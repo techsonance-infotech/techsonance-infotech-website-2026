@@ -1,0 +1,152 @@
+# 📔 Hisaab-Kitaab v2
+
+> A premium, enterprise-grade invoicing, inventory management, and digital accounting suite custom-tailored for Indian businesses. Formulated with state-of-the-art architectures, modern design tokens, high-fidelity micro-animations, and strict GST validation systems.
+
+---
+
+## 🛠️ The Tech Stack
+
+### Frontend Architecture
+* **Core**: [React 19](https://react.dev/) & [Next.js 16 (App Router)](https://nextjs.org/) for highly optimized Server-Side Rendering (SSR) and client navigation.
+* **State Management**: [Zustand](https://github.com/pmndrs/zustand) for sleek, lightweight, reactive store configurations.
+* **Async Cache**: [TanStack React Query v5](https://tanstack.com/query/latest) for high-performance server state query and mutations synchronization.
+* **Styling**: [TailwindCSS v4](https://tailwindcss.com/) with Vanilla PostCSS for custom modern UI elements, HSL color tokens, and complete responsive control.
+* **Micro-Animations**: [Framer Motion](https://www.framer.com/motion/) for fluid page entries, sidebars, interactive hover cards, and seamless UI transitions.
+
+### Backend Infrastructure
+* **Core Runtime**: [Node.js](https://nodejs.org/) & [Express.js v5](https://expressjs.com/) for reliable RESTful services.
+* **Language**: [TypeScript](https://www.typescriptlang.org/) for compile-time safety and strict interface enforcement across frontend and backend boundaries.
+* **Database**: [MongoDB](https://www.mongodb.com/) via [Mongoose v9](https://mongoosejs.com/) for dynamic, high-performance schema serialization.
+* **Utilities**:
+  * **jsPDF & jsPDF-AutoTable** for professional, customizable client PDF invoice/receipt generations.
+  * **SheetJS (XLSX)** for fast, granular spreadsheet export workflows.
+  * **Zod** for powerful, real-time client-to-server strict schema validators.
+  * **Nodemailer** for automated customer communication and transaction notification templates.
+
+---
+
+## ✨ Core Product Features
+
+### 1. Unified Billing Preference System
+* Prominent, first-choice **GST vs. Non-GST selector card** at the top of the form layout to guide the billing process.
+* **GST Bill Mode**: Dynamically generates HSN/SAC entries, CGST + SGST (intra-state supply) or IGST (inter-state supply) calculations based on place of supply.
+* **Non-GST Bill Mode**: Bypasses strict tax rules and HSN inputs for clean, simplified bills.
+
+### 2. Strict Real-Time Indian Fiscal Validations
+* **Real-time PAN Number Validation**: Enforces exactly 10 uppercase alphanumeric characters (`^[A-Z]{5}[0-9]{4}[A-Z]{1}$`) with required red asterisk indicators.
+* **Tax Exemption Validation**: Restricts input fields to standard letters, numbers, spaces, hyphens (`-`), and dots (`.`) up to 100 characters.
+* **Unified Phone Check**: Enforces standard Indian 10-digit mobile numbers while preventing numbers starting with `0`.
+* **Integrated Indian Bank List**: Features a dynamic dropdown selection list mapping all primary Indian banking institutions, including fallback options for manual typing.
+
+### 3. High-Fidelity Quick Add Modals (Invoices & Sales Orders)
+* Fully integrated **Quick-Add Customer** and **Quick-Add Product** inline popups inside both Sales Order and Invoice transaction pages.
+* Enforces mandatory fields dynamically (e.g., HSN Code and positive Sale Prices) before successfully committing to the database.
+* **Background Sync**: After adding a customer or product from the modal, the platform invalidates the React Query cache or triggers clean state refetches to **populate row details immediately and instantly** without resetting the rest of the form!
+
+### 4. Enterprise Reporting & Dashboards
+* Real-time metrics visualization with **Recharts** interactive dashboards (Profit margins, sales trends, inventory stock levels).
+* Automatic low-stock indicator thresholds with toast notifications.
+* Roles-based dashboards designed for Accountants, Sales representatives, and System Administrators.
+
+---
+
+## 📂 Repository Structure
+
+```bash
+Hisaab-Kitaab-v2/
+├── frontend/             # Next.js 16 Web Client Application
+│   ├── src/
+│   │   ├── app/          # App Router dashboard & pages configuration
+│   │   ├── components/   # Structured, reusable UI tokens and forms
+│   │   ├── hooks/        # Stateful hooks (useInvoiceForm, useSalesOrderForm, etc.)
+│   │   ├── services/     # RESTful client APIs mapping
+│   │   ├── validators/   # Strict client-side Zod validation schemas
+│   │   └── data/         # Enums and configuration presets
+└── backend/              # Node.js + Express + TypeScript API Server
+    ├── src/
+    │   ├── controllers/  # API business logic controllers
+    │   ├── models/       # MongoDB Mongoose database schemas
+    │   ├── routes/       # Express HTTP routing
+    │   └── validators/   # Server-side Zod request body schemas
+    └── scripts/          # Import helpers (e.g. HSN/SAC master database seeders)
+```
+
+---
+
+## 🚀 Setup & Installation
+
+### Prerequisites
+* **Node.js** (v18.x or above)
+* **npm** (v9.x or above)
+* **MongoDB** (Local instance running at `localhost:27017` or MongoDB Atlas cloud database cluster)
+
+### 1. Environment Configurations
+Create a `.env` file in the `backend/` directory:
+
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/billing_system
+JWT_SECRET=your_high_entropy_jwt_secret_key
+
+# Transaction SMTP Mail Settings
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=hisaabkitaab.techsonance@gmail.com
+SMTP_PASS=your_gmail_app_password
+
+# Image Upload Settings (ImageKit)
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
+PUBLIC_KEY=your_imagekit_public_key
+URL_ENDPOINT=your_imagekit_url_endpoint
+
+CLIENT_URL=http://localhost:3000
+```
+
+---
+
+### 2. Development Setup
+
+#### Backend Setup
+```bash
+# Navigate to the backend folder
+cd backend
+
+# Install server dependencies
+npm install
+
+# (Optional) Seed the HSN/SAC database records
+npm run import:hsn
+
+# Run the Express server in hot-reloading development mode
+npm run dev
+```
+
+#### Frontend Setup
+```bash
+# Navigate to the frontend folder
+cd ../frontend
+
+# Install client dependencies
+npm install
+
+# Run the Next.js development server
+npm run dev
+```
+
+The system will now be active at:
+* **Frontend Web Client**: [http://localhost:3000](http://localhost:3000)
+* **Backend API Host**: [http://localhost:5000](http://localhost:5000)
+
+---
+
+## 🧪 Validating the Workspace Compilation
+To verify complete type safety and structural integrity of the monorepo workspace, you can trigger production builds:
+
+```bash
+# In frontend/
+npm run build
+
+# In backend/
+npm run build
+```
+Both layers are guaranteed to compile successfully with zero lint or TypeScript compiler errors!
