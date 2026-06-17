@@ -31,7 +31,7 @@ export default function SiteFooter() {
                 />
                 <div>
                   <span className="block text-lg font-extrabold leading-tight tracking-[0.03em] text-white">
-                    TECH<span className="brand-gradient-text">SONΛNCE</span>
+                    TECH<span className="bg-gradient-to-r from-[#0A1A2E] via-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
                   </span>
                   <span className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-slate-500 mt-0.5">
                     <span className="h-[1px] w-2 bg-slate-700" />

@@ -64,7 +64,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
           />
           <span className="hidden sm:block">
             <span className="block text-xl font-extrabold leading-tight tracking-[0.03em] text-[#0F172A]">
-              TECH<span className="brand-gradient-text">SONΛNCE</span>
+              TECH<span className="bg-gradient-to-r from-[#0A1A2E] via-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
             </span>
             <span className="flex items-center gap-1.5 text-[8.5px] font-bold uppercase tracking-[0.24em] text-gray-500 mt-0.5">
               <span className="h-[1.5px] w-2.5 bg-gray-300" />
