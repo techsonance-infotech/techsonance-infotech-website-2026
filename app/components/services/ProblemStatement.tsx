@@ -1,6 +1,7 @@
 "use client";
 
 import type { Service } from "@/lib/services-data";
+import EmojiOrLucideIcon from "@/app/components/icons/LucideIcon";
 
 interface ProblemStatementProps {
   service: Service;
@@ -286,7 +287,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
               style={{ fontSize: "var(--text-section-title)", lineHeight: 1.1 }}
             >
               What most {service.problemHeadline} get{" "}
-              <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">wrong</span>
+              <span className="text-[#1155CC]">wrong</span>
             </h2>
           </div>
           <div className="lg:col-span-4 lg:text-right">
@@ -311,8 +312,8 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
                 <div>
                   {/* Top row with Icon and Number/Badge */}
                   <div className="flex justify-between items-center mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-[#F1F5F9] flex items-center justify-center text-lg select-none">
-                      {card.icon}
+                    <div className="w-10 h-10 rounded-xl bg-blue-50/70 flex items-center justify-center text-[var(--accent-blue)] select-none">
+                      <EmojiOrLucideIcon icon={card.icon} className="w-5 h-5 text-[var(--accent-blue)]" />
                     </div>
                     <div className="flex items-center gap-2 relative">
                       <span className="text-[52px] font-black text-slate-100 select-none leading-[0.8] tracking-tighter">

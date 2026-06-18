@@ -169,7 +169,7 @@ export default function TechnologiesSection() {
             <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-            Infrastructure &amp; Tech<br className="hidden sm:block" /> <span className="brand-gradient-text">We Work With</span>
+            Infrastructure &amp; Tech<br className="hidden sm:block" /> <span className="text-[#1155CC]">We Work With</span>
           </h2>
           <p className="text-[16px] text-gray-500 leading-relaxed max-w-xl mx-auto">
             Enterprise-grade platforms and technologies to build, scale and secure your applications.

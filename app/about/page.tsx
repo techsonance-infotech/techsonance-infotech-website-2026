@@ -7,6 +7,7 @@ import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import AboutHero from "@/app/components/about/AboutHero";
 import { projects } from "@/data/projects";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
 // Helper components for Section 2 Count-up
 function CountUp({ value, suffix = "", delay = 0 }: { value: number; suffix?: string; delay?: number }) {
@@ -95,8 +96,15 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
 }
 
 // Interactive Magnetic Button for CTA
-function MagneticButton({ href, children, className = "" }: { href: string; children: React.ReactNode; className?: string }) {
-  const btnRef = useRef<HTMLAnchorElement>(null);
+interface MagneticButtonProps {
+  href?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function MagneticButton({ href, onClick, children, className = "" }: MagneticButtonProps) {
+  const btnRef = useRef<HTMLElement>(null);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
 
@@ -119,9 +127,25 @@ function MagneticButton({ href, children, className = "" }: { href: string; chil
     setY(0);
   };
 
+  if (onClick) {
+    return (
+      <motion.button
+        ref={btnRef as React.RefObject<HTMLButtonElement>}
+        onClick={onClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        animate={{ x, y }}
+        transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+        className={`inline-block cursor-pointer ${className}`}
+      >
+        {children}
+      </motion.button>
+    );
+  }
+
   return (
     <motion.a
-      ref={btnRef}
+      ref={btnRef as React.RefObject<HTMLAnchorElement>}
       href={href}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -136,6 +160,7 @@ function MagneticButton({ href, children, className = "" }: { href: string; chil
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
   // Section 4 horizontal scroll tracking
   const horizontalSectionRef = useRef<HTMLDivElement>(null);
@@ -790,7 +815,7 @@ export default function AboutPage() {
               From custom database engineering to intelligent workflow automation, we take ownership of backend complexity so you can focus on business growth.
             </p>
 
-            <MagneticButton href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15" className="shadow-[0_4px_30px_rgba(17, 85, 204,0.3)]">
+            <MagneticButton onClick={() => setIsBookModalOpen(true)} className="shadow-[0_4px_30px_rgba(17, 85, 204,0.3)]">
               <span className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-slate-50 transition-colors inline-block">
                 Book a Strategy Call
               </span>
@@ -801,6 +826,8 @@ export default function AboutPage() {
 
       <SiteFooter />
     </main>
+
+    <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
   </>
   );
 }

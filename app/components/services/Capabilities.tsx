@@ -22,7 +22,7 @@ function CapabilityCard({
       data-capability-card
     >
       <div className="flex items-start justify-between gap-3 mb-4">
-        <div className="w-9 h-9 rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB] shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-[var(--accent-blue)] shrink-0">
           <Icon name={cap.icon as IconName} className="w-4.5 h-4.5" />
         </div>
       </div>
@@ -36,7 +36,7 @@ function CapabilityCard({
 
       {featured && cap.connectedItems && cap.connectedItems.length > 0 && (
         <div className="mb-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] p-4">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#2563EB] mb-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent-blue)] mb-3">
             What gets connected
           </p>
           <ul className="space-y-1.5">
@@ -45,7 +45,7 @@ function CapabilityCard({
                 key={item}
                 className="text-[13px] text-[#525252] flex items-start gap-2"
               >
-                <span className="text-[#2563EB] mt-0.5">•</span>
+                <span className="text-[var(--accent-blue)] mt-0.5">•</span>
                 {item}
               </li>
             ))}
@@ -87,7 +87,7 @@ function CapabilityCard({
             </p>
           </div>
         )}
-        <p className="text-[11px] font-bold uppercase tracking-widest text-[#2563EB]">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--accent-blue)]">
           • {cap.clientLabel ?? cap.usedInProject.replace(/\s+/g, "").toUpperCase()}
         </p>
       </div>
@@ -106,8 +106,8 @@ export default function Capabilities({ service }: CapabilitiesProps) {
         <div className="reveal-up flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-10">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="w-5 h-px bg-[#2563EB]" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#2563EB]">
+              <span className="w-5 h-px bg-[var(--accent-blue)]" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--accent-blue)]">
                 Capabilities
               </span>
             </div>
@@ -116,7 +116,7 @@ export default function Capabilities({ service }: CapabilitiesProps) {
               style={{ fontSize: "clamp(32px, 4vw, 44px)" }}
             >
               What we{" "}
-              <span className="text-[#2563EB]">actually</span> ship
+              <span className="text-[var(--accent-blue)]">actually</span> ship
             </h2>
           </div>
           <div className="flex items-center gap-8 shrink-0">
@@ -126,8 +126,8 @@ export default function Capabilities({ service }: CapabilitiesProps) {
             </div>
             <div className="w-px h-10 bg-[#E5E5E5]" />
             <div>
-              <p className="text-2xl font-bold text-[#0A0A0A]">4yr</p>
-              <p className="text-[13px] text-[#737373]">In production systems</p>
+              <p className="text-2xl font-bold text-[#0A0A0A]">99.9%</p>
+              <p className="text-[13px] text-[#737373]">Uptime SLA</p>
             </div>
           </div>
         </div>

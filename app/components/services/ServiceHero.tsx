@@ -11,8 +11,8 @@ const SERVICE_HERO_CONTENT: Record<
 > = {
   "custom-software-development": {
     label: "CUSTOM SOFTWARE DEVELOPMENT SERVICES",
-    titleStart: "Transform Your Vision Into Powerful Enterprise Platforms With ",
-    titleGradient: "Expert Software Engineers",
+    titleStart: "Transform Your Vision Into Powerful Enterprise Platforms With Expert ",
+    titleGradient: "Software Engineers",
     description:
       "As a premier custom software engineering partner, we deliver high-velocity, reliable digital solutions that automate workflows, scale operations, and drive real business results. Our experienced team builds secure, bespoke systems tailored to your unique architecture.",
   },
@@ -144,7 +144,7 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
               style={{ fontSize: "clamp(32px, 3.8vw, 42px)" }}
             >
               {heroContent.titleStart}
-              <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent block sm:inline">
+              <span className="text-[#1155CC] block sm:inline">
                 {heroContent.titleGradient}
               </span>
             </h1>

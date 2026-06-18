@@ -73,13 +73,13 @@ export default function VisionSection() {
         </div>
 
         {/* Center glow */}
-        <div className="absolute inset-[180px] rounded-full bg-gradient-to-tr from-[#0066ff] to-[#5d60eb] opacity-20 blur-xl" />
+        <div className="absolute inset-[180px] rounded-full bg-gradient-to-tr from-[#0066ff] to-[#1155CC] opacity-20 blur-xl" />
       </div>
 
       {/* Bottom Left Orbit */}
       <div className="absolute left-[-120px] bottom-[-120px] w-[400px] h-[400px] pointer-events-none hidden md:block opacity-90 z-0">
         {/* Outer orbit (dashed) */}
-        <div className="absolute inset-0 border-2 border-dashed border-[#5d60eb]/30 rounded-full animate-[spin_60s_linear_infinite_reverse]">
+        <div className="absolute inset-0 border-2 border-dashed border-[#1155CC]/30 rounded-full animate-[spin_60s_linear_infinite_reverse]">
           {/* Floating Icon 4: TypeScript */}
           <div className="absolute bottom-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
             <svg className="w-5 h-5 text-[#1155CC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -96,24 +96,17 @@ export default function VisionSection() {
         <div className="absolute inset-16 border-2 border-[#0066ff]/20 rounded-full" />
 
         {/* Center glow */}
-        <div className="absolute inset-[130px] rounded-full bg-gradient-to-br from-[#5d60eb] to-[#00ccf9] opacity-20 blur-xl" />
+        <div className="absolute inset-[130px] rounded-full bg-gradient-to-br from-[#1155CC] to-[#00ccf9] opacity-20 blur-xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-12 items-center relative overflow-hidden">
           {/* Ambient Glows */}
-          <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full bg-[#5d60eb]/10 blur-3xl pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full bg-[#1155CC]/10 blur-3xl pointer-events-none" />
           <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-[#0066ff]/10 blur-3xl pointer-events-none" />
 
           {/* Left Column */}
           <div className="lg:w-1/2 space-y-6 relative z-10">
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#1155CC] via-[#1155CC] to-[#5d60eb] text-white shadow-lg shadow-blue-800/25">
-              <div className="absolute inset-0.5 rounded-[14px] bg-white opacity-10" />
-              <svg className="h-7 w-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" strokeDasharray="3 3" />
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-              </svg>
-            </div>
             <h2 className="text-4xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
               Your Vision.
               <br />

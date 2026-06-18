@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Icon } from "@/app/components/icons/Icon";
 
 interface HeroContactFormProps {
   serviceName: string;
@@ -178,7 +179,7 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
   }
 
   return (
-    <div className="bg-white/95 backdrop-blur-md border border-neutral-200/60 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+    <div className="bg-white/95 backdrop-blur-md border-2 border-[#22B6F6] rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
       {/* Dynamic Background Accents */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -367,7 +368,7 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
         <button
           type="submit"
           disabled={formStatus === "submitting" || !isFormValid()}
-          className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-bold hover:brightness-105 transition-all cursor-pointer flex items-center justify-center gap-2 text-sm shadow-[0_4px_12px_rgba(37,99,235,0.2)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+          className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
         >
           {formStatus === "submitting" ? (
             <>
@@ -375,7 +376,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               Sending...
             </>
           ) : (
-            "Send Message"
+            <>
+              Send Message
+              <Icon name="arrow" className="h-5 w-5" />
+            </>
           )}
         </button>
       </form>

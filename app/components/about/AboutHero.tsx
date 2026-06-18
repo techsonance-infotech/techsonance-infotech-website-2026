@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
@@ -24,7 +26,10 @@ const imageReveal = {
 };
 
 export default function AboutHero() {
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
+
   return (
+    <>
     <section className="relative pt-28 pb-16 md:pb-24 bg-[#FAFBFD] border-b border-[#E2E8F0] overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#E6EDF5] via-[#F3F8FD] to-[#F8FBFF]"
@@ -122,14 +127,12 @@ export default function AboutHero() {
                 At TechSonance, we build software that runs real businesses — not slide decks. Every system is engineered for production from day one.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#1155CC] text-white text-[13px] font-semibold hover:bg-[#0A3D8C] transition-colors"
+                <button
+                  onClick={() => setIsBookModalOpen(true)}
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#1155CC] text-white text-[13px] font-semibold hover:bg-[#0A3D8C] transition-colors cursor-pointer"
                 >
                   Book a call
-                </Link>
+                </button>
                 <Link
                   href="/portfolio"
                   className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-[#D4D4D4] text-[#0A0A0A] text-[13px] font-semibold hover:bg-white transition-colors"
@@ -142,5 +145,7 @@ export default function AboutHero() {
         </div>
       </div>
     </section>
+    <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
+    </>
   );
 }

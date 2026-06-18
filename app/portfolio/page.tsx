@@ -6,6 +6,7 @@ import { getAllProjects, type Project } from "@/data/projects";
 import { TechBadge } from "@/app/components/projects/TechBadge";
 import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
 import { ArcGalleryHero } from "@/components/ui/arc-gallery-hero-component";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
 // ─── Hero stats ────────────────────────────────────────────────────────────────
 const heroStats = [
@@ -141,6 +142,7 @@ const categories = ["All", "SaaS Platform", "E-Commerce Platform", "POS System",
 export default function ProjectsPage() {
   const allProjects = getAllProjects();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
   const filtered = activeCategory === "All"
     ? allProjects
@@ -178,7 +180,7 @@ export default function ProjectsPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-gray-900 leading-[1.06] tracking-tight mb-6">
-            Our Best Work, <br /> <span className="brand-gradient-text">Live in Production.</span>
+            Our Best Work, <br /> <span className="text-[#1155CC]">Live in Production.</span>
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
@@ -203,7 +205,7 @@ export default function ProjectsPage() {
         {/* Section label */}
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-            All <span className="brand-gradient-text">Projects</span>
+            All <span className="text-[#1155CC]">Projects</span>
           </h2>
           <p className="text-sm text-gray-500 mt-2">
             {allProjects.length} products across {categories.length - 1} categories
@@ -283,14 +285,12 @@ export default function ProjectsPage() {
             transition={{ duration: 0.6, delay: 0.18 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link
-              href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-lg"
+            <button
+              onClick={() => setIsBookModalOpen(true)}
+              className="px-8 py-3.5 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-lg cursor-pointer"
             >
               Book Free Consultation
-            </Link>
+            </button>
             <Link
               href="/"
               className="px-8 py-3.5 rounded-xl border-2 border-white/40 text-white font-bold text-sm hover:bg-white/10 transition-colors"
@@ -300,6 +300,8 @@ export default function ProjectsPage() {
           </motion.div>
         </div>
       </section>
+
+      <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
     </main>
   );
 }

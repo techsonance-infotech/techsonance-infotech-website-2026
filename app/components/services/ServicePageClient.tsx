@@ -44,9 +44,9 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
         </div>
       </section>
 
-      <section id="project-request" className="service-section bg-[#0A0A0A]">
+      <section id="project-request" className="service-section bg-[#FAFBFD]">
         <div className="service-container">
-          <ScopingContactForm defaultService={service.name} embedded />
+          <ScopingContactForm defaultService={service.name} />
         </div>
       </section>
     </main>

@@ -81,7 +81,7 @@ const serviceNodes: ServiceNode[] = [
     title: "Web Application Development",
     description: "High-performance web apps with modern stacks and exceptional UX.",
     icon: "monitor",
-    color: "#3B82F6", // light blue
+    color: "#F97316", // orange
     x: 750,
     y: 260,
     w: 240,
@@ -141,7 +141,7 @@ const serviceNodes: ServiceNode[] = [
     title: "Product Engineering",
     description: "MVPs, product scaling and tech strategy to turn ideas into market-ready products.",
     icon: "lightbulb",
-    color: "#8B5CF6", // violet
+    color: "#E11D48", // crimson rose
     x: 580,
     y: 650,
     w: 240,
@@ -295,7 +295,7 @@ export default function ServicesSection() {
           </div>
           <h2 className="eco-header-anim text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-5 leading-tight">
             End-to-End Solutions. <br />
-            <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">Engineered for Growth.</span>
+            <span className="text-[#1155CC]">Engineered for Growth.</span>
           </h2>
           <p className="eco-header-anim text-lg text-gray-600 leading-relaxed">
             We build powerful digital systems, automate operations with AI, and deliver scalable products that help businesses grow faster.
@@ -548,50 +548,24 @@ export default function ServicesSection() {
                         </div>
 
                         {/* Title and Summary */}
-                        <div className="min-w-0 pr-4">
+                        <div className="min-w-0 pr-4 flex flex-col justify-center">
                           <h3 className="text-xs xl:text-sm font-black text-gray-900 leading-snug mb-1">
                             {node.title}
                           </h3>
-                          <p className="text-[10px] xl:text-[11px] text-gray-500 leading-normal line-clamp-2">
+                          <p className="text-[10px] xl:text-[11px] text-gray-500 leading-normal line-clamp-2 mb-1">
                             {node.description}
                           </p>
+                          <div 
+                            className={`text-[9px] font-black tracking-wider uppercase transition-all duration-300 ${
+                              isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 pointer-events-none"
+                            }`}
+                            style={{ color: node.color }}
+                          >
+                            View Service
+                          </div>
                         </div>
 
-                        {/* Edge-aligned indicator button (visual link connector) */}
-                        <div 
-                          className="w-7 h-7 rounded-full border flex items-center justify-center absolute transition-all duration-500 shrink-0"
-                          style={{
-                            right: node.side === "left" ? "-28px" : "auto",
-                            left: node.side === "right" ? "-28px" : "auto",
-                            backgroundColor: isHovered ? node.color : "#FFFFFF",
-                            borderColor: isHovered ? node.color : "#E2E8F0",
-                            color: isHovered ? "#FFFFFF" : "#94A3B8",
-                            boxShadow: isHovered ? `0 0 12px ${node.color}40` : "none",
-                            transform: isHovered ? "scale(1.15)" : "scale(1)"
-                          }}
-                        >
-                          {isHovered ? (
-                            <span className="text-[8px] font-black uppercase text-white px-1 whitespace-nowrap opacity-0 pointer-events-none">View Service</span>
-                          ) : null}
-                          <Icon 
-                            name="arrow" 
-                            className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                              node.side === "right" ? "rotate-180" : ""
-                            } ${isHovered && node.side === "left" ? "translate-x-[1px]" : ""} ${
-                              isHovered && node.side === "right" ? "-translate-x-[1px]" : ""
-                            }`} 
-                          />
-                        </div>
-                      </div>
-
-                      {/* Hover text label */}
-                      <div 
-                        className={`absolute bottom-3 right-5 text-[9px] font-black tracking-wider uppercase transition-opacity duration-300 ${
-                          isHovered ? "opacity-100" : "opacity-0"
-                        }`}
-                        style={{ color: node.color }}
-                      >
-                        View Service →
+                        {/* End of content */}
                       </div>
 
                     </div>
@@ -638,7 +612,6 @@ export default function ServicesSection() {
                       </p>
                       <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1155CC]">
                         View Service
-                        <Icon name="arrow" className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 duration-300" />
                       </div>
                     </div>
                   </div>

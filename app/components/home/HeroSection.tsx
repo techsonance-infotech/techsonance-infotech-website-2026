@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Icon } from "@/app/components/icons/Icon";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
 export const heroNodes = [
   {
@@ -43,14 +44,17 @@ export const heroNodes = [
 ];
 
 export const trustItems = [
-  { text: "No Obligations", icon: "shield" as const },
-  { text: "Expert Guidance", icon: "handshake" as const },
-  { text: "Quick Response", icon: "speed" as const },
+  { text: "No Obligations", icon: "check" as const },
+  { text: "Expert Guidance", icon: "check" as const },
+  { text: "Quick Response", icon: "check" as const },
 ];
 
 export default function HeroSection() {
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
+
   return (
-    <section className="relative overflow-hidden bg-[#FAFBFD] flex items-center pt-20" style={{ minHeight: '100vh' }}>
+    <>
+    <section className="relative overflow-hidden bg-[#FAFBFD] flex items-center pt-20" style={{ minHeight: 'calc(100vh)' }}>
       <div className="absolute inset-0 pointer-events-none z-0 select-none">
         <Image
           src="/images/hero-background.png"
@@ -71,7 +75,6 @@ export default function HeroSection() {
           >
             <div className="flex flex-col gap-3">
               <div className="inline-flex w-fit items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5">
-                <Icon name="beaker" className="h-4 w-4 text-[#1155CC]" />
                 <span className="text-xs font-bold text-[#1155CC] tracking-wide uppercase">
                   AI & Custom Software Engineering Partner
                 </span>
@@ -93,15 +96,13 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <a
-                href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm"
+              <button
+                onClick={() => setIsBookModalOpen(true)}
+                className="btn-primary px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer"
               >
                 Book Free Consultation
                 <Icon name="arrow" className="h-5 w-5" />
-              </a>
+              </button>
               <a
                 href="#"
                 className="btn-outline px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm"
@@ -111,14 +112,14 @@ export default function HeroSection() {
               </a>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3.5">
               {trustItems.map((item) => (
                 <span
                   key={item.text}
-                  className="flex items-center gap-2.5 text-sm text-gray-600 font-medium"
+                  className="flex items-center gap-3 text-sm text-gray-700 font-semibold"
                 >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1155CC]/5 text-[#1155CC] p-1.5 shrink-0">
-                    <Icon name={item.icon} className="h-3.5 w-3.5" />
+                  <span className="flex h-7.5 w-7.5 items-center justify-center rounded-full bg-[#1155CC]/10 text-[#1155CC] p-1.5 shrink-0 shadow-sm border border-[#1155CC]/10">
+                    <Icon name={item.icon} className="h-4.5 w-4.5 stroke-[2.8]" />
                   </span>
                   {item.text}
                 </span>
@@ -130,6 +131,8 @@ export default function HeroSection() {
         </div>
       </div>
     </section>
+    <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
+    </>
   );
 }
 

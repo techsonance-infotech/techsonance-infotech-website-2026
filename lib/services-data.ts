@@ -84,7 +84,7 @@ export interface Service {
 // ─── Shared metrics strip ────────────────────────────────────────────────────
 
 export const SHARED_METRICS: Metric[] = [
-  { value: "4+", label: "Years Building Production Systems" },
+  { value: "99.9%", label: "Uptime SLA Guarantee" },
   { value: "15+", label: "SaaS Projects Delivered" },
   { value: "0", label: "Missed Deadlines on Fixed-Scope Projects" },
 ];
@@ -566,27 +566,36 @@ export const app = {
     ],
     techStack: [
       {
-        category: "Frameworks",
+        category: "Mobile Frameworks",
         items: [
-          { name: "React Native", why: "One codebase for iOS and Android with native module access." },
-          { name: "Expo", why: "Faster development with managed builds and OTA updates." },
-          { name: "TypeScript", why: "Type safety across shared business logic and API contracts." },
+          { name: "React Native", why: "Cross-platform development sharing 90%+ code with native performance." },
+          { name: "Flutter", why: "High-performance UI rendering and custom widget customization." },
+          { name: "iOS Native (Swift)", why: "Uncompromised performance and access to latest iOS APIs." },
+          { name: "Android Native (Kotlin)", why: "Robust system-level integration and optimal device compatibility." },
         ],
       },
       {
-        category: "Native Features",
+        category: "OTA & Distribution",
         items: [
-          { name: "React Native Camera", why: "Receipt photos, barcode scanning, and document capture." },
-          { name: "React Native Maps", why: "GPS tracking, route visualization, and geofencing." },
-          { name: "Push Notifications", why: "FCM and APNs integration for real-time alerts." },
+          { name: "Expo Updates", why: "Deliver critical bug fixes and features over-the-air in seconds without store review delays." },
+          { name: "CodePush", why: "Microsoft service for direct-to-device React Native app updates." },
+          { name: "EAS / Fastlane", why: "Automated App Store and Google Play Store build/submission pipelines." },
         ],
       },
       {
-        category: "Backend",
+        category: "Backend & Services",
         items: [
-          { name: "Node.js", why: "Shared API layer with your web application." },
-          { name: "Supabase", why: "Real-time subscriptions and auth for mobile clients." },
-          { name: "SQLite", why: "Local offline storage with sync on reconnect." },
+          { name: "Node.js (NestJS)", why: "Highly scalable, modular API gateway sharing types with the mobile client." },
+          { name: "Supabase / Firebase", why: "Real-time client synchronization, push notifications, and fast user authentication." },
+          { name: "GraphQL (Apollo)", why: "Bandwidth-efficient data fetching to optimize performance on mobile networks." },
+        ],
+      },
+      {
+        category: "Databases & Sync",
+        items: [
+          { name: "SQLite", why: "Reliable embedded local database for offline-first functionality." },
+          { name: "Realm", why: "High-performance object-oriented local database with automatic sync." },
+          { name: "PostgreSQL", why: "Robust relational database with row-level security for secure backend sync." },
         ],
       },
     ],
@@ -931,7 +940,6 @@ const COMMON_TECH_STACK: TechStackGroup[] = [
 export const services: Service[] = rawServicesList.map((service) => ({
   ...service,
   capabilities: enrichCapabilities(service.slug, service.capabilities),
-  techStack: COMMON_TECH_STACK,
 }));
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { services } from "@/data/services";
+import GetQuoteModal from "@/app/components/home/GetQuoteModal";
 
 export const navLinks = [
   { name: "Home", href: "/" },
@@ -18,6 +19,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   useEffect(() => {
     if (!transparent) return;
@@ -36,6 +38,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
   }, [transparent]);
 
   return (
+    <>
     <header
       className={
         transparent
@@ -63,8 +66,8 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
             priority
           />
           <span className="hidden sm:flex flex-col items-center">
-            <span className="block text-[22px] font-bold font-sora leading-none tracking-[0.04em]">
-              <span className="text-[#071A35]">TECH</span>
+            <span className="flex items-center gap-1.5 text-[22px] font-bold font-sora leading-none tracking-[0.04em]">
+              <TechSvg className="text-[#071A35]" />
               <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
             </span>
             <span className="w-full flex items-center gap-2 text-[10px] font-medium font-sans uppercase tracking-[0.24em] text-[#4B5563] mt-0.5">
@@ -156,15 +159,15 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/contact"
-            className="hidden items-center gap-2 rounded-full btn-primary px-6 py-2.5 text-sm font-semibold text-white sm:flex"
+          <button
+            onClick={() => setIsQuoteModalOpen(true)}
+            className="hidden items-center gap-2 rounded-full btn-primary px-6 py-2.5 text-sm font-semibold text-white sm:flex cursor-pointer"
           >
             Get a Quote
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
               <Icon name="arrow" className="h-3 w-3" />
             </span>
-          </Link>
+          </button>
 
           {/* Mobile menu trigger */}
           <button
@@ -253,20 +256,61 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
             })}
 
             <div className="pt-4 mt-2 border-t border-gray-100">
-              <Link
-                href="/contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-xl btn-primary px-6 py-3 text-sm font-semibold text-white w-full"
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsQuoteModalOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl btn-primary px-6 py-3 text-sm font-semibold text-white w-full cursor-pointer"
               >
                 Get a Quote
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
                   <Icon name="arrow" className="h-3 w-3" />
                 </span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
       )}
     </header>
+
+    {/* Get a Quote Modal */}
+    <GetQuoteModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} />
+    </>
+  );
+}
+
+function TechSvg({ className = "text-[#071A35]" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 74 24"
+      className={`h-[0.72em] w-auto ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3.2"
+      strokeLinecap="butt"
+      strokeLinejoin="miter"
+    >
+      {/* T */}
+      <g transform="translate(0, 0)">
+        <path d="M1.5,4.5 L16.5,4.5" />
+        <path d="M9,4.5 L9,19.5" />
+      </g>
+      {/* E */}
+      <g transform="translate(18, 0)">
+        <path d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5" strokeLinejoin="round" />
+        <path d="M4.5,12 L13.5,12" />
+      </g>
+      {/* C */}
+      <g transform="translate(36, 0)">
+        <path d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5" strokeLinejoin="round" />
+      </g>
+      {/* H */}
+      <g transform="translate(54, 0)">
+        <path d="M4.5,4.5 L4.5,19.5" />
+        <path d="M16.5,4.5 L16.5,19.5" />
+        <path d="M4.5,12 L16.5,12" />
+      </g>
+    </svg>
   );
 }

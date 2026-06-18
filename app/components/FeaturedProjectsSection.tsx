@@ -258,7 +258,7 @@ function SectionHeader() {
             className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight"
           >
             Products We&apos;ve{" "}
-            <span className="brand-gradient-text">Engineered.</span>
+            <span className="text-[#1155CC]">Engineered.</span>
           </motion.h2>
 
           <motion.div
@@ -339,7 +339,7 @@ export default function FeaturedProjectsSection() {
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-1">Explore All Work</p>
               <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900">
-                See every product we&apos;ve shipped →
+                See every product we&apos;ve shipped
               </h3>
             </div>
             <Link

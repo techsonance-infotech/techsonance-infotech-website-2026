@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
 export default function ContactClient() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ export default function ContactClient() {
     message: "",
     website: "", // Honeypot field to trap spam bots
   });
+
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
   const [touched, setTouched] = useState<{
     firstName?: boolean;
@@ -169,7 +172,7 @@ export default function ContactClient() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column (60%): Contact Form */}
-          <div className="lg:col-span-7 bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)]">
+          <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)]">
             <h2 className="text-xl sm:text-2xl font-extrabold text-black mb-6">
               Send Us a Message
             </h2>
@@ -189,7 +192,7 @@ export default function ContactClient() {
                 </p>
                 <button
                   onClick={() => setFormStatus("idle")}
-                  className="px-6 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-colors shadow-md"
+                  className="btn-outline px-6 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 >
                   Send another message
                 </button>
@@ -359,7 +362,7 @@ export default function ContactClient() {
                 <button
                   type="submit"
                   disabled={formStatus === "submitting" || !isFormValid}
-                  className="w-full py-4 btn-primary rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+                  className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
                 >
                   {formStatus === "submitting" ? (
                     <>
@@ -369,7 +372,7 @@ export default function ContactClient() {
                   ) : (
                     <>
                       Send Message
-                      <Icon name="arrow" className="w-4 h-4 transform transition-transform group-hover:translate-x-0.5" />
+                      <Icon name="arrow" className="h-5 w-5" />
                     </>
                   )}
                 </button>
@@ -400,14 +403,12 @@ export default function ContactClient() {
                   Prefer a live conversation? Choose a time slot that works best for you and sync directly with our technical lead.
                 </p>
 
-                <a
-                  href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-black hover:bg-slate-100 rounded-xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all"
+                <button
+                  onClick={() => setIsBookModalOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-black hover:bg-slate-100 rounded-xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
                 >
                   Book Free 15-min Call ↗
-                </a>
+                </button>
               </div>
             </div>
 
@@ -504,6 +505,7 @@ export default function ContactClient() {
 
       <SiteFooter />
     </main>
+    <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
   </>
   );
 }

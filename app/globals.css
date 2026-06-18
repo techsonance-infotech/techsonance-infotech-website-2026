@@ -140,7 +140,7 @@ html.lenis, html.lenis body {
   --text-primary: var(--foreground);
   --text-secondary: #475569;
   --text-muted: #94A3B8;
-  --accent-blue: var(--brand-accent);
+  --accent-blue: var(--brand-royal);
   --accent-blue-light: var(--surface-3);
   --border: #E2E8F0;
   --border-strong: #CBD5E1;

@@ -7,6 +7,8 @@ import { type Project } from "@/data/projects";
 import { TechBadge } from "@/app/components/projects/TechBadge";
 import { MetricCard } from "@/app/components/projects/MetricCard";
 import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
+import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import EmojiOrLucideIcon from "@/app/components/icons/LucideIcon";
 
 // ─── Reveal animation preset ────────────────────────────────────────────────────
 function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -396,6 +398,8 @@ function ProjectHero({ project }: { project: Project }) {
 }
 
 export default function ProjectDetailClient({ project }: { project: Project }) {
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
+
   return (
     <main className="overflow-x-clip">
       {/* Hero */}
@@ -415,7 +419,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
           <RevealSection>
             <SectionLabel text="Challenges" color={project.accentColor} />
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-10">
-              Problems we <span className="brand-gradient-text">solved</span>
+              Problems we <span style={{ color: project.accentColor }}>solved</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {project.challenges.map((c, i) => (
@@ -428,10 +432,10 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   className="flex flex-col gap-4 p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300"
                 >
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-                    style={{ background: `${project.accentColor}12` }}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl"
+                    style={{ background: `${project.accentColor}12`, color: project.accentColor }}
                   >
-                    {c.icon}
+                    <EmojiOrLucideIcon icon={c.icon} className="w-5 h-5" />
                   </div>
                   <h3 className="font-extrabold text-gray-900">{c.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">{c.description}</p>
@@ -450,7 +454,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               <div>
                 <SectionLabel text="Solutions" color={project.accentColor} />
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
-                  How we <span className="brand-gradient-text">built it</span>
+                  How we <span style={{ color: project.accentColor }}>built it</span>
                 </h2>
                 <p className="text-sm text-gray-500 leading-relaxed mb-8">
                   {project.solution}
@@ -481,7 +485,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               <div>
                 <SectionLabel text="Tech Stack" color={project.accentColor} />
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
-                  Built with the <span className="brand-gradient-text">best tools</span>
+                  Built with the <span style={{ color: project.accentColor }}>best tools</span>
                 </h2>
                 {(["frontend", "backend", "database", "infra", "ai", "mobile"] as const).map((cat) => {
                   const items = project.techStack.filter((t) => t.category === cat);
@@ -512,7 +516,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             <div className="text-center mb-12">
               <SectionLabel text="Results" color={project.accentColor} />
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-                Measurable <span className="brand-gradient-text">impact</span>
+                Measurable <span style={{ color: project.accentColor }}>impact</span>
               </h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -566,14 +570,12 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               pitfalls, the shortcuts that matter, and the patterns that scale. Let&apos;s talk.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-xl"
+              <button
+                onClick={() => setIsBookModalOpen(true)}
+                className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-xl cursor-pointer"
               >
                 Book Free Consultation
-              </Link>
+              </button>
               <Link
                 href="/portfolio"
                 className="px-8 py-4 rounded-xl border-2 border-white/30 text-white font-bold text-sm hover:bg-white/10 transition-colors"
@@ -584,6 +586,8 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
           </motion.div>
         </div>
       </section>
+
+      <BookConsultationModal isOpen={isBookModalOpen} onClose={() => setIsBookModalOpen(false)} />
     </main>
   );
 }

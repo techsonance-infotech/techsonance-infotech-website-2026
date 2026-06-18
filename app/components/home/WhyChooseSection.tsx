@@ -571,7 +571,7 @@ export default function WhyChooseSection() {
             Why Choose Us
           </div>
           <h2 className="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
-            Built Different. <span className="brand-gradient-text">Built for Impact.</span>
+            Built Different. <span className="text-[#1155CC]">Built for Impact.</span>
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
             We don&apos;t just write code - we engineer intelligent systems that solve real problems and drive measurable growth.
