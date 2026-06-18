@@ -99,9 +99,10 @@ export default function ScopingContactForm({
         website: "",
       });
       setTouched({});
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFormStatus("idle");
-      setErrorMessage(err.message || "Failed to submit request. Please try again.");
+      const msg = err instanceof Error ? err.message : "Failed to submit request. Please try again.";
+      setErrorMessage(msg);
     }
   };
 

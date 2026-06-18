@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import SafeImage from "@/app/components/SafeImage";
 import { type Project } from "@/data/projects";
 import { TechBadge } from "@/app/components/projects/TechBadge";
 import { MetricCard } from "@/app/components/projects/MetricCard";
@@ -93,7 +94,7 @@ function ScreenshotGallery({
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <Image
+                <SafeImage
                   src={screenshots[active].src}
                   alt={screenshots[active].caption}
                   width={1200}
@@ -149,7 +150,7 @@ function ScreenshotGallery({
               aria-label={`View screenshot ${i + 1}`}
             >
               <div className="w-40 h-24 sm:w-52 sm:h-32 flex items-center justify-center overflow-hidden">
-                <Image
+                <SafeImage
                   src={s.src}
                   alt={s.caption}
                   width={400}

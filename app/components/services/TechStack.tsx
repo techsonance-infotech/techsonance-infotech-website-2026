@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useEffect } from "react";
 import type { Service } from "@/lib/services-data";
 
 interface TechStackProps {
@@ -42,7 +42,6 @@ const TECH_ICON_MAP: Record<string, { src: string; color: string }> = {
   "MySQL":              { src: "/tech-icons/mysql.svg",         color: "#4479A1" },
   "Google Cloud":       { src: "/tech-icons/googlecloud.svg",   color: "#4285F4" },
   "Azure":              { src: "/tech-icons/azure.svg",         color: "#0078D4" },
-  // Mobile-specific technologies
   "React Native":       { src: "/tech-icons/react.svg",         color: "#61DAFB" },
   "Flutter":            { src: "/tech-icons/flutter.svg",       color: "#02569B" },
   "iOS Native (Swift)": { src: "/tech-icons/swift.svg",         color: "#F05138" },
@@ -56,6 +55,18 @@ const TECH_ICON_MAP: Record<string, { src: string; color: string }> = {
   "GraphQL (Apollo)":   { src: "/tech-icons/graphql.svg",       color: "#E10098" },
   "SQLite":             { src: "/tech-icons/sqlite.svg",        color: "#003B57" },
   "Realm":              { src: "/tech-icons/realm.svg",         color: "#39477F" },
+  "Framer Motion":      { src: "/tech-icons/react.svg",         color: "#0055FF" },
+  "Zustand":            { src: "/tech-icons/react.svg",         color: "#764ABC" },
+  "React Query":        { src: "/tech-icons/react.svg",         color: "#FF4154" },
+  "Razorpay":           { src: "/tech-icons/react.svg",         color: "#0C68FF" },
+  "Turborepo":          { src: "/tech-icons/vercel.svg",        color: "#EF4444" },
+  "Tesseract OCR":      { src: "/tech-icons/python.svg",        color: "#3776AB" },
+  "PostgreSQL pgvector":{ src: "/tech-icons/postgresql.svg",    color: "#4169E1" },
+  "AWS Lambda":         { src: "/tech-icons/aws.svg",           color: "#FF9900" },
+  "Terraform":          { src: "/tech-icons/docker.svg",        color: "#7B42BC" },
+  "React Native Camera":{ src: "/tech-icons/react.svg",         color: "#61DAFB" },
+  "React Native Maps":  { src: "/tech-icons/react.svg",         color: "#61DAFB" },
+  "Push Notifications": { src: "/tech-icons/firebase.svg",      color: "#FFCA28" },
 };
 
 /* ── Category icon SVG paths ─────────────────────────────────────────────── */
@@ -85,24 +96,100 @@ function getCategoryIcon(category: string) {
   return CATEGORY_ICONS[category] || { svg: `<circle cx="12" cy="12" r="10"/>`, color: "#1155CC" };
 }
 
-export default function TechStack({ service }: TechStackProps) {
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+/* ── Marquee: infinite horizontal scroll ─────────────────────────────────── */
+function MarqueeTrack({
+  items,
+  speed = 28,
+  reverse = false,
+}: {
+  items: { name: string; color: string }[];
+  speed?: number;
+  reverse?: boolean;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const totalWidth = track.scrollWidth / 2;
+    let pos = reverse ? -totalWidth : 0;
+    let rafId: number;
+
+    const step = () => {
+      if (reverse) {
+        pos += speed / 60;
+        if (pos >= 0) pos = -totalWidth;
+      } else {
+        pos -= speed / 60;
+        if (pos <= -totalWidth) pos = 0;
+      }
+      track.style.transform = `translate3d(${pos}px, 0, 0)`;
+      rafId = requestAnimationFrame(step);
+    };
+
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [speed, reverse]);
+
+  const renderChip = (item: { name: string; color: string }, i: number) => {
+    const iconInfo = TECH_ICON_MAP[item.name];
+    return (
+      <div
+        key={i}
+        className="flex items-center gap-2.5 px-4 py-2.5 bg-white border border-gray-100 rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(17,85,204,0.10)] hover:border-blue-200/60 transition-all duration-300 cursor-default shrink-0 group"
+      >
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          style={{ backgroundColor: (iconInfo?.color || item.color) + "14" }}
+        >
+          {iconInfo ? (
+            <img
+              src={iconInfo.src}
+              alt={item.name}
+              width={16}
+              height={16}
+              className="w-4 h-4 object-contain"
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
+            />
+          ) : (
+            <span className="text-[9px] font-bold" style={{ color: item.color }}>
+              {item.name.charAt(0)}
+            </span>
+          )}
+        </div>
+        <span className="text-[12px] font-semibold text-gray-600 group-hover:text-[#1155CC] transition-colors whitespace-nowrap">
+          {item.name}
+        </span>
+      </div>
+    );
+  };
 
   return (
-    <section className="service-section bg-white py-20 md:py-24">
+    <div className="overflow-hidden flex-1 min-w-0 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+      <div ref={trackRef} className="flex gap-3 will-change-transform" style={{ width: "max-content" }}>
+        {items.map((item, i) => renderChip(item, i))}
+        {items.map((item, i) => renderChip(item, i + items.length))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Component ──────────────────────────────────────────────────────── */
+export default function TechStack({ service }: TechStackProps) {
+  return (
+    <section className="service-section bg-white py-20 md:py-24 overflow-hidden">
       <div className="service-container">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 mb-5">
             <div className="h-px w-8 bg-[#1155CC]/40" />
             <span className="text-xs font-extrabold text-[#1155CC] tracking-[0.15em] uppercase">
-              Infrastructure & Technologies
+              Infrastructure &amp; Technologies
             </span>
             <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
-          <h2
-            className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-gray-900 leading-tight mb-4 tracking-tight"
-          >
+          <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-gray-900 leading-tight mb-4 tracking-tight">
             Technology Stack
           </h2>
           <p className="text-[15px] text-gray-500 leading-relaxed max-w-xl mx-auto">
@@ -110,20 +197,25 @@ export default function TechStack({ service }: TechStackProps) {
           </p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Compact rows: label left | marquee right */}
+        <div className="rounded-2xl border border-gray-100 bg-[#FAFBFD] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
           {service.techStack.map((group, gi) => {
             const catIcon = getCategoryIcon(group.category);
+            const marqueeItems = group.items.map((item) => ({
+              name: item.name,
+              color: TECH_ICON_MAP[item.name]?.color || catIcon.color,
+            }));
+
             return (
               <div
                 key={gi}
-                className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-4 hover:border-blue-100/70 transition-all duration-200 cursor-default shadow-[0_4px_16px_rgba(0,0,0,0.07)] hover:shadow-[0_20px_40px_rgba(17,85,204,0.10),0_4px_12px_rgba(0,0,0,0.04)] hover:-translate-y-1"
+                className={`flex flex-col md:flex-row md:items-center gap-0 ${gi !== service.techStack.length - 1 ? "border-b border-gray-100" : ""}`}
               >
-                {/* Card Header */}
-                <div className="flex items-start gap-3">
+                {/* Left: Category label */}
+                <div className="md:w-[200px] lg:w-[240px] shrink-0 flex items-center gap-3 px-4 md:px-5 py-3 md:py-6 md:border-r border-b md:border-b-0 border-gray-100 bg-white">
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: catIcon.color + "18" }}
+                    className="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: catIcon.color + "14" }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -133,77 +225,27 @@ export default function TechStack({ service }: TechStackProps) {
                       strokeWidth="1.8"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="h-4.5 w-4.5"
+                      className="h-3.5 w-3.5 md:h-4 md:w-4"
                       dangerouslySetInnerHTML={{ __html: catIcon.svg }}
                     />
                   </div>
-                  <div>
-                    <h3 className="text-[11px] font-extrabold text-gray-800 uppercase tracking-[0.1em] leading-tight mb-1">
+                  <div className="min-w-0">
+                    <h3 className="text-[10px] md:text-[11px] font-extrabold text-gray-800 uppercase tracking-[0.08em] leading-tight truncate">
                       {group.category}
                     </h3>
-                    <p className="text-[12px] text-gray-500 leading-snug">
-                      {group.items.length} {group.items.length === 1 ? "technology" : "technologies"}
+                    <p className="text-[10px] text-gray-400 mt-0.5">
+                      {group.items.length} {group.items.length === 1 ? "tech" : "technologies"}
                     </p>
                   </div>
                 </div>
 
-                {/* Tech Items */}
-                <div className="pt-3 border-t border-gray-100 flex flex-col gap-2.5">
-                  {group.items.map((item, ii) => {
-                    const key = `${gi}-${ii}`;
-                    const iconInfo = TECH_ICON_MAP[item.name];
-                    return (
-                      <div
-                        key={key}
-                        className="relative flex items-center gap-3 group"
-                        onMouseEnter={() => item.why && setActiveTooltip(key)}
-                        onMouseLeave={() => setActiveTooltip(null)}
-                      >
-                        {/* Tech Icon */}
-                        <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 p-1.5 flex items-center justify-center transition-all group-hover:border-blue-100 group-hover:bg-white group-hover:shadow-sm shrink-0">
-                          {iconInfo ? (
-                            <img
-                              src={iconInfo.src}
-                              alt={item.name}
-                              width={20}
-                              height={20}
-                              className="w-full h-full object-contain"
-                              onError={(e) => {
-                                const target = e.currentTarget;
-                                target.style.display = "none";
-                              }}
-                            />
-                          ) : (
-                            <div
-                              className="w-full h-full rounded bg-blue-50 flex items-center justify-center text-[9px] font-bold text-[#1155CC]"
-                            >
-                              {item.name.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Name + Why */}
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[13px] font-semibold text-gray-700 group-hover:text-[#1155CC] transition-colors">
-                            {item.name}
-                          </span>
-                          {item.why && (
-                            <p className="text-[11px] text-gray-400 leading-snug truncate">
-                              {item.why}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Tooltip (on hover) */}
-                        {item.why && activeTooltip === key && (
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 px-3 py-2.5 text-[12px] text-white bg-gray-900 rounded-xl shadow-xl z-20 pointer-events-none leading-relaxed">
-                            {item.why}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                {/* Right: Marquee */}
+                <div className="flex-1 min-w-0 py-3 md:py-4 px-2">
+                  <MarqueeTrack
+                    items={marqueeItems}
+                    speed={gi % 2 === 0 ? 22 : 18}
+                    reverse={gi % 2 !== 0}
+                  />
                 </div>
               </div>
             );

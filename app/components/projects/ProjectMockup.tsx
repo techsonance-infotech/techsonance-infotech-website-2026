@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import SafeImage from "@/app/components/SafeImage";
 
 interface ProjectMockupProps {
   gradient: string;
@@ -44,7 +44,7 @@ export function ProjectMockup({
               // dynamic height based on actual content - we let the image define it
             }}
           >
-            <Image
+            <SafeImage
               src={screenshotPath}
               alt={`${title} - ${category} screenshot`}
               width={1200}

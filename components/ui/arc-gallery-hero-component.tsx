@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import SafeImage from '@/app/components/SafeImage';
 
 // --- The ArcGalleryHero Component ---
 type ArcGalleryHeroProps = {
@@ -51,7 +52,10 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setDimensions({ radius: radiusSm, cardSize: cardSizeSm });
+        // Dynamically scale radius and card size on mobile to prevent overflow
+        const dynamicRadius = Math.max(120, Math.min(radiusSm, width * 0.42));
+        const dynamicCardSize = Math.max(50, Math.min(cardSizeSm, width * 0.22));
+        setDimensions({ radius: dynamicRadius, cardSize: dynamicCardSize });
       } else if (width < 1024) {
         setDimensions({ radius: radiusMd, cardSize: cardSizeMd });
       } else {
@@ -76,7 +80,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
         style={{
           width: '100%',
           // Give it a bit more height to prevent clipping
-          height: dimensions.radius * 1.2,
+          height: dimensions.radius * 1.25,
         }}
       >
         {/* Center pivot for transforms - positioned at bottom center */}
@@ -106,20 +110,16 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                 }}
               >
                 <div 
-                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 bg-white transition-transform hover:scale-105 w-full h-full"
+                   className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 bg-white transition-transform hover:scale-105 w-full h-full"
                   style={{ transform: `rotate(${angle / 4}deg)` }}
                 >
-                  <img
+                   <SafeImage
                     src={src}
                     alt={`Memory ${i + 1}`}
                     width={400}
                     height={400}
                     className="block w-full h-full object-cover"
                     draggable={false}
-                    // Add a fallback in case an image fails to load
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://placehold.co/400x400/334155/e2e8f0?text=Memory`;
-                    }}
                   />
                 </div>
               </div>
@@ -129,7 +129,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 -mt-40 md:-mt-52 lg:-mt-64">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 -mt-16 sm:-mt-28 md:-mt-52 lg:-mt-64">
         {children ? children : (
           <div className="text-center max-w-2xl px-6 opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900">

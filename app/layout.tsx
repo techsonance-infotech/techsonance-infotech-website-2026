@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/app/components/LenisProvider";
+import CookieConsent from "@/app/components/home/CookieConsent";
+import JsonLd, { getOrganizationSchema, getLocalBusinessSchema, getWebsiteSchema } from "@/app/components/JsonLd";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,7 +48,13 @@ export default function RootLayout({
       className={`${inter.variable} ${plusJakarta.variable} ${sora.variable} antialiased`}
     >
       <body className="flex flex-col">
-        <LenisProvider>{children}</LenisProvider>
+        <JsonLd schema={getOrganizationSchema()} />
+        <JsonLd schema={getLocalBusinessSchema()} />
+        <JsonLd schema={getWebsiteSchema()} />
+        <LenisProvider>
+          {children}
+          <CookieConsent />
+        </LenisProvider>
       </body>
     </html>
   );

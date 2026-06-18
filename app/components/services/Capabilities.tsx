@@ -16,8 +16,8 @@ function CapabilityCard({
 }) {
   return (
     <div
-      className={`capability-card flex flex-col p-6 sm:p-7 bg-white ${
-        featured ? "h-full min-h-[420px]" : "min-h-[280px]"
+      className={`capability-card flex flex-col p-5 sm:p-6 md:p-7 bg-white ${
+        featured ? "h-full md:min-h-[420px]" : "min-h-[240px] md:min-h-[280px]"
       }`}
       data-capability-card
     >
@@ -138,13 +138,13 @@ export default function Capabilities({ service }: CapabilitiesProps) {
           data-capability-grid
         >
           {/* Column 1 */}
-          <div className="grid grid-rows-1 sm:grid-rows-2 lg:grid-rows-2 divide-y divide-[#E5E5E5] lg:border-r border-[#E5E5E5]">
+          <div className="grid grid-cols-1 divide-y divide-[#E5E5E5] lg:border-r border-[#E5E5E5]">
             {c0 && <CapabilityCard cap={c0} />}
             {c1 && <CapabilityCard cap={c1} />}
           </div>
 
           {/* Column 2 */}
-          <div className="grid grid-rows-1 sm:grid-rows-2 lg:grid-rows-2 divide-y divide-[#E5E5E5] lg:border-r border-[#E5E5E5]">
+          <div className="grid grid-cols-1 divide-y divide-[#E5E5E5] lg:border-r border-[#E5E5E5]">
             {c2 && <CapabilityCard cap={c2} />}
             {c3 && <CapabilityCard cap={c3} />}
           </div>

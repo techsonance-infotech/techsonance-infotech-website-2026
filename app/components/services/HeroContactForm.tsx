@@ -152,9 +152,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
       });
       setTouched({});
       setRecaptchaChecked(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFormStatus("idle");
-      setErrorMessage(err.message || "An unexpected error occurred. Please try again.");
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setErrorMessage(msg);
     }
   };
 
@@ -338,7 +339,7 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
                 <span className="w-3.5 h-3.5 rounded-full border border-blue-500 border-t-transparent animate-spin" />
               )}
             </button>
-            <span className="text-xs font-medium text-neutral-700">I'm not a robot</span>
+            <span className="text-xs font-medium text-neutral-700">I&apos;m not a robot</span>
           </div>
           <div className="flex flex-col items-center">
             {/* Simple reCAPTCHA Mock Icon */}

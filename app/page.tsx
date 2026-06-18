@@ -8,6 +8,23 @@ import WhyChooseSection from "./components/home/WhyChooseSection";
 import TechnologiesSection from "./components/home/TechnologiesSection";
 import ScopingContactForm from "@/app/components/services/ScopingContactForm";
 import SiteFooter from "./components/home/SiteFooter";
+import { SEO_METADATA } from "@/lib/seo-aeo-geo-config";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: SEO_METADATA.home.title,
+  description: SEO_METADATA.home.description,
+  keywords: SEO_METADATA.home.keywords,
+  alternates: {
+    canonical: SEO_METADATA.home.canonical,
+  },
+  openGraph: {
+    title: SEO_METADATA.home.ogTitle,
+    description: SEO_METADATA.home.ogDescription,
+    url: SEO_METADATA.home.canonical,
+    images: [{ url: SEO_METADATA.home.ogImage }],
+  },
+};
 
 export default function Home() {
   return (

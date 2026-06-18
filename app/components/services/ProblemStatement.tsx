@@ -298,13 +298,13 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {content.cards.map((card, idx) => {
             const isHighlighted = idx === 1;
             return (
               <div
                 key={idx}
-                className={`bg-white rounded-3xl p-8 relative flex flex-col justify-between transition-all duration-300 ${isHighlighted
+                className={`bg-white rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 relative flex flex-col justify-between transition-all duration-300 ${isHighlighted
                   ? "border-2 border-[#22B6F6]/40 shadow-[0_10px_50px_rgba(34, 182, 246,0.06)] hover:shadow-[0_12px_55px_rgba(34, 182, 246,0.1)]"
                   : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(17, 85, 204,0.03)]"
                   }`}
@@ -316,7 +316,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
                       <EmojiOrLucideIcon icon={card.icon} className="w-5 h-5 text-[var(--accent-blue)]" />
                     </div>
                     <div className="flex items-center gap-2 relative">
-                      <span className="text-[52px] font-black text-slate-100 select-none leading-[0.8] tracking-tighter">
+                      <span className="text-[40px] sm:text-[52px] font-black text-slate-100 select-none leading-[0.8] tracking-tighter">
                         {card.number}
                       </span>
                       <span className="absolute right-0 -bottom-1 text-[8px] font-black uppercase text-[#EF4444] bg-[#EF4444]/10 rounded-full px-2.5 py-1 tracking-wider whitespace-nowrap">

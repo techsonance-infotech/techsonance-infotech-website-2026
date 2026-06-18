@@ -213,7 +213,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight mb-1.5">
                 Let&apos;s Build{" "}
-                <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">
+                <span className="text-[#1155CC]">
                   Something Together
                 </span>
               </h2>

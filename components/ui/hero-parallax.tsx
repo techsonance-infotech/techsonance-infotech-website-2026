@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import SafeImage from "@/app/components/SafeImage";
 
 export const HeroParallax = ({
   products,
@@ -155,7 +156,7 @@ export const ProductCard = ({
         href={product.link}
         className="block group-hover/product:shadow-2xl w-full h-full relative"
       >
-        <Image
+        <SafeImage
           src={product.thumbnail}
           height="600"
           width="600"

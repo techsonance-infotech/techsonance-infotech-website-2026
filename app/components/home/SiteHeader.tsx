@@ -11,7 +11,8 @@ export const navLinks = [
   { name: "Services", href: "/services" },
   { name: "Portfolio", href: "/portfolio" },
   { name: "About", href: "/about" },
-  { name: "Career", href: "#" },
+  { name: "Blog", href: "/blog" },
+  { name: "Career", href: "/careers" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -75,8 +76,8 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               INFOTECH LLP
               <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#DDE3EA]" />
             </span>
-            <span className="block text-[8.5px] font-bold font-sans uppercase tracking-[0.28em] text-[#374151] mt-1 text-center">
-              INNOVATE <span className="text-[#1155CC]">•</span> INTEGRATE <span className="text-[#1155CC]">•</span> ELEVATE
+            <span className="block text-[7.5px] font-extrabold font-sans uppercase tracking-[0.15em] text-[#374151] mt-1.5 text-center">
+              Where Innovation Finds Its Resonance
             </span>
           </span>
         </Link>
