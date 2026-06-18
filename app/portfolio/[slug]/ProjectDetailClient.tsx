@@ -261,7 +261,7 @@ function ProjectHero({ project }: { project: Project }) {
         <div
           className="absolute inset-0 opacity-[0.022]"
           style={{
-            backgroundImage: "linear-gradient(#0D47A1 1px, transparent 1px), linear-gradient(90deg, #0D47A1 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -315,7 +315,7 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.16 }}
-              className="text-lg text-[#008BD9] font-semibold italic"
+              className="text-lg text-[#22B6F6] font-semibold italic"
             >
               &ldquo;{project.tagline}&rdquo;
             </motion.p>
@@ -410,7 +410,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       )}
 
       {/* ── Challenges ────────────────────────────────────────────────────────── */}
-      <section className="bg-[#F8FBFF] py-20">
+      <section className="bg-[#FAFBFD] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealSection>
             <SectionLabel text="Challenges" color={project.accentColor} />
@@ -506,7 +506,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       </section>
 
       {/* ── Results ────────────────────────────────────────────────────────────── */}
-      <section className="bg-[#F8FBFF] py-20">
+      <section className="bg-[#FAFBFD] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealSection>
             <div className="text-center mb-12">
@@ -570,7 +570,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 rounded-xl bg-white text-[#0D47A1] font-bold text-sm hover:bg-gray-50 transition-colors shadow-xl"
+                className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-xl"
               >
                 Book Free Consultation
               </Link>

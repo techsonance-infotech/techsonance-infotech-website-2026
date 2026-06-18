@@ -15,7 +15,7 @@ export function MetricCard({
   label,
   suffix = "",
   prefix = "",
-  accentColor = "#0D47A1",
+  accentColor = "#1155CC",
   delay = 0,
 }: MetricCardProps) {
   const [displayValue, setDisplayValue] = useState("0");

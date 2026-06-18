@@ -57,19 +57,23 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
           <Image
             src="/images/logo-icon.png"
             alt="TechSonance logo"
-            width={40}
-            height={40}
-            className="h-10 w-10 object-contain"
+            width={56}
+            height={56}
+            className="h-14 w-14 object-contain"
             priority
           />
-          <span className="hidden sm:block">
-            <span className="block text-xl font-extrabold leading-tight tracking-[0.03em] text-[#0F172A]">
-              TECH<span className="bg-gradient-to-r from-[#0A1A2E] via-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
+          <span className="hidden sm:flex flex-col items-center">
+            <span className="block text-[22px] font-bold font-sora leading-none tracking-[0.04em]">
+              <span className="text-[#071A35]">TECH</span>
+              <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
             </span>
-            <span className="flex items-center gap-1.5 text-[8.5px] font-bold uppercase tracking-[0.24em] text-gray-500 mt-0.5">
-              <span className="h-[1.5px] w-2.5 bg-gray-300" />
+            <span className="w-full flex items-center gap-2 text-[10px] font-medium font-sans uppercase tracking-[0.24em] text-[#4B5563] mt-0.5">
+              <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#DDE3EA]" />
               INFOTECH LLP
-              <span className="h-[1.5px] w-2.5 bg-gray-300" />
+              <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#DDE3EA]" />
+            </span>
+            <span className="block text-[8.5px] font-bold font-sans uppercase tracking-[0.28em] text-[#374151] mt-1 text-center">
+              INNOVATE <span className="text-[#1155CC]">•</span> INTEGRATE <span className="text-[#1155CC]">•</span> ELEVATE
             </span>
           </span>
         </Link>
@@ -83,20 +87,20 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                 <div key={link.name} className="group relative py-6">
                   <Link
                     href={link.href}
-                    className="flex items-center gap-1 text-sm font-semibold text-gray-600 transition-colors hover:text-[#0D47A1]"
+                    className="flex items-center gap-1 text-sm font-semibold text-gray-600 transition-colors hover:text-[#1155CC]"
                   >
                     {link.name}
                     <Icon name="chevron" className="h-3.5 w-3.5 text-gray-400 transition-transform duration-300 group-hover:rotate-180" />
                   </Link>
 
                   {/* Mega-menu Submenu panel */}
-                  <div className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 w-[740px] bg-white border border-gray-100 rounded-[28px] p-6 shadow-[0_20px_50px_rgba(13,71,161,0.08)] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 z-50">
+                  <div className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 w-[740px] bg-white border border-gray-100 rounded-[28px] p-6 shadow-[0_20px_50px_rgba(17, 85, 204,0.08)] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 z-50">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                       {services.map((service) => (
                         <Link
                           key={service.slug}
                           href={`/services/${service.slug}`}
-                          className="flex items-start gap-4 p-3 rounded-2xl transition-all duration-300 hover:bg-[#F8FBFF] border border-transparent hover:border-blue-500/5 group/item"
+                          className="flex items-start gap-4 p-3 rounded-2xl transition-all duration-300 hover:bg-[#FAFBFD] border border-transparent hover:border-blue-500/5 group/item"
                         >
                           <div 
                             className="w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 transition-all duration-300 group-hover/item:scale-105"
@@ -109,7 +113,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                             <Icon name={service.icon as IconName} className="w-4.5 h-4.5" />
                           </div>
                           <div className="min-w-0">
-                            <h4 className="text-xs font-bold text-gray-900 group-hover/item:text-[#0D47A1] transition-colors leading-snug mb-0.5">
+                            <h4 className="text-xs font-bold text-gray-900 group-hover/item:text-[#1155CC] transition-colors leading-snug mb-0.5">
                               {service.title}
                             </h4>
                             <p className="text-[10px] text-gray-400 leading-normal line-clamp-1">
@@ -125,7 +129,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Growth Ecosystem</span>
                       <Link 
                         href="/services" 
-                        className="text-xs font-bold text-[#0D47A1] hover:underline inline-flex items-center gap-1"
+                        className="text-xs font-bold text-[#1155CC] hover:underline inline-flex items-center gap-1"
                       >
                         All Services
                         <Icon name="arrow" className="w-3.5 h-3.5" />
@@ -140,7 +144,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               <Link
                 key={link.name}
                 href={link.href}
-                className="flex items-center gap-1 text-sm font-semibold text-gray-600 transition-colors hover:text-[#0D47A1]"
+                className="flex items-center gap-1 text-sm font-semibold text-gray-600 transition-colors hover:text-[#1155CC]"
               >
                 {link.name}
                 {link.name === "Hire Developers" ? (
@@ -191,7 +195,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                   <div key={link.name} className="border-b border-gray-100/50 py-1">
                     <button
                       onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
-                      className="flex items-center justify-between text-sm font-bold text-gray-700 hover:text-[#0D47A1] transition-colors py-3 w-full"
+                      className="flex items-center justify-between text-sm font-bold text-gray-700 hover:text-[#1155CC] transition-colors py-3 w-full"
                     >
                       <span>{link.name}</span>
                       <Icon name="chevron" className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${
@@ -222,7 +226,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                             >
                               <Icon name={service.icon as IconName} className="w-4 h-4" />
                             </div>
-                            <span className="text-xs font-semibold text-gray-600 group-hover:text-[#0D47A1] transition-colors">
+                            <span className="text-xs font-semibold text-gray-600 group-hover:text-[#1155CC] transition-colors">
                               {service.title}
                             </span>
                           </Link>
@@ -238,7 +242,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between text-sm font-bold text-gray-700 hover:text-[#0D47A1] transition-colors py-3 border-b border-gray-100/50 last:border-0"
+                  className="flex items-center justify-between text-sm font-bold text-gray-700 hover:text-[#1155CC] transition-colors py-3 border-b border-gray-100/50 last:border-0"
                 >
                   <span>{link.name}</span>
                   <svg className="h-4 w-4 text-gray-350" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">

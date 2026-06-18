@@ -9,7 +9,7 @@ export const heroNodes = [
     icon: "code" as const,
     title: "Custom Software Development",
     className: "left-1/2 top-[8%] -translate-x-1/2",
-    color: "text-[#0D47A1] bg-[#EDF5FF]",
+    color: "text-[#1155CC] bg-[#EDF5FF]",
     animation: "floatOne",
   },
   {
@@ -42,11 +42,15 @@ export const heroNodes = [
   },
 ];
 
-export const trustItems = ["No Obligations", "Expert Guidance", "Quick Response"];
+export const trustItems = [
+  { text: "No Obligations", icon: "shield" as const },
+  { text: "Expert Guidance", icon: "handshake" as const },
+  { text: "Quick Response", icon: "speed" as const },
+];
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F8FBFF] flex items-center pt-20" style={{ minHeight: '100vh' }}>
+    <section className="relative overflow-hidden bg-[#FAFBFD] flex items-center pt-20" style={{ minHeight: '100vh' }}>
       <div className="absolute inset-0 pointer-events-none z-0 select-none">
         <Image
           src="/images/hero-background.png"
@@ -65,11 +69,13 @@ export default function HeroSection() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="flex flex-col gap-5 pr-0 lg:pr-10"
           >
-            <div className="inline-flex w-fit items-center gap-2 bg-[#E6EDF5] border border-[#0D47A1]/15 rounded-full px-4 py-1.5">
-              <Icon name="beaker" className="h-4 w-4 text-[#0D47A1]" />
-              <span className="text-xs font-bold text-[#0D47A1] tracking-wide uppercase">
-                AI & Custom Software Engineering Partner
-              </span>
+            <div className="flex flex-col gap-3">
+              <div className="inline-flex w-fit items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5">
+                <Icon name="beaker" className="h-4 w-4 text-[#1155CC]" />
+                <span className="text-xs font-bold text-[#1155CC] tracking-wide uppercase">
+                  AI & Custom Software Engineering Partner
+                </span>
+              </div>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.08] tracking-tight">
@@ -77,7 +83,7 @@ export default function HeroSection() {
               <br />
               Scale Faster.
               <br />
-              <span className="brand-gradient-text">Deliver Results.</span>
+              <span className="text-[#1155CC]">Deliver Results.</span>
             </h1>
 
             <p className="text-lg text-gray-600 max-w-lg leading-relaxed">
@@ -108,13 +114,13 @@ export default function HeroSection() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
               {trustItems.map((item) => (
                 <span
-                  key={item}
-                  className="flex items-center gap-2.5 text-sm text-gray-500 font-medium"
+                  key={item.text}
+                  className="flex items-center gap-2.5 text-sm text-gray-600 font-medium"
                 >
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-[#0D47A1] p-0.5 shrink-0">
-                    <Icon name="check" className="h-3 w-3" />
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1155CC]/5 text-[#1155CC] p-1.5 shrink-0">
+                    <Icon name={item.icon} className="h-3.5 w-3.5" />
                   </span>
-                  {item}
+                  {item.text}
                 </span>
               ))}
             </div>

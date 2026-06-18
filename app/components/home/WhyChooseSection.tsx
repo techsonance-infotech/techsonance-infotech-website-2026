@@ -37,7 +37,7 @@ export const whyItems: WhyItem[] = [
     layers: [
       { title: "Agentic Workflows", icon: "brain", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
       { title: "LLM Fine-Tuning", icon: "beaker", gradientClass: "from-[#A855F7] to-[#8B5CF6]" },
-      { title: "RAG Pipelines", icon: "database", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "RAG Pipelines", icon: "database", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Secure Guardrails", icon: "shield", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
     ]
   },
@@ -54,7 +54,7 @@ export const whyItems: WhyItem[] = [
     ],
     callout: "We combine business strategy, technology and AI to build solutions that create real impact - not just deliver features.",
     layers: [
-      { title: "Business Goals", icon: "trend", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "Business Goals", icon: "trend", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "User Needs", icon: "handshake", gradientClass: "from-[#A855F7] to-[#8B5CF6]" },
       { title: "Smart Strategy", icon: "lightbulb", gradientClass: "from-[#06B6D4] to-[#0891B2]" },
       { title: "Impact & Growth", icon: "bolt", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
@@ -74,7 +74,7 @@ export const whyItems: WhyItem[] = [
     callout: "Speed is nothing without direction. We iterate rapidly while maintaining a robust, enterprise-grade architecture.",
     layers: [
       { title: "Production Release", icon: "cloud", gradientClass: "from-[#06B6D4] to-[#0891B2]" },
-      { title: "Cloud-Ready Infra", icon: "dns", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "Cloud-Ready Infra", icon: "dns", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Rapid Iteration", icon: "speed", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
       { title: "Scalable Core", icon: "code", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
     ]
@@ -93,7 +93,7 @@ export const whyItems: WhyItem[] = [
     callout: "We don't hand off and walk away. We take full responsibility from initial discovery to production launch and daily optimization.",
     layers: [
       { title: "Continuous Ops", icon: "monitor", gradientClass: "from-[#10B981] to-[#059669]" },
-      { title: "Launch Discipline", icon: "check", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "Launch Discipline", icon: "check", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Quality Assurance", icon: "shield", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
       { title: "Discovery & Plan", icon: "beaker", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
     ]
@@ -113,7 +113,7 @@ export const whyItems: WhyItem[] = [
     layers: [
       { title: "High Availability", icon: "dns", gradientClass: "from-[#F59E0B] to-[#D97706]" },
       { title: "Microservices", icon: "box", gradientClass: "from-[#EF4444] to-[#DC2626]" },
-      { title: "API Gateway", icon: "schema", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "API Gateway", icon: "schema", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Fault Tolerance", icon: "shield", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
     ]
   },
@@ -132,7 +132,7 @@ export const whyItems: WhyItem[] = [
     layers: [
       { title: "Business Scaling", icon: "trend", gradientClass: "from-[#EC4899] to-[#D946EF]" },
       { title: "Feedback Loop", icon: "handshake", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
-      { title: "Dedicated Support", icon: "monitor", gradientClass: "from-[#0D47A1] to-[#008BD9]" },
+      { title: "Dedicated Support", icon: "monitor", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Shared Vision", icon: "lightbulb", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
     ]
   }
@@ -158,7 +158,7 @@ function AIBrainFlowVisual() {
           cx={100}
           cy={100}
           r="3"
-          fill="#0D47A1"
+          fill="#1155CC"
           animate={{ cx: [100, 55, 100], cy: [100, 140, 100] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
@@ -175,7 +175,7 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-14 h-14 rounded-full bg-gradient-to-br from-[#0D47A1] to-[#8B5CF6] text-white flex items-center justify-center shadow-lg shadow-blue-800/20 z-20"
+        className="absolute w-14 h-14 rounded-full bg-gradient-to-br from-[#1155CC] to-[#8B5CF6] text-white flex items-center justify-center shadow-lg shadow-blue-800/20 z-20"
       >
         <Icon name="brain" className="h-7 w-7 text-white" />
       </motion.div>
@@ -183,7 +183,7 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ y: [0, -4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[12%] w-24 bg-[#F8FBFF] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
+        className="absolute top-[12%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="beaker" className="h-3.5 w-3.5 text-[#8B5CF6] shrink-0" />
         <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Agentic</span>
@@ -192,16 +192,16 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[12%] left-[8%] w-24 bg-[#F8FBFF] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-2 shadow-sm z-10 text-center justify-center"
+        className="absolute bottom-[12%] left-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-2 shadow-sm z-10 text-center justify-center"
       >
-        <Icon name="database" className="h-3.5 w-3.5 text-[#0D47A1] shrink-0" />
+        <Icon name="database" className="h-3.5 w-3.5 text-[#1155CC] shrink-0" />
         <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">RAG Ops</span>
       </motion.div>
 
       <motion.div
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[12%] right-[8%] w-24 bg-[#F8FBFF] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
+        className="absolute bottom-[12%] right-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="shield" className="h-3.5 w-3.5 text-[#06B6D4] shrink-0" />
         <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Guardrail</span>
@@ -219,7 +219,7 @@ function Isometric3DStackVisual() {
   ];
 
   const layers = [
-    { title: "Business Goals", icon: "trend" as const, gradient: "bg-gradient-to-r from-[#0D47A1] to-[#008BD9] text-white border-white/20" },
+    { title: "Business Goals", icon: "trend" as const, gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20" },
     { title: "User Needs", icon: "handshake" as const, gradient: "bg-gradient-to-r from-[#8B5CF6] to-[#A855F7] text-white border-white/20" },
     { title: "Smart Strategy", icon: "lightbulb" as const, gradient: "bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white border-white/20" },
     { title: "Impact & Growth", icon: "bolt" as const, gradient: "bg-white text-gray-800 border-gray-100" }
@@ -233,7 +233,7 @@ function Isometric3DStackVisual() {
       <svg className="absolute inset-0 h-full w-full pointer-events-none opacity-20" viewBox="0 0 200 320" fill="none">
         <path
           d="M 30,240 C 5,180 5,100 40,70 C 60,50 100,50 110,80"
-          stroke="#0D47A1"
+          stroke="#1155CC"
           strokeWidth="1.5"
           strokeDasharray="3 3"
         />
@@ -272,7 +272,7 @@ function Isometric3DStackVisual() {
               name={layer.icon}
               className={[
                 "h-4 w-4 mb-1",
-                isBottom ? "text-[#0D47A1]" : "text-white"
+                isBottom ? "text-[#1155CC]" : "text-white"
               ].join(" ")}
             />
             <span
@@ -300,7 +300,7 @@ function PipelineFlowVisual() {
           cx={100}
           cy={40}
           r="3"
-          fill="#0D47A1"
+          fill="#1155CC"
           animate={{ cy: [40, 220, 40] }}
           transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
         />
@@ -309,9 +309,9 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[8%] left-1/2 -translate-x-1/2 bg-[#F8FBFF] border border-blue-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute top-[8%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-blue-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
       >
-        <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#0D47A1] flex items-center justify-center shrink-0">
+        <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0">
           <Icon name="speed" className="h-3 w-3" />
         </span>
         <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Rapid Dev</span>
@@ -320,7 +320,7 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, 3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute top-[43%] left-1/2 -translate-x-1/2 bg-[#F8FBFF] border border-purple-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute top-[43%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-purple-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
       >
         <span className="w-5 h-5 rounded-lg bg-purple-50 text-[#8B5CF6] flex items-center justify-center shrink-0">
           <Icon name="shield" className="h-3 w-3" />
@@ -331,7 +331,7 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[8%] left-1/2 -translate-x-1/2 bg-[#F8FBFF] border border-cyan-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute bottom-[8%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-cyan-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
       >
         <span className="w-5 h-5 rounded-lg bg-cyan-50 text-[#06B6D4] flex items-center justify-center shrink-0">
           <Icon name="cloud" className="h-3 w-3" />
@@ -351,7 +351,7 @@ function InfiniteLifecycleVisual() {
           cx={148}
           cy={130}
           r="3"
-          fill="#0D47A1"
+          fill="#1155CC"
           animate={{
             cx: [100 + 48, 100, 100 - 48, 100, 100 + 48],
             cy: [130, 130 + 48, 130, 130 - 48, 130],
@@ -363,9 +363,9 @@ function InfiniteLifecycleVisual() {
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-12 h-12 rounded-full bg-[#E6EDF5] border border-[#0D47A1]/10 flex flex-col items-center justify-center shadow-sm z-20"
+        className="absolute w-12 h-12 rounded-full bg-[#F1F5F9] border border-[#1155CC]/10 flex flex-col items-center justify-center shadow-sm z-20"
       >
-        <Icon name="shield" className="h-5 w-5 text-[#0D47A1]" />
+        <Icon name="shield" className="h-5 w-5 text-[#1155CC]" />
       </motion.div>
 
       <div className="absolute top-[12%] left-1/2 -translate-x-1/2 text-center">
@@ -377,7 +377,7 @@ function InfiniteLifecycleVisual() {
 
       <div className="absolute right-[8%] top-[50%] -translate-y-1/2 text-center">
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
-          <Icon name="cloud" className="h-4 w-4 text-[#0D47A1]" />
+          <Icon name="cloud" className="h-4 w-4 text-[#1155CC]" />
         </div>
         <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-500">Release</span>
       </div>
@@ -407,7 +407,7 @@ function ScalableGridVisual() {
   ];
 
   const nodes = [
-    { title: "Gateway", icon: "dns" as const, gradient: "bg-gradient-to-r from-[#0D47A1] to-[#008BD9] text-white border-white/20" },
+    { title: "Gateway", icon: "dns" as const, gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20" },
     { title: "Cluster node", icon: "box" as const, gradient: "bg-[#8B5CF6] text-white border-purple-400/20" },
     { title: "Datastore", icon: "schema" as const, gradient: "bg-white text-gray-800 border-gray-100" }
   ];
@@ -446,7 +446,7 @@ function ScalableGridVisual() {
               name={node.icon}
               className={[
                 "h-4 w-4 shrink-0",
-                isBottom ? "text-[#0D47A1]" : "text-white"
+                isBottom ? "text-[#1155CC]" : "text-white"
               ].join(" ")}
             />
             <span
@@ -470,12 +470,12 @@ function CollaborationRingsVisual() {
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
           <linearGradient id="grad-left" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#0D47A1" />
+            <stop offset="0%" stopColor="#1155CC" />
             <stop offset="100%" stopColor="#8B5CF6" />
           </linearGradient>
           <linearGradient id="grad-right" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#8B5CF6" />
-            <stop offset="100%" stopColor="#0D47A1" />
+            <stop offset="100%" stopColor="#1155CC" />
           </linearGradient>
         </defs>
 
@@ -484,19 +484,19 @@ function CollaborationRingsVisual() {
         <path d="M 75 45 C 75 60, 65 62, 50 62" fill="none" stroke="url(#grad-right)" strokeWidth="0.5" />
       </svg>
 
-      <div className="absolute left-[25%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#0D47A1] z-0" />
+      <div className="absolute left-[25%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
       <div className="absolute left-[75%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
       
-      <div className="absolute left-[25%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#0D47A1] z-0" />
+      <div className="absolute left-[25%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
       <div className="absolute left-[75%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
 
       <div className="absolute left-[50%] top-[62%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#3B82F6] z-0" />
 
       <div className="absolute left-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-blue-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F5F8FC] border border-blue-100 flex items-center justify-center mb-2.5 shadow-inner">
-           <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#0D47A1]" />
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F1F5F9] border border-blue-100 flex items-center justify-center mb-2.5 shadow-inner">
+           <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
         </div>
-        <h4 className="text-[12px] sm:text-[13px] font-bold text-[#0D47A1] mb-1">Your Team</h4>
+        <h4 className="text-[12px] sm:text-[13px] font-bold text-[#1155CC] mb-1">Your Team</h4>
         <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">Your goals, your vision, your users</p>
       </div>
 
@@ -513,21 +513,21 @@ function CollaborationRingsVisual() {
            <motion.div
              animate={{ scale: [1, 1.4], opacity: [0.15, 0] }}
              transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-             className="absolute inset-[-6px] rounded-full bg-[#0D47A1]"
+             className="absolute inset-[-6px] rounded-full bg-[#1155CC]"
            />
            <motion.div
              animate={{ scale: [1, 1.2], opacity: [0.3, 0] }}
              transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
              className="absolute inset-[-2px] rounded-full bg-[#8B5CF6]"
            />
-           <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(13,71,161,0.1)] border border-blue-100 flex items-center justify-center z-10">
-              <Icon name="handshake" className="h-5 w-5 sm:h-6 sm:w-6 text-[#0D47A1]" />
+           <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(17, 85, 204,0.1)] border border-blue-100 flex items-center justify-center z-10">
+              <Icon name="handshake" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
            </div>
          </div>
          
          <div className="mt-4 sm:mt-5 flex flex-col items-center">
             <div className="bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-blue-50 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-1.5 relative z-20">
-              <span className="text-[10px] sm:text-[11px] font-bold text-[#0D47A1] whitespace-nowrap">Shared Success</span>
+              <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">Shared Success</span>
             </div>
             <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">Long-term impact<br/>together</span>
          </div>
@@ -560,13 +560,13 @@ export default function WhyChooseSection() {
   const active = whyItems[activeIndex];
 
   return (
-    <section className="relative overflow-hidden bg-[#F8FBFF] py-20">
-      <div className="pointer-events-none absolute -right-96 top-0 h-[760px] w-[760px] rounded-full bg-[#E6EDF5] blur-3xl opacity-75" />
+    <section className="relative overflow-hidden bg-[#FAFBFD] py-20">
+      <div className="pointer-events-none absolute -right-96 top-0 h-[760px] w-[760px] rounded-full bg-[#F1F5F9] blur-3xl opacity-75" />
       <div className="pointer-events-none absolute -bottom-80 -left-80 h-[680px] w-[680px] rounded-full bg-[#EEF3FF] blur-3xl opacity-75" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#E6EDF5] border border-[#0D47A1]/15 rounded-full px-4 py-1.5 text-xs font-bold text-[#0D47A1] tracking-wide uppercase">
+          <div className="inline-flex items-center gap-1.5 bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5 text-xs font-bold text-[#1155CC] tracking-wide uppercase">
             <Icon name="trend" className="h-3.5 w-3.5" />
             Why Choose Us
           </div>
@@ -604,15 +604,15 @@ export default function WhyChooseSection() {
                   className="w-full flex items-center justify-between p-5 text-left"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <span className="text-xs font-mono font-bold text-[#0D47A1] shrink-0">
+                    <span className="text-xs font-mono font-bold text-[#1155CC] shrink-0">
                       {item.number}
                     </span>
                     <span
                       className={[
                         "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-300",
                         isOpen
-                          ? "bg-[#0D47A1] text-white shadow-sm"
-                          : "bg-blue-50 text-[#0D47A1]",
+                          ? "bg-[#1155CC] text-white shadow-sm"
+                          : "bg-blue-50 text-[#1155CC]",
                       ].join(" ")}
                     >
                       <Icon name={item.icon} className="h-4.5 w-4.5" />
@@ -623,7 +623,7 @@ export default function WhyChooseSection() {
                   </div>
                   <span
                     className={[
-                      "text-[#0D47A1] transition-transform duration-300",
+                      "text-[#1155CC] transition-transform duration-300",
                       isOpen ? "rotate-180" : "",
                     ].join(" ")}
                   >
@@ -647,7 +647,7 @@ export default function WhyChooseSection() {
                         <ul className="divide-y divide-gray-100 space-y-0">
                           {item.bullets.map((bullet) => (
                             <li key={bullet} className="flex items-start gap-2.5 text-xs text-gray-700 font-medium py-2.5 first:pt-0 last:pb-0">
-                              <span className="w-4.5 h-4.5 rounded-full border border-blue-100 bg-blue-50/50 text-[#0D47A1] flex items-center justify-center shrink-0 p-0.5 mt-0.5">
+                              <span className="w-4.5 h-4.5 rounded-full border border-blue-100 bg-blue-50/50 text-[#1155CC] flex items-center justify-center shrink-0 p-0.5 mt-0.5">
                                 <Icon name="check" className="h-2.5 w-2.5" />
                               </span>
                               <span className="leading-relaxed">{bullet}</span>
@@ -655,8 +655,8 @@ export default function WhyChooseSection() {
                           ))}
                         </ul>
 
-                        <div className="flex w-full items-center gap-3 rounded-xl bg-[#F4F9FF] border border-blue-100/50 p-3.5 text-left mt-4 shadow-[0_4px_12px_rgba(13,71,161,0.01)]">
-                          <span className="text-2xl font-serif text-[#0D47A1] font-black leading-none select-none mt-1">&ldquo;</span>
+                        <div className="flex w-full items-center gap-3 rounded-xl bg-[#F4F9FF] border border-blue-100/50 p-3.5 text-left mt-4 shadow-[0_4px_12px_rgba(17, 85, 204,0.01)]">
+                          <span className="text-2xl font-serif text-[#1155CC] font-black leading-none select-none mt-1">&ldquo;</span>
                           <div className="w-[1.2px] h-6 bg-blue-200/50 shrink-0" />
                           <p className="text-xs italic font-semibold text-gray-600 leading-normal">
                             {item.callout}
@@ -664,7 +664,7 @@ export default function WhyChooseSection() {
                         </div>
 
                         <div className="relative mt-4 w-full h-[280px] flex items-center justify-center bg-gradient-to-br from-blue-50/10 via-indigo-50/5 to-transparent rounded-2xl p-3">
-                          <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(#0D47A1_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none rounded-2xl" />
+                          <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none rounded-2xl" />
 
                           <div className="relative w-full h-full bg-white rounded-xl border border-gray-100 shadow-md p-3 flex items-center justify-center overflow-hidden z-10">
                             <WhyChooseVisualizer index={index} />
@@ -708,18 +708,18 @@ function WhyChooseNav({
               className={[
                 "group relative flex min-w-[280px] snap-start items-center gap-4 rounded-2xl border p-4 text-left transition-all duration-300 ease-out sm:min-w-[320px] lg:min-w-0 shadow-sm",
                 active
-                  ? "border-[#0D47A1] bg-white shadow-lg shadow-blue-800/[0.05]"
+                  ? "border-[#1155CC] bg-white shadow-lg shadow-blue-800/[0.05]"
                   : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md",
               ].join(" ")}
             >
               <div className="absolute left-[-24px] -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none lg:flex hidden z-10">
                 {active ? (
                   <div className="relative flex items-center justify-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#0D47A1] border-2 border-white shadow-sm" />
-                    <div className="absolute left-[6px] h-[1.5px] w-5 bg-[#0D47A1]" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-[#1155CC] border-2 border-white shadow-sm" />
+                    <div className="absolute left-[6px] h-[1.5px] w-5 bg-[#1155CC]" />
                   </div>
                 ) : (
-                  <div className="h-2 w-2 rounded-full border border-blue-400 bg-white shadow-sm transition-colors duration-200 group-hover:border-[#0D47A1]" />
+                  <div className="h-2 w-2 rounded-full border border-blue-400 bg-white shadow-sm transition-colors duration-200 group-hover:border-[#1155CC]" />
                 )}
               </div>
 
@@ -727,8 +727,8 @@ function WhyChooseNav({
                 className={[
                   "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300",
                   active
-                    ? "bg-[#0D47A1] text-white shadow-md shadow-blue-800/10"
-                    : "bg-blue-50 text-[#0D47A1] group-hover:bg-[#0D47A1] group-hover:text-white group-hover:shadow-md",
+                    ? "bg-[#1155CC] text-white shadow-md shadow-blue-800/10"
+                    : "bg-blue-50 text-[#1155CC] group-hover:bg-[#1155CC] group-hover:text-white group-hover:shadow-md",
                 ].join(" ")}
               >
                 <Icon name={item.icon} className="h-5 w-5" />
@@ -749,7 +749,7 @@ function WhyChooseNav({
               <span
                 className={[
                   "transition-all duration-300 group-hover:translate-x-1 shrink-0",
-                  active ? "text-[#0D47A1]" : "text-gray-300 group-hover:text-[#0D47A1]",
+                  active ? "text-[#1155CC]" : "text-gray-300 group-hover:text-[#1155CC]",
                 ].join(" ")}
               >
                 <Icon name="arrow" className="h-4 w-4" />
@@ -779,10 +779,10 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
         >
           <div className="w-full flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pb-5 border-b border-gray-100">
             <div className="flex items-center gap-3 shrink-0">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0D47A1] to-[#008BD9] flex items-center justify-center text-white shadow-md shadow-blue-800/20">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#1155CC] to-[#22B6F6] flex items-center justify-center text-white shadow-md shadow-blue-800/20">
                 <Icon name={item.icon} className="h-5 w-5" />
               </div>
-              <span className="text-xs font-black text-[#0D47A1] bg-[#E6EDF5] border border-[#0D47A1]/10 rounded-lg px-3 py-1 font-mono tracking-wider">
+              <span className="text-xs font-black text-[#1155CC] bg-[#F1F5F9] border border-[#1155CC]/10 rounded-lg px-3 py-1 font-mono tracking-wider">
                 {item.number}
               </span>
             </div>
@@ -791,7 +791,7 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
             </h3>
           </div>
 
-          <p className="text-[15px] sm:text-[16px] text-[#4B5563] leading-relaxed border-l-2 border-[#0D47A1]/25 pl-4">
+          <p className="text-[15px] sm:text-[16px] text-[#4B5563] leading-relaxed border-l-2 border-[#1155CC]/25 pl-4">
             {item.body}
           </p>
 
@@ -800,7 +800,7 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
               <ul className="flex flex-col gap-2.5">
                 {item.bullets.map((bullet) => (
                   <li key={bullet} className="flex items-start gap-3 text-[13.5px] text-[#374151] font-medium bg-gray-50/60 rounded-xl px-3.5 py-2.5 border border-gray-100/80 hover:bg-white hover:border-blue-100 hover:shadow-sm transition-all">
-                    <span className="w-5 h-5 rounded-full bg-[#E6EDF5] text-[#0D47A1] flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="w-5 h-5 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
                       <Icon name="check" className="h-3 w-3" />
                     </span>
                     <span className="leading-relaxed">{bullet}</span>
@@ -809,7 +809,7 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
               </ul>
 
               <div className="flex items-start gap-3 rounded-xl bg-gradient-to-r from-blue-50/70 to-transparent border border-blue-100/30 px-4 py-3">
-                <span className="text-xl font-serif text-[#0D47A1] font-black leading-none select-none opacity-60 mt-0.5">&ldquo;</span>
+                <span className="text-xl font-serif text-[#1155CC] font-black leading-none select-none opacity-60 mt-0.5">&ldquo;</span>
                 <p className="text-[12.5px] italic font-medium text-gray-600 leading-relaxed">
                   {item.callout}
                 </p>
@@ -817,7 +817,7 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
             </div>
 
             <div className="relative w-full h-[280px] sm:h-[320px] flex items-center justify-center select-none bg-[#F8FAFE] rounded-2xl p-3 border border-gray-100/80">
-              <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(#0D47A1_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none rounded-2xl" />
+              <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none rounded-2xl" />
               <div className="relative w-full h-full bg-white rounded-xl border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex items-center justify-center overflow-hidden z-10">
                 <WhyChooseVisualizer index={index} />
               </div>

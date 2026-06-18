@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="min-h-screen overflow-x-clip bg-[#F8FBFF] text-[#0F172A]">
+      <main className="min-h-screen overflow-x-clip bg-[#FAFBFD] text-[#0F172A]">
       <HeroSection />
       <VisionSection />
       <ServicesSection />
@@ -21,7 +21,7 @@ export default function Home() {
       <WhyChooseSection />
       <Testimonials />
       <TechnologiesSection />
-      <section id="project-request" className="py-20 bg-[#F8FBFF]">
+      <section id="project-request" className="py-20 bg-[#FAFBFD]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScopingContactForm />
         </div>

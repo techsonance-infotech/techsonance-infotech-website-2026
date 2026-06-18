@@ -82,7 +82,7 @@ export default function VisionSection() {
         <div className="absolute inset-0 border-2 border-dashed border-[#5d60eb]/30 rounded-full animate-[spin_60s_linear_infinite_reverse]">
           {/* Floating Icon 4: TypeScript */}
           <div className="absolute bottom-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
-            <svg className="w-5 h-5 text-[#0D47A1]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-5 h-5 text-[#1155CC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
               <path d="M7 10h4" />
               <path d="M9 10v6" />
@@ -107,7 +107,7 @@ export default function VisionSection() {
 
           {/* Left Column */}
           <div className="lg:w-1/2 space-y-6 relative z-10">
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#0D47A1] via-[#1565C0] to-[#5d60eb] text-white shadow-lg shadow-blue-800/25">
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#1155CC] via-[#1155CC] to-[#5d60eb] text-white shadow-lg shadow-blue-800/25">
               <div className="absolute inset-0.5 rounded-[14px] bg-white opacity-10" />
               <svg className="h-7 w-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" strokeDasharray="3 3" />
@@ -117,7 +117,7 @@ export default function VisionSection() {
             <h2 className="text-4xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
               Your Vision.
               <br />
-              <span className="text-[#0D47A1]">
+              <span className="text-[#1155CC]">
                 Our Engineering.
                 <br />
                 Real Results.
@@ -136,9 +136,9 @@ export default function VisionSection() {
                 key={benefit.title}
                 whileHover={{ x: 6 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_20px_rgba(13,71,161,0.08)] hover:border-[#0D47A1]/15 transition-all group"
+                className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_20px_rgba(17, 85, 204,0.08)] hover:border-[#1155CC]/15 transition-all group"
               >
-                <span className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#0D47A1] shrink-0">
+                <span className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#1155CC] shrink-0">
                   <Icon name={benefit.icon} className="h-5 w-5" />
                 </span>
                 <div>

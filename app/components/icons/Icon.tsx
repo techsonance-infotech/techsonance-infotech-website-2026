@@ -8,12 +8,15 @@ export type IconName =
   | "bolt"
   | "box"
   | "brain"
+  | "cart"
   | "check"
   | "chevron"
   | "cloud"
   | "code"
+  | "cpu"
   | "database"
   | "dns"
+  | "cog"
   | "handshake"
   | "image"
   | "lightbulb"
@@ -61,6 +64,13 @@ export const iconPaths: Record<IconName, React.ReactNode> = {
       <path d="M15 13h3" />
     </>
   ),
+  cart: (
+    <>
+      <circle cx="8" cy="21" r="1" />
+      <circle cx="19" cy="21" r="1" />
+      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+    </>
+  ),
   check: <path d="m5 12 4 4L19 6" />,
   chevron: <path d="m6 9 6 6 6-6" />,
   cloud: <path d="M17.5 19H7a4 4 0 1 1 .8-7.9 5.5 5.5 0 0 1 10.5 1.9 3 3 0 0 1-.8 6Z" />,
@@ -69,6 +79,13 @@ export const iconPaths: Record<IconName, React.ReactNode> = {
       <path d="m8 9-4 3 4 3" />
       <path d="m16 9 4 3-4 3" />
       <path d="m14 4-4 16" />
+    </>
+  ),
+  cpu: (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <rect x="9" y="9" width="6" height="6" rx="1" />
+      <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3" />
     </>
   ),
   database: (
@@ -84,6 +101,12 @@ export const iconPaths: Record<IconName, React.ReactNode> = {
       <rect x="4" y="14" width="16" height="6" rx="1.5" />
       <path d="M8 7h.01" />
       <path d="M8 17h.01" />
+    </>
+  ),
+  cog: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </>
   ),
   handshake: (
@@ -165,7 +188,7 @@ export function Icon({ name, className = "", style }: { name: IconName; classNam
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth="2.2"
+      strokeWidth="1.6"
       viewBox="0 0 24 24"
     >
       {iconPaths[name]}

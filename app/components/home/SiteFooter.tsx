@@ -12,8 +12,8 @@ export default function SiteFooter() {
   return (
     <footer className="w-full bg-[#030712] text-slate-400 border-t border-slate-900 pt-20 pb-12 relative overflow-hidden">
       {/* Ambient glowing gradients */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-tr from-[#0D47A1]/5 to-transparent rounded-full blur-3xl opacity-40 pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-[#008BD9]/5 to-transparent rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-tr from-[#1155CC]/5 to-transparent rounded-full blur-3xl opacity-40 pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-[#22B6F6]/5 to-transparent rounded-full blur-3xl opacity-30 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-900">
@@ -22,21 +22,25 @@ export default function SiteFooter() {
           <div className="lg:col-span-4 flex flex-col justify-between">
             <div>
               <Link href="/" className="flex items-center gap-3 mb-6 self-start group">
-                <Image
+                 <Image
                   src="/images/logo-icon.png"
                   alt="TechSonance logo"
-                  width={38}
-                  height={38}
-                  className="h-9.5 w-9.5 object-contain transition-transform duration-300 group-hover:scale-105"
+                  width={56}
+                  height={56}
+                  className="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-105"
                 />
-                <div>
-                  <span className="block text-lg font-extrabold leading-tight tracking-[0.03em] text-white">
-                    TECH<span className="bg-gradient-to-r from-[#0A1A2E] via-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
+                <div className="flex flex-col items-center">
+                  <span className="block text-[22px] font-bold font-sora leading-none tracking-[0.04em]">
+                    <span className="text-white">TECH</span>
+                    <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
                   </span>
-                  <span className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-[0.24em] text-slate-500 mt-0.5">
-                    <span className="h-[1px] w-2 bg-slate-700" />
+                  <span className="w-full flex items-center gap-2 text-[10px] font-medium font-sans uppercase tracking-[0.25em] text-[#94A3B8] mt-0.5">
+                    <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#475569]" />
                     INFOTECH LLP
-                    <span className="h-[1px] w-2 bg-slate-700" />
+                    <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#475569]" />
+                  </span>
+                  <span className="block text-[8.5px] font-bold font-sans uppercase tracking-[0.28em] text-slate-400 mt-1 text-center">
+                    INNOVATE <span className="text-[#22B6F6] font-bold">•</span> INTEGRATE <span className="text-[#22B6F6] font-bold">•</span> ELEVATE
                   </span>
                 </div>
               </Link>
@@ -95,7 +99,7 @@ export default function SiteFooter() {
                 <li key={service.slug}>
                   <Link
                     href={`/services/${service.slug}`}
-                    className="text-slate-400 hover:text-[#008BD9] transition-colors hover:translate-x-0.5 inline-block"
+                    className="text-slate-400 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
                   >
                     {service.shortTitle || service.title}
                   </Link>
@@ -111,17 +115,17 @@ export default function SiteFooter() {
             </h3>
             <ul className="space-y-3.5 text-xs">
               <li>
-                <Link href="/services" className="text-slate-400 hover:text-[#008BD9] transition-colors">
+                <Link href="/services" className="text-slate-400 hover:text-[#22B6F6] transition-colors">
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link href="/portfolio" className="text-slate-400 hover:text-[#008BD9] transition-colors">
+                <Link href="/portfolio" className="text-slate-400 hover:text-[#22B6F6] transition-colors">
                   Case Studies
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-slate-400 hover:text-[#008BD9] transition-colors">
+                <Link href="/about" className="text-slate-400 hover:text-[#22B6F6] transition-colors">
                   About the Agency
                 </Link>
               </li>
@@ -130,13 +134,13 @@ export default function SiteFooter() {
                   href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-400 hover:text-[#008BD9] transition-colors"
+                  className="text-slate-400 hover:text-[#22B6F6] transition-colors"
                 >
                   Book Scoping Call
                 </a>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-[#008BD9] transition-colors">
+                <a href="#" className="text-slate-400 hover:text-[#22B6F6] transition-colors">
                   Careers (We're Hiring)
                 </a>
               </li>

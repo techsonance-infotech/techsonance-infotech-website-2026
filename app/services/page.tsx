@@ -174,12 +174,12 @@ export default function ServicesOverviewPage() {
   ];
 
   return (
-    <main className="bg-[#F8FBFF] min-h-screen relative overflow-x-clip">
+    <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip">
       
       {/* Hero Parallax Section */}
       <HeroParallax products={serviceProducts} />
 
-      <div className="relative z-20 bg-[#F8FBFF] pt-8 pb-24">
+      <div className="relative z-20 bg-[#FAFBFD] pt-8 pb-24">
         {/* Ambient background blur blobs */}
         <div className="absolute top-0 right-0 w-[650px] h-[650px] bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-3xl opacity-60 -translate-y-1/3 pointer-events-none" />
         <div className="absolute top-[35%] left-0 w-[550px] h-[550px] bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl opacity-60 -translate-x-1/4 pointer-events-none" />
@@ -206,7 +206,7 @@ export default function ServicesOverviewPage() {
                     el.scrollIntoView({ behavior: "smooth", block: "start" });
                   }
                 }}
-                className="bg-white border border-gray-100 hover:border-slate-200/80 rounded-[24px] p-6 shadow-[0_8px_30px_rgba(13,71,161,0.01)] hover:shadow-[0_16px_45px_rgba(13,71,161,0.04)] transition-all duration-300 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
+                className="bg-white border border-gray-100 hover:border-slate-200/80 rounded-[24px] p-6 shadow-[0_8px_30px_rgba(17, 85, 204,0.01)] hover:shadow-[0_16px_45px_rgba(17, 85, 204,0.04)] transition-all duration-300 cursor-pointer flex flex-col justify-between group relative overflow-hidden"
               >
                 {/* Top decorative line showing dynamic brand color on hover */}
                 <div 
@@ -232,7 +232,7 @@ export default function ServicesOverviewPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-base font-extrabold text-gray-900 group-hover:text-[#0D47A1] transition-colors mb-2">
+                  <h3 className="text-base font-extrabold text-gray-900 group-hover:text-[#1155CC] transition-colors mb-2">
                     {service.shortTitle || service.title}
                   </h3>
                   <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">
@@ -240,9 +240,9 @@ export default function ServicesOverviewPage() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-gray-400 group-hover:text-[#0D47A1] transition-all">
+                <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-gray-400 group-hover:text-[#1155CC] transition-all">
                   <span>Explore Capabilities</span>
-                  <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center text-gray-400 group-hover:bg-[#0D47A1] group-hover:text-white transition-all transform group-hover:translate-x-0.5">
+                  <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center text-gray-400 group-hover:bg-[#1155CC] group-hover:text-white transition-all transform group-hover:translate-x-0.5">
                     <Icon name="arrow" className="w-3 h-3" />
                   </div>
                 </div>
@@ -298,14 +298,14 @@ export default function ServicesOverviewPage() {
                           onClick={() => updateSubIndex(index, subIdx)}
                           className={`relative w-full text-left py-3.5 px-4.5 rounded-[22px] transition-all duration-300 flex items-start gap-4 cursor-pointer overflow-hidden border ${
                             isActive
-                              ? "bg-white shadow-[0_12px_30px_rgba(13,71,161,0.06)] border-slate-100"
+                              ? "bg-white shadow-[0_12px_30px_rgba(17, 85, 204,0.06)] border-slate-100"
                               : "bg-transparent border-transparent hover:bg-slate-50"
                           }`}
                         >
                           {isActive && (
                             <motion.div
                               layoutId={`active-accent-bar-${index}`}
-                              className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r bg-[#0D47A1]"
+                              className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r bg-[#1155CC]"
                               transition={{ type: "spring", stiffness: 380, damping: 30 }}
                             />
                           )}
@@ -313,7 +313,7 @@ export default function ServicesOverviewPage() {
                           {/* Number Indicator */}
                           <span
                             className={`text-xs font-mono font-bold leading-none mt-0.5 ${
-                              isActive ? "text-[#0D47A1]" : "text-gray-400"
+                              isActive ? "text-[#1155CC]" : "text-gray-400"
                             }`}
                           >
                             0{subIdx + 1}
@@ -341,7 +341,7 @@ export default function ServicesOverviewPage() {
                           <div
                             className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${
                               isActive
-                                ? "bg-[#0D47A1] text-white"
+                                ? "bg-[#1155CC] text-white"
                                 : "bg-transparent text-gray-400"
                             }`}
                           >
@@ -356,10 +356,10 @@ export default function ServicesOverviewPage() {
                   <div className="flex items-center gap-4">
                     <Link
                       href={`/services/${service.slug}`}
-                      className="inline-flex items-center gap-2 text-xs font-extrabold text-gray-800 hover:text-[#008BD9] transition-colors uppercase tracking-wider group cursor-pointer"
+                      className="inline-flex items-center gap-2 text-xs font-extrabold text-gray-800 hover:text-[#22B6F6] transition-colors uppercase tracking-wider group cursor-pointer"
                     >
                       Deep Dive Into This Service
-                      <div className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center transition-all group-hover:bg-[#0D47A1] group-hover:border-[#0D47A1] group-hover:text-white">
+                      <div className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center transition-all group-hover:bg-[#1155CC] group-hover:border-[#1155CC] group-hover:text-white">
                         <Icon name="arrow" className="w-3 h-3" />
                       </div>
                     </Link>
@@ -403,9 +403,9 @@ export default function ServicesOverviewPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: 0.05 * (idx % 3) }}
-                className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_16px_40px_rgba(13,71,161,0.03)] hover:-translate-y-0.5 transition-all duration-300"
+                className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_16px_40px_rgba(17, 85, 204,0.03)] hover:-translate-y-0.5 transition-all duration-300"
               >
-                <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#0D47A1] flex items-center justify-center mb-6">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-6">
                   <Icon name={(cap.icon === "lock" ? "shield" : cap.icon) as IconName} className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-extrabold text-gray-900 mb-2.5">
@@ -439,7 +439,7 @@ export default function ServicesOverviewPage() {
             
             {/* Left Header Info */}
             <div className="lg:col-span-4 lg:sticky lg:top-24">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#0D47A1] mb-2.5 block">Got a question?</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#1155CC] mb-2.5 block">Got a question?</span>
               <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-4 leading-tight">
                 Frequently Asked <br />Questions.
               </h2>
@@ -457,7 +457,7 @@ export default function ServicesOverviewPage() {
                     setFaqSearch(e.target.value);
                     setOpenFaqIdx(null); // Reset accordion on filter
                   }}
-                  className="w-full px-4.5 py-3 rounded-xl border border-gray-150 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#0D47A1] transition-colors"
+                  className="w-full px-4.5 py-3 rounded-xl border border-gray-150 bg-white text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#1155CC] transition-colors"
                 />
                 {faqSearch && (
                   <button
@@ -490,24 +490,24 @@ export default function ServicesOverviewPage() {
                         key={idx}
                         className={`relative border rounded-2xl overflow-hidden transition-all duration-300 ${
                           isOpen
-                            ? "bg-white shadow-[0_12px_30px_rgba(13,71,161,0.05)] border-slate-100"
+                            ? "bg-white shadow-[0_12px_30px_rgba(17, 85, 204,0.05)] border-slate-100"
                             : "bg-transparent border-transparent hover:bg-slate-100/30"
                         }`}
                       >
                         {isOpen && (
                           <motion.div
                             layoutId="active-faq-accent-bar"
-                            className="absolute left-0 top-5 bottom-5 w-1 rounded-r bg-[#0D47A1]"
+                            className="absolute left-0 top-5 bottom-5 w-1 rounded-r bg-[#1155CC]"
                             transition={{ type: "spring", stiffness: 380, damping: 30 }}
                           />
                         )}
 
                         <button
                           onClick={() => toggleFaq(idx)}
-                          className="w-full flex items-center justify-between p-5 text-left font-bold text-gray-900 text-xs sm:text-sm hover:text-[#0D47A1] transition-colors cursor-pointer"
+                          className="w-full flex items-center justify-between p-5 text-left font-bold text-gray-900 text-xs sm:text-sm hover:text-[#1155CC] transition-colors cursor-pointer"
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4.5 pr-4">
-                            <span className="px-2.5 py-0.5 rounded-full bg-[#0D47A1]/5 text-[9px] font-extrabold text-[#0D47A1] uppercase tracking-wide self-start sm:self-auto shrink-0">
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#1155CC]/5 text-[9px] font-extrabold text-[#1155CC] uppercase tracking-wide self-start sm:self-auto shrink-0">
                               {item.category}
                             </span>
                             <span className="leading-snug">{item.question}</span>
@@ -515,7 +515,7 @@ export default function ServicesOverviewPage() {
                           <div
                             className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
                               isOpen
-                                ? "bg-[#0D47A1] text-white"
+                                ? "bg-[#1155CC] text-white"
                                 : "bg-slate-100 text-gray-500 hover:bg-slate-200"
                             }`}
                           >

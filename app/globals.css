@@ -1,23 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F5F8FC;
-  --foreground: #0f172a;
+  --background: #FAFBFD;
+  --foreground: #0F172A;
 
-  /* Brand gradient */
-  --brand-dark:    #0D47A1;
-  --brand-accent:  #008BD9;
-  --brand-gradient: linear-gradient(135deg, #0D47A1 0%, #008BD9 100%);
+  /* Primary Palette */
+  --brand-navy: #071A35;
+  --brand-royal: #1155CC;
+  --brand-electric: #1463FF;
+  --brand-cyan: #22B6F6;
 
-  /* Surface palette */
+  /* Brand Gradients */
+  --brand-gradient: linear-gradient(135deg, #071A35 0%, #1155CC 50%, #22B6F6 100%);
+  --btn-gradient: linear-gradient(135deg, #1155CC 0%, #22B6F6 100%);
+  --accent-gradient: linear-gradient(135deg, #1155CC 0%, #22B6F6 100%);
+
+  /* Surface Palette */
   --surface-1: #FFFFFF;
-  --surface-2: #F5F8FC;
-  --surface-3: #E6EDF5;
+  --surface-2: #FAFBFD;
+  --surface-3: #F1F5F9;
 
   /* Functional */
-  --ring-color: rgba(13, 71, 161, 0.12);
-  --glow-sm:    0 0 0 3px rgba(13, 71, 161, 0.10), 0 4px 16px rgba(0, 139, 217, 0.12);
-  --glow-md:    0 0 0 3px rgba(13, 71, 161, 0.12), 0 8px 28px rgba(0, 139, 217, 0.18);
+  --ring-color: rgba(17, 85, 204, 0.12);
+  --glow-sm: 0 0 0 3px rgba(17, 85, 204, 0.10), 0 4px 16px rgba(34, 182, 246, 0.12);
+  --glow-md: 0 0 0 3px rgba(17, 85, 204, 0.12), 0 8px 28px rgba(34, 182, 246, 0.18);
+
+  /* Legacy mappings to prevent breaking older references */
+  --brand-dark: #1155CC;
+  --brand-accent: #22B6F6;
 }
 
 @theme inline {
@@ -26,6 +36,17 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-inter);
   --font-display: var(--font-plus-jakarta);
+  --font-sora: var(--font-sora);
+
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-royal: var(--brand-royal);
+  --color-brand-electric: var(--brand-electric);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-neutral-slate: #0F172A;
+  --color-neutral-gray: #475569;
+  --color-neutral-cool: #94A3B8;
+  --color-neutral-ice: #F1F5F9;
+  --color-neutral-soft: #FAFBFD;
 }
 
 body {
@@ -56,7 +77,7 @@ button {
 
 /* ── Primary CTA button ── */
 .btn-primary {
-  background: var(--brand-gradient);
+  background: var(--btn-gradient);
   color: #fff;
   box-shadow: var(--glow-sm);
   transition: box-shadow 0.22s ease, transform 0.18s ease, filter 0.18s ease;
@@ -74,20 +95,20 @@ button {
 /* ── Ghost / outline button ── */
 .btn-outline {
   background: transparent;
-  color: var(--brand-dark);
-  border: 2px solid var(--brand-accent);
+  color: var(--brand-royal);
+  border: 2px solid var(--brand-cyan);
   transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 .btn-outline:hover {
-  background: rgba(0, 139, 217, 0.06);
+  background: rgba(17, 85, 204, 0.06);
   box-shadow: var(--glow-sm);
   transform: translateY(-1px);
 }
 
 /* ── Active nav underline ── */
 .nav-active {
-  color: var(--brand-dark);
-  border-bottom: 2px solid var(--brand-accent);
+  color: var(--brand-royal);
+  border-bottom: 2px solid var(--brand-cyan);
 }
 
 /* ── Lenis Smooth Scroll Overrides ── */
@@ -233,7 +254,7 @@ html.lenis, html.lenis body {
   inset: 0;
   background: 
     radial-gradient(ellipse 80% 50% at 50% -10%, 
-      rgba(0, 139, 217, 0.08) 0%, 
+      rgba(34, 182, 246, 0.08) 0%, 
       transparent 70%),
     #ffffff;
   z-index: 0;
@@ -255,7 +276,7 @@ html.lenis, html.lenis body {
   .hero-bg-glow {
     background: 
       radial-gradient(ellipse 80% 50% at 50% -10%, 
-        rgba(0, 139, 217, 0.04) 0%, 
+        rgba(34, 182, 246, 0.04) 0%, 
         transparent 70%),
       #ffffff;
   }
@@ -265,8 +286,8 @@ html.lenis, html.lenis body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 139, 217, 0.08);
-  border: 1px solid rgba(0, 139, 217, 0.2);
+  background: rgba(34, 182, 246, 0.08);
+  border: 1px solid rgba(34, 182, 246, 0.2);
   color: var(--accent-blue);
   font-size: 13px;
   font-weight: 500;
@@ -322,7 +343,7 @@ html.lenis, html.lenis body {
   position: absolute;
   top: 10%; left: 10%;
   width: 80%; height: 80%;
-  background: radial-gradient(ellipse, rgba(0,139,217,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(34, 182, 246,0.12) 0%, transparent 70%);
   filter: blur(40px);
   z-index: -1;
 }
@@ -412,7 +433,7 @@ html.lenis, html.lenis body {
 /* Capabilities Grid upgrades */
 .capability-icon-wrap {
   width: 44px; height: 44px;
-  background: rgba(0, 139, 217, 0.08);
+  background: rgba(34, 182, 246, 0.08);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
@@ -467,7 +488,7 @@ html.lenis, html.lenis body {
   border-color: var(--accent-blue) !important;
   color: var(--accent-blue) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0, 139, 217, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(34, 182, 246, 0.12) !important;
 }
 
 /* Proof of Work Card Zoom */
@@ -502,7 +523,7 @@ html.lenis, html.lenis body {
 
 /* Metrics strip accent */
 .metrics-accent-strip {
-  background: linear-gradient(135deg, #0A0A0A 0%, #1a1a2e 100%) !important;
+  background: linear-gradient(135deg, #071A35 0%, #0A1021 100%) !important;
   color: white !important;
 }
 
@@ -546,8 +567,8 @@ html.lenis, html.lenis body {
 
 /* General micro-interactions */
 .card:hover {
-  border-color: rgba(0, 139, 217, 0.3) !important;
-  box-shadow: 0 0 0 3px rgba(0, 139, 217, 0.06), 
+  border-color: rgba(34, 182, 246, 0.3) !important;
+  box-shadow: 0 0 0 3px rgba(34, 182, 246, 0.06), 
               0 8px 24px rgba(0,0,0,0.08) !important;
 }
 .section-label-anim {

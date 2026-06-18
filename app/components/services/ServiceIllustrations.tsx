@@ -212,7 +212,7 @@ export function ServiceIllustration({ slug }: { slug: string }) {
           <div className="w-full h-full bg-white rounded-2xl border border-gray-200 shadow-xl p-4 flex flex-col">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Agile Roadmap</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-[#008BD9] font-bold">Sprint 24</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-50 text-[#22B6F6] font-bold">Sprint 24</span>
             </div>
 
             <div className="flex-grow space-y-3">
@@ -229,9 +229,9 @@ export function ServiceIllustration({ slug }: { slug: string }) {
               </div>
 
               {/* Task 2 */}
-              <div className="p-2.5 rounded-lg border border-[#008BD9]/30 bg-[#E6F4FE]/20 flex items-center justify-between shadow-sm">
+              <div className="p-2.5 rounded-lg border border-[#22B6F6]/30 bg-[#E6F4FE]/20 flex items-center justify-between shadow-sm">
                 <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full border-2 border-[#008BD9] flex items-center justify-center"><span className="w-1 h-1 rounded-full bg-[#008BD9] animate-ping" /></span>
+                  <span className="w-2.5 h-2.5 rounded-full border-2 border-[#22B6F6] flex items-center justify-center"><span className="w-1 h-1 rounded-full bg-[#22B6F6] animate-ping" /></span>
                   <div>
                     <h5 className="text-[10px] font-bold text-gray-900 leading-none mb-1">Payment API integration</h5>
                     <p className="text-[8px] text-gray-500 leading-none">In progress (80%)</p>

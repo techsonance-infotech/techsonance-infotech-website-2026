@@ -164,9 +164,9 @@ export default function TechnologiesSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 mb-5">
-            <div className="h-px w-8 bg-[#0D47A1]/40" />
-            <span className="text-xs font-extrabold text-[#0D47A1] tracking-[0.15em] uppercase">Infrastructure & Technologies</span>
-            <div className="h-px w-8 bg-[#0D47A1]/40" />
+            <div className="h-px w-8 bg-[#1155CC]/40" />
+            <span className="text-xs font-extrabold text-[#1155CC] tracking-[0.15em] uppercase">Infrastructure & Technologies</span>
+            <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
             Infrastructure &amp; Tech<br className="hidden sm:block" /> <span className="brand-gradient-text">We Work With</span>
@@ -180,7 +180,7 @@ export default function TechnologiesSection() {
           {techCards.map((card) => (
             <motion.article
               key={card.title}
-              whileHover={{ y: -5, scale: 1.02, boxShadow: "0 20px 40px rgba(13,71,161,0.10), 0 4px 12px rgba(0,0,0,0.04)" }}
+              whileHover={{ y: -5, scale: 1.02, boxShadow: "0 20px 40px rgba(17, 85, 204,0.10), 0 4px 12px rgba(0,0,0,0.04)" }}
               whileTap={{ scale: 0.99 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-4 hover:border-blue-100/70 transition-colors cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.07)]"

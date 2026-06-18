@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/app/components/LenisProvider";
 
@@ -12,6 +12,12 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["700", "800"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -37,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${plusJakarta.variable} antialiased`}
+      className={`${inter.variable} ${plusJakarta.variable} ${sora.variable} antialiased`}
     >
       <body className="flex flex-col">
         <LenisProvider>{children}</LenisProvider>

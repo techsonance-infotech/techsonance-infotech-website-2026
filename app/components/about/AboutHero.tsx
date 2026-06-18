@@ -25,7 +25,7 @@ const imageReveal = {
 
 export default function AboutHero() {
   return (
-    <section className="relative pt-28 pb-16 md:pb-24 bg-[#F8FBFF] border-b border-[#E6EDF5] overflow-hidden">
+    <section className="relative pt-28 pb-16 md:pb-24 bg-[#FAFBFD] border-b border-[#E2E8F0] overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#E6EDF5] via-[#F3F8FD] to-[#F8FBFF]"
         aria-hidden
@@ -77,7 +77,7 @@ export default function AboutHero() {
             animate="visible"
             className="lg:col-span-5 relative"
           >
-            <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[520px] w-full overflow-hidden rounded-[2rem] border border-[#E5E5E5] shadow-[0_20px_60px_rgba(13,71,161,0.08)] group">
+            <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[520px] w-full overflow-hidden rounded-[2rem] border border-[#E5E5E5] shadow-[0_20px_60px_rgba(17, 85, 204,0.08)] group">
               <Image
                 src="/images/about-team-large.png"
                 alt="TechSonance engineering team collaborating on production software"
@@ -96,7 +96,7 @@ export default function AboutHero() {
               variants={imageReveal}
               initial="hidden"
               animate="visible"
-              className="relative aspect-[4/3] lg:aspect-square w-full overflow-hidden rounded-[1.75rem] border border-[#E5E5E5] shadow-[0_12px_40px_rgba(13,71,161,0.06)] group"
+              className="relative aspect-[4/3] lg:aspect-square w-full overflow-hidden rounded-[1.75rem] border border-[#E5E5E5] shadow-[0_12px_40px_rgba(17, 85, 204,0.06)] group"
             >
               <Image
                 src="/images/about-team-small.png"
@@ -126,7 +126,7 @@ export default function AboutHero() {
                   href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0D47A1] text-white text-[13px] font-semibold hover:bg-[#0A3D8C] transition-colors"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#1155CC] text-white text-[13px] font-semibold hover:bg-[#0A3D8C] transition-colors"
                 >
                   Book a call
                 </Link>

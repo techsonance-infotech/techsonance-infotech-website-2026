@@ -14,7 +14,7 @@ export const Component = () => {
           backgroundImage: `
             linear-gradient(to right, #f0f0f0 1px, transparent 1px),
             linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
-            radial-gradient(circle 800px at 100% 200px, rgba(13, 71, 161, 0.12), transparent)
+            radial-gradient(circle 800px at 100% 200px, rgba(17, 85, 204, 0.12), transparent)
           `,
           backgroundSize: "96px 64px, 96px 64px, 100% 100%",
         }}

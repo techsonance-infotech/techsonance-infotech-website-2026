@@ -67,7 +67,7 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
     setRotateY(rY);
 
     setGlowStyle({
-      background: `radial-gradient(circle 220px at ${mouseX}px ${mouseY}px, rgba(13, 71, 161, 0.12), transparent)`,
+      background: `radial-gradient(circle 220px at ${mouseX}px ${mouseY}px, rgba(17, 85, 204, 0.12), transparent)`,
     });
   };
 
@@ -190,7 +190,7 @@ export default function AboutPage() {
   return (
     <>
       <SiteHeader transparent={false} />
-      <main className="bg-[#F8FBFF] min-h-screen relative overflow-x-clip font-sans text-slate-900">
+      <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
 
       {/* =========================================================================
           SECTION 1 — HERO
@@ -204,8 +204,8 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
 
         {/* Expanding glows */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#0D47A1]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#008BD9]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#1155CC]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#22B6F6]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-4 text-center">
@@ -236,7 +236,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-3">Our Principles</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-3">Our Principles</h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Our Engineering DNA</h3>
             <p className="text-slate-500 text-sm mt-3 font-medium">We replace standard vision cards with execution directives that actually shape the code we ship.</p>
           </div>
@@ -264,8 +264,8 @@ export default function AboutPage() {
                 icon: "shield"
               }
             ].map((dna) => (
-              <TiltCard key={dna.title} className="bg-[#F8FBFF] border border-slate-100 rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.015)] hover:border-blue-100 transition-colors">
-                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[#0D47A1] flex items-center justify-center mb-6 shadow-sm">
+              <TiltCard key={dna.title} className="bg-[#FAFBFD] border border-slate-100 rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.015)] hover:border-blue-100 transition-colors">
+                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[#1155CC] flex items-center justify-center mb-6 shadow-sm">
                   {dna.icon === "schema" && (
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.75a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0018 3H6A2.25 2.25 0 003.75 5.25V16.5A2.25 2.25 0 006 18.75h12zm0 0v1.5a2.25 2.25 0 01-2.25 2.25H8.25A2.25 2.25 0 016 20.25v-1.5m12 0h-12" /></svg>
                   )}
@@ -295,7 +295,7 @@ export default function AboutPage() {
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-8 relative z-20">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#008BD9] mb-2">Portfolio Showcase</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#22B6F6] mb-2">Portfolio Showcase</h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">What We&apos;ve Built</h3>
             <p className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">Production-grade systems running live for scaling organizations.</p>
           </div>
@@ -324,7 +324,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex justify-between items-start gap-4 mb-3">
                     <h4 className="text-xl font-bold text-white">{proj.title}</h4>
-                    <span className="text-[10px] font-bold text-[#008BD9] uppercase tracking-wider bg-[#008BD9]/10 px-2.5 py-1 rounded-full">
+                    <span className="text-[10px] font-bold text-[#22B6F6] uppercase tracking-wider bg-[#22B6F6]/10 px-2.5 py-1 rounded-full">
                       {proj.industry}
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-2">Our Pipeline</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-2">Our Pipeline</h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">How We Build</h3>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">A reliable software lifecycle backed by engineering protocols.</p>
           </div>
@@ -369,7 +369,7 @@ export default function AboutPage() {
             <div className="lg:col-span-7 space-y-16 relative">
               {/* Progress Tracker line */}
               <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-slate-100 pointer-events-none">
-                <motion.div style={{ height: timelineProgressHeight }} className="w-full bg-[#0D47A1] origin-top" />
+                <motion.div style={{ height: timelineProgressHeight }} className="w-full bg-[#1155CC] origin-top" />
               </div>
 
               {[
@@ -419,16 +419,16 @@ export default function AboutPage() {
                 >
                   {/* Step Bubble */}
                   <div className={`absolute left-2.5 top-0 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center border font-mono text-[10px] font-bold transition-all duration-300 z-10 ${activeStep === idx
-                    ? "bg-[#0D47A1] text-white border-[#0D47A1]"
+                    ? "bg-[#1155CC] text-white border-[#1155CC]"
                     : activeStep > idx
-                      ? "bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]"
+                      ? "bg-[#1155CC]/10 text-[#1155CC] border-[#1155CC]"
                       : "bg-white text-slate-400 border-slate-200"
                     }`}>
                     {step.step}
                   </div>
 
                   <div>
-                    <span className="text-[10px] font-bold text-[#0D47A1] uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-[#1155CC] uppercase tracking-wider">
                       {step.tag}
                     </span>
                     <h4 className="text-xl font-bold text-gray-900 mt-1 mb-3">{step.title}</h4>
@@ -441,7 +441,7 @@ export default function AboutPage() {
             {/* Right Side: Sticky Visuals */}
             <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[400px] bg-[#0A1120] border border-slate-800 rounded-3xl p-6 overflow-hidden">
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0D47A1]/15 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#1155CC]/15 rounded-full blur-2xl pointer-events-none" />
 
               <div className="h-full flex flex-col justify-between relative z-10 text-white">
                 <div className="border-b border-slate-800 pb-3 flex justify-between items-center">
@@ -460,7 +460,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.3 }}
                         className="text-center"
                       >
-                        <svg className="w-16 h-16 mx-auto text-[#008BD9] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                        <svg className="w-16 h-16 mx-auto text-[#22B6F6] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
                         <h5 className="font-bold text-sm">Auditing Operational Pipelines</h5>
                         <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">Mapping legacy databases and structural dependencies.</p>
                       </motion.div>
@@ -474,7 +474,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.3 }}
                         className="text-center"
                       >
-                        <svg className="w-16 h-16 mx-auto text-[#0D47A1] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9s2.015-9 4.5-9y" /></svg>
+                        <svg className="w-16 h-16 mx-auto text-[#1155CC] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9s2.015-9 4.5-9y" /></svg>
                         <h5 className="font-bold text-sm">System Database Modeling</h5>
                         <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">Drafting API schemas and entity relationships.</p>
                       </motion.div>
@@ -533,7 +533,7 @@ export default function AboutPage() {
                         transition={{ duration: 0.3 }}
                         className="text-center"
                       >
-                        <svg className="w-16 h-16 mx-auto text-[#008BD9] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" /></svg>
+                        <svg className="w-16 h-16 mx-auto text-[#22B6F6] mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" /></svg>
                         <h5 className="font-bold text-sm">Telemetry Monitoring Live</h5>
                         <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">Tracking live response graphs, DB locks & RAM usage.</p>
                       </motion.div>
@@ -561,7 +561,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#008BD9] mb-2">Ecosystem Web</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#22B6F6] mb-2">Ecosystem Web</h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Technology Ecosystem</h3>
             <p className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">Hover over nodes to trace structural connections and data routing pipelines.</p>
           </div>
@@ -631,7 +631,7 @@ export default function AboutPage() {
                 onMouseEnter={() => setHoveredTech(node.id)}
                 onMouseLeave={() => setHoveredTech(null)}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer p-3 rounded-xl border transition-all duration-200 select-none ${node.primary
-                  ? "bg-[#0D47A1] border-[#2563EB] shadow-lg shadow-[#0D47A1]/20 z-10"
+                  ? "bg-[#1155CC] border-[#2563EB] shadow-lg shadow-[#1155CC]/20 z-10"
                   : hoveredTech === node.id
                     ? "bg-slate-800 border-blue-500 shadow-md z-10"
                     : "bg-slate-900/80 border-slate-800/80"
@@ -687,7 +687,7 @@ export default function AboutPage() {
 
             {/* Right Column: Founder Narrative */}
             <div className="lg:col-span-7 text-left">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#0D47A1]">Our Story</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#1155CC]">Our Story</span>
               <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mt-1 mb-6">
                 Built by Engineers. <br />
                 Focused on Business Impact.
@@ -720,11 +720,11 @@ export default function AboutPage() {
       {/* =========================================================================
           SECTION 8 — TRUST & CREDIBILITY (MODERN BENTO GRID)
           ========================================================================= */}
-      <section className="py-24 bg-[#F8FBFF]">
+      <section className="py-24 bg-[#FAFBFD]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-2">Systems Trust</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-2">Systems Trust</h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Trust & Credibility</h3>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Measurable reliability indicators supporting our operations.</p>
           </div>
@@ -732,7 +732,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Box 1 */}
             <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0D47A1] flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-9h1.5m-1.5 3h1.5m-1.5 3h1.5M9 16.5h1.5m3 0h1.5" /></svg>
               </div>
               <div>
@@ -743,7 +743,7 @@ export default function AboutPage() {
 
             {/* Box 2 */}
             <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0D47A1] flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
               <div>
@@ -754,7 +754,7 @@ export default function AboutPage() {
 
             {/* Box 3 */}
             <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0D47A1] flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
               <div>
@@ -774,7 +774,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
         {/* Glowing background gradient mesh */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-[#0D47A1]/20 to-[#008BD9]/15 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-[#1155CC]/20 to-[#22B6F6]/15 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
           <motion.div
@@ -790,8 +790,8 @@ export default function AboutPage() {
               From custom database engineering to intelligent workflow automation, we take ownership of backend complexity so you can focus on business growth.
             </p>
 
-            <MagneticButton href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15" className="shadow-[0_4px_30px_rgba(13,71,161,0.3)]">
-              <span className="px-8 py-4 rounded-xl bg-white text-[#0D47A1] font-bold text-sm hover:bg-slate-50 transition-colors inline-block">
+            <MagneticButton href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15" className="shadow-[0_4px_30px_rgba(17, 85, 204,0.3)]">
+              <span className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-slate-50 transition-colors inline-block">
                 Book a Strategy Call
               </span>
             </MagneticButton>

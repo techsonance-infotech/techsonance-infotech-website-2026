@@ -160,7 +160,7 @@ ${message}
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
             
             <!-- Header with TechSonance Brand colors -->
-            <div style="background: linear-gradient(135deg, #0f172a 0%, #0d47a1 100%); padding: 32px 24px; text-align: center;">
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1155CC 100%); padding: 32px 24px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
                 TECHSONANCE
               </h1>
@@ -192,7 +192,7 @@ ${message}
                   </tr>
                   <tr>
                     <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Email Address</td>
-                    <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #0d47a1;"><a href="mailto:${email}" style="color: #0d47a1; text-decoration: none;">${email}</a></td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #1155CC;"><a href="mailto:${email}" style="color: #1155CC; text-decoration: none;">${email}</a></td>
                   </tr>
                   <tr>
                     <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Phone Number</td>
@@ -217,7 +217,7 @@ ${message}
               
               <!-- CTA Button for quick reply -->
               <div style="text-align: center; margin-top: 10px;">
-                <a href="mailto:${email}" style="display: inline-block; background-color: #0d47a1; color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2);">
+                <a href="mailto:${email}" style="display: inline-block; background-color: #1155CC; color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(17, 85, 204, 0.2);">
                   Reply Directly via Email ✉
                 </a>
               </div>
@@ -255,7 +255,7 @@ ${message}
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
             
             <!-- Header with TechSonance Brand colors -->
-            <div style="background: linear-gradient(135deg, #0f172a 0%, #0d47a1 100%); padding: 32px 24px; text-align: center;">
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1155CC 100%); padding: 32px 24px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
                 TECHSONANCE
               </h1>
@@ -287,7 +287,7 @@ ${message}
                   </tr>
                   <tr>
                     <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Email Address</td>
-                    <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #0d47a1;"><a href="mailto:${email}" style="color: #0d47a1; text-decoration: none;">${email}</a></td>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #1155CC;"><a href="mailto:${email}" style="color: #1155CC; text-decoration: none;">${email}</a></td>
                   </tr>
                   <tr>
                     <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Company Name</td>
@@ -312,7 +312,7 @@ ${message}
               
               <!-- CTA Button for quick reply -->
               <div style="text-align: center; margin-top: 10px;">
-                <a href="mailto:${email}" style="display: inline-block; background-color: #0d47a1; color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2);">
+                <a href="mailto:${email}" style="display: inline-block; background-color: #1155CC; color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(17, 85, 204, 0.2);">
                   Reply Directly via Email ✉
                 </a>
               </div>

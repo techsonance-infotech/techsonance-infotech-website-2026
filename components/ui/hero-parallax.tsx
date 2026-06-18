@@ -57,7 +57,7 @@ export const HeroParallax = ({
   return (
     <div
       ref={ref}
-      className="h-[225vh] py-20 overflow-hidden antialiased relative flex flex-col self-auto bg-[#F8FBFF] [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[225vh] py-20 overflow-hidden antialiased relative flex flex-col self-auto bg-[#FAFBFD] [perspective:1000px] [transform-style:preserve-3d]"
     >
       {/* Full-hero gradient — spans header + upper parallax, fades into page bg */}
       <div
@@ -112,12 +112,12 @@ export const Header = () => {
   return (
     <div className="w-full relative z-30">
       <div className="max-w-7xl mx-auto py-12 md:py-20 px-6 md:px-12 text-center flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 bg-white/70 border border-[#0D47A1]/10 rounded-full px-4.5 py-1.5 mb-6 relative z-10 backdrop-blur-sm">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#008BD9] animate-pulse" />
-          <span className="text-[10px] font-black text-[#0D47A1] tracking-widest uppercase">Our Capabilities</span>
+        <div className="inline-flex items-center gap-2 bg-white/70 border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6 relative z-10 backdrop-blur-sm">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
+          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">Our Capabilities</span>
         </div>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-black leading-[1.08] mb-6 tracking-tight relative z-10">
-          Engineering the <span className="bg-gradient-to-r from-[#0D47A1] to-[#008BD9] bg-clip-text text-transparent">Future</span> <br /> of Your Business.
+          Engineering the <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">Future</span> <br /> of Your Business.
         </h1>
         <p className="max-w-2xl text-sm md:text-base lg:text-lg text-black relative z-10 font-semibold leading-relaxed">
           From concept to deployment, we build high-performance software engineering and AI automation solutions that scale.

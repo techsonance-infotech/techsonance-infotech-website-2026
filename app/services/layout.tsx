@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#F8FBFF] text-[#0F172A]">
+    <div className="min-h-screen bg-[#FAFBFD] text-[#0F172A]">
       <SiteHeader />
       {children}
       <SiteFooter />

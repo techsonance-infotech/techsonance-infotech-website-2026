@@ -53,7 +53,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.1 }}
-      className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_40px_rgba(13,71,161,0.10)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden"
+      className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_40px_rgba(17, 85, 204,0.10)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden"
     >
       {/* Mockup top */}
       <div className="relative p-4 pb-0">
@@ -147,7 +147,7 @@ export default function ProjectsPage() {
     : allProjects.filter((p) => p.category === activeCategory);
 
   return (
-    <main className="min-h-screen bg-[#F8FBFF] text-[#0F172A] overflow-x-clip">
+    <main className="min-h-screen bg-[#FAFBFD] text-[#0F172A] overflow-x-clip">
       {/* ── Hero ──────────────────────────────────────────────────────────────── */}
       <ArcGalleryHero
         images={[
@@ -164,15 +164,15 @@ export default function ProjectsPage() {
           "/images/portfolio-hero-images/mobile-website-design.webp",
           "/images/portfolio-hero-images/cloud-architecture-mockup.png",
         ]}
-        className="bg-[#F8FBFF] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
+        className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
       >
         <div 
           className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center animate-fade-in" 
           style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}
         >
-          <div className="inline-flex items-center gap-2 bg-white border border-[#0D47A1]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#008BD9] animate-pulse" />
-            <span className="text-xs font-bold text-[#0D47A1] tracking-wide uppercase">
+          <div className="inline-flex items-center gap-2 bg-white border border-[#1155CC]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
+            <span className="text-xs font-bold text-[#1155CC] tracking-wide uppercase">
               Portfolio &amp; Case Studies
             </span>
           </div>
@@ -190,7 +190,7 @@ export default function ProjectsPage() {
               onClick={() => {
                 document.getElementById("projects-list")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#0D47A1] text-white font-bold text-sm hover:bg-[#0b3c8a] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#1155CC] text-white font-bold text-sm hover:bg-[#0b3c8a] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
             >
               Explore Projects
             </button>
@@ -218,8 +218,8 @@ export default function ProjectsPage() {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
                 activeCategory === cat
-                  ? "bg-[#0D47A1] text-white border-[#0D47A1] shadow-[0_2px_12px_rgba(13,71,161,0.25)]"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#0D47A1]/40 hover:text-[#0D47A1]"
+                  ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
               }`}
             >
               {cat}
@@ -287,7 +287,7 @@ export default function ProjectsPage() {
               href="https://cal.id/techsonance-infotech/connect-with-founder?duration=15"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-xl bg-white text-[#0D47A1] font-bold text-sm hover:bg-gray-50 transition-colors shadow-lg"
+              className="px-8 py-3.5 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-lg"
             >
               Book Free Consultation
             </Link>

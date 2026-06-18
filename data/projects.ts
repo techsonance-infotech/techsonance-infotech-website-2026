@@ -113,8 +113,8 @@ export const projects: Project[] = [
       { name: "React Native", category: "mobile" },
       { name: "Razorpay", category: "backend" },
     ],
-    accentColor: "#0D47A1",
-    mockupGradient: "linear-gradient(135deg, #0D47A1 0%, #1565C0 40%, #0288D1 100%)",
+    accentColor: "#1155CC",
+    mockupGradient: "linear-gradient(135deg, #1155CC 0%, #1155CC 40%, #22B6F6 100%)",
     screenshotPath: "/images/projects/freightflow/freightflow-logistics-platform-login-screen.png",
     screenshots: [
       {
@@ -196,8 +196,8 @@ export const projects: Project[] = [
       { name: "Redis", category: "database" },
       { name: "IndexedDB", category: "frontend" },
     ],
-    accentColor: "#0D47A1",
-    mockupGradient: "linear-gradient(135deg, #0D47A1 0%, #1565C0 40%, #0288D1 100%)",
+    accentColor: "#1155CC",
+    mockupGradient: "linear-gradient(135deg, #1155CC 0%, #1155CC 40%, #22B6F6 100%)",
     screenshotPath: "/images/projects/syncserve/syncserve-retail-pos-login-screen.png",
     screenshots: [
       {
@@ -285,8 +285,8 @@ export const projects: Project[] = [
       { name: "Zod", category: "backend" },
       { name: "Axios", category: "backend" },
     ],
-    accentColor: "#0D47A1",
-    mockupGradient: "linear-gradient(135deg, #0D47A1 0%, #1565C0 40%, #0288D1 100%)",
+    accentColor: "#1155CC",
+    mockupGradient: "linear-gradient(135deg, #1155CC 0%, #1155CC 40%, #22B6F6 100%)",
     screenshotPath: "/images/projects/placeholder-techsonance-marketplace.png",
   },
 

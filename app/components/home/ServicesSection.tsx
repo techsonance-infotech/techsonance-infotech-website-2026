@@ -51,7 +51,7 @@ const serviceNodes: ServiceNode[] = [
     title: "Custom Software Development",
     description: "Robust, secure and scalable software tailored to your unique needs.",
     icon: "code",
-    color: "#0D47A1", // blue
+    color: "#1155CC", // blue
     x: 710,
     y: 60,
     w: 240,
@@ -274,13 +274,13 @@ export default function ServicesSection() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="py-24 bg-[#F8FBFF] relative overflow-hidden border-t border-b border-gray-100 w-full"
+      className="py-24 bg-[#FAFBFD] relative overflow-hidden border-t border-b border-gray-100 w-full"
     >
       {/* Background Fine Grid detail */}
       <div 
         className="absolute inset-0 opacity-[0.012] pointer-events-none" 
         style={{ 
-          backgroundImage: "linear-gradient(#0D47A1 1px, transparent 1px), linear-gradient(90deg, #0D47A1 1px, transparent 1px)", 
+          backgroundImage: "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)", 
           backgroundSize: "40px 40px" 
         }} 
       />
@@ -289,13 +289,13 @@ export default function ServicesSection() {
         
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="eco-header-anim inline-flex items-center gap-2 bg-[#E6EDF5] border border-[#0D47A1]/10 rounded-full px-4 py-1.5 mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0D47A1] animate-pulse" />
-            <span className="text-[10px] font-black text-[#0D47A1] tracking-widest uppercase">What We Do</span>
+          <div className="eco-header-anim inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-pulse" />
+            <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">What We Do</span>
           </div>
           <h2 className="eco-header-anim text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-5 leading-tight">
             End-to-End Solutions. <br />
-            <span className="bg-gradient-to-r from-[#0D47A1] to-[#008BD9] bg-clip-text text-transparent">Engineered for Growth.</span>
+            <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">Engineered for Growth.</span>
           </h2>
           <p className="eco-header-anim text-lg text-gray-600 leading-relaxed">
             We build powerful digital systems, automate operations with AI, and deliver scalable products that help businesses grow faster.
@@ -323,7 +323,7 @@ export default function ServicesSection() {
 
             {/* Floating particles */}
             <div className="absolute inset-0">
-              <span className="eco-particle absolute w-1.5 h-1.5 bg-[#0D47A1]/20 rounded-full left-[12%] top-[20%] animate-pulse" />
+              <span className="eco-particle absolute w-1.5 h-1.5 bg-[#1155CC]/20 rounded-full left-[12%] top-[20%] animate-pulse" />
               <span className="eco-particle absolute w-2 h-2 bg-[#7C3AED]/20 rounded-full left-[22%] top-[70%] animate-ping" style={{ animationDuration: "3s" }} />
               <span className="eco-particle absolute w-1.5 h-1.5 bg-[#0891B2]/30 rounded-full left-[85%] top-[15%] animate-pulse" />
               <span className="eco-particle absolute w-2.5 h-2.5 bg-pink-500/15 rounded-full left-[78%] top-[65%] animate-pulse" style={{ animationDuration: "4s" }} />
@@ -354,7 +354,7 @@ export default function ServicesSection() {
                     x2="100%" 
                     y2="0%"
                   >
-                    <stop offset="0%" stopColor="#0D47A1" stopOpacity="0.1" />
+                    <stop offset="0%" stopColor="#1155CC" stopOpacity="0.1" />
                     <stop offset="50%" stopColor={node.color} stopOpacity="0.35" />
                     <stop offset="100%" stopColor={node.color} stopOpacity="0.8" />
                   </linearGradient>
@@ -431,22 +431,22 @@ export default function ServicesSection() {
               <div className="absolute w-[340px] h-[340px] rounded-full border border-blue-500/10 animate-[spin_25s_linear_infinite]" />
               <div className="absolute w-[300px] h-[300px] rounded-full border border-dashed border-blue-400/5 animate-[spin_35s_linear_infinite_reverse]" />
               <div 
-                className="absolute w-[275px] h-[275px] rounded-full border border-[#0D47A1]/20 transition-all duration-500" 
+                className="absolute w-[275px] h-[275px] rounded-full border border-[#1155CC]/20 transition-all duration-500" 
                 style={{
                   transform: hoveredNode !== null ? "scale(1.05)" : "scale(1)",
                   boxShadow: hoveredNode !== null 
                     ? `0 0 30px ${serviceNodes[hoveredNode].color}15`
-                    : "0 0 20px rgba(13,71,161,0.05)"
+                    : "0 0 20px rgba(17, 85, 204,0.05)"
                 }}
               />
               
               {/* Interactive Core Engine Card */}
               <div 
-                className={`w-[230px] h-[230px] rounded-full flex flex-col items-center justify-center p-6 text-center bg-[#07132B]/95 border border-[#0D47A1]/35 shadow-[0_0_60px_rgba(13,71,161,0.3)] z-30 transition-all duration-500 ${
+                className={`w-[230px] h-[230px] rounded-full flex flex-col items-center justify-center p-6 text-center bg-[#07132B]/95 border border-[#1155CC]/35 shadow-[0_0_60px_rgba(17, 85, 204,0.3)] z-30 transition-all duration-500 ${
                   hoveredNode !== null ? "scale-[1.03]" : "scale-100"
                 }`}
                 style={{
-                  borderColor: hoveredNode !== null ? serviceNodes[hoveredNode].color : "#0D47A1"
+                  borderColor: hoveredNode !== null ? serviceNodes[hoveredNode].color : "#1155CC"
                 }}
               >
                 {/* Tech logo mark */}
@@ -477,7 +477,7 @@ export default function ServicesSection() {
                 <div className="flex items-end gap-1.5 mt-3 h-5 justify-center">
                   <div className="w-1 bg-blue-500/60 rounded-t animate-[pulse_1.2s_infinite]" style={{ height: "40%" }} />
                   <div className="w-1 bg-blue-400 rounded-t animate-[pulse_1.5s_infinite]" style={{ height: "65%" }} />
-                  <div className="w-1 bg-[#008BD9] rounded-t animate-[pulse_1s_infinite]" style={{ height: "85%" }} />
+                  <div className="w-1 bg-[#22B6F6] rounded-t animate-[pulse_1s_infinite]" style={{ height: "85%" }} />
                   <div className="w-1 bg-blue-300 rounded-t animate-[pulse_1.8s_infinite]" style={{ height: "50%" }} />
                 </div>
               </div>
@@ -636,7 +636,7 @@ export default function ServicesSection() {
                       <p className="text-xs text-gray-500 leading-relaxed mb-4">
                         {node.description}
                       </p>
-                      <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0D47A1]">
+                      <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1155CC]">
                         View Service
                         <Icon name="arrow" className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 duration-300" />
                       </div>

@@ -272,8 +272,8 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
 
         {/* Subtitle / Category Label */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-6 h-[1.5px] bg-[#008BD9]" />
-          <span className="text-[10px] font-black uppercase text-[#0D47A1] tracking-widest">
+          <div className="w-6 h-[1.5px] bg-[#22B6F6]" />
+          <span className="text-[10px] font-black uppercase text-[#1155CC] tracking-widest">
             Industry Reality
           </span>
         </div>
@@ -286,7 +286,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
               style={{ fontSize: "var(--text-section-title)", lineHeight: 1.1 }}
             >
               What most {service.problemHeadline} get{" "}
-              <span className="bg-gradient-to-r from-[#0D47A1] to-[#008BD9] bg-clip-text text-transparent">wrong</span>
+              <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">wrong</span>
             </h2>
           </div>
           <div className="lg:col-span-4 lg:text-right">
@@ -304,14 +304,14 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
               <div
                 key={idx}
                 className={`bg-white rounded-3xl p-8 relative flex flex-col justify-between transition-all duration-300 ${isHighlighted
-                  ? "border-2 border-[#008BD9]/40 shadow-[0_10px_50px_rgba(0,139,217,0.06)] hover:shadow-[0_12px_55px_rgba(0,139,217,0.1)]"
-                  : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(13,71,161,0.03)]"
+                  ? "border-2 border-[#22B6F6]/40 shadow-[0_10px_50px_rgba(34, 182, 246,0.06)] hover:shadow-[0_12px_55px_rgba(34, 182, 246,0.1)]"
+                  : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(17, 85, 204,0.03)]"
                   }`}
               >
                 <div>
                   {/* Top row with Icon and Number/Badge */}
                   <div className="flex justify-between items-center mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-[#E6EDF5] flex items-center justify-center text-lg select-none">
+                    <div className="w-10 h-10 rounded-xl bg-[#F1F5F9] flex items-center justify-center text-lg select-none">
                       {card.icon}
                     </div>
                     <div className="flex items-center gap-2 relative">
