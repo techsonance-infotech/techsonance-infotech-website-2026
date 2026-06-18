@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TechSonance - AI &amp; Custom Software Engineering Partner</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="custom-fonts">
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#0066FF',
+              light: '#E6F0FF',
+              dark: '#0A2540',
+              text: '#334155',
+            },
+            "surface-container-high": "#dee8ff",
+            "surface-container": "#e7eeff",
+            "primary": "#0050cb",
+            "secondary-fixed": "#b7eaff",
+            "tertiary-container": "#5d60eb",
+            "inverse-on-surface": "#ecf1ff",
+            "secondary-container": "#00ccf9",
+            "on-tertiary-fixed": "#07006c",
+            "primary-container": "#0066ff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed-variant": "#003fa4",
+            "tertiary": "#4345d1",
+            "on-secondary-fixed-variant": "#004e60",
+            "on-secondary-container": "#005266",
+            "surface-variant": "#d8e3fb",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-bright": "#f9f9ff",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "surface-container-highest": "#d8e3fb",
+            "on-primary-container": "#f8f7ff",
+            "surface": "#f9f9ff",
+            "secondary-fixed-dim": "#4cd6ff",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "tertiary-fixed": "#e1e0ff",
+            "on-error-container": "#93000a",
+            "inverse-surface": "#263143",
+            "outline": "#727687",
+            "on-tertiary-container": "#faf6ff",
+            "secondary": "#00677f",
+            "outline-variant": "#c2c6d8",
+            "inverse-primary": "#b3c5ff",
+            "on-surface": "#111c2d",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#f0f3ff",
+            "on-background": "#111c2d",
+            "surface-tint": "#0054d6",
+            "background": "#f9f9ff",
+            "on-error": "#ffffff",
+            "primary-fixed": "#dae1ff",
+            "on-surface-variant": "#424656",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#cfdaf2",
+            "primary-fixed-dim": "#b3c5ff",
+            "on-primary-fixed": "#001849",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#001f28"
+          },
+          animation: {
+            'float-1': 'float-1 6s ease-in-out infinite',
+            'float-2': 'float-2 8s ease-in-out infinite',
+            'float-3': 'float-3 7s ease-in-out infinite',
+          },
+          keyframes: {
+            'float-1': {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            'float-2': {
+              '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+              '50%': { transform: 'translateY(-15px) translateX(5px)' },
+            },
+            'float-3': {
+              '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+              '50%': { transform: 'translateY(-8px) translateX(-8px)' },
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "gutter": "24px",
+            "stack-md": "16px",
+            "stack-lg": "32px",
+            "stack-sm": "8px",
+            "section-padding": "80px",
+            "margin-mobile": "16px",
+            "container-max": "1280px"
+          },
+          fontFamily: {
+            "display-lg-mobile": ["Plus Jakarta Sans"],
+            "label-bold": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"]
+          },
+          fontSize: {
+            "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+            "label-bold": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+            "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Custom styles for Why Choose Us section */
+    .feature-nav-item {
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .feature-nav-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: #0066ff;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 4px 0 0 4px;
+      opacity: 0;
+    }
+    .feature-nav-item.active::before {
+      width: 4px;
+      opacity: 1;
+    }
+    .feature-nav-item:hover {
+      background: linear-gradient(90deg, rgba(0, 102, 255, 0.05) 0%, transparent 100%);
+      transform: translateX(4px);
+    }
+    .feature-nav-item.active {
+      background: linear-gradient(90deg, rgba(0, 102, 255, 0.08) 0%, transparent 100%);
+    }
+    
+    .feature-arrow {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .feature-nav-item:hover .feature-arrow,
+    .feature-nav-item.active .feature-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+    
+    .glass-panel {
+      background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 20px 40px -10px rgba(0,102,255,0.1);
+    }
+    
+    /* Content transition classes */
+    .content-fade-enter {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+    .content-fade-enter-active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 400ms ease-out, transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .content-fade-exit {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .content-fade-exit-active {
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 300ms ease-in, transform 300ms ease-in;
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0D6EFD, #00C2FF);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] min-h-screen flex flex-col overflow-x-hidden">
+<!-- BEGIN: Main Navigation -->
+<header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-20">
+<!-- Logo -->
+<div class="flex items-center gap-3">
+<img alt="TechSonance Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXJmyFO0RlaeKQIuzRiYNC_coLDQy5Vuj9SE1igzjgFqnB_mbUoiziSk3QUpCEKdB0-6JLj_cb_D-ETPOFGbmIXN_gvBSmuCRsyz1OkJfCGICR4ebqBFrHI3chlU81oFAyvLd56x2jUJbxC4chW5H20jkRJOA8lLlpFqSgRgdQQCvJyGx7fr_JcOpEIGXy-6w-XaKUORouylbp5FpXmyGyzhRzn65BNsLYw8NWWyhiGiq9mkvYCiAJgTNjIeJDiVtsDobGV86vWm8"/>
+<div>
+<h1 class="text-xl font-bold text-gray-900 leading-tight tracking-tight">TechSonance</h1>
+<p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Infotech LLP</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex space-x-8 items-center">
+<a class="text-brand-blue font-semibold border-b-2 border-brand-blue pb-1" href="#">Home</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium flex items-center gap-1" href="#">
+            Services
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium" href="#">Portfolio</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium flex items-center gap-1" href="#">
+            Hire Developers
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium" href="#">About</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium" href="#">Career</a>
+<a class="text-gray-600 hover:text-brand-blue font-medium" href="#">Contact</a>
+</nav>
+<!-- CTA Button -->
+<div class="hidden md:flex items-center">
+<a class="bg-brand-blue hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-medium transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/30" href="#">
+            Get a Quote
+            <svg class="w-4 h-4 bg-white/20 rounded-full p-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Main Navigation -->
+<!-- BEGIN: Main Content -->
+<main class="flex-grow flex flex-col relative w-full">
+<!-- BEGIN: Hero Section -->
+<section class="relative overflow-hidden w-full flex items-center pt-12 pb-20 lg:pt-20 lg:pb-32">
+<!-- Background glow effects -->
+<div class="absolute top-0 right-0 -mr-40 -mt-40 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+<div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-96 h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+<!-- Left Content -->
+<div class="space-y-8 pr-0 lg:pr-12">
+<!-- Tag -->
+<div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5">
+<svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="text-xs font-bold text-brand-blue tracking-wide uppercase">AI &amp; Custom Software Engineering Partner</span>
+</div>
+<!-- Headline -->
+<h1 class="text-5xl lg:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight">
+            Build Fast.<br/>
+            Scale Faster.<br/>
+<span class="text-brand-blue">Deliver Results.</span>
+</h1>
+<!-- Subheadline -->
+<p class="text-lg text-gray-600 max-w-lg leading-relaxed">
+            We build custom web applications, SaaS platforms, AI integrations, RAG pipelines and intelligent solutions that help businesses innovate, automate and scale.
+          </p>
+<!-- CTAs -->
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<a class="bg-brand-blue hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-colors flex justify-center items-center gap-2 shadow-lg shadow-blue-500/20 text-lg" href="#">
+              Book Free Consultation
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="bg-white hover:bg-gray-50 text-brand-blue border-2 border-brand-blue/20 hover:border-brand-blue px-8 py-3.5 rounded-xl font-semibold transition-all flex justify-center items-center gap-2 text-lg" href="#">
+              View Case Studies
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+<!-- Trust Indicators -->
+<div class="flex flex-wrap gap-6 pt-2">
+<div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
+<svg class="w-5 h-5 text-blue-500 bg-blue-50 rounded-full p-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              No Obligations
+            </div>
+<div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
+<svg class="w-5 h-5 text-blue-500 bg-blue-50 rounded-full p-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              Expert Guidance
+            </div>
+<div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
+<svg class="w-5 h-5 text-blue-500 bg-blue-50 rounded-full p-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+              Quick Response
+            </div>
+</div>
+</div>
+<!-- Right Content: Interactive Hero Diagram -->
+<div class="relative w-full h-[600px] lg:h-[700px] flex flex-col justify-center items-center mt-10 lg:mt-0 bg-white/40 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgb(0,0,0,0.05)] border border-white p-6 overflow-hidden">
+<div class="relative w-full flex-grow flex justify-center items-center">
+<!-- SVG Connections -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Orbits / Lines -->
+<circle cx="50" cy="50" fill="none" r="30" stroke="#E2E8F0" stroke-dasharray="1 1" stroke-width="0.2"></circle>
+<circle cx="50" cy="50" fill="none" r="45" stroke="#E2E8F0" stroke-dasharray="1 1" stroke-width="0.2"></circle>
+<!-- Radial Lines -->
+<line stroke="#CBD5E1" stroke-width="0.2" x1="50" x2="50" y1="50" y2="15"></line>
+<line stroke="#CBD5E1" stroke-width="0.2" x1="50" x2="85" y1="50" y2="40"></line>
+<line stroke="#CBD5E1" stroke-width="0.2" x1="50" x2="75" y1="50" y2="80"></line>
+<line stroke="#CBD5E1" stroke-width="0.2" x1="50" x2="25" y1="50" y2="80"></line>
+<line stroke="#CBD5E1" stroke-width="0.2" x1="50" x2="15" y1="50" y2="40"></line>
+</svg>
+<!-- Center Node -->
+<div class="absolute z-20 flex flex-col items-center justify-center w-40 h-40 bg-white rounded-full shadow-[0_0_30px_rgb(0,102,255,0.15)] border-4 border-blue-50">
+<img alt="TechSonance Logo" class="h-10 w-10 object-contain mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXJmyFO0RlaeKQIuzRiYNC_coLDQy5Vuj9SE1igzjgFqnB_mbUoiziSk3QUpCEKdB0-6JLj_cb_D-ETPOFGbmIXN_gvBSmuCRsyz1OkJfCGICR4ebqBFrHI3chlU81oFAyvLd56x2jUJbxC4chW5H20jkRJOA8lLlpFqSgRgdQQCvJyGx7fr_JcOpEIGXy-6w-XaKUORouylbp5FpXmyGyzhRzn65BNsLYw8NWWyhiGiq9mkvYCiAJgTNjIeJDiVtsDobGV86vWm8"/>
+<span class="font-bold text-gray-900 text-sm">TechSonance</span>
+<span class="text-[9px] text-gray-500 font-medium text-center leading-tight mt-1">Engineering<br/>Excellence</span>
+</div>
+<!-- Nodes -->
+<div class="absolute top-[5%] z-10 flex flex-col items-center justify-center w-36 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 p-3 animate-float-1">
+<div class="w-8 h-8 rounded-full bg-blue-50 text-brand-blue flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-semibold text-gray-900 text-xs text-center leading-tight">Custom Software Development</span>
+</div>
+<div class="absolute right-[2%] top-[30%] z-10 flex flex-col items-center justify-center w-36 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 p-3 animate-float-2">
+<div class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-semibold text-gray-900 text-xs text-center leading-tight">RAG Pipeline Development</span>
+</div>
+<div class="absolute right-[10%] bottom-[15%] z-10 flex flex-col items-center justify-center w-36 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 p-3 animate-float-3">
+<div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-semibold text-gray-900 text-xs text-center leading-tight">SaaS Product Development</span>
+</div>
+<div class="absolute left-[10%] bottom-[15%] z-10 flex flex-col items-center justify-center w-36 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 p-3 animate-float-2">
+<div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-semibold text-gray-900 text-xs text-center leading-tight">AI Orchestration &amp; Engineering</span>
+</div>
+<div class="absolute left-[2%] top-[30%] z-10 flex flex-col items-center justify-center w-36 bg-white/90 backdrop-blur rounded-2xl shadow-lg border border-gray-100 p-3 animate-float-1">
+<div class="w-8 h-8 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center mb-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="font-semibold text-gray-900 text-xs text-center leading-tight">AI Integration</span>
+</div>
+</div>
+<!-- Status Bar Bottom -->
+<div class="w-full bg-white/90 backdrop-blur rounded-xl shadow-md border border-gray-100 p-4 mt-4 z-20 flex flex-col items-center gap-2">
+<div class="font-bold text-gray-900 text-sm">Production Ready. Scalable. Future Proof.</div>
+<div class="flex gap-4 text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+<span class="flex items-center gap-1"><svg class="w-3 h-3 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg> Automate Processes</span>
+<span class="flex items-center gap-1"><svg class="w-3 h-3 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg> Reduce Costs</span>
+<span class="flex items-center gap-1"><svg class="w-3 h-3 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg> Drive Growth</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: Infrastructure Section -->
+<section class="w-full py-20 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-white rounded-3xl p-8 lg:p-16 shadow-sm border border-outline-variant/20 flex flex-col lg:flex-row gap-12 items-center">
+<!-- Left Column -->
+<div class="lg:w-1/2 space-y-6">
+<div class="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h2 class="text-4xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+          Your Vision.<br/>
+<span class="text-primary">Our Engineering.<br/>Real Results.</span>
+</h2>
+<p class="text-lg text-gray-600 leading-relaxed max-w-lg">
+          From idea to execution, we build intelligent software solutions that help your business grow, scale and lead.
+        </p>
+</div>
+<!-- Right Column: Benefit Cards -->
+<div class="lg:w-1/2 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-6 w-full">
+<div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-blue-50 transition-colors group">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-1">Automate Processes</h4>
+<p class="text-sm text-gray-600">Eliminate manual work and improve efficiency.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-blue-50 transition-colors group border-l-0 lg:border-l border-outline-variant/20">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">database</span>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-1">Reduce Costs</h4>
+<p class="text-sm text-gray-600">Smart engineering that reduces operational costs.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-blue-50 transition-colors group border-l-0 lg:border-l border-outline-variant/20">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-1">Drive Growth</h4>
+<p class="text-sm text-gray-600">Scalable solutions that accelerate business growth.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- BEGIN: Why Choose TechSonance Section -->
+<section class="w-full bg-[#F8FAFC] py-24 relative overflow-hidden">
+<!-- Decorative Background Elements -->
+<div class="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -mr-96 -mt-96 pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -ml-64 -mb-64 pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="text-center mb-16">
+<h2 class="text-4xl lg:text-5xl font-extrabold text-[#0F172A] mb-4 tracking-tight">Why Choose TechSonance</h2>
+<p class="text-lg text-gray-500 max-w-2xl mx-auto">We don't just write code; we engineer scalable solutions that solve complex business challenges.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left Column: Navigation -->
+<div class="lg:col-span-5 flex flex-col gap-2 relative">
+<!-- Progress Line Background -->
+<div class="absolute left-0 top-4 bottom-4 w-px bg-gray-200 -z-10"></div>
+<!-- Nav Item 1 (Active) -->
+<div class="feature-nav-item active flex items-center gap-4 p-4 rounded-xl cursor-pointer bg-white shadow-sm border border-gray-100">
+<div class="w-10 h-10 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-bold text-[#0F172A]">AI-Native Solutions</h3>
+<p class="text-sm text-gray-500 mt-0.5">Built with intelligence from the ground up</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-brand-blue">arrow_forward</span>
+</div>
+<!-- Nav Item 2 -->
+<div class="feature-nav-item flex items-center gap-4 p-4 rounded-xl cursor-pointer hover:bg-white hover:shadow-sm border border-transparent">
+<div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-500 flex items-center justify-center shrink-0 transition-colors group-hover:text-brand-blue group-hover:bg-blue-50">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-semibold text-gray-600 transition-colors group-hover:text-[#0F172A]">Strategic Thinking First</h3>
+<p class="text-sm text-gray-400 mt-0.5">Aligning technology with business goals</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-gray-300 opacity-0">arrow_forward</span>
+</div>
+<!-- Nav Item 3 -->
+<div class="feature-nav-item flex items-center gap-4 p-4 rounded-xl cursor-pointer hover:bg-white hover:shadow-sm border border-transparent">
+<div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined">speed</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-semibold text-gray-600">Build Fast, Scale Fast</h3>
+<p class="text-sm text-gray-400 mt-0.5">Rapid iteration and deployment</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-gray-300 opacity-0">arrow_forward</span>
+</div>
+<!-- Nav Item 4 -->
+<div class="feature-nav-item flex items-center gap-4 p-4 rounded-xl cursor-pointer hover:bg-white hover:shadow-sm border border-transparent">
+<div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-semibold text-gray-600">End-to-End Ownership</h3>
+<p class="text-sm text-gray-400 mt-0.5">From concept to production to maintenance</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-gray-300 opacity-0">arrow_forward</span>
+</div>
+<!-- Nav Item 5 -->
+<div class="feature-nav-item flex items-center gap-4 p-4 rounded-xl cursor-pointer hover:bg-white hover:shadow-sm border border-transparent">
+<div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined">architecture</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-semibold text-gray-600">Scalable Architecture</h3>
+<p class="text-sm text-gray-400 mt-0.5">Designed to handle growth seamlessly</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-gray-300 opacity-0">arrow_forward</span>
+</div>
+<!-- Nav Item 6 -->
+<div class="feature-nav-item flex items-center gap-4 p-4 rounded-xl cursor-pointer hover:bg-white hover:shadow-sm border border-transparent">
+<div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined">handshake</span>
+</div>
+<div class="flex-grow">
+<h3 class="text-base font-semibold text-gray-600">Long-Term Partnership</h3>
+<p class="text-sm text-gray-400 mt-0.5">We succeed when you succeed</p>
+</div>
+<span class="material-symbols-outlined feature-arrow text-gray-300 opacity-0">arrow_forward</span>
+</div>
+</div>
+<!-- Right Column: Dynamic Content Panel -->
+<div class="lg:col-span-7 relative h-full min-h-[500px]">
+<div class="glass-panel rounded-[24px] p-8 lg:p-12 h-full flex flex-col relative overflow-hidden transform transition-transform duration-500 hover:-translate-y-1">
+<!-- Particles -->
+<div class="particle w-32 h-32 -top-10 -right-10 animate-float-1"></div>
+<div class="particle w-24 h-24 bottom-20 -left-8 animate-float-2 opacity-10"></div>
+<div class="relative z-10 flex flex-col h-full content-fade-enter-active">
+<div class="text-brand-blue font-bold text-xl mb-4 tracking-widest font-mono">01</div>
+<h3 class="text-3xl lg:text-4xl font-extrabold text-[#0F172A] mb-6 leading-tight">AI-Native Solutions</h3>
+<p class="text-gray-600 text-lg mb-8 leading-relaxed">
+              We integrate artificial intelligence into the core of your applications. From intelligent automation to predictive analytics and advanced RAG pipelines, we build systems that learn and adapt.
+            </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-start gap-3">
+<div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-brand-blue font-bold">check</span>
+</div>
+<span class="text-gray-700 font-medium">Custom LLM Integration &amp; Fine-tuning</span>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-brand-blue font-bold">check</span>
+</div>
+<span class="text-gray-700 font-medium">Advanced Retrieval-Augmented Generation (RAG)</span>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-brand-blue font-bold">check</span>
+</div>
+<span class="text-gray-700 font-medium">Automated Workflow &amp; Agentic Systems</span>
+</li>
+</ul>
+<!-- Image Placeholder -->
+<div class="mt-auto w-full h-48 bg-gradient-to-br from-blue-50 to-indigo-50/30 rounded-xl border border-blue-100/50 flex items-center justify-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-[#0066FF] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+<span class="material-symbols-outlined text-4xl text-blue-200">image</span>
+<div class="absolute bottom-4 right-4 flex gap-2">
+<div class="w-2 h-2 rounded-full bg-blue-200"></div>
+<div class="w-2 h-2 rounded-full bg-blue-200"></div>
+<div class="w-2 h-2 rounded-full bg-blue-200"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Why Choose TechSonance Section -->
+<section class="w-full bg-background relative pt-12 pb-section-padding z-20">
+<!-- Technologies Grid Section -->
+<div class="max-w-container-max mx-auto px-gutter">
+<!-- Section Header -->
+<div class="text-center mb-16 relative">
+<div class="flex items-center justify-center gap-4 mb-4">
+<div class="h-px bg-outline-variant/50 w-12 md:w-24"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary/50"></div>
+<h2 class="font-label-bold text-label-bold text-primary tracking-[0.15em] uppercase">
+                        Infrastructure &amp; Technologies We Work With
+                    </h2>
+<div class="w-1.5 h-1.5 rounded-full bg-primary/50"></div>
+<div class="h-px bg-outline-variant/50 w-12 md:w-24"></div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Enterprise-grade platforms and technologies to build, scale and secure your applications.
+                </p>
+</div>
+<!-- Grid Container -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Category 1: Cloud Providers -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">cloud</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">CLOUD PROVIDERS</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Scalable cloud platforms for every need.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-on-surface">aws</span>
+<span class="font-label-bold text-[14px] text-primary">Azure</span>
+<span class="font-label-bold text-[14px] text-secondary">Google Cloud</span>
+</div>
+</div>
+<!-- Category 2: Container & Orchestration -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">deployed_code</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">CONTAINER &amp; ORCHESTRATION</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Build, ship and run applications anywhere.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-primary">kubernetes</span>
+<span class="font-label-bold text-[14px] text-[#0db7ed]">docker</span>
+<span class="font-label-bold text-[14px] text-on-surface border border-outline-variant/30 px-1.5 rounded">aws EKS</span>
+</div>
+</div>
+<!-- Category 3: Databases -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">database</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">DATABASES</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Robust, secure and high-performance databases.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-secondary">PostgreSQL</span>
+<span class="font-label-bold text-[14px] text-[#00758f]">MySQL</span>
+<span class="font-label-bold text-[14px] text-[#47A248]">MongoDB</span>
+</div>
+</div>
+<!-- Category 4: Storage & CDN -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">dns</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">STORAGE &amp; CDN</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Blazing fast storage and global content delivery.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-on-surface">aws S3</span>
+<span class="font-label-bold text-[14px] text-[#F38020]">CLOUDFLARE</span>
+<span class="font-label-bold text-[14px] text-on-surface-variant">BunnyCDN</span>
+</div>
+</div>
+<!-- Category 5: Backend & Frameworks -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">code</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">BACKEND &amp; FRAMEWORKS</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Modern frameworks and backend technologies.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-[#68A063]">Node.js</span>
+<span class="font-label-bold text-[14px] text-[#3776AB]">Python</span>
+<span class="font-label-bold text-[14px] text-[#512BD4]">.NET</span>
+</div>
+</div>
+<!-- Category 6: AI / ML Platforms -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">AI / ML PLATFORMS</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Leading AI models and ML platforms.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-on-surface">OpenAI</span>
+<span class="font-label-bold text-[14px] text-[#D97757]">Claude</span>
+<span class="font-label-bold text-[14px] text-primary">Gemini</span>
+</div>
+</div>
+<!-- Category 7: Vector Databases -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">schema</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">VECTOR DATABASES</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Powerful vector databases for AI applications.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-on-surface">Pinecone</span>
+<span class="font-label-bold text-[14px] text-[#22C55E]">Weaviate</span>
+<span class="font-label-bold text-[14px] text-error">Qdrant</span>
+</div>
+</div>
+<!-- Category 8: Monitoring & DevOps -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/40 p-6 flex flex-col gap-6 hover:shadow-sm transition-all hover:border-primary/30 group">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-center text-primary group-hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">monitoring</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface mb-1">MONITORING &amp; DEVOPS</h3>
+<p class="font-body-md text-body-md text-[13px] leading-snug text-on-surface-variant">Monitor, log and optimize your applications.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-bold text-[14px] text-[#F46800]">Grafana</span>
+<span class="font-label-bold text-[14px] text-[#E6522C]">Prometheus</span>
+<span class="font-label-bold text-[14px] text-[#362D59]">SENTRY</span>
+</div>
+</div>
+</div>
+</div></section>
+<!-- END: Infrastructure Section -->
+</main>
+<!-- END: Main Content -->
+<!-- BEGIN: Footer Component -->
+<footer class="bg-surface-container-low border-t border-outline-variant mt-auto">
+<div class="w-full py-stack-lg px-gutter flex flex-col md:flex-row justify-between items-center max-w-container-max mx-auto gap-6">
+<!-- Copyright & Brand -->
+<div class="flex flex-col gap-2 text-center md:text-left">
+<div class="font-headline-md text-headline-md font-bold text-on-surface">
+                    TechSonance
+                </div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    © 2024 TechSonance. Engineering the future with AI and Scalable Infrastructure.
+                </p>
+</div>
+<!-- Links -->
+<nav class="flex flex-wrap items-center justify-center gap-6">
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors underline" href="#">Privacy Policy</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors underline" href="#">Terms of Service</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors underline" href="#">Security</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant hover:text-primary transition-colors underline" href="#">LinkedIn</a>
+</nav>
+</div>
+</footer>
+<!-- END: Footer Component -->
+</body></html>
