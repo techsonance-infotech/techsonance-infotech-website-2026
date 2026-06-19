@@ -271,11 +271,11 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
           <label className="block text-[11px] font-semibold text-neutral-600 uppercase tracking-wider">
             Phone Number <span className="text-red-500">*</span>
           </label>
-          <div className="flex gap-2">
+          <div className="flex flex-row gap-2">
             <select
               value={formData.countryCode}
               onChange={(e) => handleChange("countryCode", e.target.value)}
-              className="px-2 py-2 bg-neutral-50/50 border border-neutral-200 rounded-lg text-sm text-neutral-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer"
+              className="w-[90px] sm:w-[110px] px-1 sm:px-2 py-2 bg-neutral-50/50 border border-neutral-200 rounded-lg text-xs sm:text-sm text-neutral-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer shrink-0"
             >
               {COUNTRY_CODES.map((cc) => (
                 <option key={cc.code} value={cc.code}>
@@ -289,7 +289,7 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value.replace(/[^\d]/g, ""))}
               onBlur={() => handleBlur("phone")}
-              className={`flex-1 px-3 py-2 bg-neutral-50/50 border ${
+              className={`flex-1 min-w-0 px-3 py-2 bg-neutral-50/50 border ${
                 validateField("phone", formData.phone) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
               } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all`}
             />

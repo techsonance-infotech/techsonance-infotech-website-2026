@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import SafeImage from '@/app/components/SafeImage';
+import { motion } from 'framer-motion';
 
 // --- The ArcGalleryHero Component ---
 type ArcGalleryHeroProps = {
@@ -74,6 +75,63 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
   return (
     <section className={`relative overflow-hidden min-h-screen flex flex-col ${className}`}>
+      {/* Unique Background Animated Light Trails & Ambient Morphs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Ambient morphs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-tr from-[#1155CC]/5 to-[#22B6F6]/5 rounded-full blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: "8s" }} />
+        <div className="absolute bottom-[10%] right-[-10%] w-[250px] h-[250px] sm:w-[600px] sm:h-[600px] bg-gradient-to-br from-[#22B6F6]/5 to-[#1155CC]/5 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "12s", animationDelay: "3s" }} />
+
+        {/* Intersecting sleek curves & moving light trails */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.06] text-[#1155CC] pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hero-trail-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1155CC" stopOpacity="0" />
+              <stop offset="50%" stopColor="#22B6F6" stopOpacity="1" />
+              <stop offset="100%" stopColor="#1155CC" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          
+          {/* Structural wire-mesh lines */}
+          <path d="M-10 20 L110 60" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
+          <path d="M-10 50 C 30 30, 70 70, 110 40" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
+          <path d="M20 -10 L80 110" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
+          
+          {/* Animating light streaks along these paths */}
+          <motion.path
+            d="M-10 20 L110 60"
+            stroke="url(#hero-trail-grad)"
+            strokeWidth="2"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+            initial={{ strokeDasharray: "15 100", strokeDashoffset: 0 }}
+            animate={{ strokeDashoffset: -115 }}
+            transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+          />
+          
+          <motion.path
+            d="M-10 50 C 30 30, 70 70, 110 40"
+            stroke="url(#hero-trail-grad)"
+            strokeWidth="2"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+            initial={{ strokeDasharray: "15 100", strokeDashoffset: 0 }}
+            animate={{ strokeDashoffset: -115 }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: 1.5 }}
+          />
+
+          <motion.path
+            d="M20 -10 L80 110"
+            stroke="url(#hero-trail-grad)"
+            strokeWidth="2"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+            initial={{ strokeDasharray: "15 100", strokeDashoffset: 0 }}
+            animate={{ strokeDashoffset: -115 }}
+            transition={{ duration: 7, repeat: Infinity, ease: "linear", delay: 3 }}
+          />
+        </svg>
+      </div>
+
       {/* Background ring container that controls geometry */}
       <div
         className="relative mx-auto"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
@@ -9,6 +9,19 @@ import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
 export default function ContactClient() {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -141,12 +154,12 @@ export default function ContactClient() {
 
   return (
     <>
-      <SiteHeader transparent={false} />
+      <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
 
         {/* Ambient background decoration */}
-        <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
-        <div className="absolute top-[40%] left-0 w-[500px] h-[500px] bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
+        <div className="absolute top-20 right-0 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
+        <div className="absolute top-[40%] left-0 w-[250px] h-[250px] sm:w-[500px] sm:h-[500px] bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
 
         {/* Hero Header Strip (Geometric Shape Landing - Light Theme) */}
         <section className="relative pt-36 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-100 bg-white overflow-hidden min-h-[50vh] flex flex-col justify-center">
@@ -163,55 +176,80 @@ export default function ContactClient() {
 
           {/* Floating Glassmorphic Shapes (Light Theme) */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <ElegantShape
-              delay={0.3}
-              width={500}
-              height={120}
-              rotate={12}
-              gradient="from-blue-500/[0.08]"
-              light={true}
-              className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-            />
+            {mounted && isMobile ? (
+              <>
+                <ElegantShape
+                  delay={0.3}
+                  width={240}
+                  height={60}
+                  rotate={12}
+                  gradient="from-blue-500/[0.08]"
+                  light={true}
+                  className="left-[-15%] top-[10%]"
+                />
+                <ElegantShape
+                  delay={0.5}
+                  width={180}
+                  height={45}
+                  rotate={-15}
+                  gradient="from-cyan-500/[0.08]"
+                  light={true}
+                  className="right-[-10%] bottom-[15%]"
+                />
+              </>
+            ) : (
+              <>
+                <ElegantShape
+                  delay={0.3}
+                  width={500}
+                  height={120}
+                  rotate={12}
+                  gradient="from-blue-500/[0.08]"
+                  light={true}
+                  className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+                />
 
-            <ElegantShape
-              delay={0.5}
-              width={400}
-              height={100}
-              rotate={-15}
-              gradient="from-cyan-500/[0.08]"
-              light={true}
-              className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
-            />
+                <ElegantShape
+                  delay={0.5}
+                  width={400}
+                  height={100}
+                  rotate={-15}
+                  gradient="from-cyan-500/[0.08]"
+                  light={true}
+                  className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
+                />
 
-            <ElegantShape
-              delay={0.4}
-              width={280}
-              height={75}
-              rotate={-8}
-              gradient="from-indigo-500/[0.08]"
-              light={true}
-              className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-            />
+                <ElegantShape
+                  delay={0.4}
+                  width={280}
+                  height={75}
+                  rotate={-8}
+                  gradient="from-indigo-500/[0.08]"
+                  light={true}
+                  className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+                />
 
-            <ElegantShape
-              delay={0.6}
-              width={180}
-              height={50}
-              rotate={20}
-              gradient="from-blue-600/[0.08]"
-              light={true}
-              className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-            />
+                <ElegantShape
+                  delay={0.6}
+                  width={180}
+                  height={50}
+                  rotate={20}
+                  gradient="from-blue-600/[0.08]"
+                  light={true}
+                  className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+                />
 
-            <ElegantShape
-              delay={0.7}
-              width={130}
-              height={35}
-              rotate={-25}
-              gradient="from-cyan-400/[0.08]"
-              light={true}
-              className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
-            />
+                <ElegantShape
+                  delay={0.7}
+                  width={130}
+                  height={35}
+                  rotate={-25}
+                  gradient="from-cyan-400/[0.08]"
+                  light={true}
+                  className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+                />
+              </>
+            )}
           </div>
 
           <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -348,11 +386,11 @@ export default function ContactClient() {
                     <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       Phone Number <span className="text-red-500 font-bold">*</span>
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-row gap-2">
                       <select
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="w-[110px] px-3 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium"
+                        className="w-[90px] sm:w-[110px] px-2 sm:px-3 py-3 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium shrink-0"
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -374,7 +412,7 @@ export default function ContactClient() {
                           setTouched(prev => ({ ...prev, phone: true }));
                         }}
                         onBlur={() => setTouched(prev => ({ ...prev, phone: true }))}
-                        className={`flex-1 px-4 py-3 bg-white border ${getValidationError("phone") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
+                        className={`flex-1 min-w-0 px-4 py-3 bg-white border ${getValidationError("phone") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
                       />
                     </div>
                     {getValidationError("phone") && (

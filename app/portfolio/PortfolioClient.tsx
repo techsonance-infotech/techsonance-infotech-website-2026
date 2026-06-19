@@ -169,7 +169,7 @@ export default function PortfolioClient() {
         className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
       >
         <div 
-          className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center animate-fade-in" 
+          className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center relative z-10" 
           style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}
         >
           <div className="inline-flex items-center gap-2 bg-white border border-[#1155CC]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
@@ -200,57 +200,81 @@ export default function PortfolioClient() {
         </div>
       </ArcGalleryHero>
 
-      {/* ── Filter + Grid ──────────────────────────────────────────────────────── */}
-      <section id="projects-list" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        {/* Section label */}
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-            All <span className="text-[#1155CC]">Projects</span>
-          </h2>
-          <p className="text-sm text-gray-500 mt-2">
-            {allProjects.length} products across {categories.length - 1} categories
-          </p>
-        </div>
+      {/* ── Filter + Grid Section Wrapper with Background Effects ───────────────── */}
+      <div className="relative w-full overflow-hidden bg-[#FAFBFD] border-t border-slate-100">
+        
+        {/* Ambient Gradient Background Glows */}
+        <div className="absolute top-10 left-[10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none z-0" />
+        <div className="absolute bottom-20 right-[5%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
-        {/* Category filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border ${
-                activeCategory === cat
-                  ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {/* Premium SVG Wave Lines */}
+        <svg className="absolute top-[20%] left-0 w-full h-[250px] opacity-[0.04] text-[#1155CC] pointer-events-none z-0" viewBox="0 0 1440 250" fill="none">
+          <motion.path 
+            d="M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120" 
+            stroke="currentColor" 
+            strokeWidth="2"
+            animate={{
+              d: [
+                "M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120",
+                "M0 120 C300 20, 600 220, 900 20 C1200 220, 1350 110, 1440 120",
+                "M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120"
+              ]
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </svg>
 
-        {/* Project cards grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {filtered.map((project, index) => (
-              <ProjectCard key={project.slug} project={project} index={index} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
-
-        {filtered.length === 0 && (
-          <div className="text-center py-24 text-gray-400">
-            <p className="text-lg font-medium">No projects in this category yet.</p>
+        <section id="projects-list" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+          {/* Section label */}
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+              All <span className="text-[#1155CC]">Projects</span>
+            </h2>
+            <p className="text-sm text-gray-500 mt-2">
+              {allProjects.length} products across {categories.length - 1} categories
+            </p>
           </div>
-        )}
-      </section>
+
+          {/* Category filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-10">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${
+                  activeCategory === cat
+                    ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Project cards grid */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {filtered.map((project, index) => (
+                <ProjectCard key={project.slug} project={project} index={index} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {filtered.length === 0 && (
+            <div className="text-center py-24 text-gray-400">
+              <p className="text-lg font-medium">No projects in this category yet.</p>
+            </div>
+          )}
+        </section>
+      </div>
 
       {/* ── Bottom CTA ─────────────────────────────────────────────────────────── */}
       <section className="relative py-20 overflow-hidden">

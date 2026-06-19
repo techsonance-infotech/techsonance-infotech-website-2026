@@ -23,7 +23,7 @@ export default function BlogClient() {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
         {/* Custom Unique Background: Resonance Mesh & Wave Lines */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

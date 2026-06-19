@@ -196,6 +196,20 @@ export default function AboutClient() {
   const rawX = useTransform(horizontalScroll, [0, 1], [0, -scrollRange]);
   const horizontalX = useSpring(rawX, { stiffness: 100, damping: 20, mass: 0.2 });
 
+  const scrollPortfolio = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const card = container.firstElementChild;
+    if (card) {
+      const cardWidth = card.getBoundingClientRect().width;
+      const gap = 24; // gap-6 is 24px
+      container.scrollBy({
+        left: direction === "left" ? -(cardWidth + gap) : (cardWidth + gap),
+        behavior: "smooth"
+      });
+    }
+  };
+
   // Section 5 timeline progress tracking
   const timelineSectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: timelineScroll } = useScroll({
@@ -213,7 +227,7 @@ export default function AboutClient() {
 
   return (
     <>
-      <SiteHeader transparent={false} />
+      <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
 
       {/* =========================================================================
@@ -329,7 +343,7 @@ export default function AboutClient() {
 
           <motion.div
             ref={scrollRef}
-            style={isMobile ? { x: 0 } : { x: horizontalX }}
+            style={isMobile ? undefined : { x: horizontalX }}
             className={isMobile ? "w-full flex flex-row overflow-x-auto gap-6 px-6 pb-4 scrollbar-none snap-x snap-mandatory relative z-10" : "w-max flex gap-8 px-12 md:px-24 relative z-10"}
           >
             {projects.map((proj, idx) => (
@@ -377,6 +391,30 @@ export default function AboutClient() {
               </div>
             ))}
           </motion.div>
+
+          {/* Mobile Navigation Arrows */}
+          {isMobile && (
+            <div className="flex justify-center gap-4 mt-6 relative z-20">
+              <button
+                onClick={() => scrollPortfolio("left")}
+                className="w-10 h-10 rounded-full border border-white/20 bg-white/5 text-white flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+                aria-label="Previous Project"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => scrollPortfolio("right")}
+                className="w-10 h-10 rounded-full border border-white/20 bg-white/5 text-white flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+                aria-label="Next Project"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
 
         </div>
       </section>

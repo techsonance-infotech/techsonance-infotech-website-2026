@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/app/components/SafeImage";
@@ -96,6 +96,19 @@ const cultureValues = [
 ];
 
 export default function CareersClient() {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -249,55 +262,80 @@ export default function CareersClient() {
 
           {/* Floating Glassmorphic Shapes (Light Theme) */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <ElegantShape
-              delay={0.3}
-              width={520}
-              height={130}
-              rotate={12}
-              gradient="from-blue-500/[0.08]"
-              light={true}
-              className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-            />
+            {mounted && isMobile ? (
+              <>
+                <ElegantShape
+                  delay={0.3}
+                  width={240}
+                  height={60}
+                  rotate={12}
+                  gradient="from-blue-500/[0.08]"
+                  light={true}
+                  className="left-[-15%] top-[10%]"
+                />
+                <ElegantShape
+                  delay={0.5}
+                  width={180}
+                  height={45}
+                  rotate={-15}
+                  gradient="from-cyan-500/[0.08]"
+                  light={true}
+                  className="right-[-10%] bottom-[15%]"
+                />
+              </>
+            ) : (
+              <>
+                <ElegantShape
+                  delay={0.3}
+                  width={520}
+                  height={130}
+                  rotate={12}
+                  gradient="from-blue-500/[0.08]"
+                  light={true}
+                  className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+                />
 
-            <ElegantShape
-              delay={0.5}
-              width={420}
-              height={110}
-              rotate={-15}
-              gradient="from-cyan-500/[0.08]"
-              light={true}
-              className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
-            />
+                <ElegantShape
+                  delay={0.5}
+                  width={420}
+                  height={110}
+                  rotate={-15}
+                  gradient="from-cyan-500/[0.08]"
+                  light={true}
+                  className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
+                />
 
-            <ElegantShape
-              delay={0.4}
-              width={280}
-              height={75}
-              rotate={-8}
-              gradient="from-indigo-500/[0.08]"
-              light={true}
-              className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-            />
+                <ElegantShape
+                  delay={0.4}
+                  width={280}
+                  height={75}
+                  rotate={-8}
+                  gradient="from-indigo-500/[0.08]"
+                  light={true}
+                  className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+                />
 
-            <ElegantShape
-              delay={0.6}
-              width={180}
-              height={50}
-              rotate={20}
-              gradient="from-blue-600/[0.08]"
-              light={true}
-              className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-            />
+                <ElegantShape
+                  delay={0.6}
+                  width={180}
+                  height={50}
+                  rotate={20}
+                  gradient="from-blue-600/[0.08]"
+                  light={true}
+                  className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+                />
 
-            <ElegantShape
-              delay={0.7}
-              width={130}
-              height={35}
-              rotate={-25}
-              gradient="from-cyan-400/[0.08]"
-              light={true}
-              className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
-            />
+                <ElegantShape
+                  delay={0.7}
+                  width={130}
+                  height={35}
+                  rotate={-25}
+                  gradient="from-cyan-400/[0.08]"
+                  light={true}
+                  className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+                />
+              </>
+            )}
           </div>
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
