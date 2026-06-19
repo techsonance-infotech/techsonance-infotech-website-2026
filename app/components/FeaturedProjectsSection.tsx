@@ -82,13 +82,9 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
           }}
         />
 
-        <div
-          className={`grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center ${
-            isEven ? "" : "lg:[&>*:first-child]:order-2"
-          }`}
-        >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* ── Text side ── */}
-          <div className="flex flex-col gap-3.5 relative z-10">
+          <div className={`flex flex-col gap-3.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
             {/* Index + Category */}
             <motion.div
               initial={hiddenX}
@@ -210,7 +206,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
             initial={hiddenXR}
             animate={inView ? visibleX : hiddenXR}
             transition={t(0.1)}
-            className="relative w-full z-0"
+            className={`relative w-full z-0 order-1 ${isEven ? "lg:order-2" : "lg:order-1"}`}
             whileHover={{ y: -4 }}
           >
             <ProjectMockup

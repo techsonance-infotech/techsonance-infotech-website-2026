@@ -1,33 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import SafeImage from "@/app/components/SafeImage";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: i * 0.12, ease: "easeOut" as const },
-  }),
-};
-
-const imageReveal = {
-  hidden: { opacity: 0, scale: 0.96, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.85, delay: 0.2 + i * 0.14, ease: "easeOut" as const },
-  }),
-};
-
 export default function AboutHero() {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: isMobile ? 0 : 36 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, delay: i * 0.12, ease: "easeOut" as const },
+    }),
+  };
+
+  const imageReveal = {
+    hidden: { opacity: 0, scale: isMobile ? 1 : 0.96, y: isMobile ? 0 : 24 },
+    visible: (i: number) => ({
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { duration: 0.85, delay: 0.2 + i * 0.14, ease: "easeOut" as const },
+    }),
+  };
 
   return (
     <>
@@ -38,30 +50,41 @@ export default function AboutHero() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#EFF5FA] via-[#F6FAFD] to-[#FAFBFD]" />
 
           {/* Glowing Drifting Blobs */}
-          <motion.div
-            animate={{
-              x: [0, 40, -20, 0],
-              y: [0, -30, 20, 0],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute -top-20 -left-20 w-[400px] h-[400px] rounded-full bg-blue-400/10 blur-[100px]"
-          />
-          <motion.div
-            animate={{
-              x: [0, -50, 30, 0],
-              y: [0, 40, -30, 0],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute top-1/3 right-[-100px] w-[500px] h-[500px] rounded-full bg-cyan-300/10 blur-[120px]"
-          />
+          {mounted && !isMobile ? (
+            <>
+              <motion.div
+                animate={{
+                  x: [0, 40, -20, 0],
+                  y: [0, -30, 20, 0],
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -top-20 -left-20 w-[400px] h-[400px] rounded-full bg-blue-400/10 blur-[100px]"
+              />
+              <motion.div
+                animate={{
+                  x: [0, -50, 30, 0],
+                  y: [0, 40, -30, 0],
+                }}
+                transition={{
+                  duration: 25,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute top-1/3 right-[-100px] w-[500px] h-[500px] rounded-full bg-cyan-300/10 blur-[120px]"
+              />
+            </>
+          ) : (
+            mounted && (
+              <>
+                <div className="absolute -top-10 -left-10 w-[200px] h-[200px] rounded-full bg-blue-400/10 blur-[60px]" />
+                <div className="absolute top-1/3 right-[-50px] w-[250px] h-[250px] rounded-full bg-cyan-300/10 blur-[80px]" />
+              </>
+            )
+          )}
 
           {/* Animated SVG Grid Lines & Light Beams */}
           <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
@@ -89,36 +112,40 @@ export default function AboutHero() {
             <line x1="85%" y1="0" x2="85%" y2="100%" stroke="#E2E8F0" strokeWidth="1" />
 
             {/* Light trails animation */}
-            <motion.path
-              d="M 0,45% L 100vw,45%"
-              fill="none"
-              stroke="url(#grid-glow)"
-              strokeWidth="2"
-              strokeDasharray="200 800"
-              animate={{
-                strokeDashoffset: [-1000, 1000],
-              }}
-              transition={{
-                duration: 9,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-            <motion.path
-              d="M 55%,0 L 55%,100vh"
-              fill="none"
-              stroke="url(#grid-glow-cyan)"
-              strokeWidth="2"
-              strokeDasharray="150 700"
-              animate={{
-                strokeDashoffset: [900, -900],
-              }}
-              transition={{
-                duration: 12,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
+            {mounted && !isMobile && (
+              <>
+                <motion.path
+                  d="M 0,45% L 100vw,45%"
+                  fill="none"
+                  stroke="url(#grid-glow)"
+                  strokeWidth="2"
+                  strokeDasharray="200 800"
+                  animate={{
+                    strokeDashoffset: [-1000, 1000],
+                  }}
+                  transition={{
+                    duration: 9,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+                <motion.path
+                  d="M 55%,0 L 55%,100vh"
+                  fill="none"
+                  stroke="url(#grid-glow-cyan)"
+                  strokeWidth="2"
+                  strokeDasharray="150 700"
+                  animate={{
+                    strokeDashoffset: [900, -900],
+                  }}
+                  transition={{
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              </>
+            )}
           </svg>
         </div>
 
@@ -135,6 +162,10 @@ export default function AboutHero() {
                   initial="hidden"
                   animate="visible"
                   className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 >
                   <span className="w-2 h-2 rounded-full bg-[#1155CC] animate-pulse" />
                   <span className="text-[10px] font-extrabold text-[#1155CC] tracking-widest uppercase">
@@ -148,6 +179,12 @@ export default function AboutHero() {
                   initial="hidden"
                   animate="visible"
                   className="text-4xl sm:text-5xl lg:text-[72px] font-black leading-[0.95] tracking-tight text-gray-900"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                    transform: "translate3d(0, 0, 0)",
+                    WebkitTransform: "translate3d(0, 0, 0)",
+                  }}
                 >
                   ABOUT
                   <span className="text-[#1155CC] block lg:inline-block lg:ml-2">US</span>
@@ -159,6 +196,10 @@ export default function AboutHero() {
                   initial="hidden"
                   animate="visible"
                   className="text-sm text-gray-500 mt-5 leading-relaxed font-medium max-w-sm"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 >
                   We are a premium team of software architects and product engineers delivering scalable codebases that accelerate business outcomes.
                 </motion.p>
@@ -172,6 +213,10 @@ export default function AboutHero() {
                   initial="hidden"
                   animate="visible"
                   className="p-5 rounded-2xl bg-white/70 backdrop-blur-sm border border-gray-100/60 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)] hover:border-blue-100 transition-all duration-300 group"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 >
                   <h3 className="text-[13px] font-bold text-gray-900 mb-1.5 flex items-center gap-2 group-hover:text-[#1155CC] transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
@@ -188,6 +233,10 @@ export default function AboutHero() {
                   initial="hidden"
                   animate="visible"
                   className="p-5 rounded-2xl bg-white/70 backdrop-blur-sm border border-gray-100/60 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)] hover:border-blue-100 transition-all duration-300 group"
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
                 >
                   <h3 className="text-[13px] font-bold text-gray-900 mb-1.5 flex items-center gap-2 group-hover:text-[#1155CC] transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
@@ -207,6 +256,10 @@ export default function AboutHero() {
               initial="hidden"
               animate="visible"
               className="lg:col-span-5 relative"
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
             >
               {/* Outer decorative card shadow */}
               <div className="absolute inset-0 bg-[#1155CC]/5 rounded-[2.2rem] translate-x-3 translate-y-3 blur-sm pointer-events-none" />
@@ -232,6 +285,10 @@ export default function AboutHero() {
                 initial="hidden"
                 animate="visible"
                 className="relative aspect-[4/3] lg:aspect-square w-full overflow-hidden rounded-[1.75rem] border border-gray-800 bg-gradient-to-tr from-[#0F172A] to-[#1E293B] shadow-[0_12px_30px_rgba(17,85,204,0.08)] flex items-center justify-center p-8 group"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
               >
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
                 

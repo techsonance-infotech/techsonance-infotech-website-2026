@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
+import { cn } from "@/lib/utils";
 
 const sections = [
   { id: "introduction", label: "Introduction", icon: "check" },
@@ -24,6 +25,19 @@ const sections = [
 ];
 
 export default function PrivacyPolicyClient() {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [activeSection, setActiveSection] = useState("introduction");
 
   const scrollToSection = (id: string) => {
@@ -38,11 +52,17 @@ export default function PrivacyPolicyClient() {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
         {/* Ambient background glows */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-[30%] left-0 w-[600px] h-[600px] bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className={cn(
+          "absolute top-0 right-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
+          mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]"
+        )} />
+        <div className={cn(
+          "absolute top-[30%] left-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
+          mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]"
+        )} />
 
         {/* Hero Banner Header */}
         <section className="relative py-16 sm:py-24 overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] text-white">
@@ -54,16 +74,16 @@ export default function PrivacyPolicyClient() {
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <ElegantShape
               delay={0.3}
-              width={400}
-              height={120}
+              width={mounted && isMobile ? 200 : 400}
+              height={mounted && isMobile ? 60 : 120}
               rotate={12}
               gradient="from-[#1155CC]/20 to-transparent"
               className="left-[-10%] top-[10%]"
             />
             <ElegantShape
               delay={0.5}
-              width={300}
-              height={100}
+              width={mounted && isMobile ? 150 : 300}
+              height={mounted && isMobile ? 50 : 100}
               rotate={-15}
               gradient="from-[#22B6F6]/25 to-transparent"
               className="right-[-5%] bottom-[10%]"

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function PortfolioLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#FAFBFD] text-[#0F172A]">
-      <SiteHeader />
+      <SiteHeader transparent={true} />
       {children}
       <SiteFooter />
     </div>

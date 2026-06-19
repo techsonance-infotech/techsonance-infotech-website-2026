@@ -337,11 +337,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                     <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       Phone Number <span className="text-red-500 font-bold">*</span>
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-row gap-2">
                       <select
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="w-[110px] px-3 py-3 bg-white border border-[#1155CC]/15 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium"
+                        className="w-[90px] sm:w-[110px] px-2 sm:px-3 py-3 bg-white border border-[#1155CC]/15 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium shrink-0"
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -362,7 +362,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                           setTouched((prev) => ({ ...prev, phone: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, phone: true }))}
-                        className={`flex-1 ${inputBaseClass("phone")}`}
+                        className={`flex-1 min-w-0 ${inputBaseClass("phone")}`}
                       />
                     </div>
                     {getValidationError("phone") && (

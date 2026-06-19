@@ -600,7 +600,17 @@ export default function WhyChooseSection() {
               >
                 <button
                   type="button"
-                  onClick={() => setActiveIndex(isOpen ? -1 : index)}
+                  onClick={(e) => {
+                    setActiveIndex(isOpen ? -1 : index);
+                    if (!isOpen) {
+                      const buttonElement = e.currentTarget;
+                      setTimeout(() => {
+                        const yOffset = -70; // offset for sticky header
+                        const y = buttonElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                        window.scrollTo({ top: y, behavior: "smooth" });
+                      }, 120);
+                    }
+                  }}
                   className="w-full flex items-center justify-between p-5 text-left"
                 >
                   <div className="flex items-center gap-4 min-w-0">

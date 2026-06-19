@@ -37,7 +37,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader transparent={true} />
       
       {/* Sticky Top Progress Bar */}
       <motion.div
