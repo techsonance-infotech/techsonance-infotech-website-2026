@@ -63,7 +63,7 @@ function ScreenshotGallery({
             </span>
             <div className="flex-1 h-px bg-gray-100" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-10">
+          <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-10">
             See it in <span className="brand-gradient-text">action</span>
           </h2>
         </RevealSection>
@@ -141,11 +141,10 @@ function ScreenshotGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`relative shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-gray-100 ${
-                i === active
-                  ? "scale-105 shadow-lg"
-                  : "border-gray-200 opacity-60 hover:opacity-90"
-              }`}
+              className={`relative shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-gray-100 ${i === active
+                ? "scale-105 shadow-lg"
+                : "border-gray-200 opacity-60 hover:opacity-90"
+                }`}
               style={i === active ? { borderColor: accentColor } : {}}
               aria-label={`View screenshot ${i + 1}`}
             >
@@ -309,7 +308,7 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.06] tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-medium text-gray-900 leading-[1.06] tracking-tight"
             >
               {project.title}
             </motion.h1>
@@ -390,6 +389,7 @@ function ProjectHero({ project }: { project: Project }) {
               accentColor={project.accentColor}
               screenshotPath={project.screenshotPath}
               priority={true}
+              liveUrl={project.liveUrl}
             />
           </motion.div>
         </div>
@@ -419,7 +419,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealSection>
             <SectionLabel text="Challenges" color={project.accentColor} />
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-10">
+            <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-10">
               Problems we <span style={{ color: project.accentColor }}>solved</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -438,7 +438,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   >
                     <EmojiOrLucideIcon icon={c.icon} className="w-5 h-5" />
                   </div>
-                  <h3 className="font-extrabold text-gray-900">{c.title}</h3>
+                  <h3 className="font-medium text-gray-900">{c.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">{c.description}</p>
                 </motion.div>
               ))}
@@ -454,7 +454,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div>
                 <SectionLabel text="Solutions" color={project.accentColor} />
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
+                <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
                   How we <span style={{ color: project.accentColor }}>built it</span>
                 </h2>
                 <p className="text-sm text-gray-500 leading-relaxed mb-8">
@@ -485,7 +485,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               {/* Tech stack full list */}
               <div>
                 <SectionLabel text="Tech Stack" color={project.accentColor} />
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
+                <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
                   Built with the <span style={{ color: project.accentColor }}>best tools</span>
                 </h2>
                 {(["frontend", "backend", "database", "infra", "ai", "mobile"] as const).map((cat) => {
@@ -516,7 +516,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
           <RevealSection>
             <div className="text-center mb-12">
               <SectionLabel text="Results" color={project.accentColor} />
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+              <h2 className="text-2xl sm:text-3xl font-medium text-gray-900">
                 Measurable <span style={{ color: project.accentColor }}>impact</span>
               </h2>
             </div>
@@ -563,7 +563,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             <p className="text-white/70 text-sm font-bold uppercase tracking-widest mb-4">
               Your product, next
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-white mb-6 leading-tight">
               Build Your Product With Us.
             </h2>
             <p className="text-white/75 text-base mb-10 leading-relaxed">

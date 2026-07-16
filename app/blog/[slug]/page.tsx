@@ -38,7 +38,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   return (
     <>
       <SiteHeader transparent={true} />
-      
+
       {/* Sticky Top Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#1155CC] to-[#22B6F6] z-[60] origin-left"
@@ -49,15 +49,15 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         {/* Custom Unique Background: Resonance Waves */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-tr from-[#FAFBFD] via-[#EEF5FF] to-[#F5F9FF] opacity-90" />
-          <div 
-            className="absolute inset-0 opacity-[0.02]" 
-            style={{ 
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
               backgroundImage: `
                 linear-gradient(45deg, #1155cc 0.5px, transparent 0.5px), 
                 linear-gradient(-45deg, #1155cc 0.5px, transparent 0.5px)
-              `, 
-              backgroundSize: "60px 60px" 
-            }} 
+              `,
+              backgroundSize: "60px 60px"
+            }}
           />
           <div className="absolute top-20 left-[10%] w-[350px] h-[350px] bg-[#1155CC]/3 rounded-full blur-[80px]" />
           <div className="absolute top-40 right-[15%] w-[400px] h-[400px] bg-[#22B6F6]/3 rounded-full blur-[100px]" />
@@ -66,7 +66,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         {/* Hero Section */}
         <section className="relative py-16 sm:py-24 border-b border-slate-100/80 z-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
+
             {/* Back Button */}
             <Link
               href="/blog"
@@ -79,7 +79,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider block mb-3">
               {post.category}
             </span>
-            
+
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-sora text-slate-900 leading-tight tracking-tight mb-6">
               {post.title}
             </h1>
@@ -110,7 +110,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         {/* Main Content Layout */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            
+
             {/* Sticky Share Sidebar (Desktop Only) */}
             <div className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
               <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
@@ -152,10 +152,10 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
 
             {/* Post Content */}
             <div className="col-span-1 lg:col-span-9 bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17,85,204,0.02)]">
-              
+
               {/* Main Content Render */}
-              <div 
-                className="prose prose-slate max-w-none prose-headings:font-sora prose-headings:font-extrabold prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline"
+              <div
+                className="prose prose-slate max-w-none prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
 
@@ -178,7 +178,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         {/* Related Posts Section */}
         {relatedPosts.length > 0 && (
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-slate-100 relative z-10">
-            <h3 className="text-lg font-extrabold text-slate-900 font-sora mb-8 text-center sm:text-left">
+            <h3 className="text-lg font-medium text-slate-900 font-sora mb-8 text-center sm:text-left">
               Keep Reading
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -192,7 +192,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
                       {rPost.category}
                     </span>
                     <Link href={`/blog/${rPost.slug}`}>
-                      <h4 className="text-base sm:text-lg font-extrabold text-slate-900 font-sora hover:text-[#1155CC] transition-colors mb-2.5 line-clamp-2">
+                      <h4 className="text-base sm:text-lg font-medium text-slate-900 font-sora hover:text-[#1155CC] transition-colors mb-2.5 line-clamp-2">
                         {rPost.title}
                       </h4>
                     </Link>

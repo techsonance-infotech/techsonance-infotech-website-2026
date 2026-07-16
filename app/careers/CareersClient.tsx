@@ -423,7 +423,7 @@ export default function CareersClient() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-ping" />
                 <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">Core Values</span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Why Join Our Team?</h3>
+              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Why Join Our Team?</h3>
               <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto mt-3 leading-relaxed">
                 We look for engineers who are passionate about writing clean, robust code, architecting smart systems, and building solutions that deliver real-world business impact.
               </p>
@@ -466,7 +466,7 @@ export default function CareersClient() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
                 <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">Life at TechSonance</h2>
-                <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-5">
+                <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight mb-5">
                   Engineers Working Together, Scaling Limits.
                 </h3>
                 <p className="text-sm sm:text-base text-slate-500 font-medium leading-relaxed mb-6">
@@ -475,11 +475,11 @@ export default function CareersClient() {
 
                 <div className="grid grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                   <div>
-                    <span className="block text-2xl font-extrabold text-[#1155CC]">100%</span>
+                    <span className="block text-2xl font-medium text-[#1155CC]">100%</span>
                     <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Engineering Culture</span>
                   </div>
                   <div>
-                    <span className="block text-2xl font-extrabold text-[#1155CC]">Direct</span>
+                    <span className="block text-2xl font-medium text-[#1155CC]">Direct</span>
                     <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Mentor Relationship</span>
                   </div>
                 </div>
@@ -530,7 +530,7 @@ export default function CareersClient() {
 
           <div className="text-center max-w-3xl mx-auto mb-16 relative z-10">
             <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">Join Us</h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Open Opportunities</h3>
+            <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Open Opportunities</h3>
             <p className="text-sm sm:text-base text-slate-500 font-medium mt-2">
               Browse our currently open positions and find where you fit.
             </p>
@@ -544,7 +544,7 @@ export default function CareersClient() {
                 <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
                   Active Internship
                 </span>
-                <h4 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Full Stack Developer Intern</h4>
+                <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">Full Stack Developer Intern</h4>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
                   <span className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> On-Site
@@ -653,7 +653,7 @@ export default function CareersClient() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
                 <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">Hiring Path</span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Our Hiring Process</h3>
+              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Our Hiring Process</h3>
               <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-xl mx-auto mt-2 leading-relaxed">
                 We believe in a transparent, fast-paced assessment cycle designed to value your engineering and problem-solving abilities.
               </p>
@@ -900,7 +900,7 @@ export default function CareersClient() {
           />
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+            <h3 className="text-3xl sm:text-4xl font-medium text-white tracking-tight mb-4">
               Not Ready to Apply Yet?
             </h3>
             <p className="text-sm sm:text-base text-blue-50/90 max-w-xl mx-auto font-medium leading-relaxed mb-8">

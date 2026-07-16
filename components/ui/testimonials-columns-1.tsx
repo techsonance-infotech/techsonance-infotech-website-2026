@@ -35,7 +35,7 @@ export const TestimonialsColumn = (props: {
                 <div className="p-8 rounded-2xl border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] max-w-xs w-full bg-white hover:shadow-lg transition-shadow duration-300" key={i}>
                   <div className="text-gray-700 text-[14px] leading-relaxed font-medium">{text}</div>
                   <div className="flex items-center gap-3 mt-6">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#1155CC] to-indigo-600 text-white flex items-center justify-center font-extrabold text-sm border border-[#1155CC]/10 select-none shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#1155CC] to-indigo-600 text-white flex items-center justify-center font-medium text-sm border border-[#1155CC]/10 select-none shrink-0">
                       {name
                         .split(" ")
                         .map((n) => n[0])
@@ -44,7 +44,7 @@ export const TestimonialsColumn = (props: {
                         .slice(0, 2)}
                     </div>
                     <div className="flex flex-col">
-                      <div className="font-extrabold text-gray-900 tracking-tight leading-5 text-sm">{name}</div>
+                      <div className="font-medium text-gray-900 tracking-tight leading-5 text-sm">{name}</div>
                       <div className="leading-5 text-[11px] text-[#1155CC] font-bold tracking-tight uppercase">{role}</div>
                     </div>
                   </div>

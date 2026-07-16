@@ -18,7 +18,7 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
         <div className="reveal-up mb-12 md:mb-16">
           <span className="section-label">Proof of Work</span>
           <h2
-            className="text-[var(--text-primary)] font-extrabold tracking-tight"
+            className="text-[var(--text-primary)] font-medium tracking-tight"
             style={{ fontSize: "var(--text-section-title)" }}
           >
             Projects We&apos;ve Shipped
@@ -53,11 +53,11 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--accent-blue)] mb-2">
                   {project.industry}
                 </span>
-                
+
                 <h3 className="text-lg md:text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-blue)] transition-colors duration-200">
                   {project.name}
                 </h3>
-                
+
                 <p className="text-[var(--text-secondary)] text-[14px] leading-relaxed mb-5 flex-1">
                   {project.outcome}
                 </p>

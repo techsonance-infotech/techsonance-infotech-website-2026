@@ -283,7 +283,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
           <div className="lg:col-span-8">
             <h2
-              className="text-[var(--text-primary)] font-extrabold tracking-tight"
+              className="text-[var(--text-primary)] font-medium tracking-tight"
               style={{ fontSize: "var(--text-section-title)", lineHeight: 1.1 }}
             >
               What most {service.problemHeadline} get{" "}
@@ -326,7 +326,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-[15px] font-extrabold text-[var(--text-primary)] leading-snug mb-4">
+                  <h3 className="text-[15px] font-medium text-[var(--text-primary)] leading-snug mb-4">
                     {card.title}
                   </h3>
 

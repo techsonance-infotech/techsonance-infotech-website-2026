@@ -62,7 +62,7 @@ export const Testimonials = () => {
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mt-5 text-slate-900">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mt-5 text-slate-900">
             What our clients say
           </h2>
           <p className="text-center mt-5 text-slate-600">

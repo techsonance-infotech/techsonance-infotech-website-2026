@@ -23,13 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: "article",
       images: project.screenshotPath
         ? [
-            {
-              url: project.screenshotPath,
-              width: 1200,
-              height: 630,
-              alt: `${project.title} Case Study Screenshot`,
-            },
-          ]
+          {
+            url: project.screenshotPath,
+            width: 1200,
+            height: 630,
+            alt: `${project.title} Case Study Screenshot`,
+          },
+        ]
         : [],
     },
     twitter: {

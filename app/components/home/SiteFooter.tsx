@@ -42,7 +42,7 @@ export default function SiteFooter() {
                       INFOTECH LLP
                       <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#475569]" />
                     </span>
-                    <span className="block text-[7.5px] font-extrabold font-sans uppercase tracking-[0.15em] text-slate-355 mt-1.5 text-center">
+                    <span className="block text-[7.5px] font-medium font-sans uppercase tracking-[0.15em] text-slate-355 mt-1.5 text-center">
                       Where Innovation Finds Its Resonance
                     </span>
                   </div>
@@ -216,7 +216,7 @@ export default function SiteFooter() {
           {/* Lower row: copyright & compliance */}
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-5 text-[11px] text-slate-400">
             <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
-              <span>© {currentYear} All rights reserved by <span className="font-extrabold text-[#22B6F6]">TechSonance InfoTech LLP</span></span>
+              <span>© {currentYear} All rights reserved by <span className="font-medium text-[#22B6F6]">TechSonance InfoTech LLP</span></span>
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center md:justify-end">
               <Link href="/careers" className="hover:text-slate-350 transition-colors">Career</Link>

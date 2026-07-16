@@ -12,7 +12,7 @@ const t = (delay = 0) => ({ duration: 0.6, ease: "easeOut" as const, delay });
 // ─── One-liner result row ──────────────────────────────────────────────────────
 function ChallengeRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-4 px-4 sm:px-5 py-2.5 sm:py-3 border-b border-gray-100 last:border-0">
+    <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-4 px-4 sm:px-5 py-2 sm:py-2.5 border-b border-gray-100 last:border-0">
       <span
         className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider shrink-0"
         style={{ background: `${color}18`, color }}
@@ -28,7 +28,7 @@ function ChallengeRow({ label, value, color }: { label: string; value: string; c
 function FeaturedProjectRow({ project, index, total }: { project: Project; index: number; total: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { once: true, margin: "-10%" });
-  
+
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
     const media = window.matchMedia("(min-width: 1024px)");
@@ -57,7 +57,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
   return (
     <div
       ref={containerRef}
-      className="relative w-full lg:sticky transform-gpu origin-top py-4 sm:py-6 lg:py-8"
+      className="relative w-full lg:sticky transform-gpu origin-top py-3 sm:py-4 lg:py-5"
       style={{
         top: isDesktop ? `calc(90px + ${index * 20}px)` : "auto",
         zIndex: index + 10,
@@ -67,7 +67,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
     >
       <motion.div
         style={isDesktop ? { scale, opacity, transformOrigin: "top center" } : {}}
-        className="bg-white rounded-[24px] sm:rounded-[32px] border border-gray-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.03)] p-5 sm:p-8 lg:p-10 relative overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_-10px_rgba(13,71,161,0.08)]"
+        className="bg-white rounded-[24px] sm:rounded-[32px] border border-gray-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.03)] p-5 sm:p-7 lg:p-8 relative overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_-10px_rgba(13,71,161,0.08)]"
       >
         {/* Background accent glow */}
         <div
@@ -84,7 +84,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* ── Text side ── */}
-          <div className={`flex flex-col gap-3.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
+          <div className={`flex flex-col gap-2.5 lg:gap-3 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
             {/* Index + Category */}
             <motion.div
               initial={hiddenX}
@@ -115,7 +115,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={t(0.08)}
-              className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 leading-tight tracking-tight"
+              className="text-xl sm:text-2xl lg:text-3xl font-medium leading-[1.15] tracking-tight text-gray-900"
             >
               {project.title}
             </motion.h3>
@@ -215,6 +215,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               category={project.category}
               accentColor={project.accentColor}
               screenshotPath={project.screenshotPath}
+              liveUrl={project.liveUrl}
             />
           </motion.div>
         </div>
@@ -251,10 +252,10 @@ function SectionHeader() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={t(0.08)}
-            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight"
+            className="text-3xl sm:text-4xl lg:text-5xl font-medium leading-[1.15] tracking-tight text-gray-900"
           >
-            Products We&apos;ve{" "}
-            <span className="text-[#1155CC]">Engineered.</span>
+            Products <span className="italic">We&apos;ve{" "}</span>
+            <span className="italic text-[#1155CC]">Engineered.</span>
           </motion.h2>
 
           <motion.div
@@ -334,7 +335,7 @@ export default function FeaturedProjectsSection() {
           <div className="relative rounded-[calc(1.5rem-1px)] bg-white px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-1">Explore All Work</p>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900">
+              <h3 className="text-xl sm:text-2xl font-medium text-gray-900">
                 See every product we&apos;ve shipped
               </h3>
             </div>

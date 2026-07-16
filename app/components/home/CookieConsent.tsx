@@ -62,7 +62,7 @@ export default function CookieConsent() {
                 </svg>
               </div>
               <div className="space-y-1">
-                <h3 className="text-xs sm:text-sm font-extrabold tracking-tight font-sora text-slate-900">
+                <h3 className="text-xs sm:text-sm font-medium tracking-tight font-sora text-slate-900">
                   Privacy & Cookies Preferences
                 </h3>
                 <p className="text-xs font-semibold text-slate-600 leading-relaxed max-w-4xl">

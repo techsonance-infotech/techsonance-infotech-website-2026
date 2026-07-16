@@ -161,7 +161,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative flex flex-col items-center overflow-hidden bg-white px-4 pb-4 pt-28 sm:px-6 sm:pt-32 lg:pt-36">
+      <section className="relative flex flex-col items-center overflow-hidden bg-white px-4 sm:px-6 xl:px-10 min-[1920px]:px-15 pb-4 pt-30 sm:pt-36 lg:pt-40">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -171,7 +171,7 @@ export default function HeroSection() {
           <HeroHeadline />
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-gray-500 sm:text-lg">
-            From startups to global brands, we design, develop, and deliver
+            From startups to global brands. we design, develop, and deliver
             high-performing web and mobile solutions that turn ideas into
             impact.
           </p>
@@ -181,7 +181,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        <div className="mt-20 w-full">
+        <div className="mt-20 w-full max-w-7xl mx-auto">
           <TrustedClientsMarquee />
         </div>
       </section>
@@ -443,7 +443,7 @@ export default function HeroSection() {
 //         Products" on one line even on a ~700px column, and only grows once
 //         there's genuinely more room (xl/2xl/4K).
 //       */}
-//       <h1 className="text-[1.9rem] font-extrabold leading-[1.4] tracking-tight text-gray-900 sm:text-4xl lg:text-[2.5rem] xl:text-5xl 2xl:text-[3.25rem] min-[2560px]:text-6xl">
+//       <h1 className="text-[1.9rem] font-medium leading-[1.4] tracking-tight text-gray-900 sm:text-4xl lg:text-[2.5rem] xl:text-5xl 2xl:text-[3.25rem] min-[2560px]:text-6xl">
 //         We Build Digital Products
 //         <br />
 //         <span className="text-[#1155CC]">That Drive Growth.</span>
@@ -669,7 +669,7 @@ export default function HeroSection() {
 //               </div>
 //             </div>
 
-//             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-[1.08] tracking-tight">
+//             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-900 leading-[1.08] tracking-tight">
 //               We Build Digital Products
 //               <br />
 //               <span className="text-[#1155CC]">That Drive Growth.</span>
