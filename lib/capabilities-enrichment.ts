@@ -6,7 +6,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
   "custom-software-development": [
     {
       tags: ["Multi-role", "RBAC", "Audit logs"],
-      outcome: "3 fully isolated role portals with <200ms cart updates in Sound Sphere Marketplace.",
+      outcome: "3 fully isolated role portals with <200ms cart updates in Techsonance Marketplace.",
     },
     {
       tags: ["Dashboards", "Exports", "Workflows"],

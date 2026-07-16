@@ -305,7 +305,7 @@ export const projects: Project[] = [
   // ── 3. TechSonance Marketplace ─────────────────────────────────────────────
   {
     slug: "techsonance-marketplace",
-    title: "Sound Sphere Marketplace",
+    title: "Techsonance Marketplace",
     tagline: "A Multi-Vendor Commerce Platform at Scale.",
     category: "E-Commerce Platform",
     industry: "E-Commerce & Retail",
@@ -315,7 +315,7 @@ export const projects: Project[] = [
     shortDescription:
       "A comprehensive multi-tenant e-commerce marketplace where customers browse and purchase, vendors manage their stores, and admins oversee the platform - all from one React application.",
     overview:
-      "Sound Sphere Marketplace is a production-grade multi-vendor platform with separate dashboards for Customers, Vendors, and Admins. It features advanced state management, real-time cart/wishlist sync, and a rich vendor analytics suite.",
+      "Techsonance Marketplace is a production-grade multi-vendor platform with separate dashboards for Customers, Vendors, and Admins. It features advanced state management, real-time cart/wishlist sync, and a rich vendor analytics suite.",
 
     challenge: "Building a scalable multi-vendor marketplace with role-isolated dashboards, real-time cart sync, and vendor onboarding - all in a single SPA.",
     solution: "Redux Toolkit multi-slice architecture with localStorage persistence, role-based routing, and Recharts analytics.",
@@ -366,7 +366,25 @@ export const projects: Project[] = [
     ],
     accentColor: "#1155CC",
     mockupGradient: "linear-gradient(135deg, #1155CC 0%, #1155CC 40%, #22B6F6 100%)",
-    screenshotPath: "/images/projects/placeholder-techsonance-marketplace.png",
+    screenshotPath: "/images/marketplace/marketplace .png",
+    screenshots: [
+      {
+        src: "/images/marketplace/marketplace .png",
+        caption: "Techsonance Marketplace - Main storefront with product discovery and vendor listings",
+      },
+      {
+        src: "/images/marketplace/marketplace 2.png",
+        caption: "Vendor Dashboard - Revenue tracking, order management, and inventory analytics",
+      },
+      {
+        src: "/images/marketplace/marketplace 3.png",
+        caption: "Customer Portal - Personalised shopping, cart, wishlist and order history",
+      },
+      {
+        src: "/images/marketplace/marketplace 4.png",
+        caption: "Admin Panel - Platform oversight, vendor approvals, and financial reporting",
+      },
+    ],
   },
 
   // ── 4. HisaabKitaab ────────────────────────────────────────────────────────
