@@ -174,7 +174,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
                   boxShadow: `0 4px 16px ${project.accentColor}25`,
                 }}
               >
-                View Case Study
+                View Project
                 <svg
                   className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
                   viewBox="0 0 16 16"

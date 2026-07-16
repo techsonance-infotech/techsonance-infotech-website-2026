@@ -557,7 +557,7 @@ function WhyChooseVisualizer({ index }: { index: number }) {
 
 export default function WhyChooseSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const active = whyItems[activeIndex];
+  const active = whyItems[activeIndex] ?? whyItems[0];
 
   return (
     <section className="relative overflow-hidden bg-[#FAFBFD] py-20">
@@ -581,7 +581,7 @@ export default function WhyChooseSection() {
         {/* Desktop Layout: Side-by-side tabs */}
         <div className="hidden lg:grid grid-cols-12 gap-8 lg:gap-12 items-start">
           <WhyChooseNav activeIndex={activeIndex} onActivate={setActiveIndex} />
-          <WhyChoosePanel item={active} index={activeIndex} />
+          {active && <WhyChoosePanel item={active} index={activeIndex >= 0 ? activeIndex : 0} />}
         </div>
 
         {/* Mobile/Tablet Layout: Clean Expandable Accordion */}
