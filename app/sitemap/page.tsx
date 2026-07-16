@@ -129,7 +129,7 @@ export default function SitemapPage() {
                   <Icon name="monitor" className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                     Core Navigation
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -170,7 +170,7 @@ export default function SitemapPage() {
                   <Icon name="shield" className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                     Legal & Corporate
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -207,7 +207,7 @@ export default function SitemapPage() {
                   <Icon name="code" className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                     Our Expertises & Services
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -246,7 +246,7 @@ export default function SitemapPage() {
                   <Icon name="beaker" className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                     Featured Case Studies
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -285,7 +285,7 @@ export default function SitemapPage() {
                   <Icon name="brain" className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                     Blog & Engineering Insights
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">

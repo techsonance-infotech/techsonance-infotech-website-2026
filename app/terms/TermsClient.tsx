@@ -122,7 +122,7 @@ export default function TermsClient() {
         {/* Main Content Layout */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            
+
             {/* Sticky Navigation Sidebar (Desktop) */}
             <div className="hidden lg:block lg:col-span-4 sticky top-28 bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
               <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pb-3 mb-4 border-b border-slate-100">
@@ -133,15 +133,13 @@ export default function TermsClient() {
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all group ${
-                      activeSection === section.id
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all group ${activeSection === section.id
                         ? "bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/10"
                         : "text-slate-600 hover:text-[#1155CC] hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full transition-all ${
-                      activeSection === section.id ? "bg-white scale-125" : "bg-slate-300 group-hover:bg-[#1155CC]"
-                    }`} />
+                    <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeSection === section.id ? "bg-white scale-125" : "bg-slate-300 group-hover:bg-[#1155CC]"
+                      }`} />
                     {section.label}
                   </button>
                 ))}
@@ -150,7 +148,7 @@ export default function TermsClient() {
 
             {/* Terms and Conditions Main Content */}
             <div className="col-span-1 lg:col-span-8 space-y-8">
-              
+
               {/* Domain & Ownership */}
               <div
                 id="domain-ownership"
@@ -161,7 +159,7 @@ export default function TermsClient() {
                     <Icon name="check" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       Domain & Ownership
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -194,7 +192,7 @@ export default function TermsClient() {
                     <Icon name="bolt" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       Agreement to Terms
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -219,7 +217,7 @@ export default function TermsClient() {
                     <Icon name="code" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       1. Use of the Web Site
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -252,7 +250,7 @@ export default function TermsClient() {
                     <Icon name="check" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       2. Registration
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -275,7 +273,7 @@ export default function TermsClient() {
                     <Icon name="arrow" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       3. Limitation of Liability
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -301,7 +299,7 @@ export default function TermsClient() {
                     <Icon name="schema" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       4. Links to Other Web Sites
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -324,7 +322,7 @@ export default function TermsClient() {
                     <Icon name="database" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       5. The User's Content
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -350,7 +348,7 @@ export default function TermsClient() {
                     <Icon name="bolt" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       6. Payments, Cancellation & Refunds
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -380,7 +378,7 @@ export default function TermsClient() {
                     <Icon name="check" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       7. Additional Legal Terms
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -407,7 +405,7 @@ export default function TermsClient() {
                     <Icon name="arrow" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       8. Anti-Hacking Provisions
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -448,7 +446,7 @@ export default function TermsClient() {
                     <Icon name="arrow" className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 mb-1 font-sora">
+                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       Questions & Support
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">

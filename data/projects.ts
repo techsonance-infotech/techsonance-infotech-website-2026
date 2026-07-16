@@ -50,7 +50,86 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  // ── 1. FreightFlow ─────────────────────────────────────────────────────────
+  // ── 1. MasterWeg ──────────────────────────────────────────────────────────
+  {
+    slug: "masterweg",
+    title: "MasterWeg",
+    tagline: "The platform for your Master's application in Germany",
+    category: "SaaS Platform",
+    industry: "EdTech & Education",
+    liveUrl: "https://masterweg.com/",
+    featured: true,
+    featuredOrder: 1,
+    shortDescription:
+      "A unified student workspace guiding applicants to German Master's programs - centralizing profile matching, document preparation, language learning, and application tracking.",
+    overview:
+      "Masterweg is the ultimate workspace for students aiming to pursue their Master's degree in Germany. By centralizing profile evaluations, university and program matching, document editing, and language learning, it eliminates the confusion and complexity of the German university admission process.",
+    challenge: "Fragmented university requirements, complex document checks, and disjointed application tracking across multiple portals.",
+    solution: "A unified student portal with AI program matching, document guidelines, A1 German learning, and centralized tracking.",
+    result: "100% correct document submissions, interactive language learning, and a streamlined admission matching process.",
+    challenges: [
+      {
+        title: "Fragmented Requirements",
+        description: "German universities use different portals (Uni-Assist, direct portals) with varying requirements, leading to high rejection rates due to missing or incorrect documents.",
+        icon: "🇩🇪",
+      },
+      {
+        title: "Document Preparation Barriers",
+        description: "Writing Statements of Purpose (SOPs) and Letters of Recommendation (LORs) requires expert guidance and strict formatting that many students struggle to construct.",
+        icon: "📝",
+      },
+      {
+        title: "Language and Prep Tests",
+        description: "Learning basic German (A1) and preparing for tests like dMAT was scattered across third-party websites with zero tracking of progress.",
+        icon: "🗣️",
+      },
+    ],
+    solutions: [
+      "AI-powered program matching tool that matches students with universities based on GPA, ECTs, and language scores",
+      "Centralized document manager providing templates, review checklists, and AI-assisted drafts for SOPs/LORs",
+      "Structured German A1 vocabulary module with interactive flashcards and progress tracking",
+      "Real-time application tracking dashboard showing statuses of submitted applications in one workspace",
+      "Diagnostic dMAT preparation quizzes and study planners",
+    ],
+    metrics: [
+      { value: "100%", label: "Document Accuracy" },
+      { value: "400+", label: "German Universities Mapped" },
+      { value: "A1", label: "German Course Integrated" },
+      { value: "Real-time", label: "Application Tracking" },
+    ],
+    techStack: [
+      { name: "Next.js", category: "frontend" },
+      { name: "React", category: "frontend" },
+      { name: "TypeScript", category: "frontend" },
+      { name: "Tailwind CSS", category: "frontend" },
+      { name: "Node.js", category: "backend" },
+      { name: "PostgreSQL", category: "database" },
+      { name: "AI/LLM API", category: "ai" },
+    ],
+    accentColor: "#2563EB",
+    mockupGradient: "linear-gradient(135deg, #1E3A8A 0%, #2563EB 40%, #60A5FA 100%)",
+    screenshotPath: "/images/MasterWeg/masterWeg 1.png",
+    screenshots: [
+      {
+        src: "/images/MasterWeg/masterWeg 1.png",
+        caption: "Student Dashboard - Streamlined view of application status, document readiness, and next actions",
+      },
+      {
+        src: "/images/MasterWeg/masterWeg 2.png",
+        caption: "Program Finder - Matching profile criteria to German university admissions",
+      },
+      {
+        src: "/images/MasterWeg/masterWeg 3.png",
+        caption: "Profile Analytics - Checking ECTS and GPA eligibility dynamically",
+      },
+      {
+        src: "/images/MasterWeg/masterWeg 4.png",
+        caption: "Document Prep Guide - Real-time SOP and LOR checklists and templates",
+      },
+    ],
+  },
+
+  // ── 2. FreightFlow ─────────────────────────────────────────────────────────
   {
     slug: "freightflow",
     title: "FreightFlow",
@@ -59,7 +138,7 @@ export const projects: Project[] = [
     industry: "Logistics & Transport",
     liveUrl: "https://freightflow.techsonance.co.in/dashboard",
     featured: true,
-    featuredOrder: 1,
+    featuredOrder: 2,
     shortDescription:
       "A full-stack multi-tenant SaaS platform built exclusively for Indian road transport businesses - replacing disconnected spreadsheets with a single, purpose-built digital ecosystem.",
     overview:
@@ -145,7 +224,7 @@ export const projects: Project[] = [
     industry: "Retail & Hospitality",
     liveUrl: "https://syncserve.techsonance.co.in/",
     featured: true,
-    featuredOrder: 2,
+    featuredOrder: 3,
     shortDescription:
       "A cloud-native Point of Sale system built for modern retail and hospitality - featuring real-time inventory sync, multi-outlet management, and offline-first transactions.",
     overview:
@@ -226,17 +305,17 @@ export const projects: Project[] = [
   // ── 3. TechSonance Marketplace ─────────────────────────────────────────────
   {
     slug: "techsonance-marketplace",
-    title: "Sound Sphere Marketplace",
+    title: "Techsonance Marketplace",
     tagline: "A Multi-Vendor Commerce Platform at Scale.",
     category: "E-Commerce Platform",
     industry: "E-Commerce & Retail",
     liveUrl: "https://cms.techsonance.co.in/login",
     featured: true,
-    featuredOrder: 3,
+    featuredOrder: 4,
     shortDescription:
       "A comprehensive multi-tenant e-commerce marketplace where customers browse and purchase, vendors manage their stores, and admins oversee the platform - all from one React application.",
     overview:
-      "Sound Sphere Marketplace is a production-grade multi-vendor platform with separate dashboards for Customers, Vendors, and Admins. It features advanced state management, real-time cart/wishlist sync, and a rich vendor analytics suite.",
+      "Techsonance Marketplace is a production-grade multi-vendor platform with separate dashboards for Customers, Vendors, and Admins. It features advanced state management, real-time cart/wishlist sync, and a rich vendor analytics suite.",
 
     challenge: "Building a scalable multi-vendor marketplace with role-isolated dashboards, real-time cart sync, and vendor onboarding - all in a single SPA.",
     solution: "Redux Toolkit multi-slice architecture with localStorage persistence, role-based routing, and Recharts analytics.",
@@ -287,7 +366,25 @@ export const projects: Project[] = [
     ],
     accentColor: "#1155CC",
     mockupGradient: "linear-gradient(135deg, #1155CC 0%, #1155CC 40%, #22B6F6 100%)",
-    screenshotPath: "/images/projects/placeholder-techsonance-marketplace.png",
+    screenshotPath: "/images/marketplace/marketplace .png",
+    screenshots: [
+      {
+        src: "/images/marketplace/marketplace .png",
+        caption: "Techsonance Marketplace - Main storefront with product discovery and vendor listings",
+      },
+      {
+        src: "/images/marketplace/marketplace 2.png",
+        caption: "Vendor Dashboard - Revenue tracking, order management, and inventory analytics",
+      },
+      {
+        src: "/images/marketplace/marketplace 3.png",
+        caption: "Customer Portal - Personalised shopping, cart, wishlist and order history",
+      },
+      {
+        src: "/images/marketplace/marketplace 4.png",
+        caption: "Admin Panel - Platform oversight, vendor approvals, and financial reporting",
+      },
+    ],
   },
 
   // ── 4. HisaabKitaab ────────────────────────────────────────────────────────

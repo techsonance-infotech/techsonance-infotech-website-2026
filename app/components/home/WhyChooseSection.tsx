@@ -186,7 +186,7 @@ function AIBrainFlowVisual() {
         className="absolute top-[12%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="beaker" className="h-3.5 w-3.5 text-[#8B5CF6] shrink-0" />
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Agentic</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Agentic</span>
       </motion.div>
 
       <motion.div
@@ -195,7 +195,7 @@ function AIBrainFlowVisual() {
         className="absolute bottom-[12%] left-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-2 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="database" className="h-3.5 w-3.5 text-[#1155CC] shrink-0" />
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">RAG Ops</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">RAG Ops</span>
       </motion.div>
 
       <motion.div
@@ -204,7 +204,7 @@ function AIBrainFlowVisual() {
         className="absolute bottom-[12%] right-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="shield" className="h-3.5 w-3.5 text-[#06B6D4] shrink-0" />
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Guardrail</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Guardrail</span>
       </motion.div>
     </div>
   );
@@ -277,7 +277,7 @@ function Isometric3DStackVisual() {
             />
             <span
               className={[
-                "text-[9px] font-extrabold uppercase tracking-wider",
+                "text-[9px] font-medium uppercase tracking-wider",
                 isBottom ? "text-gray-800" : "text-white"
               ].join(" ")}
             >
@@ -314,7 +314,7 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0">
           <Icon name="speed" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Rapid Dev</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Rapid Dev</span>
       </motion.div>
 
       <motion.div
@@ -325,7 +325,7 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-purple-50 text-[#8B5CF6] flex items-center justify-center shrink-0">
           <Icon name="shield" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">QA Build</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">QA Build</span>
       </motion.div>
 
       <motion.div
@@ -336,7 +336,7 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-cyan-50 text-[#06B6D4] flex items-center justify-center shrink-0">
           <Icon name="cloud" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-700">Scale Out</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Scale Out</span>
       </motion.div>
     </div>
   );
@@ -372,28 +372,28 @@ function InfiniteLifecycleVisual() {
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="beaker" className="h-4 w-4 text-[#8B5CF6]" />
         </div>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-500">Plan</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Plan</span>
       </div>
 
       <div className="absolute right-[8%] top-[50%] -translate-y-1/2 text-center">
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="cloud" className="h-4 w-4 text-[#1155CC]" />
         </div>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-500">Release</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Release</span>
       </div>
 
       <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 text-center">
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="monitor" className="h-4 w-4 text-emerald-500" />
         </div>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-500">Optimize</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Optimize</span>
       </div>
 
       <div className="absolute left-[8%] top-[50%] -translate-y-1/2 text-center">
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="code" className="h-4 w-4 text-[#06B6D4]" />
         </div>
-        <span className="text-[9px] font-extrabold uppercase tracking-wide text-gray-500">Build</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Build</span>
       </div>
     </div>
   );
@@ -451,7 +451,7 @@ function ScalableGridVisual() {
             />
             <span
               className={[
-                "text-[9px] font-extrabold uppercase tracking-wider",
+                "text-[9px] font-medium uppercase tracking-wider",
                 isBottom ? "text-gray-800" : "text-white"
               ].join(" ")}
             >
@@ -486,7 +486,7 @@ function CollaborationRingsVisual() {
 
       <div className="absolute left-[25%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
       <div className="absolute left-[75%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
-      
+
       <div className="absolute left-[25%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
       <div className="absolute left-[75%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
 
@@ -494,7 +494,7 @@ function CollaborationRingsVisual() {
 
       <div className="absolute left-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-blue-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F1F5F9] border border-blue-100 flex items-center justify-center mb-2.5 shadow-inner">
-           <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
+          <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
         </div>
         <h4 className="text-[12px] sm:text-[13px] font-bold text-[#1155CC] mb-1">Your Team</h4>
         <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">Your goals, your vision, your users</p>
@@ -502,35 +502,35 @@ function CollaborationRingsVisual() {
 
       <div className="absolute right-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-purple-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F5F3FF] border border-purple-100 flex items-center justify-center mb-2.5 shadow-inner">
-           <Icon name="code" className="h-5 w-5 sm:h-6 sm:w-6 text-[#8B5CF6]" /> 
+          <Icon name="code" className="h-5 w-5 sm:h-6 sm:w-6 text-[#8B5CF6]" />
         </div>
         <h4 className="text-[12px] sm:text-[13px] font-bold text-[#8B5CF6] mb-1">Our Team</h4>
         <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">Our expertise, our commitment</p>
       </div>
 
       <div className="absolute left-1/2 bottom-[5%] -translate-x-1/2 flex flex-col items-center z-10 w-[80%] max-w-[200px]">
-         <div className="relative w-[64px] h-[64px] flex items-center justify-center">
-           <motion.div
-             animate={{ scale: [1, 1.4], opacity: [0.15, 0] }}
-             transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-             className="absolute inset-[-6px] rounded-full bg-[#1155CC]"
-           />
-           <motion.div
-             animate={{ scale: [1, 1.2], opacity: [0.3, 0] }}
-             transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
-             className="absolute inset-[-2px] rounded-full bg-[#8B5CF6]"
-           />
-           <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(17, 85, 204,0.1)] border border-blue-100 flex items-center justify-center z-10">
-              <Icon name="handshake" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
-           </div>
-         </div>
-         
-         <div className="mt-4 sm:mt-5 flex flex-col items-center">
-            <div className="bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-blue-50 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-1.5 relative z-20">
-              <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">Shared Success</span>
-            </div>
-            <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">Long-term impact<br/>together</span>
-         </div>
+        <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+          <motion.div
+            animate={{ scale: [1, 1.4], opacity: [0.15, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+            className="absolute inset-[-6px] rounded-full bg-[#1155CC]"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.2], opacity: [0.3, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+            className="absolute inset-[-2px] rounded-full bg-[#8B5CF6]"
+          />
+          <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(17, 85, 204,0.1)] border border-blue-100 flex items-center justify-center z-10">
+            <Icon name="handshake" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
+          </div>
+        </div>
+
+        <div className="mt-4 sm:mt-5 flex flex-col items-center">
+          <div className="bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-blue-50 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-1.5 relative z-20">
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">Shared Success</span>
+          </div>
+          <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">Long-term impact<br />together</span>
+        </div>
       </div>
     </div>
   );
@@ -557,7 +557,7 @@ function WhyChooseVisualizer({ index }: { index: number }) {
 
 export default function WhyChooseSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const active = whyItems[activeIndex];
+  const active = whyItems[activeIndex] ?? whyItems[0];
 
   return (
     <section className="relative overflow-hidden bg-[#FAFBFD] py-20">
@@ -570,7 +570,7 @@ export default function WhyChooseSection() {
             <Icon name="trend" className="h-3.5 w-3.5" />
             Why Choose Us
           </div>
-          <h2 className="text-3xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
+          <h2 className="text-3xl lg:text-5xl font-medium text-gray-900 leading-tight">
             Built Different. <span className="text-[#1155CC]">Built for Impact.</span>
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
@@ -581,7 +581,7 @@ export default function WhyChooseSection() {
         {/* Desktop Layout: Side-by-side tabs */}
         <div className="hidden lg:grid grid-cols-12 gap-8 lg:gap-12 items-start">
           <WhyChooseNav activeIndex={activeIndex} onActivate={setActiveIndex} />
-          <WhyChoosePanel item={active} index={activeIndex} />
+          {active && <WhyChoosePanel item={active} index={activeIndex >= 0 ? activeIndex : 0} />}
         </div>
 
         {/* Mobile/Tablet Layout: Clean Expandable Accordion */}
@@ -746,7 +746,7 @@ function WhyChooseNav({
               <span className="min-w-0 flex-1">
                 <span
                   className={[
-                    "block text-base font-extrabold leading-tight transition-colors duration-200",
+                    "block text-base font-medium leading-tight transition-colors duration-200",
                     active ? "text-gray-900" : "text-gray-600 group-hover:text-gray-900"
                   ].join(" ")}
                 >
@@ -796,7 +796,7 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
                 {item.number}
               </span>
             </div>
-            <h3 className="text-[22px] sm:text-[26px] lg:text-[30px] font-extrabold text-[#0B1221] leading-tight tracking-tight">
+            <h3 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-[#0B1221] leading-tight tracking-tight">
               {item.title}
             </h3>
           </div>

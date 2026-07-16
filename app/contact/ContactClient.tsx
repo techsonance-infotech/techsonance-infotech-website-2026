@@ -276,7 +276,7 @@ export default function ContactClient() {
 
             {/* Left Column (60%): Contact Form */}
             <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)]">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-black mb-6">
+              <h2 className="text-xl sm:text-2xl font-medium text-black mb-6">
                 Send Us a Message
               </h2>
 
@@ -498,7 +498,7 @@ export default function ContactClient() {
                     <Icon name="bolt" className="w-5 h-5 text-white" />
                   </div>
 
-                  <h3 className="text-xl font-extrabold mb-2 text-white">
+                  <h3 className="text-xl font-medium mb-2 text-white">
                     Or book a call directly
                   </h3>
 

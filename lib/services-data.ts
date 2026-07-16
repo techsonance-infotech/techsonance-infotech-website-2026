@@ -122,7 +122,7 @@ export const platform = {
         icon: "schema",
         title: "Enterprise Platforms",
         description: "Multi-role systems with isolated permissions, audit trails, and modular feature flags.",
-        usedInProject: "Sound Sphere Marketplace",
+        usedInProject: "Techsonance Marketplace",
       },
       {
         icon: "database",
@@ -140,7 +140,7 @@ export const platform = {
         icon: "users",
         title: "Customer-Facing Dashboards",
         description: "Self-service portals that reduce support load and give clients real-time visibility.",
-        usedInProject: "Sound Sphere Marketplace",
+        usedInProject: "Techsonance Marketplace",
       },
       {
         icon: "code",
@@ -432,7 +432,7 @@ export const webApp = {
         icon: "monitor",
         title: "Single Page Applications",
         description: "Fast, app-like experiences with client-side routing and optimistic UI updates.",
-        usedInProject: "Sound Sphere Marketplace",
+        usedInProject: "Techsonance Marketplace",
       },
       {
         icon: "bolt",
@@ -850,13 +850,13 @@ const v1 = await ship({
         icon: "trend",
         title: "Iterative Releases",
         description: "Weekly deployable increments with user feedback loops built into the process.",
-        usedInProject: "Sound Sphere Marketplace",
+        usedInProject: "Techsonance Marketplace",
       },
       {
         icon: "users",
         title: "Multi-Stakeholder Products",
         description: "Products with distinct user roles - customers, vendors, admins - each with tailored experiences.",
-        usedInProject: "Sound Sphere Marketplace",
+        usedInProject: "Techsonance Marketplace",
       },
       {
         icon: "cloud",

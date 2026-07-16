@@ -89,7 +89,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
           <div className="max-w-3xl">
             <span className="section-label">Our Approach</span>
             <h2
-              className="text-[var(--text-primary)] font-extrabold tracking-tight"
+              className="text-[var(--text-primary)] font-medium tracking-tight"
               style={{ fontSize: "var(--text-section-title)" }}
             >
               How We Work
@@ -121,7 +121,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
                 {/* Timeline node — desktop only */}
                 <div className="hidden md:flex items-center justify-center mb-6">
                   <div className="relative z-10 w-9 h-9 rounded-full border-2 border-[var(--accent-blue)] bg-[var(--bg-muted)] flex items-center justify-center shadow-sm">
-                    <span className="text-[10px] font-extrabold text-[var(--accent-blue)]">
+                    <span className="text-[10px] font-medium text-[var(--accent-blue)]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
                   {/* Mobile step badge */}
                   <div className="flex items-center gap-2.5 mb-3 md:hidden">
                     <div className="w-7 h-7 rounded-full border-2 border-[var(--accent-blue)] flex items-center justify-center">
-                      <span className="text-[9px] font-extrabold text-[var(--accent-blue)]">
+                      <span className="text-[9px] font-medium text-[var(--accent-blue)]">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     </div>

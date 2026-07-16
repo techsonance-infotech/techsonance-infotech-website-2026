@@ -49,7 +49,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
   return (
     <main ref={pageRef} className="bg-[var(--bg-base)] min-h-screen relative overflow-x-clip">
       <ServiceHero service={service} />
-      
+
       {/* ─── GEO (Generative Engine Optimization) FRAMEWORK SECTION ─── */}
       {geoData && (
         <section className="service-section py-20 bg-white border-y border-slate-100 relative z-10">
@@ -118,7 +118,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <span className="text-[10px] font-black uppercase text-red-500 tracking-wider block">
                     The Business Problem
                   </span>
-                  <h4 className="text-lg font-extrabold text-gray-900">
+                  <h4 className="text-lg font-medium text-gray-900">
                     What business problem does it solve?
                   </h4>
                   <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
@@ -131,7 +131,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <span className="text-[10px] font-black uppercase text-[#1155CC] tracking-wider block">
                     Our Solution Architecture
                   </span>
-                  <h4 className="text-lg font-extrabold text-gray-900">
+                  <h4 className="text-lg font-medium text-gray-900">
                     How do we address this?
                   </h4>
                   <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
@@ -144,7 +144,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <span className="text-[10px] font-black uppercase text-green-600 tracking-wider block">
                     Operational Outcome
                   </span>
-                  <h4 className="text-lg font-extrabold text-gray-900">
+                  <h4 className="text-lg font-medium text-gray-900">
                     What is the expected outcome?
                   </h4>
                   <p className="text-sm sm:text-base text-gray-500 leading-relaxed">

@@ -164,10 +164,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
   };
 
   const inputBaseClass = (field: string) =>
-    `w-full px-4 py-3 bg-white border ${
-      getValidationError(field)
-        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-        : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
+    `w-full px-4 py-3 bg-white border ${getValidationError(field)
+      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+      : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
     } rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`;
 
   return (
@@ -211,7 +210,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 </span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight mb-1.5">
+              <h2 className="text-2xl sm:text-3xl font-medium text-[#0F172A] leading-tight mb-1.5">
                 Let&apos;s Build{" "}
                 <span className="text-[#1155CC]">
                   Something Together

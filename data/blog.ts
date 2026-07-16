@@ -46,7 +46,7 @@ export const blogPosts: BlogPost[] = [
         In this article, we share our architectural learnings from building <strong>FreightFlow</strong>, a full-stack multi-tenant SaaS platform built exclusively for Indian road transport operators.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Core Challenge: Data Isolation at Scale</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Core Challenge: Data Isolation at Scale</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         In logistics, data security is paramount. Fleet owners, transporters, and consignees all demand that their transaction sheets, driver payrolls, and pricing agreements remain strictly isolated. We evaluated two multi-tenant architectural strategies:
       </p>
@@ -55,7 +55,7 @@ export const blogPosts: BlogPost[] = [
         <li><strong>Shared database with Row-Level Security (RLS):</strong> Unified schema, easy migrations, and robust security handled natively at the database level.</li>
       </ul>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Implementing PostgreSQL Row-Level Security</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Implementing PostgreSQL Row-Level Security</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         We selected PostgreSQL Row-Level Security combined with Supabase schemas to enforce tenant isolation. Every table contains a <code>tenant_id</code> column. We configured the database to deny all reads and writes by default, enabling access only through a session-level tenant identifier:
       </p>
@@ -70,12 +70,12 @@ CREATE POLICY tenant_isolation_policy ON lorry_receipts
   USING (tenant_id = current_setting('app.current_tenant_id', true));
       </pre>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Optimizing Per-Trip Profit & Loss Queries</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Optimizing Per-Trip Profit & Loss Queries</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         For transporters, calculating real-time profitability per vehicle requires aggregating trip earnings (freight charges) against immediate operational expenditures (fuel costs, driver wages, Toll payments, and vehicle repairs). We implemented indexed database views that compute material aggregates on the database layer, allowing FreightFlow to render financial metrics in under 150ms on mobile devices.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Conclusion</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Conclusion</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         By pushing multi-tenancy rules and complex calculations down to the database level, we built a highly secure, fast, and maintainable ecosystem that handles hundreds of truck transactions concurrently.
       </p>
@@ -106,7 +106,7 @@ CREATE POLICY tenant_isolation_policy ON lorry_receipts
         When developing <strong>SyncServe POS</strong>, we chose React 19 and Next.js to provide an offline-first POS experience that outperforms legacy desktop terminals.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Offline-First Architectural Layer</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Offline-First Architectural Layer</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Retail stores experience internet outages frequently. SyncServe uses a service worker pipeline to cache dynamic inventory catalogs and customer directories. When active internet is lost, transactions are written locally to the browser's <strong>IndexedDB</strong>:
       </p>
@@ -127,12 +127,12 @@ async function saveTransaction(transaction) {
 }
       </pre>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Utilizing React 19 Concurrent Actions</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Utilizing React 19 Concurrent Actions</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         React 19's new concurrent features (such as <code>useActionState</code> and <code>useTransition</code>) allow us to handle barcode scanner inputs asynchronously without locking up the UI thread. As cashiers scan items rapidly, the UI updates smoothly, buffering pending items and calculating tax totals concurrently.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Outcome</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Outcome</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         SyncServe POS achieves zero checkout downtime during retail network failures. Once connection is restored, background service workers synchronize the cached sales data back to the server in batch queries.
       </p>
@@ -163,7 +163,7 @@ async function saveTransaction(transaction) {
         At TechSonance, we are building <strong>Agentic AI Workflows</strong> that automate document verification, compliance validation, and internal support operations with human-grade accuracy.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">What Makes an AI Agent "Agentic"?</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">What Makes an AI Agent "Agentic"?</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Unlike static pipelines, agentic workflows feature a loop where the LLM evaluates input, decides which tools to call, inspects the tools' output, and loops until the task is complete:
       </p>
@@ -173,12 +173,12 @@ async function saveTransaction(transaction) {
         <li><strong>Reflection:</strong> Analyzing outputs and correcting paths dynamically.</li>
       </ul>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Automating Logistics Document Processing</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Automating Logistics Document Processing</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         By combining vision models and agentic workflows, we automated vendor invoice checks. The agent inspects the uploaded file, reads tax details, cross-references corporate purchase records, calls validation tools for GST registration, and posts the audited entry directly to the database.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Future of Agency Engineering</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Future of Agency Engineering</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Agentic workflows represent a paradigm shift. Rather than coding static conditions for every business rule, we configure guardrails and let models reason through cases dynamically.
       </p>
@@ -209,17 +209,17 @@ async function saveTransaction(transaction) {
         In this article, we share how we bridge the gap between Figma mockups and high-performance React code.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Shared Token System</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Shared Token System</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Consistency starts with variables. We map every color palette, typography scaling, shadow depth, and border radius directly to Tailwind config variables. This ensures that when a designer specifies a color, the developer uses the exact same token.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Micro-Animations and Transitions</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Micro-Animations and Transitions</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Premium websites feel alive because they react to user actions. We use Framer Motion to animate page transitions and hover states. Subtle, fast easing curves make navigation feel snappy and responsive.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Summary</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Summary</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         By establishing a unified design system and developer-friendly token structures, our team brings complex digital experiences to life efficiently and beautifully.
       </p>
@@ -250,7 +250,7 @@ async function saveTransaction(transaction) {
         In this case analysis, we discuss how we architected and scaled <strong>TechSonance Marketplace</strong> to achieve sub-second catalog search responses and seamless order splitting pipelines.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Search Challenge: Millisecond Catalog Queries</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Search Challenge: Millisecond Catalog Queries</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         With millions of SKUs from hundreds of sellers, querying PostgreSQL directly for dynamic searches, price ranges, and taxonomy filters became a bottleneck. We introduced <strong>Elasticsearch</strong> as our read-optimized query layer:
       </p>
@@ -273,12 +273,12 @@ export async function syncProductToSearchIndex(productId, db) {
 }
       </pre>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Automated Transaction & Order Splitting</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Automated Transaction & Order Splitting</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         When a customer checks out, the backend splits the single checkout payload into separate sub-orders for each seller. Payment gateways like Razorpay or Stripe are leveraged to route funds dynamically: splitting base amounts to vendors and allocating calculated commission fees to TechSonance Marketplace in a single transactional query.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Summary</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Summary</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Decoupling product search indexes and orchestrating microservice-based transaction routing allows TechSonance Marketplace to process thousands of transactions reliably with minimum latency.
       </p>
@@ -309,7 +309,7 @@ export async function syncProductToSearchIndex(productId, db) {
         During the engineering of <strong>HisaabKitaab</strong>, we focused on building an open-source grade, bulletproof invoicing and tax calculations engine that processes compliance data with zero margins of error.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Decoupling Tax Logic</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Decoupling Tax Logic</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         To prevent visual lag during user data entry, the tax compiler operates on decoupled state hooks. As line items are added, a Zod validator validates the item's parameters and computes the tax distributions client-side:
       </p>
@@ -324,12 +324,12 @@ export const InvoiceItemSchema = z.object({
 });
       </pre>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Instant Browser PDF Compilation</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Instant Browser PDF Compilation</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Rather than generating invoice PDFs on the server layer (which incurs storage and rendering costs), we utilized client-side <strong>jsPDF</strong> and <strong>jspdf-autotable</strong>. Invoices render in the browser and download instantly, saving server overhead and providing sub-second document delivery to business owners.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Conclusion</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Conclusion</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Designing clear validation models combined with client-side document processing allowed HisaabKitaab to generate thousands of clean, compliant invoices daily while keeping infrastructure costs minimal.
       </p>
@@ -360,7 +360,7 @@ export const InvoiceItemSchema = z.object({
         When building the <strong>NFC Attendance System</strong>, our goal was to bridge physical USB/Ethernet card readers to a central cloud server without introducing single-point-of-failure network bottlenecks.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">The Hardware-to-Web Bridge Daemon</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">The Hardware-to-Web Bridge Daemon</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Web browsers cannot interface directly with raw USB serial ports natively. We engineered a light background Node.js daemon (Reader Agent) that runs locally on check-in terminal machines. The agent listens to card-scan serial events and writes logs locally before attempting network dispatch:
       </p>
@@ -374,7 +374,7 @@ serialPort.on('data', (rawData) => {
 });
       </pre>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Edge SQLite Tables</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Edge SQLite Tables</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         By deploying edge-optimized **Turso** databases, the attendance system syncs logs between local nodes and central company servers automatically. If the internet goes offline, the system continues logging taps to SQLite, pushing all buffered records seamlessly once the router reconnects.
       </p>
@@ -405,17 +405,17 @@ serialPort.on('data', (rawData) => {
         For <strong>Agraj Enterprise</strong>, we built a digital presence from the ground up, optimizing local search indexing to position the brand on Google page one within 48 hours of launch.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">100% JSON-Driven Content Architecture</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">100% JSON-Driven Content Architecture</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Industrial businesses need to update safety certifications and project portfolios regularly but don't want to hire web agencies for simple text adjustments. We built the marketing pages to read entirely from configuration JSON documents, decoupling data from components.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Structured Schema Injection</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Structured Schema Injection</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         To capture maximum search results real estate, we injected 6 distinct, structured JSON-LD schemas into the pages: <em>LocalBusiness, ServicePage, FAQPage, BreadcrumbList, WebSite,</em> and <em>ImageObject</em>. This helps search engine crawlers understand service locations, safety credentials, and contact points natively.
       </p>
 
-      <h3 class="text-xl font-extrabold text-slate-900 mt-8 mb-4 font-sora">Result</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Result</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
         Agraj Enterprise went from zero web footprint to complete local indexing in two days, opening up fresh digital leads channel across Gujarat.
       </p>

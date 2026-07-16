@@ -10,6 +10,7 @@ interface ProjectMockupProps {
   /** Optional: path to real screenshot served from /public */
   screenshotPath?: string;
   priority?: boolean;
+  liveUrl?: string;
 }
 
 export function ProjectMockup({
@@ -19,6 +20,7 @@ export function ProjectMockup({
   accentColor,
   screenshotPath,
   priority = false,
+  liveUrl,
 }: ProjectMockupProps) {
   return (
     <div className="relative w-full select-none">
@@ -30,7 +32,7 @@ export function ProjectMockup({
           <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
           <span className="w-3 h-3 rounded-full bg-[#28C840]" />
           <div className="flex-1 mx-3 bg-white rounded-md px-3 py-1 text-[10px] text-gray-400 font-mono border border-gray-200 truncate">
-            {title.toLowerCase().replace(/\s+/g, "-")}.techsonance.co.in
+            {liveUrl ? new URL(liveUrl).hostname : `${title.toLowerCase().replace(/\s+/g, "-")}.techsonance.co.in`}
           </div>
         </div>
 

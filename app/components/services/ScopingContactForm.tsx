@@ -107,10 +107,9 @@ export default function ScopingContactForm({
   };
 
   const inputBaseClass = (field: string) =>
-    `w-full px-4 py-3 bg-white border ${
-      getValidationError(field)
-        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-        : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
+    `w-full px-4 py-3 bg-white border ${getValidationError(field)
+      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+      : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
     } rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`;
 
   const formContent = (
@@ -125,15 +124,15 @@ export default function ScopingContactForm({
           <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">Contact Us</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0F172A] mb-6 leading-tight">
+        <h2 className="text-3xl sm:text-4xl font-medium text-[#0F172A] mb-6 leading-tight">
           Have an idea in mind? <br />
           <span className="text-[#1155CC]">Let&apos;s build it.</span>
         </h2>
-        
+
         <p className="text-[15px] text-slate-500 font-medium leading-relaxed mb-8 max-w-md">
           Share your requirements and our engineers will follow up within 24 hours to schedule a free scoping call.
         </p>
-        
+
         <ul className="space-y-4 text-[14px] text-slate-650 font-medium">
           <li className="flex items-center gap-3">
             <span className="w-6 h-6 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 font-bold text-xs border border-[#1155CC]/10">
@@ -167,7 +166,7 @@ export default function ScopingContactForm({
               <div className="w-12 h-12 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center text-lg mb-4 font-bold border border-[#1155CC]/10">
                 ✓
               </div>
-              <h3 className="text-lg font-extrabold text-[#0F172A] mb-2">Request Submitted</h3>
+              <h3 className="text-lg font-medium text-[#0F172A] mb-2">Request Submitted</h3>
               <p className="text-sm text-slate-500 max-w-xs leading-relaxed mb-6">
                 A tech lead will review your submission and connect with you shortly.
               </p>

@@ -101,7 +101,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                 INFOTECH LLP
                 <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#DDE3EA]" />
               </span>
-              <span className="hidden sm:block text-[7.5px] font-extrabold font-sans uppercase tracking-[0.15em] text-[#374151] mt-1.5 text-center">
+              <span className="hidden sm:block text-[7.5px] font-medium font-sans uppercase tracking-[0.15em] text-[#374151] mt-1.5 text-center">
                 Where Innovation Finds Its Resonance
               </span>
             </span>

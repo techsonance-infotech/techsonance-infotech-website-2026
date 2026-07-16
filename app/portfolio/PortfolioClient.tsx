@@ -66,6 +66,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           accentColor={project.accentColor}
           screenshotPath={project.screenshotPath}
           priority={index < 3}
+          liveUrl={project.liveUrl}
         />
       </div>
 
@@ -73,7 +74,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div className="flex flex-col flex-1 p-6 gap-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-extrabold text-lg text-gray-900 leading-tight">{project.title}</h3>
+            <h3 className="font-medium text-lg text-gray-900 leading-tight">{project.title}</h3>
             <p className="text-xs text-gray-400 font-medium mt-0.5">{project.industry}</p>
           </div>
           {project.liveUrl && (
@@ -168,8 +169,8 @@ export default function PortfolioClient() {
         ]}
         className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
       >
-        <div 
-          className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center relative z-10" 
+        <div
+          className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center relative z-10"
           style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}
         >
           <div className="inline-flex items-center gap-2 bg-white border border-[#1155CC]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
@@ -179,7 +180,7 @@ export default function PortfolioClient() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-gray-900 leading-[1.06] tracking-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-medium text-gray-900 leading-[1.06] tracking-tight mb-6">
             Our Best Work, <br /> <span className="text-[#1155CC]">Live in Production.</span>
           </h1>
 
@@ -188,7 +189,7 @@ export default function PortfolioClient() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button 
+            <button
               onClick={() => {
                 document.getElementById("projects-list")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -202,16 +203,16 @@ export default function PortfolioClient() {
 
       {/* ── Filter + Grid Section Wrapper with Background Effects ───────────────── */}
       <div className="relative w-full overflow-hidden bg-[#FAFBFD] border-t border-slate-100">
-        
+
         {/* Ambient Gradient Background Glows */}
         <div className="absolute top-10 left-[10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none z-0" />
         <div className="absolute bottom-20 right-[5%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
         {/* Premium SVG Wave Lines */}
         <svg className="absolute top-[20%] left-0 w-full h-[250px] opacity-[0.04] text-[#1155CC] pointer-events-none z-0" viewBox="0 0 1440 250" fill="none">
-          <motion.path 
-            d="M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120" 
-            stroke="currentColor" 
+          <motion.path
+            d="M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120"
+            stroke="currentColor"
             strokeWidth="2"
             animate={{
               d: [
@@ -227,7 +228,7 @@ export default function PortfolioClient() {
         <section id="projects-list" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
           {/* Section label */}
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            <h2 className="text-2xl sm:text-3xl font-medium text-gray-900">
               All <span className="text-[#1155CC]">Projects</span>
             </h2>
             <p className="text-sm text-gray-500 mt-2">
@@ -241,11 +242,10 @@ export default function PortfolioClient() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${
-                  activeCategory === cat
-                    ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${activeCategory === cat
+                  ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
+                  }`}
               >
                 {cat}
               </button>
@@ -289,7 +289,7 @@ export default function PortfolioClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl font-extrabold text-white mb-4"
+            className="text-3xl sm:text-4xl font-medium text-white mb-4"
           >
             Ready to build your product?
           </motion.h2>

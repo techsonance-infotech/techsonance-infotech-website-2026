@@ -165,10 +165,10 @@ export default function TechnologiesSection() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 mb-5">
             <div className="h-px w-8 bg-[#1155CC]/40" />
-            <span className="text-xs font-extrabold text-[#1155CC] tracking-[0.15em] uppercase">Infrastructure & Technologies</span>
+            <span className="text-xs font-medium text-[#1155CC] tracking-[0.15em] uppercase">Infrastructure & Technologies</span>
             <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-900 leading-tight mb-4">
             Infrastructure &amp; Tech<br className="hidden sm:block" /> <span className="text-[#1155CC]">We Work With</span>
           </h2>
           <p className="text-[16px] text-gray-500 leading-relaxed max-w-xl mx-auto">
@@ -203,7 +203,7 @@ export default function TechnologiesSection() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-extrabold text-gray-800 uppercase tracking-[0.1em] leading-tight mb-1">{card.title}</h3>
+                  <h3 className="text-[11px] font-medium text-gray-800 uppercase tracking-[0.1em] leading-tight mb-1">{card.title}</h3>
                   <p className="text-[12px] text-gray-500 leading-snug">{card.description}</p>
                 </div>
               </div>

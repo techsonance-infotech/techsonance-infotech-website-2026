@@ -151,7 +151,7 @@ export default function AboutHero() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
+
             {/* Left Column: Heading & Key Features */}
             <div className="lg:col-span-4 flex flex-col justify-between lg:min-h-[520px] relative">
               <div>
@@ -168,7 +168,7 @@ export default function AboutHero() {
                   }}
                 >
                   <span className="w-2 h-2 rounded-full bg-[#1155CC] animate-pulse" />
-                  <span className="text-[10px] font-extrabold text-[#1155CC] tracking-widest uppercase">
+                  <span className="text-[10px] font-medium text-[#1155CC] tracking-widest uppercase">
                     OUR MISSION
                   </span>
                 </motion.div>
@@ -226,7 +226,7 @@ export default function AboutHero() {
                     Production systems built for scale — custom software, SaaS platforms, and AI automation for real businesses.
                   </p>
                 </motion.div>
-                
+
                 <motion.div
                   custom={4}
                   variants={fadeUp}
@@ -291,7 +291,7 @@ export default function AboutHero() {
                 }}
               >
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-                
+
                 {/* Floating Glow effects */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 bg-[#1155CC]/15 rounded-full blur-2xl group-hover:bg-[#22B6F6]/25 transition-all duration-500" />
 
@@ -330,7 +330,7 @@ export default function AboutHero() {
                     At TechSonance, we build software that runs real businesses — not slide decks. Every system is engineered for production from day one.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row gap-3 mt-auto">
                   <button
                     onClick={() => setIsBookModalOpen(true)}
