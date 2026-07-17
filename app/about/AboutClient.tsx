@@ -7,6 +7,7 @@ import SiteFooter from "@/app/components/home/SiteFooter";
 import AboutHero from "@/app/components/about/AboutHero";
 import { projects } from "@/data/projects";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import { Button } from "@/components/ui/button";
 
 // Helper components for Section 2 Count-up
 function CountUp({ value, suffix = "", delay = 0 }: { value: number; suffix?: string; delay?: number }) {
@@ -864,10 +865,13 @@ export default function AboutClient() {
                 From custom database engineering to intelligent workflow automation, we take ownership of backend complexity so you can focus on business growth.
               </p>
 
-              <MagneticButton onClick={() => setIsBookModalOpen(true)} className="shadow-[0_4px_30px_rgba(17, 85, 204,0.3)]">
-                <span className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-slate-50 transition-colors inline-block">
+              <MagneticButton onClick={() => setIsBookModalOpen(true)}>
+                <Button
+                  variant="secondary"
+                  className="bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-lg hover:shadow-xl focus:ring-white/20"
+                >
                   Book a Strategy Call
-                </span>
+                </Button>
               </MagneticButton>
             </motion.div>
           </div>

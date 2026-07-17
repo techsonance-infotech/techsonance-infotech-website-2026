@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
@@ -80,18 +81,22 @@ export default function CookieConsent() {
             </div>
 
             <div className="flex items-center gap-3 shrink-0 w-full md:w-auto justify-center md:justify-end">
-              <button
+              <Button
                 onClick={handleDecline}
-                className="px-4 py-2 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 active:bg-slate-100 text-slate-500 hover:text-slate-800 font-bold rounded-xl text-xs transition-all w-1/2 sm:w-auto text-center"
+                variant="secondary"
+                size="sm"
+                className="w-1/2 sm:w-auto border-slate-200 hover:border-slate-350 text-slate-500 hover:text-slate-800 hover:bg-slate-50 shadow-sm"
               >
                 Decline
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleAccept}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#1155CC] to-[#22B6F6] hover:brightness-110 active:scale-[0.98] text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-[#1155CC]/25 w-1/2 sm:w-auto text-center"
+                variant="primary"
+                size="sm"
+                className="w-1/2 sm:w-auto"
               >
                 Accept All
-              </button>
+              </Button>
             </div>
           </div>
         </motion.div>

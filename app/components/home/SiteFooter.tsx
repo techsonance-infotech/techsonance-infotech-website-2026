@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { services } from "@/data/services";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import { Button } from "@/components/ui/button";
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -132,13 +133,15 @@ export default function SiteFooter() {
               <p className="text-xs text-slate-300 leading-relaxed mb-4">
                 Schedule a tech scoping session to review your product design, system flowcharts, and architecture roadmap.
               </p>
-              <button
+              <Button
                 onClick={() => setIsBookModalOpen(true)}
-                className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-white hover:bg-slate-800 hover:border-slate-700 transition-all shadow-md group cursor-pointer"
+                variant="secondary"
+                size="sm"
+                className="border-slate-800 hover:border-slate-700 text-white hover:text-white hover:bg-slate-850 transition-all shadow-md group cursor-pointer"
               >
                 Book Free Session
-                <Icon name="arrow" className="w-3.5 h-3.5 text-slate-300 group-hover:text-white transition-all transform group-hover:translate-x-0.5" />
-              </button>
+                <Icon name="arrow" className="w-3.5 h-3.5 text-slate-300 group-hover:text-white transition-all transform group-hover:translate-x-0.5 ml-2" />
+              </Button>
               <div className="mt-6 text-[10px] text-slate-400 leading-relaxed">
                 Office Hours: Mon - Fri, 9AM - 6PM IST <br />
                 Standard response timeline: 24 Hours

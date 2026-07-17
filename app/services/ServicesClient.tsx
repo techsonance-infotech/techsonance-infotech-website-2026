@@ -9,6 +9,7 @@ import { ServiceIllustration } from "@/app/components/services/ServiceIllustrati
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import ScopingContactForm from "@/app/components/services/ScopingContactForm";
 import { AEO_FAQS } from "@/lib/seo-aeo-geo-config";
+import { Button } from "@/components/ui/button";
 
 const serviceProducts = [
   {
@@ -344,15 +345,11 @@ export default function ServicesClient() {
 
                     {/* Call-to-action link */}
                     <div className="flex items-center gap-4">
-                      <Link
-                        href={`/services/${service.slug}`}
-                        className="inline-flex items-center gap-2 text-xs font-medium text-gray-800 hover:text-[#22B6F6] transition-colors uppercase tracking-wider group cursor-pointer"
-                      >
-                        Deep Dive Into This Service
-                        <div className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center transition-all group-hover:bg-[#1155CC] group-hover:border-[#1155CC] group-hover:text-white">
-                          <Icon name="arrow" className="w-3 h-3" />
-                        </div>
-                      </Link>
+                      <Button asChild variant="secondary" size="sm" showArrow={true}>
+                        <Link href={`/services/${service.slug}`}>
+                          Deep Dive Into This Service
+                        </Link>
+                      </Button>
                     </div>
                   </motion.div>
 

@@ -9,6 +9,7 @@ import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const constellationNodes = Array.from({ length: 24 }, (_, i) => {
   const x = `${((i * 17) % 95) + 2}%`;
@@ -357,15 +358,9 @@ export default function CareersClient() {
               We design and construct production-grade SaaS, AI systems, and cloud architectures. Learn, create, and launch products that make an immediate business impact.
             </p>
 
-            <a
-              href="#positions"
-              className="inline-flex items-center gap-2 rounded-full btn-primary px-7 py-3 text-sm font-semibold text-white cursor-pointer shadow-lg hover:shadow-xl transition-all"
-            >
-              View Open Positions
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
-                <Icon name="arrow" className="h-3 w-3" />
-              </span>
-            </a>
+            <Button asChild variant="primary" showArrow={true}>
+              <a href="#positions">View Open Positions</a>
+            </Button>
           </div>
 
           {/* Fade transition to the light section below */}
@@ -555,13 +550,9 @@ export default function CareersClient() {
                   <span className="text-[#1155CC]">Stipend: Competitive</span>
                 </div>
               </div>
-              <a
-                href="#apply"
-                className="group/btn rounded-full bg-slate-900 hover:bg-[#1155CC] text-white px-8 py-3 text-xs font-bold tracking-wide transition-all duration-300 flex items-center gap-2 shadow-sm"
-              >
-                Apply Now
-                <Icon name="arrow" className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" />
-              </a>
+              <Button asChild variant="primary" size="sm" showArrow={true}>
+                <a href="#apply">Apply Now</a>
+              </Button>
             </div>
 
             <div className="py-8 space-y-8 relative z-10">
@@ -872,16 +863,15 @@ export default function CareersClient() {
                   )}
                 </AnimatePresence>
 
-                <button
+                <Button
                   type="submit"
                   disabled={status === "loading" || !isFormValid}
-                  className="w-full flex items-center justify-center gap-2 rounded-full btn-primary py-3.5 text-sm font-semibold text-white cursor-pointer shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  variant="primary"
+                  showArrow={status !== "loading"}
+                  className="w-full"
                 >
                   {status === "loading" ? "Submitting Application..." : "Submit Application"}
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
-                    <Icon name="arrow" className="h-3 w-3" />
-                  </span>
-                </button>
+                </Button>
 
               </form>
             </div>
@@ -908,18 +898,20 @@ export default function CareersClient() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="/about"
-                className="w-full sm:w-auto rounded-full bg-white hover:bg-slate-50 text-[#1155CC] px-7 py-3 text-sm font-bold shadow-md transition-all duration-300"
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
               >
-                About Company
-              </a>
-              <a
-                href="/contact"
-                className="w-full sm:w-auto rounded-full border border-white/40 hover:border-white text-white px-7 py-3 text-sm font-bold transition-all duration-300"
+                <a href="/about">About Company</a>
+              </Button>
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
               >
-                Contact Us
-              </a>
+                <a href="/contact">Contact Us</a>
+              </Button>
             </div>
           </div>
         </section>

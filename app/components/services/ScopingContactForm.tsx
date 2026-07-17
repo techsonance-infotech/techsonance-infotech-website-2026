@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { services } from "@/data/services";
 import { Icon } from "@/app/components/icons/Icon";
+import { Button } from "@/components/ui/button";
 
 export default function ScopingContactForm({
   defaultService,
@@ -291,23 +292,22 @@ export default function ScopingContactForm({
                 </div>
               )}
 
-              <button
+              <Button
                 type="submit"
                 disabled={formStatus === "submitting" || !isFormValid}
-                className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+                variant="primary"
+                showArrow={formStatus !== "submitting"}
+                className="w-full"
               >
                 {formStatus === "submitting" ? (
                   <>
-                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
                     Submitting...
                   </>
                 ) : (
-                  <>
-                    Submit Scoping Request
-                    <Icon name="arrow" className="h-5 w-5" />
-                  </>
+                  "Submit Scoping Request"
                 )}
-              </button>
+              </Button>
             </form>
           )}
         </div>

@@ -8,6 +8,7 @@ import { TechBadge } from "@/app/components/projects/TechBadge";
 import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
 import { ArcGalleryHero } from "@/components/ui/arc-gallery-hero-component";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import { Button } from "@/components/ui/button";
 
 // ─── Hero stats ────────────────────────────────────────────────────────────────
 const heroStats = [
@@ -189,14 +190,15 @@ export default function PortfolioClient() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
+            <Button
               onClick={() => {
                 document.getElementById("projects-list")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#1155CC] text-white font-bold text-sm hover:bg-[#0b3c8a] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+              variant="primary"
+              className="w-full sm:w-auto"
             >
               Explore Projects
-            </button>
+            </Button>
           </div>
         </div>
       </ArcGalleryHero>
@@ -309,18 +311,20 @@ export default function PortfolioClient() {
             transition={{ duration: 0.6, delay: 0.18 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <button
+            <Button
               onClick={() => setIsBookModalOpen(true)}
-              className="px-8 py-3.5 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-lg cursor-pointer"
+              variant="secondary"
+              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
             >
               Book Free Consultation
-            </button>
-            <Link
-              href="/"
-              className="px-8 py-3.5 rounded-xl border-2 border-white/40 text-white font-bold text-sm hover:bg-white/10 transition-colors"
+            </Button>
+            <Button
+              asChild
+              variant="secondary"
+              className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
             >
-              Back to Home
-            </Link>
+              <Link href="/">Back to Home</Link>
+            </Button>
           </motion.div>
         </div>
       </section>

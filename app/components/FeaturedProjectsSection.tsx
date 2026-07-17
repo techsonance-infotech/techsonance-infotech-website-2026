@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getFeaturedProjects, type Project } from "@/data/projects";
 import { ProjectMockup } from "./projects/ProjectMockup";
 import { TechBadge } from "./projects/TechBadge";
+import { Button } from "@/components/ui/button";
 
 // ─── Shared transition helper ──────────────────────────────────────────────────
 const t = (delay = 0) => ({ duration: 0.6, ease: "easeOut" as const, delay });
@@ -166,25 +167,16 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               transition={t(0.32)}
               className="flex items-center gap-4 pt-1"
             >
-              <Link
-                href={`/portfolio/${project.slug}`}
-                className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${project.accentColor} 0%, ${project.accentColor}dd 100%)`,
-                  boxShadow: `0 4px 16px ${project.accentColor}25`,
-                }}
+              <Button
+                asChild
+                variant="primary"
+                size="sm"
+                showArrow={true}
               >
-                View Project
-                <svg
-                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
+                <Link href={`/portfolio/${project.slug}`}>
+                  View Project
+                </Link>
+              </Button>
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
@@ -339,15 +331,16 @@ export default function FeaturedProjectsSection() {
                 See every product we&apos;ve shipped
               </h3>
             </div>
-            <Link
-              href="/portfolio"
-              className="btn-primary shrink-0 inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white text-sm"
+            <Button
+              asChild
+              variant="primary"
+              showArrow={true}
+              className="shrink-0"
             >
-              View All Projects
-              <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
+              <Link href="/portfolio">
+                View All Projects
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
