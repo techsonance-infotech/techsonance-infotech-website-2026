@@ -128,7 +128,7 @@ export const platform = {
         icon: "database",
         title: "Internal Operations Portals",
         description: "Replace spreadsheets with role-based dashboards your team will actually use daily.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
       {
         icon: "shield",
@@ -146,7 +146,7 @@ export const platform = {
         icon: "code",
         title: "Legacy System Modernization",
         description: "Incremental migration from monoliths to maintainable, testable architectures.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
       {
         icon: "monitor",
@@ -188,7 +188,7 @@ export const platform = {
         ],
       },
     ],
-    proofOfWork: ["hisaabkitaab", "nfc-attendance"],
+    proofOfWork: ["accunest", "nfc-attendance"],
     faqs: [
       { question: "How long before I see a working version?", answer: "Most projects have a clickable prototype within 3–4 weeks and a production-ready MVP in 8–12 weeks, depending on scope." },
       { question: "Will I own the source code?", answer: "Yes. You receive full IP ownership and repository access upon final payment. No licensing fees, no lock-in." },
@@ -239,13 +239,13 @@ const result = await pipeline.run({
         icon: "auto",
         title: "Workflow Automation",
         description: "Trigger actions across systems when events occur - no manual copy-paste between tools.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
       {
         icon: "bolt",
         title: "Automated Compliance Checks",
         description: "GST validation, PAN verification, and rule-based document screening at scale.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
       {
         icon: "schema",
@@ -287,7 +287,7 @@ const result = await pipeline.run({
         ],
       },
     ],
-    proofOfWork: ["freightflow", "hisaabkitaab"],
+    proofOfWork: ["freightflow", "accunest"],
     faqs: [
       { question: "How accurate is the AI on our specific documents?", answer: "We benchmark on your real data during discovery. Typical OCR extraction reaches 95%+ accuracy after tuning on Indian invoice formats." },
       { question: "Is our data used to train models?", answer: "No. We use API-based models with zero data retention policies. Your documents stay in your infrastructure." },
@@ -357,7 +357,7 @@ const tenant = await provision({
         icon: "shield",
         title: "Compliance Modules",
         description: "GST engines, e-Invoice generation, and audit trails for regulated industries.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
     ],
     process: [
@@ -757,7 +757,7 @@ await hub.connect({
         icon: "database",
         title: "ERP & Accounting Sync",
         description: "Bi-directional sync between your app and Tally, Zoho Books, or custom ERPs.",
-        usedInProject: "HisaabKitaab",
+        usedInProject: "Accunest",
       },
       {
         icon: "auto",
@@ -799,7 +799,7 @@ await hub.connect({
         ],
       },
     ],
-    proofOfWork: ["freightflow", "syncserve-pos", "hisaabkitaab"],
+    proofOfWork: ["freightflow", "syncserve-pos", "accunest"],
     faqs: [
       { question: "Can you integrate with legacy systems?", answer: "Yes - we build adapters for SOAP APIs, flat-file imports, and direct database connections." },
       { question: "How do you handle API failures?", answer: "Exponential backoff retries, dead-letter queues, and admin alerts. No silent data loss." },

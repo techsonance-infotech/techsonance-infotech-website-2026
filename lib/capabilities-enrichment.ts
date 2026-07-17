@@ -10,7 +10,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Dashboards", "Exports", "Workflows"],
-      outcome: "Replaced 12 spreadsheets with a single ops portal for HisaabKitaab.",
+      outcome: "Replaced 12 spreadsheets with a single ops portal for Accunest.",
     },
     {
       tags: ["Approvals", "Rules engine", "Alerts"],
@@ -42,7 +42,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Webhooks", "n8n / custom", "Multi-system"],
-      outcome: "3-step manual process automated end-to-end in HisaabKitaab invoicing.",
+      outcome: "3-step manual process automated end-to-end in Accunest invoicing.",
     },
     {
       tags: ["GST", "PAN / Aadhaar", "Rule engine"],
@@ -186,7 +186,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Bi-directional", "Tally / Zoho", "Sync"],
-      outcome: "Accounting sync eliminated duplicate data entry in HisaabKitaab.",
+      outcome: "Accounting sync eliminated duplicate data entry in Accunest.",
     },
     {
       tags: ["Conflict resolution", "Real-time", "Multi-outlet"],

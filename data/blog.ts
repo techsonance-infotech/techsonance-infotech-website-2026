@@ -285,9 +285,9 @@ export async function syncProductToSearchIndex(productId, db) {
     `,
   },
   {
-    slug: "hisaabkitaab-gst-invoicing",
+    slug: "accunest-gst-invoicing",
     title: "Architecting a High-Fidelity GST Invoicing Engine for Indian SMBs",
-    excerpt: "How we designed a dynamic GST/Non-GST tax compiler and real-time PAN registry validation rules for HisaabKitaab.",
+    excerpt: "How we designed a dynamic GST/Non-GST tax compiler and real-time PAN registry validation rules for Accunest.",
     category: "Software Engineering",
     date: "May 20, 2026",
     readTime: "5 min read",
@@ -298,7 +298,7 @@ export async function syncProductToSearchIndex(productId, db) {
         avatar: "MK",
       }
     ],
-    heroImage: "/images/blog/hisaabkitaab-gst.jpg",
+    heroImage: "/images/blog/accunest-gst.jpg",
     tags: ["FinTech", "Next.js", "Zod", "MongoDB", "Invoicing"],
     content: `
       <p class="lead text-lg text-slate-700 leading-relaxed font-semibold mb-6">
@@ -306,7 +306,7 @@ export async function syncProductToSearchIndex(productId, db) {
       </p>
 
       <p class="text-slate-600 leading-relaxed mb-6">
-        During the engineering of <strong>HisaabKitaab</strong>, we focused on building an open-source grade, bulletproof invoicing and tax calculations engine that processes compliance data with zero margins of error.
+        During the engineering of <strong>Accunest</strong>, we focused on building an open-source grade, bulletproof invoicing and tax calculations engine that processes compliance data with zero margins of error.
       </p>
 
       <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Decoupling Tax Logic</h3>
@@ -331,7 +331,7 @@ export const InvoiceItemSchema = z.object({
 
       <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Conclusion</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
-        Designing clear validation models combined with client-side document processing allowed HisaabKitaab to generate thousands of clean, compliant invoices daily while keeping infrastructure costs minimal.
+        Designing clear validation models combined with client-side document processing allowed Accunest to generate thousands of clean, compliant invoices daily while keeping infrastructure costs minimal.
       </p>
     `,
   },

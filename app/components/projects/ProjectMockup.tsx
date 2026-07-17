@@ -40,22 +40,16 @@ export function ProjectMockup({
         {screenshotPath ? (
           /* Real screenshot - contain so the full image is always visible */
           <div
-            className="relative w-full"
+            className="relative w-full aspect-[16/10] overflow-hidden"
             style={{
               background: gradient,
-              // dynamic height based on actual content - we let the image define it
             }}
           >
             <SafeImage
               src={screenshotPath}
               alt={`${title} - ${category} screenshot`}
-              width={1200}
-              height={750}
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-              }}
+              fill
+              className="object-cover object-top"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority={priority}
             />
