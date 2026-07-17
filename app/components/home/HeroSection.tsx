@@ -4,51 +4,28 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Icon } from "@/app/components/icons/Icon";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
-
-/**
- * ---------------------------------------------------------------------------
- * Design intent (matched from the reference):
- * - Centered, single-column layout — no side illustration competing for
- *   attention. The headline IS the visual.
- * - Huge, confident type with a mixed weight/style treatment (regular +
- *   italic) instead of a flat block of bold text.
- * - Two pill-shaped CTAs: one solid (primary), one outline (secondary) —
- *   both quiet in color so the type stays the hero, not the buttons.
- * - Generous vertical whitespace above and below; nothing else on the page
- *   competes with this block.
- * ---------------------------------------------------------------------------
- */
+import { Button } from "@/components/ui/button";
 
 function HeroCTAButtons({ onBookClick }: { onBookClick: () => void }) {
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-      <button
+      <Button
         onClick={onBookClick}
-        className="group relative flex cursor-pointer items-center gap-2 overflow-hidden rounded-full bg-[#1155CC] px-7 py-3.5 text-sm
-        font-semibold uppercase tracking-wide text-white shadow-[0_4px_14px_rgba(17,85,204,0.35)] transition-all duration-300 ease-out
-        hover:-translate-y-0.5 hover:bg-[#0d3f99] hover:shadow-[0_10px_28px_rgba(17,85,204,0.45)] active:translate-y-0 active:shadow-[0_4px_14px_rgba(17,85,204,0.35)]"
+        variant="primary"
+        size="default"
+        showArrow
       >
-        {/* subtle diagonal sheen that sweeps across on hover */}
-        <span
-          className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent
-          transition-transform duration-700 ease-out group-hover:translate-x-full"
-        />
-        <span className="relative">Book Free Consultation</span>
-        <Icon name="arrow" className="relative h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
-      </button>
+        Book Free Consultation
+      </Button>
 
-      <a
-        href="#"
-        className="group relative flex items-center gap-2 rounded-full border border-gray-300 px-7 py-3.5 text-sm font-semibold
-        uppercase tracking-wide text-gray-800 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#1155CC]
-        hover:text-[#1155CC] hover:shadow-[0_8px_20px_rgba(17,85,204,0.15)] active:translate-y-0"
+      <Button
+        asChild
+        variant="secondary"
+        size="default"
+        showArrow
       >
-        View Case Studies
-        <Icon
-          name="arrow"
-          className="h-4 w-4 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover:translate-x-0 group-hover:opacity-100"
-        />
-      </a>
+        <a href="#">View Case Studies</a>
+      </Button>
     </div>
   );
 }

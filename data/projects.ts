@@ -387,19 +387,19 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 4. HisaabKitaab ────────────────────────────────────────────────────────
+  // ── 4. Accunest ────────────────────────────────────────────────────────────
   {
-    slug: "hisaabkitaab",
-    title: "HisaabKitaab",
+    slug: "accunest",
+    title: "Accunest",
     tagline: "Enterprise-Grade Invoicing for Indian Businesses.",
     category: "Accounting Software",
     industry: "FinTech & Accounting",
-    liveUrl: "https://hisaabkitaab.techsonance.co.in/",
+    liveUrl: "https://accunest.techsonance.co.in/",
     featured: false,
     shortDescription:
       "A premium invoicing, inventory management, and digital accounting suite custom-tailored for Indian businesses - with strict GST validation, real-time PAN checks, and automated PDF/Excel exports.",
     overview:
-      "HisaabKitaab is a full-stack Indian accounting platform with GST-aware billing, inventory tracking, and automated compliance reporting. Built with Next.js + MongoDB, it features micro-animations, real-time form validation, and role-based dashboards.",
+      "Accunest is a full-stack Indian accounting platform with GST-aware billing, inventory tracking, and automated compliance reporting. Built with Next.js + MongoDB, it features micro-animations, real-time form validation, and role-based dashboards.",
 
     challenge: "Indian SMBs need GST-compliant invoicing with real-time tax calculations (CGST/IGST), PAN/bank validation, and PDF generation - all without a CA.",
     solution: "Zod-powered GST/Non-GST billing engine, instant PDF/Excel exports, and role-based dashboards for accountants and sales reps.",
@@ -451,7 +451,29 @@ export const projects: Project[] = [
     ],
     accentColor: "#00897B",
     mockupGradient: "linear-gradient(135deg, #004D40 0%, #00796B 40%, #26A69A 100%)",
-    screenshotPath: "/images/projects/placeholder-hisaabkitaab.png",
+    screenshotPath: "/images/accunest/accunest-dashboard.png",
+    screenshots: [
+      {
+        src: "/images/accunest/accunest-dashboard.png",
+        caption: "Accunest Dashboard - Overview of invoices, financial metrics, and outstanding payments at a glance",
+      },
+      {
+        src: "/images/accunest/accunest-invoices.png",
+        caption: "Invoices Management - Creating, viewing, and exporting GST-compliant invoices",
+      },
+      {
+        src: "/images/accunest/accunest-sales.png",
+        caption: "Sales Module - Tracking client accounts, sales history, and daily revenue streams",
+      },
+      {
+        src: "/images/accunest/accunest-purchase.png",
+        caption: "Purchase Module - Managing vendor bills, purchases inventory, and expenses logs",
+      },
+      {
+        src: "/images/accunest/accunest-company.png",
+        caption: "Company Setup & Settings - Configuring GST registration details, bank accounts, and profile parameters",
+      },
+    ],
   },
 
   // ── 5. NFC Attendance System ────────────────────────────────────────────────
@@ -579,7 +601,29 @@ export const projects: Project[] = [
     ],
     accentColor: "#D32F2F",
     mockupGradient: "linear-gradient(135deg, #B71C1C 0%, #D32F2F 40%, #EF5350 100%)",
-    screenshotPath: "/images/projects/placeholder-agraj-enterprise.png",
+    screenshotPath: "/images/agraj-enterprise/agraj-enterprise-1.png",
+    screenshots: [
+      {
+        src: "/images/agraj-enterprise/agraj-enterprise-1.png",
+        caption: "Agraj Enterprise Home Page - Visualizing industrial painting services with premium SEO schemas",
+      },
+      {
+        src: "/images/agraj-enterprise/agraj-enterprise-2.png",
+        caption: "Services Overview - Highlighting protective coating, sandblasting, and structural painting capabilities",
+      },
+      {
+        src: "/images/agraj-enterprise/agraj-enterprise-3.png",
+        caption: "Safety & Compliance - Showcasing certificates, standards, and vendor registration options",
+      },
+      {
+        src: "/images/agraj-enterprise/agraj-enterprise-4.png",
+        caption: "Project Gallery - Before/After comparison sliders detailing completed projects",
+      },
+      {
+        src: "/images/agraj-enterprise/agraj-enterprise-5.png",
+        caption: "Contact & Estimation - Integrated lead capture forms and WhatsApp communication channels",
+      },
+    ],
   },
 ];
 

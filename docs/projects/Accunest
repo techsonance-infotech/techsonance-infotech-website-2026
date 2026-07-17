@@ -1,4 +1,4 @@
-# 📔 Hisaab-Kitaab v2
+# 📔 Accunest
 
 > A premium, enterprise-grade invoicing, inventory management, and digital accounting suite custom-tailored for Indian businesses. Formulated with state-of-the-art architectures, modern design tokens, high-fidelity micro-animations, and strict GST validation systems.
 
@@ -53,7 +53,7 @@
 ## 📂 Repository Structure
 
 ```bash
-Hisaab-Kitaab-v2/
+Accunest/
 ├── frontend/             # Next.js 16 Web Client Application
 │   ├── src/
 │   │   ├── app/          # App Router dashboard & pages configuration
@@ -91,7 +91,7 @@ JWT_SECRET=your_high_entropy_jwt_secret_key
 # Transaction SMTP Mail Settings
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=hisaabkitaab.techsonance@gmail.com
+SMTP_USER=accunest.techsonance@gmail.com
 SMTP_PASS=your_gmail_app_password
 
 # Image Upload Settings (ImageKit)

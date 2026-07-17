@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { services } from "@/data/services";
 import GetQuoteModal from "@/app/components/home/GetQuoteModal";
+import { Button } from "@/components/ui/button";
 
 export const navLinks = [
   { name: "Home", href: "/" },
@@ -55,7 +56,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
       <header
         className={
           transparent
-            ? `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen
+            ? `fixed top-0 left-0 right-0 z-50 py-3 transition-all duration-300 ${isScrolled || isMobileMenuOpen
               ? "border-b border-gray-100 bg-white md:bg-white/85 shadow-sm"
               : "border-b border-transparent bg-transparent"
             }`
@@ -100,9 +101,6 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                 <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#DDE3EA]" />
                 INFOTECH LLP
                 <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#DDE3EA]" />
-              </span>
-              <span className="hidden sm:block text-[7.5px] font-medium font-sans uppercase tracking-[0.15em] text-[#374151] mt-1.5 text-center">
-                Where Innovation Finds Its Resonance
               </span>
             </span>
           </Link>
@@ -185,15 +183,15 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
           </nav>
 
           <div className="flex items-center gap-4">
-            <button
+            <Button
               onClick={() => setIsQuoteModalOpen(true)}
-              className="hidden items-center gap-2 rounded-full btn-primary px-6 py-2.5 text-sm font-semibold text-white sm:flex cursor-pointer"
+              variant="primary"
+              size="sm"
+              showArrow
+              className="hidden sm:inline-flex"
             >
               Get a Quote
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
-                <Icon name="arrow" className="h-3 w-3" />
-              </span>
-            </button>
+            </Button>
 
             {/* Mobile menu trigger */}
             <button
@@ -302,18 +300,18 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               })}
 
               <div className="pt-4 mt-2 border-t border-gray-100">
-                <button
+                <Button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     setIsQuoteModalOpen(true);
                   }}
-                  className="flex items-center justify-center gap-2 rounded-xl btn-primary px-6 py-3 text-sm font-semibold text-white w-full cursor-pointer"
+                  variant="primary"
+                  size="default"
+                  showArrow
+                  className="w-full"
                 >
                   Get a Quote
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20">
-                    <Icon name="arrow" className="h-3 w-3" />
-                  </span>
-                </button>
+                </Button>
               </div>
             </div>
           </div>

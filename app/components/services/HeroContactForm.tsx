@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Icon } from "@/app/components/icons/Icon";
+import { Button } from "@/components/ui/button";
 
 interface HeroContactFormProps {
   serviceName: string;
@@ -366,23 +367,22 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
         )}
 
         {/* Submit Button */}
-        <button
+        <Button
           type="submit"
           disabled={formStatus === "submitting" || !isFormValid()}
-          className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+          variant="primary"
+          showArrow={formStatus !== "submitting"}
+          className="w-full"
         >
           {formStatus === "submitting" ? (
             <>
-              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
               Sending...
             </>
           ) : (
-            <>
-              Send Message
-              <Icon name="arrow" className="h-5 w-5" />
-            </>
+            "Send Message"
           )}
-        </button>
+        </Button>
       </form>
     </div>
   );

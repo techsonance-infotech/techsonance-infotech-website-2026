@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import SafeImage from "@/app/components/SafeImage";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import { Button } from "@/components/ui/button";
 
 export default function AboutHero() {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
@@ -332,18 +333,22 @@ export default function AboutHero() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-                  <button
+                  <Button
                     onClick={() => setIsBookModalOpen(true)}
-                    className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#1155CC] text-white text-[13px] font-semibold shadow-[0_4px_16px_rgba(17,85,204,0.15)] hover:bg-[#0A3D8C] hover:shadow-[0_6px_20px_rgba(17,85,204,0.22)] transition-all cursor-pointer text-center"
+                    variant="primary"
+                    size="sm"
                   >
                     Book a call
-                  </button>
-                  <Link
-                    href="/portfolio"
-                    className="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-gray-250 bg-white text-gray-800 text-[13px] font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all text-center"
+                  </Button>
+                  <Button
+                    asChild
+                    variant="secondary"
+                    size="sm"
                   >
-                    View our work
-                  </Link>
+                    <Link href="/portfolio">
+                      View our work
+                    </Link>
+                  </Button>
                 </div>
               </motion.div>
             </div>

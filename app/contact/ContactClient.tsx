@@ -7,6 +7,7 @@ import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
+import { Button } from "@/components/ui/button";
 
 export default function ContactClient() {
   const [mounted, setMounted] = useState(false);
@@ -293,12 +294,13 @@ export default function ContactClient() {
                   <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-8">
                     Thank you for reaching out. A senior engineer will review your project details and get back to you within 24 hours.
                   </p>
-                  <button
+                  <Button
                     onClick={() => setFormStatus("idle")}
-                    className="btn-outline px-6 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                    variant="secondary"
+                    size="sm"
                   >
                     Send another message
-                  </button>
+                  </Button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -462,23 +464,22 @@ export default function ContactClient() {
                   </div>
 
                   {/* Submit button */}
-                  <button
+                  <Button
                     type="submit"
                     disabled={formStatus === "submitting" || !isFormValid}
-                    className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+                    variant="primary"
+                    showArrow={formStatus !== "submitting"}
+                    className="w-full"
                   >
                     {formStatus === "submitting" ? (
                       <>
-                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
                         Sending Message...
                       </>
                     ) : (
-                      <>
-                        Send Message
-                        <Icon name="arrow" className="h-5 w-5" />
-                      </>
+                      "Send Message"
                     )}
-                  </button>
+                  </Button>
 
                 </form>
               )}
@@ -506,12 +507,13 @@ export default function ContactClient() {
                     Prefer a live conversation? Choose a time slot that works best for you and sync directly with our technical lead.
                   </p>
 
-                  <button
+                  <Button
                     onClick={() => setIsBookModalOpen(true)}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-black hover:bg-slate-100 rounded-xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+                    variant="secondary"
+                    className="w-full sm:w-auto bg-white text-slate-900 border-transparent hover:bg-slate-100 hover:text-slate-900 hover:border-transparent shadow-md hover:shadow-lg"
                   >
                     Book Free 15-min Call ↗
-                  </button>
+                  </Button>
                 </div>
               </div>
 

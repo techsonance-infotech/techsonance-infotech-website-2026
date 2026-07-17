@@ -9,6 +9,7 @@ import { TechBadge } from "@/app/components/projects/TechBadge";
 import { MetricCard } from "@/app/components/projects/MetricCard";
 import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
+import { Button } from "@/components/ui/button";
 import EmojiOrLucideIcon from "@/app/components/icons/LucideIcon";
 
 // ─── Reveal animation preset ────────────────────────────────────────────────────
@@ -351,28 +352,35 @@ function ProjectHero({ project }: { project: Project }) {
               className="flex flex-wrap gap-3 pt-2"
             >
               {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 hover:shadow-xl"
+                <Button
+                  asChild
+                  variant="primary"
                   style={{
                     background: `linear-gradient(135deg, ${project.accentColor}, ${project.accentColor}cc)`,
                     boxShadow: `0 4px 20px ${project.accentColor}30`,
                   }}
+                  className="border-transparent hover:border-transparent"
                 >
-                  <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  View Live Product
-                </a>
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg className="h-4 w-4 mr-2" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    View Live Product
+                  </a>
+                </Button>
               )}
-              <Link
-                href="/portfolio"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-600 hover:border-gray-400 hover:text-gray-900 transition-all"
+              <Button
+                asChild
+                variant="secondary"
               >
-                ← Portfolio
-              </Link>
+                <Link href="/portfolio">
+                  ← Portfolio
+                </Link>
+              </Button>
             </motion.div>
           </div>
 
@@ -571,18 +579,20 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               pitfalls, the shortcuts that matter, and the patterns that scale. Let&apos;s talk.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
+              <Button
                 onClick={() => setIsBookModalOpen(true)}
-                className="px-8 py-4 rounded-xl bg-white text-[#1155CC] font-bold text-sm hover:bg-gray-50 transition-colors shadow-xl cursor-pointer"
+                variant="secondary"
+                className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
               >
                 Book Free Consultation
-              </button>
-              <Link
-                href="/portfolio"
-                className="px-8 py-4 rounded-xl border-2 border-white/30 text-white font-bold text-sm hover:bg-white/10 transition-colors"
+              </Button>
+              <Button
+                asChild
+                variant="secondary"
+                className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
               >
-                See More Portfolio
-              </Link>
+                <Link href="/portfolio">See More Portfolio</Link>
+              </Button>
             </div>
           </motion.div>
         </div>

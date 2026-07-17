@@ -77,35 +77,50 @@ button {
 
 /* ── Primary CTA button ── */
 .btn-primary {
-  background: var(--btn-gradient);
+  background-color: #1155CC;
   color: #fff;
-  box-shadow: var(--glow-sm);
-  transition: box-shadow 0.22s ease, transform 0.18s ease, filter 0.18s ease;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 14px rgba(17, 85, 204, 0.35);
+  transition: all 0.3s ease-out;
 }
 
 .btn-primary:hover {
-  box-shadow: var(--glow-md);
-  filter: brightness(1.06);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  background-color: #0d3f99;
+  box-shadow: 0 10px 28px rgba(17, 85, 204, 0.45);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  filter: brightness(0.97);
+  box-shadow: 0 4px 14px rgba(17, 85, 204, 0.35);
 }
 
 /* ── Ghost / outline button ── */
 .btn-outline {
-  background: transparent;
-  color: var(--brand-royal);
-  border: 2px solid var(--brand-cyan);
-  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  background-color: transparent;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  font-size: 0.875rem;
+  transition: all 0.3s ease-out;
 }
 
 .btn-outline:hover {
-  background: rgba(17, 85, 204, 0.06);
-  box-shadow: var(--glow-sm);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: #1155CC;
+  color: #1155CC;
+  box-shadow: 0 8px 20px rgba(17, 85, 204, 0.15);
+}
+
+.btn-outline:active {
+  transform: translateY(0);
 }
 
 /* ── Active nav underline ── */

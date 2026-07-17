@@ -10,7 +10,7 @@ const testimonials = [
     role: "Founder, Grover Roadlines",
   },
   {
-    text: "TechSonance solved all our GST compliance headaches with HisaabKitaab. Their real-time validation logic means zero manual calculation errors. Creating compliance-ready invoices now takes under 5 minutes.",
+    text: "TechSonance solved all our GST compliance headaches with Accunest. Their real-time validation logic means zero manual calculation errors. Creating compliance-ready invoices now takes under 5 minutes.",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Sunita Sharma",
     role: "Managing Director, Sharma Trading Co.",

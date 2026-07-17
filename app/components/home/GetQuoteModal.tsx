@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@/app/components/icons/Icon";
+import { Button } from "@/components/ui/button";
 
 interface GetQuoteModalProps {
   isOpen: boolean;
@@ -237,18 +238,20 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                     Thank you for reaching out. A senior engineer will review your project details and get back to you within 24 hours.
                   </p>
                   <div className="flex gap-3">
-                    <button
+                    <Button
                       onClick={() => setFormStatus("idle")}
-                      className="btn-outline px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                      variant="secondary"
+                      size="sm"
                     >
                       Send another
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={resetAndClose}
-                      className="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                      variant="primary"
+                      size="sm"
                     >
                       Close
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               ) : (
@@ -411,23 +414,22 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   </div>
 
                   {/* Submit */}
-                  <button
+                  <Button
                     type="submit"
                     disabled={formStatus === "submitting" || !isFormValid}
-                    className="btn-primary w-full px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
+                    variant="primary"
+                    showArrow={formStatus !== "submitting"}
+                    className="w-full"
                   >
                     {formStatus === "submitting" ? (
                       <>
-                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
                         Sending Message...
                       </>
                     ) : (
-                      <>
-                        Send Message
-                        <Icon name="arrow" className="h-5 w-5" />
-                      </>
+                      "Send Message"
                     )}
-                  </button>
+                  </Button>
                 </form>
               )}
             </div>
