@@ -117,10 +117,10 @@ export const Header = () => {
           <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
           <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">Our Capabilities</span>
         </div>
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-black leading-[1.08] mb-6 tracking-tight relative z-10">
+        <h1 className="text-4xl md:text-6xl font-medium lg:text-7xl font-black text-black leading-[1.08] mb-6 tracking-tight relative z-10">
           Engineering the <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">Future</span> <br /> of Your Business.
         </h1>
-        <p className="max-w-2xl text-sm md:text-base lg:text-lg text-black relative z-10 font-semibold leading-relaxed">
+        <p className="max-w-2xl text-sm font-medium md:text-base lg:text-lg text-black relative z-10 font-semibold leading-relaxed">
           From concept to deployment, we build high-performance software engineering and AI automation solutions that scale.
         </p>
       </div>
