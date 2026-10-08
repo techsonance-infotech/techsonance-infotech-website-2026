@@ -1,0 +1,746 @@
+[
+  {
+    "id": "company-overview",
+    "q": "Who are you and what does TechSonance do?",
+    "aliases": [
+      "what is techsonance",
+      "tell me about techsonance",
+      "what does your company do",
+      "about techsonance infotech",
+      "what do you guys do"
+    ],
+    "a": "TechSonance Infotech LLP is a software engineering agency in Surat, India.\n\nWe specialize in:\n• Custom Web & SaaS Development\n• Cross-Platform Mobile Apps (Flutter)\n• AI Chatbots & RAG Systems\n• Custom ERP, POS & Automation",
+    "cta": true,
+    "tags": ["company", "overview", "about"]
+  },
+  {
+    "id": "company-location",
+    "q": "Where are you located and which time zones do you work in?",
+    "aliases": [
+      "where are you located",
+      "office location",
+      "which city are you in",
+      "time zones you support",
+      "do you work us hours",
+      "do you work uk timezone"
+    ],
+    "a": "We are based in Surat, Gujarat, India.\n\nWe work with clients worldwide and overlap with US, UK, Europe, UAE, and Australia working hours.",
+    "cta": false,
+    "tags": ["company", "location", "timezone"]
+  },
+  {
+    "id": "company-experience-years",
+    "q": "How long have you been in business and how many projects have you delivered?",
+    "aliases": [
+      "how long in business",
+      "company experience",
+      "how many projects completed",
+      "track record",
+      "projects delivered"
+    ],
+    "a": "Our track record:\n• 5+ years of core engineering experience\n• 9+ production platforms delivered\n• Domains: Logistics, Fintech, Retail POS, SaaS & AI",
+    "cta": true,
+    "tags": ["company", "experience", "stats"]
+  },
+  {
+    "id": "company-industries",
+    "q": "What industries have you worked in?",
+    "aliases": [
+      "which domains do you work in",
+      "industry experience",
+      "sectors you serve",
+      "what types of businesses do you build for"
+    ],
+    "a": "We have engineered solutions across diverse industries:\n• Logistics & Supply Chain\n• Retail & Point-of-Sale (POS)\n• B2B & Multi-Vendor E-Commerce\n• SaaS & Enterprise Workflow Systems\n• Events, Ticketing & Community Apps",
+    "cta": true,
+    "tags": ["company", "industries", "experience"]
+  },
+  {
+    "id": "company-ratings-reviews",
+    "q": "What is your overall rating and reviews?",
+    "aliases": [
+      "customer reviews",
+      "client feedback",
+      "clutch rating",
+      "google reviews rating",
+      "upwork rating"
+    ],
+    "a": "We maintain top client satisfaction ratings across our portfolio.\n\nYou can review our published case studies or request verified client references on a consultation call.",
+    "cta": true,
+    "tags": ["company", "ratings", "reviews"]
+  },
+  {
+    "id": "company-portfolio",
+    "q": "Can I see your portfolio, case studies or testimonials?",
+    "aliases": [
+      "show me your work",
+      "case studies",
+      "past projects",
+      "portfolio link",
+      "examples of your work",
+      "previous apps"
+    ],
+    "a": "Our featured production case studies include:\n• Zion: Event discovery & ticketing platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
+    "cta": true,
+    "tags": ["portfolio", "case-studies", "work"]
+  },
+  {
+    "id": "company-international-clients",
+    "q": "Do you work with international clients?",
+    "aliases": [
+      "overseas clients",
+      "do you work with US clients",
+      "foreign clients",
+      "international billing",
+      "global clients"
+    ],
+    "a": "Yes! We work with clients across the US, UK, Europe, UAE, and Asia-Pacific.\n\nWe provide seamless asynchronous communication, flexible meeting hours, and international billing.",
+    "cta": false,
+    "tags": ["company", "international", "clients"]
+  },
+  {
+    "id": "company-registration-invoicing",
+    "q": "Are you a registered company? Do you give invoices?",
+    "aliases": [
+      "is techsonance registered",
+      "gst invoice",
+      "company registration details",
+      "legal entity"
+    ],
+    "a": "Yes, TechSonance Infotech LLP is a registered Limited Liability Partnership in India.\n\nWe provide formal contracts, bilateral NDAs, and official GST tax invoices for all engagements.",
+    "cta": false,
+    "tags": ["company", "legal", "invoicing"]
+  },
+  {
+    "id": "company-why-choose-us",
+    "q": "Why should I choose you over other agencies or freelancers?",
+    "aliases": [
+      "why choose techsonance",
+      "why hire you",
+      "freelancers vs techsonance",
+      "your competitive advantage",
+      "why work with you"
+    ],
+    "a": "Why choose TechSonance:\n• Senior engineers & direct founder involvement\n• 100% code & IP ownership upon payment\n• Agile sprints with weekly demos & transparent tracking\n• Zero junior bloat with rapid proactive communication",
+    "cta": true,
+    "tags": ["company", "advantages", "differentiators"]
+  },
+  {
+    "id": "company-references-ndas",
+    "q": "Have you worked on projects like mine? Can I speak to a past client?",
+    "aliases": [
+      "can i get client references",
+      "similar projects to mine",
+      "talk to previous client",
+      "client reference check"
+    ],
+    "a": "We have engineered apps across most modern software categories.\n\nShare your concept with us, and we will provide matching case studies and client references under mutual confidentiality.",
+    "cta": true,
+    "tags": ["company", "references", "nda"]
+  },
+  {
+    "id": "company-contact-hours",
+    "q": "What are your working hours? How can I contact you?",
+    "aliases": [
+      "contact details",
+      "working hours",
+      "phone number",
+      "email address",
+      "office hours",
+      "how to reach you"
+    ],
+    "a": "Working hours: 10:00 AM – 7:00 PM IST (Mon–Sat) with flexible international overlap.\n\nContact options:\n• Email: info@techsonance.co.in\n• Phone: +91 9173101711\n• Or book a consultation directly in this chat!",
+    "cta": true,
+    "tags": ["contact", "hours", "email", "phone"]
+  },
+  {
+    "id": "team-overview",
+    "q": "Tell me about your development team.",
+    "aliases": [
+      "team size",
+      "who is in your team",
+      "development team",
+      "engineering team",
+      "team structure"
+    ],
+    "a": "Our core engineering team includes:\n• Full-Stack Web Engineers (React, Next.js, Node.js)\n• Mobile Developers (Flutter iOS & Android)\n• UI/UX Designers & QA Specialists\n• Cloud & DevOps Engineers (AWS, Docker)",
+    "cta": true,
+    "tags": ["team", "headcount", "roles"]
+  },
+  {
+    "id": "team-experience",
+    "q": "How experienced are your developers?",
+    "aliases": [
+      "developer seniority",
+      "years of experience developers",
+      "lead developer background",
+      "senior developers"
+    ],
+    "a": "Our lead engineers bring 5+ years of hands-on experience architecting scalable systems with React, Next.js, Node.js, NestJS, TypeScript, PostgreSQL, and AWS cloud infrastructure.",
+    "cta": true,
+    "tags": ["team", "experience", "seniority"]
+  },
+  {
+    "id": "team-dedicated-pm",
+    "q": "Will I have a dedicated project manager or point of contact?",
+    "aliases": [
+      "point of contact",
+      "project manager assigned",
+      "who will i communicate with",
+      "dedicated lead"
+    ],
+    "a": "Yes. Every engagement includes a dedicated technical lead or project manager as your single point of contact for sprint demos, daily standups, and architecture decisions.",
+    "cta": false,
+    "tags": ["team", "pm", "communication"]
+  },
+  {
+    "id": "team-in-house-vs-outsourcing",
+    "q": "Do you have designers, QA and DevOps in house? Do you outsource?",
+    "aliases": [
+      "do you outsource work",
+      "is team in house",
+      "in house designers",
+      "in house devops"
+    ],
+    "a": "All architecture, development, UI/UX design, QA, and DevOps are executed in-house by our dedicated engineers. We do not outsource your project to unvetted third parties.",
+    "cta": false,
+    "tags": ["team", "in-house", "outsourcing"]
+  },
+  {
+    "id": "team-interview-developers",
+    "q": "Can I choose or interview the developers?",
+    "aliases": [
+      "interview developers",
+      "select developers",
+      "meet the team before hiring",
+      "vet developers"
+    ],
+    "a": "Yes! For dedicated developer and team models, you can interview and meet the assigned engineers, review their portfolio, and assess technical fit before kickoff.",
+    "cta": true,
+    "tags": ["team", "interview", "hiring"]
+  },
+  {
+    "id": "team-developer-replacement",
+    "q": "What if a developer leaves during my project?",
+    "aliases": [
+      "developer leaves project",
+      "developer turnover",
+      "what if engineer quits",
+      "continuity plan"
+    ],
+    "a": "We maintain continuous documentation, clean modular code, and peer reviews so a backup engineer is always ramped up on your codebase with zero project interruption.",
+    "cta": false,
+    "tags": ["team", "continuity", "risk"]
+  },
+  {
+    "id": "team-domain-experts",
+    "q": "Do you have experts in AI, mobile apps, SaaS, ERP or e-commerce?",
+    "aliases": [
+      "ai specialists",
+      "mobile app experts",
+      "saas experts",
+      "flutter developers",
+      "erp developers"
+    ],
+    "a": "Yes! Our core specializations include:\n• Multi-Tenant SaaS Platforms\n• Flutter Mobile Apps (iOS & Android)\n• AI Chatbots & RAG Automation\n• Custom ERP, CRM & POS Systems",
+    "cta": true,
+    "tags": ["team", "expertise", "domains"]
+  },
+  {
+    "id": "contracts-nda",
+    "q": "Do you sign an NDA before I share my idea?",
+    "aliases": [
+      "sign an nda",
+      "confidentiality agreement",
+      "is my idea safe",
+      "non disclosure agreement",
+      "protect my idea"
+    ],
+    "a": "Absolutely. We sign bilateral Non-Disclosure Agreements (NDAs) before discussing any project concepts, business plans, or proprietary logic.",
+    "cta": false,
+    "tags": ["contracts", "nda", "security"]
+  },
+  {
+    "id": "services-list",
+    "q": "What services do you offer?",
+    "aliases": [
+      "list of services",
+      "what do you build",
+      "software services",
+      "capabilities",
+      "what can you do for me"
+    ],
+    "a": "We provide end-to-end software engineering services:\n\n• Web Development (Next.js, React, TypeScript)\n• Mobile Apps (Flutter for iOS & Android)\n• SaaS Product Engineering & Cloud Backends\n• AI Chatbots & Workflow Automation\n• Custom ERP, CRM & POS Systems\n• UI/UX Design & Ongoing Maintenance",
+    "cta": true,
+    "tags": ["services", "overview", "offerings"]
+  },
+  {
+    "id": "services-web-apps",
+    "q": "Can you build a website or web app?",
+    "aliases": [
+      "build a website",
+      "web app development",
+      "nextjs website",
+      "react web application",
+      "custom web platform"
+    ],
+    "a": "Yes! We build high-performance web applications and portals using React, Next.js, TypeScript, and scalable Node.js/NestJS backends.",
+    "cta": true,
+    "tags": ["services", "web", "frontend"]
+  },
+  {
+    "id": "services-mobile-apps",
+    "q": "Can you build Android and iOS apps from one codebase?",
+    "aliases": [
+      "flutter mobile apps",
+      "cross platform mobile development",
+      "ios and android app",
+      "build a mobile app",
+      "flutter app developers"
+    ],
+    "a": "Yes! We develop cross-platform mobile apps using Flutter & Dart, delivering native 60fps performance on both iOS and Android from a single unified codebase.",
+    "cta": true,
+    "tags": ["services", "mobile", "flutter"]
+  },
+  {
+    "id": "services-ecommerce",
+    "q": "Can you build an e-commerce store or multi vendor marketplace?",
+    "aliases": [
+      "build ecommerce store",
+      "multi vendor marketplace",
+      "online store development",
+      "b2b ecommerce platform"
+    ],
+    "a": "Yes! We build complete e-commerce solutions:\n• Custom online storefronts & multi-vendor marketplaces\n• Seamless payment gateways (Stripe, Razorpay)\n• Seller dashboards, inventory & logistics tracking",
+    "cta": true,
+    "tags": ["services", "ecommerce", "marketplace"]
+  },
+  {
+    "id": "services-saas-products",
+    "q": "Can you build a SaaS product from scratch?",
+    "aliases": [
+      "build a saas",
+      "saas product development",
+      "saas mvp",
+      "multi tenant saas platform"
+    ],
+    "a": "Yes! We engineer full-featured SaaS products:\n• Multi-tenant database isolation\n• User authentication, RBAC & subscription billing\n• Scalable cloud deployments & real-time analytics",
+    "cta": true,
+    "tags": ["services", "saas", "mvp"]
+  },
+  {
+    "id": "services-erp-crm-pos",
+    "q": "Can you build an ERP, HRMS, CRM, inventory or billing system?",
+    "aliases": [
+      "build custom erp",
+      "custom crm system",
+      "pos software development",
+      "inventory management system",
+      "hrms development"
+    ],
+    "a": "Yes! We build tailored business systems with granular permissions, automated workflows, audit logging, barcode/POS hardware integrations, and live reporting.",
+    "cta": true,
+    "tags": ["services", "erp", "crm", "pos"]
+  },
+  {
+    "id": "services-booking-ticketing",
+    "q": "Can you build booking, ticketing or event platforms?",
+    "aliases": [
+      "event booking app",
+      "ticket booking system",
+      "appointment booking software",
+      "reservation platform"
+    ],
+    "a": "Yes! We have built ticketing platforms (like Zion) featuring seat/tier selection, QR-code validation, automated scheduling, and organizer revenue dashboards.",
+    "cta": true,
+    "tags": ["services", "booking", "events"]
+  },
+  {
+    "id": "services-realtime-chat",
+    "q": "Can you build chat or social apps with real time messaging?",
+    "aliases": [
+      "real time chat app",
+      "websocket chat system",
+      "messaging app development",
+      "social media platform"
+    ],
+    "a": "Yes! We implement real-time communication using WebSockets and Socket.IO, complete with instant messaging, media sharing, push notifications, and presence tracking.",
+    "cta": true,
+    "tags": ["services", "chat", "realtime"]
+  },
+  {
+    "id": "services-property-logistics",
+    "q": "Can you build property, hotel or transport management systems?",
+    "aliases": [
+      "logistics software",
+      "transportation management system",
+      "property management app",
+      "hotel pms"
+    ],
+    "a": "Yes! We have built fleet management and logistics platforms (such as FreightFlow) with route tracking, dispatch automation, digital invoicing, and asset maintenance.",
+    "cta": true,
+    "tags": ["services", "logistics", "property"]
+  },
+  {
+    "id": "services-ai-chatbots-rag",
+    "q": "Can you build an AI chatbot or RAG assistant for my business?",
+    "aliases": [
+      "build an ai chatbot",
+      "rag chatbot development",
+      "custom ai assistant",
+      "chatbot for my website",
+      "ai knowledge base bot"
+    ],
+    "a": "Yes! We build custom RAG assistants and AI chatbots that answer accurately from your business documents, featuring strict guardrails, zero hallucinations, and booking integrations.",
+    "cta": true,
+    "tags": ["services", "ai", "rag", "chatbots"]
+  },
+  {
+    "id": "services-ai-integrations",
+    "q": "Can you integrate OpenAI, Claude or other AI into my product?",
+    "aliases": [
+      "integrate chatgpt api",
+      "integrate claude ai",
+      "llm integration services",
+      "ai api integration"
+    ],
+    "a": "Yes! We integrate OpenAI, Anthropic Claude, and Google Gemini into existing products using pgvector embeddings, tool calling, and automated AI workflow pipelines.",
+    "cta": true,
+    "tags": ["services", "ai", "llm"]
+  },
+  {
+    "id": "services-whatsapp-automation",
+    "q": "Can you build WhatsApp automation, bots or scrapers?",
+    "aliases": [
+      "whatsapp bot development",
+      "whatsapp api automation",
+      "whatsapp notification integration",
+      "web scrapers"
+    ],
+    "a": "Yes! We integrate official WhatsApp Business Cloud APIs for automated booking confirmations, customer notifications, and interactive self-service support flows.",
+    "cta": true,
+    "tags": ["services", "whatsapp", "automation"]
+  },
+  {
+    "id": "services-takeover-legacy",
+    "q": "Can you fix, redesign or take over an existing project?",
+    "aliases": [
+      "take over existing project",
+      "fix broken codebase",
+      "redesign existing app",
+      "rescue project"
+    ],
+    "a": "Yes! We conduct an initial architecture and code audit, identify bottlenecks, and execute a structured roadmap to refactor, upgrade, and deliver your project.",
+    "cta": true,
+    "tags": ["services", "refactor", "takeover"]
+  },
+  {
+    "id": "services-migration-cloud",
+    "q": "Can you migrate my site to Next.js or to the cloud?",
+    "aliases": [
+      "migrate to nextjs",
+      "cloud migration aws",
+      "upgrade legacy website",
+      "move to vercel aws"
+    ],
+    "a": "Yes! We migrate legacy web applications to modern Next.js and containerize backend services on AWS with zero downtime and improved SEO performance.",
+    "cta": true,
+    "tags": ["services", "migration", "cloud"]
+  },
+  {
+    "id": "tech-stack-overview",
+    "q": "Which technologies do you use?",
+    "aliases": [
+      "what is your tech stack",
+      "technologies you work with",
+      "programming languages used",
+      "frameworks used"
+    ],
+    "a": "Our core technology stack:\n\n• Frontend: React, Next.js, TypeScript, Tailwind CSS\n• Backend: Node.js, NestJS, Express\n• Mobile: Flutter (Dart) for iOS & Android\n• Databases: PostgreSQL, MongoDB, Redis\n• Cloud & DevOps: AWS, Docker, Vercel",
+    "cta": false,
+    "tags": ["technology", "stack", "tools"]
+  },
+  {
+    "id": "tech-scalability",
+    "q": "Will my app scale to many users?",
+    "aliases": [
+      "app scalability",
+      "handle high traffic",
+      "scale to millions of users",
+      "performance at scale"
+    ],
+    "a": "Yes! We engineer apps with modular architectures, database indexing, Redis caching, and autoscaling cloud deployments designed for high concurrency.",
+    "cta": true,
+    "tags": ["technology", "scalability", "architecture"]
+  },
+  {
+    "id": "tech-third-party-integrations",
+    "q": "Can you integrate payments, maps, SMS, email and push notifications?",
+    "aliases": [
+      "payment gateway integration",
+      "stripe razorpay integration",
+      "sms email notifications",
+      "google maps api"
+    ],
+    "a": "Yes! We regularly integrate:\n• Payments: Stripe, Razorpay, PayPal\n• Maps & Media: Google Maps, Mapbox\n• Messaging & Notifications: Twilio, Firebase FCM, SendGrid",
+    "cta": false,
+    "tags": ["technology", "integrations", "apis"]
+  },
+  {
+    "id": "tech-offline-capabilities",
+    "q": "Can you build offline capable mobile apps?",
+    "aliases": [
+      "offline first mobile app",
+      "offline sync app",
+      "app works without internet"
+    ],
+    "a": "Yes! We build offline-first mobile apps using local SQLite, Isar, or Hive storage with background synchronization when connectivity is restored.",
+    "cta": false,
+    "tags": ["technology", "mobile", "offline"]
+  },
+  {
+    "id": "tech-code-ownership",
+    "q": "Who owns the source code and accounts?",
+    "aliases": [
+      "who owns the code",
+      "ip ownership",
+      "do i own the intellectual property",
+      "github repository transfer"
+    ],
+    "a": "You own 100% of the source code, intellectual property, and deployment credentials upon milestone completion. We provide full repository transfer.",
+    "cta": false,
+    "tags": ["contracts", "ownership", "ip"]
+  },
+  {
+    "id": "tech-security",
+    "q": "How do you handle security?",
+    "aliases": [
+      "security practices",
+      "how secure is the software",
+      "data protection",
+      "2fa authentication",
+      "encryption"
+    ],
+    "a": "Our security protocols include:\n• JWT/OAuth2 authentication & RBAC\n• TLS encryption in transit & encrypted storage at rest\n• Parameterized database queries & input sanitization\n• Secure backup routines & vulnerability scanning",
+    "cta": false,
+    "tags": ["technology", "security", "data"]
+  },
+  {
+    "id": "process-development-flow",
+    "q": "What is your development process?",
+    "aliases": [
+      "how do you work",
+      "development process",
+      "workflow and methodology",
+      "sprint process",
+      "project lifecycle"
+    ],
+    "a": "Our structured 6-step process:\n\n1. Discovery & Requirements Breakdown\n2. Architecture & Scope Scoping\n3. UI/UX Wireframing & Design Approval\n4. Agile Sprints with Bi-Weekly Demos\n5. QA, Security & Performance Testing\n6. Deployment & Post-Launch Support",
+    "cta": true,
+    "tags": ["process", "methodology", "workflow"]
+  },
+  {
+    "id": "process-how-to-start",
+    "q": "How do we start and what do you need from me?",
+    "aliases": [
+      "how to get started",
+      "next steps to start",
+      "what do you need from client",
+      "kickoff process"
+    ],
+    "a": "Getting started is simple:\n\n1. Book a free 30-minute discovery call with our team.\n2. We discuss your core goals, timeline, and MVP features.\n3. We provide a clear architecture breakdown and fixed estimate.",
+    "cta": true,
+    "tags": ["process", "kickoff", "consultation"]
+  },
+  {
+    "id": "process-communication-tools",
+    "q": "How often will I get updates and which tools do you use?",
+    "aliases": [
+      "communication tools",
+      "how often do you update",
+      "slack whatsapp updates",
+      "project tracking"
+    ],
+    "a": "We provide transparent updates via Slack, WhatsApp, or Email, paired with weekly video demo calls and live project tracking boards (Jira/ClickUp).",
+    "cta": false,
+    "tags": ["process", "communication", "updates"]
+  },
+  {
+    "id": "timeline-general",
+    "q": "How long will my project take?",
+    "aliases": [
+      "project timeline",
+      "how long to build an app",
+      "how long to build a website",
+      "development duration",
+      "time to market",
+      "time kitna lagega"
+    ],
+    "a": "Typical project delivery timelines:\n\n• Focused MVP / Web App: 4 – 8 weeks\n• Mobile App (iOS & Android): 6 – 10 weeks\n• Custom SaaS Platform: 8 – 14 weeks\n• AI Chatbot / RAG System: 2 – 4 weeks",
+    "cta": true,
+    "tags": ["timeline", "duration", "estimates"]
+  },
+  {
+    "id": "timeline-ai-chatbots",
+    "q": "How long for an AI chatbot or RAG project?",
+    "aliases": [
+      "ai chatbot timeline",
+      "how long to build rag bot",
+      "ai integration duration"
+    ],
+    "a": "A production-grade AI chatbot or RAG knowledge assistant typically takes 2 to 4 weeks, including custom guardrails, vector search, and API integrations.",
+    "cta": true,
+    "tags": ["timeline", "ai", "chatbots"]
+  },
+  {
+    "id": "timeline-fast-track",
+    "q": "Can you deliver faster if I have a deadline?",
+    "aliases": [
+      "urgent project deadline",
+      "expedited development",
+      "rush project delivery",
+      "can you build faster"
+    ],
+    "a": "Yes! We can fast-track development by scoping an accelerated core MVP release and allocating dedicated additional engineering bandwidth.",
+    "cta": true,
+    "tags": ["timeline", "urgent", "fast-track"]
+  },
+  {
+    "id": "timeline-start-date",
+    "q": "When can you start?",
+    "aliases": [
+      "when can you begin",
+      "availability to start",
+      "how soon can we start",
+      "start date"
+    ],
+    "a": "We can commence initial discovery and UI/UX sprints within 3 to 7 business days following scope alignment and agreement finalization.",
+    "cta": true,
+    "tags": ["timeline", "start", "availability"]
+  },
+  {
+    "id": "pricing-general",
+    "q": "How much will my project cost?",
+    "aliases": [
+      "pricing",
+      "how much do you charge",
+      "cost of app development",
+      "how much does a website cost",
+      "how much does an app cost",
+      "website cost",
+      "website price",
+      "app price",
+      "cost estimate",
+      "price kitna hai",
+      "kharcha kitna hoga"
+    ],
+    "a": "Project costs depend on scope, features, and platform.\n\nWe provide:\n• Fixed-Price Milestone Quotes for defined scopes\n• Flexible Monthly Dedicated Developer Rates\n• Free 30-minute estimate & scope breakdown",
+    "cta": true,
+    "tags": ["pricing", "cost", "budget"]
+  },
+  {
+    "id": "pricing-models",
+    "q": "What is your hourly or monthly rate? What engagement models do you offer?",
+    "aliases": [
+      "hourly rate",
+      "monthly dedicated developer cost",
+      "engagement models",
+      "fixed price vs hourly"
+    ],
+    "a": "We offer three transparent engagement models:\n\n• Fixed-Price Milestone Contracts: For defined scopes\n• Monthly Dedicated Developers: For continuous velocity\n• Time & Material: For dynamic advisory & feature builds",
+    "cta": true,
+    "tags": ["pricing", "models", "rates"]
+  },
+  {
+    "id": "pricing-free-consultation",
+    "q": "Is there a free estimate?",
+    "aliases": [
+      "is consultation free",
+      "free estimate",
+      "cost for initial discussion",
+      "quote charges"
+    ],
+    "a": "Yes! Our initial 30-minute discovery call and proposal estimate are 100% free with zero obligation.",
+    "cta": true,
+    "tags": ["pricing", "free", "consultation"]
+  },
+  {
+    "id": "pricing-payment-schedule",
+    "q": "What is the payment schedule and which methods do you accept?",
+    "aliases": [
+      "payment terms",
+      "payment methods",
+      "milestone payments",
+      "do you take bank transfer upi paypal"
+    ],
+    "a": "Payment terms & accepted methods:\n• Milestone-based payments tied to verified deliverables\n• Wire Transfers (NEFT/RTGS/SWIFT), UPI, Wise, Stripe & PayPal",
+    "cta": false,
+    "tags": ["pricing", "payments", "milestones"]
+  },
+  {
+    "id": "pricing-hidden-costs",
+    "q": "Are there hidden costs?",
+    "aliases": [
+      "hidden charges",
+      "extra fees",
+      "are there unexpected costs"
+    ],
+    "a": "No hidden costs. Third-party expenses (cloud hosting, domains, SMS credits, and paid APIs) are billed directly to your own accounts.",
+    "cta": false,
+    "tags": ["pricing", "transparency", "costs"]
+  },
+  {
+    "id": "pricing-budget-limit",
+    "q": "Can you work within my budget limit?",
+    "aliases": [
+      "work with tight budget",
+      "can you fit my budget",
+      "small budget startup",
+      "budget constraints"
+    ],
+    "a": "Yes! We help startups prioritize high-impact MVP features so you can launch within your target budget and expand later.",
+    "cta": true,
+    "tags": ["pricing", "budget", "mvp"]
+  },
+  {
+    "id": "support-maintenance",
+    "q": "Do you provide maintenance and support after launch?",
+    "aliases": [
+      "post launch maintenance",
+      "support packages",
+      "bug fixes after release",
+      "ongoing maintenance support"
+    ],
+    "a": "Post-launch support includes:\n• Free warranty period for all bug fixes\n• Regular security updates & server monitoring\n• Automated backups & continuous feature enhancements",
+    "cta": true,
+    "tags": ["support", "maintenance", "warranty"]
+  },
+  {
+    "id": "hiring-dedicated-developers",
+    "q": "Can I hire a dedicated developer or team monthly?",
+    "aliases": [
+      "hire dedicated developer",
+      "monthly developer hiring",
+      "staff augmentation",
+      "hire flutter developer",
+      "hire nextjs developer"
+    ],
+    "a": "You can hire dedicated full-time or part-time developers:\n• Next.js / React Frontend Engineers\n• Flutter Mobile Developers (iOS & Android)\n• Node.js / Backend & DevOps Specialists",
+    "cta": true,
+    "tags": ["hiring", "dedicated", "staffing"]
+  },
+  {
+    "id": "booking-how-to-book",
+    "q": "How do I book a meeting or consultation?",
+    "aliases": [
+      "book a call",
+      "schedule meeting",
+      "talk to your team",
+      "book appointment",
+      "book free consultation"
+    ],
+    "a": "You can book a free consultation right here in our chat! Simply click 'Book Free Consultation' or select a slot that suits your schedule.",
+    "cta": true,
+    "tags": ["booking", "consultation", "meeting"]
+  }
+]

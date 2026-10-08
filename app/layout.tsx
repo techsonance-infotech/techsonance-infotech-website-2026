@@ -4,6 +4,7 @@ import "./globals.css";
 import LenisProvider from "@/app/components/LenisProvider";
 import CookieConsent from "@/app/components/home/CookieConsent";
 import JsonLd, { getOrganizationSchema, getLocalBusinessSchema, getWebsiteSchema } from "@/app/components/JsonLd";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -54,6 +55,7 @@ export default function RootLayout({
         <LenisProvider>
           {children}
           <CookieConsent />
+          <ChatWidget />
         </LenisProvider>
       </body>
     </html>
