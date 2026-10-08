@@ -1,0 +1,1028 @@
+[
+  {
+    "id": "company-0",
+    "topic": "company",
+    "title": "Who We Are",
+    "text": "TechSonance Infotech LLP is a software engineering agency based in Surat, Gujarat, India. Our motto is \"Where Innovation Finds Its Resonance\". We specialize in engineering modern web applications, cross-platform mobile apps with Flutter, SaaS product platforms, e-commerce systems, and practical AI automation (including RAG chatbots and workflow automations).",
+    "tags": [
+      "company",
+      "who",
+      "we",
+      "are"
+    ]
+  },
+  {
+    "id": "company-1",
+    "topic": "company",
+    "title": "Location & Working Hours",
+    "text": "We are located at UG-15, Palladium Plaza, VIP Road, Vesu, Surat, Gujarat - 395007, India.\nOur standard business hours are 10:00 AM to 7:00 PM IST (Monday to Saturday).\nWe work with global clients across North America, Europe, the Middle East, and Asia-Pacific, offering dedicated overlap hours to accommodate international timezones.",
+    "tags": [
+      "company",
+      "location",
+      "&",
+      "working",
+      "hours"
+    ]
+  },
+  {
+    "id": "company-2",
+    "topic": "company",
+    "title": "Contact Information",
+    "text": "- **General Inquiries**: info@techsonance.co.in\n- **Careers & HR**: hr@techsonance.co.in\n- **Phone / WhatsApp**: +91 9173101711\n- **Official Website**: https://www.techsonance.co.in",
+    "tags": [
+      "company",
+      "contact",
+      "information"
+    ]
+  },
+  {
+    "id": "company-3",
+    "topic": "company",
+    "title": "Registration & Compliance",
+    "text": "TechSonance Infotech LLP is an officially registered Limited Liability Partnership (LLP) in India. We operate transparently with formal client service agreements, mutual non-disclosure agreements (NDAs), and official GST invoicing.",
+    "tags": [
+      "company",
+      "registration",
+      "&",
+      "compliance"
+    ]
+  },
+  {
+    "id": "experience-0",
+    "topic": "experience",
+    "title": "Portfolio Track Record",
+    "text": "Over our 5+ years of building digital products, our team has delivered over 9+ production platforms and applications across diverse industries:\n- **Zion**: AI-powered cross-platform mobile application for event discovery, social ticketing, real-time chat, and host analytics built with Flutter, Firebase, and Stripe.\n- **Utsav**: Unified mobile mandal and community festival management platform for Ganesh Chaturthi scheduling, donation ledger tracking, expense reporting, and committee workflows built with Flutter and Node.js.\n- **FreightFlow**: Enterprise logistics and supply chain orchestration platform featuring real-time fleet dispatch, automated invoicing, and route optimization.\n- **SyncServe POS**: High-throughput retail point-of-sale system supporting multi-terminal syncing, barcode scanning, offline caching, and instant GST invoices.\n- **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.\n- **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.\n- **AccuNest**: Comprehensive accounting and financial management suite for SMEs.\n- **Agraj Enterprise**: Industrial protective coating and structural painting platform with project estimating and lead management.",
+    "tags": [
+      "experience",
+      "portfolio",
+      "track",
+      "record"
+    ]
+  },
+  {
+    "id": "experience-1",
+    "topic": "experience",
+    "title": "Client Industries Served",
+    "text": "We build software across Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, Industrial Services, and B2B E-Commerce.",
+    "tags": [
+      "experience",
+      "client",
+      "industries",
+      "served"
+    ]
+  },
+  {
+    "id": "policies-0",
+    "topic": "policies",
+    "title": "100% Intellectual Property (IP) Ownership",
+    "text": "All source code, documentation, UI/UX designs, database schemas, and intellectual property developed during the project belong 100% to the client upon milestone payment completion.",
+    "tags": [
+      "policies",
+      "100%",
+      "intellectual",
+      "property",
+      "(ip)",
+      "ownership"
+    ]
+  },
+  {
+    "id": "policies-1",
+    "topic": "policies",
+    "title": "Non-Disclosure Agreements (NDAs)",
+    "text": "We prioritize client confidentiality and enter into mutual Non-Disclosure Agreements (NDAs) prior to project discovery and repository access.",
+    "tags": [
+      "policies",
+      "non-disclosure",
+      "agreements",
+      "(ndas)"
+    ]
+  },
+  {
+    "id": "policies-2",
+    "topic": "policies",
+    "title": "Post-Launch Warranty & Support",
+    "text": "Every project delivered by TechSonance comes with a dedicated post-launch warranty period during which all bugs or deviations from the agreed scope are fixed free of charge.",
+    "tags": [
+      "policies",
+      "post-launch",
+      "warranty",
+      "&",
+      "support"
+    ]
+  },
+  {
+    "id": "policies-3",
+    "topic": "policies",
+    "title": "Source Code & Account Handover",
+    "text": "Upon project completion, we transfer all repository access (GitHub/GitLab), cloud environments (AWS/Vercel/Firebase), API keys, and deployment credentials directly to your designated accounts, along with technical setup documentation.",
+    "tags": [
+      "policies",
+      "source",
+      "code",
+      "&",
+      "account",
+      "handover"
+    ]
+  },
+  {
+    "id": "pricing-0",
+    "topic": "pricing",
+    "title": "Engagement Models",
+    "text": "We offer three flexible and transparent engagement structures:\n1. **Fixed-Price Milestone Contracts**: Best for projects with clear requirements. Defined scopes, guaranteed delivery dates, and payments tied to approved deliverables.\n2. **Monthly Dedicated Teams / Developers**: Best for evolving products and fast iterations. Full-time dedicated engineers (Next.js, Flutter, Node.js, AI) focused exclusively on your backlog.\n3. **Time & Material (T&M)**: Best for technical consulting, architecture audits, or rapid prototyping.",
+    "tags": [
+      "pricing",
+      "engagement",
+      "models"
+    ]
+  },
+  {
+    "id": "pricing-1",
+    "topic": "pricing",
+    "title": "Factors Influencing Project Cost",
+    "text": "Costs vary based on platform scope (Web, iOS, Android), feature complexity, third-party integrations (payments, maps, SMS), AI/LLM integration depth, and timeline urgency.",
+    "tags": [
+      "pricing",
+      "factors",
+      "influencing",
+      "project",
+      "cost"
+    ]
+  },
+  {
+    "id": "pricing-2",
+    "topic": "pricing",
+    "title": "Free Initial Consultation & Proposal",
+    "text": "We offer a 100% free 30-minute discovery consultation. We review your idea and deliver a transparent scope breakdown, architecture suggestion, and cost estimate with zero obligation.",
+    "tags": [
+      "pricing",
+      "free",
+      "initial",
+      "consultation",
+      "&",
+      "proposal"
+    ]
+  },
+  {
+    "id": "pricing-3",
+    "topic": "pricing",
+    "title": "Payment Terms & Methods",
+    "text": "Payments are divided across project milestones (e.g. deposit at kickoff, sprint milestones upon approved demo, and final balance at release). We accept Bank Wire Transfers (NEFT, RTGS, SWIFT), UPI, Wise, PayPal, and Stripe.",
+    "tags": [
+      "pricing",
+      "payment",
+      "terms",
+      "&",
+      "methods"
+    ]
+  },
+  {
+    "id": "process-0",
+    "topic": "process",
+    "title": "Six-Stage Development Lifecycle",
+    "text": "1. **Discovery & Requirements**: A 30-minute consultation to define core objectives, user personas, MVP feature scope, and tech stack choices.\n2. **Architecture & Milestone Plan**: Creation of database schemas, API contracts, milestone deliverables, and fixed-price or sprint estimates.\n3. **UI/UX Product Design**: Wireframing and interactive Figma prototypes approved by you before engineering commences.\n4. **Agile Sprint Execution**: Bi-weekly sprints with working demo links, continuous integration, and transparent pull requests.\n5. **QA & Security Auditing**: Automated unit and integration testing, cross-browser/device validation, and security vulnerability scanning.\n6. **Launch & Handover**: Production deployment, full source code and account transfer, training walkthroughs, and warranty support.",
+    "tags": [
+      "process",
+      "six-stage",
+      "development",
+      "lifecycle"
+    ]
+  },
+  {
+    "id": "process-1",
+    "topic": "process",
+    "title": "Communication & Collaboration Tools",
+    "text": "We communicate actively on Slack, WhatsApp, or Email, paired with weekly live video sprint reviews (Google Meet or Zoom) and real-time task boards on Jira, Trello, or ClickUp.",
+    "tags": [
+      "process",
+      "communication",
+      "&",
+      "collaboration",
+      "tools"
+    ]
+  },
+  {
+    "id": "projects-ideas-0",
+    "topic": "projects-ideas",
+    "title": "Typical MVP Estimates & Scopes",
+    "text": "- **Mobile MVP (iOS & Android with Flutter)**: Cross-platform mobile app with authentication, user profiles, notifications, offline sync, and payment gateway. Typically 6 to 10 weeks.\n- **SaaS Platform MVP**: Multi-tenant web platform with authentication, dashboard analytics, role management, and automated subscription billing. Typically 8 to 12 weeks.\n- **Custom AI / RAG Chatbot**: Document indexing, vector search, custom system guardrails, natural language query answering, and meeting booking integration. Typically 2 to 4 weeks.\n- **B2B E-Commerce Marketplace**: Multi-vendor catalogs, checkout, payment processing, seller dashboard, and shipping integrations. Typically 8 to 12 weeks.\n- **Custom POS & Inventory System**: Offline-first point-of-sale, barcode scanning, live multi-terminal sync, and automated GST billing. Typically 6 to 10 weeks.",
+    "tags": [
+      "projects-ideas",
+      "typical",
+      "mvp",
+      "estimates",
+      "&",
+      "scopes"
+    ]
+  },
+  {
+    "id": "projects-ideas-1",
+    "topic": "projects-ideas",
+    "title": "How We Scope New Ideas",
+    "text": "If you have a rough idea or wireframes, we help distill it into a phased roadmap: Phase 1 (Core MVP to validate with users), Phase 2 (Advanced features and automation), and Phase 3 (Scaling infrastructure).",
+    "tags": [
+      "projects-ideas",
+      "how",
+      "we",
+      "scope",
+      "new",
+      "ideas"
+    ]
+  },
+  {
+    "id": "services-0",
+    "topic": "services",
+    "title": "Web Application Development",
+    "text": "We build responsive web portals, marketing websites, and enterprise web applications using React, Next.js (App Router), TypeScript, Tailwind CSS, and Node.js or NestJS backends. Our web solutions prioritize core web vitals, sub-second page loads, and modern SEO architectures.",
+    "tags": [
+      "services",
+      "web",
+      "application",
+      "development"
+    ]
+  },
+  {
+    "id": "services-1",
+    "topic": "services",
+    "title": "Cross-Platform Mobile App Development",
+    "text": "We engineer cross-platform mobile apps for iOS and Android using Flutter and Dart from a single unified codebase. Features include offline storage with SQLite/Hive/Isar, smooth 60fps animations, push notifications via FCM/APNs, biometric authentication, and in-app payment gateways.",
+    "tags": [
+      "services",
+      "cross-platform",
+      "mobile",
+      "app",
+      "development"
+    ]
+  },
+  {
+    "id": "services-2",
+    "topic": "services",
+    "title": "SaaS Product Engineering",
+    "text": "We design and deploy full-lifecycle SaaS software with multi-tenant database isolation, role-based access control (RBAC), subscription billing via Stripe or Razorpay, automated onboarding, usage telemetry, and microservices on AWS.",
+    "tags": [
+      "services",
+      "saas",
+      "product",
+      "engineering"
+    ]
+  },
+  {
+    "id": "services-3",
+    "topic": "services",
+    "title": "Custom ERP, CRM & POS Systems",
+    "text": "We build tailored business operating platforms: multi-location point-of-sale (POS) systems, customer relationship management (CRM) software, enterprise resource planning (ERP), inventory tracking, automated GST billing, and employee management.",
+    "tags": [
+      "services",
+      "custom",
+      "erp,",
+      "crm",
+      "&",
+      "pos",
+      "systems"
+    ]
+  },
+  {
+    "id": "services-4",
+    "topic": "services",
+    "title": "AI Chatbots & Workflow Automation",
+    "text": "We design and build production-ready RAG (Retrieval-Augmented Generation) assistants, website chatbots with zero hallucinations, customer service automation, and agentic workflows using OpenAI, Claude, Google Gemini, LangChain, and pgvector.",
+    "tags": [
+      "services",
+      "ai",
+      "chatbots",
+      "&",
+      "workflow",
+      "automation"
+    ]
+  },
+  {
+    "id": "services-5",
+    "topic": "services",
+    "title": "DevOps, Cloud & Maintenance",
+    "text": "We configure cloud infrastructure on Amazon Web Services (AWS) and Vercel, setup Docker containerization, CI/CD automated deployment pipelines, SSL security, database replication, server monitoring, and continuous post-launch maintenance.",
+    "tags": [
+      "services",
+      "devops,",
+      "cloud",
+      "&",
+      "maintenance"
+    ]
+  },
+  {
+    "id": "team-0",
+    "topic": "team",
+    "title": "Engineering Team & Roles",
+    "text": "We are a focused, senior-led software development team. Our core roles include full-stack web engineers (React, Next.js, Node.js, TypeScript), mobile app developers (Flutter for iOS & Android), UI/UX product designers, QA automation testers, and DevOps cloud engineers. Our founder remains directly involved in technical architecture and quality reviews for every client engagement.",
+    "tags": [
+      "team",
+      "engineering",
+      "team",
+      "&",
+      "roles"
+    ]
+  },
+  {
+    "id": "team-1",
+    "topic": "team",
+    "title": "Seniority & Experience",
+    "text": "Our lead engineers possess over 5+ years of production experience building high-scale architectures, real-time messaging, distributed caching, multi-tenant databases, and AI LLM integrations.",
+    "tags": [
+      "team",
+      "seniority",
+      "&",
+      "experience"
+    ]
+  },
+  {
+    "id": "team-2",
+    "topic": "team",
+    "title": "In-House Delivery & Dedicated Points of Contact",
+    "text": "All primary engineering, architecture, design, and DevOps are executed directly in-house without outsourcing core tasks. Every client project is assigned a dedicated technical project manager or engineering lead who provides transparent communication, bi-weekly demos, and sprint progress tracking.",
+    "tags": [
+      "team",
+      "in-house",
+      "delivery",
+      "&",
+      "dedicated",
+      "points",
+      "of",
+      "contact"
+    ]
+  },
+  {
+    "id": "team-3",
+    "topic": "team",
+    "title": "Staff Augmentation & Dedicated Developers",
+    "text": "Clients can hire dedicated full-time or part-time developers (Next.js, Node.js, Flutter) working exclusively on their products under their own sprint cadence and timezone preferences.",
+    "tags": [
+      "team",
+      "staff",
+      "augmentation",
+      "&",
+      "dedicated",
+      "developers"
+    ]
+  },
+  {
+    "id": "faq-company-overview",
+    "topic": "faq",
+    "title": "Who are you and what does TechSonance do?",
+    "text": "Question: Who are you and what does TechSonance do?\nAlternative phrasings: what is techsonance | tell me about techsonance | what does your company do | about techsonance infotech | what do you guys do\nAnswer: TechSonance Infotech LLP is a software engineering agency in Surat, India.\n\nWe specialize in:\n• Custom Web & SaaS Development\n• Cross-Platform Mobile Apps (Flutter)\n• AI Chatbots & RAG Systems\n• Custom ERP, POS & Automation",
+    "tags": [
+      "faq",
+      "company",
+      "overview",
+      "about"
+    ]
+  },
+  {
+    "id": "faq-company-location",
+    "topic": "faq",
+    "title": "Where are you located and which time zones do you work in?",
+    "text": "Question: Where are you located and which time zones do you work in?\nAlternative phrasings: where are you located | office location | which city are you in | time zones you support | do you work us hours | do you work uk timezone\nAnswer: We are based in Surat, Gujarat, India.\n\nWe work with clients worldwide and overlap with US, UK, Europe, UAE, and Australia working hours.",
+    "tags": [
+      "faq",
+      "company",
+      "location",
+      "timezone"
+    ]
+  },
+  {
+    "id": "faq-company-experience-years",
+    "topic": "faq",
+    "title": "How long have you been in business and how many projects have you delivered?",
+    "text": "Question: How long have you been in business and how many projects have you delivered?\nAlternative phrasings: how long in business | company experience | how many projects completed | track record | projects delivered\nAnswer: Our track record:\n• 5+ years of core engineering experience\n• 9+ production platforms delivered\n• Domains: Logistics, Fintech, Retail POS, SaaS & AI",
+    "tags": [
+      "faq",
+      "company",
+      "experience",
+      "stats"
+    ]
+  },
+  {
+    "id": "faq-company-industries",
+    "topic": "faq",
+    "title": "What industries have you worked in?",
+    "text": "Question: What industries have you worked in?\nAlternative phrasings: which domains do you work in | industry experience | sectors you serve | what types of businesses do you build for\nAnswer: We have engineered solutions across diverse industries:\n• Logistics & Supply Chain\n• Retail & Point-of-Sale (POS)\n• B2B & Multi-Vendor E-Commerce\n• SaaS & Enterprise Workflow Systems\n• Events, Ticketing & Community Apps",
+    "tags": [
+      "faq",
+      "company",
+      "industries",
+      "experience"
+    ]
+  },
+  {
+    "id": "faq-company-ratings-reviews",
+    "topic": "faq",
+    "title": "What is your overall rating and reviews?",
+    "text": "Question: What is your overall rating and reviews?\nAlternative phrasings: customer reviews | client feedback | clutch rating | google reviews rating | upwork rating\nAnswer: We maintain top client satisfaction ratings across our portfolio.\n\nYou can review our published case studies or request verified client references on a consultation call.",
+    "tags": [
+      "faq",
+      "company",
+      "ratings",
+      "reviews"
+    ]
+  },
+  {
+    "id": "faq-company-portfolio",
+    "topic": "faq",
+    "title": "Can I see your portfolio, case studies or testimonials?",
+    "text": "Question: Can I see your portfolio, case studies or testimonials?\nAlternative phrasings: show me your work | case studies | past projects | portfolio link | examples of your work | previous apps\nAnswer: Our featured production case studies include:\n• Zion: Event discovery & ticketing platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
+    "tags": [
+      "faq",
+      "portfolio",
+      "case-studies",
+      "work"
+    ]
+  },
+  {
+    "id": "faq-company-international-clients",
+    "topic": "faq",
+    "title": "Do you work with international clients?",
+    "text": "Question: Do you work with international clients?\nAlternative phrasings: overseas clients | do you work with US clients | foreign clients | international billing | global clients\nAnswer: Yes! We work with clients across the US, UK, Europe, UAE, and Asia-Pacific.\n\nWe provide seamless asynchronous communication, flexible meeting hours, and international billing.",
+    "tags": [
+      "faq",
+      "company",
+      "international",
+      "clients"
+    ]
+  },
+  {
+    "id": "faq-company-registration-invoicing",
+    "topic": "faq",
+    "title": "Are you a registered company? Do you give invoices?",
+    "text": "Question: Are you a registered company? Do you give invoices?\nAlternative phrasings: is techsonance registered | gst invoice | company registration details | legal entity\nAnswer: Yes, TechSonance Infotech LLP is a registered Limited Liability Partnership in India.\n\nWe provide formal contracts, bilateral NDAs, and official GST tax invoices for all engagements.",
+    "tags": [
+      "faq",
+      "company",
+      "legal",
+      "invoicing"
+    ]
+  },
+  {
+    "id": "faq-company-why-choose-us",
+    "topic": "faq",
+    "title": "Why should I choose you over other agencies or freelancers?",
+    "text": "Question: Why should I choose you over other agencies or freelancers?\nAlternative phrasings: why choose techsonance | why hire you | freelancers vs techsonance | your competitive advantage | why work with you\nAnswer: Why choose TechSonance:\n• Senior engineers & direct founder involvement\n• 100% code & IP ownership upon payment\n• Agile sprints with weekly demos & transparent tracking\n• Zero junior bloat with rapid proactive communication",
+    "tags": [
+      "faq",
+      "company",
+      "advantages",
+      "differentiators"
+    ]
+  },
+  {
+    "id": "faq-company-references-ndas",
+    "topic": "faq",
+    "title": "Have you worked on projects like mine? Can I speak to a past client?",
+    "text": "Question: Have you worked on projects like mine? Can I speak to a past client?\nAlternative phrasings: can i get client references | similar projects to mine | talk to previous client | client reference check\nAnswer: We have engineered apps across most modern software categories.\n\nShare your concept with us, and we will provide matching case studies and client references under mutual confidentiality.",
+    "tags": [
+      "faq",
+      "company",
+      "references",
+      "nda"
+    ]
+  },
+  {
+    "id": "faq-company-contact-hours",
+    "topic": "faq",
+    "title": "What are your working hours? How can I contact you?",
+    "text": "Question: What are your working hours? How can I contact you?\nAlternative phrasings: contact details | working hours | phone number | email address | office hours | how to reach you\nAnswer: Working hours: 10:00 AM – 7:00 PM IST (Mon–Sat) with flexible international overlap.\n\nContact options:\n• Email: info@techsonance.co.in\n• Phone: +91 9173101711\n• Or book a consultation directly in this chat!",
+    "tags": [
+      "faq",
+      "contact",
+      "hours",
+      "email",
+      "phone"
+    ]
+  },
+  {
+    "id": "faq-team-overview",
+    "topic": "faq",
+    "title": "Tell me about your development team.",
+    "text": "Question: Tell me about your development team.\nAlternative phrasings: team size | who is in your team | development team | engineering team | team structure\nAnswer: Our core engineering team includes:\n• Full-Stack Web Engineers (React, Next.js, Node.js)\n• Mobile Developers (Flutter iOS & Android)\n• UI/UX Designers & QA Specialists\n• Cloud & DevOps Engineers (AWS, Docker)",
+    "tags": [
+      "faq",
+      "team",
+      "headcount",
+      "roles"
+    ]
+  },
+  {
+    "id": "faq-team-experience",
+    "topic": "faq",
+    "title": "How experienced are your developers?",
+    "text": "Question: How experienced are your developers?\nAlternative phrasings: developer seniority | years of experience developers | lead developer background | senior developers\nAnswer: Our lead engineers bring 5+ years of hands-on experience architecting scalable systems with React, Next.js, Node.js, NestJS, TypeScript, PostgreSQL, and AWS cloud infrastructure.",
+    "tags": [
+      "faq",
+      "team",
+      "experience",
+      "seniority"
+    ]
+  },
+  {
+    "id": "faq-team-dedicated-pm",
+    "topic": "faq",
+    "title": "Will I have a dedicated project manager or point of contact?",
+    "text": "Question: Will I have a dedicated project manager or point of contact?\nAlternative phrasings: point of contact | project manager assigned | who will i communicate with | dedicated lead\nAnswer: Yes. Every engagement includes a dedicated technical lead or project manager as your single point of contact for sprint demos, daily standups, and architecture decisions.",
+    "tags": [
+      "faq",
+      "team",
+      "pm",
+      "communication"
+    ]
+  },
+  {
+    "id": "faq-team-in-house-vs-outsourcing",
+    "topic": "faq",
+    "title": "Do you have designers, QA and DevOps in house? Do you outsource?",
+    "text": "Question: Do you have designers, QA and DevOps in house? Do you outsource?\nAlternative phrasings: do you outsource work | is team in house | in house designers | in house devops\nAnswer: All architecture, development, UI/UX design, QA, and DevOps are executed in-house by our dedicated engineers. We do not outsource your project to unvetted third parties.",
+    "tags": [
+      "faq",
+      "team",
+      "in-house",
+      "outsourcing"
+    ]
+  },
+  {
+    "id": "faq-team-interview-developers",
+    "topic": "faq",
+    "title": "Can I choose or interview the developers?",
+    "text": "Question: Can I choose or interview the developers?\nAlternative phrasings: interview developers | select developers | meet the team before hiring | vet developers\nAnswer: Yes! For dedicated developer and team models, you can interview and meet the assigned engineers, review their portfolio, and assess technical fit before kickoff.",
+    "tags": [
+      "faq",
+      "team",
+      "interview",
+      "hiring"
+    ]
+  },
+  {
+    "id": "faq-team-developer-replacement",
+    "topic": "faq",
+    "title": "What if a developer leaves during my project?",
+    "text": "Question: What if a developer leaves during my project?\nAlternative phrasings: developer leaves project | developer turnover | what if engineer quits | continuity plan\nAnswer: We maintain continuous documentation, clean modular code, and peer reviews so a backup engineer is always ramped up on your codebase with zero project interruption.",
+    "tags": [
+      "faq",
+      "team",
+      "continuity",
+      "risk"
+    ]
+  },
+  {
+    "id": "faq-team-domain-experts",
+    "topic": "faq",
+    "title": "Do you have experts in AI, mobile apps, SaaS, ERP or e-commerce?",
+    "text": "Question: Do you have experts in AI, mobile apps, SaaS, ERP or e-commerce?\nAlternative phrasings: ai specialists | mobile app experts | saas experts | flutter developers | erp developers\nAnswer: Yes! Our core specializations include:\n• Multi-Tenant SaaS Platforms\n• Flutter Mobile Apps (iOS & Android)\n• AI Chatbots & RAG Automation\n• Custom ERP, CRM & POS Systems",
+    "tags": [
+      "faq",
+      "team",
+      "expertise",
+      "domains"
+    ]
+  },
+  {
+    "id": "faq-contracts-nda",
+    "topic": "faq",
+    "title": "Do you sign an NDA before I share my idea?",
+    "text": "Question: Do you sign an NDA before I share my idea?\nAlternative phrasings: sign an nda | confidentiality agreement | is my idea safe | non disclosure agreement | protect my idea\nAnswer: Absolutely. We sign bilateral Non-Disclosure Agreements (NDAs) before discussing any project concepts, business plans, or proprietary logic.",
+    "tags": [
+      "faq",
+      "contracts",
+      "nda",
+      "security"
+    ]
+  },
+  {
+    "id": "faq-services-list",
+    "topic": "faq",
+    "title": "What services do you offer?",
+    "text": "Question: What services do you offer?\nAlternative phrasings: list of services | what do you build | software services | capabilities | what can you do for me\nAnswer: We provide end-to-end software engineering services:\n\n• Web Development (Next.js, React, TypeScript)\n• Mobile Apps (Flutter for iOS & Android)\n• SaaS Product Engineering & Cloud Backends\n• AI Chatbots & Workflow Automation\n• Custom ERP, CRM & POS Systems\n• UI/UX Design & Ongoing Maintenance",
+    "tags": [
+      "faq",
+      "services",
+      "overview",
+      "offerings"
+    ]
+  },
+  {
+    "id": "faq-services-web-apps",
+    "topic": "faq",
+    "title": "Can you build a website or web app?",
+    "text": "Question: Can you build a website or web app?\nAlternative phrasings: build a website | web app development | nextjs website | react web application | custom web platform\nAnswer: Yes! We build high-performance web applications and portals using React, Next.js, TypeScript, and scalable Node.js/NestJS backends.",
+    "tags": [
+      "faq",
+      "services",
+      "web",
+      "frontend"
+    ]
+  },
+  {
+    "id": "faq-services-mobile-apps",
+    "topic": "faq",
+    "title": "Can you build Android and iOS apps from one codebase?",
+    "text": "Question: Can you build Android and iOS apps from one codebase?\nAlternative phrasings: flutter mobile apps | cross platform mobile development | ios and android app | build a mobile app | flutter app developers\nAnswer: Yes! We develop cross-platform mobile apps using Flutter & Dart, delivering native 60fps performance on both iOS and Android from a single unified codebase.",
+    "tags": [
+      "faq",
+      "services",
+      "mobile",
+      "flutter"
+    ]
+  },
+  {
+    "id": "faq-services-ecommerce",
+    "topic": "faq",
+    "title": "Can you build an e-commerce store or multi vendor marketplace?",
+    "text": "Question: Can you build an e-commerce store or multi vendor marketplace?\nAlternative phrasings: build ecommerce store | multi vendor marketplace | online store development | b2b ecommerce platform\nAnswer: Yes! We build complete e-commerce solutions:\n• Custom online storefronts & multi-vendor marketplaces\n• Seamless payment gateways (Stripe, Razorpay)\n• Seller dashboards, inventory & logistics tracking",
+    "tags": [
+      "faq",
+      "services",
+      "ecommerce",
+      "marketplace"
+    ]
+  },
+  {
+    "id": "faq-services-saas-products",
+    "topic": "faq",
+    "title": "Can you build a SaaS product from scratch?",
+    "text": "Question: Can you build a SaaS product from scratch?\nAlternative phrasings: build a saas | saas product development | saas mvp | multi tenant saas platform\nAnswer: Yes! We engineer full-featured SaaS products:\n• Multi-tenant database isolation\n• User authentication, RBAC & subscription billing\n• Scalable cloud deployments & real-time analytics",
+    "tags": [
+      "faq",
+      "services",
+      "saas",
+      "mvp"
+    ]
+  },
+  {
+    "id": "faq-services-erp-crm-pos",
+    "topic": "faq",
+    "title": "Can you build an ERP, HRMS, CRM, inventory or billing system?",
+    "text": "Question: Can you build an ERP, HRMS, CRM, inventory or billing system?\nAlternative phrasings: build custom erp | custom crm system | pos software development | inventory management system | hrms development\nAnswer: Yes! We build tailored business systems with granular permissions, automated workflows, audit logging, barcode/POS hardware integrations, and live reporting.",
+    "tags": [
+      "faq",
+      "services",
+      "erp",
+      "crm",
+      "pos"
+    ]
+  },
+  {
+    "id": "faq-services-booking-ticketing",
+    "topic": "faq",
+    "title": "Can you build booking, ticketing or event platforms?",
+    "text": "Question: Can you build booking, ticketing or event platforms?\nAlternative phrasings: event booking app | ticket booking system | appointment booking software | reservation platform\nAnswer: Yes! We have built ticketing platforms (like Zion) featuring seat/tier selection, QR-code validation, automated scheduling, and organizer revenue dashboards.",
+    "tags": [
+      "faq",
+      "services",
+      "booking",
+      "events"
+    ]
+  },
+  {
+    "id": "faq-services-realtime-chat",
+    "topic": "faq",
+    "title": "Can you build chat or social apps with real time messaging?",
+    "text": "Question: Can you build chat or social apps with real time messaging?\nAlternative phrasings: real time chat app | websocket chat system | messaging app development | social media platform\nAnswer: Yes! We implement real-time communication using WebSockets and Socket.IO, complete with instant messaging, media sharing, push notifications, and presence tracking.",
+    "tags": [
+      "faq",
+      "services",
+      "chat",
+      "realtime"
+    ]
+  },
+  {
+    "id": "faq-services-property-logistics",
+    "topic": "faq",
+    "title": "Can you build property, hotel or transport management systems?",
+    "text": "Question: Can you build property, hotel or transport management systems?\nAlternative phrasings: logistics software | transportation management system | property management app | hotel pms\nAnswer: Yes! We have built fleet management and logistics platforms (such as FreightFlow) with route tracking, dispatch automation, digital invoicing, and asset maintenance.",
+    "tags": [
+      "faq",
+      "services",
+      "logistics",
+      "property"
+    ]
+  },
+  {
+    "id": "faq-services-ai-chatbots-rag",
+    "topic": "faq",
+    "title": "Can you build an AI chatbot or RAG assistant for my business?",
+    "text": "Question: Can you build an AI chatbot or RAG assistant for my business?\nAlternative phrasings: build an ai chatbot | rag chatbot development | custom ai assistant | chatbot for my website | ai knowledge base bot\nAnswer: Yes! We build custom RAG assistants and AI chatbots that answer accurately from your business documents, featuring strict guardrails, zero hallucinations, and booking integrations.",
+    "tags": [
+      "faq",
+      "services",
+      "ai",
+      "rag",
+      "chatbots"
+    ]
+  },
+  {
+    "id": "faq-services-ai-integrations",
+    "topic": "faq",
+    "title": "Can you integrate OpenAI, Claude or other AI into my product?",
+    "text": "Question: Can you integrate OpenAI, Claude or other AI into my product?\nAlternative phrasings: integrate chatgpt api | integrate claude ai | llm integration services | ai api integration\nAnswer: Yes! We integrate OpenAI, Anthropic Claude, and Google Gemini into existing products using pgvector embeddings, tool calling, and automated AI workflow pipelines.",
+    "tags": [
+      "faq",
+      "services",
+      "ai",
+      "llm"
+    ]
+  },
+  {
+    "id": "faq-services-whatsapp-automation",
+    "topic": "faq",
+    "title": "Can you build WhatsApp automation, bots or scrapers?",
+    "text": "Question: Can you build WhatsApp automation, bots or scrapers?\nAlternative phrasings: whatsapp bot development | whatsapp api automation | whatsapp notification integration | web scrapers\nAnswer: Yes! We integrate official WhatsApp Business Cloud APIs for automated booking confirmations, customer notifications, and interactive self-service support flows.",
+    "tags": [
+      "faq",
+      "services",
+      "whatsapp",
+      "automation"
+    ]
+  },
+  {
+    "id": "faq-services-takeover-legacy",
+    "topic": "faq",
+    "title": "Can you fix, redesign or take over an existing project?",
+    "text": "Question: Can you fix, redesign or take over an existing project?\nAlternative phrasings: take over existing project | fix broken codebase | redesign existing app | rescue project\nAnswer: Yes! We conduct an initial architecture and code audit, identify bottlenecks, and execute a structured roadmap to refactor, upgrade, and deliver your project.",
+    "tags": [
+      "faq",
+      "services",
+      "refactor",
+      "takeover"
+    ]
+  },
+  {
+    "id": "faq-services-migration-cloud",
+    "topic": "faq",
+    "title": "Can you migrate my site to Next.js or to the cloud?",
+    "text": "Question: Can you migrate my site to Next.js or to the cloud?\nAlternative phrasings: migrate to nextjs | cloud migration aws | upgrade legacy website | move to vercel aws\nAnswer: Yes! We migrate legacy web applications to modern Next.js and containerize backend services on AWS with zero downtime and improved SEO performance.",
+    "tags": [
+      "faq",
+      "services",
+      "migration",
+      "cloud"
+    ]
+  },
+  {
+    "id": "faq-tech-stack-overview",
+    "topic": "faq",
+    "title": "Which technologies do you use?",
+    "text": "Question: Which technologies do you use?\nAlternative phrasings: what is your tech stack | technologies you work with | programming languages used | frameworks used\nAnswer: Our core technology stack:\n\n• Frontend: React, Next.js, TypeScript, Tailwind CSS\n• Backend: Node.js, NestJS, Express\n• Mobile: Flutter (Dart) for iOS & Android\n• Databases: PostgreSQL, MongoDB, Redis\n• Cloud & DevOps: AWS, Docker, Vercel",
+    "tags": [
+      "faq",
+      "technology",
+      "stack",
+      "tools"
+    ]
+  },
+  {
+    "id": "faq-tech-scalability",
+    "topic": "faq",
+    "title": "Will my app scale to many users?",
+    "text": "Question: Will my app scale to many users?\nAlternative phrasings: app scalability | handle high traffic | scale to millions of users | performance at scale\nAnswer: Yes! We engineer apps with modular architectures, database indexing, Redis caching, and autoscaling cloud deployments designed for high concurrency.",
+    "tags": [
+      "faq",
+      "technology",
+      "scalability",
+      "architecture"
+    ]
+  },
+  {
+    "id": "faq-tech-third-party-integrations",
+    "topic": "faq",
+    "title": "Can you integrate payments, maps, SMS, email and push notifications?",
+    "text": "Question: Can you integrate payments, maps, SMS, email and push notifications?\nAlternative phrasings: payment gateway integration | stripe razorpay integration | sms email notifications | google maps api\nAnswer: Yes! We regularly integrate:\n• Payments: Stripe, Razorpay, PayPal\n• Maps & Media: Google Maps, Mapbox\n• Messaging & Notifications: Twilio, Firebase FCM, SendGrid",
+    "tags": [
+      "faq",
+      "technology",
+      "integrations",
+      "apis"
+    ]
+  },
+  {
+    "id": "faq-tech-offline-capabilities",
+    "topic": "faq",
+    "title": "Can you build offline capable mobile apps?",
+    "text": "Question: Can you build offline capable mobile apps?\nAlternative phrasings: offline first mobile app | offline sync app | app works without internet\nAnswer: Yes! We build offline-first mobile apps using local SQLite, Isar, or Hive storage with background synchronization when connectivity is restored.",
+    "tags": [
+      "faq",
+      "technology",
+      "mobile",
+      "offline"
+    ]
+  },
+  {
+    "id": "faq-tech-code-ownership",
+    "topic": "faq",
+    "title": "Who owns the source code and accounts?",
+    "text": "Question: Who owns the source code and accounts?\nAlternative phrasings: who owns the code | ip ownership | do i own the intellectual property | github repository transfer\nAnswer: You own 100% of the source code, intellectual property, and deployment credentials upon milestone completion. We provide full repository transfer.",
+    "tags": [
+      "faq",
+      "contracts",
+      "ownership",
+      "ip"
+    ]
+  },
+  {
+    "id": "faq-tech-security",
+    "topic": "faq",
+    "title": "How do you handle security?",
+    "text": "Question: How do you handle security?\nAlternative phrasings: security practices | how secure is the software | data protection | 2fa authentication | encryption\nAnswer: Our security protocols include:\n• JWT/OAuth2 authentication & RBAC\n• TLS encryption in transit & encrypted storage at rest\n• Parameterized database queries & input sanitization\n• Secure backup routines & vulnerability scanning",
+    "tags": [
+      "faq",
+      "technology",
+      "security",
+      "data"
+    ]
+  },
+  {
+    "id": "faq-process-development-flow",
+    "topic": "faq",
+    "title": "What is your development process?",
+    "text": "Question: What is your development process?\nAlternative phrasings: how do you work | development process | workflow and methodology | sprint process | project lifecycle\nAnswer: Our structured 6-step process:\n\n1. Discovery & Requirements Breakdown\n2. Architecture & Scope Scoping\n3. UI/UX Wireframing & Design Approval\n4. Agile Sprints with Bi-Weekly Demos\n5. QA, Security & Performance Testing\n6. Deployment & Post-Launch Support",
+    "tags": [
+      "faq",
+      "process",
+      "methodology",
+      "workflow"
+    ]
+  },
+  {
+    "id": "faq-process-how-to-start",
+    "topic": "faq",
+    "title": "How do we start and what do you need from me?",
+    "text": "Question: How do we start and what do you need from me?\nAlternative phrasings: how to get started | next steps to start | what do you need from client | kickoff process\nAnswer: Getting started is simple:\n\n1. Book a free 30-minute discovery call with our team.\n2. We discuss your core goals, timeline, and MVP features.\n3. We provide a clear architecture breakdown and fixed estimate.",
+    "tags": [
+      "faq",
+      "process",
+      "kickoff",
+      "consultation"
+    ]
+  },
+  {
+    "id": "faq-process-communication-tools",
+    "topic": "faq",
+    "title": "How often will I get updates and which tools do you use?",
+    "text": "Question: How often will I get updates and which tools do you use?\nAlternative phrasings: communication tools | how often do you update | slack whatsapp updates | project tracking\nAnswer: We provide transparent updates via Slack, WhatsApp, or Email, paired with weekly video demo calls and live project tracking boards (Jira/ClickUp).",
+    "tags": [
+      "faq",
+      "process",
+      "communication",
+      "updates"
+    ]
+  },
+  {
+    "id": "faq-timeline-general",
+    "topic": "faq",
+    "title": "How long will my project take?",
+    "text": "Question: How long will my project take?\nAlternative phrasings: project timeline | how long to build an app | how long to build a website | development duration | time to market | time kitna lagega\nAnswer: Typical project delivery timelines:\n\n• Focused MVP / Web App: 4 – 8 weeks\n• Mobile App (iOS & Android): 6 – 10 weeks\n• Custom SaaS Platform: 8 – 14 weeks\n• AI Chatbot / RAG System: 2 – 4 weeks",
+    "tags": [
+      "faq",
+      "timeline",
+      "duration",
+      "estimates"
+    ]
+  },
+  {
+    "id": "faq-timeline-ai-chatbots",
+    "topic": "faq",
+    "title": "How long for an AI chatbot or RAG project?",
+    "text": "Question: How long for an AI chatbot or RAG project?\nAlternative phrasings: ai chatbot timeline | how long to build rag bot | ai integration duration\nAnswer: A production-grade AI chatbot or RAG knowledge assistant typically takes 2 to 4 weeks, including custom guardrails, vector search, and API integrations.",
+    "tags": [
+      "faq",
+      "timeline",
+      "ai",
+      "chatbots"
+    ]
+  },
+  {
+    "id": "faq-timeline-fast-track",
+    "topic": "faq",
+    "title": "Can you deliver faster if I have a deadline?",
+    "text": "Question: Can you deliver faster if I have a deadline?\nAlternative phrasings: urgent project deadline | expedited development | rush project delivery | can you build faster\nAnswer: Yes! We can fast-track development by scoping an accelerated core MVP release and allocating dedicated additional engineering bandwidth.",
+    "tags": [
+      "faq",
+      "timeline",
+      "urgent",
+      "fast-track"
+    ]
+  },
+  {
+    "id": "faq-timeline-start-date",
+    "topic": "faq",
+    "title": "When can you start?",
+    "text": "Question: When can you start?\nAlternative phrasings: when can you begin | availability to start | how soon can we start | start date\nAnswer: We can commence initial discovery and UI/UX sprints within 3 to 7 business days following scope alignment and agreement finalization.",
+    "tags": [
+      "faq",
+      "timeline",
+      "start",
+      "availability"
+    ]
+  },
+  {
+    "id": "faq-pricing-general",
+    "topic": "faq",
+    "title": "How much will my project cost?",
+    "text": "Question: How much will my project cost?\nAlternative phrasings: pricing | how much do you charge | cost of app development | how much does a website cost | how much does an app cost | website cost | website price | app price | cost estimate | price kitna hai | kharcha kitna hoga\nAnswer: Project costs depend on scope, features, and platform.\n\nWe provide:\n• Fixed-Price Milestone Quotes for defined scopes\n• Flexible Monthly Dedicated Developer Rates\n• Free 30-minute estimate & scope breakdown",
+    "tags": [
+      "faq",
+      "pricing",
+      "cost",
+      "budget"
+    ]
+  },
+  {
+    "id": "faq-pricing-models",
+    "topic": "faq",
+    "title": "What is your hourly or monthly rate? What engagement models do you offer?",
+    "text": "Question: What is your hourly or monthly rate? What engagement models do you offer?\nAlternative phrasings: hourly rate | monthly dedicated developer cost | engagement models | fixed price vs hourly\nAnswer: We offer three transparent engagement models:\n\n• Fixed-Price Milestone Contracts: For defined scopes\n• Monthly Dedicated Developers: For continuous velocity\n• Time & Material: For dynamic advisory & feature builds",
+    "tags": [
+      "faq",
+      "pricing",
+      "models",
+      "rates"
+    ]
+  },
+  {
+    "id": "faq-pricing-free-consultation",
+    "topic": "faq",
+    "title": "Is there a free estimate?",
+    "text": "Question: Is there a free estimate?\nAlternative phrasings: is consultation free | free estimate | cost for initial discussion | quote charges\nAnswer: Yes! Our initial 30-minute discovery call and proposal estimate are 100% free with zero obligation.",
+    "tags": [
+      "faq",
+      "pricing",
+      "free",
+      "consultation"
+    ]
+  },
+  {
+    "id": "faq-pricing-payment-schedule",
+    "topic": "faq",
+    "title": "What is the payment schedule and which methods do you accept?",
+    "text": "Question: What is the payment schedule and which methods do you accept?\nAlternative phrasings: payment terms | payment methods | milestone payments | do you take bank transfer upi paypal\nAnswer: Payment terms & accepted methods:\n• Milestone-based payments tied to verified deliverables\n• Wire Transfers (NEFT/RTGS/SWIFT), UPI, Wise, Stripe & PayPal",
+    "tags": [
+      "faq",
+      "pricing",
+      "payments",
+      "milestones"
+    ]
+  },
+  {
+    "id": "faq-pricing-hidden-costs",
+    "topic": "faq",
+    "title": "Are there hidden costs?",
+    "text": "Question: Are there hidden costs?\nAlternative phrasings: hidden charges | extra fees | are there unexpected costs\nAnswer: No hidden costs. Third-party expenses (cloud hosting, domains, SMS credits, and paid APIs) are billed directly to your own accounts.",
+    "tags": [
+      "faq",
+      "pricing",
+      "transparency",
+      "costs"
+    ]
+  },
+  {
+    "id": "faq-pricing-budget-limit",
+    "topic": "faq",
+    "title": "Can you work within my budget limit?",
+    "text": "Question: Can you work within my budget limit?\nAlternative phrasings: work with tight budget | can you fit my budget | small budget startup | budget constraints\nAnswer: Yes! We help startups prioritize high-impact MVP features so you can launch within your target budget and expand later.",
+    "tags": [
+      "faq",
+      "pricing",
+      "budget",
+      "mvp"
+    ]
+  },
+  {
+    "id": "faq-support-maintenance",
+    "topic": "faq",
+    "title": "Do you provide maintenance and support after launch?",
+    "text": "Question: Do you provide maintenance and support after launch?\nAlternative phrasings: post launch maintenance | support packages | bug fixes after release | ongoing maintenance support\nAnswer: Post-launch support includes:\n• Free warranty period for all bug fixes\n• Regular security updates & server monitoring\n• Automated backups & continuous feature enhancements",
+    "tags": [
+      "faq",
+      "support",
+      "maintenance",
+      "warranty"
+    ]
+  },
+  {
+    "id": "faq-hiring-dedicated-developers",
+    "topic": "faq",
+    "title": "Can I hire a dedicated developer or team monthly?",
+    "text": "Question: Can I hire a dedicated developer or team monthly?\nAlternative phrasings: hire dedicated developer | monthly developer hiring | staff augmentation | hire flutter developer | hire nextjs developer\nAnswer: You can hire dedicated full-time or part-time developers:\n• Next.js / React Frontend Engineers\n• Flutter Mobile Developers (iOS & Android)\n• Node.js / Backend & DevOps Specialists",
+    "tags": [
+      "faq",
+      "hiring",
+      "dedicated",
+      "staffing"
+    ]
+  },
+  {
+    "id": "faq-booking-how-to-book",
+    "topic": "faq",
+    "title": "How do I book a meeting or consultation?",
+    "text": "Question: How do I book a meeting or consultation?\nAlternative phrasings: book a call | schedule meeting | talk to your team | book appointment | book free consultation\nAnswer: You can book a free consultation right here in our chat! Simply click 'Book Free Consultation' or select a slot that suits your schedule.",
+    "tags": [
+      "faq",
+      "booking",
+      "consultation",
+      "meeting"
+    ]
+  }
+]
