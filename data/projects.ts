@@ -745,6 +745,134 @@ export const projects: Project[] = [
       },
     ],
   },
+  // ── 9. Utsav ──────────────────────────────────────────────────────────────
+  {
+    slug: "utsav",
+    title: "Utsav",
+    tagline: "Mandal Management, Festival Operations & Community Engagement Platform",
+    category: "Mobile App",
+    industry: "Community & Religious Events",
+    featured: true,
+    featuredOrder: 6,
+    shortDescription:
+      "A centralized mandal management platform for festivals, donations, expenses, events, members, vendors, announcements, duties, reporting, and community operations.",
+    overview:
+      "Utsav is a centralized digital platform built for Ganpati mandals and community organizations to manage festivals, donations, expenses, events, members, vendors, announcements, duties, reports, and day-to-day mandal operations from a single application. The platform combines real-time financial visibility, festival scheduling, community communication, donation management, operational tools, and role-based access into a modern mobile experience designed specifically for Indian community and festival organizations.",
+    challenge:
+      "Fragmented mandal operations, manual financial tracking, disconnected festival scheduling, and difficulty coordinating members, vendors, duties, and community communication.",
+    solution:
+      "A centralized Flutter-based mandal management platform combining festival scheduling, financial management, donations, committee operations, vendor management, announcements, reporting, analytics, and role-based access.",
+    result:
+      "A unified digital operating platform that brings festival planning, financial management, community coordination, and mandal administration into one mobile application.",
+    challenges: [
+      {
+        title: "Fragmented Mandal Operations",
+        description:
+          "Mandal activities were traditionally managed across spreadsheets, WhatsApp groups, paper records, and disconnected tools, making it difficult to maintain a single source of truth.",
+        icon: "🏛️",
+      },
+      {
+        title: "Donation & Financial Visibility",
+        description:
+          "Donation collections, cash entries, expenses, pending requests, and financial reporting required manual tracking, limiting real-time financial visibility.",
+        icon: "💰",
+      },
+      {
+        title: "Festival & Event Coordination",
+        description:
+          "Festival dates, puja schedules, events, duties, and upcoming activities required centralized scheduling to improve coordination and reduce missed activities.",
+        icon: "📅",
+      },
+      {
+        title: "Community & Committee Management",
+        description:
+          "Managing members, responsibilities, vendors, volunteers, announcements, and communication required a structured platform with centralized information and role-based access.",
+        icon: "👥",
+      },
+    ],
+    solutions: [
+      "Cross-platform Flutter architecture delivering a consistent Android and iOS experience from a single codebase",
+      "Centralized Mandal Dashboard providing real-time visibility into festivals, donations, expenses, activities, and upcoming events",
+      "Digital festival calendar supporting festival schedules, event planning, highlights, and upcoming activities",
+      "Complete financial management workflow covering donations, cash entries, expenses, pending requests, reports, and transaction history",
+      "Mandal Directory & Operations Center for members, vendors, duties, announcements, gallery, analytics, committee management, and settings",
+      "Real-time notifications and communication infrastructure for festival updates, announcements, financial activity, and operational coordination",
+      "Role-based access control for mandal owners, committee members, volunteers, and authorized users",
+      "Centralized analytics and reporting layer for financial and operational decision-making",
+    ],
+    metrics: [
+      {
+        value: "1",
+        label: "Unified Mandal Management Platform",
+      },
+      {
+        value: "Real-Time",
+        label: "Donation & Financial Visibility",
+      },
+      {
+        value: "Role-Based",
+        label: "Committee & Operational Access",
+      },
+      {
+        value: "Cross-Platform",
+        label: "Android & iOS Application",
+      },
+    ],
+    techStack: [
+      // Mobile
+      { name: "Flutter", category: "mobile" },
+      { name: "Dart", category: "mobile" },
+      { name: "Riverpod", category: "mobile" },
+      { name: "GoRouter", category: "mobile" },
+      { name: "Freezed", category: "mobile" },
+      { name: "Dio", category: "mobile" },
+      { name: "Flutter Animate", category: "mobile" },
+      { name: "Lottie", category: "mobile" },
+      { name: "Android & iOS", category: "mobile" },
+
+      // Backend
+      { name: "Node.js", category: "backend" },
+      { name: "TypeScript", category: "backend" },
+      { name: "REST API", category: "backend" },
+      { name: "Prisma ORM", category: "backend" },
+      { name: "JWT Authentication", category: "backend" },
+      { name: "RBAC", category: "backend" },
+      { name: "Socket.IO", category: "backend" },
+
+      // Database
+      { name: "PostgreSQL", category: "database" },
+      { name: "Redis", category: "database" },
+      { name: "Secure Storage", category: "database" },
+      { name: "Local Storage", category: "database" },
+
+      // Cloud & Infrastructure
+      { name: "AWS", category: "infra" },
+      { name: "Amazon S3", category: "infra" },
+      { name: "CloudFront", category: "infra" },
+      { name: "Firebase FCM", category: "infra" },
+      { name: "Docker", category: "infra" },
+
+      // Security
+      { name: "JWT", category: "backend" },
+      { name: "OTP Authentication", category: "backend" },
+      { name: "Role-Based Access Control", category: "backend" },
+      { name: "API Rate Limiting", category: "infra" },
+      { name: "Audit Logging", category: "backend" },
+    ],
+    accentColor: "#A45A00",
+    mockupGradient: "linear-gradient(135deg, #FFF7ED 0%, #FED7AA 45%, #FB923C 100%)",
+    screenshotPath: "/images/utsav/utsav-festival-app-showcase.png",
+    screenshots: [
+      {
+        src: "/images/utsav/utsav-festival-app-showcase.png",
+        caption: "Utsav Festival Operations & App Showcase - Welcome screen, Jai Ganesh mandal dashboard, puja schedule, donation ledger, and profile settings",
+      },
+      {
+        src: "/images/utsav/utsav-mandal-app-ui-showcase.png",
+        caption: "Mandal Directory & Operational Tools - Committee members, expenses, announcements, gallery, vendors, donations, duties, reports, and analytics",
+      },
+    ],
+  },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -806,3 +934,47 @@ export const zionTechStack = {
     "Firebase Crashlytics",
   ],
 };
+
+export const utsavTechStack = {
+  mobile: [
+    "Flutter",
+    "Dart",
+    "Riverpod",
+    "GoRouter",
+    "Freezed",
+    "Dio",
+    "Flutter Animate",
+    "Lottie",
+    "Android & iOS",
+  ],
+  backend: [
+    "Node.js",
+    "TypeScript",
+    "REST API",
+    "Prisma ORM",
+    "JWT Authentication",
+    "RBAC",
+    "Socket.IO",
+  ],
+  database: [
+    "PostgreSQL",
+    "Redis",
+    "Secure Storage",
+    "Local Storage",
+  ],
+  cloudAndInfra: [
+    "AWS",
+    "Amazon S3",
+    "CloudFront",
+    "Firebase FCM",
+    "Docker",
+  ],
+  security: [
+    "JWT",
+    "OTP Authentication",
+    "Role-Based Access Control",
+    "API Rate Limiting",
+    "Audit Logging",
+  ],
+};
+

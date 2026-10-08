@@ -600,7 +600,7 @@ export const app = {
         ],
       },
     ],
-    proofOfWork: ["zion", "freightflow", "syncserve-pos", "nfc-attendance"],
+    proofOfWork: ["zion", "utsav", "freightflow", "syncserve-pos", "nfc-attendance"],
     faqs: [
       { question: "React Native or native - which do you recommend?", answer: "React Native for 90% of use cases. Saves 40–60% development cost while delivering native-quality UX." },
       { question: "Do you handle App Store submission?", answer: "Yes - we manage the entire process including assets, privacy policies, and review responses." },

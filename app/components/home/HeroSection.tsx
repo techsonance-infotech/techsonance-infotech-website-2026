@@ -69,6 +69,7 @@ interface ClientLogoData {
 
 const trustedClients: ClientLogoData[] = [
   { name: "Zion", url: "/portfolio/zion", src: "/images/clients/zion.png", width: 180, className: "h-10 sm:h-12 scale-125" },
+  { name: "Utsav", url: "/portfolio/utsav", src: "/images/clients/utsav.png", width: 150, className: "h-9 sm:h-11 scale-110" },
   { name: "AccuNest", url: "https://accunest.techsonance.co.in/", src: "/images/clients/accunest.webp", width: 150 },
   { name: "TechSonance Marketplace", url: "https://marketplace.techsonance.co.in/", src: "/images/clients/marketplace.png", width: 170 },
   { name: "SyncServe", url: "https://syncserve.techsonance.co.in/", src: "/images/clients/syncserve.png", width: 140 },
