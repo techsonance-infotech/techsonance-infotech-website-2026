@@ -511,13 +511,14 @@ export const webApp = {
     accentColor: "#1155CC",
     gradient: "linear-gradient(135deg, #1155CC 0%, #22B6F6 100%)",
     nodePosition: { angle: 180, orbitRadiusX: 1, orbitRadiusY: 1 },
-    keyTech: ["React Native", "Expo", "TypeScript"],
+    keyTech: ["Flutter", "React Native", "Firebase", "Isar DB"],
+    caseStudySlug: "zion",
     heroCode: `// mobile-app.config.ts
 export const app = {
-  platform: "react-native",
+  platform: "flutter-crossplatform",
   targets: ["ios", "android"],
-  offline: { sync: "background", storage: "sqlite" },
-  features: ["camera", "gps", "push-notifications"],
+  offline: { sync: "background", storage: "isar-db" },
+  features: ["ai-recommendations", "realtime-chat", "apple-pay", "google-pay"],
 };`,
     problemHeadline: "mobile app development agencies",
     painPoints: [
@@ -529,14 +530,14 @@ export const app = {
       {
         icon: "box",
         title: "Cross-Platform Apps",
-        description: "React Native apps that share 90%+ code between iOS and Android without compromising UX.",
-        usedInProject: "FreightFlow",
+        description: "Flutter & React Native apps that share 90%+ code between iOS and Android without compromising UX.",
+        usedInProject: "Zion",
       },
       {
         icon: "bolt",
         title: "Offline-First Mobile",
         description: "Local data storage with background sync - apps that work without connectivity.",
-        usedInProject: "NFC Attendance System",
+        usedInProject: "Zion",
       },
       {
         icon: "monitor",
@@ -599,7 +600,7 @@ export const app = {
         ],
       },
     ],
-    proofOfWork: ["freightflow", "syncserve-pos", "nfc-attendance"],
+    proofOfWork: ["zion", "utsav", "freightflow", "syncserve-pos", "nfc-attendance"],
     faqs: [
       { question: "React Native or native - which do you recommend?", answer: "React Native for 90% of use cases. Saves 40–60% development cost while delivering native-quality UX." },
       { question: "Do you handle App Store submission?", answer: "Yes - we manage the entire process including assets, privacy policies, and review responses." },

@@ -50,7 +50,127 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  // ── 1. MasterWeg ──────────────────────────────────────────────────────────
+  // ── 1. Zion ───────────────────────────────────────────────────────────────
+  {
+    slug: "zion",
+    title: "Zion",
+    tagline: "AI-Powered Event Discovery, Ticketing & Community Mobile Platform",
+    category: "Mobile App",
+    industry: "Events & Entertainment",
+    featured: true,
+    featuredOrder: 1,
+    shortDescription:
+      "An all-in-one event discovery, community engagement, and ticketing mobile platform connecting event seekers with creators, centralizing AI discovery, booking, social feeds, and host analytics.",
+    overview:
+      "Zion is an all-in-one event discovery, community engagement, and ticketing mobile platform that seamlessly connects event seekers with creators. Engineered as a high-performance, offline-first cross-platform application for iOS and Android, Zion unifies AI-powered personalized event recommendations, frictionless two-step ticket booking, interactive attendee feeds, real-time community chat, and an end-to-end seller portal with live attendance and revenue analytics.",
+    challenge:
+      "Fragmented event discovery, friction-heavy ticket checkout, and complex creator analytics.",
+    solution:
+      "Cross-platform Flutter mobile app with AI recommendations, 2-step ticket booking, and live social feeds.",
+    result:
+      "Fluid 60 FPS performance across iOS & Android, offline-cached search, and high-conversion checkout.",
+    challenges: [
+      {
+        title: "Fragmented Event Discovery",
+        description:
+          "Scattered event listings across third-party websites with zero personalization or real-time geolocation filtering.",
+        icon: "🔍",
+      },
+      {
+        title: "Checkout Drop-off & Latency",
+        description:
+          "Multi-step checkout funnels and slow load times leading to high cart abandonment rates during peak drop times.",
+        icon: "🎟️",
+      },
+      {
+        title: "Disconnected Attendee Community",
+        description:
+          "Lack of pre-event interaction, social feeds, and in-app networking between attendees and artists/creators.",
+        icon: "💬",
+      },
+      {
+        title: "Creator Onboarding & Analytics",
+        description:
+          "Event organizers lacked unified mobile tools for instant ticket validation, revenue tracking, and attendee demographics.",
+        icon: "📊",
+      },
+    ],
+    solutions: [
+      "Cross-platform Flutter architecture delivering fluid 60 FPS animations across iOS and Android from a single codebase",
+      "Local-first Isar database caching for sub-second offline search, offline ticket access, and instant startup",
+      "AI-driven event recommendation engine tailoring personalized feeds based on user preferences and location",
+      "Streamlined 2-step booking flow integrated with Apple Pay, Google Pay, and secure card processors",
+      "Real-time community chat and interactive event feed powered by Riverpod and Firebase",
+      "Comprehensive Host & Creator Dashboard with real-time ticket scanning, attendance analytics, and payout tracking",
+    ],
+    metrics: [
+      { value: "60 FPS", label: "Fluid Performance (iOS & Android)" },
+      { value: "<100ms", label: "Local Search Latency (Isar DB)" },
+      { value: "2-Step", label: "Frictionless Ticket Booking" },
+      { value: "Offline-First", label: "Offline Ticket & Pass Access" },
+    ],
+    techStack: [
+      // Mobile
+      { name: "Flutter", category: "mobile" },
+      { name: "Dart", category: "mobile" },
+      { name: "Riverpod", category: "mobile" },
+      { name: "GoRouter", category: "mobile" },
+      { name: "Freezed", category: "mobile" },
+      { name: "iOS & Android", category: "mobile" },
+      { name: "Flutter Animate", category: "mobile" },
+      { name: "Lottie", category: "mobile" },
+      { name: "CartoDB / Map", category: "mobile" },
+      { name: "Mobile Scanner QR", category: "mobile" },
+      { name: "Audio / Video", category: "mobile" },
+      { name: "Photo Manager", category: "mobile" },
+
+      // Backend, Security & Payments
+      { name: "REST API", category: "backend" },
+      { name: "Socket.IO", category: "backend" },
+      { name: "Dio Client", category: "backend" },
+      { name: "Firebase Core", category: "backend" },
+      { name: "Firebase FCM", category: "backend" },
+      { name: "Apple & Google Auth", category: "backend" },
+      { name: "Stripe", category: "backend" },
+      { name: "Biometric Auth", category: "backend" },
+      { name: "OAuth 2.0", category: "backend" },
+      { name: "SMS OTP Autofill", category: "backend" },
+
+      // Database & Storage
+      { name: "Isar DB", category: "database" },
+      { name: "Hive", category: "database" },
+      { name: "Secure Storage", category: "database" },
+      { name: "Shared Preferences", category: "database" },
+
+      // Observability & Infrastructure
+      { name: "Sentry", category: "infra" },
+      { name: "PostHog Analytics", category: "infra" },
+      { name: "Firebase Crashlytics", category: "infra" },
+    ],
+    accentColor: "#8B5CF6",
+    mockupGradient: "linear-gradient(135deg, #1E1B4B 0%, #6366F1 50%, #EC4899 100%)",
+    screenshotPath: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
+    screenshots: [
+      {
+        src: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
+        caption: "Zion Mobile App UI - Explore events, interactive maps, and AI recommendations",
+      },
+      {
+        src: "/images/zion/zion-neon-dubai-onboarding-screens.png",
+        caption: "Onboarding & Event Experience - Immersive Dubai nightlife, festivals, and music showcases",
+      },
+      {
+        src: "/images/zion/zion-event-analytics-host-dashboard.png",
+        caption: "Event Host Analytics - Real-time ticket sales, attendee engagement, and conversion tracking",
+      },
+      {
+        src: "/images/zion/zion-event-ticket-booking-analytics.png",
+        caption: "Ticket Booking & Verification - Seamless 2-step checkout with instant QR access",
+      },
+    ],
+  },
+
+  // ── 2. MasterWeg ──────────────────────────────────────────────────────────
   {
     slug: "masterweg",
     title: "MasterWeg",
@@ -59,7 +179,7 @@ export const projects: Project[] = [
     industry: "EdTech & Education",
     liveUrl: "https://masterweg.com/",
     featured: true,
-    featuredOrder: 1,
+    featuredOrder: 2,
     shortDescription:
       "A unified student workspace guiding applicants to German Master's programs - centralizing profile matching, document preparation, language learning, and application tracking.",
     overview:
@@ -129,7 +249,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 2. FreightFlow ─────────────────────────────────────────────────────────
+  // ── 3. FreightFlow ─────────────────────────────────────────────────────────
   {
     slug: "freightflow",
     title: "FreightFlow",
@@ -138,7 +258,7 @@ export const projects: Project[] = [
     industry: "Logistics & Transport",
     liveUrl: "https://freightflow.techsonance.co.in/dashboard",
     featured: true,
-    featuredOrder: 2,
+    featuredOrder: 3,
     shortDescription:
       "A full-stack multi-tenant SaaS platform built exclusively for Indian road transport businesses - replacing disconnected spreadsheets with a single, purpose-built digital ecosystem.",
     overview:
@@ -215,7 +335,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 2. SyncServe POS ───────────────────────────────────────────────────────
+  // ── 4. SyncServe POS ───────────────────────────────────────────────────────
   {
     slug: "syncserve-pos",
     title: "SyncServe POS",
@@ -224,7 +344,7 @@ export const projects: Project[] = [
     industry: "Retail & Hospitality",
     liveUrl: "https://syncserve.techsonance.co.in/",
     featured: true,
-    featuredOrder: 3,
+    featuredOrder: 4,
     shortDescription:
       "A cloud-native Point of Sale system built for modern retail and hospitality - featuring real-time inventory sync, multi-outlet management, and offline-first transactions.",
     overview:
@@ -302,7 +422,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 3. TechSonance Marketplace ─────────────────────────────────────────────
+  // ── 5. TechSonance Marketplace ─────────────────────────────────────────────
   {
     slug: "techsonance-marketplace",
     title: "Techsonance Marketplace",
@@ -311,7 +431,7 @@ export const projects: Project[] = [
     industry: "E-Commerce & Retail",
     liveUrl: "https://cms.techsonance.co.in/login",
     featured: true,
-    featuredOrder: 4,
+    featuredOrder: 5,
     shortDescription:
       "A comprehensive multi-tenant e-commerce marketplace where customers browse and purchase, vendors manage their stores, and admins oversee the platform - all from one React application.",
     overview:
@@ -625,6 +745,134 @@ export const projects: Project[] = [
       },
     ],
   },
+  // ── 9. Utsav ──────────────────────────────────────────────────────────────
+  {
+    slug: "utsav",
+    title: "Utsav",
+    tagline: "Mandal Management, Festival Operations & Community Engagement Platform",
+    category: "Mobile App",
+    industry: "Community & Religious Events",
+    featured: true,
+    featuredOrder: 6,
+    shortDescription:
+      "A centralized mandal management platform for festivals, donations, expenses, events, members, vendors, announcements, duties, reporting, and community operations.",
+    overview:
+      "Utsav is a centralized digital platform built for Ganpati mandals and community organizations to manage festivals, donations, expenses, events, members, vendors, announcements, duties, reports, and day-to-day mandal operations from a single application. The platform combines real-time financial visibility, festival scheduling, community communication, donation management, operational tools, and role-based access into a modern mobile experience designed specifically for Indian community and festival organizations.",
+    challenge:
+      "Fragmented mandal operations, manual financial tracking, disconnected festival scheduling, and difficulty coordinating members, vendors, duties, and community communication.",
+    solution:
+      "A centralized Flutter-based mandal management platform combining festival scheduling, financial management, donations, committee operations, vendor management, announcements, reporting, analytics, and role-based access.",
+    result:
+      "A unified digital operating platform that brings festival planning, financial management, community coordination, and mandal administration into one mobile application.",
+    challenges: [
+      {
+        title: "Fragmented Mandal Operations",
+        description:
+          "Mandal activities were traditionally managed across spreadsheets, WhatsApp groups, paper records, and disconnected tools, making it difficult to maintain a single source of truth.",
+        icon: "🏛️",
+      },
+      {
+        title: "Donation & Financial Visibility",
+        description:
+          "Donation collections, cash entries, expenses, pending requests, and financial reporting required manual tracking, limiting real-time financial visibility.",
+        icon: "💰",
+      },
+      {
+        title: "Festival & Event Coordination",
+        description:
+          "Festival dates, puja schedules, events, duties, and upcoming activities required centralized scheduling to improve coordination and reduce missed activities.",
+        icon: "📅",
+      },
+      {
+        title: "Community & Committee Management",
+        description:
+          "Managing members, responsibilities, vendors, volunteers, announcements, and communication required a structured platform with centralized information and role-based access.",
+        icon: "👥",
+      },
+    ],
+    solutions: [
+      "Cross-platform Flutter architecture delivering a consistent Android and iOS experience from a single codebase",
+      "Centralized Mandal Dashboard providing real-time visibility into festivals, donations, expenses, activities, and upcoming events",
+      "Digital festival calendar supporting festival schedules, event planning, highlights, and upcoming activities",
+      "Complete financial management workflow covering donations, cash entries, expenses, pending requests, reports, and transaction history",
+      "Mandal Directory & Operations Center for members, vendors, duties, announcements, gallery, analytics, committee management, and settings",
+      "Real-time notifications and communication infrastructure for festival updates, announcements, financial activity, and operational coordination",
+      "Role-based access control for mandal owners, committee members, volunteers, and authorized users",
+      "Centralized analytics and reporting layer for financial and operational decision-making",
+    ],
+    metrics: [
+      {
+        value: "1",
+        label: "Unified Mandal Management Platform",
+      },
+      {
+        value: "Real-Time",
+        label: "Donation & Financial Visibility",
+      },
+      {
+        value: "Role-Based",
+        label: "Committee & Operational Access",
+      },
+      {
+        value: "Cross-Platform",
+        label: "Android & iOS Application",
+      },
+    ],
+    techStack: [
+      // Mobile
+      { name: "Flutter", category: "mobile" },
+      { name: "Dart", category: "mobile" },
+      { name: "Riverpod", category: "mobile" },
+      { name: "GoRouter", category: "mobile" },
+      { name: "Freezed", category: "mobile" },
+      { name: "Dio", category: "mobile" },
+      { name: "Flutter Animate", category: "mobile" },
+      { name: "Lottie", category: "mobile" },
+      { name: "Android & iOS", category: "mobile" },
+
+      // Backend
+      { name: "Node.js", category: "backend" },
+      { name: "TypeScript", category: "backend" },
+      { name: "REST API", category: "backend" },
+      { name: "Prisma ORM", category: "backend" },
+      { name: "JWT Authentication", category: "backend" },
+      { name: "RBAC", category: "backend" },
+      { name: "Socket.IO", category: "backend" },
+
+      // Database
+      { name: "PostgreSQL", category: "database" },
+      { name: "Redis", category: "database" },
+      { name: "Secure Storage", category: "database" },
+      { name: "Local Storage", category: "database" },
+
+      // Cloud & Infrastructure
+      { name: "AWS", category: "infra" },
+      { name: "Amazon S3", category: "infra" },
+      { name: "CloudFront", category: "infra" },
+      { name: "Firebase FCM", category: "infra" },
+      { name: "Docker", category: "infra" },
+
+      // Security
+      { name: "JWT", category: "backend" },
+      { name: "OTP Authentication", category: "backend" },
+      { name: "Role-Based Access Control", category: "backend" },
+      { name: "API Rate Limiting", category: "infra" },
+      { name: "Audit Logging", category: "backend" },
+    ],
+    accentColor: "#A45A00",
+    mockupGradient: "linear-gradient(135deg, #FFF7ED 0%, #FED7AA 45%, #FB923C 100%)",
+    screenshotPath: "/images/utsav/utsav-festival-app-showcase.png",
+    screenshots: [
+      {
+        src: "/images/utsav/utsav-festival-app-showcase.png",
+        caption: "Utsav Festival Operations & App Showcase - Welcome screen, Jai Ganesh mandal dashboard, puja schedule, donation ledger, and profile settings",
+      },
+      {
+        src: "/images/utsav/utsav-mandal-app-ui-showcase.png",
+        caption: "Mandal Directory & Operational Tools - Committee members, expenses, announcements, gallery, vendors, donations, duties, reports, and analytics",
+      },
+    ],
+  },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -642,3 +890,91 @@ export function getFeaturedProjects(): Project[] {
 export function getAllProjects(): Project[] {
   return projects;
 }
+
+export const zionTechStack = {
+  mobile: [
+    "Flutter",
+    "Dart",
+    "Riverpod",
+    "GoRouter",
+    "Freezed",
+    "iOS & Android",
+    "Flutter Animate",
+    "Lottie",
+  ],
+  backend: [
+    "REST API",
+    "Socket.IO",
+    "Dio Client",
+    "Firebase Core",
+    "Firebase Cloud Messaging (FCM)",
+    "Apple & Google Auth",
+  ],
+  database: [
+    "Isar DB",
+    "Hive",
+    "Secure Storage (Keychain/Keystore)",
+    "Shared Preferences",
+  ],
+  paymentsAndSecurity: [
+    "Stripe",
+    "Biometric Auth",
+    "OAuth 2.0",
+    "SMS OTP Autofill",
+  ],
+  mapsAndMedia: [
+    "CartoDB / Flutter Map",
+    "Mobile Scanner (QR)",
+    "Audio / Video Players",
+    "Photo Manager",
+  ],
+  observability: [
+    "Sentry",
+    "PostHog Analytics",
+    "Firebase Crashlytics",
+  ],
+};
+
+export const utsavTechStack = {
+  mobile: [
+    "Flutter",
+    "Dart",
+    "Riverpod",
+    "GoRouter",
+    "Freezed",
+    "Dio",
+    "Flutter Animate",
+    "Lottie",
+    "Android & iOS",
+  ],
+  backend: [
+    "Node.js",
+    "TypeScript",
+    "REST API",
+    "Prisma ORM",
+    "JWT Authentication",
+    "RBAC",
+    "Socket.IO",
+  ],
+  database: [
+    "PostgreSQL",
+    "Redis",
+    "Secure Storage",
+    "Local Storage",
+  ],
+  cloudAndInfra: [
+    "AWS",
+    "Amazon S3",
+    "CloudFront",
+    "Firebase FCM",
+    "Docker",
+  ],
+  security: [
+    "JWT",
+    "OTP Authentication",
+    "Role-Based Access Control",
+    "API Rate Limiting",
+    "Audit Logging",
+  ],
+};
+

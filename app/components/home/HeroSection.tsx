@@ -64,9 +64,12 @@ interface ClientLogoData {
    * at a comparable visual size — kept per-logo rather than forcing one
    * fixed width on every card. */
   width: number;
+  className?: string;
 }
 
 const trustedClients: ClientLogoData[] = [
+  { name: "Zion", url: "/portfolio/zion", src: "/images/clients/zion.png", width: 180, className: "h-10 sm:h-12 scale-125" },
+  { name: "Utsav", url: "/portfolio/utsav", src: "/images/clients/utsav.png", width: 150, className: "h-9 sm:h-11 scale-110" },
   { name: "AccuNest", url: "https://accunest.techsonance.co.in/", src: "/images/clients/accunest.webp", width: 150 },
   { name: "TechSonance Marketplace", url: "https://marketplace.techsonance.co.in/", src: "/images/clients/marketplace.png", width: 170 },
   { name: "SyncServe", url: "https://syncserve.techsonance.co.in/", src: "/images/clients/syncserve.png", width: 140 },
@@ -75,11 +78,11 @@ const trustedClients: ClientLogoData[] = [
 ];
 
 function ClientLogo({ client }: { client: ClientLogoData }) {
+  const isExternal = client.url.startsWith("http");
   return (
     <a
       href={client.url}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className="flex h-16 shrink-0 items-center justify-center px-8 transition-transform duration-300 ease-out hover:-translate-y-0.5 hover:scale-105"
       aria-label={client.name}
     >
@@ -89,7 +92,7 @@ function ClientLogo({ client }: { client: ClientLogoData }) {
         width={client.width}
         height={48}
         loading="eager"
-        className="h-8 w-auto object-contain sm:h-10"
+        className={`w-auto object-contain ${client.className || "h-8 sm:h-10"}`}
       />
     </a>
   );

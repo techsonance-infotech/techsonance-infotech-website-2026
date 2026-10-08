@@ -218,7 +218,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 </span>
               </h2>
               <p className="text-sm text-slate-500 font-medium">
-                Tell us about your project — we&apos;ll respond within 24 hours.
+                Tell us about your project - we&apos;ll respond within 24 hours.
               </p>
             </div>
 

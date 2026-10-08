@@ -28,7 +28,7 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "GENERIC MASK",
         icon: "🎨",
         title: "They sell a generic template as custom",
-        quote: "They built a generic dashboard and called it 'custom' — then charged us for every single field change.",
+        quote: "They built a generic dashboard and called it 'custom' - then charged us for every single field change.",
         resolution: "Every layout and feature built from scratch for your workflow",
       },
       {
@@ -57,7 +57,7 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "DEMO TRAP",
         icon: "🎭",
         title: "They sell the demo, not the integration",
-        quote: "They showed us a ChatGPT wrapper and called it enterprise AI — it broke the moment we fed it our actual documents.",
+        quote: "They showed us a ChatGPT wrapper and called it enterprise AI - it broke the moment we fed it our actual documents.",
         resolution: "We prototype on your real data before any contract",
       },
       {
@@ -73,7 +73,7 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "DATA RISK",
         icon: "🔒",
         title: "Your data lives on their servers forever",
-        quote: "The AI runs in their cloud. Our invoices never leave their servers — became a compliance nightmare for our auditors.",
+        quote: "The AI runs in their cloud. Our invoices never leave their servers - became a compliance nightmare for our auditors.",
         resolution: "Self-hosted or VPC-deployed options available on day one",
       },
     ],
@@ -94,7 +94,7 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "MANUAL BILLS",
         icon: "💳",
         title: "Manual billing and pricing models",
-        quote: "Billing was an afterthought — we're manually invoicing because subscription integration never happened.",
+        quote: "Billing was an afterthought - we're manually invoicing because subscription integration never happened.",
         resolution: "Automated Stripe/Razorpay billing built into the core sprint",
       },
       {
