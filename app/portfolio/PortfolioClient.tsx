@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 
 // ─── Hero stats ────────────────────────────────────────────────────────────────
 const heroStats = [
-  { value: 6, suffix: "+", label: "Products Shipped" },
-  { value: 4, suffix: "+", label: "Industries Served" },
+  { value: 7, suffix: "+", label: "Products Shipped" },
+  { value: 5, suffix: "+", label: "Industries Served" },
   { value: 5, suffix: "+", label: "Years of Building" },
   { value: 100, suffix: "k+", label: "Users Impacted" },
 ];
@@ -139,7 +139,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 // ─── Category filter tabs ──────────────────────────────────────────────────────
-const categories = ["All", "SaaS Platform", "E-Commerce Platform", "POS System", "Accounting Software", "Enterprise Tool", "Website Redesign"];
+const categories = ["All", "Mobile App", "SaaS Platform", "E-Commerce Platform", "POS System", "Accounting Software", "Enterprise Tool", "Website Redesign"];
 
 export default function PortfolioClient() {
   const allProjects = getAllProjects();
@@ -155,18 +155,18 @@ export default function PortfolioClient() {
       {/* ── Hero ──────────────────────────────────────────────────────────────── */}
       <ArcGalleryHero
         images={[
+          "/images/zion/zion-event-discovery-mobile-app-showcase.png",
           "/images/portfolio-hero-images/ai-automation-mockup.png",
           "/images/portfolio-hero-images/ecommerce-website-design-examples-1024x768.jpg",
+          "/images/zion/zion-neon-dubai-onboarding-screens.png",
           "/images/portfolio-hero-images/saas-analytics-mockup.png",
           "/images/portfolio-hero-images/custom-software-mockup.png",
+          "/images/zion/zion-event-analytics-host-dashboard.png",
           "/images/portfolio-hero-images/mobile-website-design.webp",
           "/images/portfolio-hero-images/cloud-architecture-mockup.png",
           "/images/portfolio-hero-images/ai-automation-mockup.png",
+          "/images/zion/zion-event-ticket-booking-analytics.png",
           "/images/portfolio-hero-images/ecommerce-website-design-examples-1024x768.jpg",
-          "/images/portfolio-hero-images/saas-analytics-mockup.png",
-          "/images/portfolio-hero-images/custom-software-mockup.png",
-          "/images/portfolio-hero-images/mobile-website-design.webp",
-          "/images/portfolio-hero-images/cloud-architecture-mockup.png",
         ]}
         className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
       >

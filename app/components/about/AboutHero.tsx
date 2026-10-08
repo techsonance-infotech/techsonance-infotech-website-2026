@@ -224,7 +224,7 @@ export default function AboutHero() {
                     Engineering that ships
                   </h3>
                   <p className="text-[12px] text-gray-500 leading-relaxed">
-                    Production systems built for scale — custom software, SaaS platforms, and AI automation for real businesses.
+                    Production systems built for scale - custom software, SaaS platforms, and AI automation for real businesses.
                   </p>
                 </motion.div>
 
@@ -328,7 +328,7 @@ export default function AboutHero() {
                     Our philosophy
                   </h2>
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6 font-medium">
-                    At TechSonance, we build software that runs real businesses — not slide decks. Every system is engineered for production from day one.
+                    At TechSonance, we build software that runs real businesses - not slide decks. Every system is engineered for production from day one.
                   </p>
                 </div>
 

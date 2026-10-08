@@ -82,7 +82,7 @@ export default function BookConsultationModal({ isOpen, onClose }: BookConsultat
                   </span>
                 </h2>
                 <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-none mt-1">
-                  Pick a time that works for you — 15 min with our technical lead.
+                  Pick a time that works for you - 15 min with our technical lead.
                 </p>
               </div>
             </div>

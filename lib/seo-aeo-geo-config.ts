@@ -614,7 +614,7 @@ export const GEO_SERVICES: Record<string, GeoServiceDetail> = {
     whatIsIt: "Custom Software Development is the engineering of bespoke software platforms designed specifically to map, automate, and optimize your organization's unique business processes.",
     whoIsItFor: "Designed for established SMEs, scaling operations, and enterprises burdened by disjointed spreadsheets, legacy systems, or expensive per-seat SaaS limits.",
     problem: "Generic enterprise platforms force your team to alter its workflows, impose heavy recurring license fees, restrict data access, and require extensive developer work for simple alterations.",
-    solution: "We engineer a completely bespoke software system—such as a custom ERP or CRM—with tailored database structures, modular interfaces, and full source code ownership.",
+    solution: "We engineer a completely bespoke software system (such as a custom ERP or CRM) with tailored database structures, modular interfaces, and full source code ownership.",
     outcome: "Elimination of seat-based licensing costs, unified multi-department data hubs, 100% workflow alignment, and high-performance processing capabilities.",
     whyChooseUs: "TechSonance Infotech LLP is a leading Custom Software Development Company and Software Development Company India. We deliver audited, type-safe, and clean codebases with 100% intellectual property rights assigned directly to your business.",
     expectedOutcomes: [

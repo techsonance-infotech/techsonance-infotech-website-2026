@@ -50,7 +50,127 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  // ── 1. MasterWeg ──────────────────────────────────────────────────────────
+  // ── 1. Zion ───────────────────────────────────────────────────────────────
+  {
+    slug: "zion",
+    title: "Zion",
+    tagline: "AI-Powered Event Discovery, Ticketing & Community Mobile Platform",
+    category: "Mobile App",
+    industry: "Events & Entertainment",
+    featured: true,
+    featuredOrder: 1,
+    shortDescription:
+      "An all-in-one event discovery, community engagement, and ticketing mobile platform connecting event seekers with creators, centralizing AI discovery, booking, social feeds, and host analytics.",
+    overview:
+      "Zion is an all-in-one event discovery, community engagement, and ticketing mobile platform that seamlessly connects event seekers with creators. Engineered as a high-performance, offline-first cross-platform application for iOS and Android, Zion unifies AI-powered personalized event recommendations, frictionless two-step ticket booking, interactive attendee feeds, real-time community chat, and an end-to-end seller portal with live attendance and revenue analytics.",
+    challenge:
+      "Fragmented event discovery, friction-heavy ticket checkout, and complex creator analytics.",
+    solution:
+      "Cross-platform Flutter mobile app with AI recommendations, 2-step ticket booking, and live social feeds.",
+    result:
+      "Fluid 60 FPS performance across iOS & Android, offline-cached search, and high-conversion checkout.",
+    challenges: [
+      {
+        title: "Fragmented Event Discovery",
+        description:
+          "Scattered event listings across third-party websites with zero personalization or real-time geolocation filtering.",
+        icon: "🔍",
+      },
+      {
+        title: "Checkout Drop-off & Latency",
+        description:
+          "Multi-step checkout funnels and slow load times leading to high cart abandonment rates during peak drop times.",
+        icon: "🎟️",
+      },
+      {
+        title: "Disconnected Attendee Community",
+        description:
+          "Lack of pre-event interaction, social feeds, and in-app networking between attendees and artists/creators.",
+        icon: "💬",
+      },
+      {
+        title: "Creator Onboarding & Analytics",
+        description:
+          "Event organizers lacked unified mobile tools for instant ticket validation, revenue tracking, and attendee demographics.",
+        icon: "📊",
+      },
+    ],
+    solutions: [
+      "Cross-platform Flutter architecture delivering fluid 60 FPS animations across iOS and Android from a single codebase",
+      "Local-first Isar database caching for sub-second offline search, offline ticket access, and instant startup",
+      "AI-driven event recommendation engine tailoring personalized feeds based on user preferences and location",
+      "Streamlined 2-step booking flow integrated with Apple Pay, Google Pay, and secure card processors",
+      "Real-time community chat and interactive event feed powered by Riverpod and Firebase",
+      "Comprehensive Host & Creator Dashboard with real-time ticket scanning, attendance analytics, and payout tracking",
+    ],
+    metrics: [
+      { value: "60 FPS", label: "Fluid Performance (iOS & Android)" },
+      { value: "<100ms", label: "Local Search Latency (Isar DB)" },
+      { value: "2-Step", label: "Frictionless Ticket Booking" },
+      { value: "Offline-First", label: "Offline Ticket & Pass Access" },
+    ],
+    techStack: [
+      // Mobile
+      { name: "Flutter", category: "mobile" },
+      { name: "Dart", category: "mobile" },
+      { name: "Riverpod", category: "mobile" },
+      { name: "GoRouter", category: "mobile" },
+      { name: "Freezed", category: "mobile" },
+      { name: "iOS & Android", category: "mobile" },
+      { name: "Flutter Animate", category: "mobile" },
+      { name: "Lottie", category: "mobile" },
+      { name: "CartoDB / Map", category: "mobile" },
+      { name: "Mobile Scanner QR", category: "mobile" },
+      { name: "Audio / Video", category: "mobile" },
+      { name: "Photo Manager", category: "mobile" },
+
+      // Backend, Security & Payments
+      { name: "REST API", category: "backend" },
+      { name: "Socket.IO", category: "backend" },
+      { name: "Dio Client", category: "backend" },
+      { name: "Firebase Core", category: "backend" },
+      { name: "Firebase FCM", category: "backend" },
+      { name: "Apple & Google Auth", category: "backend" },
+      { name: "Stripe", category: "backend" },
+      { name: "Biometric Auth", category: "backend" },
+      { name: "OAuth 2.0", category: "backend" },
+      { name: "SMS OTP Autofill", category: "backend" },
+
+      // Database & Storage
+      { name: "Isar DB", category: "database" },
+      { name: "Hive", category: "database" },
+      { name: "Secure Storage", category: "database" },
+      { name: "Shared Preferences", category: "database" },
+
+      // Observability & Infrastructure
+      { name: "Sentry", category: "infra" },
+      { name: "PostHog Analytics", category: "infra" },
+      { name: "Firebase Crashlytics", category: "infra" },
+    ],
+    accentColor: "#8B5CF6",
+    mockupGradient: "linear-gradient(135deg, #1E1B4B 0%, #6366F1 50%, #EC4899 100%)",
+    screenshotPath: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
+    screenshots: [
+      {
+        src: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
+        caption: "Zion Mobile App UI - Explore events, interactive maps, and AI recommendations",
+      },
+      {
+        src: "/images/zion/zion-neon-dubai-onboarding-screens.png",
+        caption: "Onboarding & Event Experience - Immersive Dubai nightlife, festivals, and music showcases",
+      },
+      {
+        src: "/images/zion/zion-event-analytics-host-dashboard.png",
+        caption: "Event Host Analytics - Real-time ticket sales, attendee engagement, and conversion tracking",
+      },
+      {
+        src: "/images/zion/zion-event-ticket-booking-analytics.png",
+        caption: "Ticket Booking & Verification - Seamless 2-step checkout with instant QR access",
+      },
+    ],
+  },
+
+  // ── 2. MasterWeg ──────────────────────────────────────────────────────────
   {
     slug: "masterweg",
     title: "MasterWeg",
@@ -59,7 +179,7 @@ export const projects: Project[] = [
     industry: "EdTech & Education",
     liveUrl: "https://masterweg.com/",
     featured: true,
-    featuredOrder: 1,
+    featuredOrder: 2,
     shortDescription:
       "A unified student workspace guiding applicants to German Master's programs - centralizing profile matching, document preparation, language learning, and application tracking.",
     overview:
@@ -129,7 +249,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 2. FreightFlow ─────────────────────────────────────────────────────────
+  // ── 3. FreightFlow ─────────────────────────────────────────────────────────
   {
     slug: "freightflow",
     title: "FreightFlow",
@@ -138,7 +258,7 @@ export const projects: Project[] = [
     industry: "Logistics & Transport",
     liveUrl: "https://freightflow.techsonance.co.in/dashboard",
     featured: true,
-    featuredOrder: 2,
+    featuredOrder: 3,
     shortDescription:
       "A full-stack multi-tenant SaaS platform built exclusively for Indian road transport businesses - replacing disconnected spreadsheets with a single, purpose-built digital ecosystem.",
     overview:
@@ -215,7 +335,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 2. SyncServe POS ───────────────────────────────────────────────────────
+  // ── 4. SyncServe POS ───────────────────────────────────────────────────────
   {
     slug: "syncserve-pos",
     title: "SyncServe POS",
@@ -224,7 +344,7 @@ export const projects: Project[] = [
     industry: "Retail & Hospitality",
     liveUrl: "https://syncserve.techsonance.co.in/",
     featured: true,
-    featuredOrder: 3,
+    featuredOrder: 4,
     shortDescription:
       "A cloud-native Point of Sale system built for modern retail and hospitality - featuring real-time inventory sync, multi-outlet management, and offline-first transactions.",
     overview:
@@ -302,7 +422,7 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 3. TechSonance Marketplace ─────────────────────────────────────────────
+  // ── 5. TechSonance Marketplace ─────────────────────────────────────────────
   {
     slug: "techsonance-marketplace",
     title: "Techsonance Marketplace",
@@ -311,7 +431,7 @@ export const projects: Project[] = [
     industry: "E-Commerce & Retail",
     liveUrl: "https://cms.techsonance.co.in/login",
     featured: true,
-    featuredOrder: 4,
+    featuredOrder: 5,
     shortDescription:
       "A comprehensive multi-tenant e-commerce marketplace where customers browse and purchase, vendors manage their stores, and admins oversee the platform - all from one React application.",
     overview:
@@ -642,3 +762,47 @@ export function getFeaturedProjects(): Project[] {
 export function getAllProjects(): Project[] {
   return projects;
 }
+
+export const zionTechStack = {
+  mobile: [
+    "Flutter",
+    "Dart",
+    "Riverpod",
+    "GoRouter",
+    "Freezed",
+    "iOS & Android",
+    "Flutter Animate",
+    "Lottie",
+  ],
+  backend: [
+    "REST API",
+    "Socket.IO",
+    "Dio Client",
+    "Firebase Core",
+    "Firebase Cloud Messaging (FCM)",
+    "Apple & Google Auth",
+  ],
+  database: [
+    "Isar DB",
+    "Hive",
+    "Secure Storage (Keychain/Keystore)",
+    "Shared Preferences",
+  ],
+  paymentsAndSecurity: [
+    "Stripe",
+    "Biometric Auth",
+    "OAuth 2.0",
+    "SMS OTP Autofill",
+  ],
+  mapsAndMedia: [
+    "CartoDB / Flutter Map",
+    "Mobile Scanner (QR)",
+    "Audio / Video Players",
+    "Photo Manager",
+  ],
+  observability: [
+    "Sentry",
+    "PostHog Analytics",
+    "Firebase Crashlytics",
+  ],
+};

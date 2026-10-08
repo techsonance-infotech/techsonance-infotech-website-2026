@@ -14,7 +14,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Approvals", "Rules engine", "Alerts"],
-      outcome: "Automated attendance validation — zero buddy-punching in NFC Attendance System.",
+      outcome: "Automated attendance validation - zero buddy-punching in NFC Attendance System.",
     },
     {
       tags: ["Self-service", "Real-time", "Notifications"],
@@ -66,7 +66,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Razorpay", "Usage metering", "Invoicing"],
-      outcome: "Subscription billing live from day one — no manual invoicing.",
+      outcome: "Subscription billing live from day one - no manual invoicing.",
     },
     {
       tags: ["Signup flows", "Team invites", "Email verify"],
@@ -150,7 +150,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["GitHub Actions", "Preview envs", "Auto deploy"],
-      outcome: "Every PR gets a preview URL — deploys in under 3 minutes.",
+      outcome: "Every PR gets a preview URL - deploys in under 3 minutes.",
     },
     {
       tags: ["Docker", "Health checks", "Rolling updates"],
@@ -182,7 +182,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["GST portal", "e-Way Bill", "NIC API"],
-      outcome: "Automated e-Way Bill generation — zero manual NIC portal visits.",
+      outcome: "Automated e-Way Bill generation - zero manual NIC portal visits.",
     },
     {
       tags: ["Bi-directional", "Tally / Zoho", "Sync"],
@@ -202,7 +202,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
   "product-engineering": [
     {
       tags: ["MVP scope", "Prioritization", "Roadmap"],
-      outcome: "FreightFlow MVP scoped to 8 core modules — shipped in 12 weeks.",
+      outcome: "FreightFlow MVP scoped to 8 core modules - shipped in 12 weeks.",
     },
     {
       tags: ["Full-stack", "Sprints", "Demos"],

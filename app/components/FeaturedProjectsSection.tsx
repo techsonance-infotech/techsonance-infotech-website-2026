@@ -13,14 +13,14 @@ const t = (delay = 0) => ({ duration: 0.6, ease: "easeOut" as const, delay });
 // ─── One-liner result row ──────────────────────────────────────────────────────
 function ChallengeRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start gap-2 sm:gap-4 px-4 sm:px-5 py-2 sm:py-2.5 border-b border-gray-100 last:border-0">
+    <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-3.5 px-3.5 sm:px-4 py-1.5 sm:py-2 border-b border-gray-100 last:border-0">
       <span
-        className="px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider shrink-0"
+        className="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider shrink-0"
         style={{ background: `${color}18`, color }}
       >
         {label}
       </span>
-      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{value}</p>
+      <p className="text-xs sm:text-[13px] text-gray-600 leading-snug">{value}</p>
     </div>
   );
 }
@@ -58,17 +58,17 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
   return (
     <div
       ref={containerRef}
-      className="relative w-full lg:sticky transform-gpu origin-top py-3 sm:py-4 lg:py-5"
+      className="relative w-full lg:sticky transform-gpu origin-top py-2 sm:py-3 lg:py-4"
       style={{
-        top: isDesktop ? `calc(90px + ${index * 20}px)` : "auto",
+        top: isDesktop ? `calc(72px + ${index * 14}px)` : "auto",
         zIndex: index + 10,
         // Give preceding cards breathing room under stacked cards
-        paddingBottom: isDesktop ? `${(total - 1 - index) * 12}px` : "0px",
+        paddingBottom: isDesktop ? `${(total - 1 - index) * 10}px` : "0px",
       }}
     >
       <motion.div
         style={isDesktop ? { scale, opacity, transformOrigin: "top center" } : {}}
-        className="bg-white rounded-[24px] sm:rounded-[32px] border border-gray-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.03)] p-5 sm:p-7 lg:p-8 relative overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_-10px_rgba(13,71,161,0.08)]"
+        className="bg-white rounded-[22px] sm:rounded-[28px] border border-gray-200/80 shadow-[0_10px_35px_rgba(0,0,0,0.03)] p-4 sm:p-6 lg:p-6 xl:p-7 relative overflow-hidden transition-all duration-300 hover:shadow-[0_16px_50px_-10px_rgba(13,71,161,0.08)]"
       >
         {/* Background accent glow */}
         <div
@@ -83,18 +83,18 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
           }}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-7 items-center">
           {/* ── Text side ── */}
-          <div className={`flex flex-col gap-2.5 lg:gap-3 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
+          <div className={`flex flex-col gap-2 lg:gap-2.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
             {/* Index + Category */}
             <motion.div
               initial={hiddenX}
               animate={inView ? visibleX : hiddenX}
               transition={t(0)}
-              className="flex items-center gap-3.5"
+              className="flex items-center gap-3"
             >
               <span
-                className="text-4xl lg:text-5xl font-black leading-none select-none"
+                className="text-3xl lg:text-4xl font-black leading-none select-none"
                 style={{ color: `${project.accentColor}18` }}
               >
                 0{index + 1}
@@ -104,7 +104,7 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
                 style={{ background: `linear-gradient(to right, ${project.accentColor}40, transparent)` }}
               />
               <span
-                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full"
+                className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full"
                 style={{ background: `${project.accentColor}12`, color: project.accentColor }}
               >
                 {project.industry}
@@ -113,30 +113,30 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
 
             {/* Title */}
             <motion.h3
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={t(0.08)}
-              className="text-xl sm:text-2xl lg:text-3xl font-medium leading-[1.15] tracking-tight text-gray-900"
+              className="text-lg sm:text-xl lg:text-2xl font-medium leading-[1.15] tracking-tight text-gray-900"
             >
               {project.title}
             </motion.h3>
 
             {/* Short description */}
             <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={t(0.14)}
-              className="text-xs sm:text-sm text-gray-550 leading-relaxed max-w-md"
+              className="text-xs sm:text-[13px] text-gray-550 leading-relaxed max-w-md line-clamp-2"
             >
               {project.shortDescription}
             </motion.p>
 
             {/* Challenge / Solution / Result */}
             <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={t(0.2)}
-              className="rounded-2xl border border-gray-100 bg-white/80 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden"
+              className="rounded-xl border border-gray-100 bg-white/80 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden"
             >
               <ChallengeRow label="Challenge" value={project.challenge} color={project.accentColor} />
               <ChallengeRow label="Solution" value={project.solution} color={project.accentColor} />

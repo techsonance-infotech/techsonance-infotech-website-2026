@@ -46,12 +46,21 @@ function SectionLabel({ text, color }: { text: string; color: string }) {
 function ScreenshotGallery({
   screenshots,
   accentColor,
+  liveUrl,
+  slug,
+  category,
 }: {
   screenshots: { src: string; caption: string }[];
   accentColor: string;
+  liveUrl?: string;
+  slug: string;
+  category?: string;
 }) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const isMobile = category?.toLowerCase().includes("mobile");
+
+  const displayHost = liveUrl ? new URL(liveUrl).hostname : `${slug}.techsonance.co.in`;
 
   return (
     <section className="py-20 bg-white overflow-hidden">
@@ -71,19 +80,21 @@ function ScreenshotGallery({
 
         {/* Main active image - no fixed height, let the image define its size */}
         <div
-          className="relative w-full rounded-2xl overflow-hidden border border-gray-200 shadow-2xl cursor-zoom-in mb-5"
+          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-2xl cursor-zoom-in mb-5 bg-white"
           onClick={() => setLightbox(true)}
         >
-          {/* Browser chrome */}
-          <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-            <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-            <div className="flex-1 mx-3 bg-white rounded-md px-3 py-1 text-[10px] text-gray-400 font-mono border border-gray-200">
-              freightflow.techsonance.co.in
+          {/* Browser chrome - only for web apps */}
+          {!isMobile && (
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+              <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+              <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+              <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+              <div className="flex-1 mx-3 bg-white rounded-md px-3 py-1 text-[10px] text-gray-400 font-mono border border-gray-200 truncate">
+                {displayHost}
+              </div>
+              <span className="text-[10px] text-gray-400 hidden sm:inline">Click to enlarge</span>
             </div>
-            <span className="text-[10px] text-gray-400 hidden sm:inline">Click to enlarge</span>
-          </div>
+          )}
 
           {/* Full-width image - no fixed height container, natural aspect ratio */}
           <div className="relative overflow-hidden">
@@ -318,9 +329,9 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.16 }}
-              className="text-lg text-[#22B6F6] font-semibold italic"
+              className="text-base sm:text-lg text-slate-700 font-medium leading-snug"
             >
-              &ldquo;{project.tagline}&rdquo;
+              {project.tagline}
             </motion.p>
 
             <motion.p
@@ -419,6 +430,9 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
         <ScreenshotGallery
           screenshots={project.screenshots}
           accentColor={project.accentColor}
+          liveUrl={project.liveUrl}
+          slug={project.slug}
+          category={project.category}
         />
       )}
 

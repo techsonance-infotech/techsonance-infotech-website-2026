@@ -36,7 +36,9 @@ Full-cycle frontend and backend development using React, Next.js, Node.js, and n
 - **DevOps & Cloud**: Amazon Web Services (AWS), Vercel, Docker, CI/CD pipelines, Nginx.
 
 ## Key Projects & Case Studies
+- **Zion**: AI-powered cross-platform event discovery, real-time ticket booking, and host analytics mobile app built with Flutter and Firebase.
 - **FreightFlow**: Advanced logistics orchestration platform optimizing supply chain routes and fleet dispatch schedules.
+- **MasterWeg**: All-in-one German Master's application workspace with AI university matching and document prep.
 - **SyncServe POS**: High-throughput retail point-of-sale system featuring multi-terminal sync and offline operations.
 - **TechSonance Marketplace**: Highly scalable B2B e-commerce platform with automated merchant payouts and advanced catalog search.
 - **Custom AI Automation**: LLM-driven internal CRM helpers that automatically extract leads and generate support responses.
