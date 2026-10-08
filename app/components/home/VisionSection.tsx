@@ -43,7 +43,7 @@ const GROUPS: AvatarGroup[] = [
 ];
 
 const STATS_ITEMS: StatItem[] = [
-  { value: "5+", label: "Projects Delivered" },
+  { value: "10+", label: "Projects Delivered" },
   { value: "100%", label: "Client Satisfaction" },
 ];
 
