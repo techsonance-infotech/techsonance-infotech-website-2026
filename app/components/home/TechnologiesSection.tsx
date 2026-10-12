@@ -156,6 +156,50 @@ export const techCards: TechCard[] = [
       { label: "Nginx", src: "/tech-icons/nginx.svg", color: "#009639" },
     ],
   },
+  {
+    iconSvg: `<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>`,
+    iconColor: "#02569B",
+    title: "CROSS-PLATFORM MOBILE",
+    description: "High-performance iOS & Android apps from unified codebases.",
+    items: [
+      { label: "Flutter", src: "/tech-icons/flutter.svg", color: "#02569B" },
+      { label: "React Native", src: "/tech-icons/react.svg", color: "#61DAFB" },
+      { label: "Dart", src: "/tech-icons/dart.svg", color: "#0175C2" },
+      { label: "Expo", src: "/tech-icons/expo.svg", color: "#000020" },
+    ],
+  },
+  {
+    iconSvg: `<path d="M12 18h.01M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM9 5h6"/>`,
+    iconColor: "#F05138",
+    title: "NATIVE MOBILE APPS",
+    description: "Platform-native performance and deep hardware access.",
+    items: [
+      { label: "Swift", src: "/tech-icons/swift.svg", color: "#F05138" },
+      { label: "Kotlin", src: "/tech-icons/kotlin.svg", color: "#7F52FF" },
+    ],
+  },
+  {
+    iconSvg: `<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>`,
+    iconColor: "#003B57",
+    title: "MOBILE DATA & SYNC",
+    description: "Embedded offline storage and real-time state sync.",
+    items: [
+      { label: "SQLite", src: "/tech-icons/sqlite.svg", color: "#003B57" },
+      { label: "Realm", src: "/tech-icons/realm.svg", color: "#39477F" },
+      { label: "Firebase", src: "/tech-icons/firebase.svg", color: "#FFCA28" },
+    ],
+  },
+  {
+    iconSvg: `<path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>`,
+    iconColor: "#CB2E6D",
+    title: "MOBILE CI/CD & TESTING",
+    description: "Automated app builds, OTA updates, and release pipelines.",
+    items: [
+      { label: "App Center", src: "/tech-icons/appcenter.svg", color: "#CB2E6D" },
+      { label: "GitHub Actions", src: "/tech-icons/githubactions.svg", color: "#2088FF" },
+      { label: "Sentry", src: "/tech-icons/sentry.svg", color: "#362D59" },
+    ],
+  },
 ];
 
 export default function TechnologiesSection() {

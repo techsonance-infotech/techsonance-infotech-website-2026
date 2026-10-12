@@ -31,6 +31,7 @@ Full-cycle frontend and backend development using React, Next.js, Node.js, and n
 
 ## Technology Stack
 - **Frontend**: Next.js (App Router), React, Tailwind CSS, Framer Motion, TypeScript.
+- **Mobile**: Flutter, Dart, React Native, Expo, Kotlin (Android), Swift (iOS), SQLite, Realm, Firebase.
 - **Backend & APIs**: Node.js, Express, Python (FastAPI/Django), RESTful & GraphQL APIs.
 - **Database & Storage**: PostgreSQL, MongoDB, Redis, AWS S3.
 - **DevOps & Cloud**: Amazon Web Services (AWS), Vercel, Docker, CI/CD pipelines, Nginx.
