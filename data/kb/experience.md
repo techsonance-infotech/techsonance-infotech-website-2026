@@ -9,7 +9,6 @@ Over our 5+ years of building digital products, our team has delivered over 10+ 
 - **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.
 - **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.
 - **AccuNest**: Comprehensive accounting and financial management suite for SMEs.
-- **Agraj Enterprise**: Industrial protective coating and structural painting platform with project estimating and lead management.
 
 ## Client Industries Served
-We build software across Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, Industrial Services, and B2B E-Commerce.
+We build software across Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, and B2B E-Commerce.

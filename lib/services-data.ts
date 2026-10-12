@@ -444,13 +444,13 @@ export const webApp = {
         icon: "speed",
         title: "Performance-Optimized Frontends",
         description: "Code splitting, image optimization, and caching strategies for sub-second load times.",
-        usedInProject: "Agraj Enterprise",
+        usedInProject: "MasterWeg",
       },
       {
         icon: "image",
         title: "Marketing & Corporate Sites",
         description: "SEO-optimized sites with CMS integration your marketing team can update independently.",
-        usedInProject: "Agraj Enterprise",
+        usedInProject: "FreightFlow",
       },
       {
         icon: "schema",
@@ -491,7 +491,7 @@ export const webApp = {
         ],
       },
     ],
-    proofOfWork: ["syncserve-pos", "techsonance-marketplace", "agraj-enterprise"],
+    proofOfWork: ["syncserve-pos", "techsonance-marketplace", "masterweg"],
     faqs: [
       { question: "How long before I see a working version?", answer: "A functional frontend prototype is typically ready in 3–4 weeks. Full production app in 8–12 weeks." },
       { question: "Will the site work on mobile?", answer: "Every app we build is mobile-first responsive - tested on real devices, not just browser resize." },

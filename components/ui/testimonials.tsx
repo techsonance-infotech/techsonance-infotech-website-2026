@@ -34,10 +34,10 @@ const testimonials = [
     role: "HR Director, NeoTech Solutions",
   },
   {
-    text: "Our industrial painting business had zero digital footprint. TechSonance redesigned our brand online with high-performing SEO schemas. We were indexed on Google within 48 hours and saw a 3x jump in inbound leads.",
+    text: "Coordinating festival schedules and tracking donation ledgers across hundreds of committee members used to be chaos. Utsav streamlined our entire mandal operations into a single intuitive mobile platform.",
     image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150&q=80",
-    name: "Mahendra Agraj",
-    role: "Managing Partner, Agraj Enterprise",
+    name: "Anand Deshmukh",
+    role: "Trustee, Shree Ganesh Seva Mandal",
   },
 ];
 
