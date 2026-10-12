@@ -380,47 +380,6 @@ serialPort.on('data', (rawData) => {
       </p>
     `,
   },
-  {
-    slug: "agraj-enterprise-seo-architecture",
-    title: "JSON-Driven SEO: How We Indexed an Industrial Site in 48 Hours",
-    excerpt: "How we engineered a 100% JSON-configured Next.js site with 6 nested JSON-LD structured schemas to capture industrial traffic.",
-    category: "Product Design",
-    date: "May 10, 2026",
-    readTime: "4 min read",
-    authors: [
-      {
-        name: "Someshwari Adeya",
-        role: "CEO",
-        avatar: "SO",
-      }
-    ],
-    heroImage: "/images/blog/seo-json.jpg",
-    tags: ["SEO", "Next.js", "JSON-LD", "Marketing", "UX"],
-    content: `
-      <p class="lead text-lg text-slate-700 leading-relaxed font-semibold mb-6">
-        Industrial contractors have historically struggled with online customer acquisition. Relying on paper cards or offline contracts means missing search traffic from facility managers searching for verified services online.
-      </p>
-
-      <p class="text-slate-600 leading-relaxed mb-6">
-        For <strong>Agraj Enterprise</strong>, we built a digital presence from the ground up, optimizing local search indexing to position the brand on Google page one within 48 hours of launch.
-      </p>
-
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">100% JSON-Driven Content Architecture</h3>
-      <p class="text-slate-600 leading-relaxed mb-6">
-        Industrial businesses need to update safety certifications and project portfolios regularly but don't want to hire web agencies for simple text adjustments. We built the marketing pages to read entirely from configuration JSON documents, decoupling data from components.
-      </p>
-
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Structured Schema Injection</h3>
-      <p class="text-slate-600 leading-relaxed mb-6">
-        To capture maximum search results real estate, we injected 6 distinct, structured JSON-LD schemas into the pages: <em>LocalBusiness, ServicePage, FAQPage, BreadcrumbList, WebSite,</em> and <em>ImageObject</em>. This helps search engine crawlers understand service locations, safety credentials, and contact points natively.
-      </p>
-
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Result</h3>
-      <p class="text-slate-600 leading-relaxed mb-6">
-        Agraj Enterprise went from zero web footprint to complete local indexing in two days, opening up fresh digital leads channel across Gujarat.
-      </p>
-    `,
-  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

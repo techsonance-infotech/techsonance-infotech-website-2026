@@ -98,7 +98,7 @@ const enrichments: Record<string, CapabilityEnrichment[]> = {
     },
     {
       tags: ["Code splitting", "Image opt", "CDN"],
-      outcome: "Agraj Enterprise indexed on Google within 48 hours of launch.",
+      outcome: "Sub-second initial load and 99+ Lighthouse performance scores.",
     },
     {
       tags: ["CMS", "JSON-LD", "Sitemap"],
