@@ -3,24 +3,27 @@ import { Inter, Plus_Jakarta_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/app/components/LenisProvider";
 import CookieConsent from "@/app/components/home/CookieConsent";
-import JsonLd, { getOrganizationSchema, getLocalBusinessSchema, getWebsiteSchema } from "@/app/components/JsonLd";
+import JsonLd, { getUnifiedRootEntityGraph } from "@/app/components/JsonLd";
 import ChatWidget from "@/components/chat/ChatWidget";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["700", "800"],
+  display: "swap",
 });
 
 const sora = Sora({
   variable: "--font-sora",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -49,9 +52,7 @@ export default function RootLayout({
       className={`${inter.variable} ${plusJakarta.variable} ${sora.variable} antialiased`}
     >
       <body className="flex flex-col">
-        <JsonLd schema={getOrganizationSchema()} />
-        <JsonLd schema={getLocalBusinessSchema()} />
-        <JsonLd schema={getWebsiteSchema()} />
+        <JsonLd schema={getUnifiedRootEntityGraph()} />
         <LenisProvider>
           {children}
           <CookieConsent />

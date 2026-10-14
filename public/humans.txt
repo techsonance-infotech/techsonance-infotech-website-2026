@@ -1,0 +1,18 @@
+/* TEAM */
+Founder & CEO: Someshwari Adeya
+Chief Technology Officer: Sajeshkumar Adeya
+Lead Full-Stack Engineer: Manish Kushwaha
+Location: Surat, Gujarat, India
+Website: https://www.techsonance.co.in
+Contact: info@techsonance.co.in
+
+/* THANKS */
+Our Clients & Engineering Partners across US, UK, UAE & India
+
+/* TECHNOLOGY COLOPHON */
+Framework: Next.js 15 (App Router, Turbopack)
+Language: TypeScript
+UI: React 19, Tailwind CSS v4, Framer Motion
+Data & State: PostgreSQL with Row-Level Security, Redis, Minisearch
+Hosting & CDN: Vercel Edge Network
+Standard: HTML5, Semantic Microdata & JSON-LD Entity Graph

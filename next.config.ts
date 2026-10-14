@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
     "*.ngrok-free.app",
     "localhost:3000"
   ],
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
   async redirects() {
     return [
       {

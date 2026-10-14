@@ -13,7 +13,137 @@ export default function JsonLd({ schema }: JsonLdProps) {
   );
 }
 
-// 1. Organization Schema
+// 1. Unified Root Entity Graph (Google Recommended Connected Graph)
+export function getUnifiedRootEntityGraph() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["Organization", "Corporation"],
+        "@id": "https://www.techsonance.co.in/#organization",
+        "name": "TechSonance Infotech LLP",
+        "legalName": "TechSonance Infotech LLP",
+        "url": "https://www.techsonance.co.in",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.techsonance.co.in/#logo",
+          "url": "https://www.techsonance.co.in/images/logo-icon.png",
+          "caption": "TechSonance Infotech LLP Logo"
+        },
+        "foundingDate": "2021",
+        "founder": {
+          "@type": "Person",
+          "@id": "https://www.techsonance.co.in/#founder",
+          "name": "Someshwari Adeya",
+          "jobTitle": "Founder & CEO",
+          "image": "https://www.techsonance.co.in/images/about-headshot-v2.png",
+          "sameAs": "https://www.linkedin.com/company/techsonance-infotech-llp"
+        },
+        "employee": [
+          {
+            "@type": "Person",
+            "@id": "https://www.techsonance.co.in/#founder"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.techsonance.co.in/#cto",
+            "name": "Sajeshkumar Adeya",
+            "jobTitle": "Chief Technology Officer"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.techsonance.co.in/#lead-developer",
+            "name": "Manish Kushwaha",
+            "jobTitle": "Lead Full-Stack Engineer"
+          }
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "UG-15, Palladium Plaza, VIP Road, Vesu",
+          "addressLocality": "Surat",
+          "addressRegion": "Gujarat",
+          "postalCode": "395007",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.1418,
+          "longitude": 72.7709
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91 9173101711",
+          "contactType": "customer service",
+          "email": "info@techsonance.co.in",
+          "areaServed": [
+            "India",
+            "United States",
+            "United Kingdom",
+            "Canada",
+            "Australia",
+            "United Arab Emirates"
+          ],
+          "availableLanguage": ["en", "hi", "gu"]
+        },
+        "sameAs": [
+          "https://www.linkedin.com/company/techsonance-infotech-llp",
+          "https://x.com/techsonance",
+          "https://github.com/techsonance",
+          "https://cal.id/techsonance-infotech/connect-with-founder"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.techsonance.co.in/#website",
+        "url": "https://www.techsonance.co.in",
+        "name": "TechSonance Infotech LLP",
+        "publisher": {
+          "@id": "https://www.techsonance.co.in/#organization"
+        }
+      },
+      {
+        "@type": ["ProfessionalService", "LocalBusiness"],
+        "@id": "https://www.techsonance.co.in/#localbusiness",
+        "name": "TechSonance Infotech LLP",
+        "parentOrganization": {
+          "@id": "https://www.techsonance.co.in/#organization"
+        },
+        "url": "https://www.techsonance.co.in",
+        "image": "https://www.techsonance.co.in/images/logo-icon.png",
+        "telephone": "+91 9173101711",
+        "email": "info@techsonance.co.in",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "UG-15, Palladium Plaza, VIP Road, Vesu",
+          "addressLocality": "Surat",
+          "addressRegion": "Gujarat",
+          "postalCode": "395007",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.1418,
+          "longitude": 72.7709
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+          ],
+          "opens": "09:00",
+          "closes": "18:00"
+        }
+      }
+    ]
+  };
+}
+
+// 2. Organization Schema
 export function getOrganizationSchema() {
   return {
     "@context": "https://schema.org",
@@ -22,40 +152,54 @@ export function getOrganizationSchema() {
     "name": "TechSonance Infotech LLP",
     "url": "https://www.techsonance.co.in",
     "logo": "https://www.techsonance.co.in/images/logo-icon.png",
+    "foundingDate": "2021",
+    "founder": {
+      "@type": "Person",
+      "@id": "https://www.techsonance.co.in/#founder",
+      "name": "Someshwari Adeya",
+      "jobTitle": "Founder & CEO"
+    },
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+91 9173101711",
       "contactType": "customer service",
       "email": "info@techsonance.co.in",
       "areaServed": "IN",
-      "availableLanguage": ["en", "hi"]
+      "availableLanguage": ["en", "hi", "gu"]
     },
     "sameAs": [
       "https://www.linkedin.com/company/techsonance-infotech-llp",
       "https://x.com/techsonance",
-      "https://github.com/techsonance"
+      "https://github.com/techsonance",
+      "https://cal.id/techsonance-infotech/connect-with-founder"
     ]
   };
 }
 
-// 2. Website Schema
+// 3. Website Schema
 export function getWebsiteSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": "https://www.techsonance.co.in/#website",
     "name": "TechSonance Infotech LLP",
-    "url": "https://www.techsonance.co.in"
+    "url": "https://www.techsonance.co.in",
+    "publisher": {
+      "@id": "https://www.techsonance.co.in/#organization"
+    }
   };
 }
 
-// 3. Local Business & Professional Service Schema
+// 4. Local Business & Professional Service Schema
 export function getLocalBusinessSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "@id": "https://www.techsonance.co.in/#localbusiness",
     "name": "TechSonance Infotech LLP",
+    "parentOrganization": {
+      "@id": "https://www.techsonance.co.in/#organization"
+    },
     "image": "https://www.techsonance.co.in/images/logo-icon.png",
     "url": "https://www.techsonance.co.in",
     "telephone": "+91 9173101711",
@@ -89,7 +233,7 @@ export function getLocalBusinessSchema() {
   };
 }
 
-// 4. FAQ Schema
+// 5. FAQ Schema
 export function getFaqSchema(faqs: { question: string; answer: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -105,7 +249,7 @@ export function getFaqSchema(faqs: { question: string; answer: string }[]) {
   };
 }
 
-// 5. Service Schema
+// 6. Service Schema
 export function getServiceSchema(
   name: string,
   description: string,
@@ -122,6 +266,9 @@ export function getServiceSchema(
       "name": "TechSonance Infotech LLP",
       "url": providerUrl,
       "logo": "https://www.techsonance.co.in/images/logo-icon.png"
+    },
+    "isPartOf": {
+      "@id": "https://www.techsonance.co.in/#website"
     },
     "areaServed": [
       { "@type": "Country", "name": "India" },
@@ -146,7 +293,7 @@ export function getServiceSchema(
   };
 }
 
-// 6. Breadcrumb Schema
+// 7. Breadcrumb Schema
 export function getBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -160,7 +307,7 @@ export function getBreadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
-// 7. Review Schema
+// 8. Review Schema
 export function getReviewSchema(
   authorName: string,
   reviewBody: string,
@@ -187,7 +334,7 @@ export function getReviewSchema(
   };
 }
 
-// 8. Article/Blog Schema
+// 9. Article/Blog Schema
 export function getArticleSchema(
   title: string,
   description: string,
@@ -197,6 +344,19 @@ export function getArticleSchema(
   articleUrl: string,
   modifiedDate?: string
 ) {
+  let authorId = "https://www.techsonance.co.in/#organization";
+  let authorRole = "Software Engineer";
+  if (authorName.toLowerCase().includes("someshwari")) {
+    authorId = "https://www.techsonance.co.in/#founder";
+    authorRole = "Founder & CEO";
+  } else if (authorName.toLowerCase().includes("sajeshkumar")) {
+    authorId = "https://www.techsonance.co.in/#cto";
+    authorRole = "Chief Technology Officer";
+  } else if (authorName.toLowerCase().includes("manish")) {
+    authorId = "https://www.techsonance.co.in/#lead-developer";
+    authorRole = "Lead Full-Stack Engineer";
+  }
+
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -209,9 +369,17 @@ export function getArticleSchema(
       "@type": "WebPage",
       "@id": articleUrl
     },
+    "isPartOf": {
+      "@id": "https://www.techsonance.co.in/#website"
+    },
     "author": {
       "@type": "Person",
-      "name": authorName
+      "@id": authorId,
+      "name": authorName,
+      "jobTitle": authorRole,
+      "worksFor": {
+        "@id": "https://www.techsonance.co.in/#organization"
+      }
     },
     "publisher": {
       "@type": "Organization",
@@ -224,4 +392,3 @@ export function getArticleSchema(
     }
   };
 }
-
