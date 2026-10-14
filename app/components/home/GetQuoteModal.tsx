@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Icon } from "@/app/components/icons/Icon";
 import { Button } from "@/components/ui/button";
 
 interface GetQuoteModalProps {
@@ -32,16 +31,23 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const bodyRef = React.useRef<HTMLDivElement>(null);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      window.__lenis?.stop();
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      window.__lenis?.start();
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      window.__lenis?.start();
     };
   }, [isOpen]);
 
@@ -142,9 +148,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
         website: "",
       });
       setTouched({});
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFormStatus("idle");
-      showToast(err.message || "Failed to send message. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Failed to send message. Please try again.";
+      showToast(errorMessage);
     }
   };
 
@@ -173,7 +180,14 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto">
+        <div
+          data-lenis-prevent
+          data-lenis-prevent-wheel
+          data-lenis-prevent-touch
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+        >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -186,17 +200,27 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
           {/* Modal panel */}
           <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.97 }}
+            initial={{ opacity: 0, y: 25, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.97 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-2xl mx-4 my-12 sm:my-16 bg-white rounded-3xl shadow-[0_20px_50px_rgba(17,85,204,0.18)] border border-[#1155CC]/10 overflow-hidden"
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            data-lenis-prevent
+            data-lenis-prevent-wheel
+            data-lenis-prevent-touch
+            className="relative z-10 w-full max-w-2xl bg-white rounded-3xl shadow-[0_25px_60px_rgba(17,85,204,0.18)] border border-[#1155CC]/10 overflow-hidden flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-3.5rem)] my-auto"
           >
             {/* Modal Header */}
-            <div className="relative px-6 sm:px-10 pt-8 pb-6 border-b border-[#1155CC]/10 bg-gradient-to-br from-white to-slate-50/80">
+            <div
+              onWheel={(e) => {
+                if (bodyRef.current) {
+                  bodyRef.current.scrollTop += e.deltaY;
+                }
+              }}
+              className="relative px-6 sm:px-10 pt-7 pb-5 sm:pt-8 sm:pb-6 border-b border-[#1155CC]/10 bg-gradient-to-br from-white to-slate-50/80 shrink-0"
+            >
               <button
                 onClick={resetAndClose}
-                className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-all"
+                className="absolute top-4 sm:top-5 right-4 sm:right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-all cursor-pointer"
                 aria-label="Close modal"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -204,7 +228,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 </svg>
               </button>
 
-              <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-4">
+              <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-3 sm:mb-4">
                 <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
                 <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
                   Get a Quote
@@ -217,13 +241,19 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   Something Together
                 </span>
               </h2>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-xs sm:text-sm text-slate-500 font-medium">
                 Tell us about your project - we&apos;ll respond within 24 hours.
               </p>
             </div>
 
             {/* Modal Body */}
-            <div className="px-6 sm:px-10 py-8 max-h-[calc(100vh-260px)] overflow-y-auto">
+            <div
+              ref={bodyRef}
+              data-lenis-prevent
+              data-lenis-prevent-wheel
+              data-lenis-prevent-touch
+              className="px-6 sm:px-10 py-6 sm:py-8 overflow-y-auto flex-1 overscroll-contain modal-scrollbar"
+            >
               {formStatus === "success" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
