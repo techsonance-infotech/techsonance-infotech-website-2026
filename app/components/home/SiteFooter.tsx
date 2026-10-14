@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Icon, type IconName } from "@/app/components/icons/Icon";
+import { Icon } from "@/app/components/icons/Icon";
 import { services } from "@/data/services";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";
@@ -105,6 +105,11 @@ export default function SiteFooter() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/locations/surat" className="text-slate-300 hover:text-[#22B6F6] transition-colors">
+                    Surat Office & Dev Hub
+                  </Link>
+                </li>
+                <li>
                   <Link href="/blog" className="text-slate-300 hover:text-[#22B6F6] transition-colors">
                     Blog & Insights
                   </Link>
@@ -119,7 +124,7 @@ export default function SiteFooter() {
                 </li>
                 <li>
                   <Link href="/careers" className="text-slate-300 hover:text-[#22B6F6] transition-colors">
-                    Careers (We're Hiring)
+                    Careers (We&apos;re Hiring)
                   </Link>
                 </li>
               </ul>
