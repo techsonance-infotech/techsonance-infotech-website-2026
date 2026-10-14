@@ -70,13 +70,38 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     "author": {
       "@type": "Organization",
       "@id": `${BASE_URL}/#organization`,
-      "name": "TechSonance Infotech LLP"
+      "name": "TechSonance Infotech LLP",
     },
     "publisher": {
       "@type": "Organization",
       "@id": `${BASE_URL}/#organization`,
-      "name": "TechSonance Infotech LLP"
-    }
+      "name": "TechSonance Infotech LLP",
+    },
+    "keywords": project.techStack.map((t) => t.name).join(", "),
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": project.title,
+      "applicationCategory": project.category,
+      "operatingSystem": "Cloud, Web, Mobile",
+    },
+    ...(project.clientReview
+      ? {
+          "review": {
+            "@type": "Review",
+            "reviewBody": project.clientReview.quote,
+            "author": {
+              "@type": "Person",
+              "name": project.clientReview.author,
+              "jobTitle": project.clientReview.role,
+            },
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5",
+            },
+          },
+        }
+      : {}),
   };
 
   return (

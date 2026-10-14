@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { services } from "@/data/services";
-import { Icon } from "@/app/components/icons/Icon";
 import { Button } from "@/components/ui/button";
+import { trackScopingFormSubmit } from "@/lib/analytics";
 
 export default function ScopingContactForm({
   defaultService,
@@ -89,6 +89,11 @@ export default function ScopingContactForm({
         const errorData = await res.json();
         throw new Error(errorData.error || "Failed to submit form.");
       }
+
+      trackScopingFormSubmit({
+        service: formData.service,
+        hasCompany: Boolean(formData.company.trim()),
+      });
 
       setFormStatus("success");
       setFormData({

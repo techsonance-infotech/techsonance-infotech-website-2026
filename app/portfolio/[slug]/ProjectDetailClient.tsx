@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";
 import EmojiOrLucideIcon from "@/app/components/icons/LucideIcon";
+import { trackCaseStudyView } from "@/lib/analytics";
 
 // ─── Reveal animation preset ────────────────────────────────────────────────────
 function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -420,6 +421,10 @@ function ProjectHero({ project }: { project: Project }) {
 export default function ProjectDetailClient({ project }: { project: Project }) {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
+  useEffect(() => {
+    trackCaseStudyView(project.slug, project.title);
+  }, [project.slug, project.title]);
+
   return (
     <main className="overflow-x-clip">
       {/* Hero */}
@@ -564,6 +569,42 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 {project.result}
               </p>
             </div>
+
+            {project.clientReview && (
+              <div
+                className="mt-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden"
+              >
+                <div
+                  className="absolute top-0 left-0 bottom-0 w-1.5"
+                  style={{ background: project.accentColor }}
+                />
+                <div className="flex items-center gap-2 mb-3 text-amber-500">
+                  {"★".repeat(5)}
+                  <span className="text-xs font-bold text-slate-700 ml-2">Verified Client Review</span>
+                </div>
+                <blockquote className="text-sm sm:text-base text-slate-800 italic leading-relaxed mb-4">
+                  &ldquo;{project.clientReview.quote}&rdquo;
+                </blockquote>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t border-slate-100 pt-4">
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 block">
+                      {project.clientReview.author}
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      {project.clientReview.role} &bull; {project.clientReview.organization}
+                    </span>
+                  </div>
+                  {project.roiSummary && (
+                    <span
+                      className="text-xs font-bold px-3 py-1 rounded-full self-start sm:self-auto"
+                      style={{ background: `${project.accentColor}15`, color: project.accentColor }}
+                    >
+                      ROI: {project.roiSummary}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </RevealSection>
         </div>
       </section>

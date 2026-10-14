@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { getVisitorProfile, saveVisitorProfile, saveBookingCopy } from "@/lib/db";
 import type { Slot } from "@/lib/slots";
+import { trackBookingFormSubmit } from "@/lib/analytics";
 
 interface BookingCardProps {
   onSuccess?: (ref: string) => void;
@@ -67,11 +68,11 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
   const [company, setCompany] = useState("");
   const [projectType, setProjectType] = useState(PROJECT_TYPES[0]);
   const [budgetRange, setBudgetRange] = useState(BUDGET_RANGES[0]);
-  const [timeline, setTimeline] = useState(TIMELINES[0]);
+  const [timeline] = useState(TIMELINES[0]);
   const [selectedSlotIso, setSelectedSlotIso] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
-  const [consent, setConsent] = useState(true);
+  const [consent] = useState(true);
 
   // Status State
   const [submitting, setSubmitting] = useState(false);
@@ -150,6 +151,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
       const ref = data.ref || "TS-CONFIRMED";
       setBookedRef(ref);
+
+      trackBookingFormSubmit({
+        projectType,
+        budgetRange,
+        timeline,
+        referenceId: ref,
+      });
 
       // Save booking copy locally in IndexedDB
       await saveBookingCopy({

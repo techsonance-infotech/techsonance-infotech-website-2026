@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { trackBookingModalOpen } from "@/lib/analytics";
 
 interface BookConsultationModalProps {
   isOpen: boolean;
@@ -96,6 +97,7 @@ export default function BookConsultationModal({ isOpen, onClose }: BookConsultat
   // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
     if (isOpen) {
+      trackBookingModalOpen("global_modal");
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       window.__lenis?.stop();

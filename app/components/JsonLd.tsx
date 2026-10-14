@@ -86,9 +86,14 @@ export function getUnifiedRootEntityGraph() {
           "availableLanguage": ["en", "hi", "gu"]
         },
         "sameAs": [
-          "https://www.linkedin.com/company/techsonance-infotech-llp",
-          "https://x.com/techsonance",
-          "https://github.com/techsonance",
+          "https://linkedin.com/company/techsonance-infotech/",
+          "https://x.com/techsonance_in",
+          "https://github.com/techsonance-infotech",
+          "https://www.instagram.com/techsonance_infotech/",
+          "https://www.facebook.com/people/TechSonance-InfoTech/61583918872159/",
+          "https://clutch.co/profile/techsonance-infotech",
+          "https://www.goodfirms.co/company/techsonance-infotech",
+          "https://www.crunchbase.com/organization/techsonance-infotech",
           "https://cal.id/techsonance-infotech/connect-with-founder"
         ]
       },
@@ -168,9 +173,14 @@ export function getOrganizationSchema() {
       "availableLanguage": ["en", "hi", "gu"]
     },
     "sameAs": [
-      "https://www.linkedin.com/company/techsonance-infotech-llp",
-      "https://x.com/techsonance",
-      "https://github.com/techsonance",
+      "https://linkedin.com/company/techsonance-infotech/",
+      "https://x.com/techsonance_in",
+      "https://github.com/techsonance-infotech",
+      "https://www.instagram.com/techsonance_infotech/",
+      "https://www.facebook.com/people/TechSonance-InfoTech/61583918872159/",
+      "https://clutch.co/profile/techsonance-infotech",
+      "https://www.goodfirms.co/company/techsonance-infotech",
+      "https://www.crunchbase.com/organization/techsonance-infotech",
       "https://cal.id/techsonance-infotech/connect-with-founder"
     ]
   };

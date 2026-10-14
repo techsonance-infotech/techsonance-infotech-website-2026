@@ -70,7 +70,7 @@ export default function SiteFooter() {
                 Expertise & Services
               </h3>
               <ul className="space-y-3.5 text-xs">
-                {services.slice(0, 6).map((service) => (
+                {services.slice(0, 5).map((service) => (
                   <li key={service.slug}>
                     <Link
                       href={`/services/${service.slug}`}
@@ -80,6 +80,30 @@ export default function SiteFooter() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link
+                    href="/technologies/nestjs"
+                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                  >
+                    NestJS Microservices
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/services/rag-chatbot-development"
+                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                  >
+                    Enterprise RAG Chatbots
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/technologies/nextjs"
+                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                  >
+                    Next.js 15 & React 19
+                  </Link>
+                </li>
               </ul>
             </div>
 
