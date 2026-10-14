@@ -151,6 +151,30 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ── Custom Modal Scrollbar ── */
+.modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 85, 204, 0.25) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(17, 85, 204, 0.25);
+  border-radius: 9999px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(17, 85, 204, 0.5);
+}
+
 /* ── Service page design tokens ── */
 :root {
   --bg-base: var(--background);

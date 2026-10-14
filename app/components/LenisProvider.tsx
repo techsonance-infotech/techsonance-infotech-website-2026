@@ -10,7 +10,15 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      prevent: (node) => {
+        return (
+          node.hasAttribute("data-lenis-prevent") ||
+          Boolean(node.closest?.("[data-lenis-prevent]"))
+        );
+      },
     });
+
+    window.__lenis = lenis;
 
     let gsapTicker: ((time: number) => void) | null = null;
     let destroyed = false;
@@ -38,6 +46,9 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
         import("gsap").then(({ gsap }) => {
           gsap.ticker.remove(gsapTicker!);
         });
+      }
+      if (window.__lenis === lenis) {
+        delete window.__lenis;
       }
       lenis.destroy();
     };
