@@ -6,6 +6,7 @@ import LenisProvider from "@/app/components/LenisProvider";
 import CookieConsent from "@/app/components/home/CookieConsent";
 import JsonLd, { getUnifiedRootEntityGraph } from "@/app/components/JsonLd";
 import ChatWidget from "@/components/chat/ChatWidget";
+import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,7 +29,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.techsonance.co.in"),
+  metadataBase: new URL(BASE_URL),
   title: "TechSonance - Custom Software & AI Engineering Partner",
   description:
     "TechSonance designs and builds custom software, logistics SaaS, Point of Sale systems, and AI-powered web applications for modern enterprises.",
