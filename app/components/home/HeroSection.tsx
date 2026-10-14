@@ -32,15 +32,11 @@ function HeroCTAButtons({ onBookClick }: { onBookClick: () => void }) {
 
 function HeroHeadline() {
   return (
-    <>
-      <h1 className="text-[2.25rem] font-medium leading-[1.15] tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-[3.75rem] 2xl:text-[4.25rem]">
-        Custom Software and AI Engineering Agency{" "}
-        <span className="italic text-[#1155CC]">for Global Startups</span>
-      </h1>
-      <p className="mt-3 text-lg font-medium text-slate-700 sm:text-xl">
-        We Build <span className="italic text-[#1155CC]">Digital Products</span> That Drive Growth.
-      </p>
-    </>
+    <h1 className="text-[2.25rem] font-medium leading-[1.15] tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-[4rem] 2xl:text-[4.5rem]">
+      We Build <span className="italic text-[#1155CC]">Digital Products</span>
+      <br />
+      That Drive Growth.
+    </h1>
   );
 }
 
