@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { services, getFullServiceBySlug } from "@/data/services";
 import ServicePageClient from "@/app/components/services/ServicePageClient";
-import { SEO_METADATA, AEO_FAQS } from "@/lib/seo-aeo-geo-config";
+import { SEO_METADATA, BASE_URL, getAeoFaqsForSlug } from "@/lib/seo-aeo-geo-config";
 import JsonLd, { getServiceSchema, getFaqSchema, getBreadcrumbSchema } from "@/app/components/JsonLd";
 
 // Map requested aliases to internal slugs
@@ -29,17 +29,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!service) return { title: "Service Not Found" };
 
   const seo = SEO_METADATA[mappedSlug];
+  const canonicalUrl = `${BASE_URL}/services/${mappedSlug}`;
   return {
     title: seo ? seo.title : `${service.name} - TechSonance InfoTech LLP`,
     description: seo ? seo.description : service.quickSummary,
     keywords: seo ? seo.keywords : [],
     alternates: {
-      canonical: seo ? seo.canonical : `https://techsonance.co.in/services/${mappedSlug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title: seo ? seo.ogTitle : service.name,
       description: seo ? seo.ogDescription : service.quickSummary,
-      url: `https://techsonance.co.in/services/${mappedSlug}`,
+      url: canonicalUrl,
       images: [{ url: seo ? seo.ogImage : "/images/logo-icon.png" }],
     },
     twitter: {
@@ -60,20 +61,26 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  // Compile FAQs specific to this service to generate FAQSchema
-  const serviceFaqItems = service.faqs.map((f) => ({
-    question: f.question,
-    answer: f.answer,
-  }));
+  // Compile FAQs from single source of truth (AEO_FAQS matching visible UI)
+  const aeoFaqs = getAeoFaqsForSlug(mappedSlug);
+  const serviceFaqItems = aeoFaqs.length > 0
+    ? aeoFaqs.map((f) => ({
+        question: f.question,
+        answer: `${f.directAnswer} ${f.expandedExplanation}`,
+      }))
+    : service.faqs.map((f) => ({
+        question: f.question,
+        answer: f.answer,
+      }));
 
   // Create dynamic schemas
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", url: "https://techsonance.co.in" },
-    { name: "Services", url: "https://techsonance.co.in/services" },
-    { name: service.name, url: `https://techsonance.co.in/services/${slug}` },
+    { name: "Home", url: BASE_URL },
+    { name: "Services", url: `${BASE_URL}/services` },
+    { name: service.name, url: `${BASE_URL}/services/${mappedSlug}` },
   ]);
 
-  const serviceSchema = getServiceSchema(service.name, service.quickSummary);
+  const serviceSchema = getServiceSchema(service.name, service.quickSummary, BASE_URL);
   const faqSchema = getFaqSchema(serviceFaqItems);
 
   return (
@@ -85,3 +92,4 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     </>
   );
 }
+

@@ -24,7 +24,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://techsonance.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.techsonance.co.in"),
   title: "TechSonance - Custom Software & AI Engineering Partner",
   description:
     "TechSonance designs and builds custom software, logistics SaaS, Point of Sale systems, and AI-powered web applications for modern enterprises.",

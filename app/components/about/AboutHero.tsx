@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -8,13 +8,14 @@ import SafeImage from "@/app/components/SafeImage";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";
 
+const emptySubscribe = () => () => {};
+
 export default function AboutHero() {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -179,7 +180,7 @@ export default function AboutHero() {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="text-4xl sm:text-5xl lg:text-[72px] font-black leading-[0.95] tracking-tight text-gray-900"
+                  className="text-3xl sm:text-4xl lg:text-[52px] font-black leading-[1.05] tracking-tight text-gray-900"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
@@ -187,8 +188,8 @@ export default function AboutHero() {
                     WebkitTransform: "translate3d(0, 0, 0)",
                   }}
                 >
-                  ABOUT
-                  <span className="text-[#1155CC] block lg:inline-block lg:ml-2">US</span>
+                  About TechSonance Infotech:{" "}
+                  <span className="text-[#1155CC] block lg:inline-block">Software &amp; AI Engineering Partner in Surat</span>
                 </motion.h1>
 
                 <motion.p
