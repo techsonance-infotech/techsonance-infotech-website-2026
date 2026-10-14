@@ -11,35 +11,12 @@ import ProofOfWork from "./ProofOfWork";
 import MetricsStrip from "./MetricsStrip";
 import ServiceFaq from "./ServiceFaq";
 import ScopingContactForm from "./ScopingContactForm";
-import { GEO_SERVICES, AEO_FAQS } from "@/lib/seo-aeo-geo-config";
+import { GEO_SERVICES, getAeoFaqsForSlug } from "@/lib/seo-aeo-geo-config";
 
 interface ServicePageClientProps {
   service: Service;
 }
 
-// Map slug to AEO FAQ slices from the config database
-function getAeoFaqsForSlug(slug: string) {
-  switch (slug) {
-    case "custom-software-development":
-      return AEO_FAQS.slice(5, 11);
-    case "ai-automation":
-      return AEO_FAQS.slice(11, 18);
-    case "saas-product-development":
-      return AEO_FAQS.slice(18, 24);
-    case "web-development":
-      return AEO_FAQS.slice(24, 30);
-    case "mobile-development":
-      return AEO_FAQS.slice(30, 36);
-    case "cloud-devops":
-      return AEO_FAQS.slice(36, 41);
-    case "api-integrations":
-      return AEO_FAQS.slice(41, 45);
-    case "product-engineering":
-      return AEO_FAQS.slice(45, 50);
-    default:
-      return [];
-  }
-}
 
 export default function ServicePageClient({ service }: ServicePageClientProps) {
   const pageRef = useServicePageAnimations();

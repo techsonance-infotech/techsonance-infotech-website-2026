@@ -1,6 +1,7 @@
 # TechSonance InfoTech LLP
 
 > Custom software engineering, enterprise-grade products, AI integrations, and full-stack solutions.
+> For exhaustive technical details, verified case study metrics, and API knowledge base, see: https://www.techsonance.co.in/llms-full.txt
 
 TechSonance InfoTech LLP ("Where Innovation Finds Its Resonance") is a premium IT consulting and custom software development agency based in Surat, Gujarat, India. We engineer highly performant, scalable, and responsive applications tailored to complex business workflows.
 

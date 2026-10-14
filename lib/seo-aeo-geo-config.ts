@@ -41,6 +41,8 @@ export interface GeoServiceDetail {
   projectTimeline: string;
 }
 
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.techsonance.co.in";
+
 // 1. Curated SEO Metadata for all key pages
 export const SEO_METADATA: Record<string, PageMetadata> = {
   home: {
@@ -58,7 +60,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Cloud & DevOps Services",
       "API Integration Services"
     ],
-    canonical: "https://techsonance.co.in",
+    canonical: BASE_URL,
     ogTitle: "TechSonance Infotech LLP - Software Development Company India",
     ogDescription: "Enterprise-grade Custom Software Development, AI Automation, SaaS platforms, and Product Engineering Services for global brands.",
     ogImage: "/images/og/home.png"
@@ -73,7 +75,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Startup Software Development Partner",
       "Software Development Company India"
     ],
-    canonical: "https://techsonance.co.in/about",
+    canonical: `${BASE_URL}/about`,
     ogTitle: "About Us | TechSonance Infotech LLP",
     ogDescription: "A premium software engineering organization specializing in scalable systems, AI automation, and cloud engineering.",
     ogImage: "/images/og/about.png"
@@ -88,7 +90,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "CRM Development Services",
       "Custom Software Development Company"
     ],
-    canonical: "https://techsonance.co.in/portfolio",
+    canonical: `${BASE_URL}/portfolio`,
     ogTitle: "Our Work Portfolio | TechSonance Infotech LLP",
     ogDescription: "Real-world engineering case studies, showing high-scale systems built for logistics, retail POS, and audio marketplaces.",
     ogImage: "/images/og/portfolio.png"
@@ -103,7 +105,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "AI Agent Development",
       "AI Integration Services"
     ],
-    canonical: "https://techsonance.co.in/blog",
+    canonical: `${BASE_URL}/blog`,
     ogTitle: "TechSonance Engineering Blog",
     ogDescription: "Expert insights, technical articles, and architectural patterns in modern web engineering and artificial intelligence.",
     ogImage: "/images/og/blog.png"
@@ -116,7 +118,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Software Developer Careers",
       "Software Engineer Jobs India"
     ],
-    canonical: "https://techsonance.co.in/careers",
+    canonical: `${BASE_URL}/careers`,
     ogTitle: "Join TechSonance Infotech LLP",
     ogDescription: "Build production-grade applications and shape the future of enterprise automation.",
     ogImage: "/images/og/careers.png"
@@ -130,7 +132,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "AI Automation Company",
       "Hire Software Developers"
     ],
-    canonical: "https://techsonance.co.in/contact",
+    canonical: `${BASE_URL}/contact`,
     ogTitle: "Contact TechSonance Infotech LLP",
     ogDescription: "Start scoping your software development project or AI integration workflow today.",
     ogImage: "/images/og/contact.png"
@@ -145,7 +147,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "CRM Development Services",
       "Software Development Company India"
     ],
-    canonical: "https://techsonance.co.in/services/custom-software-development",
+    canonical: `${BASE_URL}/services/custom-software-development`,
     ogTitle: "Custom Software Development Services | TechSonance",
     ogDescription: "Bespoke software platforms engineered around your specific operational workflows.",
     ogImage: "/images/og/services-custom.png"
@@ -160,7 +162,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Workflow Automation Solutions",
       "Business Process Automation"
     ],
-    canonical: "https://techsonance.co.in/services/ai-automation",
+    canonical: `${BASE_URL}/services/ai-automation`,
     ogTitle: "AI Automation Solutions | TechSonance Infotech LLP",
     ogDescription: "Intelligent workflow automation, AI agents, document processing pipelines, and data systems.",
     ogImage: "/images/og/services-ai.png"
@@ -174,7 +176,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Marketplace Development Company",
       "Enterprise Software Development"
     ],
-    canonical: "https://techsonance.co.in/services/saas-development",
+    canonical: `${BASE_URL}/services/saas-product-development`,
     ogTitle: "SaaS Product Development | TechSonance Infotech LLP",
     ogDescription: "Secure multi-tenant B2B and B2C SaaS platforms engineered for cloud scale.",
     ogImage: "/images/og/services-saas.png"
@@ -188,7 +190,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "React Development Company",
       "Node.js Development Company"
     ],
-    canonical: "https://techsonance.co.in/services/web-app-development",
+    canonical: `${BASE_URL}/services/web-development`,
     ogTitle: "Web Application Development | TechSonance Infotech LLP",
     ogDescription: "High-performance, dynamic, SEO-optimized web applications with sub-second loads.",
     ogImage: "/images/og/services-web.png"
@@ -202,7 +204,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "iOS App Development",
       "Offline-First Mobile Apps"
     ],
-    canonical: "https://techsonance.co.in/services/mobile-app-development",
+    canonical: `${BASE_URL}/services/mobile-development`,
     ogTitle: "Mobile App Development | TechSonance Infotech LLP",
     ogDescription: "Cross-platform mobile apps sharing 90%+ code with native performance.",
     ogImage: "/images/og/services-mobile.png"
@@ -216,7 +218,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "AWS Consulting Services",
       "DevOps Automation"
     ],
-    canonical: "https://techsonance.co.in/services/cloud-devops",
+    canonical: `${BASE_URL}/services/cloud-devops`,
     ogTitle: "Cloud & DevOps Engineering | TechSonance Infotech LLP",
     ogDescription: "Zero-downtime automated pipelines and auto-scaling cloud deployments.",
     ogImage: "/images/og/services-devops.png"
@@ -230,7 +232,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "CRM Development Services",
       "Business Process Automation"
     ],
-    canonical: "https://techsonance.co.in/services/api-integration",
+    canonical: `${BASE_URL}/services/api-integrations`,
     ogTitle: "API & System Integration | TechSonance Infotech LLP",
     ogDescription: "Secure, real-time bi-directional data flow across disparate enterprise systems.",
     ogImage: "/images/og/services-api.png"
@@ -244,7 +246,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Digital Transformation Services",
       "Technology Consulting Services"
     ],
-    canonical: "https://techsonance.co.in/services/product-engineering",
+    canonical: `${BASE_URL}/services/product-engineering`,
     ogTitle: "Product Engineering Services | TechSonance Infotech LLP",
     ogDescription: "From validated business requirements to modular, high-scale production systems.",
     ogImage: "/images/og/services-product.png"
@@ -253,7 +255,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
     title: "Privacy Policy | TechSonance Infotech LLP",
     description: "Read our privacy policy to understand how TechSonance Infotech LLP collects, uses, and safeguards your personal and project-related data.",
     keywords: ["Privacy Policy", "Data Security", "TechSonance", "Compliance"],
-    canonical: "https://techsonance.co.in/privacy-policy",
+    canonical: `${BASE_URL}/privacy-policy`,
     ogTitle: "Privacy Policy | TechSonance Infotech LLP",
     ogDescription: "Read our privacy policy to understand how TechSonance Infotech LLP collects, uses, and safeguards your personal and project-related data.",
     ogImage: "/images/og/privacy.png"
@@ -262,7 +264,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
     title: "Terms & Conditions | TechSonance Infotech LLP",
     description: "Review the terms and conditions governing the use of www.techsonance.co.in and the software development services provided by TechSonance Infotech LLP.",
     keywords: ["Terms and Conditions", "User Agreement", "Governing Law", "TechSonance"],
-    canonical: "https://techsonance.co.in/terms",
+    canonical: `${BASE_URL}/terms`,
     ogTitle: "Terms & Conditions | TechSonance Infotech LLP",
     ogDescription: "Review the terms and conditions governing the use of www.techsonance.co.in and the software development services provided by TechSonance Infotech LLP.",
     ogImage: "/images/og/terms.png"
@@ -277,7 +279,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Product Engineering Services",
       "Web Application Development Company"
     ],
-    canonical: "https://techsonance.co.in/services",
+    canonical: `${BASE_URL}/services`,
     ogTitle: "Software & AI Development Services | TechSonance Infotech LLP",
     ogDescription: "Enterprise-grade Custom Software Development, AI Automation, SaaS platforms, and Product Engineering Services.",
     ogImage: "/images/og/services.png"
@@ -760,3 +762,34 @@ export const GEO_SERVICES: Record<string, GeoServiceDetail> = {
     projectTimeline: "8 to 12 Weeks"
   }
 };
+
+/**
+ * Returns single source of truth AEO FAQs for each service slug
+ */
+export function getAeoFaqsForSlug(slug: string): AeoFaq[] {
+  switch (slug) {
+    case "custom-software-development":
+      return AEO_FAQS.slice(5, 11);
+    case "ai-automation":
+      return AEO_FAQS.slice(11, 18);
+    case "saas-product-development":
+    case "saas-development":
+      return AEO_FAQS.slice(18, 24);
+    case "web-development":
+    case "web-app-development":
+      return AEO_FAQS.slice(24, 30);
+    case "mobile-development":
+    case "mobile-app-development":
+      return AEO_FAQS.slice(30, 36);
+    case "cloud-devops":
+      return AEO_FAQS.slice(36, 41);
+    case "api-integrations":
+    case "api-integration":
+      return AEO_FAQS.slice(41, 45);
+    case "product-engineering":
+      return AEO_FAQS.slice(45, 50);
+    default:
+      return [];
+  }
+}
+

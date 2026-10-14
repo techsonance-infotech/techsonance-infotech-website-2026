@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
@@ -8,20 +8,23 @@ import { Icon } from "@/app/components/icons/Icon";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { Button } from "@/components/ui/button";
+import { trackContactFormSubmit } from "@/lib/analytics";
+
+function subscribeResize(callback: () => void) {
+  window.addEventListener("resize", callback);
+  return () => window.removeEventListener("resize", callback);
+}
+
+function getIsMobileSnapshot() {
+  return window.innerWidth < 768;
+}
+
+function getServerIsMobileSnapshot() {
+  return false;
+}
 
 export default function ContactClient() {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useSyncExternalStore(subscribeResize, getIsMobileSnapshot, getServerIsMobileSnapshot);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -134,6 +137,11 @@ export default function ContactClient() {
         throw new Error(errorData.error || "Something went wrong.");
       }
 
+      trackContactFormSubmit({
+        service: formData.interest,
+        subject: "Direct Contact Form",
+      });
+
       setFormStatus("success");
       showToast("Message sent! We'll be in touch within 24 hours.");
       setFormData({
@@ -147,9 +155,10 @@ export default function ContactClient() {
         website: "",
       });
       setTouched({});
-    } catch (err: any) {
+    } catch (err: unknown) {
       setFormStatus("idle");
-      showToast(err.message || "Failed to send message. Please try again.");
+      const msg = err instanceof Error ? err.message : "Failed to send message. Please try again.";
+      showToast(msg);
     }
   };
 
@@ -177,7 +186,7 @@ export default function ContactClient() {
 
           {/* Floating Glassmorphic Shapes (Light Theme) */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            {mounted && isMobile ? (
+            {isMobile ? (
               <>
                 <ElegantShape
                   delay={0.3}
@@ -262,11 +271,11 @@ export default function ContactClient() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6.5xl font-black text-slate-900 leading-tight mb-4 tracking-tight">
-              Let's Build <span className="text-[#1155CC]">Something Together</span>
+              Let&apos;s Build <span className="text-[#1155CC]">Something Together</span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-505 font-medium max-w-xl mx-auto leading-relaxed">
-              Tell us about your project - we'll get back within 24 hours.
+              Tell us about your project - we&apos;ll get back within 24 hours.
             </p>
           </div>
         </section>
@@ -425,7 +434,7 @@ export default function ContactClient() {
                   {/* Interested in Select Dropdown */}
                   <div className="space-y-1.5">
                     <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                      I'm interested in
+                      I&apos;m interested in
                     </label>
                     <select
                       value={formData.interest}

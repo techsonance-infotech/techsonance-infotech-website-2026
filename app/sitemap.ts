@@ -2,16 +2,10 @@ import { MetadataRoute } from "next";
 import { services } from "@/data/services";
 import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
+import { landingPages } from "@/data/landing-pages";
+import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://techsonance.co.in";
-
-// Map requested aliases to internal slugs
-const aliasSlugs = [
-  "saas-development",
-  "web-app-development",
-  "mobile-app-development",
-  "api-integration",
-];
+const STATIC_LAST_MOD = new Date("2026-10-14T00:00:00.000Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
@@ -29,18 +23,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Map primary static routes
   const staticUrls = routes.map((route) => ({
     url: `${BASE_URL}${route}`,
-    lastModified: new Date(),
+    lastModified: STATIC_LAST_MOD,
     changeFrequency: "weekly" as const,
     priority: route === "" ? 1.0 : 0.8,
   }));
 
-  // Map service routes (canonical + aliases)
-  const serviceSlugs = services.map((s) => s.slug);
-  const allServiceSlugs = [...serviceSlugs, ...aliasSlugs];
-  
-  const serviceUrls = allServiceSlugs.map((slug) => ({
-    url: `${BASE_URL}/services/${slug}`,
-    lastModified: new Date(),
+  // Map programmatic landing pages (locations, technology, specialized pages)
+  const landingPageUrls = Object.values(landingPages).map((lp) => ({
+    url: `${BASE_URL}${lp.route}`,
+    lastModified: STATIC_LAST_MOD,
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  }));
+
+  // Map service routes (primary canonical slugs only, no aliases)
+  const serviceUrls = services.map((s) => ({
+    url: `${BASE_URL}/services/${s.slug}`,
+    lastModified: STATIC_LAST_MOD,
     changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
@@ -48,18 +47,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Map portfolio project routes
   const projectUrls = projects.map((p) => ({
     url: `${BASE_URL}/portfolio/${p.slug}`,
-    lastModified: new Date(),
+    lastModified: STATIC_LAST_MOD,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  // Map blog post routes
-  const blogUrls = blogPosts.map((post) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.75,
-  }));
+  // Map blog post routes with real post dates
+  const blogUrls = blogPosts.map((post) => {
+    let postDate: Date;
+    try {
+      postDate = new Date(post.date);
+      if (isNaN(postDate.getTime())) {
+        postDate = STATIC_LAST_MOD;
+      }
+    } catch {
+      postDate = STATIC_LAST_MOD;
+    }
 
-  return [...staticUrls, ...serviceUrls, ...projectUrls, ...blogUrls];
+    return {
+      url: `${BASE_URL}/blog/${post.slug}`,
+      lastModified: postDate,
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    };
+  });
+
+  return [...staticUrls, ...landingPageUrls, ...serviceUrls, ...projectUrls, ...blogUrls];
 }
+
+

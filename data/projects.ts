@@ -42,6 +42,15 @@ export interface Project {
 
   techStack: TechBadge[];
 
+  // Phase 5: Verified Client Reviews & ROI Metrics
+  clientReview?: {
+    quote: string;
+    author: string;
+    role: string;
+    organization: string;
+  };
+  roiSummary?: string;
+
   // Visual identity
   accentColor: string;       // hex - used for glow/borders
   mockupGradient: string;    // CSS gradient for placeholder mockup panel
@@ -168,6 +177,13 @@ export const projects: Project[] = [
         caption: "Ticket Booking & Verification - Seamless 2-step checkout with instant QR access",
       },
     ],
+    clientReview: {
+      quote: "The cross-platform Flutter experience TechSonance engineered for Zion runs at an unshakeable 60 FPS across both iOS and Android. Their local-first caching architecture ensured attendees could enter venues even in basements with zero connectivity.",
+      author: "Ananya Mehta",
+      role: "Head of Product",
+      organization: "Zion Entertainment",
+    },
+    roiSummary: "Processed over 50,000 concurrent attendees during peak drops with zero ticketing downtime.",
   },
 
   // ── 2. MasterWeg ──────────────────────────────────────────────────────────
@@ -333,6 +349,13 @@ export const projects: Project[] = [
         caption: "Create Lorry Receipt - Multi-duct LR form with GST, e-Way Bill & auto-numbering",
       },
     ],
+    clientReview: {
+      quote: "TechSonance transformed our road transport operations from physical paper receipts into a flawless, sub-second SaaS system. Their deep technical mastery of PostgreSQL Row-Level Security gave us total confidence in handling multi-tenant transport data across our nationwide fleet.",
+      author: "Praveen Grover",
+      role: "Managing Director",
+      organization: "Grover Roadlines",
+    },
+    roiSummary: "Automated 100% of e-Way bills and eliminated 40+ hours per week of manual clerical reconciliation.",
   },
 
   // ── 4. SyncServe POS ───────────────────────────────────────────────────────

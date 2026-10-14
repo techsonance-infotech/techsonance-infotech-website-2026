@@ -1,0 +1,7 @@
+Contact: mailto:security@techsonance.co.in
+Contact: https://www.techsonance.co.in/contact
+Expires: 2027-10-14T00:00:00.000Z
+Preferred-Languages: en, hi, gu
+Canonical: https://www.techsonance.co.in/.well-known/security.txt
+Policy: https://www.techsonance.co.in/privacy-policy
+Hiring: https://www.techsonance.co.in/careers
