@@ -41,7 +41,12 @@ export interface GeoServiceDetail {
   projectTimeline: string;
 }
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.techsonance.co.in";
+const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+export const BASE_URL = (() => {
+  if (!envUrl) return "https://www.techsonance.co.in";
+  if (envUrl.includes("techsonance.co.in")) return "https://www.techsonance.co.in";
+  return envUrl;
+})();
 
 // 1. Curated SEO Metadata for all key pages
 export const SEO_METADATA: Record<string, PageMetadata> = {
