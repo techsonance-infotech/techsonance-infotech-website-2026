@@ -5,39 +5,45 @@ import SemiCircleDashboard from "./vision/SemiCircleDashboard";
 import Stats from "./vision/Stats";
 import { AvatarGroup, StatItem } from "./vision/types";
 
-// Unified grouped team avatar data with exactly 5 members per category
+// Real team members
+const SOMESHWARI = "/images/teams/Someshwari-rudra.PNG";
+const SAJESH = "/images/teams/sajesh-kumar.png";
+const SAIKIRAN = "/images/teams/saikiran-rudra.jpeg";
+const MANISH = "/images/teams/manish.jpeg";
+
+// Unified grouped team avatar data with real team members across categories
 const GROUPS: AvatarGroup[] = [
   {
     id: "g-core",
     title: "Our Core Team",
     members: [
-      { id: "ct-1", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-2", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-3", avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-4", avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      { id: "ct-1", avatarUrl: SAJESH },
+      { id: "ct-2", avatarUrl: SAIKIRAN },
+      { id: "ct-3", avatarUrl: SOMESHWARI },
+      { id: "ct-4", avatarUrl: MANISH },
+      { id: "ct-5", avatarUrl: SAJESH },
     ],
   },
   {
     id: "g-talent",
     title: "Talent",
     members: [
-      { id: "t-1", avatarUrl: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-2", avatarUrl: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-3", avatarUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-4", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      { id: "t-1", avatarUrl: SOMESHWARI },
+      { id: "t-2", avatarUrl: MANISH },
+      { id: "t-3", avatarUrl: SAIKIRAN },
+      { id: "t-4", avatarUrl: SAJESH },
+      { id: "t-5", avatarUrl: SOMESHWARI },
     ],
   },
   {
     id: "g-experts",
     title: "Experts",
     members: [
-      { id: "e-1", avatarUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-2", avatarUrl: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-3", avatarUrl: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-4", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      { id: "e-1", avatarUrl: SAIKIRAN },
+      { id: "e-2", avatarUrl: SOMESHWARI },
+      { id: "e-3", avatarUrl: SAJESH },
+      { id: "e-4", avatarUrl: MANISH },
+      { id: "e-5", avatarUrl: SAIKIRAN },
     ],
   },
 ];
