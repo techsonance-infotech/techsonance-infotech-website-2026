@@ -8,7 +8,8 @@ Over our 5+ years of building digital products, our team has delivered over 10+ 
 - **SyncServe POS**: High-throughput retail point-of-sale system supporting multi-terminal syncing, barcode scanning, offline caching, and instant GST invoices.
 - **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.
 - **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.
+- **CMS TechSonance**: Enterprise multi-tenant operations, HRMS, and client management platform featuring dual dashboards, 23-role granular RBAC, NFC/GPS attendance, automated payroll, project sprint/Kanban tracking, client CRM pipeline, and finance invoicing built with Next.js 15, React 19, Supabase (PostgreSQL), and Docker.
 - **AccuNest**: Comprehensive accounting and financial management suite for SMEs.
 
 ## Client Industries Served
-We build software across Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, and B2B E-Commerce.
+We build software across Enterprise Operations & IT Services, Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, and B2B E-Commerce.

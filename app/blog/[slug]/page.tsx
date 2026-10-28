@@ -89,18 +89,67 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     publishedTime = new Date("2026-10-14T00:00:00.000Z").toISOString();
   }
 
+  const postUrl = `${BASE_URL}/blog/${post.slug}`;
+
   const articleSchema = getArticleSchema(
     post.title,
     post.excerpt,
     heroImageUrl,
     publishedTime,
     post.authors.map((a) => a.name).join(" & "),
-    `${BASE_URL}/blog/${post.slug}`
+    postUrl
   );
+
+  const breadcrumbSchema = {
+    "@type": "BreadcrumbList",
+    "@id": `${postUrl}#breadcrumb`,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": `${BASE_URL}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": postUrl,
+      },
+    ],
+  };
+
+  const faqSchema = post.faqs && post.faqs.length > 0 ? {
+    "@type": "FAQPage",
+    "@id": `${postUrl}#faq`,
+    "mainEntity": post.faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  } : null;
+
+  const unifiedSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      articleSchema,
+      breadcrumbSchema,
+      ...(faqSchema ? [faqSchema] : []),
+    ],
+  };
 
   return (
     <>
-      <JsonLd schema={articleSchema} />
+      <JsonLd schema={unifiedSchema} />
       <BlogPostClient post={post} relatedPosts={relatedPosts} />
     </>
   );

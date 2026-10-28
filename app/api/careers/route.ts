@@ -83,7 +83,7 @@ ${message}
             </span>
             <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 5px 14px; margin-top: 18px;">
               <span style="font-size: 10px; color: #38bdf8; font-weight: 700; text-transform: uppercase; tracking-wider;">
-                💼 Intern Application
+                💼 Career / Partnership Application
               </span>
             </div>
           </div>

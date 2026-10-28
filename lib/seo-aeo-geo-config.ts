@@ -87,32 +87,40 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
   },
   portfolio: {
     title: "Our Work & Case Studies | TechSonance Infotech LLP Portfolio",
-    description: "Explore our software portfolio. We build high-throughput Marketplace platforms, scalable multi-tenant SaaS architectures, mobile solutions, and Custom ERPs for leading enterprises.",
+    description: "Explore our software portfolio. We build high-throughput Marketplace platforms, enterprise CMS & HRMS systems, scalable multi-tenant logistics SaaS, mobile ticketing apps, and custom accounting tools.",
     keywords: [
       "Marketplace Development Company",
       "SaaS Development Company",
+      "Enterprise HRMS Software",
+      "Logistics Fleet Management System",
       "ERP Development Services",
       "CRM Development Services",
-      "Custom Software Development Company"
+      "Custom Software Development Company",
+      "Flutter Mobile App Development"
     ],
     canonical: `${BASE_URL}/portfolio`,
     ogTitle: "Our Work Portfolio | TechSonance Infotech LLP",
-    ogDescription: "Real-world engineering case studies, showing high-scale systems built for logistics, retail POS, and audio marketplaces.",
+    ogDescription: "Real-world engineering case studies, showing high-scale systems built for enterprise operations, logistics, retail POS, mobile ticketing, and accounting.",
     ogImage: "/images/og/portfolio.png"
   },
   blog: {
-    title: "TechSonance Engineering Blog | Insights on AI & Software Architecture",
-    description: "Stay ahead with deep dives into Next.js, React, Node.js, AI Agent Development, and cloud-native software architecture from TechSonance Infotech LLP.",
+    title: "TechSonance Engineering Blog | Insights on AI, SaaS & Software Architecture",
+    description: "Stay ahead with deep dives into Next.js 16, React 19, Supabase RLS, multi-tenant SaaS architecture, Flutter mobile engineering, and enterprise AI automation from TechSonance Infotech LLP.",
     keywords: [
       "Next.js Development Company",
       "React Development Company",
       "Node.js Development Company",
+      "Multi-Tenant SaaS Architecture",
+      "Enterprise HRMS Software",
+      "Fleet Management System India",
+      "Flutter App Development",
+      "GST Invoicing Software",
       "AI Agent Development",
       "AI Integration Services"
     ],
     canonical: `${BASE_URL}/blog`,
-    ogTitle: "TechSonance Engineering Blog",
-    ogDescription: "Expert insights, technical articles, and architectural patterns in modern web engineering and artificial intelligence.",
+    ogTitle: "TechSonance Engineering Blog | Software Architecture & AI",
+    ogDescription: "Expert insights, technical articles, and architectural patterns in multi-tenant SaaS, enterprise HRMS, mobile engineering, and artificial intelligence.",
     ogImage: "/images/og/blog.png"
   },
   careers: {

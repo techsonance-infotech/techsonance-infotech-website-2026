@@ -24,7 +24,8 @@ export type ConversionEvent =
   | "scoping_form_submit"
   | "contact_form_submit"
   | "whatsapp_click"
-  | "case_study_view";
+  | "case_study_view"
+  | "blog_post_view";
 
 /**
  * Universal safe event tracking helper compatible with GA4 gtag() and GTM dataLayer.
@@ -135,5 +136,16 @@ export function trackCaseStudyView(projectSlug: string, projectTitle: string): v
   trackEvent("case_study_view", {
     project_slug: projectSlug,
     project_title: projectTitle,
+  });
+}
+
+/**
+ * Convenience helper: Track blog article view for GA4 / GTM
+ */
+export function trackBlogPostView(postSlug: string, postTitle: string, category: string): void {
+  trackEvent("blog_post_view", {
+    post_slug: postSlug,
+    post_title: postTitle,
+    category: category,
   });
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { motion, useScroll, useSpring } from "framer-motion";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
 import type { BlogPost } from "@/data/blog";
+import { trackBlogPostView } from "@/lib/analytics";
 
 interface BlogPostClientProps {
   post: BlogPost;
@@ -14,6 +15,10 @@ interface BlogPostClientProps {
 }
 
 export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
+  useEffect(() => {
+    trackBlogPostView(post.slug, post.title, post.category);
+  }, [post.slug, post.title, post.category]);
+
   // Scroll Progress Hook
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -145,6 +150,34 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 className="prose prose-slate max-w-none prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
+
+              {/* FAQ Section (AEO & FAQPage Schema Alignment) */}
+              {post.faqs && post.faqs.length > 0 && (
+                <div className="mt-12 pt-8 border-t border-slate-100">
+                  <div className="flex items-center gap-2 mb-6">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#1155CC]" />
+                    <h3 className="text-xl font-medium text-slate-900 font-sora">
+                      Frequently Asked Questions
+                    </h3>
+                  </div>
+                  <div className="space-y-4">
+                    {post.faqs.map((faq, idx) => (
+                      <div
+                        key={idx}
+                        className="p-5 rounded-2xl bg-slate-50/80 border border-slate-100 hover:border-slate-200 transition-colors"
+                      >
+                        <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-2 font-sora flex items-start gap-2">
+                          <span className="text-[#1155CC] font-mono shrink-0">Q{idx + 1}.</span>
+                          <span>{faq.question}</span>
+                        </h4>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Tag section (Mobile Only) */}
               <div className="flex flex-wrap gap-1.5 mt-8 pt-6 border-t border-slate-50 lg:hidden">

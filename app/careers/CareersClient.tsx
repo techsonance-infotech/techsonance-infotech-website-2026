@@ -113,7 +113,7 @@ export default function CareersClient() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    role: "Full Stack Developer Intern",
+    role: "Business Development Partner",
     message: "",
   });
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -228,7 +228,7 @@ export default function CareersClient() {
       setFormData({
         fullName: "",
         email: "",
-        role: "Full Stack Developer Intern",
+        role: "Business Development Partner",
         message: "",
       });
       setResumeFile(null);
@@ -483,8 +483,8 @@ export default function CareersClient() {
               {/* Single Team Collaboration Image */}
               <div className="overflow-hidden rounded-2xl border border-slate-100 shadow-md aspect-[16/10] relative w-full">
                 <SafeImage
-                  src="/images/about-team-collaboration.png"
-                  alt="Team collaboration"
+                  src="/images/careers-life-at-techsonance.jpg"
+                  alt="TechSonance engineers collaborating on ideas, product strategy, and scalable architectures"
                   fill
                   className="object-cover"
                 />
@@ -531,7 +531,115 @@ export default function CareersClient() {
             </p>
           </div>
 
+          {/* =========================================================================
+              ACTIVE OPEN POSITION: BUSINESS DEVELOPMENT PARTNER (Commission / Project-Based)
+              ========================================================================= */}
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 max-w-4xl mx-auto group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
+              <div>
+                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
+                  Strategic Partnership • Active Opening
+                </span>
+                <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">Business Development Partner</h4>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Remote / Flexible
+                  </span>
+                  <span className="text-slate-200">•</span>
+                  <span>Engagement: Project-Based / Commission-Based</span>
+                  <span className="text-slate-200">•</span>
+                  <span className="text-[#1155CC]">Earning: Highly Competitive Commission &amp; Deal Revenue Share</span>
+                </div>
+              </div>
+              <Button asChild variant="primary" size="sm" showArrow={true}>
+                <a href="#apply">Apply as Partner</a>
+              </Button>
+            </div>
+
+            <div className="py-8 space-y-8 relative z-10">
+              <div>
+                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">{"// Role Overview"}</h5>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  We are looking for an entrepreneurial, results-driven <span className="font-bold text-slate-800">Business Development Partner</span> to spearhead client acquisition, enterprise technology partnerships, and high-value project deals. In this performance-driven role, you will connect with international startup founders, CTOs, and enterprises seeking custom AI automation, scalable SaaS platforms, and modern web/mobile systems, earning uncapped commissions and project-based revenue shares on every deal closed.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
+                <div>
+                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Key Responsibilities"}</h5>
+                  <ul className="space-y-3">
+                    {[
+                      "Prospect, identify, and close new client deals for custom software, SaaS products, AI automation, and cloud engineering.",
+                      "Build and nurture relationships with international startup founders, CTOs, and enterprise executives across North America, Europe, UAE, and APAC.",
+                      "Pitch TechSonance's technical capabilities, case studies, and engineering delivery workflows to prospective clients.",
+                      "Collaborate with our solutions architecture team during technical scoping and contract negotiations.",
+                      "Drive recurring client retainers, strategic referral networks, and long-term agency partnerships."
+                    ].map((resp, i) => (
+                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
+                        <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
+                          ✓
+                        </span>
+                        <span>{resp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Requirements & Qualifications"}</h5>
+                  <ul className="space-y-3">
+                    {[
+                      "Proven track record in B2B tech sales, software agency business development, consulting, or client acquisition.",
+                      "Strong professional network or outbound prospecting expertise targeting founders, CTOs, and C-level decision-makers.",
+                      "Solid understanding of software solutions (Next.js, React, Node.js, Cloud, AI/LLMs) to communicate technical credibility.",
+                      "Exceptional communication, presentation, negotiation, and contract closing abilities.",
+                      "High autonomy and hunger to unlock uncapped commission earnings on 5- and 6-figure technology projects."
+                    ].map((req, i) => (
+                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
+                        <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
+                          ✓
+                        </span>
+                        <span>{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-slate-50">
+                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Domains & Solutions You Will Represent"}</h5>
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    { name: "Custom SaaS Development", bg: "bg-blue-50/50 border-blue-100 text-blue-700" },
+                    { name: "AI Automation & RAG Agents", bg: "bg-slate-50 border-slate-200 text-slate-800" },
+                    { name: "Full-Stack Web (Next.js/React/Node)", bg: "bg-emerald-50/50 border-emerald-100 text-emerald-700" },
+                    { name: "Cross-Platform Mobile (Flutter/RN)", bg: "bg-[#1155CC]/5 border-[#1155CC]/15 text-[#1155CC]" },
+                    { name: "Enterprise Cloud & DevOps", bg: "bg-cyan-50/50 border-cyan-100 text-cyan-700" },
+                    { name: "B2B Tech Sales", bg: "bg-indigo-50/50 border-indigo-100 text-indigo-750" },
+                    { name: "High Uncapped Commission", bg: "bg-violet-50/50 border-violet-100 text-violet-750" },
+                    { name: "Deal Closing & Retainers", bg: "bg-orange-50/50 border-orange-100 text-orange-700" }
+                  ].map((tech) => (
+                    <span
+                      key={tech.name}
+                      className={cn(
+                        "text-[10px] sm:text-xs font-mono font-semibold border px-3 py-1 rounded-lg transition-transform duration-200 hover:-translate-y-0.5 cursor-default shadow-2xs",
+                        tech.bg
+                      )}
+                    >
+                      {tech.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* =========================================================================
+              COMMENTED OUT: Full Stack Developer Intern (Saved for future reopening)
+              =========================================================================
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 max-w-4xl mx-auto group relative overflow-hidden mt-8 opacity-75">
             <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
             <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
@@ -630,6 +738,7 @@ export default function CareersClient() {
               </div>
             </div>
           </div>
+          */}
         </section>
 
         {/* ==========================================
@@ -769,7 +878,8 @@ export default function CareersClient() {
                     onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-bold"
                   >
-                    <option value="Full Stack Developer Intern">Full Stack Developer Intern</option>
+                    <option value="Business Development Partner">Business Development Partner (Commission / Project-Based)</option>
+                    {/* <option value="Full Stack Developer Intern">Full Stack Developer Intern</option> */}
                   </select>
                 </div>
 
@@ -830,7 +940,7 @@ export default function CareersClient() {
                     value={formData.message}
                     onChange={handleInputChange}
                     onBlur={() => setTouched(prev => ({ ...prev, message: true }))}
-                    placeholder="Briefly introduce yourself, mention links to your portfolio/GitHub, and why you are excited to join us..."
+                    placeholder="Briefly introduce yourself, your experience in software business development or sales, relevant target industries/networks, and why you are excited to partner with us..."
                     className={`w-full rounded-2xl border ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
                   />
                   {getValidationError("message") && (
