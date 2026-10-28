@@ -188,7 +188,7 @@ export const platform = {
         ],
       },
     ],
-    proofOfWork: ["accunest", "nfc-attendance"],
+    proofOfWork: ["cms-techsonance", "accunest", "nfc-attendance"],
     faqs: [
       { question: "How long before I see a working version?", answer: "Most projects have a clickable prototype within 3–4 weeks and a production-ready MVP in 8–12 weeks, depending on scope." },
       { question: "Will I own the source code?", answer: "Yes. You receive full IP ownership and repository access upon final payment. No licensing fees, no lock-in." },
@@ -393,7 +393,7 @@ const tenant = await provision({
         ],
       },
     ],
-    proofOfWork: ["freightflow", "syncserve-pos"],
+    proofOfWork: ["cms-techsonance", "freightflow", "syncserve-pos"],
     faqs: [
       { question: "How long before I see a working version?", answer: "A functional multi-tenant MVP with auth and billing typically ships in 10–14 weeks." },
       { question: "Will I own the source code?", answer: "100%. Full repository access, documentation, and deployment rights transfer to you." },
@@ -700,7 +700,7 @@ jobs:
         ],
       },
     ],
-    proofOfWork: ["freightflow", "syncserve-pos"],
+    proofOfWork: ["cms-techsonance", "freightflow", "syncserve-pos"],
     faqs: [
       { question: "Can you migrate us to AWS without downtime?", answer: "Yes. We use blue-green deployments and database replication for zero-downtime migrations." },
       { question: "How do you handle cost optimization?", answer: "Right-sizing instances, reserved capacity analysis, and automated shutdown of non-production resources." },

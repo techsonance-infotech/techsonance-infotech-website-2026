@@ -445,16 +445,125 @@ export const projects: Project[] = [
     ],
   },
 
-  // ── 5. TechSonance Marketplace ─────────────────────────────────────────────
+  // ── 5. CMS TechSonance ──────────────────────────────────────────────────────
+  {
+    slug: "cms-techsonance",
+    title: "CMS TechSonance",
+    tagline: "Enterprise Multi-Tenant Operations, HRMS & Client Management Ecosystem",
+    category: "SaaS Platform",
+    industry: "Enterprise Operations & IT Services",
+    liveUrl: "https://cms.techsonance.co.in/login",
+    featured: true,
+    featuredOrder: 5,
+    shortDescription:
+      "A production-grade multi-tenant enterprise operations and content management system consolidating HRMS, attendance, project sprints, client CRM, financial invoicing, payroll, and 23-role granular RBAC into one unified ecosystem.",
+    overview:
+      "CMS TechSonance is an enterprise operations and workforce governance platform engineered for TechSonance InfoTech LLP to consolidate fragmented operations into a unified pane of glass. Built with Next.js 15, React 19, and Supabase PostgreSQL with strict Row-Level Security (RLS), the system manages daily operations — spanning a comprehensive HRMS suite (dual-source NFC attendance, GPS geofencing, IP whitelisting, overtime computation, daily work reports, leave management, automated payroll, and expense claims), complete Project Management (sprint lifecycles, milestones, Kanban task boards, and Supabase document storage), Client Relationship Management (CRM) with communication histories and deal pipelines, plus billing and financial run-rate analytics — all governed by a 23-role permission matrix across 13 core modules.",
+    challenge:
+      "Fragmented operational silos, manual attendance logs, disjointed client invoicing, and lack of role-governed data isolation across departments.",
+    solution:
+      "Multi-tenant Next.js 15 + Supabase platform with Row-Level Security, NFC & GPS attendance tracking, automated payroll, Kanban project management, and 23-role RBAC.",
+    result:
+      "100% unified daily operations, zero buddy-punching, automated multi-currency invoicing, sub-second query speeds, and 53+ standardized REST endpoints.",
+    challenges: [
+      {
+        title: "Multi-Tenant Data Isolation",
+        description:
+          "Ensuring complete data separation and security between multiple organizational units sharing the same database infrastructure without accidental data leakage.",
+        icon: "🛡️",
+      },
+      {
+        title: "Dual Attendance & Geofence Fraud",
+        description:
+          "Merging legacy attendance logs with modern NFC tap-to-clock hardware, GPS geofencing, IP whitelisting, and weekend overtime approvals while eliminating buddy-punching.",
+        icon: "📍",
+      },
+      {
+        title: "23-Role Permission Complexity",
+        description:
+          "Managing fine-grained access rights (canView, canCreate, canEdit, canDelete, canApprove) across 23 distinct user tiers and 13 modules without maintainability overhead.",
+        icon: "🔐",
+      },
+      {
+        title: "Disjointed Operations & Billing",
+        description:
+          "Departments previously relied on disconnected spreadsheets, paper expense slips, and manual payroll calculations that caused administrative delays and billing discrepancies.",
+        icon: "💼",
+      },
+    ],
+    solutions: [
+      "Multi-tenant Supabase PostgreSQL architecture with Row-Level Security (RLS) guaranteeing total organizational data isolation at the database layer",
+      "Comprehensive HRMS Module with complete employee directory, department structuring, status tracking (active, on-leave, resigned), and employee work history timelines",
+      "Dual-source attendance engine combining NFC hardware readers (tag UID enrollment) and web check-ins, with GPS geofencing, IP whitelisting, and automatic overtime computation",
+      "Daily work reports & updates tracking employee project progress, submission compliance, missing update alerts, and presence categorization (present, half-day, leave)",
+      "Automated leave & holiday management featuring configurable per-organization leave policies (sick, casual, vacation, unpaid), balance tracking, and approval workflows",
+      "Server-side payroll processing engine with configurable pay cycles, draft-to-paid lifecycle status, bulk processing pagination, and secure Supabase payslip storage",
+      "Expense & reimbursement claim system with multi-category classification (Travel, Meals, Lodging, Office), receipt uploads, and multi-tier manager approval queues",
+      "End-to-end Project Management with full lifecycle tracking (planned → in_progress → completed → on_hold → cancelled), role-based member assignment, sprints, and milestones",
+      "Interactive Kanban task board with status lanes (todo → in_progress → in_review → done), priority scoring, due-date counters, and direct sprint linkage",
+      "Client Relationship Management (CRM) featuring client directories, contact logs, inquiry feeds, client-project mapping, document vaults, and business development deal pipelines",
+      "Finance & invoicing engine with itemized line calculations, tax rules, Stripe payment integrations, categorized expenses, and Recharts-powered financial run-rate analytics",
+      "Help Desk ticketing system with priority tiers (low, medium, high, urgent), threaded discussions, file attachments, and Firebase Cloud Messaging (FCM) push notifications",
+      "23-role permission matrix covering Executive, Management, Operations, Sales, Engineering, Creative, Entry, and External Client tiers with granular module guards",
+      "Auto-generated OpenAPI/Swagger documentation parsed dynamically via AST parsing across 53+ RESTful endpoints wrapped with standardized API handlers",
+    ],
+    metrics: [
+      { value: "23+", label: "User Roles with RBAC" },
+      { value: "53+", label: "RESTful API Endpoints" },
+      { value: "100%", label: "Multi-Tenant Data Isolation" },
+      { value: "6-in-1", label: "Operations Tools Consolidated" },
+    ],
+    techStack: [
+      { name: "Next.js 15", category: "frontend" },
+      { name: "React 19", category: "frontend" },
+      { name: "TypeScript", category: "frontend" },
+      { name: "Tailwind CSS 4", category: "frontend" },
+      { name: "Supabase (PostgreSQL)", category: "database" },
+      { name: "Radix UI", category: "frontend" },
+      { name: "Framer Motion", category: "frontend" },
+      { name: "Recharts", category: "frontend" },
+      { name: "Node.js", category: "backend" },
+      { name: "Zod", category: "backend" },
+      { name: "MongoDB", category: "database" },
+      { name: "Firebase FCM", category: "backend" },
+      { name: "Stripe", category: "backend" },
+      { name: "Docker", category: "infra" },
+    ],
+    accentColor: "#1155CC",
+    mockupGradient: "linear-gradient(135deg, #0F172A 0%, #1155CC 45%, #06B6D4 100%)",
+    screenshotPath: "/images/cms-techsonance/login-illustration.png",
+    screenshots: [
+      {
+        src: "/images/cms-techsonance/login-illustration.png",
+        caption: "CMS TechSonance Portal - Secure role-based authentication with session management and multi-tenant isolation",
+      },
+      {
+        src: "/images/cms-techsonance/login-left-banner.jpg",
+        caption: "Operations & HRMS Dashboard - Workforce directory, real-time NFC attendance, project tracking, and client CRM",
+      },
+      {
+        src: "/images/cms-techsonance/register-left-banner.png",
+        caption: "Multi-Tenant Workspace & Role Hub - Organization registration, team onboarding, and 23-role granular RBAC",
+      },
+    ],
+    clientReview: {
+      quote: "CMS TechSonance unified our entire firm's daily operations — from NFC attendance and leave approvals to sprint deliverables, client CRM, and monthly payroll. It eliminated dozens of messy spreadsheets and gave our leadership instant operational transparency.",
+      author: "Kunal Shah",
+      role: "Operations Director",
+      organization: "TechSonance Enterprise Client",
+    },
+    roiSummary: "Consolidated 6 separate SaaS subscriptions into a single platform and saved 25+ administrative hours each week.",
+  },
+
+  // ── 6. TechSonance Marketplace ─────────────────────────────────────────────
   {
     slug: "techsonance-marketplace",
     title: "Techsonance Marketplace",
     tagline: "A Multi-Vendor Commerce Platform at Scale.",
     category: "E-Commerce Platform",
     industry: "E-Commerce & Retail",
-    liveUrl: "https://cms.techsonance.co.in/login",
     featured: true,
-    featuredOrder: 5,
+    featuredOrder: 6,
     shortDescription:
       "A comprehensive multi-tenant e-commerce marketplace where customers browse and purchase, vendors manage their stores, and admins oversee the platform - all from one React application.",
     overview:
@@ -691,7 +800,7 @@ export const projects: Project[] = [
     category: "Mobile App",
     industry: "Community & Religious Events",
     featured: true,
-    featuredOrder: 6,
+    featuredOrder: 7,
     shortDescription:
       "A centralized mandal management platform for festivals, donations, expenses, events, members, vendors, announcements, duties, reporting, and community operations.",
     overview:

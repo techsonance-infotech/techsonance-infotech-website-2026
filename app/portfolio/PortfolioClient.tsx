@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 
 // ─── Hero stats ────────────────────────────────────────────────────────────────
 const heroStats = [
-  { value: 9, suffix: "+", label: "Products Shipped" },
+  { value: 10, suffix: "+", label: "Products Shipped" },
   { value: 6, suffix: "+", label: "Industries Served" },
   { value: 5, suffix: "+", label: "Years of Building" },
   { value: 100, suffix: "k+", label: "Users Impacted" },
