@@ -268,8 +268,8 @@ export default function AboutHero() {
 
               <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[520px] w-full overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white shadow-[0_20px_50px_rgba(17,85,204,0.06)] group">
                 <SafeImage
-                  src="/images/about-team-large.png"
-                  alt="TechSonance engineering team collaborating on production software"
+                  src="/images/about-techsonance-engineering-team.jpg"
+                  alt="TechSonance Infotech engineering team collaborating on production software and AI solutions in Surat"
                   fill
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   sizes="(max-width: 1024px) 100vw, 42vw"

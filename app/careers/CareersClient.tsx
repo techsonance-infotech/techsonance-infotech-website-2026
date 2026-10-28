@@ -483,8 +483,8 @@ export default function CareersClient() {
               {/* Single Team Collaboration Image */}
               <div className="overflow-hidden rounded-2xl border border-slate-100 shadow-md aspect-[16/10] relative w-full">
                 <SafeImage
-                  src="/images/about-team-collaboration.png"
-                  alt="Team collaboration"
+                  src="/images/careers-life-at-techsonance.jpg"
+                  alt="TechSonance engineers collaborating on ideas, product strategy, and scalable architectures"
                   fill
                   className="object-cover"
                 />
