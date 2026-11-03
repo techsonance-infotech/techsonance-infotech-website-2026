@@ -32,27 +32,6 @@ Format: `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, 
 ```
 Formatter is **Prettier** with `prettier-plugin-tailwindcss` (the one formatter; never debated in review).
 
-## package.json scripts (required)
-```json
-{
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "lint": "oxlint --deny-warnings",
-  "lint:fix": "oxlint --fix",
-  "format": "prettier --write .",
-  "format:check": "prettier --check .",
-  "typecheck": "tsc --noEmit",
-  "check:boundaries": "node scripts/check-boundaries.mjs",
-  "check:unused": "knip",
-  "test": "vitest run",
-  "test:rls": "supabase test db",
-  "test:e2e": "playwright test",
-  "db:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.types.ts",
-  "db:types:check": "npm run db:types && git diff --exit-code src/types/database.types.ts",
-  "check": "npm run typecheck && npm run lint && npm run format:check && npm run check:boundaries && npm run check:unused && npm run test && npm run build",
-  "prepare": "husky"
-}
 ```
 Never edit `check` to drop a step. Scripts only reference tools listed under "Required now".
 
@@ -100,7 +79,3 @@ Never edit `check` to drop a step. Scripts only reference tools listed under "Re
 - `.env.example` stays in sync with `lib/env/public.ts` and `lib/env/server.ts` in the same PR as any new variable; CI diffs the variable names.
 - Feature flags for risky releases; remove flags after rollout.
 
-## Documentation
-- `README.md`: setup, scripts, env vars, architecture overview, running Supabase locally, deploy steps.
-- Significant decisions as ADRs in `docs/adr/NNNN-title.md` (context, decision, consequences).
-- Update `.rules/` in the same PR when behaviour or conventions change; keep every file ≤ 12,000 characters (`AGENTS.md`).
