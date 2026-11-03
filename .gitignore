@@ -58,3 +58,7 @@ desktop.ini
 # logs
 *.log
 
+# Code intelligence & knowledge graphs
+.gitnexus/
+graphify-out/
+
