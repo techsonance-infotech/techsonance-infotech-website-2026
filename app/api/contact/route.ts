@@ -329,10 +329,10 @@ ${message}
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending email via SMTP:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to send email" },
+      { error: (error instanceof Error ? error.message : "Failed to send email") || "Failed to send email" },
       { status: 500 }
     );
   }
