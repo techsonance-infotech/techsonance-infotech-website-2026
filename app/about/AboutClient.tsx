@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import AboutHero from "@/app/components/about/AboutHero";

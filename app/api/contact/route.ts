@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendMail } from '@/lib/email';
+import { getEnv } from '@/lib/env';
 
 // In-memory rate limiting map
 const ipCache = new Map<string, { count: number; resetTime: number }>();
@@ -332,16 +333,22 @@ ${message}
       `;
     }
 
-    const mailOptions = {
-      from: `"${body.firstName ? `${body.firstName} ${body.lastName}` : body.name}" <${emailUser}>`,
+        const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
+    const result = await sendMail({
+      from: `"${senderName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
       html: htmlContent,
       replyTo: body.email,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error || "Failed to send email" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

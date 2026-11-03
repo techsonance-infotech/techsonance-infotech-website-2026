@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendMail } from "@/lib/email";
+import { getEnv } from "@/lib/env";
 
 export async function POST(request: Request) {
   try {
@@ -153,17 +154,22 @@ ${message}
       </div>
     `;
 
-    const mailOptions = {
-      from: `"${fullName}" <${emailUser}>`,
+        const result = await sendMail({
+      from: `"${fullName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
       html: htmlContent,
       replyTo: email,
       attachments: attachments,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error || "Failed to send application email" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

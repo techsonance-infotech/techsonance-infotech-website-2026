@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { getAllProjects, type Project } from "@/data/projects";
 import { TechBadge } from "@/app/components/projects/TechBadge";

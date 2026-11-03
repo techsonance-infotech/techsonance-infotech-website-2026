@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";

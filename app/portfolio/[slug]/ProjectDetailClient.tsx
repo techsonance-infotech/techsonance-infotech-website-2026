@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import Image from "next/image";
 import SafeImage from "@/app/components/SafeImage";
