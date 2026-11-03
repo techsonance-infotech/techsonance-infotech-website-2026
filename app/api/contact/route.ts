@@ -113,32 +113,10 @@ export async function POST(request: Request) {
       }
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = process.env.SMTP_PORT;
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS;
-    const adminEmail = process.env.ADMIN_EMAIL;
+        const env = getEnv();
+    const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
 
-    // Check if SMTP configuration is missing
-    if (!smtpHost || !smtpPort || !emailUser || !emailPass || !adminEmail) {
-      console.error("Missing SMTP environment variables");
-      return NextResponse.json(
-        { error: "Mail server configuration is missing on the server." },
-        { status: 500 }
-      );
-    }
-
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: parseInt(smtpPort),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    });
-
-    let subject = "New Contact Inquiry - TechSonance";
+let subject = "New Contact Inquiry - TechSonance";
     let textContent = "";
     let htmlContent = "";
 
