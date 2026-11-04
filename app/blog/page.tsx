@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BlogClient from "./BlogClient";
 import JsonLd from "@/app/components/JsonLd";
 import { BASE_URL, SEO_METADATA } from "@/lib/seo-aeo-geo-config";
-import { blogPosts } from "@/data/blog";
+import { getPostSource } from "@/lib/content/posts";
 
 export const metadata: Metadata = {
   title: SEO_METADATA.blog.title,
@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogListingPage() {
+export default async function BlogListingPage() {
+  const source = getPostSource();
+  const posts = await source.list();
   const blogUrl = `${BASE_URL}/blog`;
 
   const schema = {
@@ -36,7 +38,7 @@ export default function BlogListingPage() {
           "@id": `${BASE_URL}/#organization`,
           name: "TechSonance Infotech LLP",
         },
-        blogPost: blogPosts.map((post) => ({
+        blogPost: posts.map((post) => ({
           "@type": "BlogPosting",
           "@id": `${BASE_URL}/blog/${post.slug}`,
           headline: post.title,
@@ -69,7 +71,7 @@ export default function BlogListingPage() {
   return (
     <>
       <JsonLd schema={schema} />
-      <BlogClient />
+      <BlogClient initialPosts={posts} />
     </>
   );
 }

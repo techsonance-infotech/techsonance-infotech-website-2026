@@ -41,6 +41,27 @@ const envSchema = z.object({
   TURNSTILE_SITE_KEY: z.string().optional(),
   TURNSTILE_SECRET: z.string().optional(),
 
+  // Cache Revalidation
+  REVALIDATE_SECRET: z.string().optional(),
+
+  // AI Blog — QStash (Upstash)
+  QSTASH_TOKEN: z.string().optional(),
+  QSTASH_CURRENT_SIGNING_KEY: z.string().optional(),
+  QSTASH_NEXT_SIGNING_KEY: z.string().optional(),
+
+  // Cloudinary Configuration
+  CLOUDINARY_CLOUD_NAME: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string().optional(),
+  CLOUDINARY_URL: z.string().optional(),
+
+  // AI Blog Settings
+  AI_BLOG_SITE_ID: z.string().optional(),
+  AI_BLOG_APPROVER_EMAIL: z.string().email().optional().default("info@techsonance.co.in"),
+  AI_BLOG_APPROVAL_EXPIRY_HOURS: z.coerce.number().optional().default(72),
+  AI_BLOG_DAILY_CAP: z.coerce.number().optional().default(1),
+  AI_BLOG_WEEKLY_CAP: z.coerce.number().optional().default(3),
+
   // Content Abstraction Layer Sources
   CONTENT_SOURCE_BLOG: z.enum(["legacy", "cms"]).optional().default("legacy"),
   CONTENT_SOURCE_CAREERS: z.enum(["legacy", "cms"]).optional().default("legacy"),

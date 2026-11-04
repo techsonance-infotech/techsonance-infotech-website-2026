@@ -6,7 +6,7 @@ import { motion, useScroll, useSpring } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
-import type { BlogPost } from "@/data/blog";
+import type { BlogPost } from "@/lib/content/types";
 import { trackBlogPostView } from "@/lib/analytics";
 
 interface BlogPostClientProps {
@@ -172,7 +172,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                   <div className="space-y-4">
                     {post.faqs.map((faq, idx) => (
                       <div
-                        key={idx}
+                        key={faq.question}
                         className="p-5 rounded-2xl bg-slate-50/80 border border-slate-100 hover:border-slate-200 transition-colors"
                       >
                         <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-2 font-sora flex items-start gap-2">

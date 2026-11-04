@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { blogPosts, getPostBySlug } from "@/data/blog";
+import { getPostSource } from "@/lib/content/posts";
 import BlogPostClient from "./BlogPostClient";
 import JsonLd, { getArticleSchema } from "@/app/components/JsonLd";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
@@ -9,15 +9,18 @@ interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
+export async function generateStaticParams() {
+  const source = getPostSource();
+  const slugs = await source.slugs();
+  return slugs.map((slug) => ({
+    slug,
   }));
 }
 
 export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const source = getPostSource();
+  const post = await source.get(slug);
 
   if (!post) {
     return { title: "Post Not Found | TechSonance Blog" };
@@ -68,13 +71,15 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const source = getPostSource();
+  const post = await source.get(slug);
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const allPosts = await source.list();
+  const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const heroImageUrl = post.heroImage.startsWith("http")
     ? post.heroImage

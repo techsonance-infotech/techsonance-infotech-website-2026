@@ -1,4 +1,5 @@
 export * from "./base.schema";
+export * from "./core/user.schema";
 export * from "./core/site.schema";
 export * from "./core/author.schema";
 export * from "./core/category.schema";

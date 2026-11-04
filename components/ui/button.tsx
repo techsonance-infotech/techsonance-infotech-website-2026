@@ -1,31 +1,33 @@
-import * as React from "react";
-import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Icon } from "@/app/components/icons/Icon";
+import { Slot } from "radix-ui";
+import type * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-sans font-semibold uppercase tracking-wide transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-center select-none relative z-10",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap outline-none transition-[scale] duration-(--godui-duration-base) ease-spring-bouncy active:scale-[0.97] motion-reduce:transition-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default:
-          "group cursor-pointer rounded-full bg-[#1155CC] text-white shadow-[0_4px_14px_rgba(17,85,204,0.35)] hover:-translate-y-0.5 hover:bg-[#0d3f99] hover:shadow-[0_10px_28px_rgba(17,85,204,0.45)] active:translate-y-0 active:shadow-[0_4px_14px_rgba(17,85,204,0.35)]",
-        primary:
-          "group cursor-pointer rounded-full bg-[#1155CC] text-white shadow-[0_4px_14px_rgba(17,85,204,0.35)] hover:-translate-y-0.5 hover:bg-[#0d3f99] hover:shadow-[0_10px_28px_rgba(17,85,204,0.45)] active:translate-y-0 active:shadow-[0_4px_14px_rgba(17,85,204,0.35)]",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
         outline:
-          "group cursor-pointer rounded-full border border-gray-300 text-gray-800 hover:-translate-y-0.5 hover:border-[#1155CC] hover:text-[#1155CC] hover:shadow-[0_8px_20px_rgba(17,85,204,0.15)] active:translate-y-0 bg-transparent",
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
-          "group cursor-pointer rounded-full border border-gray-300 text-gray-800 hover:-translate-y-0.5 hover:border-[#1155CC] hover:text-[#1155CC] hover:shadow-[0_8px_20px_rgba(17,85,204,0.15)] active:translate-y-0 bg-transparent",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "rounded-full hover:bg-gray-100 hover:text-gray-900 transition-colors font-medium normal-case tracking-normal",
-        link: "text-[#1155CC] underline-offset-4 hover:underline font-medium normal-case tracking-normal p-0 h-auto bg-transparent",
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline active:scale-100",
       },
       size: {
-        default: "px-5 py-3 sm:px-7 sm:py-3.5 text-xs sm:text-sm min-h-[44px] sm:min-h-[48px]",
-        sm: "px-4 py-2 sm:px-5 sm:py-2.5 text-[11px] sm:text-xs min-h-[38px] sm:min-h-[40px]",
-        lg: "px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base min-h-[50px] sm:min-h-[54px]",
-        icon: "p-2.5 sm:p-3 aspect-square",
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-9",
+        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-8",
+        "icon-lg": "size-10",
       },
     },
     defaultVariants: {
@@ -35,60 +37,27 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  showArrow?: boolean;
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  }) {
+  const Comp = asChild ? Slot.Root : "button";
+
+  return (
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
 }
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "default",
-      size = "default",
-      asChild = false,
-      showArrow = false,
-      children,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
-
-    const isPrimary = variant === "default" || variant === "primary";
-    const isSecondary = variant === "outline" || variant === "secondary";
-
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }), "overflow-hidden")}
-        ref={ref}
-        {...props}
-      >
-        <Slottable>{children}</Slottable>
-        {isPrimary && (
-          // subtle diagonal sheen that sweeps across on hover
-          <span
-            className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent
-            transition-transform duration-700 ease-out group-hover:translate-x-full z-0"
-          />
-        )}
-        {showArrow && isPrimary && (
-          <Icon
-            name="arrow"
-            className="relative h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1 shrink-0"
-          />
-        )}
-        {showArrow && isSecondary && (
-          <Icon
-            name="arrow"
-            className="h-4 w-4 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover:translate-x-0 group-hover:opacity-100 shrink-0"
-          />
-        )}
-      </Comp>
-    );
-  },
-);
-Button.displayName = "Button";
 
 export { Button, buttonVariants };

@@ -21,6 +21,10 @@ import { LLMRouterService } from "../services/llm-router.service";
 import { ChatStorageService } from "../services/chat-storage.service";
 import { AnalyticsService } from "../services/analytics.service";
 import { ContentDbService } from "../services/content-db.service";
+import { MediaService } from "../services/media.service";
+import { AdminPostsService } from "../services/admin-posts.service";
+import { AdminJobsService } from "../services/admin-jobs.service";
+import { AdminAuthService } from "../services/admin-auth.service";
 
 let rootContainer: Container | null = null;
 
@@ -40,6 +44,10 @@ export function configureContainer(container: Container): Container {
   container.bind(ChatStorageService);
   container.bind(AnalyticsService);
   container.bind(ContentDbService);
+  container.bind(MediaService);
+  container.bind(AdminPostsService);
+  container.bind(AdminJobsService);
+  container.bind(AdminAuthService);
   return container;
 }
 

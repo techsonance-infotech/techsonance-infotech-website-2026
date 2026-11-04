@@ -6,22 +6,28 @@ import { motion, AnimatePresence } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
-import { blogPosts, type BlogPost } from "@/data/blog";
+import { blogPosts } from "@/data/blog";
+import type { BlogPost } from "@/lib/content/types";
 
 const categories = ["All", "Software Engineering", "AI & Automation", "Product Design"];
 
-export default function BlogClient() {
+interface BlogClientProps {
+  initialPosts?: BlogPost[];
+}
+
+export default function BlogClient({ initialPosts }: BlogClientProps) {
+  const posts = initialPosts ?? blogPosts;
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredPosts =
     selectedCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((post) => post.category === selectedCategory);
+      ? posts
+      : posts.filter((post) => post.category === selectedCategory);
 
   // Use the first post as featured
-  const featuredPost = blogPosts[0];
+  const featuredPost = posts[0];
   const gridPosts = filteredPosts.filter(
-    (post) => post.slug !== featuredPost.slug || selectedCategory !== "All",
+    (post) => post.slug !== featuredPost?.slug || selectedCategory !== "All",
   );
 
   return (
