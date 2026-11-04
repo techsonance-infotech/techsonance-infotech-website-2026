@@ -4,7 +4,7 @@ import type { LLMChatRequest, LLMProvider } from "./types";
 
 export function routeChat(
   req: LLMChatRequest,
-  customProviders?: LLMProvider[]
+  customProviders?: LLMProvider[],
 ): AsyncIterable<string> {
   return getContainer().get(LLMRouterService).routeChat(req, customProviders);
 }

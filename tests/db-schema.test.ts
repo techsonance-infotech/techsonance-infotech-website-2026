@@ -5,7 +5,7 @@ import * as path from "node:path";
 describe("Database Schema & Migration Verification", () => {
   const migrationPath = path.resolve(
     process.cwd(),
-    "supabase/migrations/20261104120000_agency_admin_phase1.sql"
+    "supabase/migrations/20261104120000_agency_admin_phase1.sql",
   );
 
   it("should have the phase 1 migration file present", () => {
@@ -34,7 +34,10 @@ describe("Database Schema & Migration Verification", () => {
   it("should create all 9 core tables with CREATE TABLE IF NOT EXISTS", () => {
     const sql = getSql();
     for (const table of expectedTables) {
-      const regex = new RegExp(`CREATE\\s+TABLE\\s+(IF\\s+NOT\\s+EXISTS\\s+)?(public\\.)?${table}\\b`, "i");
+      const regex = new RegExp(
+        `CREATE\\s+TABLE\\s+(IF\\s+NOT\\s+EXISTS\\s+)?(public\\.)?${table}\\b`,
+        "i",
+      );
       expect(sql).toMatch(regex);
     }
   });
@@ -44,7 +47,7 @@ describe("Database Schema & Migration Verification", () => {
     for (const table of expectedTables) {
       const regex = new RegExp(
         `ALTER\\s+TABLE\\s+(ONLY\\s+)?(public\\.)?${table}\\s+ENABLE\\s+ROW\\s+LEVEL\\s+SECURITY`,
-        "i"
+        "i",
       );
       expect(sql).toMatch(regex);
     }
@@ -54,16 +57,24 @@ describe("Database Schema & Migration Verification", () => {
     const sql = getSql();
 
     // Check membership roles
-    expect(sql).toMatch(/check\s*\(\s*role\s+in\s*\(\s*'owner',\s*'admin',\s*'editor',\s*'author',\s*'viewer'\s*\)\s*\)/i);
+    expect(sql).toMatch(
+      /check\s*\(\s*role\s+in\s*\(\s*'owner',\s*'admin',\s*'editor',\s*'author',\s*'viewer'\s*\)\s*\)/i,
+    );
 
     // Check post status
-    expect(sql).toMatch(/check\s*\(\s*status\s+in\s*\(\s*'DRAFT',\s*'IN_REVIEW',\s*'PUBLISHED',\s*'ARCHIVED'\s*\)\s*\)/i);
+    expect(sql).toMatch(
+      /check\s*\(\s*status\s+in\s*\(\s*'DRAFT',\s*'IN_REVIEW',\s*'PUBLISHED',\s*'ARCHIVED'\s*\)\s*\)/i,
+    );
 
     // Check job status
-    expect(sql).toMatch(/check\s*\(\s*status\s+in\s*\(\s*'DRAFT',\s*'OPEN',\s*'CLOSED',\s*'ARCHIVED'\s*\)\s*\)/i);
+    expect(sql).toMatch(
+      /check\s*\(\s*status\s+in\s*\(\s*'DRAFT',\s*'OPEN',\s*'CLOSED',\s*'ARCHIVED'\s*\)\s*\)/i,
+    );
 
     // Check application status
-    expect(sql).toMatch(/check\s*\(\s*status\s+in\s*\(\s*'NEW',\s*'REVIEWING',\s*'SHORTLISTED',\s*'INTERVIEW',\s*'OFFERED',\s*'REJECTED'\s*\)\s*\)/i);
+    expect(sql).toMatch(
+      /check\s*\(\s*status\s+in\s*\(\s*'NEW',\s*'REVIEWING',\s*'SHORTLISTED',\s*'INTERVIEW',\s*'OFFERED',\s*'REJECTED'\s*\)\s*\)/i,
+    );
 
     // Unique constraints
     expect(sql).toMatch(/UNIQUE\s*\(\s*user_id\s*,\s*site_id\s*\)/i);

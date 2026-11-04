@@ -1,3 +1,4 @@
+import "server-only";
 import { Container, type Provider } from "@needle-di/core";
 import { BOT_CONFIG } from "../config";
 import { getEnv } from "../env";
@@ -8,7 +9,7 @@ import {
   DRIZZLE_DB_TOKEN,
 } from "./tokens";
 import { getSharedSupabaseClient } from "../supabase/db-client";
-import { getDrizzleDb } from "../db/drizzle";
+import { getDrizzleDb } from "../database";
 import { RateLimiterService } from "../services/ratelimit.service";
 import { EmailService } from "../services/email.service";
 import { BookingService } from "../services/booking.service";

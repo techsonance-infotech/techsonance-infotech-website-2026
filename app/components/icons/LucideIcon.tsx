@@ -37,7 +37,7 @@ import {
   TrendingUp,
   Building,
   AlertTriangle,
-  Siren
+  Siren,
 } from "lucide-react";
 
 const EMOJI_MAP: Record<string, React.ComponentType<any>> = {
@@ -83,7 +83,7 @@ const EMOJI_MAP: Record<string, React.ComponentType<any>> = {
 export default function EmojiOrLucideIcon({
   icon,
   className = "w-5 h-5",
-  size
+  size,
 }: {
   icon: string;
   className?: string;

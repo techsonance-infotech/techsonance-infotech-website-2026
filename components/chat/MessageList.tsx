@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { Bot, User } from "lucide-react";
-import type { Msg } from "@/lib/db";
+import type { Msg } from "@/lib/chat/storage";
 import { TypingDots } from "./TypingDots";
 import { BookingCard } from "./BookingCard";
 import { QuickReplies } from "./QuickReplies";
@@ -73,16 +73,16 @@ export function MessageList({
             {/* Avatar */}
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-white font-medium text-[11px] shadow-2xs ${
-                isUser
-                  ? "bg-slate-700"
-                  : "bg-gradient-to-tr from-[#0F52BA] to-[#008BD9]"
+                isUser ? "bg-slate-700" : "bg-gradient-to-tr from-[#0F52BA] to-[#008BD9]"
               }`}
             >
               {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
             </div>
 
             {/* Bubble Container */}
-            <div className={`space-y-1.5 ${msg.showBooking ? "w-full max-w-full" : "max-w-[85%]"} ${isUser ? "items-end text-right" : "items-start text-left"}`}>
+            <div
+              className={`space-y-1.5 ${msg.showBooking ? "w-full max-w-full" : "max-w-[85%]"} ${isUser ? "items-end text-right" : "items-start text-left"}`}
+            >
               <div
                 className={`p-3.5 rounded-2xl leading-relaxed whitespace-pre-wrap ${
                   isUser
@@ -94,16 +94,12 @@ export function MessageList({
               </div>
 
               {/* Timestamp */}
-              <div className="text-[10px] text-slate-400 px-1">
-                {formatTime(msg.ts)}
-              </div>
+              <div className="text-[10px] text-slate-400 px-1">{formatTime(msg.ts)}</div>
 
               {/* Render BookingCard if flagged */}
               {msg.showBooking && (
                 <div className="pt-1 w-full">
-                  <BookingCard
-                    recentMessages={recentMessagesForBooking}
-                  />
+                  <BookingCard recentMessages={recentMessagesForBooking} />
                 </div>
               )}
 
@@ -125,7 +121,9 @@ export function MessageList({
             <Bot className="w-3.5 h-3.5" />
           </div>
 
-          <div className={`space-y-1.5 ${streamingShowBooking ? "w-full max-w-full" : "max-w-[85%]"}`}>
+          <div
+            className={`space-y-1.5 ${streamingShowBooking ? "w-full max-w-full" : "max-w-[85%]"}`}
+          >
             {streamingText ? (
               <div className="p-3.5 rounded-2xl rounded-tl-xs bg-white text-slate-800 border border-slate-100 shadow-2xs leading-relaxed whitespace-pre-wrap">
                 {streamingText}
@@ -136,9 +134,7 @@ export function MessageList({
 
             {streamingShowBooking && (
               <div className="pt-1 w-full">
-                <BookingCard
-                  recentMessages={recentMessagesForBooking}
-                />
+                <BookingCard recentMessages={recentMessagesForBooking} />
               </div>
             )}
           </div>

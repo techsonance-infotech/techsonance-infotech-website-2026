@@ -24,7 +24,11 @@ function getServerIsMobileSnapshot() {
 }
 
 export default function ContactClient() {
-  const isMobile = useSyncExternalStore(subscribeResize, getIsMobileSnapshot, getServerIsMobileSnapshot);
+  const isMobile = useSyncExternalStore(
+    subscribeResize,
+    getIsMobileSnapshot,
+    getServerIsMobileSnapshot,
+  );
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -100,7 +104,8 @@ export default function ContactClient() {
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
   const cleanPhoneLength = formData.phone.replace(/\D/g, "").length;
-  const isPhoneValid = formData.countryCode === "+91" ? cleanPhoneLength === 10 : cleanPhoneLength >= 7;
+  const isPhoneValid =
+    formData.countryCode === "+91" ? cleanPhoneLength === 10 : cleanPhoneLength >= 7;
   const messageWordsCount = formData.message.trim().split(/\s+/).filter(Boolean).length;
   const isMessageValid = messageWordsCount > 0 && messageWordsCount <= 1000;
 
@@ -166,7 +171,6 @@ export default function ContactClient() {
     <>
       <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
-
         {/* Ambient background decoration */}
         <div className="absolute top-20 right-0 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
         <div className="absolute top-[40%] left-0 w-[250px] h-[250px] sm:w-[500px] sm:h-[500px] bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
@@ -177,10 +181,11 @@ export default function ContactClient() {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl pointer-events-none z-0" />
 
           {/* Dot Grid Background */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, #1155CC 1.5px, transparent 0)`,
-              backgroundSize: "28px 28px"
+              backgroundSize: "28px 28px",
             }}
           />
 
@@ -283,12 +288,9 @@ export default function ContactClient() {
         {/* Two Column Layout (60/40 Split) */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-
             {/* Left Column (60%): Contact Form */}
             <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)]">
-              <h2 className="text-xl sm:text-2xl font-medium text-black mb-6">
-                Send Us a Message
-              </h2>
+              <h2 className="text-xl sm:text-2xl font-medium text-black mb-6">Send Us a Message</h2>
 
               {formStatus === "success" ? (
                 <motion.div
@@ -301,19 +303,15 @@ export default function ContactClient() {
                   </div>
                   <h3 className="text-xl font-bold text-black mb-3">Message Sent Successfully</h3>
                   <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-8">
-                    Thank you for reaching out. A senior engineer will review your project details and get back to you within 24 hours.
+                    Thank you for reaching out. A senior engineer will review your project details
+                    and get back to you within 24 hours.
                   </p>
-                  <Button
-                    onClick={() => setFormStatus("idle")}
-                    variant="secondary"
-                    size="sm"
-                  >
+                  <Button onClick={() => setFormStatus("idle")} variant="secondary" size="sm">
                     Send another message
                   </Button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleFormSubmit} className="space-y-6">
-
                   {/* Honeypot field to trap spam bots */}
                   <div style={{ display: "none" }} aria-hidden="true">
                     <input
@@ -338,14 +336,19 @@ export default function ContactClient() {
                         placeholder="John"
                         value={formData.firstName}
                         onChange={(e) => {
-                          setFormData({ ...formData, firstName: e.target.value.replace(/[^a-zA-Z\s-]/g, "") });
-                          setTouched(prev => ({ ...prev, firstName: true }));
+                          setFormData({
+                            ...formData,
+                            firstName: e.target.value.replace(/[^a-zA-Z\s-]/g, ""),
+                          });
+                          setTouched((prev) => ({ ...prev, firstName: true }));
                         }}
-                        onBlur={() => setTouched(prev => ({ ...prev, firstName: true }))}
+                        onBlur={() => setTouched((prev) => ({ ...prev, firstName: true }))}
                         className={`w-full px-4 py-3 bg-white border ${getValidationError("firstName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
                       />
                       {getValidationError("firstName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("firstName")}</p>
+                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                          {getValidationError("firstName")}
+                        </p>
                       )}
                     </div>
                     <div className="space-y-1.5">
@@ -358,14 +361,19 @@ export default function ContactClient() {
                         placeholder="Doe"
                         value={formData.lastName}
                         onChange={(e) => {
-                          setFormData({ ...formData, lastName: e.target.value.replace(/[^a-zA-Z\s-]/g, "") });
-                          setTouched(prev => ({ ...prev, lastName: true }));
+                          setFormData({
+                            ...formData,
+                            lastName: e.target.value.replace(/[^a-zA-Z\s-]/g, ""),
+                          });
+                          setTouched((prev) => ({ ...prev, lastName: true }));
                         }}
-                        onBlur={() => setTouched(prev => ({ ...prev, lastName: true }))}
+                        onBlur={() => setTouched((prev) => ({ ...prev, lastName: true }))}
                         className={`w-full px-4 py-3 bg-white border ${getValidationError("lastName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
                       />
                       {getValidationError("lastName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("lastName")}</p>
+                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                          {getValidationError("lastName")}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -382,13 +390,15 @@ export default function ContactClient() {
                       value={formData.email}
                       onChange={(e) => {
                         setFormData({ ...formData, email: e.target.value });
-                        setTouched(prev => ({ ...prev, email: true }));
+                        setTouched((prev) => ({ ...prev, email: true }));
                       }}
-                      onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
+                      onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                       className={`w-full px-4 py-3 bg-white border ${getValidationError("email") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
                     />
                     {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("email")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("email")}
+                      </p>
                     )}
                   </div>
 
@@ -414,20 +424,24 @@ export default function ContactClient() {
                       <input
                         type="tel"
                         required
-                        placeholder={formData.countryCode === "+91" ? "99099 12345" : "Phone number"}
+                        placeholder={
+                          formData.countryCode === "+91" ? "99099 12345" : "Phone number"
+                        }
                         value={formData.phone}
                         onChange={(e) => {
                           const val = e.target.value;
                           const cleanVal = val.replace(/[^0-9\s-()]/g, "");
                           setFormData({ ...formData, phone: cleanVal });
-                          setTouched(prev => ({ ...prev, phone: true }));
+                          setTouched((prev) => ({ ...prev, phone: true }));
                         }}
-                        onBlur={() => setTouched(prev => ({ ...prev, phone: true }))}
+                        onBlur={() => setTouched((prev) => ({ ...prev, phone: true }))}
                         className={`flex-1 min-w-0 px-4 py-3 bg-white border ${getValidationError("phone") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
                       />
                     </div>
                     {getValidationError("phone") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("phone")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("phone")}
+                      </p>
                     )}
                   </div>
 
@@ -462,13 +476,15 @@ export default function ContactClient() {
                       value={formData.message}
                       onChange={(e) => {
                         setFormData({ ...formData, message: e.target.value });
-                        setTouched(prev => ({ ...prev, message: true }));
+                        setTouched((prev) => ({ ...prev, message: true }));
                       }}
-                      onBlur={() => setTouched(prev => ({ ...prev, message: true }))}
+                      onBlur={() => setTouched((prev) => ({ ...prev, message: true }))}
                       className={`w-full px-4 py-3 bg-white border ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all resize-none`}
                     />
                     {getValidationError("message") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("message")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("message")}
+                      </p>
                     )}
                   </div>
 
@@ -489,14 +505,12 @@ export default function ContactClient() {
                       "Send Message"
                     )}
                   </Button>
-
                 </form>
               )}
             </div>
 
             {/* Right Column (40%): Trust/Info Panel */}
             <div className="lg:col-span-5 space-y-8">
-
               {/* Book Call Card */}
               <div className="bg-gradient-to-br from-[#0F172A] to-[#1155CC] border border-white/5 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
                 {/* Decorative radial glows */}
@@ -508,12 +522,11 @@ export default function ContactClient() {
                     <Icon name="bolt" className="w-5 h-5 text-white" />
                   </div>
 
-                  <h3 className="text-xl font-medium mb-2 text-white">
-                    Or book a call directly
-                  </h3>
+                  <h3 className="text-xl font-medium mb-2 text-white">Or book a call directly</h3>
 
                   <p className="text-slate-300 text-xs font-medium leading-relaxed mb-8">
-                    Prefer a live conversation? Choose a time slot that works best for you and sync directly with our technical lead.
+                    Prefer a live conversation? Choose a time slot that works best for you and sync
+                    directly with our technical lead.
                   </p>
 
                   <Button
@@ -525,8 +538,6 @@ export default function ContactClient() {
                   </Button>
                 </div>
               </div>
-
-
 
               {/* Corporate Address & Contact info card */}
               <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)] space-y-6">
@@ -544,7 +555,8 @@ export default function ContactClient() {
                         Our Location
                       </h5>
                       <p className="text-xs font-semibold text-[#22B6F6] leading-relaxed">
-                        UG-15, Palladium Plaza, Vip Road,<br />
+                        UG-15, Palladium Plaza, Vip Road,
+                        <br />
                         Vesu, Surat, Gujarat - 395007, India
                       </p>
                     </div>
@@ -552,8 +564,18 @@ export default function ContactClient() {
 
                   <div className="flex gap-4 items-start">
                     <div className="w-8 h-8 rounded-lg bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.557-5.132-3.865-6.689-6.69l1.293-.97c.362-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25z" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.557-5.132-3.865-6.689-6.69l1.293-.97c.362-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25z"
+                        />
                       </svg>
                     </div>
                     <div>
@@ -561,7 +583,9 @@ export default function ContactClient() {
                         Phone Number
                       </h5>
                       <div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">Business Call:</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                          Business Call:
+                        </span>
                         <a
                           href="tel:+919173101711"
                           className="text-xs font-semibold text-[#22B6F6] hover:underline"
@@ -582,7 +606,9 @@ export default function ContactClient() {
                       </h5>
                       <div className="flex flex-col gap-2">
                         <div>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">General Inquiry:</span>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                            General Inquiry:
+                          </span>
                           <a
                             href="mailto:info@techsonance.co.in"
                             className="text-xs font-semibold text-[#22B6F6] hover:underline"
@@ -591,7 +617,9 @@ export default function ContactClient() {
                           </a>
                         </div>
                         <div>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">Careers & HR:</span>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                            Careers & HR:
+                          </span>
                           <a
                             href="mailto:hr@techsonance.co.in"
                             className="text-xs font-semibold text-[#22B6F6] hover:underline"
@@ -611,16 +639,12 @@ export default function ContactClient() {
                       <h5 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1">
                         Standard Response
                       </h5>
-                      <p className="text-xs font-semibold text-[#22B6F6]">
-                        Within 24 Hours
-                      </p>
+                      <p className="text-xs font-semibold text-[#22B6F6]">Within 24 Hours</p>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </section>
 

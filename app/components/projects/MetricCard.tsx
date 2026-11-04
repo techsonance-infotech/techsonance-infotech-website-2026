@@ -24,7 +24,8 @@ export function MetricCard({
 
   // Check if value is numeric for animation
   const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""));
-  const isNumeric = !isNaN(numericValue) && value.replace(/[^0-9.]/g, "") === value.replace(/[^0-9.]/g, "");
+  const isNumeric =
+    !isNaN(numericValue) && value.replace(/[^0-9.]/g, "") === value.replace(/[^0-9.]/g, "");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -33,7 +34,7 @@ export function MetricCard({
           setTriggered(true);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();

@@ -1,12 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "react",
-    "unicorn",
-    "import",
-    "oxc"
-  ],
+  "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "unicorn", "import", "oxc"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn",
@@ -14,11 +8,25 @@
   },
   "rules": {
     "eqeqeq": ["error", "always"],
-    "no-console": "warn",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-debugger": "error",
     "prefer-const": "error",
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
     "react/jsx-no-undef": "error",
-    "typescript/no-explicit-any": "warn"
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "typescript/no-explicit-any": "warn",
+    "typescript/consistent-type-imports": "error",
+    "import/no-cycle": "error",
+    "import/no-duplicates": "error"
   },
   "env": {
     "browser": true,
@@ -26,26 +34,36 @@
     "node": true
   },
   "ignorePatterns": [
-    ".next/**",
     "node_modules/**",
+    ".next/**",
     "out/**",
     "build/**",
     "dist/**",
     "coverage/**",
+    ".turbo/**",
+    ".vercel/**",
     "next-env.d.ts",
+    "*.min.js",
     "graphify-out/**",
     ".gitnexus/**"
   ],
   "overrides": [
     {
-      "files": ["tests/**/*.ts", "tests/**/*.tsx", "**/*.test.ts", "**/*.spec.ts"],
+      "files": [
+        "tests/**/*.ts",
+        "tests/**/*.tsx",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts",
+        "**/*.spec.tsx"
+      ],
       "rules": {
         "typescript/no-explicit-any": "off",
         "no-console": "off"
       }
     },
     {
-      "files": ["scripts/**/*.ts"],
+      "files": ["scripts/**/*.ts", "scripts/**/*.mjs"],
       "rules": {
         "no-console": "off"
       }

@@ -13,13 +13,16 @@ const categories = ["All", "Software Engineering", "AI & Automation", "Product D
 export default function BlogClient() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredPosts = selectedCategory === "All"
-    ? blogPosts
-    : blogPosts.filter((post) => post.category === selectedCategory);
+  const filteredPosts =
+    selectedCategory === "All"
+      ? blogPosts
+      : blogPosts.filter((post) => post.category === selectedCategory);
 
   // Use the first post as featured
   const featuredPost = blogPosts[0];
-  const gridPosts = filteredPosts.filter((post) => post.slug !== featuredPost.slug || selectedCategory !== "All");
+  const gridPosts = filteredPosts.filter(
+    (post) => post.slug !== featuredPost.slug || selectedCategory !== "All",
+  );
 
   return (
     <>
@@ -38,16 +41,27 @@ export default function BlogClient() {
                 linear-gradient(45deg, #1155cc 0.5px, transparent 0.5px), 
                 linear-gradient(-45deg, #1155cc 0.5px, transparent 0.5px)
               `,
-              backgroundSize: "60px 60px"
+              backgroundSize: "60px 60px",
             }}
           />
 
           {/* Glowing neon ambient orbs */}
-          <div className="absolute top-20 left-[10%] w-[350px] h-[350px] bg-[#1155CC]/5 rounded-full blur-[80px] animate-pulse" style={{ animationDuration: "10s" }} />
-          <div className="absolute top-40 right-[15%] w-[400px] h-[400px] bg-[#22B6F6]/5 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: "14s" }} />
+          <div
+            className="absolute top-20 left-[10%] w-[350px] h-[350px] bg-[#1155CC]/5 rounded-full blur-[80px] animate-pulse"
+            style={{ animationDuration: "10s" }}
+          />
+          <div
+            className="absolute top-40 right-[15%] w-[400px] h-[400px] bg-[#22B6F6]/5 rounded-full blur-[100px] animate-pulse"
+            style={{ animationDuration: "14s" }}
+          />
 
           {/* SVG Resonance Waves - Unique Theme Background */}
-          <svg className="absolute top-[10%] left-0 w-full h-[300px] opacity-[0.06] text-[#1155CC]" viewBox="0 0 1440 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="absolute top-[10%] left-0 w-full h-[300px] opacity-[0.06] text-[#1155CC]"
+            viewBox="0 0 1440 300"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <motion.path
               d="M0 150 C300 280, 600 20, 900 280 C1200 140, 1350 20, 1440 150"
               stroke="currentColor"
@@ -56,8 +70,8 @@ export default function BlogClient() {
                 d: [
                   "M0 150 C300 280, 600 20, 900 280 C1200 140, 1350 20, 1440 150",
                   "M0 150 C300 20, 600 280, 900 20 C1200 280, 1350 140, 1440 150",
-                  "M0 150 C300 280, 600 20, 900 280 C1200 140, 1350 20, 1440 150"
-                ]
+                  "M0 150 C300 280, 600 20, 900 280 C1200 140, 1350 20, 1440 150",
+                ],
               }}
               transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -70,8 +84,8 @@ export default function BlogClient() {
                 d: [
                   "M0 150 C200 80, 500 220, 800 80 C1100 220, 1300 80, 1440 150",
                   "M0 150 C200 220, 500 80, 800 220 C1100 80, 1300 220, 1440 150",
-                  "M0 150 C200 80, 500 220, 800 80 C1100 220, 1300 80, 1440 150"
-                ]
+                  "M0 150 C200 80, 500 220, 800 80 C1100 220, 1300 80, 1440 150",
+                ],
               }}
               transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -105,23 +119,24 @@ export default function BlogClient() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-4 text-sm sm:text-base font-semibold text-slate-500 max-w-2xl mx-auto"
           >
-            Engineering strategies, design practices, and operational insights from our custom software development team.
+            Engineering strategies, design practices, and operational insights from our custom
+            software development team.
           </motion.p>
         </section>
 
         {/* Blog Directory & Filtering */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
           {/* Categories Filters bar */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-12 border-b border-slate-100 pb-6">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedCategory === category
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  selectedCategory === category
                     ? "bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/15"
                     : "text-slate-600 hover:text-[#1155CC] bg-white border border-slate-100 hover:border-[#1155CC]/20"
-                  }`}
+                }`}
               >
                 {category}
               </button>
@@ -139,7 +154,10 @@ export default function BlogClient() {
               {/* Image box */}
               <div className="lg:col-span-6 h-64 sm:h-80 lg:h-full min-h-[280px] bg-gradient-to-br from-[#1155CC]/10 to-[#22B6F6]/10 relative flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-100">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#1155CC]/20 via-transparent to-[#22B6F6]/20 opacity-50 group-hover:scale-105 transition-all duration-500" />
-                <Icon name="code" className="w-16 h-16 text-[#1155CC]/30 group-hover:scale-110 transition-all duration-500" />
+                <Icon
+                  name="code"
+                  className="w-16 h-16 text-[#1155CC]/30 group-hover:scale-110 transition-all duration-500"
+                />
                 <span className="absolute top-4 left-4 bg-[#1155CC] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-sm">
                   Featured
                 </span>
@@ -184,8 +202,12 @@ export default function BlogClient() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-bold text-slate-400 block leading-none mb-1">{featuredPost.date}</span>
-                    <span className="text-[10px] font-semibold text-[#1155CC] bg-[#1155CC]/5 px-2 py-0.5 rounded-full">{featuredPost.readTime}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block leading-none mb-1">
+                      {featuredPost.date}
+                    </span>
+                    <span className="text-[10px] font-semibold text-[#1155CC] bg-[#1155CC]/5 px-2 py-0.5 rounded-full">
+                      {featuredPost.readTime}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -209,7 +231,10 @@ export default function BlogClient() {
                     {/* Card Image area */}
                     <div className="h-48 bg-gradient-to-br from-[#1155CC]/5 to-[#22B6F6]/5 relative flex items-center justify-center overflow-hidden border-b border-slate-50">
                       <div className="absolute inset-0 bg-gradient-to-tr from-[#1155CC]/10 via-transparent to-[#22B6F6]/10 opacity-30 group-hover:scale-105 transition-all duration-500" />
-                      <Icon name="monitor" className="w-12 h-12 text-[#1155CC]/25 group-hover:scale-110 transition-all duration-500" />
+                      <Icon
+                        name="monitor"
+                        className="w-12 h-12 text-[#1155CC]/25 group-hover:scale-110 transition-all duration-500"
+                      />
                       <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm border border-slate-100 text-[#1155CC] text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
                         {post.category}
                       </span>
@@ -253,8 +278,12 @@ export default function BlogClient() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="text-[9px] font-bold text-slate-400 block mb-0.5">{post.date}</span>
-                        <span className="text-[9px] font-semibold text-[#1155CC]">{post.readTime}</span>
+                        <span className="text-[9px] font-bold text-slate-400 block mb-0.5">
+                          {post.date}
+                        </span>
+                        <span className="text-[9px] font-semibold text-[#1155CC]">
+                          {post.readTime}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -268,10 +297,11 @@ export default function BlogClient() {
             <div className="text-center py-20 bg-white border border-slate-100 rounded-3xl shadow-[0_15px_30px_rgba(17,85,204,0.01)]">
               <Icon name="beaker" className="w-12 h-12 text-[#1155CC]/30 mx-auto mb-4" />
               <h3 className="text-base font-medium text-slate-900 mb-1">No articles found</h3>
-              <p className="text-xs font-semibold text-slate-400">Check back later or try selecting another category.</p>
+              <p className="text-xs font-semibold text-slate-400">
+                Check back later or try selecting another category.
+              </p>
             </div>
           )}
-
         </section>
       </main>
       <SiteFooter />

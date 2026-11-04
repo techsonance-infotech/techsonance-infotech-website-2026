@@ -11,14 +11,20 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
 
   const canonicalUrl = `${BASE_URL}/portfolio/${project.slug}`;
   const screenshotUrl = project.screenshotPath
-    ? (project.screenshotPath.startsWith("http") ? project.screenshotPath : `${BASE_URL}${project.screenshotPath}`)
+    ? project.screenshotPath.startsWith("http")
+      ? project.screenshotPath
+      : `${BASE_URL}${project.screenshotPath}`
     : undefined;
 
   return {
@@ -34,13 +40,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: canonicalUrl,
       images: screenshotUrl
         ? [
-          {
-            url: screenshotUrl,
-            width: 1200,
-            height: 630,
-            alt: `${project.title} Case Study Screenshot`,
-          },
-        ]
+            {
+              url: screenshotUrl,
+              width: 1200,
+              height: 630,
+              alt: `${project.title} Case Study Screenshot`,
+            },
+          ]
         : [],
     },
     twitter: {
@@ -63,41 +69,41 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const caseStudySchema = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    "name": `${project.title} Case Study`,
-    "headline": `${project.title}: ${project.shortDescription}`,
-    "description": project.shortDescription,
-    "url": `${BASE_URL}/portfolio/${project.slug}`,
-    "author": {
+    name: `${project.title} Case Study`,
+    headline: `${project.title}: ${project.shortDescription}`,
+    description: project.shortDescription,
+    url: `${BASE_URL}/portfolio/${project.slug}`,
+    author: {
       "@type": "Organization",
       "@id": `${BASE_URL}/#organization`,
-      "name": "TechSonance Infotech LLP",
+      name: "TechSonance Infotech LLP",
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
       "@id": `${BASE_URL}/#organization`,
-      "name": "TechSonance Infotech LLP",
+      name: "TechSonance Infotech LLP",
     },
-    "keywords": project.techStack.map((t) => t.name).join(", "),
-    "about": {
+    keywords: project.techStack.map((t) => t.name).join(", "),
+    about: {
       "@type": "SoftwareApplication",
-      "name": project.title,
-      "applicationCategory": project.category,
-      "operatingSystem": "Cloud, Web, Mobile",
+      name: project.title,
+      applicationCategory: project.category,
+      operatingSystem: "Cloud, Web, Mobile",
     },
     ...(project.clientReview
       ? {
-          "review": {
+          review: {
             "@type": "Review",
-            "reviewBody": project.clientReview.quote,
-            "author": {
+            reviewBody: project.clientReview.quote,
+            author: {
               "@type": "Person",
-              "name": project.clientReview.author,
-              "jobTitle": project.clientReview.role,
+              name: project.clientReview.author,
+              jobTitle: project.clientReview.role,
             },
-            "reviewRating": {
+            reviewRating: {
               "@type": "Rating",
-              "ratingValue": "5",
-              "bestRating": "5",
+              ratingValue: "5",
+              bestRating: "5",
             },
           },
         }
@@ -111,4 +117,3 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     </>
   );
 }
-

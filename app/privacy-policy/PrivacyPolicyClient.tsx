@@ -55,19 +55,29 @@ export default function PrivacyPolicyClient() {
       <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
         {/* Ambient background glows */}
-        <div className={cn(
-          "absolute top-0 right-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-          mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]"
-        )} />
-        <div className={cn(
-          "absolute top-[30%] left-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-          mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]"
-        )} />
+        <div
+          className={cn(
+            "absolute top-0 right-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
+            mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+          )}
+        />
+        <div
+          className={cn(
+            "absolute top-[30%] left-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
+            mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+          )}
+        />
 
         {/* Hero Banner Header */}
         <section className="relative py-16 sm:py-24 overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] text-white">
           <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-            <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(#22B6F6 1.5px, transparent 1.5px)", backgroundSize: "24px 24px" }} />
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "radial-gradient(#22B6F6 1.5px, transparent 1.5px)",
+                backgroundSize: "24px 24px",
+              }}
+            />
           </div>
 
           {/* Floating Elegant Shapes */}
@@ -124,7 +134,6 @@ export default function PrivacyPolicyClient() {
         {/* Main Content Layout */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-
             {/* Sticky Navigation Sidebar (Desktop) */}
             <div className="hidden lg:block lg:col-span-4 sticky top-28 bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
               <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pb-3 mb-4 border-b border-slate-100">
@@ -135,13 +144,19 @@ export default function PrivacyPolicyClient() {
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all group ${activeSection === section.id
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all group ${
+                      activeSection === section.id
                         ? "bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/10"
                         : "text-slate-600 hover:text-[#1155CC] hover:bg-slate-50"
-                      }`}
+                    }`}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeSection === section.id ? "bg-white scale-125" : "bg-slate-300 group-hover:bg-[#1155CC]"
-                      }`} />
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${
+                        activeSection === section.id
+                          ? "bg-white scale-125"
+                          : "bg-slate-300 group-hover:bg-[#1155CC]"
+                      }`}
+                    />
                     {section.label}
                   </button>
                 ))}
@@ -150,7 +165,6 @@ export default function PrivacyPolicyClient() {
 
             {/* Privacy Policy Main Body */}
             <div className="col-span-1 lg:col-span-8 space-y-8">
-
               {/* Introduction */}
               <div
                 id="introduction"
@@ -170,7 +184,10 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                  At TechSonance Infotech LLP, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website (www.techsonance.co.in) or use our services.
+                  At TechSonance Infotech LLP, we are committed to protecting your privacy and
+                  ensuring the security of your personal information. This Privacy Policy explains
+                  how we collect, use, disclose, and safeguard your information when you visit our
+                  website (www.techsonance.co.in) or use our services.
                 </p>
               </div>
 
@@ -199,7 +216,8 @@ export default function PrivacyPolicyClient() {
                       Personal Information
                     </h4>
                     <p className="text-xs font-medium text-slate-600 mb-3 leading-relaxed">
-                      We collect personal details that you voluntarily submit to us during project consultations, applications, or contact requests:
+                      We collect personal details that you voluntarily submit to us during project
+                      consultations, applications, or contact requests:
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700 font-bold">
                       <li className="flex items-center gap-2.5">
@@ -228,7 +246,8 @@ export default function PrivacyPolicyClient() {
                       Technical & Usage Information
                     </h4>
                     <p className="text-xs font-medium text-slate-600 mb-3 leading-relaxed">
-                      We automatically collect browser, network, and device logs when you navigate our platform:
+                      We automatically collect browser, network, and device logs when you navigate
+                      our platform:
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700 font-bold">
                       <li className="flex items-center gap-2.5">
@@ -287,27 +306,33 @@ export default function PrivacyPolicyClient() {
                     <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       2. How We Use Your Information
                     </h2>
-                    <p className="text-xs font-semibold text-slate-400">
-                      Processing objectives
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400">Processing objectives</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                     <span className="text-[#1155CC] font-bold block mb-1">Service Delivery</span>
-                    <p className="text-slate-500 font-medium text-xs">To construct, test, and host custom web, mobile, and agentic AI platforms.</p>
+                    <p className="text-slate-500 font-medium text-xs">
+                      To construct, test, and host custom web, mobile, and agentic AI platforms.
+                    </p>
                   </div>
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                     <span className="text-[#1155CC] font-bold block mb-1">Communication</span>
-                    <p className="text-slate-500 font-medium text-xs">Providing direct technical updates, proposal drafts, and code review logs.</p>
+                    <p className="text-slate-500 font-medium text-xs">
+                      Providing direct technical updates, proposal drafts, and code review logs.
+                    </p>
                   </div>
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                     <span className="text-[#1155CC] font-bold block mb-1">UX Optimization</span>
-                    <p className="text-slate-500 font-medium text-xs">Analysing metrics and clickmaps to continuously upgrade site rendering speed.</p>
+                    <p className="text-slate-500 font-medium text-xs">
+                      Analysing metrics and clickmaps to continuously upgrade site rendering speed.
+                    </p>
                   </div>
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                     <span className="text-[#1155CC] font-bold block mb-1">Compliance</span>
-                    <p className="text-slate-500 font-medium text-xs">Enforcing terms of service, security protocols, and Indian legal mandates.</p>
+                    <p className="text-slate-500 font-medium text-xs">
+                      Enforcing terms of service, security protocols, and Indian legal mandates.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -331,20 +356,31 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4 font-bold">
-                  We value your trust and do not sell, rent, or lease your personal information. Sharing occurs exclusively under the following terms:
+                  We value your trust and do not sell, rent, or lease your personal information.
+                  Sharing occurs exclusively under the following terms:
                 </p>
                 <ul className="space-y-3 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
                   <li className="flex items-start gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
-                    <span><strong className="text-slate-800">Consent:</strong> With your explicit approval and permission.</span>
+                    <span>
+                      <strong className="text-slate-800">Consent:</strong> With your explicit
+                      approval and permission.
+                    </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
-                    <span><strong className="text-slate-800">Trusted Partners:</strong> Providers supporting server infrastructure, transactional mail APIs, or database architecture under strict NDAs.</span>
+                    <span>
+                      <strong className="text-slate-800">Trusted Partners:</strong> Providers
+                      supporting server infrastructure, transactional mail APIs, or database
+                      architecture under strict NDAs.
+                    </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
-                    <span><strong className="text-slate-800">Legal Demands:</strong> When required by statutory authorities, court subpoenas, or to prevent fraudulent attacks.</span>
+                    <span>
+                      <strong className="text-slate-800">Legal Demands:</strong> When required by
+                      statutory authorities, court subpoenas, or to prevent fraudulent attacks.
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -368,7 +404,8 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
-                  TechSonance InfoTech LLP implements advanced protection layers to secure data transit and database nodes:
+                  TechSonance InfoTech LLP implements advanced protection layers to secure data
+                  transit and database nodes:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold text-center">
                   <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-2xl">
@@ -410,15 +447,25 @@ export default function PrivacyPolicyClient() {
                 <ul className="space-y-3 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
-                    <span><strong className="text-[#1155CC]">Essential:</strong> Core files required to render forms and dynamic page routes.</span>
+                    <span>
+                      <strong className="text-[#1155CC]">Essential:</strong> Core files required to
+                      render forms and dynamic page routes.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
-                    <span><strong className="text-[#1155CC]">Analytics:</strong> Help compile session time metrics (e.g. Google Analytics).</span>
+                    <span>
+                      <strong className="text-[#1155CC]">Analytics:</strong> Help compile session
+                      time metrics (e.g. Google Analytics).
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
-                    <span><strong className="text-[#1155CC]">Management:</strong> Users can disable or reject cookies in browser configurations, though some layout aspects may cease to function correctly.</span>
+                    <span>
+                      <strong className="text-[#1155CC]">Management:</strong> Users can disable or
+                      reject cookies in browser configurations, though some layout aspects may cease
+                      to function correctly.
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -436,14 +483,22 @@ export default function PrivacyPolicyClient() {
                     <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       6. Your Rights & Choices
                     </h2>
-                    <p className="text-xs font-semibold text-slate-400">
-                      Data ownership rights
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400">Data ownership rights</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
-                  {["Access Records", "Correct Inaccuracies", "Delete Info", "Opt Out of Emails", "Request Portability", "Object to Processing"].map((right, idx) => (
-                    <div key={idx} className="p-3 border border-slate-100 rounded-xl bg-slate-50/50 text-slate-700 font-bold text-xs">
+                  {[
+                    "Access Records",
+                    "Correct Inaccuracies",
+                    "Delete Info",
+                    "Opt Out of Emails",
+                    "Request Portability",
+                    "Object to Processing",
+                  ].map((right, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 border border-slate-100 rounded-xl bg-slate-50/50 text-slate-700 font-bold text-xs"
+                    >
                       {right}
                     </div>
                   ))}
@@ -469,7 +524,8 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
-                  For custom product development, we handle project architecture metadata under key confidentiality rules:
+                  For custom product development, we handle project architecture metadata under key
+                  confidentiality rules:
                 </p>
                 <ul className="space-y-2.5 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
                   <li className="flex items-center gap-2">
@@ -500,13 +556,13 @@ export default function PrivacyPolicyClient() {
                     <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       8. Third-Party Services
                     </h2>
-                    <p className="text-xs font-semibold text-slate-400">
-                      External dependencies
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400">External dependencies</p>
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                  We integrate Cloud hostings (AWS, Google Cloud), web analysis tools (Google Analytics), payment gateways, and mailing relays. These entities operate under their respective privacy protocols, which we advise you to review.
+                  We integrate Cloud hostings (AWS, Google Cloud), web analysis tools (Google
+                  Analytics), payment gateways, and mailing relays. These entities operate under
+                  their respective privacy protocols, which we advise you to review.
                 </p>
               </div>
 
@@ -523,13 +579,13 @@ export default function PrivacyPolicyClient() {
                     <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       9. International Data Transfers
                     </h2>
-                    <p className="text-xs font-semibold text-slate-400">
-                      Global routing protocols
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400">Global routing protocols</p>
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                  As an international custom developer team, your client specifications may be routed across regional boundaries. We safeguard these transfers with standard data protection clauses matching jurisdiction codes.
+                  As an international custom developer team, your client specifications may be
+                  routed across regional boundaries. We safeguard these transfers with standard data
+                  protection clauses matching jurisdiction codes.
                 </p>
               </div>
 
@@ -546,13 +602,13 @@ export default function PrivacyPolicyClient() {
                     <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
                       10. Children's Privacy
                     </h2>
-                    <p className="text-xs font-semibold text-slate-400">
-                      Minors security policy
-                    </p>
+                    <p className="text-xs font-semibold text-slate-400">Minors security policy</p>
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                  Our development offerings are targeted strictly at entities and individuals aged 18 and older. We do not gather details from minors. If you suspect any child information has been collected, notify us to delete it instantly.
+                  Our development offerings are targeted strictly at entities and individuals aged
+                  18 and older. We do not gather details from minors. If you suspect any child
+                  information has been collected, notify us to delete it instantly.
                 </p>
               </div>
 
@@ -575,7 +631,9 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                  We modify this policy to align with regulatory adjustments. Updates will be visible directly on this URL with an updated "Last Updated" status. Significant revisions will prompt notification alerts on our main domains.
+                  We modify this policy to align with regulatory adjustments. Updates will be
+                  visible directly on this URL with an updated "Last Updated" status. Significant
+                  revisions will prompt notification alerts on our main domains.
                 </p>
               </div>
 
@@ -598,24 +656,32 @@ export default function PrivacyPolicyClient() {
                   </div>
                 </div>
                 <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
-                  For policy questions, details request, or correction tickets, contact our legal representative:
+                  For policy questions, details request, or correction tickets, contact our legal
+                  representative:
                 </p>
                 <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Legal & DPO Email</span>
-                    <a href="mailto:info@techsonance.co.in" className="text-xs sm:text-sm font-black text-[#1155CC] hover:underline">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">
+                      Legal & DPO Email
+                    </span>
+                    <a
+                      href="mailto:info@techsonance.co.in"
+                      className="text-xs sm:text-sm font-black text-[#1155CC] hover:underline"
+                    >
                       info@techsonance.co.in
                     </a>
                   </div>
                   <div className="text-right sm:text-left">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Corporate HQ Address</span>
-                    <span className="text-[11px] font-bold text-slate-700">UG-15, Palladium Plaza, Vip Road, Surat, Gujarat - 395007</span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">
+                      Corporate HQ Address
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-700">
+                      UG-15, Palladium Plaza, Vip Road, Surat, Gujarat - 395007
+                    </span>
                   </div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </section>
       </main>

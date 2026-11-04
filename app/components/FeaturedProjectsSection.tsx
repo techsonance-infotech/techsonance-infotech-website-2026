@@ -26,7 +26,15 @@ function ChallengeRow({ label, value, color }: { label: string; value: string; c
 }
 
 // ─── Single featured project row with sticky stacking effect ──────────────────
-function FeaturedProjectRow({ project, index, total }: { project: Project; index: number; total: number }) {
+function FeaturedProjectRow({
+  project,
+  index,
+  total,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { once: true, margin: "-10%" });
 
@@ -85,7 +93,9 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-7 items-center">
           {/* ── Text side ── */}
-          <div className={`flex flex-col gap-2 lg:gap-2.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
+          <div
+            className={`flex flex-col gap-2 lg:gap-2.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}
+          >
             {/* Index + Category */}
             <motion.div
               initial={hiddenX}
@@ -101,7 +111,9 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               </span>
               <div
                 className="h-px flex-1"
-                style={{ background: `linear-gradient(to right, ${project.accentColor}40, transparent)` }}
+                style={{
+                  background: `linear-gradient(to right, ${project.accentColor}40, transparent)`,
+                }}
               />
               <span
                 className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full"
@@ -138,7 +150,11 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               transition={t(0.2)}
               className="rounded-xl border border-gray-100 bg-white/80 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden"
             >
-              <ChallengeRow label="Challenge" value={project.challenge} color={project.accentColor} />
+              <ChallengeRow
+                label="Challenge"
+                value={project.challenge}
+                color={project.accentColor}
+              />
               <ChallengeRow label="Solution" value={project.solution} color={project.accentColor} />
               <ChallengeRow label="Result" value={project.result} color={project.accentColor} />
             </motion.div>
@@ -167,15 +183,8 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
               transition={t(0.32)}
               className="flex items-center gap-4 pt-1"
             >
-              <Button
-                asChild
-                variant="primary"
-                size="sm"
-                showArrow={true}
-              >
-                <Link href={`/portfolio/${project.slug}`}>
-                  View Project
-                </Link>
+              <Button asChild variant="primary" size="sm" showArrow={true}>
+                <Link href={`/portfolio/${project.slug}`}>View Project</Link>
               </Button>
               {project.liveUrl && (
                 <a
@@ -184,8 +193,18 @@ function FeaturedProjectRow({ project, index, total }: { project: Project; index
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
                 >
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="h-3.5 w-3.5"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                   Live Demo
                 </a>
@@ -230,13 +249,21 @@ function SectionHeader() {
           transition={t(0)}
           className="inline-flex items-center gap-2 bg-[#E6EDF5] border border-[#0D47A1]/15 rounded-full px-4 py-1.5"
         >
-          <svg className="h-3.5 w-3.5 text-[#0D47A1]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            className="h-3.5 w-3.5 text-[#0D47A1]"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <rect x="2" y="2" width="5" height="5" rx="1" />
             <rect x="9" y="2" width="5" height="5" rx="1" />
             <rect x="2" y="9" width="5" height="5" rx="1" />
             <rect x="9" y="9" width="5" height="5" rx="1" />
           </svg>
-          <span className="text-xs font-bold text-[#0D47A1] tracking-wide uppercase">Featured Work</span>
+          <span className="text-xs font-bold text-[#0D47A1] tracking-wide uppercase">
+            Featured Work
+          </span>
         </motion.div>
 
         <div className="flex items-end justify-between w-full flex-wrap gap-4">
@@ -246,7 +273,7 @@ function SectionHeader() {
             transition={t(0.08)}
             className="text-3xl sm:text-4xl lg:text-5xl font-medium leading-[1.15] tracking-tight text-gray-900"
           >
-            Products <span className="italic">We&apos;ve{" "}</span>
+            Products <span className="italic">We&apos;ve </span>
             <span className="italic text-[#1155CC]">Engineered.</span>
           </motion.h2>
 
@@ -301,7 +328,8 @@ export default function FeaturedProjectsSection() {
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.018]"
         style={{
-          backgroundImage: "linear-gradient(#0D47A1 1px, transparent 1px), linear-gradient(90deg, #0D47A1 1px, transparent 1px)",
+          backgroundImage:
+            "linear-gradient(#0D47A1 1px, transparent 1px), linear-gradient(90deg, #0D47A1 1px, transparent 1px)",
           backgroundSize: "64px 64px",
         }}
       />
@@ -326,20 +354,15 @@ export default function FeaturedProjectsSection() {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#0D47A1] to-[#008BD9]" />
           <div className="relative rounded-[calc(1.5rem-1px)] bg-white px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-1">Explore All Work</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-1">
+                Explore All Work
+              </p>
               <h3 className="text-xl sm:text-2xl font-medium text-gray-900">
                 See every product we&apos;ve shipped
               </h3>
             </div>
-            <Button
-              asChild
-              variant="primary"
-              showArrow={true}
-              className="shrink-0"
-            >
-              <Link href="/portfolio">
-                View All Projects
-              </Link>
+            <Button asChild variant="primary" showArrow={true} className="shrink-0">
+              <Link href="/portfolio">View All Projects</Link>
             </Button>
           </div>
         </div>

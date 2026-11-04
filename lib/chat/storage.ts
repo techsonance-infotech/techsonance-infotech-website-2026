@@ -1,43 +1,45 @@
-import { getContainer } from "./di/container";
 import {
   ChatStorageService,
   ChatDB,
   type Msg,
   type Visitor,
   type BookingCopy,
-} from "./services/chat-storage.service";
+} from "../services/chat-storage.service";
 
 export type { Msg, Visitor, BookingCopy };
 export { ChatDB };
 
+// Pure client-side singleton for Dexie IndexedDB chat operations
+const chatStorage = new ChatStorageService();
+
 export function getChatDB(): ChatDB | null {
-  return getContainer().get(ChatStorageService).getDB();
+  return chatStorage.getDB();
 }
 
 export function saveMessage(msg: Msg): Promise<void> {
-  return getContainer().get(ChatStorageService).saveMessage(msg);
+  return chatStorage.saveMessage(msg);
 }
 
 export function getSessionMessages(sessionId: string): Promise<Msg[]> {
-  return getContainer().get(ChatStorageService).getSessionMessages(sessionId);
+  return chatStorage.getSessionMessages(sessionId);
 }
 
 export function clearAllChat(): Promise<void> {
-  return getContainer().get(ChatStorageService).clearAllChat();
+  return chatStorage.clearAllChat();
 }
 
 export function cleanupOldMessages(days = 30): Promise<void> {
-  return getContainer().get(ChatStorageService).cleanupOldMessages(days);
+  return chatStorage.cleanupOldMessages(days);
 }
 
 export function getVisitorProfile(): Promise<Visitor | null> {
-  return getContainer().get(ChatStorageService).getVisitorProfile();
+  return chatStorage.getVisitorProfile();
 }
 
 export function saveVisitorProfile(profile: Partial<Visitor>): Promise<void> {
-  return getContainer().get(ChatStorageService).saveVisitorProfile(profile);
+  return chatStorage.saveVisitorProfile(profile);
 }
 
 export function saveBookingCopy(booking: BookingCopy): Promise<void> {
-  return getContainer().get(ChatStorageService).saveBookingCopy(booking);
+  return chatStorage.saveBookingCopy(booking);
 }

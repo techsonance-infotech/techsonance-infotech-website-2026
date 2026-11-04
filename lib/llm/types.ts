@@ -18,7 +18,7 @@ export class QuotaError extends Error {
   constructor(
     public kind: QuotaErrorKind,
     public retryAfterSec?: number,
-    message?: string
+    message?: string,
   ) {
     super(message || `LLM Provider Error: ${kind}`);
     this.name = "QuotaError";
@@ -26,12 +26,15 @@ export class QuotaError extends Error {
 }
 
 export class AllExhaustedError extends Error {
-  constructor(public earliestRetryAt?: number, message?: string) {
+  constructor(
+    public earliestRetryAt?: number,
+    message?: string,
+  ) {
     super(
       message ||
         `All LLM providers are currently exhausted. Earliest retry at: ${
           earliestRetryAt ? new Date(earliestRetryAt).toISOString() : "unknown"
-        }`
+        }`,
     );
     this.name = "AllExhaustedError";
   }

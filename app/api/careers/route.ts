@@ -23,10 +23,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });
     }
 
-        const env = getEnv();
+    const env = getEnv();
     const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
 
-// Handle File Attachment
+    // Handle File Attachment
     const attachments = [];
     if (resume && resume.size > 0) {
       const bytes = await resume.arrayBuffer();
@@ -133,7 +133,7 @@ ${message}
       </div>
     `;
 
-        const result = await emailService.sendMail({
+    const result = await emailService.sendMail({
       from: `"${fullName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
@@ -146,7 +146,7 @@ ${message}
     if (!result.ok) {
       return NextResponse.json(
         { error: result.error || "Failed to send application email" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -154,8 +154,12 @@ ${message}
   } catch (error: unknown) {
     console.error("Error sending career application email via SMTP:", error);
     return NextResponse.json(
-      { error: (error instanceof Error ? error.message : "Failed to send application email") || "Failed to send application email" },
-      { status: 500 }
+      {
+        error:
+          (error instanceof Error ? error.message : "Failed to send application email") ||
+          "Failed to send application email",
+      },
+      { status: 500 },
     );
   }
 }

@@ -99,7 +99,7 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
             duration: 0.7,
             stagger: 0.15,
             ease: "power2.out",
-          }
+          },
         );
       }, sectionRef);
     }
@@ -131,7 +131,10 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
             {/* Category Label */}
-            <div data-hero-item className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-6">
+            <div
+              data-hero-item
+              className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-6"
+            >
               <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
               <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
                 {heroContent.label}
@@ -144,9 +147,7 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
               style={{ fontSize: "clamp(32px, 3.8vw, 42px)" }}
             >
               {heroContent.titleStart}
-              <span className="text-[#1155CC] block sm:inline">
-                {heroContent.titleGradient}
-              </span>
+              <span className="text-[#1155CC] block sm:inline">{heroContent.titleGradient}</span>
             </h1>
             <p
               data-hero-item
@@ -155,10 +156,16 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
               {heroContent.description}
             </p>
             <div data-hero-item className="flex flex-wrap items-center gap-4">
-              <a href="#project-request" className="btn-primary px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm shadow-[0_4px_20px_rgba(17, 85, 204,0.15)]">
+              <a
+                href="#project-request"
+                className="btn-primary px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm shadow-[0_4px_20px_rgba(17, 85, 204,0.15)]"
+              >
                 Talk to Expert &rarr;
               </a>
-              <a href="#proof-of-work" className="btn-outline px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm bg-white">
+              <a
+                href="#proof-of-work"
+                className="btn-outline px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm bg-white"
+              >
                 See Case Studies &darr;
               </a>
             </div>

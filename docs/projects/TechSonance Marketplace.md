@@ -28,6 +28,7 @@ A comprehensive **multi-tenant techsonance marketplace** platform where customer
 ---
 
 ## Overview
+
 The platform operates on a **multi-tenant architecture** where each vendor operates an isolated storefront under the Sound Sphere umbrella, managed centrally by platform administrators.
 
 ---
@@ -35,6 +36,7 @@ The platform operates on a **multi-tenant architecture** where each vendor opera
 ## Key Features
 
 ### 🛒 Customer Storefront
+
 - **Product Browsing** - Browse by category, filter, and search across all vendor products
 - **Shopping Cart** - Persistent cart with add/remove/update quantity, synced to localStorage
 - **Wishlist** - Save favourite products for later, persisted across sessions
@@ -44,6 +46,7 @@ The platform operates on a **multi-tenant architecture** where each vendor opera
 - **Responsive Design** - Mobile-first with dedicated bottom tab navigation
 
 ### 🏪 Vendor Dashboard
+
 - **Product Management** - Full CRUD for product listings (name, price, SKU, images, variants)
 - **Order Processing** - View and manage incoming customer orders
 - **Inventory Tracking** - Monitor stock levels
@@ -53,6 +56,7 @@ The platform operates on a **multi-tenant architecture** where each vendor opera
 - **Store Settings** - Store profile, locations/warehouses, business profile, billing & banking, security
 
 ### 🛡️ Admin Panel
+
 - **Vendor Management** - View all vendors, approve/reject registrations
 - **Support Tickets** - Handle platform-wide support cases
 - **Audit Logs** - System-wide activity tracking
@@ -60,6 +64,7 @@ The platform operates on a **multi-tenant architecture** where each vendor opera
 - **Dark / Light Theme** - Toggle between themes in the admin panel
 
 ### 🔐 Authentication & Security
+
 - **Role-Based Access Control (RBAC)** - Protected routes per user role
 - **JWT Token Auth** - Token-based authentication stored securely
 - **Separate Login Portals** - Dedicated login/register flows for Admin, Vendor, and Customer
@@ -69,18 +74,18 @@ The platform operates on a **multi-tenant architecture** where each vendor opera
 
 ## Tech Stack
 
-| Category | Technologies |
-|---|---|
-| **Framework** | React 19 · TypeScript 5.9 · Vite 7.2 |
-| **State Management** | Redux Toolkit · React Redux |
-| **Routing** | React Router v7 |
-| **Styling** | Tailwind CSS 4 · shadcn/ui · Radix UI · Motion (animations) |
-| **Forms & Validation** | React Hook Form · Zod |
-| **Data Visualisation** | Recharts |
-| **HTTP Client** | Axios |
-| **Icons** | Lucide React |
-| **Utilities** | date-fns · clsx · tailwind-merge · class-variance-authority |
-| **UI Extras** | Embla Carousel · React Day Picker · react-responsive |
+| Category               | Technologies                                                |
+| ---------------------- | ----------------------------------------------------------- |
+| **Framework**          | React 19 · TypeScript 5.9 · Vite 7.2                        |
+| **State Management**   | Redux Toolkit · React Redux                                 |
+| **Routing**            | React Router v7                                             |
+| **Styling**            | Tailwind CSS 4 · shadcn/ui · Radix UI · Motion (animations) |
+| **Forms & Validation** | React Hook Form · Zod                                       |
+| **Data Visualisation** | Recharts                                                    |
+| **HTTP Client**        | Axios                                                       |
+| **Icons**              | Lucide React                                                |
+| **Utilities**          | date-fns · clsx · tailwind-merge · class-variance-authority |
+| **UI Extras**          | Embla Carousel · React Day Picker · react-responsive        |
 
 ---
 
@@ -194,11 +199,11 @@ techsonance-marketplace/
 
 ## User Roles & Permissions
 
-| Role | `user_role_id` | Permissions | Dashboard |
-|---|:---:|---|---|
-| **Admin** | `1` | Read · Create · Delete · Update | `/admin` |
-| **Vendor** | `2` | Read · Create · Update | `/vendor` |
-| **Customer** | `3` | Read | `/` (Storefront) |
+| Role         | `user_role_id` | Permissions                     | Dashboard        |
+| ------------ | :------------: | ------------------------------- | ---------------- |
+| **Admin**    |      `1`       | Read · Create · Delete · Update | `/admin`         |
+| **Vendor**   |      `2`       | Read · Create · Update          | `/vendor`        |
+| **Customer** |      `3`       | Read                            | `/` (Storefront) |
 
 Each role has a dedicated login portal, layout, sidebar, and set of protected routes. The `ProtectedRoute` component validates the user's role before rendering any guarded page.
 
@@ -206,14 +211,14 @@ Each role has a dedicated login portal, layout, sidebar, and set of protected ro
 
 ## Routing Overview
 
-| Path | Layout | Description |
-|---|---|---|
-| `/` | `ShopLayout` | Customer storefront (Home, Shopping, Product Detail, Contact, About) |
-| `/auth/*` | - | Login & registration pages for all roles |
-| `/customerProfile/:userId/*` | `UserLayout` | Profile, addresses, wishlist, cart, orders, checkout |
-| `/admin/*` | `AdminLayout` | Admin dashboard, vendor management, support tickets, audit logs |
-| `/vendor/*` | `VendorLayout` | Vendor dashboard, products, orders, inventory, finances, marketing, settings |
-| `/vendor/settings/*` | `VendorSettingLayout` | Nested vendor settings (store profile, locations, security, billing) |
+| Path                         | Layout                | Description                                                                  |
+| ---------------------------- | --------------------- | ---------------------------------------------------------------------------- |
+| `/`                          | `ShopLayout`          | Customer storefront (Home, Shopping, Product Detail, Contact, About)         |
+| `/auth/*`                    | -                     | Login & registration pages for all roles                                     |
+| `/customerProfile/:userId/*` | `UserLayout`          | Profile, addresses, wishlist, cart, orders, checkout                         |
+| `/admin/*`                   | `AdminLayout`         | Admin dashboard, vendor management, support tickets, audit logs              |
+| `/vendor/*`                  | `VendorLayout`        | Vendor dashboard, products, orders, inventory, finances, marketing, settings |
+| `/vendor/settings/*`         | `VendorSettingLayout` | Nested vendor settings (store profile, locations, security, billing)         |
 
 > For the full route tree, see `src/app/main.tsx` or [PROJECT_ARCHITECTURE_UPDATED.md](./PROJECT_ARCHITECTURE_UPDATED.md).
 
@@ -223,15 +228,15 @@ Each role has a dedicated login portal, layout, sidebar, and set of protected ro
 
 The app uses **Redux Toolkit** with **7 slices** and a custom localStorage middleware for state persistence:
 
-| Slice | Persisted | Purpose |
-|---|:---:|---|
-| `auth` | ✅ | User session, profile, addresses |
-| `cart` | ✅ | Shopping cart items |
-| `wishlist` | ✅ | Saved/favourite products |
-| `cartSidebar` | ✅ | Cart panel open/close state |
-| `adminTheme` | ❌ | Dark/light mode toggle |
-| `sidebar` | ❌ | Admin/vendor sidebar collapse |
-| `menu` | ❌ | Mobile menu open/close |
+| Slice         | Persisted | Purpose                          |
+| ------------- | :-------: | -------------------------------- |
+| `auth`        |    ✅     | User session, profile, addresses |
+| `cart`        |    ✅     | Shopping cart items              |
+| `wishlist`    |    ✅     | Saved/favourite products         |
+| `cartSidebar` |    ✅     | Cart panel open/close state      |
+| `adminTheme`  |    ❌     | Dark/light mode toggle           |
+| `sidebar`     |    ❌     | Admin/vendor sidebar collapse    |
+| `menu`        |    ❌     | Mobile menu open/close           |
 
 State is hydrated from `localStorage` on app init and automatically synced back via custom Redux middleware whenever relevant actions are dispatched.
 
@@ -253,12 +258,12 @@ These are used across the app via `import.meta.env.VITE_*` to configure Axios ba
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start dev server (with `--host` for LAN access) |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint across the codebase |
+| Command           | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| `npm run dev`     | Start dev server (with `--host` for LAN access) |
+| `npm run build`   | Type-check + production build                   |
+| `npm run preview` | Preview the production build locally            |
+| `npm run lint`    | Run ESLint across the codebase                  |
 
 ---
 

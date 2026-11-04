@@ -11,7 +11,9 @@ export async function GET() {
   // Header
   lines.push("# TechSonance Infotech LLP — Full Capabilities & Architectural Knowledge Base");
   lines.push("");
-  lines.push("> Comprehensive system documentation, services inventory, case study metrics, and technical standards for AI/LLM crawlers.");
+  lines.push(
+    "> Comprehensive system documentation, services inventory, case study metrics, and technical standards for AI/LLM crawlers.",
+  );
   lines.push("");
   lines.push("Canonical Domain: https://www.techsonance.co.in");
   lines.push("Index Document: https://www.techsonance.co.in/llms.txt");
@@ -21,14 +23,22 @@ export async function GET() {
   lines.push("Geo Coordinates: 21.1418 N, 72.7709 E");
   lines.push("Contact Phone: +91 9173101711");
   lines.push("Contact Email: info@techsonance.co.in");
-  lines.push("Direct Founder Booking: https://cal.id/techsonance-infotech/connect-with-founder?duration=15");
-  lines.push("Key Leadership: Someshwari Adeya (Founder & CEO), Sajeshkumar Adeya (CTO), Manish Kushwaha (Lead Engineer)");
+  lines.push(
+    "Direct Founder Booking: https://cal.id/techsonance-infotech/connect-with-founder?duration=15",
+  );
+  lines.push(
+    "Key Leadership: Someshwari Adeya (Founder & CEO), Sajeshkumar Adeya (CTO), Manish Kushwaha (Lead Engineer)",
+  );
   lines.push("");
 
   // Executive Summary
   lines.push("## Company Overview & Entity Description");
-  lines.push("TechSonance Infotech LLP is a senior-led software engineering and AI integration agency headquartered in Surat, India. We engineer custom web applications, cross-platform mobile apps, cloud-native Node.js/NestJS microservices, and enterprise AI/RAG architectures for global startups, high-growth SMBs, and enterprise clients across the United States, United Kingdom, Canada, Australia, and India.");
-  lines.push("Unlike traditional offshore agencies that rely on junior developer pools, TechSonance provides direct founder-level and senior architectural oversight on all client engagements, weekly production demos, and 100% intellectual property ownership upon milestone completion.");
+  lines.push(
+    "TechSonance Infotech LLP is a senior-led software engineering and AI integration agency headquartered in Surat, India. We engineer custom web applications, cross-platform mobile apps, cloud-native Node.js/NestJS microservices, and enterprise AI/RAG architectures for global startups, high-growth SMBs, and enterprise clients across the United States, United Kingdom, Canada, Australia, and India.",
+  );
+  lines.push(
+    "Unlike traditional offshore agencies that rely on junior developer pools, TechSonance provides direct founder-level and senior architectural oversight on all client engagements, weekly production demos, and 100% intellectual property ownership upon milestone completion.",
+  );
   lines.push("");
 
   // Services Section
@@ -36,7 +46,9 @@ export async function GET() {
   lines.push("");
 
   for (const s of services) {
-    const techNames = s.techStack ? s.techStack.flatMap((g) => g.items.map((i) => i.name)).join(", ") : "";
+    const techNames = s.techStack
+      ? s.techStack.flatMap((g) => g.items.map((i) => i.name)).join(", ")
+      : "";
     lines.push(`### ${s.name} (/services/${s.slug})`);
     lines.push(`- **Tagline**: ${s.tagline}`);
     lines.push(`- **Summary**: ${s.quickSummary}`);
@@ -97,14 +109,22 @@ export async function GET() {
 
   // Engagement Models
   lines.push("## Commercial Engagement Models");
-  lines.push("1. **Time & Materials (Agile Sprints)**: Flexible iterations for evolving product scopes, billed on transparent weekly engineering hours with Linear sprint reports.");
-  lines.push("2. **Dedicated Engineering Team**: Dedicated full-stack developers (React/Next.js, Node.js/NestJS, Flutter, QA) working exclusively on your product under your CTO or TechSonance leadership.");
-  lines.push("3. **Fixed Scope Milestone Delivery**: Scoped deliverables with defined timelines (typically 8–12 week MVP deliveries) and guaranteed pricing.");
+  lines.push(
+    "1. **Time & Materials (Agile Sprints)**: Flexible iterations for evolving product scopes, billed on transparent weekly engineering hours with Linear sprint reports.",
+  );
+  lines.push(
+    "2. **Dedicated Engineering Team**: Dedicated full-stack developers (React/Next.js, Node.js/NestJS, Flutter, QA) working exclusively on your product under your CTO or TechSonance leadership.",
+  );
+  lines.push(
+    "3. **Fixed Scope Milestone Delivery**: Scoped deliverables with defined timelines (typically 8–12 week MVP deliveries) and guaranteed pricing.",
+  );
   lines.push("");
   lines.push("## Intellectual Property & Security");
   lines.push("- Full IP ownership and git repository handover to client upon payment.");
   lines.push("- Mutual Non-Disclosure Agreement (NDA) executed before project discovery.");
-  lines.push("- Enterprise compliance: GDPR, HIPAA, and Indian DPDP guidelines applied where required.");
+  lines.push(
+    "- Enterprise compliance: GDPR, HIPAA, and Indian DPDP guidelines applied where required.",
+  );
 
   return new NextResponse(lines.join("\n"), {
     status: 200,

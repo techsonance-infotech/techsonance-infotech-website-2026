@@ -74,7 +74,7 @@ describe("Needle DI Container Infrastructure", () => {
         slotIso: new Date(Date.now() + 86400000).toISOString(),
         visitorTimezone: "Asia/Kolkata",
       },
-      "TS-REF123"
+      "TS-REF123",
     );
 
     expect(ics).toContain("BEGIN:VCALENDAR");

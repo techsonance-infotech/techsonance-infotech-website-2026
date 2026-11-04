@@ -8,7 +8,7 @@ import { OpenAICompatibleProvider } from "../llm/providers/openai-compatible";
 export class LLMProviderService {
   constructor(
     private env: Env = inject(ENV_CONFIG_TOKEN),
-    private config: typeof BOT_CONFIG = inject(BOT_CONFIG_TOKEN)
+    private config: typeof BOT_CONFIG = inject(BOT_CONFIG_TOKEN),
   ) {}
 
   getProviders(): LLMProvider[] {
@@ -87,7 +87,9 @@ export class LLMProviderService {
     });
 
     // Order according to LLM_PRIORITY
-    const priorityList = (env.LLM_PRIORITY || "groq,gemini,cerebras,openrouter,mistral,cloudflare,github")
+    const priorityList = (
+      env.LLM_PRIORITY || "groq,gemini,cerebras,openrouter,mistral,cloudflare,github"
+    )
       .split(",")
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean);

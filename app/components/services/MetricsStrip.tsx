@@ -14,9 +14,7 @@ export default function MetricsStrip({ metrics }: MetricsStripProps) {
               <div className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-1">
                 {metric.value}
               </div>
-              <div className="text-[14px] text-[var(--text-secondary)]">
-                {metric.label}
-              </div>
+              <div className="text-[14px] text-[var(--text-secondary)]">{metric.label}</div>
             </div>
           ))}
         </div>

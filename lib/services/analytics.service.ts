@@ -3,7 +3,7 @@ declare global {
     gtag?: (
       command: "event" | "config" | "js" | "set",
       eventNameOrTargetId: string,
-      eventParams?: Record<string, unknown>
+      eventParams?: Record<string, unknown>,
     ) => void;
     dataLayer?: Array<Record<string, unknown>>;
   }
@@ -19,10 +19,7 @@ export type ConversionEvent =
   | "blog_post_view";
 
 export class AnalyticsService {
-  track(
-    eventName: ConversionEvent,
-    params: Record<string, unknown> = {}
-  ): void {
+  track(eventName: ConversionEvent, params: Record<string, unknown> = {}): void {
     if (typeof window === "undefined") return;
 
     const eventPayload = {
@@ -77,20 +74,14 @@ export class AnalyticsService {
     });
   }
 
-  trackScopingFormSubmit(details: {
-    service: string;
-    hasCompany: boolean;
-  }): void {
+  trackScopingFormSubmit(details: { service: string; hasCompany: boolean }): void {
     this.track("scoping_form_submit", {
       selected_service: details.service,
       has_company: details.hasCompany,
     });
   }
 
-  trackContactFormSubmit(details: {
-    service?: string;
-    subject?: string;
-  }): void {
+  trackContactFormSubmit(details: { service?: string; subject?: string }): void {
     this.track("contact_form_submit", {
       service: details.service,
       subject: details.subject,

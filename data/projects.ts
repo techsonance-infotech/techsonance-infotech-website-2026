@@ -32,9 +32,9 @@ export interface Project {
   shortDescription: string;
   overview: string;
 
-  challenge: string;       // one-liner challenge for home featured
-  solution: string;        // one-liner solution for home featured
-  result: string;          // one-liner result for home featured
+  challenge: string; // one-liner challenge for home featured
+  solution: string; // one-liner solution for home featured
+  result: string; // one-liner result for home featured
 
   challenges: ProjectChallenge[];
   solutions: string[];
@@ -52,9 +52,9 @@ export interface Project {
   roiSummary?: string;
 
   // Visual identity
-  accentColor: string;       // hex - used for glow/borders
-  mockupGradient: string;    // CSS gradient for placeholder mockup panel
-  screenshotPath?: string;   // primary screenshot shown in mockup
+  accentColor: string; // hex - used for glow/borders
+  mockupGradient: string; // CSS gradient for placeholder mockup panel
+  screenshotPath?: string; // primary screenshot shown in mockup
   screenshots?: { src: string; caption: string }[]; // gallery for detail page
 }
 
@@ -166,11 +166,13 @@ export const projects: Project[] = [
       },
       {
         src: "/images/zion/zion-neon-dubai-onboarding-screens.png",
-        caption: "Onboarding & Event Experience - Immersive Dubai nightlife, festivals, and music showcases",
+        caption:
+          "Onboarding & Event Experience - Immersive Dubai nightlife, festivals, and music showcases",
       },
       {
         src: "/images/zion/zion-event-analytics-host-dashboard.png",
-        caption: "Event Host Analytics - Real-time ticket sales, attendee engagement, and conversion tracking",
+        caption:
+          "Event Host Analytics - Real-time ticket sales, attendee engagement, and conversion tracking",
       },
       {
         src: "/images/zion/zion-event-ticket-booking-analytics.png",
@@ -178,12 +180,14 @@ export const projects: Project[] = [
       },
     ],
     clientReview: {
-      quote: "The cross-platform Flutter experience TechSonance engineered for Zion runs at an unshakeable 60 FPS across both iOS and Android. Their local-first caching architecture ensured attendees could enter venues even in basements with zero connectivity.",
+      quote:
+        "The cross-platform Flutter experience TechSonance engineered for Zion runs at an unshakeable 60 FPS across both iOS and Android. Their local-first caching architecture ensured attendees could enter venues even in basements with zero connectivity.",
       author: "Ananya Mehta",
       role: "Head of Product",
       organization: "Zion Entertainment",
     },
-    roiSummary: "Processed over 50,000 concurrent attendees during peak drops with zero ticketing downtime.",
+    roiSummary:
+      "Processed over 50,000 concurrent attendees during peak drops with zero ticketing downtime.",
   },
 
   // ── 2. MasterWeg ──────────────────────────────────────────────────────────
@@ -200,23 +204,29 @@ export const projects: Project[] = [
       "A unified student workspace guiding applicants to German Master's programs - centralizing profile matching, document preparation, language learning, and application tracking.",
     overview:
       "Masterweg is the ultimate workspace for students aiming to pursue their Master's degree in Germany. By centralizing profile evaluations, university and program matching, document editing, and language learning, it eliminates the confusion and complexity of the German university admission process.",
-    challenge: "Fragmented university requirements, complex document checks, and disjointed application tracking across multiple portals.",
-    solution: "A unified student portal with AI program matching, document guidelines, A1 German learning, and centralized tracking.",
-    result: "100% correct document submissions, interactive language learning, and a streamlined admission matching process.",
+    challenge:
+      "Fragmented university requirements, complex document checks, and disjointed application tracking across multiple portals.",
+    solution:
+      "A unified student portal with AI program matching, document guidelines, A1 German learning, and centralized tracking.",
+    result:
+      "100% correct document submissions, interactive language learning, and a streamlined admission matching process.",
     challenges: [
       {
         title: "Fragmented Requirements",
-        description: "German universities use different portals (Uni-Assist, direct portals) with varying requirements, leading to high rejection rates due to missing or incorrect documents.",
+        description:
+          "German universities use different portals (Uni-Assist, direct portals) with varying requirements, leading to high rejection rates due to missing or incorrect documents.",
         icon: "🇩🇪",
       },
       {
         title: "Document Preparation Barriers",
-        description: "Writing Statements of Purpose (SOPs) and Letters of Recommendation (LORs) requires expert guidance and strict formatting that many students struggle to construct.",
+        description:
+          "Writing Statements of Purpose (SOPs) and Letters of Recommendation (LORs) requires expert guidance and strict formatting that many students struggle to construct.",
         icon: "📝",
       },
       {
         title: "Language and Prep Tests",
-        description: "Learning basic German (A1) and preparing for tests like dMAT was scattered across third-party websites with zero tracking of progress.",
+        description:
+          "Learning basic German (A1) and preparing for tests like dMAT was scattered across third-party websites with zero tracking of progress.",
         icon: "🗣️",
       },
     ],
@@ -248,7 +258,8 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "/images/MasterWeg/masterWeg 1.png",
-        caption: "Student Dashboard - Streamlined view of application status, document readiness, and next actions",
+        caption:
+          "Student Dashboard - Streamlined view of application status, document readiness, and next actions",
       },
       {
         src: "/images/MasterWeg/masterWeg 2.png",
@@ -280,24 +291,30 @@ export const projects: Project[] = [
     overview:
       "FreightFlow replaces paper lorry receipts, Excel invoices, and disjointed accounting tools with a single unified platform. It handles everything from LR creation to GST filing, fleet tracking to driver payroll - all in real time.",
 
-    challenge: "Indian transport businesses drowning in paper LRs, manual GST calculations, and zero real-time fleet visibility.",
-    solution: "Multi-tenant SaaS with automated GST/e-Way Bill, per-trip P&L, and a React Native driver app.",
-    result: "100% digital operations, zero missed compliance deadlines, real-time profitability per truck.",
+    challenge:
+      "Indian transport businesses drowning in paper LRs, manual GST calculations, and zero real-time fleet visibility.",
+    solution:
+      "Multi-tenant SaaS with automated GST/e-Way Bill, per-trip P&L, and a React Native driver app.",
+    result:
+      "100% digital operations, zero missed compliance deadlines, real-time profitability per truck.",
 
     challenges: [
       {
         title: "Manual Paperwork",
-        description: "Hundreds of paper LRs per day causing data loss, billing delays, and disputes between transporters and consignees.",
+        description:
+          "Hundreds of paper LRs per day causing data loss, billing delays, and disputes between transporters and consignees.",
         icon: "📄",
       },
       {
         title: "GST Complexity",
-        description: "Automated CGST/SGST/IGST, RCM for GTA, e-Invoice IRN generation, and GSTR-1/3B preparation - Indian compliance is complex.",
+        description:
+          "Automated CGST/SGST/IGST, RCM for GTA, e-Invoice IRN generation, and GSTR-1/3B preparation - Indian compliance is complex.",
         icon: "🧾",
       },
       {
         title: "Zero Fleet Visibility",
-        description: "Owners had no real-time data on vehicle locations, fuel consumption, or per-trip profitability.",
+        description:
+          "Owners had no real-time data on vehicle locations, fuel consumption, or per-trip profitability.",
         icon: "🚛",
       },
     ],
@@ -350,12 +367,14 @@ export const projects: Project[] = [
       },
     ],
     clientReview: {
-      quote: "TechSonance transformed our road transport operations from physical paper receipts into a flawless, sub-second SaaS system. Their deep technical mastery of PostgreSQL Row-Level Security gave us total confidence in handling multi-tenant transport data across our nationwide fleet.",
+      quote:
+        "TechSonance transformed our road transport operations from physical paper receipts into a flawless, sub-second SaaS system. Their deep technical mastery of PostgreSQL Row-Level Security gave us total confidence in handling multi-tenant transport data across our nationwide fleet.",
       author: "Praveen Grover",
       role: "Managing Director",
       organization: "Grover Roadlines",
     },
-    roiSummary: "Automated 100% of e-Way bills and eliminated 40+ hours per week of manual clerical reconciliation.",
+    roiSummary:
+      "Automated 100% of e-Way bills and eliminated 40+ hours per week of manual clerical reconciliation.",
   },
 
   // ── 4. SyncServe POS ───────────────────────────────────────────────────────
@@ -373,24 +392,30 @@ export const projects: Project[] = [
     overview:
       "SyncServe is a modern cloud POS platform that works online and offline. It supports multi-location retail with real-time inventory synchronization, billing, and analytics - all accessible from any device.",
 
-    challenge: "Retail businesses using outdated POS systems with no cloud sync, offline capability, or multi-outlet support.",
-    solution: "Cloud-native POS with offline-first architecture, real-time inventory sync across outlets, and mobile billing.",
-    result: "Zero billing downtime even during network outages, 3× faster checkout, unified multi-store dashboard.",
+    challenge:
+      "Retail businesses using outdated POS systems with no cloud sync, offline capability, or multi-outlet support.",
+    solution:
+      "Cloud-native POS with offline-first architecture, real-time inventory sync across outlets, and mobile billing.",
+    result:
+      "Zero billing downtime even during network outages, 3× faster checkout, unified multi-store dashboard.",
 
     challenges: [
       {
         title: "Offline Reliability",
-        description: "Retail floors frequently lose internet. POS systems must continue working and sync automatically when connection restores.",
+        description:
+          "Retail floors frequently lose internet. POS systems must continue working and sync automatically when connection restores.",
         icon: "📡",
       },
       {
         title: "Multi-Outlet Chaos",
-        description: "Managing inventory, pricing, and staff across multiple store locations was fragmented and error-prone.",
+        description:
+          "Managing inventory, pricing, and staff across multiple store locations was fragmented and error-prone.",
         icon: "🏪",
       },
       {
         title: "Slow Checkout",
-        description: "Legacy systems caused long queues. Customers and cashiers needed a fast, intuitive billing experience.",
+        description:
+          "Legacy systems caused long queues. Customers and cashiers needed a fast, intuitive billing experience.",
         icon: "⚡",
       },
     ],
@@ -428,7 +453,8 @@ export const projects: Project[] = [
       },
       {
         src: "/images/projects/syncserve/syncserve-retail-pos-billing-terminal.png",
-        caption: "Retail POS Billing Interface - Fast checkout with barcode scanning & dynamic discounts",
+        caption:
+          "Retail POS Billing Interface - Fast checkout with barcode scanning & dynamic discounts",
       },
       {
         src: "/images/projects/syncserve/syncserve-retail-pos-inventory-management.png",
@@ -436,11 +462,13 @@ export const projects: Project[] = [
       },
       {
         src: "/images/projects/syncserve/syncserve-retail-pos-sales-analytics.png",
-        caption: "Sales & Analytics Dashboard - Live metrics on revenue, top products, and store performance",
+        caption:
+          "Sales & Analytics Dashboard - Live metrics on revenue, top products, and store performance",
       },
       {
         src: "/images/projects/syncserve/syncserve-retail-pos-terminal-settings.png",
-        caption: "Outlet Terminal Settings - Granular printer configurations and cashier management",
+        caption:
+          "Outlet Terminal Settings - Granular printer configurations and cashier management",
       },
     ],
   },
@@ -535,24 +563,29 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "/images/cms-techsonance/login-illustration.png",
-        caption: "CMS TechSonance Portal - Secure role-based authentication with session management and multi-tenant isolation",
+        caption:
+          "CMS TechSonance Portal - Secure role-based authentication with session management and multi-tenant isolation",
       },
       {
         src: "/images/cms-techsonance/login-left-banner.jpg",
-        caption: "Operations & HRMS Dashboard - Workforce directory, real-time NFC attendance, project tracking, and client CRM",
+        caption:
+          "Operations & HRMS Dashboard - Workforce directory, real-time NFC attendance, project tracking, and client CRM",
       },
       {
         src: "/images/cms-techsonance/register-left-banner.png",
-        caption: "Multi-Tenant Workspace & Role Hub - Organization registration, team onboarding, and 23-role granular RBAC",
+        caption:
+          "Multi-Tenant Workspace & Role Hub - Organization registration, team onboarding, and 23-role granular RBAC",
       },
     ],
     clientReview: {
-      quote: "CMS TechSonance unified our entire firm's daily operations — from NFC attendance and leave approvals to sprint deliverables, client CRM, and monthly payroll. It eliminated dozens of messy spreadsheets and gave our leadership instant operational transparency.",
+      quote:
+        "CMS TechSonance unified our entire firm's daily operations — from NFC attendance and leave approvals to sprint deliverables, client CRM, and monthly payroll. It eliminated dozens of messy spreadsheets and gave our leadership instant operational transparency.",
       author: "Kunal Shah",
       role: "Operations Director",
       organization: "TechSonance Enterprise Client",
     },
-    roiSummary: "Consolidated 6 separate SaaS subscriptions into a single platform and saved 25+ administrative hours each week.",
+    roiSummary:
+      "Consolidated 6 separate SaaS subscriptions into a single platform and saved 25+ administrative hours each week.",
   },
 
   // ── 6. TechSonance Marketplace ─────────────────────────────────────────────
@@ -569,24 +602,30 @@ export const projects: Project[] = [
     overview:
       "Techsonance Marketplace is a production-grade multi-vendor platform with separate dashboards for Customers, Vendors, and Admins. It features advanced state management, real-time cart/wishlist sync, and a rich vendor analytics suite.",
 
-    challenge: "Building a scalable multi-vendor marketplace with role-isolated dashboards, real-time cart sync, and vendor onboarding - all in a single SPA.",
-    solution: "Redux Toolkit multi-slice architecture with localStorage persistence, role-based routing, and Recharts analytics.",
-    result: "3 fully isolated role portals, <200ms cart updates, vendor-level financial reporting, and dark/light mode.",
+    challenge:
+      "Building a scalable multi-vendor marketplace with role-isolated dashboards, real-time cart sync, and vendor onboarding - all in a single SPA.",
+    solution:
+      "Redux Toolkit multi-slice architecture with localStorage persistence, role-based routing, and Recharts analytics.",
+    result:
+      "3 fully isolated role portals, <200ms cart updates, vendor-level financial reporting, and dark/light mode.",
 
     challenges: [
       {
         title: "Role Isolation",
-        description: "Three distinct user types (Customer, Vendor, Admin) each need completely separate layouts, permissions, and data access.",
+        description:
+          "Three distinct user types (Customer, Vendor, Admin) each need completely separate layouts, permissions, and data access.",
         icon: "🔐",
       },
       {
         title: "State Persistence",
-        description: "Cart, wishlist, and auth state must persist across page refreshes without a backend round-trip.",
+        description:
+          "Cart, wishlist, and auth state must persist across page refreshes without a backend round-trip.",
         icon: "💾",
       },
       {
         title: "Vendor Analytics",
-        description: "Vendors needed real-time financial dashboards, inventory tracking, and order processing - all in one view.",
+        description:
+          "Vendors needed real-time financial dashboards, inventory tracking, and order processing - all in one view.",
         icon: "📊",
       },
     ],
@@ -622,7 +661,8 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "/images/marketplace/marketplace .png",
-        caption: "Techsonance Marketplace - Main storefront with product discovery and vendor listings",
+        caption:
+          "Techsonance Marketplace - Main storefront with product discovery and vendor listings",
       },
       {
         src: "/images/marketplace/marketplace 2.png",
@@ -653,24 +693,30 @@ export const projects: Project[] = [
     overview:
       "Accunest is a full-stack Indian accounting platform with GST-aware billing, inventory tracking, and automated compliance reporting. Built with Next.js + MongoDB, it features micro-animations, real-time form validation, and role-based dashboards.",
 
-    challenge: "Indian SMBs need GST-compliant invoicing with real-time tax calculations (CGST/IGST), PAN/bank validation, and PDF generation - all without a CA.",
-    solution: "Zod-powered GST/Non-GST billing engine, instant PDF/Excel exports, and role-based dashboards for accountants and sales reps.",
-    result: "Zero manual GST calculation errors, 5-minute invoice generation, automated low-stock alerts.",
+    challenge:
+      "Indian SMBs need GST-compliant invoicing with real-time tax calculations (CGST/IGST), PAN/bank validation, and PDF generation - all without a CA.",
+    solution:
+      "Zod-powered GST/Non-GST billing engine, instant PDF/Excel exports, and role-based dashboards for accountants and sales reps.",
+    result:
+      "Zero manual GST calculation errors, 5-minute invoice generation, automated low-stock alerts.",
 
     challenges: [
       {
         title: "GST Complexity",
-        description: "Intra-state vs. inter-state supply triggers different tax rules (CGST+SGST vs. IGST). Businesses got this wrong constantly.",
+        description:
+          "Intra-state vs. inter-state supply triggers different tax rules (CGST+SGST vs. IGST). Businesses got this wrong constantly.",
         icon: "🧾",
       },
       {
         title: "PAN/Bank Validation",
-        description: "Indian regulatory fields like PAN, GST numbers, and bank accounts have strict formats that most generic tools ignore.",
+        description:
+          "Indian regulatory fields like PAN, GST numbers, and bank accounts have strict formats that most generic tools ignore.",
         icon: "🏦",
       },
       {
         title: "Inventory Sync",
-        description: "Billing and inventory were managed separately, causing stock discrepancies and overbooking.",
+        description:
+          "Billing and inventory were managed separately, causing stock discrepancies and overbooking.",
         icon: "📦",
       },
     ],
@@ -707,7 +753,8 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "/images/accunest/accunest-dashboard.png",
-        caption: "Accunest Dashboard - Overview of invoices, financial metrics, and outstanding payments at a glance",
+        caption:
+          "Accunest Dashboard - Overview of invoices, financial metrics, and outstanding payments at a glance",
       },
       {
         src: "/images/accunest/accunest-invoices.png",
@@ -715,7 +762,8 @@ export const projects: Project[] = [
       },
       {
         src: "/images/accunest/accunest-sales.png",
-        caption: "Sales Module - Tracking client accounts, sales history, and daily revenue streams",
+        caption:
+          "Sales Module - Tracking client accounts, sales history, and daily revenue streams",
       },
       {
         src: "/images/accunest/accunest-purchase.png",
@@ -723,7 +771,8 @@ export const projects: Project[] = [
       },
       {
         src: "/images/accunest/accunest-company.png",
-        caption: "Company Setup & Settings - Configuring GST registration details, bank accounts, and profile parameters",
+        caption:
+          "Company Setup & Settings - Configuring GST registration details, bank accounts, and profile parameters",
       },
     ],
   },
@@ -741,24 +790,29 @@ export const projects: Project[] = [
     overview:
       "Built with Next.js 15 and Turso SQLite, this system handles NFC tag enrollment, real-time attendance tracking, role-based access, and offline buffering with automatic sync. Includes a Progressive Web App for mobile NFC check-ins.",
 
-    challenge: "Manual attendance registers and PIN-based systems were slow, gameable, and produced no analyzable data.",
-    solution: "NFC tap-to-check-in with offline buffering, RBAC, and a real-time admin dashboard with CSV export.",
+    challenge:
+      "Manual attendance registers and PIN-based systems were slow, gameable, and produced no analyzable data.",
+    solution:
+      "NFC tap-to-check-in with offline buffering, RBAC, and a real-time admin dashboard with CSV export.",
     result: "Zero buddy-punching, instant attendance data, offline reliability with auto-sync.",
 
     challenges: [
       {
         title: "Hardware Integration",
-        description: "Physical NFC readers (USB/Ethernet) needed a bridge between hardware events and the web application.",
+        description:
+          "Physical NFC readers (USB/Ethernet) needed a bridge between hardware events and the web application.",
         icon: "📡",
       },
       {
         title: "Offline Reliability",
-        description: "Network drops in factories and warehouses meant check-ins would fail. Attendance data is too critical to lose.",
+        description:
+          "Network drops in factories and warehouses meant check-ins would fail. Attendance data is too critical to lose.",
         icon: "🔌",
       },
       {
         title: "Role Complexity",
-        description: "Admin, HR, Reader devices, and Employees all need different access levels with secure session management.",
+        description:
+          "Admin, HR, Reader devices, and Employees all need different access levels with secure session management.",
         icon: "🔐",
       },
     ],
@@ -912,11 +966,13 @@ export const projects: Project[] = [
     screenshots: [
       {
         src: "/images/utsav/utsav-festival-app-showcase.png",
-        caption: "Utsav Festival Operations & App Showcase - Welcome screen, Jai Ganesh mandal dashboard, puja schedule, donation ledger, and profile settings",
+        caption:
+          "Utsav Festival Operations & App Showcase - Welcome screen, Jai Ganesh mandal dashboard, puja schedule, donation ledger, and profile settings",
       },
       {
         src: "/images/utsav/utsav-mandal-app-ui-showcase.png",
-        caption: "Mandal Directory & Operational Tools - Committee members, expenses, announcements, gallery, vendors, donations, duties, reports, and analytics",
+        caption:
+          "Mandal Directory & Operational Tools - Committee members, expenses, announcements, gallery, vendors, donations, duties, reports, and analytics",
       },
     ],
   },
@@ -957,29 +1013,15 @@ export const zionTechStack = {
     "Firebase Cloud Messaging (FCM)",
     "Apple & Google Auth",
   ],
-  database: [
-    "Isar DB",
-    "Hive",
-    "Secure Storage (Keychain/Keystore)",
-    "Shared Preferences",
-  ],
-  paymentsAndSecurity: [
-    "Stripe",
-    "Biometric Auth",
-    "OAuth 2.0",
-    "SMS OTP Autofill",
-  ],
+  database: ["Isar DB", "Hive", "Secure Storage (Keychain/Keystore)", "Shared Preferences"],
+  paymentsAndSecurity: ["Stripe", "Biometric Auth", "OAuth 2.0", "SMS OTP Autofill"],
   mapsAndMedia: [
     "CartoDB / Flutter Map",
     "Mobile Scanner (QR)",
     "Audio / Video Players",
     "Photo Manager",
   ],
-  observability: [
-    "Sentry",
-    "PostHog Analytics",
-    "Firebase Crashlytics",
-  ],
+  observability: ["Sentry", "PostHog Analytics", "Firebase Crashlytics"],
 };
 
 export const utsavTechStack = {
@@ -1003,19 +1045,8 @@ export const utsavTechStack = {
     "RBAC",
     "Socket.IO",
   ],
-  database: [
-    "PostgreSQL",
-    "Redis",
-    "Secure Storage",
-    "Local Storage",
-  ],
-  cloudAndInfra: [
-    "AWS",
-    "Amazon S3",
-    "CloudFront",
-    "Firebase FCM",
-    "Docker",
-  ],
+  database: ["PostgreSQL", "Redis", "Secure Storage", "Local Storage"],
+  cloudAndInfra: ["AWS", "Amazon S3", "CloudFront", "Firebase FCM", "Docker"],
   security: [
     "JWT",
     "OTP Authentication",
@@ -1024,4 +1055,3 @@ export const utsavTechStack = {
     "Audit Logging",
   ],
 };
-

@@ -1,12 +1,15 @@
 # Needle DI Setup and Migration Design Spec
 
 ## 1. Overview
+
 This specification details the setup of **Needle DI** (`@needle-di/core`) and the incremental migration of core I/O and stateful services in the TechSonance Next.js application.
 
 The goal is to replace ad-hoc module singletons and duplicate implementations (such as in-memory rate limiting and nodemailer transports) with type-safe, decoupled, and testable dependency-injected services using ECMAScript native decorators.
 
 ## 2. Goals & Non-Goals
+
 ### Goals
+
 - Centralize dependency management using `@needle-di/core`.
 - Provide a robust root container with testable override capabilities (`createTestContainer`).
 - Migrate key stateful and I/O services into `@injectable()` classes:
@@ -20,6 +23,7 @@ The goal is to replace ad-hoc module singletons and duplicate implementations (s
 - Fix Next.js 16 build/typecheck deprecation in `next.config.ts`.
 
 ### Non-Goals
+
 - Migrating stateless utility functions (e.g., text sanitizers, prompt formatting strings, SEO metadata maps) to DI classes.
 - Introducing heavy reflection packages like `reflect-metadata` (Needle DI utilizes native Stage 3 decorators).
 
@@ -51,6 +55,7 @@ tests/
 ## 4. Detailed Component Design
 
 ### 4.1 Dependency Injection Module (`lib/di/`)
+
 - **`tokens.ts`**:
   - `InjectionToken<T>` definitions:
     - `ENV_CONFIG_TOKEN`: configuration from `getEnv()`.
@@ -60,6 +65,7 @@ tests/
   - `createTestContainer(overrides?: Provider[])`: Creates an isolated container with test mocks.
 
 ### 4.2 Services (`lib/services/`)
+
 - **`RateLimiterService`**:
   - Injected with `BOT_CONFIG_TOKEN` and `ENV_CONFIG_TOKEN`.
   - Methods:
@@ -89,13 +95,16 @@ tests/
     - `routeChat(req: LLMChatRequest): AsyncIterable<string>`
 
 ### 4.3 Route Handlers Migration
+
 - Update `POST` handlers in `app/api/contact`, `app/api/careers`, `app/api/book`, and `app/api/chat` to resolve services via `getContainer().get(...)`.
 - Eliminate duplicated inline rate limiting logic from `app/api/contact/route.ts`.
 
 ### 4.4 Prerequisite Fix
+
 - In `next.config.ts`, remove the deprecated `eslint: { ignoreDuringBuilds: true }` block which causes TypeScript error TS2353 under Next.js 16.
 
 ## 5. Testing & Verification Plan
+
 - **Unit & Container Tests (`tests/di.test.ts`)**:
   - Verify container initialization and singleton instance retrieval.
   - Verify `BookingService` correctly receives and uses injected `EmailService`.

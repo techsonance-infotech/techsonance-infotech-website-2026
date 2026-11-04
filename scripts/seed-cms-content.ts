@@ -20,7 +20,10 @@ export function loadEnvironment() {
             const eqIdx = trimmed.indexOf("=");
             if (eqIdx !== -1) {
               const key = trimmed.slice(0, eqIdx).trim();
-              const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, "");
+              const val = trimmed
+                .slice(eqIdx + 1)
+                .trim()
+                .replace(/^["']|["']$/g, "");
               if (!process.env[key]) {
                 process.env[key] = val;
               }
@@ -66,7 +69,7 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
   const supabase = client || getScriptSupabaseClient();
   if (!supabase) {
     throw new Error(
-      "Supabase client unavailable. Please ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set."
+      "Supabase client unavailable. Please ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set.",
     );
   }
 
@@ -91,7 +94,7 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
           slug: siteSlug,
           domain: "techsonance.com",
         },
-        { onConflict: "slug" }
+        { onConflict: "slug" },
       )
       .select("id")
       .single();
@@ -150,10 +153,26 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
 
   // 3. Seed Categories (All 4 supported categories)
   const categoriesToSeed = [
-    { name: "Software Engineering", slug: "software-engineering", description: "Architecture, frameworks, and system engineering." },
-    { name: "AI & Automation", slug: "ai-automation", description: "RAG, LLMs, autonomous agents, and intelligence pipelines." },
-    { name: "Product Design", slug: "product-design", description: "UI/UX, interactions, accessibility, and design systems." },
-    { name: "Culture", slug: "culture", description: "Engineering culture, remote teams, and company values." },
+    {
+      name: "Software Engineering",
+      slug: "software-engineering",
+      description: "Architecture, frameworks, and system engineering.",
+    },
+    {
+      name: "AI & Automation",
+      slug: "ai-automation",
+      description: "RAG, LLMs, autonomous agents, and intelligence pipelines.",
+    },
+    {
+      name: "Product Design",
+      slug: "product-design",
+      description: "UI/UX, interactions, accessibility, and design systems.",
+    },
+    {
+      name: "Culture",
+      slug: "culture",
+      description: "Engineering culture, remote teams, and company values.",
+    },
   ];
 
   const categoryNameToId: Record<string, string> = {};
@@ -168,7 +187,7 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
           slug: cat.slug,
           description: cat.description,
         },
-        { onConflict: "site_id,slug" }
+        { onConflict: "site_id,slug" },
       )
       .select("id")
       .single();
@@ -205,30 +224,28 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
       publishedAt = new Date().toISOString();
     }
 
-    const { error: postErr } = await supabase
-      .from("ts_content_posts")
-      .upsert(
-        {
-          site_id: siteId,
-          slug: post.slug,
-          title: post.title,
-          excerpt: post.excerpt,
-          content: post.content,
-          category_id: categoryId,
-          hero_image: post.heroImage,
-          tags: post.tags,
-          author_ids: authorIds,
-          read_time: post.readTime,
-          faqs: post.faqs || [],
-          seo: {
-            metaTitle: post.title,
-            metaDescription: post.excerpt,
-          },
-          status: "PUBLISHED",
-          published_at: publishedAt,
+    const { error: postErr } = await supabase.from("ts_content_posts").upsert(
+      {
+        site_id: siteId,
+        slug: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        content: post.content,
+        category_id: categoryId,
+        hero_image: post.heroImage,
+        tags: post.tags,
+        author_ids: authorIds,
+        read_time: post.readTime,
+        faqs: post.faqs || [],
+        seo: {
+          metaTitle: post.title,
+          metaDescription: post.excerpt,
         },
-        { onConflict: "site_id,slug" }
-      );
+        status: "PUBLISHED",
+        published_at: publishedAt,
+      },
+      { onConflict: "site_id,slug" },
+    );
 
     if (!postErr) {
       seededPostsCount++;
@@ -238,25 +255,23 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
   // 5. Seed Jobs
   let seededJobsCount = 0;
   for (const job of legacyJobs) {
-    const { error: jobErr } = await supabase
-      .from("ts_content_jobs")
-      .upsert(
-        {
-          site_id: siteId,
-          slug: job.slug,
-          title: job.title,
-          department: job.department,
-          location: job.location,
-          type: job.type,
-          experience_level: job.experienceLevel || null,
-          description: job.description,
-          responsibilities: job.responsibilities,
-          requirements: job.requirements,
-          benefits: job.benefits,
-          status: job.status,
-        },
-        { onConflict: "site_id,slug" }
-      );
+    const { error: jobErr } = await supabase.from("ts_content_jobs").upsert(
+      {
+        site_id: siteId,
+        slug: job.slug,
+        title: job.title,
+        department: job.department,
+        location: job.location,
+        type: job.type,
+        experience_level: job.experienceLevel || null,
+        description: job.description,
+        responsibilities: job.responsibilities,
+        requirements: job.requirements,
+        benefits: job.benefits,
+        status: job.status,
+      },
+      { onConflict: "site_id,slug" },
+    );
 
     if (!jobErr) {
       seededJobsCount++;
@@ -274,8 +289,7 @@ export async function seedCmsContent(client?: SupabaseClient): Promise<SeedResul
 
 // ─── Direct CLI Execution ─────────────────────────────────────────────────────
 const isDirectRun =
-  Boolean(process.argv[1]) &&
-  path.resolve(process.argv[1]) === path.resolve(__filename || "");
+  Boolean(process.argv[1]) && path.resolve(process.argv[1]) === path.resolve(__filename || "");
 
 if (isDirectRun || process.env.RUN_SEEDER === "true") {
   seedCmsContent()

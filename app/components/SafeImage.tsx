@@ -22,8 +22,8 @@ export default function SafeImage({
     <div className={`relative overflow-hidden w-full h-full ${wrapperClassName}`}>
       {/* Premium Shimmering Skeleton Loader */}
       {!isLoaded && (
-        <div 
-          className={`absolute inset-0 z-10 shimmer-loader rounded-[inherit] ${skeletonClassName}`} 
+        <div
+          className={`absolute inset-0 z-10 shimmer-loader rounded-[inherit] ${skeletonClassName}`}
           style={{ width: "100%", height: "100%" }}
         />
       )}

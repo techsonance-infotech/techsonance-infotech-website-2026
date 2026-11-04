@@ -9,9 +9,7 @@ import type { BlogPost, BlogPostStatus, JobPosting, JobStatus } from "../content
  * and Needle DI container injection.
  */
 export class ContentDbService {
-  constructor(
-    private db: Database = inject(DRIZZLE_DB_TOKEN)
-  ) {}
+  constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
 
   getDb(): Database {
     return this.db;
@@ -83,8 +81,8 @@ export class ContentDbService {
           publishedAt: row.publishedAt
             ? row.publishedAt.toISOString()
             : row.createdAt
-            ? row.createdAt.toISOString()
-            : undefined,
+              ? row.createdAt.toISOString()
+              : undefined,
           seo: row.seo as BlogPost["seo"],
         };
       });
@@ -161,8 +159,8 @@ export class ContentDbService {
         publishedAt: row.publishedAt
           ? row.publishedAt.toISOString()
           : row.createdAt
-          ? row.createdAt.toISOString()
-          : undefined,
+            ? row.createdAt.toISOString()
+            : undefined,
         seo: row.seo as BlogPost["seo"],
       };
     } catch {

@@ -5,37 +5,43 @@ import { motion } from "motion/react";
 const testimonials = [
   {
     text: "Before partnering with TechSonance, we were drowning in physical LRs and manual trip-cost Excel sheets. The custom platform they built gave us real-time visibility into route profitability. Our operations are now 100% digital.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Rajesh Grover",
     role: "Founder, Grover Roadlines",
   },
   {
     text: "TechSonance solved all our GST compliance headaches with Accunest. Their real-time validation logic means zero manual calculation errors. Creating compliance-ready invoices now takes under 5 minutes.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Sunita Sharma",
     role: "Managing Director, Sharma Trading Co.",
   },
   {
     text: "TechSonance's SyncServe POS is an absolute lifesaver. The offline-first implementation they designed ensures our checkouts never stop even when connection drops. Stock discrepancies are now zero.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Rohan Malhotra",
     role: "Operations Head, Choice Supermarkets",
   },
   {
     text: "Managing three isolated portals for customers, vendors, and admins in one app seemed impossible. TechSonance delivered under-200ms cart updates and a robust Redux state middleware that works flawlessly.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Priya Patel",
     role: "E-Commerce Director, SoundSphere Ltd.",
   },
   {
     text: "The custom NFC attendance system designed by TechSonance is frictionless. Auto-syncing from local hardware buffers to our HR dashboard has eliminated buddy-punching and saved tons of payroll time.",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Devendra Prasad",
     role: "HR Director, NeoTech Solutions",
   },
   {
     text: "Coordinating festival schedules and tracking donation ledgers across hundreds of committee members used to be chaos. Utsav streamlined our entire mandal operations into a single intuitive mobile platform.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150&q=80",
+    image:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150&q=80",
     name: "Anand Deshmukh",
     role: "Trustee, Shree Ganesh Seva Mandal",
   },
@@ -66,14 +72,23 @@ export const Testimonials = () => {
             What our clients say
           </h2>
           <p className="text-center mt-5 text-slate-600">
-            See what our clients have to say about us and how our solutions transformed their workflows.
+            See what our clients have to say about us and how our solutions transformed their
+            workflows.
           </p>
         </motion.div>
 
         <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] max-h-[600px] overflow-hidden">
           <TestimonialsColumn testimonials={firstColumn} duration={15} />
-          <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
-          <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+          <TestimonialsColumn
+            testimonials={secondColumn}
+            className="hidden md:block"
+            duration={19}
+          />
+          <TestimonialsColumn
+            testimonials={thirdColumn}
+            className="hidden lg:block"
+            duration={17}
+          />
         </div>
       </div>
     </section>

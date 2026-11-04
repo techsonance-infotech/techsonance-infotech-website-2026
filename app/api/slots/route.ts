@@ -28,6 +28,6 @@ export async function GET(req: Request) {
         "Content-Type": "application/json",
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },
-    }
+    },
   );
 }

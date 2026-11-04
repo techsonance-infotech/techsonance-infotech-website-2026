@@ -131,12 +131,15 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
             {/* Semicircle Wedges (Background Sectors) */}
             {/* Left Segment (180 to 120 deg) */}
             <path d="M 42.5 540 A 520 520 0 0 1 302.5 89.7 L 562.5 540 Z" fill="#FFFFFF" />
-            
+
             {/* Right Segment (60 to 0 deg) */}
             <path d="M 822.5 89.7 A 520 520 0 0 1 1082.5 540 L 562.5 540 Z" fill="#FFFFFF" />
 
             {/* Active Center Segment (120 to 60 deg) */}
-            <path d="M 302.5 89.7 A 520 520 0 0 1 822.5 89.7 L 562.5 540 Z" fill="url(#active-segment-grad)" />
+            <path
+              d="M 302.5 89.7 A 520 520 0 0 1 822.5 89.7 L 562.5 540 Z"
+              fill="url(#active-segment-grad)"
+            />
 
             {/* Inner Mask (R_INNER = 410) to create Annular Sectors */}
             <circle cx={CX} cy={CY} r={R_INNER} fill="#F8FAFC" />
@@ -146,24 +149,89 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
             <line x1={822.5} y1={89.7} x2={CX} y2={CY} stroke="#FFFFFF" strokeWidth={4} />
 
             {/* Concentric Arcs */}
-            <Arc cx={CX} cy={CY} r={R_OUTER} startAngle={180} endAngle={0} stroke="#E2E8F0" strokeWidth={2} />
-            <Arc cx={CX} cy={CY} r={R_OUTER} startAngle={120} endAngle={60} stroke={COLOR_PRIMARY} strokeWidth={4} filter="url(#neon-glow)" />
-            <Arc cx={CX} cy={CY} r={R_MIDDLE} startAngle={180} endAngle={0} stroke="#E2E8F0" strokeWidth={2} />
-            <Arc cx={CX} cy={CY} r={R_INNER} startAngle={180} endAngle={0} stroke="#E2E8F0" strokeWidth={1.5} strokeDasharray="5 7" />
+            <Arc
+              cx={CX}
+              cy={CY}
+              r={R_OUTER}
+              startAngle={180}
+              endAngle={0}
+              stroke="#E2E8F0"
+              strokeWidth={2}
+            />
+            <Arc
+              cx={CX}
+              cy={CY}
+              r={R_OUTER}
+              startAngle={120}
+              endAngle={60}
+              stroke={COLOR_PRIMARY}
+              strokeWidth={4}
+              filter="url(#neon-glow)"
+            />
+            <Arc
+              cx={CX}
+              cy={CY}
+              r={R_MIDDLE}
+              startAngle={180}
+              endAngle={0}
+              stroke="#E2E8F0"
+              strokeWidth={2}
+            />
+            <Arc
+              cx={CX}
+              cy={CY}
+              r={R_INNER}
+              startAngle={180}
+              endAngle={0}
+              stroke="#E2E8F0"
+              strokeWidth={1.5}
+              strokeDasharray="5 7"
+            />
 
             {/* Ticks */}
             {ticks.map((tick, idx) => (
-              <line key={idx} x1={tick.x1} y1={tick.y1} x2={tick.x2} y2={tick.y2} stroke="#E2E8F0" strokeWidth={1.5} />
+              <line
+                key={idx}
+                x1={tick.x1}
+                y1={tick.y1}
+                x2={tick.x2}
+                y2={tick.y2}
+                stroke="#E2E8F0"
+                strokeWidth={1.5}
+              />
             ))}
 
             {/* Static Needle Pointer */}
-            <line x1={CX} y1={230} x2={CX} y2={520} stroke={COLOR_PRIMARY} strokeWidth={8} strokeLinecap="round" />
-            <circle cx={CX} cy={CY} r={25} fill="white" stroke="#F1F5F9" strokeWidth={1} filter="url(#hub-shadow)" />
+            <line
+              x1={CX}
+              y1={230}
+              x2={CX}
+              y2={520}
+              stroke={COLOR_PRIMARY}
+              strokeWidth={8}
+              strokeLinecap="round"
+            />
+            <circle
+              cx={CX}
+              cy={CY}
+              r={25}
+              fill="white"
+              stroke="#F1F5F9"
+              strokeWidth={1}
+              filter="url(#hub-shadow)"
+            />
             <circle cx={CX} cy={CY} r={10} fill={COLOR_PRIMARY} />
           </g>
 
           {/* Lower Bottom Fade Masking Overlay */}
-          <rect x="0" y="475" width={DESIGN_W} height="87.5" fill="url(#bottom-overlay-grad)" className="pointer-events-none" />
+          <rect
+            x="0"
+            y="475"
+            width={DESIGN_W}
+            height="87.5"
+            fill="url(#bottom-overlay-grad)"
+            className="pointer-events-none"
+          />
         </svg>
 
         {/* HTML Rotating Group Cards */}
@@ -193,9 +261,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
           const visibleMembers = isActive ? group.members : group.members.slice(0, 3);
 
           // Spacing offsets for the curved avatar layout
-          const angleOffsets = isActive
-            ? [-24, -12, 0, 12, 24]
-            : [-13, 0, 13];
+          const angleOffsets = isActive ? [-24, -12, 0, 12, 24] : [-13, 0, 13];
 
           return (
             <div
@@ -225,11 +291,11 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                 // Position relative to group card container (width: 480, center: 240, pivot: 540)
                 const avatarRadius = R_MIDDLE;
                 const leftPos = 240 + avatarRadius * Math.sin(rad) - 50; // 50 is half of 100px avatar
-                const topPos = 540 - avatarRadius * Math.cos(rad) - 50;  // 50 is half of 100px avatar
+                const topPos = 540 - avatarRadius * Math.cos(rad) - 50; // 50 is half of 100px avatar
 
                 // Only middle avatar in the active row gets the blue border/glow
                 const isCenterAvatar = isActive && mIdx === 2;
-                const zIndex = isActive ? (10 - Math.abs(mIdx - 2)) : (10 - Math.abs(mIdx - 1));
+                const zIndex = isActive ? 10 - Math.abs(mIdx - 2) : 10 - Math.abs(mIdx - 1);
 
                 return (
                   <div
@@ -243,7 +309,9 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                       zIndex: zIndex,
                       transform: `rotate(${-angle - angleOffset}deg)`,
                       opacity: isActive ? 1.0 : 0.6,
-                      transition: isWrapping ? "none" : "transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease",
+                      transition: isWrapping
+                        ? "none"
+                        : "transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease",
                     }}
                     className={`rounded-full border-2 bg-white overflow-hidden flex-shrink-0 transition-all ${
                       isCenterAvatar
@@ -252,7 +320,11 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                     }`}
                   >
                     {member.avatarUrl ? (
-                      <img src={member.avatarUrl} alt="Team" className="w-full h-full object-cover" />
+                      <img
+                        src={member.avatarUrl}
+                        alt="Team"
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-[10px] text-gray-400 font-semibold select-none">
                         TS

@@ -14,7 +14,13 @@ import EmojiOrLucideIcon from "@/app/components/icons/LucideIcon";
 import { trackCaseStudyView } from "@/lib/analytics";
 
 // ─── Reveal animation preset ────────────────────────────────────────────────────
-function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function RevealSection({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8%" });
   return (
@@ -69,7 +75,10 @@ function ScreenshotGallery({
         <RevealSection>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: accentColor }} />
-            <span className="text-xs font-black uppercase tracking-widest" style={{ color: accentColor }}>
+            <span
+              className="text-xs font-black uppercase tracking-widest"
+              style={{ color: accentColor }}
+            >
               Product Screenshots
             </span>
             <div className="flex-1 h-px bg-gray-100" />
@@ -122,22 +131,40 @@ function ScreenshotGallery({
             {/* Prev / Next overlays */}
             {active > 0 && (
               <button
-                onClick={(e) => { e.stopPropagation(); setActive(active - 1); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActive(active - 1);
+                }}
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition-colors"
                 aria-label="Previous screenshot"
               >
-                <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <path d="M10 4l-4 4 4 4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             )}
             {active < screenshots.length - 1 && (
               <button
-                onClick={(e) => { e.stopPropagation(); setActive(active + 1); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActive(active + 1);
+                }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition-colors"
                 aria-label="Next screenshot"
               >
-                <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <path d="M6 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
@@ -146,7 +173,9 @@ function ScreenshotGallery({
         </div>
 
         {/* Caption */}
-        <p className="text-sm text-gray-500 text-center mb-6 italic">{screenshots[active].caption}</p>
+        <p className="text-sm text-gray-500 text-center mb-6 italic">
+          {screenshots[active].caption}
+        </p>
 
         {/* Thumbnail strip - fixed height, object-contain so full image is visible */}
         <div className="flex gap-3 overflow-x-auto pb-2">
@@ -154,10 +183,9 @@ function ScreenshotGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`relative shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-gray-100 ${i === active
-                ? "scale-105 shadow-lg"
-                : "border-gray-200 opacity-60 hover:opacity-90"
-                }`}
+              className={`relative shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-gray-100 ${
+                i === active ? "scale-105 shadow-lg" : "border-gray-200 opacity-60 hover:opacity-90"
+              }`}
               style={i === active ? { borderColor: accentColor } : {}}
               aria-label={`View screenshot ${i + 1}`}
             >
@@ -215,7 +243,12 @@ function ScreenshotGallery({
               aria-label="Close lightbox"
             >
               <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <path
+                  d="M6 6l8 8M14 6l-8 8"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
 
@@ -246,7 +279,10 @@ function ScreenshotGallery({
               {screenshots.map((_, i) => (
                 <button
                   key={i}
-                  onClick={(e) => { e.stopPropagation(); setActive(i); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActive(i);
+                  }}
                   className="w-2 h-2 rounded-full transition-all"
                   style={{ background: i === active ? "white" : "rgba(255,255,255,0.3)" }}
                 />
@@ -276,7 +312,8 @@ function ProjectHero({ project }: { project: Project }) {
         <div
           className="absolute inset-0 opacity-[0.022]"
           style={{
-            backgroundImage: "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
+            backgroundImage:
+              "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -290,9 +327,13 @@ function ProjectHero({ project }: { project: Project }) {
           transition={{ duration: 0.5 }}
           className="flex items-center gap-2 text-sm text-gray-400 mb-8"
         >
-          <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-700 transition-colors">
+            Home
+          </Link>
           <span>/</span>
-          <Link href="/portfolio" className="hover:text-gray-700 transition-colors">Portfolio</Link>
+          <Link href="/portfolio" className="hover:text-gray-700 transition-colors">
+            Portfolio
+          </Link>
           <span>/</span>
           <span className="text-gray-700 font-medium">{project.title}</span>
         </motion.div>
@@ -373,25 +414,26 @@ function ProjectHero({ project }: { project: Project }) {
                   }}
                   className="border-transparent hover:border-transparent"
                 >
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg className="h-4 w-4 mr-2" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2" strokeLinecap="round" strokeLinejoin="round" />
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                    <svg
+                      className="h-4 w-4 mr-2"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                     View Live Product
                   </a>
                 </Button>
               )}
-              <Button
-                asChild
-                variant="secondary"
-              >
-                <Link href="/portfolio">
-                  ← Portfolio
-                </Link>
+              <Button asChild variant="secondary">
+                <Link href="/portfolio">← Portfolio</Link>
               </Button>
             </motion.div>
           </div>
@@ -484,9 +526,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
                   How we <span style={{ color: project.accentColor }}>built it</span>
                 </h2>
-                <p className="text-sm text-gray-500 leading-relaxed mb-8">
-                  {project.solution}
-                </p>
+                <p className="text-sm text-gray-500 leading-relaxed mb-8">{project.solution}</p>
                 <ul className="flex flex-col gap-4">
                   {project.solutions.map((s, i) => (
                     <motion.li
@@ -515,22 +555,24 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
                   Built with the <span style={{ color: project.accentColor }}>best tools</span>
                 </h2>
-                {(["frontend", "backend", "database", "infra", "ai", "mobile"] as const).map((cat) => {
-                  const items = project.techStack.filter((t) => t.category === cat);
-                  if (!items.length) return null;
-                  return (
-                    <div key={cat} className="mb-6">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 capitalize">
-                        {cat === "ai" ? "AI / ML" : cat === "infra" ? "Infrastructure" : cat}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {items.map((t) => (
-                          <TechBadge key={t.name} name={t.name} category={t.category} size="md" />
-                        ))}
+                {(["frontend", "backend", "database", "infra", "ai", "mobile"] as const).map(
+                  (cat) => {
+                    const items = project.techStack.filter((t) => t.category === cat);
+                    if (!items.length) return null;
+                    return (
+                      <div key={cat} className="mb-6">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 capitalize">
+                          {cat === "ai" ? "AI / ML" : cat === "infra" ? "Infrastructure" : cat}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {items.map((t) => (
+                            <TechBadge key={t.name} name={t.name} category={t.category} size="md" />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  },
+                )}
               </div>
             </div>
           </RevealSection>
@@ -562,25 +604,30 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             </div>
             <div
               className="mt-10 p-6 rounded-2xl border"
-              style={{ borderColor: `${project.accentColor}25`, background: `${project.accentColor}08` }}
+              style={{
+                borderColor: `${project.accentColor}25`,
+                background: `${project.accentColor}08`,
+              }}
             >
               <p className="text-sm text-gray-600 leading-relaxed">
-                <span className="font-bold" style={{ color: project.accentColor }}>Overall Result:</span>{" "}
+                <span className="font-bold" style={{ color: project.accentColor }}>
+                  Overall Result:
+                </span>{" "}
                 {project.result}
               </p>
             </div>
 
             {project.clientReview && (
-              <div
-                className="mt-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden"
-              >
+              <div className="mt-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden">
                 <div
                   className="absolute top-0 left-0 bottom-0 w-1.5"
                   style={{ background: project.accentColor }}
                 />
                 <div className="flex items-center gap-2 mb-3 text-amber-500">
                   {"★".repeat(5)}
-                  <span className="text-xs font-bold text-slate-700 ml-2">Verified Client Review</span>
+                  <span className="text-xs font-bold text-slate-700 ml-2">
+                    Verified Client Review
+                  </span>
                 </div>
                 <blockquote className="text-sm sm:text-base text-slate-800 italic leading-relaxed mb-4">
                   &ldquo;{project.clientReview.quote}&rdquo;
@@ -612,10 +659,14 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       {/* ── CTA ────────────────────────────────────────────────────────────────── */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 brand-gradient opacity-95" />
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
-          backgroundSize: "52px 52px",
-        }} />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
+            backgroundSize: "52px 52px",
+          }}
+        />
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import SafeImage from '@/app/components/SafeImage';
+import React, { useEffect, useState } from "react";
+import SafeImage from "@/app/components/SafeImage";
 import { motion } from "motion/react";
 
 // --- The ArcGalleryHero Component ---
@@ -36,7 +36,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   cardSizeLg = 120,
   cardSizeMd = 100,
   cardSizeSm = 80,
-  className = '',
+  className = "",
   title = "Rediscover Your Memories with AI",
   description = "Our intelligent platform finds, organizes, and brings your most cherished moments back to life.",
   primaryButtonText = "Explore Your Past",
@@ -65,8 +65,8 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
     };
 
     handleResize(); // Set initial size
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [radiusLg, radiusMd, radiusSm, cardSizeLg, cardSizeMd, cardSizeSm]);
 
   // Ensure at least 2 points to distribute angles for the arc calculation
@@ -78,11 +78,22 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       {/* Unique Background Animated Light Trails & Ambient Morphs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Ambient morphs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-tr from-[#1155CC]/5 to-[#22B6F6]/5 rounded-full blur-[100px] pointer-events-none animate-pulse" style={{ animationDuration: "8s" }} />
-        <div className="absolute bottom-[10%] right-[-10%] w-[250px] h-[250px] sm:w-[600px] sm:h-[600px] bg-gradient-to-br from-[#22B6F6]/5 to-[#1155CC]/5 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "12s", animationDelay: "3s" }} />
+        <div
+          className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-tr from-[#1155CC]/5 to-[#22B6F6]/5 rounded-full blur-[100px] pointer-events-none animate-pulse"
+          style={{ animationDuration: "8s" }}
+        />
+        <div
+          className="absolute bottom-[10%] right-[-10%] w-[250px] h-[250px] sm:w-[600px] sm:h-[600px] bg-gradient-to-br from-[#22B6F6]/5 to-[#1155CC]/5 rounded-full blur-[120px] pointer-events-none animate-pulse"
+          style={{ animationDuration: "12s", animationDelay: "3s" }}
+        />
 
         {/* Intersecting sleek curves & moving light trails */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.06] text-[#1155CC] pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="absolute inset-0 w-full h-full opacity-[0.06] text-[#1155CC] pointer-events-none"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <defs>
             <linearGradient id="hero-trail-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#1155CC" stopOpacity="0" />
@@ -90,12 +101,30 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
               <stop offset="100%" stopColor="#1155CC" stopOpacity="0" />
             </linearGradient>
           </defs>
-          
+
           {/* Structural wire-mesh lines */}
-          <path d="M-10 20 L110 60" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
-          <path d="M-10 50 C 30 30, 70 70, 110 40" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
-          <path d="M20 -10 L80 110" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" fill="none" />
-          
+          <path
+            d="M-10 20 L110 60"
+            stroke="currentColor"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+          />
+          <path
+            d="M-10 50 C 30 30, 70 70, 110 40"
+            stroke="currentColor"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+          />
+          <path
+            d="M20 -10 L80 110"
+            stroke="currentColor"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            fill="none"
+          />
+
           {/* Animating light streaks along these paths */}
           <motion.path
             d="M-10 20 L110 60"
@@ -107,7 +136,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
             animate={{ strokeDashoffset: -115 }}
             transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
           />
-          
+
           <motion.path
             d="M-10 50 C 30 30, 70 70, 110 40"
             stroke="url(#hero-trail-grad)"
@@ -136,7 +165,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       <div
         className="relative mx-auto"
         style={{
-          width: '100%',
+          width: "100%",
           // Give it a bit more height to prevent clipping
           height: dimensions.radius * 1.25,
         }}
@@ -147,11 +176,11 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
           {images.map((src, i) => {
             const angle = startAngle + step * i; // degrees
             const angleRad = (angle * Math.PI) / 180;
-            
+
             // Calculate x and y positions on the arc
             const x = Math.cos(angleRad) * dimensions.radius;
             const y = Math.sin(angleRad) * dimensions.radius;
-            
+
             return (
               <div
                 key={i}
@@ -163,15 +192,15 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                   bottom: `${y.toFixed(3)}px`,
                   transform: `translate(-50%, 50%)`,
                   animationDelay: `${i * 100}ms`,
-                  animationFillMode: 'forwards',
+                  animationFillMode: "forwards",
                   zIndex: count - i,
                 }}
               >
-                <div 
-                   className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 bg-white transition-transform hover:scale-105 w-full h-full"
+                <div
+                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 bg-white transition-transform hover:scale-105 w-full h-full"
                   style={{ transform: `rotate(${angle / 4}deg)` }}
                 >
-                   <SafeImage
+                  <SafeImage
                     src={src}
                     alt={`Memory ${i + 1}`}
                     width={400}
@@ -188,14 +217,17 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
 
       {/* Content positioned below the arc */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 -mt-16 sm:-mt-28 md:-mt-52 lg:-mt-64">
-        {children ? children : (
-          <div className="text-center max-w-2xl px-6 opacity-0 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}>
+        {children ? (
+          children
+        ) : (
+          <div
+            className="text-center max-w-2xl px-6 opacity-0 animate-fade-in"
+            style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
+          >
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900">
               {title}
             </h1>
-            <p className="mt-4 text-lg text-gray-600">
-              {description}
-            </p>
+            <p className="mt-4 text-lg text-gray-600">{description}</p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button className="w-full sm:w-auto px-6 py-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 {primaryButtonText}
@@ -207,7 +239,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
           </div>
         )}
       </div>
-      
+
       {/* CSS for animations */}
       <style>{`
         @keyframes fade-in-up {

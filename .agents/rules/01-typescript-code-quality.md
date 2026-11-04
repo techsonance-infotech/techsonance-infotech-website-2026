@@ -3,6 +3,7 @@
 Owns: tsconfig, typing, naming, lint config. `Result`/`AppError` live in `04`; contracts in `08`; layer direction in `AGENTS.md`.
 
 ## tsconfig (required flags)
+
 ```json
 {
   "compilerOptions": {
@@ -23,9 +24,11 @@ Owns: tsconfig, typing, naming, lint config. `Result`/`AppError` live in `04`; c
   }
 }
 ```
+
 Keep the Next-generated defaults (`module`, `moduleResolution: "bundler"`, `jsx`, `incremental`, `plugins`). Never loosen a flag to make an error go away; fix the code. With `exactOptionalPropertyTypes`, build optional props conditionally (`...(x ? { key: x } : {})`), never assign `undefined`.
 
 ## Typing rules
+
 - **No `any`.** Use `unknown` and narrow (Zod `safeParse`, type guards). Generic constraints over casts.
 - **No assertions.** `as` is allowed only for `as const`. No `!`, no `as unknown as X`, no `@ts-ignore`/`@ts-nocheck`; `@ts-expect-error` only with a reason and issue link.
 - **Boundary data enters as `unknown`.** Any parameter that receives external data (request, form, event, JSON, third-party or AI output) is typed `unknown` and parsed before use.
@@ -47,24 +50,27 @@ Keep the Next-generated defaults (`module`, `moduleResolution: "bundler"`, `jsx`
 - **Type tests**: critical helpers, contracts, and `Result` shapes get `expectTypeOf` assertions in Vitest, so type drift fails `npm test`, not production.
 
 ## Naming & files
-| Thing | Convention | Example |
-|---|---|---|
-| Files/folders | `kebab-case` | `user-card.tsx` |
-| Components, types | `PascalCase` | `UserCard`, `UserProfile` |
-| Functions, vars | `camelCase` | `getUserById` |
-| Constants | `SCREAMING_SNAKE_CASE` (module-level, truly constant) | `MAX_UPLOAD_BYTES` |
-| Booleans | `is/has/can/should` prefix | `isLoading` |
-| Zod schemas | `camelCase` + `Schema` | `signUpSchema` |
-| Schema types | `<Name>Input` / `<Name>Data` / `<Name>Dto` | `SignUpInput` |
-| Contracts | verb + noun + `Contract` | `getPostContract` |
-| Events | dotted `domain.verb` string, schema `<name>EventSchema` | `post.created` |
-| Server Actions | verb-first + `Action` | `createPostAction` |
-| Hooks | `use` prefix | `useDebouncedValue` |
+
+| Thing             | Convention                                              | Example                   |
+| ----------------- | ------------------------------------------------------- | ------------------------- |
+| Files/folders     | `kebab-case`                                            | `user-card.tsx`           |
+| Components, types | `PascalCase`                                            | `UserCard`, `UserProfile` |
+| Functions, vars   | `camelCase`                                             | `getUserById`             |
+| Constants         | `SCREAMING_SNAKE_CASE` (module-level, truly constant)   | `MAX_UPLOAD_BYTES`        |
+| Booleans          | `is/has/can/should` prefix                              | `isLoading`               |
+| Zod schemas       | `camelCase` + `Schema`                                  | `signUpSchema`            |
+| Schema types      | `<Name>Input` / `<Name>Data` / `<Name>Dto`              | `SignUpInput`             |
+| Contracts         | verb + noun + `Contract`                                | `getPostContract`         |
+| Events            | dotted `domain.verb` string, schema `<name>EventSchema` | `post.created`            |
+| Server Actions    | verb-first + `Action`                                   | `createPostAction`        |
+| Hooks             | `use` prefix                                            | `useDebouncedValue`       |
+
 - One component per file; filename matches the main export.
 - **Named exports only**, except where Next requires default (`page`, `layout`, `loading`, `error`, `global-error`, `not-found`); `route.ts` exports named HTTP methods.
 - No barrel files (`index.ts` re-exports): they hurt bundling and cause cycles.
 
 ## Function & module design
+
 - Functions do one thing; target ≤ 40 lines, ≤ 3 params (options object beyond that).
 - Early returns over nested `if`; max nesting depth 3.
 - Pure functions in `lib/utils`; side effects isolated in `server/` or hooks.
@@ -73,21 +79,26 @@ Keep the Next-generated defaults (`module`, `moduleResolution: "bundler"`, `jsx`
 - Server-only modules start with `import "server-only";`. Client-reachable code never touches `process.env` (`03`).
 
 ## Comments & docs
+
 - Code explains **what**; comments explain **why** (constraints, trade-offs, workarounds, links).
 - Public/shared utilities get a one-line JSDoc. `TODO(#123): …` only with an issue number. No commented-out code.
 
 ## Error handling in code
+
 - Never swallow errors: no empty `catch {}`. Log with context or rethrow.
 - `catch (e)` → `e` is `unknown`; narrow with `instanceof`. In Next code, rethrow framework control-flow errors (`redirect`, `notFound`) with `unstable_rethrow` (`02`).
 - Never throw strings. Throw `AppError` (`04`) with a safe message; keep internals (SQL, stack, table names) out of user-facing text.
 
 ## Async rules
+
 - Always `await` or explicitly `void` a promise; no floating promises.
 - Parallelise independent work with `Promise.all`; no sequential awaits in loops over network calls.
 - Every outbound fetch to a third party has `AbortSignal.timeout(...)`.
 
 ## Imports order (enforced by review)
+
 1. `node:` built-ins → 2. external packages → 3. `@/` aliases → 4. relative → 5. type-only imports last in each group. CSS imports last.
 
 ## oxlint expectations
+
 Enable at minimum: `correctness` (error), `suspicious` (warn→error in CI), `typescript`, `react`, `react-hooks`, `nextjs`, `jsx-a11y`, `import`, `promise`, `unicorn` (selective). Keep on: `no-console`, `no-debugger`, `eqeqeq`, `no-explicit-any`, `no-non-null-assertion`, `ban-ts-comment`, `consistent-type-imports`, `no-floating-promises` (type-aware if available), `exhaustive-deps`, `rules-of-hooks`, `no-array-index-key`. Use `no-restricted-imports` per folder (via `overrides`): client folders may not import `@/server/*`, `@/lib/env/server`, `@/lib/supabase/admin`; deep relative imports are banned. `check:boundaries` (`08`) is the backstop. Lint runs with `--deny-warnings` in CI.

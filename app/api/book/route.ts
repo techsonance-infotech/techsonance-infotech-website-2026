@@ -26,7 +26,7 @@ const bookingSchema = z.object({
       z.object({
         role: z.enum(["user", "assistant"]),
         content: z.string().max(300),
-      })
+      }),
     )
     .max(5)
     .optional(),
@@ -51,7 +51,8 @@ export async function POST(req: Request) {
   if (!rateCheck.success) {
     return new Response(
       JSON.stringify({
-        error: "Too many booking attempts. Please try again later or reach out via WhatsApp at +91 9173101711.",
+        error:
+          "Too many booking attempts. Please try again later or reach out via WhatsApp at +91 9173101711.",
         retryAfter: rateCheck.retryAfter,
       }),
       {
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
           "Retry-After": String(rateCheck.retryAfter || 3600),
         },
-      }
+      },
     );
   }
 
@@ -85,7 +86,7 @@ export async function POST(req: Request) {
       {
         status: 400,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 
@@ -94,10 +95,16 @@ export async function POST(req: Request) {
   // 4. Honeypot check (bot trap)
   if (body.website && body.website.trim().length > 0) {
     // Silently succeed to fool spam bots
-    return new Response(JSON.stringify({ ok: true, ref: `TS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}` }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        ref: `TS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   // 5. Cloudflare Turnstile Verification (Optional)
@@ -134,7 +141,7 @@ export async function POST(req: Request) {
       {
         status: 400,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 
@@ -164,13 +171,14 @@ export async function POST(req: Request) {
     console.error("Failed to send booking notification email:", msg);
     return new Response(
       JSON.stringify({
-        error: "We could not send your confirmation email. Please contact us directly at info@techsonance.co.in or WhatsApp +91 9173101711.",
+        error:
+          "We could not send your confirmation email. Please contact us directly at info@techsonance.co.in or WhatsApp +91 9173101711.",
         fallbackContact: "+91 9173101711",
       }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 }

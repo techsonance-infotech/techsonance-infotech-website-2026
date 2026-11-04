@@ -4,10 +4,7 @@ export function buildSystemPrompt(retrievedChunks: RetrievedChunk[]): string {
   const chunksText =
     retrievedChunks.length > 0
       ? retrievedChunks
-          .map(
-            (c, i) =>
-              `[Document ${i + 1}: ${c.chunk.title}]\n${c.chunk.text}`
-          )
+          .map((c, i) => `[Document ${i + 1}: ${c.chunk.title}]\n${c.chunk.text}`)
           .join("\n\n")
       : "No direct matching knowledge base articles found.";
 

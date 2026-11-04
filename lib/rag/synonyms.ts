@@ -2,8 +2,30 @@
 
 export const SYNONYM_MAP: Record<string, string[]> = {
   // Pricing / Cost / Budget
-  cost: ["price", "pricing", "budget", "quote", "rates", "charges", "estimate", "fee", "kharcha", "kitna"],
-  price: ["cost", "pricing", "budget", "quote", "rates", "charges", "estimate", "fee", "kharcha", "kitna"],
+  cost: [
+    "price",
+    "pricing",
+    "budget",
+    "quote",
+    "rates",
+    "charges",
+    "estimate",
+    "fee",
+    "kharcha",
+    "kitna",
+  ],
+  price: [
+    "cost",
+    "pricing",
+    "budget",
+    "quote",
+    "rates",
+    "charges",
+    "estimate",
+    "fee",
+    "kharcha",
+    "kitna",
+  ],
   pricing: ["cost", "price", "budget", "quote", "rates", "charges", "estimate", "fee"],
   budget: ["cost", "price", "pricing", "quote", "estimate", "rates", "affordable", "cheap"],
   quote: ["estimate", "cost", "pricing", "proposal", "rates"],
@@ -11,7 +33,17 @@ export const SYNONYM_MAP: Record<string, string[]> = {
   rate: ["hourly", "monthly", "cost", "price", "charges"],
 
   // Timeline / Duration
-  time: ["timeline", "duration", "how long", "weeks", "months", "days", "turnaround", "delivery", "kitna time"],
+  time: [
+    "timeline",
+    "duration",
+    "how long",
+    "weeks",
+    "months",
+    "days",
+    "turnaround",
+    "delivery",
+    "kitna time",
+  ],
   timeline: ["duration", "time", "how long", "schedule", "deadline", "turnaround", "completion"],
   duration: ["timeline", "time", "how long", "weeks", "months"],
 

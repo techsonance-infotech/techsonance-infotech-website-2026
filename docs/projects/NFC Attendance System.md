@@ -5,6 +5,7 @@ A complete, production-grade NFC-based attendance management system for IT compa
 ## 🎯 Features
 
 ### Admin Dashboard
+
 - **Real-time Statistics**: Live attendance tracking with auto-refresh
 - **Employee Management**: Full CRUD operations for employee records
 - **NFC Enrollment**: Bind NFC tags to employees with simulation mode
@@ -13,18 +14,21 @@ A complete, production-grade NFC-based attendance management system for IT compa
 - **Settings & Configuration**: Environment-based API endpoint management
 
 ### Mobile PWA
+
 - **Progressive Web App**: Installable on mobile devices
 - **NFC Check-in/Check-out**: Web NFC API support for Android Chrome
 - **Offline Support**: Local buffering with automatic sync
 - **Service Worker**: Background sync and caching
 
 ### Reader Agent
+
 - **USB/Ethernet Support**: Standalone Node.js agent for hardware readers
 - **Offline Buffering**: Automatic retry and sync when connection returns
 - **Health Monitoring**: Built-in HTTP endpoints for status checks
 - **Multiple Reader Support**: Run multiple agents for different locations
 
 ### Security & Authentication
+
 - **Better Auth (JWT)**: Secure authentication with bearer tokens
 - **Role-Based Access Control (RBAC)**: Admin, HR, Reader, Employee roles
 - **Protected Routes**: Middleware-based route protection
@@ -53,10 +57,12 @@ Visit [http://localhost:3000](http://localhost:3000)
 ### 3. Login
 
 **Admin Account:**
+
 - Email: `admin@company.com`
 - Password: `password123`
 
 **Employee Account:**
+
 - Email: `john.doe@company.com`
 - Password: `password123`
 
@@ -76,20 +82,24 @@ Visit [http://localhost:3000](http://localhost:3000)
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/[...all]` - Better Auth endpoints
 
 ### Employees
+
 - `GET /api/employees` - List employees
 - `POST /api/employees` - Create employee
 - `PUT /api/employees/[id]` - Update employee
 - `DELETE /api/employees/[id]` - Delete employee
 
 ### Enrollments
+
 - `GET /api/enrollments` - List enrollments
 - `POST /api/enrollments` - Create enrollment
 - `DELETE /api/enrollments/[id]` - Remove enrollment
 
 ### Attendance
+
 - `POST /api/attendance/checkin` - Check in
 - `POST /api/attendance/checkout` - Check out
 - `GET /api/attendance` - List attendance (with filters)
@@ -97,6 +107,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 - `POST /api/attendance/manual` - Manual entry
 
 ### Readers
+
 - `GET /api/readers` - List readers
 - `POST /api/readers` - Create reader
 - `PUT /api/readers/[id]` - Update reader
@@ -117,6 +128,7 @@ See `reader-agent/README.md` for details.
 ## 🗄️ Database
 
 Pre-seeded with:
+
 - 20 employees across 5 departments
 - 18 active NFC tags
 - 3 reader devices

@@ -70,8 +70,7 @@ export function buildKnowledgeBase() {
   const faqFile = path.resolve(rootDir, "data/faq.json");
   const outputFile = path.resolve(rootDir, "data/kb.index.json");
 
-  const isStrict =
-    process.argv.includes("--strict") || process.env.ALLOW_PLACEHOLDERS === "false";
+  const isStrict = process.argv.includes("--strict") || process.env.ALLOW_PLACEHOLDERS === "false";
 
   console.log("🔨 Building Knowledge Base Index...");
   const allChunks: KBChunk[] = [];
@@ -120,7 +119,7 @@ export function buildKnowledgeBase() {
 
     if (violations.length > 0) {
       console.error(
-        `\n❌ Strict validation failed: Found ${violations.length} unresolved placeholders {{...}}:`
+        `\n❌ Strict validation failed: Found ${violations.length} unresolved placeholders {{...}}:`,
       );
       for (const v of violations.slice(0, 10)) {
         console.error(`   • Chunk ${v.id}: ${v.match}`);
@@ -133,7 +132,9 @@ export function buildKnowledgeBase() {
   }
 
   fs.writeFileSync(outputFile, JSON.stringify(allChunks, null, 2), "utf-8");
-  console.log(`✅ Knowledge Base built successfully: ${allChunks.length} chunks indexed in data/kb.index.json`);
+  console.log(
+    `✅ Knowledge Base built successfully: ${allChunks.length} chunks indexed in data/kb.index.json`,
+  );
 }
 
 // Run if called directly

@@ -33,7 +33,11 @@ export class OpenAICompatibleProvider implements LLMProvider {
 
   async *chat(req: LLMChatRequest): AsyncIterable<string> {
     if (!this.enabled()) {
-      throw new QuotaError("auth", undefined, `Provider ${this.id} is not configured with an API key.`);
+      throw new QuotaError(
+        "auth",
+        undefined,
+        `Provider ${this.id} is not configured with an API key.`,
+      );
     }
 
     const controller = new AbortController();
@@ -47,7 +51,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
     let hasReceivedFirstToken = false;
     const timeoutTimer = setTimeout(() => {
       if (!hasReceivedFirstToken) {
-        controller.abort(new QuotaError("timeout", 120, `Provider ${this.id} timed out waiting for first token.`));
+        controller.abort(
+          new QuotaError("timeout", 120, `Provider ${this.id} timed out waiting for first token.`),
+        );
       }
     }, BOT_CONFIG.thresholds.firstTokenTimeoutMs);
 
@@ -75,7 +81,11 @@ export class OpenAICompatibleProvider implements LLMProvider {
       if (err instanceof Error && err.name === "AbortError") {
         throw new QuotaError("timeout", 120, `Request to ${this.id} was aborted or timed out.`);
       }
-      throw new QuotaError("server", 120, `Network error communicating with ${this.id}: ${String(err)}`);
+      throw new QuotaError(
+        "server",
+        120,
+        `Network error communicating with ${this.id}: ${String(err)}`,
+      );
     }
 
     if (!res.ok) {
@@ -100,7 +110,11 @@ export class OpenAICompatibleProvider implements LLMProvider {
       if (status >= 500) {
         throw new QuotaError("server", 120, `Server error ${status} from ${this.id}`);
       }
-      throw new QuotaError("server", 60, `Unexpected HTTP ${status} from ${this.id}: ${bodyText.slice(0, 100)}`);
+      throw new QuotaError(
+        "server",
+        60,
+        `Unexpected HTTP ${status} from ${this.id}: ${bodyText.slice(0, 100)}`,
+      );
     }
 
     if (!res.body) {

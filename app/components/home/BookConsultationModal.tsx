@@ -51,17 +51,20 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }) {
             className="absolute top-2.5 sm:top-3 right-4 sm:right-5 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-all cursor-pointer"
             aria-label="Close modal"
           >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg
+              className="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           <div className="flex flex-col pr-8">
             <h2 className="text-sm sm:text-base font-black text-[#0F172A] leading-tight">
-              Schedule Your{" "}
-              <span className="text-[#1155CC]">
-                Free Consultation
-              </span>
+              Schedule Your <span className="text-[#1155CC]">Free Consultation</span>
             </h2>
             <p className="text-[10px] sm:text-xs text-slate-500 font-medium leading-none mt-1">
               Pick a time that works for you - 15 min with our technical lead.
@@ -87,7 +90,6 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }) {
             onLoad={() => setIframeLoading(false)}
           />
         </div>
-
       </motion.div>
     </div>
   );
@@ -125,8 +127,6 @@ export default function BookConsultationModal({ isOpen, onClose }: BookConsultat
   }, [isOpen, onClose]);
 
   return (
-    <AnimatePresence>
-      {isOpen && <BookConsultationDialog onClose={onClose} />}
-    </AnimatePresence>
+    <AnimatePresence>{isOpen && <BookConsultationDialog onClose={onClose} />}</AnimatePresence>
   );
 }

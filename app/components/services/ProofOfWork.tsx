@@ -24,7 +24,8 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
             Projects We&apos;ve Shipped
           </h2>
           <p className="text-[var(--text-secondary)] mt-3 text-base md:text-lg max-w-2xl">
-            Real-world applications delivered for our clients. Built with the same engineering standards we bring to your project.
+            Real-world applications delivered for our clients. Built with the same engineering
+            standards we bring to your project.
           </p>
         </div>
 

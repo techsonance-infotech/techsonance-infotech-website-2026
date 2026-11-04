@@ -1,17 +1,16 @@
-import { getContainer } from "./di/container";
 import { AnalyticsService, type ConversionEvent } from "./services/analytics.service";
 
 export type { ConversionEvent };
 
-export function trackEvent(
-  eventName: ConversionEvent,
-  params: Record<string, unknown> = {}
-): void {
-  getContainer().get(AnalyticsService).track(eventName, params);
+// Pure client-side singleton for Google Analytics 4 / Google Tag Manager
+const analytics = new AnalyticsService();
+
+export function trackEvent(eventName: ConversionEvent, params: Record<string, unknown> = {}): void {
+  analytics.track(eventName, params);
 }
 
 export function trackBookingModalOpen(source: string): void {
-  getContainer().get(AnalyticsService).trackBookingModalOpen(source);
+  analytics.trackBookingModalOpen(source);
 }
 
 export function trackBookingFormSubmit(details: {
@@ -20,31 +19,25 @@ export function trackBookingFormSubmit(details: {
   timeline?: string;
   referenceId?: string;
 }): void {
-  getContainer().get(AnalyticsService).trackBookingFormSubmit(details);
+  analytics.trackBookingFormSubmit(details);
 }
 
-export function trackScopingFormSubmit(details: {
-  service: string;
-  hasCompany: boolean;
-}): void {
-  getContainer().get(AnalyticsService).trackScopingFormSubmit(details);
+export function trackScopingFormSubmit(details: { service: string; hasCompany: boolean }): void {
+  analytics.trackScopingFormSubmit(details);
 }
 
-export function trackContactFormSubmit(details: {
-  service?: string;
-  subject?: string;
-}): void {
-  getContainer().get(AnalyticsService).trackContactFormSubmit(details);
+export function trackContactFormSubmit(details: { service?: string; subject?: string }): void {
+  analytics.trackContactFormSubmit(details);
 }
 
 export function trackWhatsAppClick(source: string): void {
-  getContainer().get(AnalyticsService).trackWhatsAppClick(source);
+  analytics.trackWhatsAppClick(source);
 }
 
 export function trackCaseStudyView(projectSlug: string, projectTitle: string): void {
-  getContainer().get(AnalyticsService).trackCaseStudyView(projectSlug, projectTitle);
+  analytics.trackCaseStudyView(projectSlug, projectTitle);
 }
 
 export function trackBlogPostView(postSlug: string, postTitle: string, category: string): void {
-  getContainer().get(AnalyticsService).trackBlogPostView(postSlug, postTitle, category);
+  analytics.trackBlogPostView(postSlug, postTitle, category);
 }

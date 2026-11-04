@@ -107,15 +107,17 @@ export default function ScopingContactForm({
       setTouched({});
     } catch (err: unknown) {
       setFormStatus("idle");
-      const msg = err instanceof Error ? err.message : "Failed to submit request. Please try again.";
+      const msg =
+        err instanceof Error ? err.message : "Failed to submit request. Please try again.";
       setErrorMessage(msg);
     }
   };
 
   const inputBaseClass = (field: string) =>
-    `w-full px-4 py-3 bg-white border ${getValidationError(field)
-      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-      : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
+    `w-full px-4 py-3 bg-white border ${
+      getValidationError(field)
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+        : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
     } rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`;
 
   const formContent = (
@@ -127,7 +129,9 @@ export default function ScopingContactForm({
       <div className="flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-6 w-fit">
           <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] animate-pulse" />
-          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">Contact Us</span>
+          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+            Contact Us
+          </span>
         </div>
 
         <h2 className="text-3xl sm:text-4xl font-medium text-[#0F172A] mb-6 leading-tight">
@@ -136,7 +140,8 @@ export default function ScopingContactForm({
         </h2>
 
         <p className="text-[15px] text-slate-500 font-medium leading-relaxed mb-8 max-w-md">
-          Share your requirements and our engineers will follow up within 24 hours to schedule a free scoping call.
+          Share your requirements and our engineers will follow up within 24 hours to schedule a
+          free scoping call.
         </p>
 
         <ul className="space-y-4 text-[14px] text-slate-650 font-medium">
@@ -208,14 +213,19 @@ export default function ScopingContactForm({
                     placeholder="Your name"
                     value={formData.name}
                     onChange={(e) => {
-                      setFormData({ ...formData, name: e.target.value.replace(/[^a-zA-Z\s-]/g, "") });
-                      setTouched(prev => ({ ...prev, name: true }));
+                      setFormData({
+                        ...formData,
+                        name: e.target.value.replace(/[^a-zA-Z\s-]/g, ""),
+                      });
+                      setTouched((prev) => ({ ...prev, name: true }));
                     }}
-                    onBlur={() => setTouched(prev => ({ ...prev, name: true }))}
+                    onBlur={() => setTouched((prev) => ({ ...prev, name: true }))}
                     className={inputBaseClass("name")}
                   />
                   {getValidationError("name") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("name")}</p>
+                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      {getValidationError("name")}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-1.5">
@@ -229,13 +239,15 @@ export default function ScopingContactForm({
                     value={formData.email}
                     onChange={(e) => {
                       setFormData({ ...formData, email: e.target.value });
-                      setTouched(prev => ({ ...prev, email: true }));
+                      setTouched((prev) => ({ ...prev, email: true }));
                     }}
-                    onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
+                    onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                     className={inputBaseClass("email")}
                   />
                   {getValidationError("email") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("email")}</p>
+                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      {getValidationError("email")}
+                    </p>
                   )}
                 </div>
               </div>
@@ -281,13 +293,15 @@ export default function ScopingContactForm({
                   value={formData.message}
                   onChange={(e) => {
                     setFormData({ ...formData, message: e.target.value });
-                    setTouched(prev => ({ ...prev, message: true }));
+                    setTouched((prev) => ({ ...prev, message: true }));
                   }}
-                  onBlur={() => setTouched(prev => ({ ...prev, message: true }))}
+                  onBlur={() => setTouched((prev) => ({ ...prev, message: true }))}
                   className={`${inputBaseClass("message")} resize-none`}
                 />
                 {getValidationError("message") && (
-                  <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("message")}</p>
+                  <p className="text-[10px] font-semibold text-red-500 mt-1">
+                    {getValidationError("message")}
+                  </p>
                 )}
               </div>
 

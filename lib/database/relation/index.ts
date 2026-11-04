@@ -1,5 +1,5 @@
-import { defineRelations } from 'drizzle-orm';
-import * as schema from '../schema/index.schema';
+import { defineRelations } from "drizzle-orm";
+import * as schema from "../schema/index.schema";
 
 export const relations = defineRelations(schema, (r) => ({
   sitesTable: {

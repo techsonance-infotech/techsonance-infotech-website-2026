@@ -1,7 +1,9 @@
 # Experience & Case Studies
 
 ## Portfolio Track Record
+
 Over our 5+ years of building digital products, our team has delivered over 10+ production platforms and applications across diverse industries:
+
 - **Zion**: AI-powered cross-platform mobile application for event discovery, social ticketing, real-time chat, and host analytics built with Flutter, Firebase, and Stripe.
 - **Utsav**: Unified mobile mandal and community festival management platform for Ganesh Chaturthi scheduling, donation ledger tracking, expense reporting, and committee workflows built with Flutter and Node.js.
 - **FreightFlow**: Enterprise logistics and supply chain orchestration platform featuring real-time fleet dispatch, automated invoicing, and route optimization.
@@ -12,4 +14,5 @@ Over our 5+ years of building digital products, our team has delivered over 10+ 
 - **AccuNest**: Comprehensive accounting and financial management suite for SMEs.
 
 ## Client Industries Served
+
 We build software across Enterprise Operations & IT Services, Logistics & Freight, Retail & POS, Events & Ticketing, Community & Religious Organizations, Education & EdTech, and B2B E-Commerce.

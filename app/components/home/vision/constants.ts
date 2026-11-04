@@ -18,5 +18,3 @@ export const COLOR_GRAY_TEXT = "#6B7280";
 export const COLOR_ARC_LIGHT = "#CFE3FF";
 export const BACKGROUND_COLOR = "#F8FAFC";
 export const ROTATION_DURATION = 12; // seconds
-
-

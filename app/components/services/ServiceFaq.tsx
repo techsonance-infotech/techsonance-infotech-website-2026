@@ -72,7 +72,7 @@ export default function ServiceFaq({ faq }: ServiceFaqProps) {
                             {item.directAnswer}
                           </p>
                         </div>
-                        
+
                         <div className="space-y-1">
                           <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">
                             Technical Explanation & Integration
@@ -92,9 +92,7 @@ export default function ServiceFaq({ faq }: ServiceFaqProps) {
                         </div>
                       </div>
                     ) : (
-                      <div className="pt-2">
-                        {item.answer}
-                      </div>
+                      <div className="pt-2">{item.answer}</div>
                     )}
                   </div>
                 </motion.div>

@@ -67,7 +67,8 @@ export default function CookieConsent() {
                   Privacy & Cookies Preferences
                 </h3>
                 <p className="text-xs font-semibold text-slate-600 leading-relaxed max-w-4xl">
-                  We use cookies to optimize site navigation, analyze traffic, and support marketing efforts. By continuing or clicking "Accept All", you agree to our{" "}
+                  We use cookies to optimize site navigation, analyze traffic, and support marketing
+                  efforts. By continuing or clicking "Accept All", you agree to our{" "}
                   <Link href="/privacy-policy" className="text-[#1155CC] hover:underline font-bold">
                     Privacy Policy
                   </Link>{" "}

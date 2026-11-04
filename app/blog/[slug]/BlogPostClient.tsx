@@ -24,7 +24,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   return (
@@ -48,7 +48,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 linear-gradient(45deg, #1155cc 0.5px, transparent 0.5px), 
                 linear-gradient(-45deg, #1155cc 0.5px, transparent 0.5px)
               `,
-              backgroundSize: "60px 60px"
+              backgroundSize: "60px 60px",
             }}
           />
           <div className="absolute top-20 left-[10%] w-[350px] h-[350px] bg-[#1155CC]/3 rounded-full blur-[80px]" />
@@ -58,13 +58,15 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
         {/* Hero Section */}
         <section className="relative py-16 sm:py-24 border-b border-slate-100/80 z-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-
             {/* Back Button */}
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-[#1155CC] transition-colors mb-6 group"
             >
-              <Icon name="arrow" className="w-4 h-4 rotate-180 group-hover:-translate-x-0.5 transition-transform" />
+              <Icon
+                name="arrow"
+                className="w-4 h-4 rotate-180 group-hover:-translate-x-0.5 transition-transform"
+              />
               Back to Blog
             </Link>
 
@@ -89,12 +91,16 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                     </div>
                   ))}
                 </div>
-                <span className="text-slate-700">{post.authors.map((a) => a.name).join(" & ")}</span>
+                <span className="text-slate-700">
+                  {post.authors.map((a) => a.name).join(" & ")}
+                </span>
               </div>
               <span>&bull;</span>
               <span>{post.date}</span>
               <span>&bull;</span>
-              <span className="text-[#1155CC] bg-[#1155CC]/5 px-2.5 py-0.5 rounded-full">{post.readTime}</span>
+              <span className="text-[#1155CC] bg-[#1155CC]/5 px-2.5 py-0.5 rounded-full">
+                {post.readTime}
+              </span>
             </div>
           </div>
         </section>
@@ -102,7 +108,6 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
         {/* Main Content Layout */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-
             {/* Sticky Share Sidebar (Desktop Only) */}
             <div className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
               <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
@@ -110,12 +115,17 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                   AUTHOR
                 </span>
                 {post.authors.map((auth) => (
-                  <div key={auth.name} className="flex items-center gap-3 mb-4 last:mb-0 border-b border-slate-50 last:border-b-0 pb-3 last:pb-0">
+                  <div
+                    key={auth.name}
+                    className="flex items-center gap-3 mb-4 last:mb-0 border-b border-slate-50 last:border-b-0 pb-3 last:pb-0"
+                  >
                     <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 text-[#1155CC] font-bold flex items-center justify-center shrink-0">
                       {auth.avatar}
                     </div>
                     <div>
-                      <h4 className="text-xs font-black text-slate-800 leading-tight mb-0.5">{auth.name}</h4>
+                      <h4 className="text-xs font-black text-slate-800 leading-tight mb-0.5">
+                        {auth.name}
+                      </h4>
                       <p className="text-[10px] font-semibold text-slate-400">{auth.role}</p>
                     </div>
                   </div>
@@ -144,7 +154,6 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
 
             {/* Post Content */}
             <div className="col-span-1 lg:col-span-9 bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17,85,204,0.02)]">
-
               {/* Main Content Render */}
               <div
                 className="prose prose-slate max-w-none prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline"
@@ -191,7 +200,6 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 ))}
               </div>
             </div>
-
           </div>
         </section>
 
@@ -227,7 +235,10 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                       className="text-xs font-bold text-[#1155CC] hover:underline flex items-center gap-1 group/link"
                     >
                       Read Article
-                      <Icon name="arrow" className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
+                      <Icon
+                        name="arrow"
+                        className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform"
+                      />
                     </Link>
                   </div>
                 </div>
@@ -235,7 +246,6 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
             </div>
           </section>
         )}
-
       </main>
       <SiteFooter />
     </>

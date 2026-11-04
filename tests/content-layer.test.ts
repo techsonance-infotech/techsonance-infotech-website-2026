@@ -66,7 +66,9 @@ describe("Content Abstraction Layer", () => {
     });
 
     it("legacyPostSource.get() returns post by slug or null if not found", async () => {
-      const post = await legacyPostSource.get("cms-techsonance-enterprise-multi-tenant-architecture");
+      const post = await legacyPostSource.get(
+        "cms-techsonance-enterprise-multi-tenant-architecture",
+      );
       expect(post).not.toBeNull();
       expect(post?.slug).toBe("cms-techsonance-enterprise-multi-tenant-architecture");
       expect(post?.title).toContain("Architecting an Enterprise Multi-Tenant CMS & HRMS");

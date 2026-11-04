@@ -11,6 +11,7 @@
 The TechSonance Agency Admin & Content Control Platform transitions the current static, in-code content management (careers and blog articles) into a secure, database-backed admin platform with zero visitor-facing performance degradation.
 
 ### Key Objectives
+
 1. **Performance as a Release Gate**: Visitors continue to receive statically pre-rendered pages served directly from the CDN with on-demand cache revalidation (`revalidateTag`). The admin is never queried at public request time.
 2. **Zero-Downtime Safe Migration**: A dual-source Content Abstraction Layer switched via environment feature flags (`CONTENT_SOURCE_BLOG` and `CONTENT_SOURCE_CAREERS`) enables instantaneous fallback to existing code-based data (`data/blog.ts` and legacy career configs).
 3. **Phase 1 Focus**: Full end-to-end management of **Blog** (posts, categories, tags, authors, SEO fields, draft/review/publish workflow, draft preview) and **Careers** (job positions, open/closed toggle, application form submission, application inbox with status & review notes).
@@ -59,6 +60,7 @@ The TechSonance Agency Admin & Content Control Platform transitions the current 
 ## 3. Database Schema (Supabase Migration with RLS)
 
 ### 3.1 Tenancy & RBAC
+
 - **`ts_admin_sites`**:
   - `id` (uuid, PK)
   - `name` (text, default 'TechSonance Infotech')
@@ -73,6 +75,7 @@ The TechSonance Agency Admin & Content Control Platform transitions the current 
   - Capabilities array / lookup for granular permissions (`post.publish`, `job.edit`, `application.view`).
 
 ### 3.2 Content Tables
+
 - **`ts_content_authors`**:
   - `id` (uuid, PK), `site_id` (uuid), `name` (text), `role` (text), `avatar` (text), `bio` (text)
 - **`ts_content_categories`**:
@@ -150,6 +153,7 @@ The TechSonance Agency Admin & Content Control Platform transitions the current 
 ## 4. Content Abstraction Layer & Hybrid Cut-Over
 
 Public pages interact solely via domain contracts in `lib/content/`:
+
 - `lib/content/posts.ts`: defines `PostSource` with `cmsPostSource` (Supabase queries cached via `unstable_cache` / tagged fetch) and `legacyPostSource` (`data/blog.ts`).
 - `lib/content/jobs.ts`: defines `JobSource` with `cmsJobSource` (Supabase queries for `status = 'OPEN'`) and `legacyJobSource` (in-memory job definitions extracted from `CareersClient.tsx`).
 - Controlled via runtime env vars:
@@ -157,6 +161,7 @@ Public pages interact solely via domain contracts in `lib/content/`:
   - `CONTENT_SOURCE_CAREERS`: `legacy` | `cms`
 
 ### On-Demand Invalidation & Draft Preview
+
 - **Tag Invalidation**:
   - `revalidateTag('posts')`
   - `revalidateTag('post:${slug}')`
@@ -164,7 +169,7 @@ Public pages interact solely via domain contracts in `lib/content/`:
   - `revalidateTag('job:${slug}')`
 - **Draft Mode**:
   - Route `/api/draft/enable?secret=...&slug=...&type=post` sets cookie `draftMode().enable()`.
-  - Preview page shows real production page styling with an interactive floating banner: *"Viewing Unpublished Draft – [Exit Preview]"*.
+  - Preview page shows real production page styling with an interactive floating banner: _"Viewing Unpublished Draft – [Exit Preview]"_.
 
 ---
 

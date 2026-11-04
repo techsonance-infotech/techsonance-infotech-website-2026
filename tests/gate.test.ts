@@ -55,14 +55,11 @@ describe("Gate Evaluation Tests", () => {
     "Can you do my math homework for calculus?",
   ];
 
-  it.each(outOfScopePrompts)(
-    "should refuse out-of-scope or injection prompt: '%s'",
-    (prompt) => {
-      const result = evaluateGate(prompt);
-      expect(["BLOCKED", "OUT_OF_SCOPE"]).toContain(result.decision);
-      expect(result.showBooking).toBe(false);
-    }
-  );
+  it.each(outOfScopePrompts)("should refuse out-of-scope or injection prompt: '%s'", (prompt) => {
+    const result = evaluateGate(prompt);
+    expect(["BLOCKED", "OUT_OF_SCOPE"]).toContain(result.decision);
+    expect(result.showBooking).toBe(false);
+  });
 
   // ─── 40+ In-Scope Agency Questions (Must Pass) ──────────────────────────────
   const inScopePrompts = [
@@ -122,13 +119,10 @@ describe("Gate Evaluation Tests", () => {
     "Thanks for the help!",
   ];
 
-  it.each(inScopePrompts)(
-    "should accept and route in-scope agency query: '%s'",
-    (prompt) => {
-      const result = evaluateGate(prompt);
-      expect(["GREETING", "SMALLTALK", "BOOKING", "FAQ_DIRECT", "IN_SCOPE"]).toContain(
-        result.decision
-      );
-    }
-  );
+  it.each(inScopePrompts)("should accept and route in-scope agency query: '%s'", (prompt) => {
+    const result = evaluateGate(prompt);
+    expect(["GREETING", "SMALLTALK", "BOOKING", "FAQ_DIRECT", "IN_SCOPE"]).toContain(
+      result.decision,
+    );
+  });
 });

@@ -64,7 +64,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
                   start: "top 90%",
                   toggleActions: "play none none none",
                 },
-              }
+              },
             );
           });
         }, sectionRef.current!);
@@ -95,7 +95,8 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
               How We Work
             </h2>
             <p className="text-[var(--text-secondary)] mt-3 text-sm sm:text-base md:text-lg leading-relaxed">
-              Our structured engineering process ensures transparency, velocity, and high-fidelity output from kick-off to deployment.
+              Our structured engineering process ensures transparency, velocity, and high-fidelity
+              output from kick-off to deployment.
             </p>
           </div>
         </div>
@@ -114,10 +115,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
             style={{ willChange: "transform" }}
           >
             {service.process.map((step, i) => (
-              <div
-                key={i}
-                className="process-card md:w-[340px] lg:w-[380px] md:shrink-0 md:pr-6"
-              >
+              <div key={i} className="process-card md:w-[340px] lg:w-[380px] md:shrink-0 md:pr-6">
                 {/* Timeline node — desktop only */}
                 <div className="hidden md:flex items-center justify-center mb-6">
                   <div className="relative z-10 w-9 h-9 rounded-full border-2 border-[var(--accent-blue)] bg-[var(--bg-muted)] flex items-center justify-center shadow-sm">

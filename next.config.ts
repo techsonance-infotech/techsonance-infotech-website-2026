@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: [
-    "*.ngrok-free.app",
-    "localhost:3000"
-  ],
+  allowedDevOrigins: ["*.ngrok-free.app", "localhost:3000"],
   images: {
     formats: ["image/avif", "image/webp"],
   },
@@ -64,4 +61,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-

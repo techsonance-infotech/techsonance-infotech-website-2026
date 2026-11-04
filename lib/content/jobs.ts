@@ -8,14 +8,14 @@ import type { JobPosting, JobSource } from "./types";
 function safeCache<Args extends unknown[], R>(
   fn: (...args: Args) => Promise<R>,
   keyParts?: string[],
-  options?: { revalidate?: number | false; tags?: string[] }
+  options?: { revalidate?: number | false; tags?: string[] },
 ): (...args: Args) => Promise<R> {
   let cached: ((...args: Args) => Promise<R>) | null = null;
   try {
     cached = unstable_cache(
       fn as unknown as Parameters<typeof unstable_cache>[0],
       keyParts,
-      options
+      options,
     ) as (...args: Args) => Promise<R>;
   } catch {
     return fn;
@@ -146,23 +146,20 @@ async function fetchCmsJobSlugsRaw(): Promise<string[]> {
 }
 
 // ─── Cached CMS Fetchers with Next.js Tags ───────────────────────────────────
-const getCachedCmsJobs = safeCache(
-  fetchCmsJobsRaw,
-  ["cms-jobs-list"],
-  { tags: ["jobs"], revalidate: 3600 }
-);
+const getCachedCmsJobs = safeCache(fetchCmsJobsRaw, ["cms-jobs-list"], {
+  tags: ["jobs"],
+  revalidate: 3600,
+});
 
-const getCachedCmsJobBySlug = safeCache(
-  fetchCmsJobBySlugRaw,
-  ["cms-job-by-slug"],
-  { tags: ["jobs"], revalidate: 3600 }
-);
+const getCachedCmsJobBySlug = safeCache(fetchCmsJobBySlugRaw, ["cms-job-by-slug"], {
+  tags: ["jobs"],
+  revalidate: 3600,
+});
 
-const getCachedCmsJobSlugs = safeCache(
-  fetchCmsJobSlugsRaw,
-  ["cms-jobs-slugs"],
-  { tags: ["jobs"], revalidate: 3600 }
-);
+const getCachedCmsJobSlugs = safeCache(fetchCmsJobSlugsRaw, ["cms-jobs-slugs"], {
+  tags: ["jobs"],
+  revalidate: 3600,
+});
 
 // ─── CMS Job Source ──────────────────────────────────────────────────────────
 export const cmsJobSource: JobSource = {

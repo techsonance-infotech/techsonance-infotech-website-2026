@@ -39,7 +39,9 @@ export default function Loading() {
 
         {/* Logo Text center */}
         <div className="absolute text-center">
-          <span className="text-xs font-black tracking-wider text-[#1155CC] font-sora block">TS</span>
+          <span className="text-xs font-black tracking-wider text-[#1155CC] font-sora block">
+            TS
+          </span>
         </div>
       </div>
 

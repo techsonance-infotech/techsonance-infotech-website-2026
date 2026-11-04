@@ -98,7 +98,7 @@ const categories = [
   "Mobile Apps",
   "Cloud & DevOps",
   "API Integration",
-  "Product Engineering"
+  "Product Engineering",
 ];
 
 // Compile all FAQs into a single master database list
@@ -120,7 +120,7 @@ const masterFaqs = AEO_FAQS.map((faq, idx) => ({
   answer: faq.directAnswer,
   directAnswer: faq.directAnswer,
   expandedExplanation: faq.expandedExplanation,
-  businessBenefits: faq.businessBenefits
+  businessBenefits: faq.businessBenefits,
 }));
 
 export default function ServicesClient() {
@@ -145,7 +145,7 @@ export default function ServicesClient() {
   };
 
   const filteredFaqs = useMemo(() => {
-    let result = masterFaqs.filter((f) => f.category === activeFaqCategory);
+    const result = masterFaqs.filter((f) => f.category === activeFaqCategory);
     if (!faqSearch) return result;
     const query = faqSearch.toLowerCase();
     return result.filter(
@@ -154,23 +154,46 @@ export default function ServicesClient() {
         f.category.toLowerCase().includes(query) ||
         (f.directAnswer && f.directAnswer.toLowerCase().includes(query)) ||
         (f.expandedExplanation && f.expandedExplanation.toLowerCase().includes(query)) ||
-        (f.businessBenefits && f.businessBenefits.toLowerCase().includes(query))
+        (f.businessBenefits && f.businessBenefits.toLowerCase().includes(query)),
     );
   }, [activeFaqCategory, faqSearch]);
 
   // Capabilities dataset (all styled in brand blue/slate)
   const capabilities = [
-    { title: "High-Performance Architecture", desc: "We build microservices and database engines that scale smoothly past 100k requests per minute.", icon: "schema" },
-    { title: "Developer Quality Control", desc: "Rigorous CI/CD integrations, automated unit tests, and type checking to ensure zero-error runtimes.", icon: "shield" },
-    { title: "Agile Development Process", desc: "We operate on weekly iterations and transparent dashboards, allowing you to trace code updates directly.", icon: "trend" },
-    { title: "Advanced Security & Isolation", desc: "Multi-tenant logic built from the ground up with secure JWT tokens, OAuth, and row-level database guards.", icon: "shield" },
-    { title: "AI & ML Integrations", desc: "Connecting enterprise datasets to language models (RAG) and workflow agents for intelligent automations.", icon: "brain" },
-    { title: "Performance Optimization", desc: "Zero-bloat bundle sizes, optimized database indexing, and CDN strategies ensuring perfect Lighthouse metrics.", icon: "speed" }
+    {
+      title: "High-Performance Architecture",
+      desc: "We build microservices and database engines that scale smoothly past 100k requests per minute.",
+      icon: "schema",
+    },
+    {
+      title: "Developer Quality Control",
+      desc: "Rigorous CI/CD integrations, automated unit tests, and type checking to ensure zero-error runtimes.",
+      icon: "shield",
+    },
+    {
+      title: "Agile Development Process",
+      desc: "We operate on weekly iterations and transparent dashboards, allowing you to trace code updates directly.",
+      icon: "trend",
+    },
+    {
+      title: "Advanced Security & Isolation",
+      desc: "Multi-tenant logic built from the ground up with secure JWT tokens, OAuth, and row-level database guards.",
+      icon: "shield",
+    },
+    {
+      title: "AI & ML Integrations",
+      desc: "Connecting enterprise datasets to language models (RAG) and workflow agents for intelligent automations.",
+      icon: "brain",
+    },
+    {
+      title: "Performance Optimization",
+      desc: "Zero-bloat bundle sizes, optimized database indexing, and CDN strategies ensuring perfect Lighthouse metrics.",
+      icon: "speed",
+    },
   ];
 
   return (
     <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip">
-
       {/* Hero Parallax Section */}
       <HeroParallax products={serviceProducts} />
 
@@ -181,7 +204,6 @@ export default function ServicesClient() {
         <div className="absolute bottom-[20%] right-0 w-[500px] h-[500px] bg-gradient-to-tl from-cyan-100/10 to-transparent rounded-full blur-3xl opacity-50 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
           {/* ==========================================
             SERVICES DIRECTORY / NAVIGATOR
             ========================================== */}
@@ -216,7 +238,7 @@ export default function ServicesClient() {
                         className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-300"
                         style={{
                           backgroundColor: `${service.accentColor}0D`,
-                          color: service.accentColor
+                          color: service.accentColor,
                         }}
                       >
                         <Icon name={service.icon as IconName} className="w-5.5 h-5.5" />
@@ -260,7 +282,6 @@ export default function ServicesClient() {
                   id={service.slug}
                   className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center scroll-mt-24"
                 >
-
                   {/* Text Content Column with Scroll reveal */}
                   <motion.div
                     initial={{ opacity: 0, x: isEven ? -40 : 40 }}
@@ -271,8 +292,13 @@ export default function ServicesClient() {
                   >
                     {/* Accent tag */}
                     <div className="flex items-center gap-2 mb-4">
-                      <div className="w-6 h-0.5 rounded-full" style={{ backgroundColor: service.accentColor }} />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Service 0{index + 1}</span>
+                      <div
+                        className="w-6 h-0.5 rounded-full"
+                        style={{ backgroundColor: service.accentColor }}
+                      />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                        Service 0{index + 1}
+                      </span>
                     </div>
 
                     <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-4 leading-tight">
@@ -291,10 +317,11 @@ export default function ServicesClient() {
                           <button
                             key={specialty}
                             onClick={() => updateSubIndex(index, subIdx)}
-                            className={`relative w-full text-left py-3.5 px-4.5 rounded-[22px] transition-all duration-300 flex items-start gap-4 cursor-pointer overflow-hidden border ${isActive
+                            className={`relative w-full text-left py-3.5 px-4.5 rounded-[22px] transition-all duration-300 flex items-start gap-4 cursor-pointer overflow-hidden border ${
+                              isActive
                                 ? "bg-white shadow-[0_12px_30px_rgba(17, 85, 204,0.06)] border-slate-100"
                                 : "bg-transparent border-transparent hover:bg-slate-50"
-                              }`}
+                            }`}
                           >
                             {isActive && (
                               <motion.div
@@ -306,16 +333,18 @@ export default function ServicesClient() {
 
                             {/* Number Indicator */}
                             <span
-                              className={`text-xs font-mono font-bold leading-none mt-0.5 ${isActive ? "text-[#1155CC]" : "text-gray-400"
-                                }`}
+                              className={`text-xs font-mono font-bold leading-none mt-0.5 ${
+                                isActive ? "text-[#1155CC]" : "text-gray-400"
+                              }`}
                             >
                               0{subIdx + 1}
                             </span>
 
                             <div className="flex-grow">
                               <h4
-                                className={`text-sm font-bold leading-none mb-1.5 transition-colors ${isActive ? "text-gray-900" : "text-gray-600"
-                                  }`}
+                                className={`text-sm font-bold leading-none mb-1.5 transition-colors ${
+                                  isActive ? "text-gray-900" : "text-gray-600"
+                                }`}
                               >
                                 {specialty}
                               </h4>
@@ -325,18 +354,24 @@ export default function ServicesClient() {
                                   animate={{ opacity: 1, height: "auto" }}
                                   className="text-xs text-gray-400 leading-relaxed mt-1"
                                 >
-                                  Specialized engineering workflows customized to build robust, secure, and production-grade {specialty.toLowerCase()} solutions for our partners.
+                                  Specialized engineering workflows customized to build robust,
+                                  secure, and production-grade {specialty.toLowerCase()} solutions
+                                  for our partners.
                                 </motion.p>
                               )}
                             </div>
 
                             <div
-                              className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${isActive
+                              className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${
+                                isActive
                                   ? "bg-[#1155CC] text-white"
                                   : "bg-transparent text-gray-400"
-                                }`}
+                              }`}
                             >
-                              <Icon name="chevron" className={`w-2.5 h-2.5 transition-transform ${isActive ? "rotate-180" : ""}`} />
+                              <Icon
+                                name="chevron"
+                                className={`w-2.5 h-2.5 transition-transform ${isActive ? "rotate-180" : ""}`}
+                              />
                             </div>
                           </button>
                         );
@@ -346,9 +381,7 @@ export default function ServicesClient() {
                     {/* Call-to-action link */}
                     <div className="flex items-center gap-4">
                       <Button asChild variant="secondary" size="sm" showArrow={true}>
-                        <Link href={`/services/${service.slug}`}>
-                          Deep Dive Into This Service
-                        </Link>
+                        <Link href={`/services/${service.slug}`}>Deep Dive Into This Service</Link>
                       </Button>
                     </div>
                   </motion.div>
@@ -363,7 +396,6 @@ export default function ServicesClient() {
                   >
                     <ServiceIllustration slug={service.slug} />
                   </motion.div>
-
                 </div>
               );
             })}
@@ -378,7 +410,8 @@ export default function ServicesClient() {
                 Our Core Architecture Principles
               </h2>
               <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
-                Every system we build incorporates enterprise-grade capabilities to deliver reliability, performance, and scale.
+                Every system we build incorporates enterprise-grade capabilities to deliver
+                reliability, performance, and scale.
               </p>
             </div>
 
@@ -393,14 +426,13 @@ export default function ServicesClient() {
                   className="bg-white rounded-[28px] p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_16px_40px_rgba(17, 85, 204,0.03)] hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-6">
-                    <Icon name={(cap.icon === "lock" ? "shield" : cap.icon) as IconName} className="w-5 h-5" />
+                    <Icon
+                      name={(cap.icon === "lock" ? "shield" : cap.icon) as IconName}
+                      className="w-5 h-5"
+                    />
                   </div>
-                  <h3 className="text-base font-medium text-gray-900 mb-2.5">
-                    {cap.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">
-                    {cap.desc}
-                  </p>
+                  <h3 className="text-base font-medium text-gray-900 mb-2.5">{cap.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{cap.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -423,15 +455,18 @@ export default function ServicesClient() {
             transition={{ duration: 0.6 }}
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-
               {/* Left Header Info */}
               <div className="lg:col-span-4 lg:sticky lg:top-24">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#1155CC] mb-2.5 block">Got a question?</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#1155CC] mb-2.5 block">
+                  Got a question?
+                </span>
                 <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight mb-4 leading-tight">
-                  Frequently Asked <br />Questions.
+                  Frequently Asked <br />
+                  Questions.
                 </h2>
                 <p className="text-sm text-gray-500 leading-relaxed mb-6">
-                  Find answers regarding intellectual property, data compliance, typical timelines, and our software engineering methods.
+                  Find answers regarding intellectual property, data compliance, typical timelines,
+                  and our software engineering methods.
                 </p>
 
                 {/* Live search input */}
@@ -461,7 +496,9 @@ export default function ServicesClient() {
               <div className="lg:col-span-8 bg-transparent p-0">
                 <h3 className="text-sm font-black text-gray-900 mb-6 pb-4 border-b border-slate-200/50 flex items-center justify-between">
                   <span>Showing {filteredFaqs.length} FAQ answers</span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">TechSonance Knowledge Database</span>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    TechSonance Knowledge Database
+                  </span>
                 </h3>
 
                 {/* Category selector tabs */}
@@ -475,10 +512,11 @@ export default function ServicesClient() {
                           setActiveFaqCategory(cat);
                           setOpenFaqIdx(null); // Reset accordion open state when switching tabs
                         }}
-                        className={`px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${isActive
+                        className={`px-3 py-1.5 rounded-full text-[10px] font-bold tracking-wider whitespace-nowrap transition-all duration-300 cursor-pointer ${
+                          isActive
                             ? "bg-[#1155CC] text-white shadow-sm shadow-[#1155CC]/15"
                             : "bg-white text-gray-500 hover:text-[#1155CC] hover:bg-slate-50/50 border border-slate-100/80"
-                          }`}
+                        }`}
                       >
                         {cat}
                       </button>
@@ -497,10 +535,11 @@ export default function ServicesClient() {
                       return (
                         <div
                           key={idx}
-                          className={`relative border rounded-2xl overflow-hidden transition-all duration-300 ${isOpen
+                          className={`relative border rounded-2xl overflow-hidden transition-all duration-300 ${
+                            isOpen
                               ? "bg-white shadow-[0_12px_30px_rgba(17, 85, 204,0.05)] border-slate-100"
                               : "bg-transparent border-transparent hover:bg-slate-100/30"
-                            }`}
+                          }`}
                         >
                           {isOpen && (
                             <motion.div
@@ -521,10 +560,11 @@ export default function ServicesClient() {
                               <span className="leading-snug">{item.question}</span>
                             </div>
                             <div
-                              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${isOpen
+                              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                                isOpen
                                   ? "bg-[#1155CC] text-white"
                                   : "bg-slate-100 text-gray-500 hover:bg-slate-200"
-                                }`}
+                              }`}
                             >
                               <Icon
                                 name="chevron"
@@ -584,10 +624,8 @@ export default function ServicesClient() {
                   </div>
                 )}
               </div>
-
             </div>
           </motion.div>
-
         </div>
       </div>
     </main>

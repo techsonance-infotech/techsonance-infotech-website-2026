@@ -1,6 +1,7 @@
 # Project Architecture & Directory Restructuring Design Spec
 
 ## 1. Overview
+
 This specification details the end-to-end restructuring of the TechSonance codebase to align with modern Next.js 16 App Router best practices, feature-driven domain boundaries, consistent naming conventions, and Needle DI integration.
 
 ## 2. Target Directory Hierarchy
@@ -135,6 +136,7 @@ public/                       # Static public assets
 ```
 
 ## 3. Best Practices & Naming Conventions
+
 - **Route Groups**: `(auth)`, `(dashboard)`, `(marketing)`.
 - **Loading & Error Boundaries**: Add `loading.tsx` and `error.tsx` to each route group.
 - **Import Aliases**: All imports use absolute `@/` path aliases pointing to the project root.
@@ -146,6 +148,7 @@ public/                       # Static public assets
 - **Single Component Per File**: One component per file with clean default/named exports.
 
 ## 4. Migration Strategy
+
 1. **Remove Stray Directory**: Delete unused `Users/` directory created accidentally.
 2. **Reorganize `lib/`**:
    - Move config files into `lib/config/`.

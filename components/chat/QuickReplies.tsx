@@ -17,7 +17,8 @@ export function QuickReplies({
   return (
     <div className="flex flex-wrap items-center gap-1.5 py-1.5 px-1 animate-fade-in">
       {chips.map((chip) => {
-        const isBooking = chip.toLowerCase().includes("book") || chip.toLowerCase().includes("consultation");
+        const isBooking =
+          chip.toLowerCase().includes("book") || chip.toLowerCase().includes("consultation");
         return (
           <button
             key={chip}

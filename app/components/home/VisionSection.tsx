@@ -11,33 +11,93 @@ const GROUPS: AvatarGroup[] = [
     id: "g-core",
     title: "Our Core Team",
     members: [
-      { id: "ct-1", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-2", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-3", avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-4", avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "ct-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      {
+        id: "ct-1",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "ct-2",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "ct-3",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "ct-4",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "ct-5",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80",
+      },
     ],
   },
   {
     id: "g-talent",
     title: "Talent",
     members: [
-      { id: "t-1", avatarUrl: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-2", avatarUrl: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-3", avatarUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-4", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "t-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      {
+        id: "t-1",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "t-2",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "t-3",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "t-4",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "t-5",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80",
+      },
     ],
   },
   {
     id: "g-experts",
     title: "Experts",
     members: [
-      { id: "e-1", avatarUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-2", avatarUrl: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-3", avatarUrl: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-4", avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80" },
-      { id: "e-5", avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80" },
+      {
+        id: "e-1",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "e-2",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "e-3",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "e-4",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80",
+      },
+      {
+        id: "e-5",
+        avatarUrl:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80",
+      },
     ],
   },
 ];
@@ -52,7 +112,6 @@ export default function VisionSection() {
     <section className="w-full bg-[#F8FAFC] max-w-7xl mx-auto relative overflow-hidden select-none">
       {/* Container max-width 1440px with exact padding constraints */}
       <div className="max-w-[1440px] mx-auto px-[24px] sm:px-[40px] lg:px-[60px] py-[60px] sm:py-[80px] lg:py-[100px] flex flex-col lg:flex-row gap-12 lg:gap-[120px] justify-between items-start">
-
         {/* Left Column: Heading and semi-circular dashboard (flex-1 max-w-480px) */}
         <div className="flex-1 w-full lg:max-w-[480px] flex flex-col justify-start">
           <motion.h2
@@ -62,7 +121,8 @@ export default function VisionSection() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="text-[36px] sm:text-[46px] lg:text-[56px] font-medium leading-[1.15] tracking-tight text-[#111827] tracking-tight"
           >
-            <span className="lg:whitespace-nowrap">A Team of Builders &amp;</span><br />
+            <span className="lg:whitespace-nowrap">A Team of Builders &amp;</span>
+            <br />
             <span className="italic text-[#2563EB] font-medium">Innovators</span>
           </motion.h2>
 
@@ -85,7 +145,9 @@ export default function VisionSection() {
               we combine creativity with engineering discipline to build products that users love.
             </h3>
             <p className="text-[16px] sm:text-[17px] lg:text-[18px] font-normal text-[#6B7280] leading-relaxed">
-              From <span className="font-semibold text-gray-800">early-stage</span> startups to established enterprises, we help our clients transform complex problems into simple, elegant solutions.
+              From <span className="font-semibold text-gray-800">early-stage</span> startups to
+              established enterprises, we help our clients transform complex problems into simple,
+              elegant solutions.
             </p>
           </motion.div>
 
@@ -100,7 +162,6 @@ export default function VisionSection() {
             <Stats items={STATS_ITEMS} />
           </motion.div>
         </div>
-
       </div>
     </section>
   );

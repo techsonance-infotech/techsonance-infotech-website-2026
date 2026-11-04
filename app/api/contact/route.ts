@@ -19,12 +19,12 @@ export async function POST(request: Request) {
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { error: "Too many requests. Please try again after 15 minutes." },
-        { 
+        {
           status: 429,
           headers: {
-            "Retry-After": String(rateLimitResult.retryAfter || 900)
-          }
-        }
+            "Retry-After": String(rateLimitResult.retryAfter || 900),
+          },
+        },
       );
     }
 
@@ -43,7 +43,13 @@ export async function POST(request: Request) {
     if (body.firstName !== undefined || body.lastName !== undefined) {
       const { firstName, lastName, email, countryCode, phone, interest, message } = body;
 
-      if (!firstName?.trim() || !lastName?.trim() || !email?.trim() || !phone?.trim() || !message?.trim()) {
+      if (
+        !firstName?.trim() ||
+        !lastName?.trim() ||
+        !email?.trim() ||
+        !phone?.trim() ||
+        !message?.trim()
+      ) {
         return NextResponse.json({ error: "All required fields must be filled." }, { status: 400 });
       }
 
@@ -54,11 +60,17 @@ export async function POST(request: Request) {
       const cleanPhone = phone.replace(/\D/g, "");
       if (countryCode === "+91") {
         if (cleanPhone.length !== 10) {
-          return NextResponse.json({ error: "Please enter a valid 10-digit Indian phone number." }, { status: 400 });
+          return NextResponse.json(
+            { error: "Please enter a valid 10-digit Indian phone number." },
+            { status: 400 },
+          );
         }
       } else {
         if (cleanPhone.length < 7) {
-          return NextResponse.json({ error: "Please enter a valid phone number." }, { status: 400 });
+          return NextResponse.json(
+            { error: "Please enter a valid phone number." },
+            { status: 400 },
+          );
         }
       }
 
@@ -84,10 +96,10 @@ export async function POST(request: Request) {
       }
     }
 
-        const env = getEnv();
+    const env = getEnv();
     const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
 
-let subject = "New Contact Inquiry - TechSonance";
+    let subject = "New Contact Inquiry - TechSonance";
     let textContent = "";
     let htmlContent = "";
 
@@ -282,7 +294,7 @@ ${message}
       `;
     }
 
-        const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
+    const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
     const result = await emailService.sendMail({
       from: `"${senderName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
@@ -293,18 +305,19 @@ ${message}
     });
 
     if (!result.ok) {
-      return NextResponse.json(
-        { error: result.error || "Failed to send email" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: result.error || "Failed to send email" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     console.error("Error sending email via SMTP:", error);
     return NextResponse.json(
-      { error: (error instanceof Error ? error.message : "Failed to send email") || "Failed to send email" },
-      { status: 500 }
+      {
+        error:
+          (error instanceof Error ? error.message : "Failed to send email") ||
+          "Failed to send email",
+      },
+      { status: 500 },
     );
   }
 }

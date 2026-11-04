@@ -3,17 +3,11 @@
   "version": "9",
   "dialect": "postgres",
   "id": "e6cf85fe-7415-494c-9144-cc15c1fe0bdf",
-  "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
-  ],
+  "prevIds": ["00000000-0000-0000-0000-000000000000"],
   "footprints": [
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_admin_memberships"
-      ],
+      "statementTarget": ["table", "public", "ts_admin_memberships"],
       "writes": [
         "s|tbl|public.ts_admin_memberships",
         "n|tbl|public.ts_admin_memberships",
@@ -22,17 +16,11 @@
         "n|type|public.ts_admin_memberships",
         "n|rel|public.ts_admin_memberships_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_admin_sites"
-      ],
+      "statementTarget": ["table", "public", "ts_admin_sites"],
       "writes": [
         "s|tbl|public.ts_admin_sites",
         "n|tbl|public.ts_admin_sites",
@@ -42,17 +30,11 @@
         "n|rel|public.ts_admin_sites_pkey",
         "n|rel|public.ts_admin_sites_slug_key"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_applications"
-      ],
+      "statementTarget": ["table", "public", "ts_content_applications"],
       "writes": [
         "s|tbl|public.ts_content_applications",
         "n|tbl|public.ts_content_applications",
@@ -61,17 +43,11 @@
         "n|type|public.ts_content_applications",
         "n|rel|public.ts_content_applications_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_audit_log"
-      ],
+      "statementTarget": ["table", "public", "ts_content_audit_log"],
       "writes": [
         "s|tbl|public.ts_content_audit_log",
         "n|tbl|public.ts_content_audit_log",
@@ -80,17 +56,11 @@
         "n|type|public.ts_content_audit_log",
         "n|rel|public.ts_content_audit_log_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_authors"
-      ],
+      "statementTarget": ["table", "public", "ts_content_authors"],
       "writes": [
         "s|tbl|public.ts_content_authors",
         "n|tbl|public.ts_content_authors",
@@ -99,17 +69,11 @@
         "n|type|public.ts_content_authors",
         "n|rel|public.ts_content_authors_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_categories"
-      ],
+      "statementTarget": ["table", "public", "ts_content_categories"],
       "writes": [
         "s|tbl|public.ts_content_categories",
         "n|tbl|public.ts_content_categories",
@@ -118,17 +82,11 @@
         "n|type|public.ts_content_categories",
         "n|rel|public.ts_content_categories_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_content_jobs"],
       "writes": [
         "s|tbl|public.ts_content_jobs",
         "n|tbl|public.ts_content_jobs",
@@ -137,17 +95,11 @@
         "n|type|public.ts_content_jobs",
         "n|rel|public.ts_content_jobs_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_posts"
-      ],
+      "statementTarget": ["table", "public", "ts_content_posts"],
       "writes": [
         "s|tbl|public.ts_content_posts",
         "n|tbl|public.ts_content_posts",
@@ -156,17 +108,11 @@
         "n|type|public.ts_content_posts",
         "n|rel|public.ts_content_posts_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_versions"
-      ],
+      "statementTarget": ["table", "public", "ts_content_versions"],
       "writes": [
         "s|tbl|public.ts_content_versions",
         "n|tbl|public.ts_content_versions",
@@ -175,9 +121,7 @@
         "n|type|public.ts_content_versions",
         "n|rel|public.ts_content_versions_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_index",
@@ -223,12 +167,7 @@
     },
     {
       "statementType": "create_index",
-      "statementTarget": [
-        "index",
-        "public",
-        "ts_content_jobs",
-        "ts_content_jobs_site_slug_idx"
-      ],
+      "statementTarget": ["index", "public", "ts_content_jobs", "ts_content_jobs_site_slug_idx"],
       "writes": [
         "s|idx|public.ts_content_jobs_site_slug_idx",
         "n|idx|public.ts_content_jobs_site_slug_idx",
@@ -244,12 +183,7 @@
     },
     {
       "statementType": "create_index",
-      "statementTarget": [
-        "index",
-        "public",
-        "ts_content_posts",
-        "ts_content_posts_site_slug_idx"
-      ],
+      "statementTarget": ["index", "public", "ts_content_posts", "ts_content_posts_site_slug_idx"],
       "writes": [
         "s|idx|public.ts_content_posts_site_slug_idx",
         "n|idx|public.ts_content_posts_site_slug_idx",
@@ -265,11 +199,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_admin_memberships"
-      ],
+      "statementTarget": ["table", "public", "ts_admin_memberships"],
       "writes": [
         "s|fk|public.ts_admin_memberships.ts_admin_memberships_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_admin_memberships.ts_admin_memberships_site_id_ts_admin_sites_id_fkey",
@@ -288,11 +218,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_applications"
-      ],
+      "statementTarget": ["table", "public", "ts_content_applications"],
       "writes": [
         "s|fk|public.ts_content_applications.ts_content_applications_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_applications.ts_content_applications_site_id_ts_admin_sites_id_fkey",
@@ -311,11 +237,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_applications"
-      ],
+      "statementTarget": ["table", "public", "ts_content_applications"],
       "writes": [
         "s|fk|public.ts_content_applications.ts_content_applications_job_id_ts_content_jobs_id_fkey",
         "n|fk|public.ts_content_applications.ts_content_applications_job_id_ts_content_jobs_id_fkey",
@@ -334,11 +256,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_authors"
-      ],
+      "statementTarget": ["table", "public", "ts_content_authors"],
       "writes": [
         "s|fk|public.ts_content_authors.ts_content_authors_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_authors.ts_content_authors_site_id_ts_admin_sites_id_fkey",
@@ -357,11 +275,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_categories"
-      ],
+      "statementTarget": ["table", "public", "ts_content_categories"],
       "writes": [
         "s|fk|public.ts_content_categories.ts_content_categories_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_categories.ts_content_categories_site_id_ts_admin_sites_id_fkey",
@@ -380,11 +294,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_content_jobs"],
       "writes": [
         "s|fk|public.ts_content_jobs.ts_content_jobs_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_jobs.ts_content_jobs_site_id_ts_admin_sites_id_fkey",
@@ -403,11 +313,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_posts"
-      ],
+      "statementTarget": ["table", "public", "ts_content_posts"],
       "writes": [
         "s|fk|public.ts_content_posts.ts_content_posts_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_posts.ts_content_posts_site_id_ts_admin_sites_id_fkey",
@@ -426,11 +332,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_posts"
-      ],
+      "statementTarget": ["table", "public", "ts_content_posts"],
       "writes": [
         "s|fk|public.ts_content_posts.ts_content_posts_category_id_ts_content_categories_id_fkey",
         "n|fk|public.ts_content_posts.ts_content_posts_category_id_ts_content_categories_id_fkey",
@@ -1829,14 +1731,10 @@
       "table": "ts_admin_memberships",
       "name": "ts_admin_memberships_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1846,14 +1744,10 @@
       "table": "ts_content_applications",
       "name": "ts_content_applications_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1863,14 +1757,10 @@
       "table": "ts_content_applications",
       "name": "ts_content_applications_job_id_ts_content_jobs_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "job_id"
-      ],
+      "columns": ["job_id"],
       "schemaTo": "public",
       "tableTo": "ts_content_jobs",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1880,14 +1770,10 @@
       "table": "ts_content_authors",
       "name": "ts_content_authors_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1897,14 +1783,10 @@
       "table": "ts_content_categories",
       "name": "ts_content_categories_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1914,14 +1796,10 @@
       "table": "ts_content_jobs",
       "name": "ts_content_jobs_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1931,14 +1809,10 @@
       "table": "ts_content_posts",
       "name": "ts_content_posts_site_id_ts_admin_sites_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "site_id"
-      ],
+      "columns": ["site_id"],
       "schemaTo": "public",
       "tableTo": "ts_admin_sites",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "entityType": "fks"
@@ -1948,14 +1822,10 @@
       "table": "ts_content_posts",
       "name": "ts_content_posts_category_id_ts_content_categories_id_fkey",
       "nameExplicit": false,
-      "columns": [
-        "category_id"
-      ],
+      "columns": ["category_id"],
       "schemaTo": "public",
       "tableTo": "ts_content_categories",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "SET NULL",
       "entityType": "fks"
@@ -1964,9 +1834,7 @@
       "schema": "public",
       "table": "ts_admin_memberships",
       "name": "ts_admin_memberships_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -1974,9 +1842,7 @@
       "schema": "public",
       "table": "ts_admin_sites",
       "name": "ts_admin_sites_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -1984,9 +1850,7 @@
       "schema": "public",
       "table": "ts_content_applications",
       "name": "ts_content_applications_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -1994,9 +1858,7 @@
       "schema": "public",
       "table": "ts_content_audit_log",
       "name": "ts_content_audit_log_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2004,9 +1866,7 @@
       "schema": "public",
       "table": "ts_content_authors",
       "name": "ts_content_authors_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2014,9 +1874,7 @@
       "schema": "public",
       "table": "ts_content_categories",
       "name": "ts_content_categories_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2024,9 +1882,7 @@
       "schema": "public",
       "table": "ts_content_jobs",
       "name": "ts_content_jobs_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2034,9 +1890,7 @@
       "schema": "public",
       "table": "ts_content_posts",
       "name": "ts_content_posts_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2044,9 +1898,7 @@
       "schema": "public",
       "table": "ts_content_versions",
       "name": "ts_content_versions_pkey",
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "entityType": "pks"
     },
@@ -2055,9 +1907,7 @@
       "table": "ts_admin_sites",
       "name": "ts_admin_sites_slug_key",
       "nameExplicit": false,
-      "columns": [
-        "slug"
-      ],
+      "columns": ["slug"],
       "nullsNotDistinct": false,
       "entityType": "uniques"
     }

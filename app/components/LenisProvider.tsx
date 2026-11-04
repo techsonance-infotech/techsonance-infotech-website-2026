@@ -12,8 +12,7 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
       smoothWheel: true,
       prevent: (node) => {
         return (
-          node.hasAttribute("data-lenis-prevent") ||
-          Boolean(node.closest?.("[data-lenis-prevent]"))
+          node.hasAttribute("data-lenis-prevent") || Boolean(node.closest?.("[data-lenis-prevent]"))
         );
       },
     });

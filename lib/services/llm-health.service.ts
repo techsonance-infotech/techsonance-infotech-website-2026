@@ -17,7 +17,7 @@ export class LLMHealthService {
 
   constructor(
     private env: Env = inject(ENV_CONFIG_TOKEN),
-    private config: typeof BOT_CONFIG = inject(BOT_CONFIG_TOKEN)
+    private config: typeof BOT_CONFIG = inject(BOT_CONFIG_TOKEN),
   ) {}
 
   private getRedisConfig() {

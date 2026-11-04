@@ -1,11 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { routeChat } from "../lib/llm/router";
 import { health } from "../lib/llm/health";
-import {
-  AllExhaustedError,
-  QuotaError,
-  type LLMProvider,
-} from "../lib/llm/types";
+import { AllExhaustedError, QuotaError, type LLMProvider } from "../lib/llm/types";
 
 describe("LLM Router & Failover State Machine Tests", () => {
   beforeEach(() => {
@@ -25,7 +21,9 @@ describe("LLM Router & Failover State Machine Tests", () => {
     };
 
     const chunks: string[] = [];
-    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [providerA])) {
+    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [
+      providerA,
+    ])) {
       chunks.push(chunk);
     }
 
@@ -54,7 +52,10 @@ describe("LLM Router & Failover State Machine Tests", () => {
     };
 
     const chunks: string[] = [];
-    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [providerA, providerB])) {
+    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [
+      providerA,
+      providerB,
+    ])) {
       chunks.push(chunk);
     }
 
@@ -91,7 +92,10 @@ describe("LLM Router & Failover State Machine Tests", () => {
     };
 
     const chunks: string[] = [];
-    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [providerA, providerB])) {
+    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [
+      providerA,
+      providerB,
+    ])) {
       chunks.push(chunk);
     }
 
@@ -128,7 +132,10 @@ describe("LLM Router & Failover State Machine Tests", () => {
     let errorThrown: unknown = null;
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      for await (const _ of routeChat({ messages: [{ role: "user", content: "hi" }] }, [providerA, providerB])) {
+      for await (const _ of routeChat({ messages: [{ role: "user", content: "hi" }] }, [
+        providerA,
+        providerB,
+      ])) {
         // no-op
       }
     } catch (err) {
@@ -165,7 +172,10 @@ describe("LLM Router & Failover State Machine Tests", () => {
     };
 
     const chunks: string[] = [];
-    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [providerA, providerB])) {
+    for await (const chunk of routeChat({ messages: [{ role: "user", content: "hi" }] }, [
+      providerA,
+      providerB,
+    ])) {
       chunks.push(chunk);
     }
 

@@ -178,7 +178,15 @@ export const iconPaths: Record<IconName, React.ReactNode> = {
   ),
 };
 
-export function Icon({ name, className = "", style }: { name: IconName; className?: string; style?: React.CSSProperties }) {
+export function Icon({
+  name,
+  className = "",
+  style,
+}: {
+  name: IconName;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <svg
       aria-hidden="true"

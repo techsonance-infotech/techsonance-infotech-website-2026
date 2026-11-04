@@ -18,7 +18,7 @@ const chatRequestSchema = z.object({
       z.object({
         role: z.enum(["user", "assistant"]),
         content: z.string().max(BOT_CONFIG.thresholds.maxInputChars),
-      })
+      }),
     )
     .min(1)
     .max(BOT_CONFIG.thresholds.maxHistoryMessages),
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
           "Retry-After": String(rateCheck.retryAfter || 60),
         },
-      }
+      },
     );
   }
 
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       {
         status: 400,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 

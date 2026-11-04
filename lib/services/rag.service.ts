@@ -3,9 +3,7 @@ import { evaluateGate, type GateResult } from "../rag/gate";
 import { KBSearchService, type RetrievedChunk } from "./kb-search.service";
 
 export class RAGService {
-  constructor(
-    private searchService: KBSearchService = inject(KBSearchService)
-  ) {}
+  constructor(private searchService: KBSearchService = inject(KBSearchService)) {}
 
   evaluateGate(query: string): GateResult {
     return evaluateGate(query);

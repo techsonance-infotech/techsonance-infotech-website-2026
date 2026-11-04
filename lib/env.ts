@@ -21,9 +21,7 @@ const envSchema = z.object({
   CF_API_TOKEN: z.string().optional(),
   GITHUB_MODELS_TOKEN: z.string().optional(),
 
-  LLM_PRIORITY: z
-    .string()
-    .default("groq,gemini,cerebras,openrouter,mistral,cloudflare,github"),
+  LLM_PRIORITY: z.string().default("groq,gemini,cerebras,openrouter,mistral,cloudflare,github"),
   EXHAUSTED_RETRY_HOURS: z.coerce.number().default(6),
 
   // Email Configuration (SMTP or Resend)

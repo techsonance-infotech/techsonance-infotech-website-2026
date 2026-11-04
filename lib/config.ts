@@ -72,12 +72,7 @@ export const BOT_CONFIG = {
   },
 
   // Default quick replies shown on welcome and after answers
-  quickReplies: [
-    "Services",
-    "Pricing & Budget",
-    "Our Team",
-    "Book Free Consultation",
-  ],
+  quickReplies: ["Services", "Pricing & Budget", "Our Team", "Book Free Consultation"],
 
   // LLM Providers Definition
   providers: {

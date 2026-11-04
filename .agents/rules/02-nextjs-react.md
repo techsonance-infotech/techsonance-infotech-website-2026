@@ -3,6 +3,7 @@
 > Next 16 and React 19 changed many APIs. Do not write code from older memory (Next 13/14 patterns). Verify against the installed types (`09`).
 
 ## Server vs Client Components
+
 - Everything is a **Server Component** by default. Add `"use client"` only for state, effects, event handlers, browser APIs, or client-only libs (framer-motion).
 - Push `"use client"` **down the tree** to the smallest leaf (a `<LikeButton />`, not the page).
 - Pass Server Components as `children`/props into Client Components to keep them on the server.
@@ -10,25 +11,30 @@
 - Props crossing server→client must be serialisable (no functions except Server Actions, no class instances, no `Date` unless converted). Pass DTOs typed by the same schema the API contract uses (`08`), never raw DB rows.
 
 ## Async request APIs (Next 15+/16)
+
 `params`, `searchParams`, `cookies()`, `headers()`, `draftMode()` are **async** and are **external input**:
+
 ```tsx
 const paramsSchema = z.strictObject({ id: idSchema });
 type Props = { params: Promise<unknown>; searchParams: Promise<unknown> };
 export default async function Page({ params, searchParams }: Props) {
   const p = paramsSchema.safeParse(await params);
-  if (!p.success) notFound();                       // invalid id is a 404, never a 500
+  if (!p.success) notFound(); // invalid id is a 404, never a 500
   const q = listQuerySchema.catch({ limit: 20 }).parse(await searchParams); // fallback to defaults, never throws
 }
 ```
+
 - `params`/`searchParams` are typed `unknown` and parsed with the domain schema from `lib/validations/<domain>.ts`; the same query schema feeds the API contract (`08`). `.catch()` fallbacks are the only permitted `.parse()` use on external input, and only with a total fallback.
 - Use generated `PageProps`/`LayoutProps` helpers only if enabled and verified.
 
 ## Request interception: `proxy.ts`
+
 - Next 16 renames `middleware.ts` → **`proxy.ts`** (export `proxy`, Node.js runtime). Never create `middleware.ts`.
 - Only for: Supabase session refresh, coarse redirects (unauthenticated → `/login`), security headers/CSP nonce (`03`), `x-request-id` injection (`08`), locale. Fast; no heavy DB queries.
 - The proxy is **not** the authorization layer. Re-check auth in every Server Action, route handler, and data function.
 
 ## Data fetching & caching
+
 - Fetch on the server in the component that needs the data, via `src/server/queries/<domain>.ts`. Queries return DTOs already parsed by the response schema. Wrap shared reads in `React.cache()` for per-request dedupe.
 - Parallelise independent fetches; use `<Suspense>` with meaningful fallbacks to stream slow parts. No request waterfalls.
 - Caching is **opt-in** in Next 16:
@@ -39,11 +45,13 @@ export default async function Page({ params, searchParams }: Props) {
 - `loading.tsx` / `<Suspense>` for loading, `error.tsx` (client, with `reset`) and `global-error.tsx` for errors, `not-found.tsx` + `notFound()` for missing resources. Every data segment has all three.
 
 ## Mutations
+
 - **Server Actions** for form mutations (progressive enhancement), wrapped by `runAction` (`04`); route handlers (`handleRoute`, `08`) for webhooks/public APIs/non-form clients.
 - After a successful mutation: invalidate (`updateTag`/`revalidatePath`) inside the service, then `redirect()` **outside** `try/catch`. In any `try/catch` that wraps framework calls, call `unstable_rethrow(e)` first so `redirect`/`notFound` are not swallowed.
 - `useActionState` for form state/errors, `useFormStatus` for pending buttons, `useOptimistic` for optimistic UI with rollback on `ok: false`.
 
 ## React 19 rules
+
 - `ref` is a normal prop: **no `forwardRef`** in new code. `<Context value={…}>` directly (no `.Provider`).
 - `use()` to read promises/context in client components when needed; prefer server fetch.
 - Prefer the Next `metadata`/`generateMetadata` API over in-component `<title>`/`<meta>`.
@@ -57,6 +65,7 @@ export default async function Page({ params, searchParams }: Props) {
 - Browser storage and `window`/`BroadcastChannel`/`postMessage` data is external input: parse with a schema (`08`) before use.
 
 ## Routing & files
+
 - Route groups `(marketing)`, `(app)`, `(auth)` for layouts; private folders `_components` for colocation.
 - `next/link` for internal navigation (never `<a href>`), `useRouter` only for imperative nav; `next/font`; `next/script` with the right `strategy`.
 - `generateStaticParams` for known dynamic routes; set `dynamicParams` deliberately.
@@ -64,6 +73,7 @@ export default async function Page({ params, searchParams }: Props) {
 - Server Actions live in `app/<route>/actions.ts` (`"use server"`, async function exports only).
 
 ## `next.config.ts`
+
 - Typed (`NextConfig`), `reactStrictMode: true`, `poweredByHeader: false`.
 - `images.remotePatterns` explicit (protocol, hostname, pathname), no wildcard hosts.
 - `serverActions.bodySizeLimit` set explicitly and consistent with `MAX_UPLOAD_BYTES` (`06`); `serverActions.allowedOrigins` minimal.
@@ -72,5 +82,6 @@ export default async function Page({ params, searchParams }: Props) {
 - Config key names change between Next versions: confirm each in the installed `NextConfig` type before adding it (`09`).
 
 ## Environment
+
 - Access env only via `@/lib/env/public` (client-safe) and `@/lib/env/server` (server-only), Zod-validated at startup (`03`). No raw `process.env.X` elsewhere (root config files excepted).
 - Public vars are prefixed `NEXT_PUBLIC_` and contain nothing secret.

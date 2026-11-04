@@ -84,9 +84,7 @@ export class EmailService {
     const smtpHost = this.env.SMTP_HOST || process.env.SMTP_HOST || "smtp.gmail.com";
     const smtpPort = Number(this.env.SMTP_PORT || process.env.SMTP_PORT || 465);
     const isSecure =
-      process.env.SMTP_SECURE !== undefined
-        ? process.env.SMTP_SECURE === "true"
-        : smtpPort === 465;
+      process.env.SMTP_SECURE !== undefined ? process.env.SMTP_SECURE === "true" : smtpPort === 465;
 
     if (smtpUser && smtpPass) {
       return nodemailer.createTransport({
@@ -100,7 +98,7 @@ export class EmailService {
   }
 
   async sendMail(
-    options: SendMailOptions
+    options: SendMailOptions,
   ): Promise<{ ok: boolean; messageId?: string; error?: string }> {
     const fromEmail =
       options.from || this.env.FROM_EMAIL || `"TechSonance Infotech" <info@techsonance.co.in>`;
@@ -134,7 +132,7 @@ export class EmailService {
 
   async sendConsultationEmails(
     booking: BookingPayload,
-    ref: string
+    ref: string,
   ): Promise<{ ok: boolean; messageId?: string }> {
     const adminEmail = this.env.ADMIN_EMAIL || "info@techsonance.co.in";
     const fromEmail = this.env.FROM_EMAIL || `"TechSonance Consultations" <info@techsonance.co.in>`;
@@ -185,7 +183,7 @@ export class EmailService {
               <strong style="color: ${m.role === "user" ? "#1155CC" : "#64748B"};">${m.role === "user" ? safeName : "Sonance AI"}:</strong>
               <span style="color: #334155;">${escapeHtml(m.content.slice(0, 300))}</span>
             </div>
-          `
+          `,
             )
             .join("")}
         </div>

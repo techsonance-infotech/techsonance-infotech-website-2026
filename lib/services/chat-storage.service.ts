@@ -1,4 +1,4 @@
-import { ChatDB, type Msg, type Visitor, type BookingCopy } from "../db/chatDb";
+import { ChatDB, type Msg, type Visitor, type BookingCopy } from "../chat/indexeddb";
 
 export type { Msg, Visitor, BookingCopy };
 export { ChatDB };
@@ -83,9 +83,7 @@ export class ChatStorageService {
         // ignore
       }
     }
-    this.memoryFallback.messages = this.memoryFallback.messages.filter(
-      (m) => m.ts >= cutoff
-    );
+    this.memoryFallback.messages = this.memoryFallback.messages.filter((m) => m.ts >= cutoff);
   }
 
   async getVisitorProfile(): Promise<Visitor | null> {

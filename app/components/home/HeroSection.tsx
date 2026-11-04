@@ -9,21 +9,11 @@ import { Button } from "@/components/ui/button";
 function HeroCTAButtons({ onBookClick }: { onBookClick: () => void }) {
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-      <Button
-        onClick={onBookClick}
-        variant="primary"
-        size="default"
-        showArrow
-      >
+      <Button onClick={onBookClick} variant="primary" size="default" showArrow>
         Book Free Consultation
       </Button>
 
-      <Button
-        asChild
-        variant="secondary"
-        size="default"
-        showArrow
-      >
+      <Button asChild variant="secondary" size="default" showArrow>
         <Link href="/portfolio">View Case Studies</Link>
       </Button>
     </div>
@@ -68,13 +58,50 @@ interface ClientLogoData {
 }
 
 const trustedClients: ClientLogoData[] = [
-  { name: "Zion", url: "/portfolio/zion", src: "/images/clients/zion.png", width: 180, className: "h-10 sm:h-12 scale-125" },
-  { name: "Utsav", url: "/portfolio/utsav", src: "/images/clients/utsav.png", width: 150, className: "h-9 sm:h-11 scale-110" },
-  { name: "AccuNest", url: "https://accunest.techsonance.co.in/", src: "/images/clients/accunest.webp", width: 150 },
-  { name: "TechSonance Marketplace", url: "https://marketplace.techsonance.co.in/", src: "/images/clients/marketplace.png", width: 170 },
-  { name: "SyncServe", url: "https://syncserve.techsonance.co.in/", src: "/images/clients/syncserve.png", width: 140 },
-  { name: "FreightFlow", url: "https://freightflow.techsonance.co.in/", src: "/images/clients/freightflow.png", width: 240 },
-  { name: "Masterweg", url: "https://masterweg.com/", src: "/images/clients/masterweg.png", width: 150 },
+  {
+    name: "Zion",
+    url: "/portfolio/zion",
+    src: "/images/clients/zion.png",
+    width: 180,
+    className: "h-10 sm:h-12 scale-125",
+  },
+  {
+    name: "Utsav",
+    url: "/portfolio/utsav",
+    src: "/images/clients/utsav.png",
+    width: 150,
+    className: "h-9 sm:h-11 scale-110",
+  },
+  {
+    name: "AccuNest",
+    url: "https://accunest.techsonance.co.in/",
+    src: "/images/clients/accunest.webp",
+    width: 150,
+  },
+  {
+    name: "TechSonance Marketplace",
+    url: "https://marketplace.techsonance.co.in/",
+    src: "/images/clients/marketplace.png",
+    width: 170,
+  },
+  {
+    name: "SyncServe",
+    url: "https://syncserve.techsonance.co.in/",
+    src: "/images/clients/syncserve.png",
+    width: 140,
+  },
+  {
+    name: "FreightFlow",
+    url: "https://freightflow.techsonance.co.in/",
+    src: "/images/clients/freightflow.png",
+    width: 240,
+  },
+  {
+    name: "Masterweg",
+    url: "https://masterweg.com/",
+    src: "/images/clients/masterweg.png",
+    width: 150,
+  },
 ];
 
 function ClientLogo({ client }: { client: ClientLogoData }) {
@@ -107,7 +134,9 @@ function TrustedClientsMarquee() {
 
       <div
         className="relative w-full overflow-hidden"
-        style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}
+        style={{
+          maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+        }}
       >
         <div className="marquee-track flex w-max items-center">
           {[...trustedClients, ...trustedClients].map((client, i) => (
@@ -151,9 +180,8 @@ export default function HeroSection() {
           <HeroHeadline />
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-gray-500 sm:text-lg">
-            From startups to global brands. we design, develop, and deliver
-            high-performing web and mobile solutions that turn ideas into
-            impact.
+            From startups to global brands. we design, develop, and deliver high-performing web and
+            mobile solutions that turn ideas into impact.
           </p>
 
           <div className="mt-10">

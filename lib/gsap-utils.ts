@@ -35,7 +35,7 @@ export function useServicePageAnimations() {
                 start: "top 85%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
         });
 
@@ -55,7 +55,7 @@ export function useServicePageAnimations() {
                 start: "top 80%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
         });
 
@@ -73,7 +73,7 @@ export function useServicePageAnimations() {
                 start: "top 85%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
         });
 
@@ -92,7 +92,7 @@ export function useServicePageAnimations() {
                 start: "top 85%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
         });
       }, ref);
@@ -141,7 +141,7 @@ export function useScrollReveal(deps: unknown[] = []) {
               start: "top 82%",
               once: true,
             },
-          }
+          },
         );
       }, ref);
     }
@@ -152,7 +152,7 @@ export function useScrollReveal(deps: unknown[] = []) {
       active = false;
       ctx?.revert();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   return ref;
@@ -229,7 +229,7 @@ export function useCounterAnimation(end: number, duration = 2, decimals = 0) {
                 onUpdate: function () {
                   el.textContent = this.targets()[0].val.toFixed(decimals);
                 },
-              }
+              },
             );
           },
         });

@@ -75,10 +75,12 @@ server/
 ### Task 1: Supabase Database Migration & RLS Setup
 
 **Files:**
+
 - Create: `supabase/migrations/20261104120000_agency_admin_phase1.sql`
 - Test: `tests/db-schema.test.ts`
 
 **Interfaces:**
+
 - Consumes: Supabase database connection via `@supabase/supabase-js`.
 - Produces: Tables `ts_admin_sites`, `ts_admin_memberships`, `ts_content_authors`, `ts_content_categories`, `ts_content_posts`, `ts_content_jobs`, `ts_content_applications`, `ts_content_versions`, `ts_content_audit_log`, and storage buckets `ts_media`, `ts_resumes`.
 
@@ -93,6 +95,7 @@ server/
 ### Task 2: Content Abstraction Layer & Content Seeder
 
 **Files:**
+
 - Create: `lib/content/types.ts`
 - Create: `lib/content/posts.ts`
 - Create: `lib/content/jobs.ts`
@@ -100,12 +103,14 @@ server/
 - Test: `tests/content-layer.test.ts`
 
 **Interfaces:**
+
 - Consumes: `data/blog.ts`, `data/landing-pages.ts`, Supabase client (`lib/supabase/server.ts`).
 - Produces: `postSource.get(slug)`, `postSource.list()`, `jobSource.get(slug)`, `jobSource.list()`.
 
 - [ ] **Step 1: Write the failing content layer test**
 
 Create `tests/content-layer.test.ts`:
+
 ```ts
 import { describe, it, expect } from "vitest";
 import { getPostSource } from "@/lib/content/posts";
@@ -165,6 +170,7 @@ git commit -m "feat(content): implement dual-source content abstraction layer an
 ### Task 3: GodUI & Opensource UI Animated Component Primitives
 
 **Files:**
+
 - Create: `components/ui/dialog.tsx`
 - Create: `components/ui/sheet.tsx`
 - Create: `components/ui/tabs.tsx`
@@ -175,12 +181,14 @@ git commit -m "feat(content): implement dual-source content abstraction layer an
 - Test: `tests/godui-components.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `motion/react`, `@radix-ui/react-dialog`, `@radix-ui/react-tabs`, `@radix-ui/react-tooltip`, Opensource UI component patterns.
 - Produces: GodUI animated UI components (Dialog, Sheet, Tabs, Tooltip, Badge) and Opensource UI components (Phone Mockup frame, Dashboard Stat Cards).
 
 - [ ] **Step 1: Write the failing test for UI components**
 
 Create `tests/godui-components.test.tsx`:
+
 ```tsx
 import { describe, it, expect } from "vitest";
 import React from "react";
@@ -203,13 +211,17 @@ describe("GodUI & Opensource UI Primitives", () => {
           <TabsTrigger value="published">Published</TabsTrigger>
         </TabsList>
         <TabsContent value="drafts">Drafts Content</TabsContent>
-      </Tabs>
+      </Tabs>,
     );
     expect(screen.getByText("Drafts")).toBeDefined();
   });
 
   it("renders PhoneMockup frame with child content", () => {
-    render(<PhoneMockup><div>Mobile View Content</div></PhoneMockup>);
+    render(
+      <PhoneMockup>
+        <div>Mobile View Content</div>
+      </PhoneMockup>,
+    );
     expect(screen.getByText("Mobile View Content")).toBeDefined();
   });
 });
@@ -247,6 +259,7 @@ git commit -m "feat(ui): add GodUI and Opensource UI animated primitives for adm
 ### Task 4: Admin Authentication, Layout, and RBAC Guard
 
 **Files:**
+
 - Create: `lib/admin/auth.ts`
 - Create: `app/(admin)/layout.tsx`
 - Create: `app/(admin)/login/page.tsx`
@@ -254,12 +267,14 @@ git commit -m "feat(ui): add GodUI and Opensource UI animated primitives for adm
 - Test: `tests/admin-auth.test.ts`
 
 **Interfaces:**
+
 - Consumes: `@supabase/ssr`, `lib/supabase/server.ts`.
 - Produces: `getAdminSession()`, `hasCapability(role, capability)`, protected admin layout and login.
 
 - [ ] **Step 1: Write the failing auth test**
 
 Create `tests/admin-auth.test.ts`:
+
 ```ts
 import { describe, it, expect } from "vitest";
 import { hasCapability, ROLE_CAPABILITIES } from "@/lib/admin/auth";
@@ -312,6 +327,7 @@ git commit -m "feat(admin): implement admin authentication, rbac guard, layout a
 ### Task 5: Blog Management Module & On-Demand Cache Invalidation
 
 **Files:**
+
 - Create: `server/actions/blog.actions.ts`
 - Create: `app/(admin)/admin/blog/page.tsx`
 - Create: `app/(admin)/admin/blog/[id]/page.tsx`
@@ -321,12 +337,14 @@ git commit -m "feat(admin): implement admin authentication, rbac guard, layout a
 - Test: `tests/blog-actions.test.ts`
 
 **Interfaces:**
+
 - Consumes: Supabase database, `revalidateTag` from `next/cache`.
 - Produces: `saveDraftAction`, `submitForReviewAction`, `publishPostAction`, `/api/draft`, `/api/revalidate`.
 
 - [ ] **Step 1: Write the failing blog actions test**
 
 Create `tests/blog-actions.test.ts`:
+
 ```ts
 import { describe, it, expect, vi } from "vitest";
 import { validatePostSchema } from "@/server/actions/blog.actions";
@@ -383,6 +401,7 @@ git commit -m "feat(admin): implement blog management module, editor, draft mode
 ### Task 6: Careers & Application Inbox Module
 
 **Files:**
+
 - Create: `server/actions/careers.actions.ts`
 - Create: `app/(admin)/admin/careers/page.tsx`
 - Create: `app/(admin)/admin/careers/[id]/page.tsx`
@@ -391,12 +410,14 @@ git commit -m "feat(admin): implement blog management module, editor, draft mode
 - Test: `tests/careers-actions.test.ts`
 
 **Interfaces:**
+
 - Consumes: Supabase database, Supabase storage bucket `ts_resumes`.
 - Produces: `saveJobAction`, `toggleJobStatusAction`, `updateApplicationStatusAction`, `POST /api/careers/apply`.
 
 - [ ] **Step 1: Write the failing careers actions test**
 
 Create `tests/careers-actions.test.ts`:
+
 ```ts
 import { describe, it, expect } from "vitest";
 import { validateJobSchema, validateApplicationSchema } from "@/server/actions/careers.actions";
@@ -456,18 +477,21 @@ git commit -m "feat(admin): implement careers management, candidate inbox, and a
 ### Task 7: Public Site Wiring, Shadow Run & Parity Verification
 
 **Files:**
+
 - Modify: `app/blog/page.tsx`
 - Modify: `app/blog/[slug]/page.tsx`
 - Modify: `app/careers/page.tsx`
 - Create: `tests/public-content-parity.test.ts`
 
 **Interfaces:**
+
 - Consumes: `getPostSource()`, `getJobSource()`.
 - Produces: Public blog and career pages reading from the content abstraction layer.
 
 - [ ] **Step 1: Write the parity and shadow run test**
 
 Create `tests/public-content-parity.test.ts`:
+
 ```ts
 import { describe, it, expect } from "vitest";
 import { getPostSource } from "@/lib/content/posts";

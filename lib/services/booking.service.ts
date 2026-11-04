@@ -18,9 +18,7 @@ export class BookingService {
     return `TS-${randomHex}`;
   }
 
-  async processBooking(
-    payload: BookingPayload
-  ): Promise<{ success: boolean; ref: string }> {
+  async processBooking(payload: BookingPayload): Promise<{ success: boolean; ref: string }> {
     if (!this.validateSlot(payload.slotIso)) {
       throw new Error("Selected time slot is unavailable or invalid.");
     }

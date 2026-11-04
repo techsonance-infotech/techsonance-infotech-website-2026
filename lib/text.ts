@@ -21,7 +21,11 @@ export function escapeHtml(text: string): string {
 export function isAllowedOrigin(originHeader: string | null): boolean {
   if (!originHeader) return true; // Server-side or direct invocation
 
-  let allowedList = ["http://localhost:3000", "https://www.techsonance.co.in", "https://techsonance.co.in"];
+  let allowedList = [
+    "http://localhost:3000",
+    "https://www.techsonance.co.in",
+    "https://techsonance.co.in",
+  ];
   try {
     const env = getEnv();
     if (env.ALLOWED_ORIGINS) {

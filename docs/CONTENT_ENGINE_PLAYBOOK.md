@@ -26,15 +26,15 @@ Every post published in `data/blog.ts` must follow this 5-point formula:
 
 ## 3. 12-Week Editorial Queue
 
-| Week | Target Topic | Target Keyword | Author Byline | Primary Internal Link |
-| :--- | :--- | :--- | :--- | :--- |
-| **Current** | Enterprise RAG Benchmark 2026: pgvector vs Pinecone vs Qdrant | `pgvector benchmark 2026`, `enterprise RAG architecture` | Sajeshkumar Adeya | `/services/ai-automation` |
-| **Week 2** | Multi-Tenant Data Isolation with PostgreSQL Row-Level Security | `multi tenant postgresql rls`, `SaaS database security` | Sajeshkumar Adeya | `/services/saas-product-development` |
-| **Week 4** | Building Offline-First POS Terminals with React 19 & IndexedDB | `offline first POS react`, `retail pos terminal engineering` | Manish Kushwaha | `/services/custom-software-development` |
-| **Week 6** | Agentic AI Workflows: LangChain vs Autonomous Function Calling | `agentic AI workflows`, `custom AI agents India` | Sajeshkumar Adeya | `/services/ai-automation` |
-| **Week 8** | Complete Software Development Cost Breakdown in India (2026 Guide) | `software development cost India`, `hire dedicated team India` | Someshwari Adeya | `/locations/surat` |
-| **Week 10** | Migrating Legacy Express APIs to NestJS 11 Microservices | `NestJS development agency`, `Express to NestJS migration` | Sajeshkumar Adeya | `/services/custom-software-development` |
-| **Week 12** | Flutter vs React Native in 2026: The Hardware & 60 FPS Reality | `mobile app developers Surat`, `Flutter development company` | Manish Kushwaha | `/locations/surat` |
+| Week        | Target Topic                                                       | Target Keyword                                                 | Author Byline     | Primary Internal Link                   |
+| :---------- | :----------------------------------------------------------------- | :------------------------------------------------------------- | :---------------- | :-------------------------------------- |
+| **Current** | Enterprise RAG Benchmark 2026: pgvector vs Pinecone vs Qdrant      | `pgvector benchmark 2026`, `enterprise RAG architecture`       | Sajeshkumar Adeya | `/services/ai-automation`               |
+| **Week 2**  | Multi-Tenant Data Isolation with PostgreSQL Row-Level Security     | `multi tenant postgresql rls`, `SaaS database security`        | Sajeshkumar Adeya | `/services/saas-product-development`    |
+| **Week 4**  | Building Offline-First POS Terminals with React 19 & IndexedDB     | `offline first POS react`, `retail pos terminal engineering`   | Manish Kushwaha   | `/services/custom-software-development` |
+| **Week 6**  | Agentic AI Workflows: LangChain vs Autonomous Function Calling     | `agentic AI workflows`, `custom AI agents India`               | Sajeshkumar Adeya | `/services/ai-automation`               |
+| **Week 8**  | Complete Software Development Cost Breakdown in India (2026 Guide) | `software development cost India`, `hire dedicated team India` | Someshwari Adeya  | `/locations/surat`                      |
+| **Week 10** | Migrating Legacy Express APIs to NestJS 11 Microservices           | `NestJS development agency`, `Express to NestJS migration`     | Sajeshkumar Adeya | `/services/custom-software-development` |
+| **Week 12** | Flutter vs React Native in 2026: The Hardware & 60 FPS Reality     | `mobile app developers Surat`, `Flutter development company`   | Manish Kushwaha   | `/locations/surat`                      |
 
 ---
 
@@ -46,7 +46,7 @@ When a blog post goes live on `https://www.techsonance.co.in/blog/[slug]`:
    - Syndicate the full post.
    - Set `canonical_url: https://www.techsonance.co.in/blog/[slug]` in Dev.to frontmatter.
 2. **Medium:**
-   - Use Medium's *"Import a story"* tool to automatically preserve the canonical tag pointing back to TechSonance.
+   - Use Medium's _"Import a story"_ tool to automatically preserve the canonical tag pointing back to TechSonance.
 3. **LinkedIn Articles:**
    - Publish a 400-word executive summary under the Founder or CTO's LinkedIn profile linking back to the full case study/post on the website.
 4. **Reddit & Quora:**

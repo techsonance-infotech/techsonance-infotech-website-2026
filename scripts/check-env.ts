@@ -14,10 +14,7 @@ function loadEnvFile(filePath: string) {
     if (eqIdx === -1) continue;
     const key = trimmed.slice(0, eqIdx).trim();
     let val = trimmed.slice(eqIdx + 1).trim();
-    if (
-      (val.startsWith('"') && val.endsWith('"')) ||
-      (val.startsWith("'") && val.endsWith("'"))
-    ) {
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
     if (!process.env[key]) {
@@ -51,8 +48,12 @@ async function checkOpenAICompatible(
   baseUrl: string,
   apiKey: string,
   model: string,
-  extraHeaders?: Record<string, string>
-): Promise<{ status: "OK" | "FAIL" | "RATE_LIMITED" | "BAD_KEY"; latencyMs: number; message?: string }> {
+  extraHeaders?: Record<string, string>,
+): Promise<{
+  status: "OK" | "FAIL" | "RATE_LIMITED" | "BAD_KEY";
+  latencyMs: number;
+  message?: string;
+}> {
   const start = Date.now();
   try {
     const controller = new AbortController();
@@ -85,7 +86,11 @@ async function checkOpenAICompatible(
       return { status: "BAD_KEY", latencyMs: latency, message: `HTTP ${res.status} Auth Error` };
     }
     const bodyText = await res.text().catch(() => "");
-    return { status: "FAIL", latencyMs: latency, message: `HTTP ${res.status}: ${bodyText.slice(0, 80)}` };
+    return {
+      status: "FAIL",
+      latencyMs: latency,
+      message: `HTTP ${res.status}: ${bodyText.slice(0, 80)}`,
+    };
   } catch (err: unknown) {
     const latency = Date.now() - start;
     const msg = err instanceof Error ? err.message : String(err);
@@ -108,7 +113,7 @@ async function run() {
       providers.groq.name,
       providers.groq.baseUrl,
       groqKey,
-      providers.groq.model
+      providers.groq.model,
     );
     results.push({
       id: "groq",
@@ -134,7 +139,7 @@ async function run() {
       providers.gemini.name,
       providers.gemini.baseUrl,
       geminiKey,
-      providers.gemini.model
+      providers.gemini.model,
     );
     results.push({
       id: "gemini",
@@ -160,7 +165,7 @@ async function run() {
       providers.cerebras.name,
       providers.cerebras.baseUrl,
       cerebrasKey,
-      providers.cerebras.model
+      providers.cerebras.model,
     );
     results.push({
       id: "cerebras",
@@ -190,7 +195,7 @@ async function run() {
       {
         "HTTP-Referer": "https://techsonance.co.in",
         "X-Title": "TechSonance Website Assistant",
-      }
+      },
     );
     results.push({
       id: "openrouter",
@@ -216,7 +221,7 @@ async function run() {
       providers.mistral.name,
       providers.mistral.baseUrl,
       mistralKey,
-      providers.mistral.model
+      providers.mistral.model,
     );
     results.push({
       id: "mistral",
@@ -239,7 +244,7 @@ async function run() {
   console.log("📋 LLM Providers Status:");
   console.log("--------------------------------------------------------------------------------");
   console.log(
-    ` ${"Provider".padEnd(16)} | ${"Key".padEnd(10)} | ${"Status".padEnd(14)} | ${"Latency".padEnd(10)} | Model`
+    ` ${"Provider".padEnd(16)} | ${"Key".padEnd(10)} | ${"Status".padEnd(14)} | ${"Latency".padEnd(10)} | Model`,
   );
   console.log("--------------------------------------------------------------------------------");
   for (const r of results) {
@@ -247,15 +252,15 @@ async function run() {
       r.status === "OK"
         ? "✅ OK"
         : r.status === "RATE_LIMITED"
-        ? "⏳ RATE_LIMIT"
-        : r.status === "BAD_KEY"
-        ? "❌ BAD_KEY"
-        : r.status === "DISABLED"
-        ? "⚪ DISABLED"
-        : "⚠️ FAIL";
+          ? "⏳ RATE_LIMIT"
+          : r.status === "BAD_KEY"
+            ? "❌ BAD_KEY"
+            : r.status === "DISABLED"
+              ? "⚪ DISABLED"
+              : "⚠️ FAIL";
     const latencyStr = r.latencyMs !== undefined ? `${r.latencyMs}ms` : "-";
     console.log(
-      ` ${r.name.padEnd(16)} | ${r.keyStatus.padEnd(10)} | ${statusStr.padEnd(14)} | ${latencyStr.padEnd(10)} | ${r.model}`
+      ` ${r.name.padEnd(16)} | ${r.keyStatus.padEnd(10)} | ${statusStr.padEnd(14)} | ${latencyStr.padEnd(10)} | ${r.model}`,
     );
     if (r.message && r.status !== "OK") {
       console.log(`   └─ ℹ️ ${r.message}`);
@@ -273,7 +278,9 @@ async function run() {
   if (resendKey) {
     console.log(`   • Resend API Key: ${maskKey(resendKey)} (Configured)`);
   } else if (smtpUser && smtpPass) {
-    console.log(`   • SMTP Host: ${process.env.SMTP_HOST ?? "smtp.gmail.com"}:${process.env.SMTP_PORT ?? 465}`);
+    console.log(
+      `   • SMTP Host: ${process.env.SMTP_HOST ?? "smtp.gmail.com"}:${process.env.SMTP_PORT ?? 465}`,
+    );
     console.log(`   • SMTP User: ${smtpUser}`);
     console.log(`   • Admin Email: ${adminEmail ?? "(missing)"}`);
 
@@ -306,7 +313,9 @@ async function run() {
       console.log(`   • SMTP Connection: ❌ Failed (${msg})`);
     }
   } else {
-    console.log("   • SMTP/Resend: ⚪ Not configured in .env.local (Fallback to simulated mode in dev)");
+    console.log(
+      "   • SMTP/Resend: ⚪ Not configured in .env.local (Fallback to simulated mode in dev)",
+    );
   }
 
   // Check Upstash Redis
@@ -337,9 +346,13 @@ async function run() {
   if (activeCount >= 2) {
     console.log(`   ✅ ${activeCount} LLM providers active and healthy! Ready for production RAG.`);
   } else if (activeCount === 1) {
-    console.log(`   ⚠️ 1 LLM provider active. Recommended to configure at least 2 for automatic failover.`);
+    console.log(
+      `   ⚠️ 1 LLM provider active. Recommended to configure at least 2 for automatic failover.`,
+    );
   } else {
-    console.log(`   ℹ️ 0 LLM providers configured with working keys. Bot will operate in Direct FAQ mode.`);
+    console.log(
+      `   ℹ️ 0 LLM providers configured with working keys. Bot will operate in Direct FAQ mode.`,
+    );
   }
   console.log("\n=======================================================\n");
 }

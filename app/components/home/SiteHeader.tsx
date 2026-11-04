@@ -56,10 +56,11 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
       <header
         className={
           transparent
-            ? `fixed top-0 left-0 right-0 z-50 py-3 transition-all duration-300 ${isScrolled || isMobileMenuOpen
-              ? "border-b border-gray-100 bg-white md:bg-white/85 shadow-sm"
-              : "border-b border-transparent bg-transparent"
-            }`
+            ? `fixed top-0 left-0 right-0 z-50 py-3 transition-all duration-300 ${
+                isScrolled || isMobileMenuOpen
+                  ? "border-b border-gray-100 bg-white md:bg-white/85 shadow-sm"
+                  : "border-b border-transparent bg-transparent"
+              }`
             : "fixed top-0 left-0 right-0 md:sticky z-50 border-b border-gray-100 bg-white md:bg-white/80 w-full"
         }
         style={{
@@ -95,7 +96,9 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
             <span className="flex flex-col items-center">
               <span className="flex items-center gap-1 sm:gap-1.5 text-[13px] sm:text-[20px] font-bold font-sora leading-none tracking-[0.04em]">
                 <TechSvg className="text-[#071A35]" />
-                <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">SONΛNCE</span>
+                <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">
+                  SONΛNCE
+                </span>
               </span>
               <span className="w-full flex items-center gap-1 sm:gap-2 text-[6.5px] sm:text-[9px] font-medium font-sans uppercase tracking-[0.24em] text-[#4B5563] mt-0.5">
                 <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#DDE3EA]" />
@@ -117,7 +120,10 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                       className="flex items-center gap-1 text-sm font-semibold text-gray-600 transition-colors hover:text-[#1155CC]"
                     >
                       {link.name}
-                      <Icon name="chevron" className="h-3.5 w-3.5 text-gray-400 transition-transform duration-300 group-hover:rotate-180" />
+                      <Icon
+                        name="chevron"
+                        className="h-3.5 w-3.5 text-gray-400 transition-transform duration-300 group-hover:rotate-180"
+                      />
                     </Link>
 
                     {/* Mega-menu Submenu panel */}
@@ -134,7 +140,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                               style={{
                                 backgroundColor: `${service.accentColor}08`,
                                 borderColor: `${service.accentColor}15`,
-                                color: service.accentColor
+                                color: service.accentColor,
                               }}
                             >
                               <Icon name={service.icon as IconName} className="w-4.5 h-4.5" />
@@ -153,7 +159,9 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
 
                       {/* Submenu footer panel */}
                       <div className="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Growth Ecosystem</span>
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                          Growth Ecosystem
+                        </span>
                         <Link
                           href="/services"
                           className="text-xs font-bold text-[#1155CC] hover:underline inline-flex items-center gap-1"
@@ -206,11 +214,23 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               }}
             >
               {isMobileMenuOpen ? (
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
@@ -231,8 +251,12 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                         className="flex items-center justify-between text-sm font-bold font-sans text-gray-700 hover:text-[#1155CC] transition-colors py-3 w-full cursor-pointer"
                       >
                         <span className="font-bold">{link.name}</span>
-                        <Icon name="chevron" className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${isMobileServicesOpen ? "rotate-180" : ""
-                          }`} />
+                        <Icon
+                          name="chevron"
+                          className={`h-4 w-4 text-gray-400 transition-transform duration-300 ${
+                            isMobileServicesOpen ? "rotate-180" : ""
+                          }`}
+                        />
                       </button>
 
                       {/* Mobile submenu list accordion layout */}
@@ -253,7 +277,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                                 style={{
                                   backgroundColor: `${service.accentColor}06`,
                                   borderColor: `${service.accentColor}12`,
-                                  color: service.accentColor
+                                  color: service.accentColor,
                                 }}
                               >
                                 <Icon name={service.icon as IconName} className="w-4 h-4" />
@@ -292,7 +316,13 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                     className="flex items-center justify-between text-sm font-bold font-sans text-gray-700 hover:text-[#1155CC] transition-colors py-3 border-b border-gray-100/50 last:border-0"
                   >
                     <span className="font-bold">{link.name}</span>
-                    <svg className="h-4 w-4 text-gray-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      className="h-4 w-4 text-gray-400"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </Link>
@@ -345,12 +375,18 @@ function TechSvg({ className = "text-[#071A35]" }: { className?: string }) {
       </g>
       {/* E */}
       <g transform="translate(18, 0)">
-        <path d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5" strokeLinejoin="round" />
+        <path
+          d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5"
+          strokeLinejoin="round"
+        />
         <path d="M4.5,12 L13.5,12" />
       </g>
       {/* C */}
       <g transform="translate(36, 0)">
-        <path d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5" strokeLinejoin="round" />
+        <path
+          d="M16.5,4.5 L8.5,4.5 C6.2,4.5 4.5,6.2 4.5,8.5 L4.5,15.5 C4.5,17.8 6.2,19.5 8.5,19.5 L16.5,19.5"
+          strokeLinejoin="round"
+        />
       </g>
       {/* H */}
       <g transform="translate(54, 0)">

@@ -1,10 +1,12 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes - APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
 <!-- gitnexus:start -->
+
 # GitNexus — Code Intelligence
 
 This project is indexed by GitNexus as **techsonance-infotech-website-2026** (2058 symbols, 3618 relationships, 86 execution flows).
@@ -29,22 +31,22 @@ This project is indexed by GitNexus as **techsonance-infotech-website-2026** (20
 
 ## Resources
 
-| Resource | Use for |
-| --- | --- |
-| `gitnexus://repo/techsonance-infotech-website-2026/context` | Codebase overview, check index freshness |
-| `gitnexus://repo/techsonance-infotech-website-2026/clusters` | All functional areas |
-| `gitnexus://repo/techsonance-infotech-website-2026/processes` | All execution flows |
-| `gitnexus://repo/techsonance-infotech-website-2026/process/{name}` | Step-by-step execution trace |
+| Resource                                                           | Use for                                  |
+| ------------------------------------------------------------------ | ---------------------------------------- |
+| `gitnexus://repo/techsonance-infotech-website-2026/context`        | Codebase overview, check index freshness |
+| `gitnexus://repo/techsonance-infotech-website-2026/clusters`       | All functional areas                     |
+| `gitnexus://repo/techsonance-infotech-website-2026/processes`      | All execution flows                      |
+| `gitnexus://repo/techsonance-infotech-website-2026/process/{name}` | Step-by-step execution trace             |
 
 ## CLI
 
-| Task | Read this skill file |
-| --- | --- |
-| Understand architecture / "How does X work?" | `.claude/skills/gitnexus-exploring/SKILL.md` |
-| Blast radius / "What breaks if I change X?" | `.claude/skills/gitnexus-impact-analysis/SKILL.md` |
-| Trace bugs / "Why is X failing?" | `.claude/skills/gitnexus-debugging/SKILL.md` |
-| Rename / extract / split / refactor | `.claude/skills/gitnexus-refactoring/SKILL.md` |
-| Tools, resources, schema reference | `.claude/skills/gitnexus-guide/SKILL.md` |
-| Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus-cli/SKILL.md` |
+| Task                                         | Read this skill file                               |
+| -------------------------------------------- | -------------------------------------------------- |
+| Understand architecture / "How does X work?" | `.claude/skills/gitnexus-exploring/SKILL.md`       |
+| Blast radius / "What breaks if I change X?"  | `.claude/skills/gitnexus-impact-analysis/SKILL.md` |
+| Trace bugs / "Why is X failing?"             | `.claude/skills/gitnexus-debugging/SKILL.md`       |
+| Rename / extract / split / refactor          | `.claude/skills/gitnexus-refactoring/SKILL.md`     |
+| Tools, resources, schema reference           | `.claude/skills/gitnexus-guide/SKILL.md`           |
+| Index, status, clean, wiki CLI commands      | `.claude/skills/gitnexus-cli/SKILL.md`             |
 
 <!-- gitnexus:end -->

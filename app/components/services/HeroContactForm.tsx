@@ -155,7 +155,8 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
       setRecaptchaChecked(false);
     } catch (err: unknown) {
       setFormStatus("idle");
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      const msg =
+        err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
       setErrorMessage(msg);
     }
   };
@@ -168,7 +169,8 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
         </div>
         <h3 className="text-xl font-bold text-neutral-900 mb-3">Scoping Request Sent</h3>
         <p className="text-sm text-neutral-600 max-w-sm leading-relaxed mb-8">
-          Thank you! An engineering lead has received your project details and will reach out within 24 hours to schedule a free scoping call.
+          Thank you! An engineering lead has received your project details and will reach out within
+          24 hours to schedule a free scoping call.
         </p>
         <button
           onClick={() => setFormStatus("idle")}
@@ -187,9 +189,12 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="mb-6">
-        <h3 className="text-lg font-bold text-neutral-900 leading-tight">Get Expert Help for Your Project</h3>
+        <h3 className="text-lg font-bold text-neutral-900 leading-tight">
+          Get Expert Help for Your Project
+        </h3>
         <p className="text-xs text-neutral-500 mt-1.5 leading-relaxed">
-          Provide the details of your project, and our engineers will guide you from architecture to launch.
+          Provide the details of your project, and our engineers will guide you from architecture to
+          launch.
         </p>
       </div>
 
@@ -219,11 +224,15 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               onChange={(e) => handleChange("firstName", e.target.value)}
               onBlur={() => handleBlur("firstName")}
               className={`w-full px-3 py-2 bg-neutral-50/50 border ${
-                validateField("firstName", formData.firstName) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
+                validateField("firstName", formData.firstName)
+                  ? "border-red-500 focus:ring-red-100"
+                  : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
               } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all`}
             />
             {validateField("firstName", formData.firstName) && (
-              <p className="text-[10px] font-medium text-red-500">{validateField("firstName", formData.firstName)}</p>
+              <p className="text-[10px] font-medium text-red-500">
+                {validateField("firstName", formData.firstName)}
+              </p>
             )}
           </div>
 
@@ -238,11 +247,15 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               onChange={(e) => handleChange("lastName", e.target.value)}
               onBlur={() => handleBlur("lastName")}
               className={`w-full px-3 py-2 bg-neutral-50/50 border ${
-                validateField("lastName", formData.lastName) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
+                validateField("lastName", formData.lastName)
+                  ? "border-red-500 focus:ring-red-100"
+                  : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
               } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all`}
             />
             {validateField("lastName", formData.lastName) && (
-              <p className="text-[10px] font-medium text-red-500">{validateField("lastName", formData.lastName)}</p>
+              <p className="text-[10px] font-medium text-red-500">
+                {validateField("lastName", formData.lastName)}
+              </p>
             )}
           </div>
         </div>
@@ -259,11 +272,15 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
             onChange={(e) => handleChange("email", e.target.value)}
             onBlur={() => handleBlur("email")}
             className={`w-full px-3 py-2 bg-neutral-50/50 border ${
-              validateField("email", formData.email) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
+              validateField("email", formData.email)
+                ? "border-red-500 focus:ring-red-100"
+                : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
             } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all`}
           />
           {validateField("email", formData.email) && (
-            <p className="text-[10px] font-medium text-red-500">{validateField("email", formData.email)}</p>
+            <p className="text-[10px] font-medium text-red-500">
+              {validateField("email", formData.email)}
+            </p>
           )}
         </div>
 
@@ -291,12 +308,16 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               onChange={(e) => handleChange("phone", e.target.value.replace(/[^\d]/g, ""))}
               onBlur={() => handleBlur("phone")}
               className={`flex-1 min-w-0 px-3 py-2 bg-neutral-50/50 border ${
-                validateField("phone", formData.phone) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
+                validateField("phone", formData.phone)
+                  ? "border-red-500 focus:ring-red-100"
+                  : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
               } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all`}
             />
           </div>
           {validateField("phone", formData.phone) && (
-            <p className="text-[10px] font-medium text-red-500">{validateField("phone", formData.phone)}</p>
+            <p className="text-[10px] font-medium text-red-500">
+              {validateField("phone", formData.phone)}
+            </p>
           )}
         </div>
 
@@ -312,11 +333,15 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
             onChange={(e) => handleChange("message", e.target.value)}
             onBlur={() => handleBlur("message")}
             className={`w-full px-3 py-2 bg-neutral-50/50 border ${
-              validateField("message", formData.message) ? "border-red-500 focus:ring-red-100" : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
+              validateField("message", formData.message)
+                ? "border-red-500 focus:ring-red-100"
+                : "border-neutral-200 focus:border-blue-500 focus:ring-blue-100"
             } rounded-lg text-sm text-neutral-900 focus:outline-none focus:ring-2 transition-all resize-none`}
           />
           {validateField("message", formData.message) && (
-            <p className="text-[10px] font-medium text-red-500">{validateField("message", formData.message)}</p>
+            <p className="text-[10px] font-medium text-red-500">
+              {validateField("message", formData.message)}
+            </p>
           )}
         </div>
 
@@ -331,8 +356,8 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
                 recaptchaChecked
                   ? "bg-green-500 border-green-600 text-white"
                   : recaptchaLoading
-                  ? "border-blue-500"
-                  : "border-neutral-300 hover:border-neutral-400 bg-white"
+                    ? "border-blue-500"
+                    : "border-neutral-300 hover:border-neutral-400 bg-white"
               }`}
             >
               {recaptchaChecked && "✓"}
@@ -355,7 +380,9 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
             >
               <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
             </svg>
-            <span className="text-[7px] text-neutral-400 font-bold tracking-wider mt-0.5">reCAPTCHA</span>
+            <span className="text-[7px] text-neutral-400 font-bold tracking-wider mt-0.5">
+              reCAPTCHA
+            </span>
           </div>
         </div>
 

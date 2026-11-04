@@ -7,13 +7,7 @@ interface CapabilitiesProps {
   service: Service;
 }
 
-function CapabilityCard({
-  cap,
-  featured = false,
-}: {
-  cap: Capability;
-  featured?: boolean;
-}) {
+function CapabilityCard({ cap, featured = false }: { cap: Capability; featured?: boolean }) {
   return (
     <div
       className={`capability-card flex flex-col p-5 sm:p-6 md:p-7 bg-white ${
@@ -27,12 +21,8 @@ function CapabilityCard({
         </div>
       </div>
 
-      <h3 className="text-[17px] font-bold text-[#0A0A0A] mb-2 leading-snug">
-        {cap.title}
-      </h3>
-      <p className="text-[14px] text-[#525252] leading-relaxed mb-4">
-        {cap.description}
-      </p>
+      <h3 className="text-[17px] font-bold text-[#0A0A0A] mb-2 leading-snug">{cap.title}</h3>
+      <p className="text-[14px] text-[#525252] leading-relaxed mb-4">{cap.description}</p>
 
       {featured && cap.connectedItems && cap.connectedItems.length > 0 && (
         <div className="mb-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] p-4">
@@ -41,10 +31,7 @@ function CapabilityCard({
           </p>
           <ul className="space-y-1.5">
             {cap.connectedItems.map((item) => (
-              <li
-                key={item}
-                className="text-[13px] text-[#525252] flex items-start gap-2"
-              >
+              <li key={item} className="text-[13px] text-[#525252] flex items-start gap-2">
                 <span className="text-[var(--accent-blue)] mt-0.5">•</span>
                 {item}
               </li>
@@ -82,9 +69,7 @@ function CapabilityCard({
               <path d="M7 17l5-5 5 5" />
               <path d="M12 7v10" />
             </svg>
-            <p className="text-[12px] text-[#065F46] leading-relaxed font-medium">
-              {cap.outcome}
-            </p>
+            <p className="text-[12px] text-[#065F46] leading-relaxed font-medium">{cap.outcome}</p>
           </div>
         )}
         <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--accent-blue)]">
@@ -115,8 +100,7 @@ export default function Capabilities({ service }: CapabilitiesProps) {
               className="font-bold tracking-tight text-[#0A0A0A] leading-[1.1]"
               style={{ fontSize: "clamp(32px, 4vw, 44px)" }}
             >
-              What we{" "}
-              <span className="text-[var(--accent-blue)]">actually</span> ship
+              What we <span className="text-[var(--accent-blue)]">actually</span> ship
             </h2>
           </div>
           <div className="flex items-center gap-8 shrink-0">

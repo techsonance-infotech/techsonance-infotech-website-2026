@@ -47,7 +47,9 @@ async function main() {
     console.log("✅ SUCCESS: Connected to Database using in-app database module!");
     console.log(`⏱️  Latency: ${latency}ms`);
     console.log(`🗄️  Database: ${row?.db_name}`);
-    console.log(`📦 Engine: ${String(row?.version).split(" ")[0]} ${String(row?.version).split(" ")[1]}`);
+    console.log(
+      `📦 Engine: ${String(row?.version).split(" ")[0]} ${String(row?.version).split(" ")[1]}`,
+    );
     console.log(`🕒 Server Time: ${row?.current_time}\n`);
 
     // 3. Verify Phase 1 Tables
@@ -77,7 +79,7 @@ async function main() {
       if (existingTableNames.has(tbl)) {
         try {
           const countRes = await db.execute<{ cnt: number }>(
-            sql.raw(`SELECT count(*)::int as cnt FROM "${tbl}"`)
+            sql.raw(`SELECT count(*)::int as cnt FROM "${tbl}"`),
           );
           const count = countRes[0]?.cnt ?? 0;
           console.log(`   🟢 ${tbl.padEnd(25)} (found, ${count} rows)`);
@@ -92,9 +94,10 @@ async function main() {
     if (existingTableNames.size === expectedTables.length) {
       console.log("\n🎉 All 9 Phase 1 tables are present and ready!");
     } else {
-      console.log(`\n⚠️  ${existingTableNames.size}/${expectedTables.length} tables found in public schema.`);
+      console.log(
+        `\n⚠️  ${existingTableNames.size}/${expectedTables.length} tables found in public schema.`,
+      );
     }
-
   } catch (err: any) {
     console.error("❌ Database connection failed with in-app database client!");
     console.error(`💥 Error: ${err.message || err}`);

@@ -74,5 +74,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...staticUrls, ...landingPageUrls, ...serviceUrls, ...projectUrls, ...blogUrls];
 }
-
-

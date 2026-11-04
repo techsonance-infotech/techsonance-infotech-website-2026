@@ -74,9 +74,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     notFound();
   }
 
-  const relatedPosts = blogPosts
-    .filter((p) => p.slug !== post.slug)
-    .slice(0, 2);
+  const relatedPosts = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   const heroImageUrl = post.heroImage.startsWith("http")
     ? post.heroImage
@@ -97,54 +95,53 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     heroImageUrl,
     publishedTime,
     post.authors.map((a) => a.name).join(" & "),
-    postUrl
+    postUrl,
   );
 
   const breadcrumbSchema = {
     "@type": "BreadcrumbList",
     "@id": `${postUrl}#breadcrumb`,
-    "itemListElement": [
+    itemListElement: [
       {
         "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": BASE_URL,
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
       },
       {
         "@type": "ListItem",
-        "position": 2,
-        "name": "Blog",
-        "item": `${BASE_URL}/blog`,
+        position: 2,
+        name: "Blog",
+        item: `${BASE_URL}/blog`,
       },
       {
         "@type": "ListItem",
-        "position": 3,
-        "name": post.title,
-        "item": postUrl,
+        position: 3,
+        name: post.title,
+        item: postUrl,
       },
     ],
   };
 
-  const faqSchema = post.faqs && post.faqs.length > 0 ? {
-    "@type": "FAQPage",
-    "@id": `${postUrl}#faq`,
-    "mainEntity": post.faqs.map((faq) => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer,
-      },
-    })),
-  } : null;
+  const faqSchema =
+    post.faqs && post.faqs.length > 0
+      ? {
+          "@type": "FAQPage",
+          "@id": `${postUrl}#faq`,
+          mainEntity: post.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }
+      : null;
 
   const unifiedSchema = {
     "@context": "https://schema.org",
-    "@graph": [
-      articleSchema,
-      breadcrumbSchema,
-      ...(faqSchema ? [faqSchema] : []),
-    ],
+    "@graph": [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])],
   };
 
   return (

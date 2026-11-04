@@ -31,20 +31,20 @@ export default function Home() {
     <>
       <SiteHeader transparent={true} />
       <main className="min-h-screen overflow-x-clip bg-[#FAFBFD] text-[#0F172A]">
-      <HeroSection />
-      <VisionSection />
-      <ServicesSection />
-      <FeaturedProjectsSection />
-      <WhyChooseSection />
-      <Testimonials />
-      <TechnologiesSection />
-      <section id="project-request" className="py-20 bg-[#FAFBFD]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScopingContactForm />
-        </div>
-      </section>
-      <SiteFooter />
-    </main>
-  </>
+        <HeroSection />
+        <VisionSection />
+        <ServicesSection />
+        <FeaturedProjectsSection />
+        <WhyChooseSection />
+        <Testimonials />
+        <TechnologiesSection />
+        <section id="project-request" className="py-20 bg-[#FAFBFD]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ScopingContactForm />
+          </div>
+        </section>
+        <SiteFooter />
+      </main>
+    </>
   );
 }

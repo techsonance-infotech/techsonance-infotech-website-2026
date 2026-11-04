@@ -33,13 +33,18 @@ export const whyItems: WhyItem[] = [
       "Advanced Retrieval-Augmented Generation (RAG)",
       "Automated Workflow & Agentic Systems",
     ],
-    callout: "We build systems that think. By embedding agentic intelligence at the core, we turn standard software into an active growth driver.",
+    callout:
+      "We build systems that think. By embedding agentic intelligence at the core, we turn standard software into an active growth driver.",
     layers: [
       { title: "Agentic Workflows", icon: "brain", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
       { title: "LLM Fine-Tuning", icon: "beaker", gradientClass: "from-[#A855F7] to-[#8B5CF6]" },
       { title: "RAG Pipelines", icon: "database", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
-      { title: "Secure Guardrails", icon: "shield", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
+      {
+        title: "Secure Guardrails",
+        icon: "shield",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
   },
   {
     number: "02",
@@ -52,13 +57,18 @@ export const whyItems: WhyItem[] = [
       "Solution strategy & target architecture",
       "Roadmap with clear outcomes",
     ],
-    callout: "We combine business strategy, technology and AI to build solutions that create real impact - not just deliver features.",
+    callout:
+      "We combine business strategy, technology and AI to build solutions that create real impact - not just deliver features.",
     layers: [
       { title: "Business Goals", icon: "trend", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "User Needs", icon: "handshake", gradientClass: "from-[#A855F7] to-[#8B5CF6]" },
       { title: "Smart Strategy", icon: "lightbulb", gradientClass: "from-[#06B6D4] to-[#0891B2]" },
-      { title: "Impact & Growth", icon: "bolt", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
+      {
+        title: "Impact & Growth",
+        icon: "bolt",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
   },
   {
     number: "03",
@@ -71,13 +81,18 @@ export const whyItems: WhyItem[] = [
       "Performance-focused application architecture",
       "Cloud-ready systems built for growth",
     ],
-    callout: "Speed is nothing without direction. We iterate rapidly while maintaining a robust, enterprise-grade architecture.",
+    callout:
+      "Speed is nothing without direction. We iterate rapidly while maintaining a robust, enterprise-grade architecture.",
     layers: [
       { title: "Production Release", icon: "cloud", gradientClass: "from-[#06B6D4] to-[#0891B2]" },
       { title: "Cloud-Ready Infra", icon: "dns", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Rapid Iteration", icon: "speed", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
-      { title: "Scalable Core", icon: "code", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
+      {
+        title: "Scalable Core",
+        icon: "code",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
   },
   {
     number: "04",
@@ -90,13 +105,18 @@ export const whyItems: WhyItem[] = [
       "Security and quality considered throughout",
       "Post-launch maintenance and optimization",
     ],
-    callout: "We don't hand off and walk away. We take full responsibility from initial discovery to production launch and daily optimization.",
+    callout:
+      "We don't hand off and walk away. We take full responsibility from initial discovery to production launch and daily optimization.",
     layers: [
       { title: "Continuous Ops", icon: "monitor", gradientClass: "from-[#10B981] to-[#059669]" },
       { title: "Launch Discipline", icon: "check", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
       { title: "Quality Assurance", icon: "shield", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
-      { title: "Discovery & Plan", icon: "beaker", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
+      {
+        title: "Discovery & Plan",
+        icon: "beaker",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
   },
   {
     number: "05",
@@ -109,13 +129,18 @@ export const whyItems: WhyItem[] = [
       "Future-ready infrastructure and integrations",
       "Technical foundations that reduce rework",
     ],
-    callout: "We design for the future. Our architectures grow seamlessly alongside your users, transactions, and integrations.",
+    callout:
+      "We design for the future. Our architectures grow seamlessly alongside your users, transactions, and integrations.",
     layers: [
       { title: "High Availability", icon: "dns", gradientClass: "from-[#F59E0B] to-[#D97706]" },
       { title: "Microservices", icon: "box", gradientClass: "from-[#EF4444] to-[#DC2626]" },
       { title: "API Gateway", icon: "schema", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
-      { title: "Fault Tolerance", icon: "shield", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
+      {
+        title: "Fault Tolerance",
+        icon: "shield",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
   },
   {
     number: "06",
@@ -128,20 +153,29 @@ export const whyItems: WhyItem[] = [
       "Practical technical guidance as you grow",
       "Support that extends beyond launch",
     ],
-    callout: "Our relationship doesn't end at launch. We walk beside you, providing technical direction and collaborative engineering as your business evolves.",
+    callout:
+      "Our relationship doesn't end at launch. We walk beside you, providing technical direction and collaborative engineering as your business evolves.",
     layers: [
       { title: "Business Scaling", icon: "trend", gradientClass: "from-[#EC4899] to-[#D946EF]" },
       { title: "Feedback Loop", icon: "handshake", gradientClass: "from-[#8B5CF6] to-[#6366F1]" },
       { title: "Dedicated Support", icon: "monitor", gradientClass: "from-[#1155CC] to-[#22B6F6]" },
-      { title: "Shared Vision", icon: "lightbulb", gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200" }
-    ]
-  }
+      {
+        title: "Shared Vision",
+        icon: "lightbulb",
+        gradientClass: "from-white to-gray-50 text-gray-800 border-gray-200",
+      },
+    ],
+  },
 ];
 
 function AIBrainFlowVisual() {
   return (
     <div className="relative w-full h-[260px] flex items-center justify-center">
-      <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 200 200" fill="none">
+      <svg
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        viewBox="0 0 200 200"
+        fill="none"
+      >
         <path d="M100,100 L100,45" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
         <path d="M100,100 L55,140" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
         <path d="M100,100 L145,140" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
@@ -186,7 +220,9 @@ function AIBrainFlowVisual() {
         className="absolute top-[12%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="beaker" className="h-3.5 w-3.5 text-[#8B5CF6] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Agentic</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          Agentic
+        </span>
       </motion.div>
 
       <motion.div
@@ -195,7 +231,9 @@ function AIBrainFlowVisual() {
         className="absolute bottom-[12%] left-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-2 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="database" className="h-3.5 w-3.5 text-[#1155CC] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">RAG Ops</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          RAG Ops
+        </span>
       </motion.div>
 
       <motion.div
@@ -204,7 +242,9 @@ function AIBrainFlowVisual() {
         className="absolute bottom-[12%] right-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
       >
         <Icon name="shield" className="h-3.5 w-3.5 text-[#06B6D4] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Guardrail</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          Guardrail
+        </span>
       </motion.div>
     </div>
   );
@@ -219,10 +259,26 @@ function Isometric3DStackVisual() {
   ];
 
   const layers = [
-    { title: "Business Goals", icon: "trend" as const, gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20" },
-    { title: "User Needs", icon: "handshake" as const, gradient: "bg-gradient-to-r from-[#8B5CF6] to-[#A855F7] text-white border-white/20" },
-    { title: "Smart Strategy", icon: "lightbulb" as const, gradient: "bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white border-white/20" },
-    { title: "Impact & Growth", icon: "bolt" as const, gradient: "bg-white text-gray-800 border-gray-100" }
+    {
+      title: "Business Goals",
+      icon: "trend" as const,
+      gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20",
+    },
+    {
+      title: "User Needs",
+      icon: "handshake" as const,
+      gradient: "bg-gradient-to-r from-[#8B5CF6] to-[#A855F7] text-white border-white/20",
+    },
+    {
+      title: "Smart Strategy",
+      icon: "lightbulb" as const,
+      gradient: "bg-gradient-to-r from-[#06B6D4] to-[#0891B2] text-white border-white/20",
+    },
+    {
+      title: "Impact & Growth",
+      icon: "bolt" as const,
+      gradient: "bg-white text-gray-800 border-gray-100",
+    },
   ];
 
   const verticalOffsets = ["top-[8%]", "top-[28%]", "top-[48%]", "top-[68%]"];
@@ -230,7 +286,11 @@ function Isometric3DStackVisual() {
 
   return (
     <div className="relative w-full h-[260px] flex items-center justify-center [perspective:1000px]">
-      <svg className="absolute inset-0 h-full w-full pointer-events-none opacity-20" viewBox="0 0 200 320" fill="none">
+      <svg
+        className="absolute inset-0 h-full w-full pointer-events-none opacity-20"
+        viewBox="0 0 200 320"
+        fill="none"
+      >
         <path
           d="M 30,240 C 5,180 5,100 40,70 C 60,50 100,50 110,80"
           stroke="#1155CC"
@@ -270,15 +330,12 @@ function Isometric3DStackVisual() {
           >
             <Icon
               name={layer.icon}
-              className={[
-                "h-4 w-4 mb-1",
-                isBottom ? "text-[#1155CC]" : "text-white"
-              ].join(" ")}
+              className={["h-4 w-4 mb-1", isBottom ? "text-[#1155CC]" : "text-white"].join(" ")}
             />
             <span
               className={[
                 "text-[9px] font-medium uppercase tracking-wider",
-                isBottom ? "text-gray-800" : "text-white"
+                isBottom ? "text-gray-800" : "text-white",
               ].join(" ")}
             >
               {layer.title}
@@ -295,7 +352,11 @@ function PipelineFlowVisual() {
     <div className="relative w-full h-[260px] flex items-center justify-center">
       <div className="absolute top-[15%] bottom-[15%] w-[2px] bg-gradient-to-b from-blue-100 via-purple-100 to-cyan-100 left-1/2 -translate-x-1/2" />
 
-      <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 200 260" fill="none">
+      <svg
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        viewBox="0 0 200 260"
+        fill="none"
+      >
         <motion.circle
           cx={100}
           cy={40}
@@ -314,7 +375,9 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0">
           <Icon name="speed" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Rapid Dev</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          Rapid Dev
+        </span>
       </motion.div>
 
       <motion.div
@@ -325,7 +388,9 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-purple-50 text-[#8B5CF6] flex items-center justify-center shrink-0">
           <Icon name="shield" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">QA Build</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          QA Build
+        </span>
       </motion.div>
 
       <motion.div
@@ -336,7 +401,9 @@ function PipelineFlowVisual() {
         <span className="w-5 h-5 rounded-lg bg-cyan-50 text-[#06B6D4] flex items-center justify-center shrink-0">
           <Icon name="cloud" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">Scale Out</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+          Scale Out
+        </span>
       </motion.div>
     </div>
   );
@@ -345,7 +412,11 @@ function PipelineFlowVisual() {
 function InfiniteLifecycleVisual() {
   return (
     <div className="relative w-full h-[260px] flex items-center justify-center">
-      <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 200 260" fill="none">
+      <svg
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        viewBox="0 0 200 260"
+        fill="none"
+      >
         <circle cx="100" cy="130" r="48" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="3 3" />
         <motion.circle
           cx={148}
@@ -379,14 +450,18 @@ function InfiniteLifecycleVisual() {
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="cloud" className="h-4 w-4 text-[#1155CC]" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Release</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">
+          Release
+        </span>
       </div>
 
       <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 text-center">
         <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
           <Icon name="monitor" className="h-4 w-4 text-emerald-500" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Optimize</span>
+        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">
+          Optimize
+        </span>
       </div>
 
       <div className="absolute left-[8%] top-[50%] -translate-y-1/2 text-center">
@@ -407,9 +482,21 @@ function ScalableGridVisual() {
   ];
 
   const nodes = [
-    { title: "Gateway", icon: "dns" as const, gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20" },
-    { title: "Cluster node", icon: "box" as const, gradient: "bg-[#8B5CF6] text-white border-purple-400/20" },
-    { title: "Datastore", icon: "schema" as const, gradient: "bg-white text-gray-800 border-gray-100" }
+    {
+      title: "Gateway",
+      icon: "dns" as const,
+      gradient: "bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white border-white/20",
+    },
+    {
+      title: "Cluster node",
+      icon: "box" as const,
+      gradient: "bg-[#8B5CF6] text-white border-purple-400/20",
+    },
+    {
+      title: "Datastore",
+      icon: "schema" as const,
+      gradient: "bg-white text-gray-800 border-gray-100",
+    },
   ];
 
   const verticalOffsets = ["top-[10%]", "top-[36%]", "top-[62%]"];
@@ -444,15 +531,12 @@ function ScalableGridVisual() {
           >
             <Icon
               name={node.icon}
-              className={[
-                "h-4 w-4 shrink-0",
-                isBottom ? "text-[#1155CC]" : "text-white"
-              ].join(" ")}
+              className={["h-4 w-4 shrink-0", isBottom ? "text-[#1155CC]" : "text-white"].join(" ")}
             />
             <span
               className={[
                 "text-[9px] font-medium uppercase tracking-wider",
-                isBottom ? "text-gray-800" : "text-white"
+                isBottom ? "text-gray-800" : "text-white",
               ].join(" ")}
             >
               {node.title}
@@ -467,7 +551,11 @@ function ScalableGridVisual() {
 function CollaborationRingsVisual() {
   return (
     <div className="relative w-full max-w-[360px] h-[280px] mx-auto flex items-center justify-center font-sans">
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
         <defs>
           <linearGradient id="grad-left" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#1155CC" />
@@ -479,9 +567,27 @@ function CollaborationRingsVisual() {
           </linearGradient>
         </defs>
 
-        <line x1="25" y1="18" x2="75" y2="18" stroke="#E2E8F0" strokeWidth="0.5" strokeDasharray="1 1" />
-        <path d="M 25 45 C 25 60, 35 62, 50 62" fill="none" stroke="url(#grad-left)" strokeWidth="0.5" />
-        <path d="M 75 45 C 75 60, 65 62, 50 62" fill="none" stroke="url(#grad-right)" strokeWidth="0.5" />
+        <line
+          x1="25"
+          y1="18"
+          x2="75"
+          y2="18"
+          stroke="#E2E8F0"
+          strokeWidth="0.5"
+          strokeDasharray="1 1"
+        />
+        <path
+          d="M 25 45 C 25 60, 35 62, 50 62"
+          fill="none"
+          stroke="url(#grad-left)"
+          strokeWidth="0.5"
+        />
+        <path
+          d="M 75 45 C 75 60, 65 62, 50 62"
+          fill="none"
+          stroke="url(#grad-right)"
+          strokeWidth="0.5"
+        />
       </svg>
 
       <div className="absolute left-[25%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
@@ -497,7 +603,9 @@ function CollaborationRingsVisual() {
           <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
         </div>
         <h4 className="text-[12px] sm:text-[13px] font-bold text-[#1155CC] mb-1">Your Team</h4>
-        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">Your goals, your vision, your users</p>
+        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">
+          Your goals, your vision, your users
+        </p>
       </div>
 
       <div className="absolute right-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-purple-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
@@ -505,7 +613,9 @@ function CollaborationRingsVisual() {
           <Icon name="code" className="h-5 w-5 sm:h-6 sm:w-6 text-[#8B5CF6]" />
         </div>
         <h4 className="text-[12px] sm:text-[13px] font-bold text-[#8B5CF6] mb-1">Our Team</h4>
-        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">Our expertise, our commitment</p>
+        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">
+          Our expertise, our commitment
+        </p>
       </div>
 
       <div className="absolute left-1/2 bottom-[5%] -translate-x-1/2 flex flex-col items-center z-10 w-[80%] max-w-[200px]">
@@ -527,9 +637,15 @@ function CollaborationRingsVisual() {
 
         <div className="mt-4 sm:mt-5 flex flex-col items-center">
           <div className="bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-blue-50 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-1.5 relative z-20">
-            <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">Shared Success</span>
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">
+              Shared Success
+            </span>
           </div>
-          <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">Long-term impact<br />together</span>
+          <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">
+            Long-term impact
+            <br />
+            together
+          </span>
         </div>
       </div>
     </div>
@@ -574,7 +690,8 @@ export default function WhyChooseSection() {
             Built Different. <span className="text-[#1155CC]">Built for Impact.</span>
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            We don&apos;t just write code - we engineer intelligent systems that solve real problems and drive measurable growth.
+            We don&apos;t just write code - we engineer intelligent systems that solve real problems
+            and drive measurable growth.
           </p>
         </div>
 
@@ -606,7 +723,8 @@ export default function WhyChooseSection() {
                       const buttonElement = e.currentTarget;
                       setTimeout(() => {
                         const yOffset = -70; // offset for sticky header
-                        const y = buttonElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                        const y =
+                          buttonElement.getBoundingClientRect().top + window.scrollY + yOffset;
                         window.scrollTo({ top: y, behavior: "smooth" });
                       }, 120);
                     }
@@ -620,9 +738,7 @@ export default function WhyChooseSection() {
                     <span
                       className={[
                         "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-300",
-                        isOpen
-                          ? "bg-[#1155CC] text-white shadow-sm"
-                          : "bg-blue-50 text-[#1155CC]",
+                        isOpen ? "bg-[#1155CC] text-white shadow-sm" : "bg-blue-50 text-[#1155CC]",
                       ].join(" ")}
                     >
                       <Icon name={item.icon} className="h-4.5 w-4.5" />
@@ -650,13 +766,14 @@ export default function WhyChooseSection() {
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
                       <div className="px-5 pb-5 pt-1 border-t border-gray-50 space-y-4">
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          {item.body}
-                        </p>
+                        <p className="text-sm text-gray-600 leading-relaxed">{item.body}</p>
 
                         <ul className="divide-y divide-gray-100 space-y-0">
                           {item.bullets.map((bullet) => (
-                            <li key={bullet} className="flex items-start gap-2.5 text-xs text-gray-700 font-medium py-2.5 first:pt-0 last:pb-0">
+                            <li
+                              key={bullet}
+                              className="flex items-start gap-2.5 text-xs text-gray-700 font-medium py-2.5 first:pt-0 last:pb-0"
+                            >
                               <span className="w-4.5 h-4.5 rounded-full border border-blue-100 bg-blue-50/50 text-[#1155CC] flex items-center justify-center shrink-0 p-0.5 mt-0.5">
                                 <Icon name="check" className="h-2.5 w-2.5" />
                               </span>
@@ -666,7 +783,9 @@ export default function WhyChooseSection() {
                         </ul>
 
                         <div className="flex w-full items-center gap-3 rounded-xl bg-[#F4F9FF] border border-blue-100/50 p-3.5 text-left mt-4 shadow-[0_4px_12px_rgba(17, 85, 204,0.01)]">
-                          <span className="text-2xl font-serif text-[#1155CC] font-black leading-none select-none mt-1">&ldquo;</span>
+                          <span className="text-2xl font-serif text-[#1155CC] font-black leading-none select-none mt-1">
+                            &ldquo;
+                          </span>
                           <div className="w-[1.2px] h-6 bg-blue-200/50 shrink-0" />
                           <p className="text-xs italic font-semibold text-gray-600 leading-normal">
                             {item.callout}
@@ -747,7 +866,7 @@ function WhyChooseNav({
                 <span
                   className={[
                     "block text-base font-medium leading-tight transition-colors duration-200",
-                    active ? "text-gray-900" : "text-gray-600 group-hover:text-gray-900"
+                    active ? "text-gray-900" : "text-gray-600 group-hover:text-gray-900",
                   ].join(" ")}
                 >
                   {item.title}
@@ -809,7 +928,10 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
             <div className="flex flex-col gap-5">
               <ul className="flex flex-col gap-2.5">
                 {item.bullets.map((bullet) => (
-                  <li key={bullet} className="flex items-start gap-3 text-[13.5px] text-[#374151] font-medium bg-gray-50/60 rounded-xl px-3.5 py-2.5 border border-gray-100/80 hover:bg-white hover:border-blue-100 hover:shadow-sm transition-all">
+                  <li
+                    key={bullet}
+                    className="flex items-start gap-3 text-[13.5px] text-[#374151] font-medium bg-gray-50/60 rounded-xl px-3.5 py-2.5 border border-gray-100/80 hover:bg-white hover:border-blue-100 hover:shadow-sm transition-all"
+                  >
                     <span className="w-5 h-5 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
                       <Icon name="check" className="h-3 w-3" />
                     </span>
@@ -819,7 +941,9 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
               </ul>
 
               <div className="flex items-start gap-3 rounded-xl bg-gradient-to-r from-blue-50/70 to-transparent border border-blue-100/30 px-4 py-3">
-                <span className="text-xl font-serif text-[#1155CC] font-black leading-none select-none opacity-60 mt-0.5">&ldquo;</span>
+                <span className="text-xl font-serif text-[#1155CC] font-black leading-none select-none opacity-60 mt-0.5">
+                  &ldquo;
+                </span>
                 <p className="text-[12.5px] italic font-medium text-gray-600 leading-relaxed">
                   {item.callout}
                 </p>

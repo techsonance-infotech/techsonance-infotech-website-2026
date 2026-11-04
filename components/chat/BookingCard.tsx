@@ -15,7 +15,7 @@ import {
   Briefcase,
   DollarSign,
 } from "lucide-react";
-import { getVisitorProfile, saveVisitorProfile, saveBookingCopy } from "@/lib/db";
+import { getVisitorProfile, saveVisitorProfile, saveBookingCopy } from "@/lib/chat/storage";
 import type { Slot } from "@/lib/slots";
 import { trackBookingFormSubmit } from "@/lib/analytics";
 
@@ -102,7 +102,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         }
       })
       .catch(() => {
-        setErrorMsg("Failed to load time slots. You can still reach us directly at info@techsonance.co.in.");
+        setErrorMsg(
+          "Failed to load time slots. You can still reach us directly at info@techsonance.co.in.",
+        );
       })
       .finally(() => setLoadingSlots(false));
   }, []);
@@ -195,15 +197,16 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           <h4 className="font-semibold text-base text-slate-900">Consultation Confirmed!</h4>
         </div>
         <p className="text-xs text-slate-600 mb-3 leading-relaxed">
-          We have sent your confirmation email and calendar invite (.ics) to <strong>{email}</strong>.
+          We have sent your confirmation email and calendar invite (.ics) to{" "}
+          <strong>{email}</strong>.
         </p>
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs flex justify-between items-center mb-3">
           <span className="text-slate-500">Booking Reference:</span>
           <span className="font-mono font-bold text-[#1155CC]">{bookedRef}</span>
         </div>
         <p className="text-[11px] text-slate-500">
-          Our technical team will review your project requirements and join the call. Have questions? WhatsApp us at{" "}
-          <strong className="text-slate-700">+91 9173101711</strong>.
+          Our technical team will review your project requirements and join the call. Have
+          questions? WhatsApp us at <strong className="text-slate-700">+91 9173101711</strong>.
         </p>
       </div>
     );
@@ -222,13 +225,19 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             TS
           </div>
           <div>
-            <h4 className="font-semibold text-sm text-slate-900 leading-tight">Book Free 30-Min Consultation</h4>
-            <p className="text-[11px] text-slate-500">Zero obligation • Architecture &amp; scope estimate</p>
+            <h4 className="font-semibold text-sm text-slate-900 leading-tight">
+              Book Free 30-Min Consultation
+            </h4>
+            <p className="text-[11px] text-slate-500">
+              Zero obligation • Architecture &amp; scope estimate
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-1 text-[11px] text-slate-400">
           <Globe className="w-3 h-3" />
-          <span className="truncate max-w-[90px]">{visitorTimezone.split("/")[1] || visitorTimezone}</span>
+          <span className="truncate max-w-[90px]">
+            {visitorTimezone.split("/")[1] || visitorTimezone}
+          </span>
         </div>
       </div>
 
@@ -291,7 +300,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Phone & Company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">Phone / WhatsApp (Optional)</label>
+            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+              Phone / WhatsApp (Optional)
+            </label>
             <div className="relative">
               <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
@@ -305,7 +316,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">Company (Optional)</label>
+            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+              Company (Optional)
+            </label>
             <div className="relative">
               <Building className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
@@ -322,7 +335,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Project Type & Budget */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">Project Type</label>
+            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+              Project Type
+            </label>
             <div className="relative">
               <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
@@ -340,7 +355,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">Target Budget</label>
+            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+              Target Budget
+            </label>
             <div className="relative">
               <DollarSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
@@ -393,7 +410,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
         {/* Short Message / Idea */}
         <div>
-          <label className="block text-[11px] font-medium text-slate-600 mb-1">Brief Project Overview (Optional)</label>
+          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            Brief Project Overview (Optional)
+          </label>
           <textarea
             rows={2}
             value={message}

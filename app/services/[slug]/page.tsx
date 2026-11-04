@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import { services, getFullServiceBySlug } from "@/data/services";
 import ServicePageClient from "@/app/components/services/ServicePageClient";
 import { SEO_METADATA, BASE_URL, getAeoFaqsForSlug } from "@/lib/seo-aeo-geo-config";
-import JsonLd, { getServiceSchema, getFaqSchema, getBreadcrumbSchema } from "@/app/components/JsonLd";
+import JsonLd, {
+  getServiceSchema,
+  getFaqSchema,
+  getBreadcrumbSchema,
+} from "@/app/components/JsonLd";
 
 // Map requested aliases to internal slugs
 const slugMap: Record<string, string> = {
@@ -48,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: seo ? seo.ogTitle : service.name,
       description: seo ? seo.ogDescription : service.quickSummary,
       images: [seo ? seo.ogImage : "/images/logo-icon.png"],
-    }
+    },
   };
 }
 
@@ -63,15 +67,16 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   // Compile FAQs from single source of truth (AEO_FAQS matching visible UI)
   const aeoFaqs = getAeoFaqsForSlug(mappedSlug);
-  const serviceFaqItems = aeoFaqs.length > 0
-    ? aeoFaqs.map((f) => ({
-        question: f.question,
-        answer: `${f.directAnswer} ${f.expandedExplanation}`,
-      }))
-    : service.faqs.map((f) => ({
-        question: f.question,
-        answer: f.answer,
-      }));
+  const serviceFaqItems =
+    aeoFaqs.length > 0
+      ? aeoFaqs.map((f) => ({
+          question: f.question,
+          answer: `${f.directAnswer} ${f.expandedExplanation}`,
+        }))
+      : service.faqs.map((f) => ({
+          question: f.question,
+          answer: f.answer,
+        }));
 
   // Create dynamic schemas
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -92,4 +97,3 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     </>
   );
 }
-

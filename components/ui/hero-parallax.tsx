@@ -1,12 +1,6 @@
 "use client";
 import React from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  MotionValue,
-} from "motion/react";
+import { motion, useScroll, useTransform, useSpring, MotionValue } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import SafeImage from "@/app/components/SafeImage";
@@ -31,30 +25,15 @@ export const HeroParallax = ({
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
-  const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1000]),
-    springConfig
-  );
+  const translateX = useSpring(useTransform(scrollYProgress, [0, 1], [0, 1000]), springConfig);
   const translateXReverse = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, -1000]),
-    springConfig
+    springConfig,
   );
-  const rotateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [15, 0]),
-    springConfig
-  );
-  const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0.2, 1]),
-    springConfig
-  );
-  const rotateZ = useSpring(
-    useTransform(scrollYProgress, [0, 1], [20, 0]),
-    springConfig
-  );
-  const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 1], [-700, 500]),
-    springConfig
-  );
+  const rotateX = useSpring(useTransform(scrollYProgress, [0, 1], [15, 0]), springConfig);
+  const opacity = useSpring(useTransform(scrollYProgress, [0, 1], [0.2, 1]), springConfig);
+  const rotateZ = useSpring(useTransform(scrollYProgress, [0, 1], [20, 0]), springConfig);
+  const translateY = useSpring(useTransform(scrollYProgress, [0, 1], [-700, 500]), springConfig);
   return (
     <div
       ref={ref}
@@ -97,11 +76,7 @@ export const HeroParallax = ({
         </motion.div>
         <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
           {thirdRow.map((product) => (
-            <ProductCard
-              product={product}
-              translate={translateX}
-              key={product.title}
-            />
+            <ProductCard product={product} translate={translateX} key={product.title} />
           ))}
         </motion.div>
       </motion.div>
@@ -115,7 +90,9 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto py-12 md:py-20 px-6 md:px-12 text-center flex flex-col items-center">
         <div className="inline-flex items-center gap-2 bg-white/70 border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6 relative z-10 backdrop-blur-sm">
           <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
-          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">Our Capabilities</span>
+          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+            Our Capabilities
+          </span>
         </div>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-black leading-[1.1] mb-4 tracking-tight relative z-10">
           Custom Software, AI and{" "}
@@ -128,7 +105,8 @@ export const Header = () => {
           Engineering the Future of Your Business.
         </p>
         <p className="max-w-2xl text-sm font-medium md:text-base lg:text-lg text-black relative z-10 font-semibold leading-relaxed">
-          From concept to deployment, we build high-performance software engineering and AI automation solutions that scale.
+          From concept to deployment, we build high-performance software engineering and AI
+          automation solutions that scale.
         </p>
       </div>
     </div>

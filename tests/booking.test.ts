@@ -15,7 +15,7 @@ describe("Booking Slots and Validation Tests", () => {
     expect(firstSlot.startIST).toMatch(/\b(AM|PM)\b/);
     expect(firstSlot.endIST).toMatch(/\b(AM|PM)\b/);
     expect(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]).toContain(
-      firstSlot.dayOfWeek
+      firstSlot.dayOfWeek,
     );
   });
 

@@ -3,6 +3,7 @@
 Owns: Directory layout, route group structure, feature-slice boundaries, file naming conventions, and service wiring for all new implementations.
 
 ---
+
 ## 1. Directory Structure
 
 All new implementations and refactors must strictly follow this structure:
@@ -40,8 +41,11 @@ All new implementations and refactors must strictly follow this structure:
   🛠️ utils/                  # Pure helper functions (camelCase: cn.ts, text.ts)
 🖼️ public/                   # Static public assets (images, fonts, icons)
 ```
+
 ---
+
 ## 2. Best Practices for New Implementations
+
 1. **Use Route Groups `( )`**:
    - Organize routes by lifecycle and access: `(marketing)` for public pages, `(auth)` for login/registration, `(dashboard)` for authenticated portals.
    - Route groups keep URLs clean without polluting path segments.
@@ -68,16 +72,16 @@ All new implementations and refactors must strictly follow this structure:
 
 ## 3. File & Symbol Naming Rules
 
-| Entity | Convention | Example |
-|---|---|---|
-| **React Components** | `PascalCase.tsx` | `Button.tsx`, `ChatWidget.tsx`, `Navbar.tsx` |
-| **Helper Utilities** | `camelCase.ts` | `formatDate.ts`, `cn.ts`, `text.ts` |
-| **Custom Hooks** | `useCamelCase.ts` | `useAuth.ts`, `useChat.ts`, `useBooking.ts` |
-| **Constants & Tokens** | `UPPER_CASE` | `BOT_CONFIG`, `RATE_LIMIT_WINDOW_MS`, `ENV_CONFIG_TOKEN` |
-| **Services (Needle DI)**| `kebab-case.service.ts` | `email.service.ts`, `booking.service.ts` |
-| **Validation Schemas** | `kebab-case.schema.ts` | `booking.schema.ts`, `contact.schema.ts` |
-| **Config Objects** | `camelCaseConfig.ts` | `botConfig.ts`, `seoConfig.ts` |
-| **Database Tables (Postgres)** | `ts_web_snake_case` | `ts_web_chat_messages`, `ts_web_consultation_bookings` |
+| Entity                         | Convention              | Example                                                  |
+| ------------------------------ | ----------------------- | -------------------------------------------------------- |
+| **React Components**           | `PascalCase.tsx`        | `Button.tsx`, `ChatWidget.tsx`, `Navbar.tsx`             |
+| **Helper Utilities**           | `camelCase.ts`          | `formatDate.ts`, `cn.ts`, `text.ts`                      |
+| **Custom Hooks**               | `useCamelCase.ts`       | `useAuth.ts`, `useChat.ts`, `useBooking.ts`              |
+| **Constants & Tokens**         | `UPPER_CASE`            | `BOT_CONFIG`, `RATE_LIMIT_WINDOW_MS`, `ENV_CONFIG_TOKEN` |
+| **Services (Needle DI)**       | `kebab-case.service.ts` | `email.service.ts`, `booking.service.ts`                 |
+| **Validation Schemas**         | `kebab-case.schema.ts`  | `booking.schema.ts`, `contact.schema.ts`                 |
+| **Config Objects**             | `camelCaseConfig.ts`    | `botConfig.ts`, `seoConfig.ts`                           |
+| **Database Tables (Postgres)** | `ts_web_snake_case`     | `ts_web_chat_messages`, `ts_web_consultation_bookings`   |
 
 > [!CAUTION]
 > **Shared Supabase Instance Rule**: The connected Supabase project is shared with other applications (HRMS, ERP, CMS). NEVER drop, alter, rename, or write to any existing non-website tables. All tables, functions, indexes, and policies for this website MUST use the `ts_web_` prefix.
@@ -99,7 +103,7 @@ For any new service, I/O operation, or stateful backend workflow:
      export class OrderService {
        constructor(
          private emailService = inject(EmailService),
-         private env = inject(ENV_CONFIG_TOKEN)
+         private env = inject(ENV_CONFIG_TOKEN),
        ) {}
      }
      ```

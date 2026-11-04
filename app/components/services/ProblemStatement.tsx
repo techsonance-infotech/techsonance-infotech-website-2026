@@ -28,7 +28,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "GENERIC MASK",
         icon: "🎨",
         title: "They sell a generic template as custom",
-        quote: "They built a generic dashboard and called it 'custom' - then charged us for every single field change.",
+        quote:
+          "They built a generic dashboard and called it 'custom' - then charged us for every single field change.",
         resolution: "Every layout and feature built from scratch for your workflow",
       },
       {
@@ -36,7 +37,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "GAP IN MIND",
         icon: "🗺️",
         title: "They don't understand your business model",
-        quote: "Six months in, we were still explaining our workflow because they never mapped it out properly.",
+        quote:
+          "Six months in, we were still explaining our workflow because they never mapped it out properly.",
         resolution: "Deep operations audit and process mapping on week one",
       },
       {
@@ -44,7 +46,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "BLACK BOX",
         icon: "📦",
         title: "They lock you into their codebase",
-        quote: "The codebase was a total black box. We couldn't hire another developer without a full rewrite.",
+        quote:
+          "The codebase was a total black box. We couldn't hire another developer without a full rewrite.",
         resolution: "Clean, documented, type-safe code you own completely",
       },
     ],
@@ -57,7 +60,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "DEMO TRAP",
         icon: "🎭",
         title: "They sell the demo, not the integration",
-        quote: "They showed us a ChatGPT wrapper and called it enterprise AI - it broke the moment we fed it our actual documents.",
+        quote:
+          "They showed us a ChatGPT wrapper and called it enterprise AI - it broke the moment we fed it our actual documents.",
         resolution: "We prototype on your real data before any contract",
       },
       {
@@ -65,7 +69,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "NO BASELINE",
         icon: "📊",
         title: "No accuracy measurement before go-live",
-        quote: "No one measured accuracy on our data before we signed the contract. We found out at launch it was 60% reliable.",
+        quote:
+          "No one measured accuracy on our data before we signed the contract. We found out at launch it was 60% reliable.",
         resolution: "Accuracy benchmarks signed off in the scoping phase",
       },
       {
@@ -73,7 +78,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "DATA RISK",
         icon: "🔒",
         title: "Your data lives on their servers forever",
-        quote: "The AI runs in their cloud. Our invoices never leave their servers - became a compliance nightmare for our auditors.",
+        quote:
+          "The AI runs in their cloud. Our invoices never leave their servers - became a compliance nightmare for our auditors.",
         resolution: "Self-hosted or VPC-deployed options available on day one",
       },
     ],
@@ -86,7 +92,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "SCALING WALL",
         icon: "🧱",
         title: "They build single-tenant MVPs",
-        quote: "They built our MVP as a single-tenant app. Now every new customer needs a separate expensive deployment.",
+        quote:
+          "They built our MVP as a single-tenant app. Now every new customer needs a separate expensive deployment.",
         resolution: "True multi-tenant database architectures from day one",
       },
       {
@@ -94,7 +101,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "MANUAL BILLS",
         icon: "💳",
         title: "Manual billing and pricing models",
-        quote: "Billing was an afterthought - we're manually invoicing because subscription integration never happened.",
+        quote:
+          "Billing was an afterthought - we're manually invoicing because subscription integration never happened.",
         resolution: "Automated Stripe/Razorpay billing built into the core sprint",
       },
       {
@@ -102,7 +110,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "LEAK RISK",
         icon: "🚨",
         title: "No data isolation security measures",
-        quote: "One customer's data leaked into another's dashboard. Multi-tenancy wasn't architected correctly.",
+        quote:
+          "One customer's data leaked into another's dashboard. Multi-tenancy wasn't architected correctly.",
         resolution: "Strict Row-Level Security (RLS) policies on the database level",
       },
     ],
@@ -115,7 +124,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "SLOW RENDERS",
         icon: "🐌",
         title: "Slow page load speeds and low SEO",
-        quote: "The website looks nice but takes 6 seconds to load. Our Google Lighthouse score is red.",
+        quote:
+          "The website looks nice but takes 6 seconds to load. Our Google Lighthouse score is red.",
         resolution: "Server-side rendering (SSR) and optimized image assets",
       },
       {
@@ -123,7 +133,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "MOBILE CLUNKY",
         icon: "📱",
         title: "Clunky, broken mobile experiences",
-        quote: "It looks perfect on their desktop screen, but half our links are impossible to tap on a mobile device.",
+        quote:
+          "It looks perfect on their desktop screen, but half our links are impossible to tap on a mobile device.",
         resolution: "Fully responsive, mobile-first design system layouts",
       },
       {
@@ -131,7 +142,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "CONTENT LOCK",
         icon: "🔑",
         title: "Hardcoded contents you can't edit",
-        quote: "We have to email the agency every time we want to change a simple text paragraph or team photo.",
+        quote:
+          "We have to email the agency every time we want to change a simple text paragraph or team photo.",
         resolution: "Headless CMS integration for easy editor updates",
       },
     ],
@@ -152,7 +164,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "STORE REJECT",
         icon: "❌",
         title: "Apple App Store review rejections",
-        quote: "We spent 4 months building, and Apple rejected the app immediately for guideline compliance issues.",
+        quote:
+          "We spent 4 months building, and Apple rejected the app immediately for guideline compliance issues.",
         resolution: "Strict adherence to Apple Human Interface Guidelines",
       },
       {
@@ -160,7 +173,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "LAGGY TRANS",
         icon: "⚡",
         title: "Laggy page transitions and frame drops",
-        quote: "The page scrolls feel sluggish. It doesn't feel like a native app, it feels like a slow website.",
+        quote:
+          "The page scrolls feel sluggish. It doesn't feel like a native app, it feels like a slow website.",
         resolution: "GPU-accelerated native animations and lightweight state",
       },
     ],
@@ -181,7 +195,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "MANUAL PUSH",
         icon: "🛠️",
         title: "Manual deployments and config drift",
-        quote: "Only one senior dev knows how to deploy. When he went on vacation, we couldn't push critical bugfixes.",
+        quote:
+          "Only one senior dev knows how to deploy. When he went on vacation, we couldn't push critical bugfixes.",
         resolution: "Fully automated GitOps pipelines using GitHub Actions/Terraform",
       },
       {
@@ -189,7 +204,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "ZERO ALERTS",
         icon: "🔔",
         title: "No central logging or alert monitors",
-        quote: "Our database went down for 6 hours, and we only found out because a client called to complain.",
+        quote:
+          "Our database went down for 6 hours, and we only found out because a client called to complain.",
         resolution: "Prometheus/Grafana telemetry with instant Slack alerts",
       },
     ],
@@ -202,7 +218,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "RATE LIMITS",
         icon: "🛑",
         title: "No rate-limiting or queue backoff",
-        quote: "The integration crashed because the third-party API rate-limited us during peak hours.",
+        quote:
+          "The integration crashed because the third-party API rate-limited us during peak hours.",
         resolution: "BullMQ job queues with automatic retry backoff logic",
       },
       {
@@ -210,7 +227,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "SILENT FAILS",
         icon: "🔕",
         title: "Silent database sync failures",
-        quote: "Customers were charged, but the ERP system didn't update. We had no audit logs to see why.",
+        quote:
+          "Customers were charged, but the ERP system didn't update. We had no audit logs to see why.",
         resolution: "Comprehensive transaction logging and dead-letter queues",
       },
       {
@@ -218,7 +236,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "HARD CODED",
         icon: "🧩",
         title: "Hardcoded credentials and schemas",
-        quote: "The integration broke completely when the client updated their Salesforce field names.",
+        quote:
+          "The integration broke completely when the client updated their Salesforce field names.",
         resolution: "Type-safe dynamically mapped API payload validators",
       },
     ],
@@ -231,7 +250,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "PROTO DELAY",
         icon: "⏳",
         title: "Slow prototyping cycle times",
-        quote: "It took them 3 months to build the first physical prototype. We lost our market lead window.",
+        quote:
+          "It took them 3 months to build the first physical prototype. We lost our market lead window.",
         resolution: "Rapid 3D prototyping and modular hardware testing",
       },
       {
@@ -239,7 +259,8 @@ const SERVICE_PROBLEMS_CONTENT: Record<
         badge: "FIRM BUG",
         icon: "🐛",
         title: "Hard-to-update firmware bug risks",
-        quote: "We shipped 100 units, and then found a firmware bug. There was no way to update them over the air.",
+        quote:
+          "We shipped 100 units, and then found a firmware bug. There was no way to update them over the air.",
         resolution: "Secure OTA (Over-the-Air) firmware update agents",
       },
       {
@@ -270,7 +291,6 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
   return (
     <section className="service-section bg-[var(--bg-subtle)] py-20 md:py-24">
       <div className="service-container">
-
         {/* Subtitle / Category Label */}
         <div className="flex items-center gap-2 mb-4">
           <div className="w-6 h-[1.5px] bg-[#22B6F6]" />
@@ -286,8 +306,7 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
               className="text-[var(--text-primary)] font-medium tracking-tight"
               style={{ fontSize: "var(--text-section-title)", lineHeight: 1.1 }}
             >
-              What most {service.problemHeadline} get{" "}
-              <span className="text-[#1155CC]">wrong</span>
+              What most {service.problemHeadline} get <span className="text-[#1155CC]">wrong</span>
             </h2>
           </div>
           <div className="lg:col-span-4 lg:text-right">
@@ -304,16 +323,20 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
             return (
               <div
                 key={idx}
-                className={`bg-white rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 relative flex flex-col justify-between transition-all duration-300 ${isHighlighted
-                  ? "border-2 border-[#22B6F6]/40 shadow-[0_10px_50px_rgba(34, 182, 246,0.06)] hover:shadow-[0_12px_55px_rgba(34, 182, 246,0.1)]"
-                  : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(17, 85, 204,0.03)]"
-                  }`}
+                className={`bg-white rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 relative flex flex-col justify-between transition-all duration-300 ${
+                  isHighlighted
+                    ? "border-2 border-[#22B6F6]/40 shadow-[0_10px_50px_rgba(34, 182, 246,0.06)] hover:shadow-[0_12px_55px_rgba(34, 182, 246,0.1)]"
+                    : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(17, 85, 204,0.03)]"
+                }`}
               >
                 <div>
                   {/* Top row with Icon and Number/Badge */}
                   <div className="flex justify-between items-center mb-6">
                     <div className="w-10 h-10 rounded-xl bg-blue-50/70 flex items-center justify-center text-[var(--accent-blue)] select-none">
-                      <EmojiOrLucideIcon icon={card.icon} className="w-5 h-5 text-[var(--accent-blue)]" />
+                      <EmojiOrLucideIcon
+                        icon={card.icon}
+                        className="w-5 h-5 text-[var(--accent-blue)]"
+                      />
                     </div>
                     <div className="flex items-center gap-2 relative">
                       <span className="text-[40px] sm:text-[52px] font-black text-slate-100 select-none leading-[0.8] tracking-tighter">

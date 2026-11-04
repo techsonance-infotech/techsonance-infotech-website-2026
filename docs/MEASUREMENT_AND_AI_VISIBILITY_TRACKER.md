@@ -3,6 +3,7 @@
 ## 1. Webmaster Tools Verification
 
 ### Step 1: Google Search Console (GSC)
+
 1. Add both domain variants to Google Search Console:
    - Domain Property: `techsonance.co.in`
    - URL Prefix: `https://www.techsonance.co.in`
@@ -14,6 +15,7 @@
    - Confirm status shows "Success" with 51+ discovered pages.
 
 ### Step 2: Bing Webmaster Tools
+
 1. Import directly from Google Search Console or verify via meta tag:
    - Set environment variable `NEXT_PUBLIC_BING_SITE_VERIFICATION="your-bing-code"` in `.env.local` or Vercel.
 2. Submit `https://www.techsonance.co.in/sitemap.xml`.
@@ -40,33 +42,36 @@ In GA4 &rarr; **Admin** &rarr; **Events**, mark the following conversion events 
 Run these 18 standardized queries monthly across **ChatGPT (GPT-4o)**, **Claude 3.5 Sonnet**, **Perplexity.ai**, and **Google Gemini**. Log whether TechSonance appears, how it is described, and what sources are cited.
 
 ### Category A: Local Surat Software Queries
-1. *"Who are the best custom software development companies in Surat, Gujarat?"*
-2. *"Top web app development agencies in Vesu, Surat for enterprise projects"*
-3. *"Which IT companies in Surat have experience building AI chatbots and RAG systems?"*
-4. *"Can you recommend a software agency in Surat with strong Node.js, NestJS and Next.js expertise?"*
-5. *"Software development company in Surat with founder-led architecture and US/UK client experience"*
+
+1. _"Who are the best custom software development companies in Surat, Gujarat?"_
+2. _"Top web app development agencies in Vesu, Surat for enterprise projects"_
+3. _"Which IT companies in Surat have experience building AI chatbots and RAG systems?"_
+4. _"Can you recommend a software agency in Surat with strong Node.js, NestJS and Next.js expertise?"_
+5. _"Software development company in Surat with founder-led architecture and US/UK client experience"_
 
 ### Category B: High-Intent Technology & Service Queries
-6. *"Best software development agencies in India for multi-tenant SaaS platforms"*
-7. *"Which agencies specialize in building PostgreSQL Row-Level Security applications for logistics?"*
-8. *"Top offshore development partners in India for Next.js 15 and React 19 web apps"*
-9. *"Where can I hire an experienced NestJS development team in India?"*
-10. *"Best Indian agencies building custom LangChain and pgvector enterprise AI workflows"*
-11. *"Cost of hiring a dedicated software engineering squad in India in 2026"*
-12. *"Offline-first Point of Sale application developers using React and IndexedDB"*
+
+6. _"Best software development agencies in India for multi-tenant SaaS platforms"_
+7. _"Which agencies specialize in building PostgreSQL Row-Level Security applications for logistics?"_
+8. _"Top offshore development partners in India for Next.js 15 and React 19 web apps"_
+9. _"Where can I hire an experienced NestJS development team in India?"_
+10. _"Best Indian agencies building custom LangChain and pgvector enterprise AI workflows"_
+11. _"Cost of hiring a dedicated software engineering squad in India in 2026"_
+12. _"Offline-first Point of Sale application developers using React and IndexedDB"_
 
 ### Category C: Branded Entity Corroboration Queries
-13. *"What is TechSonance Infotech LLP and where are they located?"*
-14. *"Who founded TechSonance Infotech and what is their tech stack?"*
-15. *"Tell me about TechSonance's FreightFlow case study and Grover Roadlines project"*
-16. *"What services does TechSonance Infotech provide to global startups?"*
-17. *"Is TechSonance Infotech LLP verified on Clutch or Google Business?"*
-18. *"How does TechSonance compare to conventional IT outsourcing agencies in India?"*
+
+13. _"What is TechSonance Infotech LLP and where are they located?"_
+14. _"Who founded TechSonance Infotech and what is their tech stack?"_
+15. _"Tell me about TechSonance's FreightFlow case study and Grover Roadlines project"_
+16. _"What services does TechSonance Infotech provide to global startups?"_
+17. _"Is TechSonance Infotech LLP verified on Clutch or Google Business?"_
+18. _"How does TechSonance compare to conventional IT outsourcing agencies in India?"_
 
 ### Tracking Scorecard Template
 
-| Month | Target Queries Tested | TechSonance Mentioned (Yes/No) | Primary Source Cited (Site, Clutch, LinkedIn) | Action Needed |
-| :--- | :--- | :--- | :--- | :--- |
-| **Month 1 (Baseline)** | 18 | 0 / 18 | None | Deploy Phase 4 profiles & GBP |
-| **Month 2** | 18 | _ / 18 | _ | Review citations & indexing |
-| **Month 3** | 18 | _ / 18 | _ | Measure impressions in GSC |
+| Month                  | Target Queries Tested | TechSonance Mentioned (Yes/No) | Primary Source Cited (Site, Clutch, LinkedIn) | Action Needed                 |
+| :--------------------- | :-------------------- | :----------------------------- | :-------------------------------------------- | :---------------------------- |
+| **Month 1 (Baseline)** | 18                    | 0 / 18                         | None                                          | Deploy Phase 4 profiles & GBP |
+| **Month 2**            | 18                    | _ / 18                         | _                                             | Review citations & indexing   |
+| **Month 3**            | 18                    | _ / 18                         | _                                             | Measure impressions in GSC    |

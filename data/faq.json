@@ -489,11 +489,7 @@
   {
     "id": "tech-offline-capabilities",
     "q": "Can you build offline capable mobile apps?",
-    "aliases": [
-      "offline first mobile app",
-      "offline sync app",
-      "app works without internet"
-    ],
+    "aliases": ["offline first mobile app", "offline sync app", "app works without internet"],
     "a": "Yes! We build offline-first mobile apps using local SQLite, Isar, or Hive storage with background synchronization when connectivity is restored.",
     "cta": false,
     "tags": ["technology", "mobile", "offline"]
@@ -583,11 +579,7 @@
   {
     "id": "timeline-ai-chatbots",
     "q": "How long for an AI chatbot or RAG project?",
-    "aliases": [
-      "ai chatbot timeline",
-      "how long to build rag bot",
-      "ai integration duration"
-    ],
+    "aliases": ["ai chatbot timeline", "how long to build rag bot", "ai integration duration"],
     "a": "A production-grade AI chatbot or RAG knowledge assistant typically takes 2 to 4 weeks, including custom guardrails, vector search, and API integrations.",
     "cta": true,
     "tags": ["timeline", "ai", "chatbots"]
@@ -680,11 +672,7 @@
   {
     "id": "pricing-hidden-costs",
     "q": "Are there hidden costs?",
-    "aliases": [
-      "hidden charges",
-      "extra fees",
-      "are there unexpected costs"
-    ],
+    "aliases": ["hidden charges", "extra fees", "are there unexpected costs"],
     "a": "No hidden costs. Third-party expenses (cloud hosting, domains, SMS credits, and paid APIs) are billed directly to your own accounts.",
     "cta": false,
     "tags": ["pricing", "transparency", "costs"]

@@ -139,7 +139,8 @@ const serviceNodes: ServiceNode[] = [
     id: 7,
     slug: "product-engineering",
     title: "Product Engineering",
-    description: "MVPs, product scaling and tech strategy to turn ideas into market-ready products.",
+    description:
+      "MVPs, product scaling and tech strategy to turn ideas into market-ready products.",
     icon: "lightbulb",
     color: "#E11D48", // crimson rose
     x: 580,
@@ -210,7 +211,7 @@ export default function ServicesSection() {
       tl.fromTo(
         ".eco-header-anim",
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.15 }
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.15 },
       );
 
       // Step 2: Scale center orb from 0.6 to 1
@@ -218,7 +219,7 @@ export default function ServicesSection() {
         ".eco-orb-container",
         { scale: 0.6, opacity: 0 },
         { scale: 1, opacity: 1, duration: 1, ease: "elastic.out(1, 0.75)" },
-        "-=0.4"
+        "-=0.4",
       );
 
       // Step 3: Animate connection lines drawing themselves
@@ -226,7 +227,7 @@ export default function ServicesSection() {
         ".connection-path",
         { strokeDasharray: "600", strokeDashoffset: "600" },
         { strokeDashoffset: "0", duration: 1.4, ease: "power3.inOut" },
-        "-=0.7"
+        "-=0.7",
       );
 
       // Step 4: Service cards appear sequentially
@@ -237,7 +238,7 @@ export default function ServicesSection() {
           `.eco-card-node-${nodeId}`,
           { scale: 0.85, opacity: 0, y: 20 },
           { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
-          `-=${idx === 0 ? 0.9 : 0.42}`
+          `-=${idx === 0 ? 0.9 : 0.42}`,
         );
       });
 
@@ -246,7 +247,7 @@ export default function ServicesSection() {
         [".eco-particle", ".flowing-dash-line"],
         { opacity: 0 },
         { opacity: 1, duration: 0.6 },
-        "-=0.2"
+        "-=0.2",
       );
     }, containerRef);
 
@@ -280,31 +281,33 @@ export default function ServicesSection() {
       <div
         className="absolute inset-0 opacity-[0.012] pointer-events-none"
         style={{
-          backgroundImage: "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
-          backgroundSize: "40px 40px"
+          backgroundImage:
+            "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
         }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="eco-header-anim inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-pulse" />
-            <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">What We Do</span>
+            <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+              What We Do
+            </span>
           </div>
           <h2 className="eco-header-anim text-4xl sm:text-5xl font-medium leading-[1.15] tracking-tight text-gray-900 mb-5 leading-tight">
             End-to-End Solutions. <br />
             <span className="italic text-[#1155CC]">Engineered for Growth.</span>
           </h2>
           <p className="eco-header-anim text-lg text-gray-600 leading-relaxed">
-            We build powerful digital systems, automate operations with AI, and deliver scalable products that help businesses grow faster.
+            We build powerful digital systems, automate operations with AI, and deliver scalable
+            products that help businesses grow faster.
           </p>
         </div>
 
         {/* ─── DESKTOP FUTURISTIC ECOSYSTEM GRID (lg and up) ─── */}
         <div className="hidden lg:block relative w-full aspect-[1.25] max-w-6xl mx-auto select-none">
-
           {/* Parallax Background Layer (Particles, Orbs & Glows) */}
           <motion.div
             style={{ x: bgX, y: bgY }}
@@ -324,20 +327,25 @@ export default function ServicesSection() {
             {/* Floating particles */}
             <div className="absolute inset-0">
               <span className="eco-particle absolute w-1.5 h-1.5 bg-[#1155CC]/20 rounded-full left-[12%] top-[20%] animate-pulse" />
-              <span className="eco-particle absolute w-2 h-2 bg-[#7C3AED]/20 rounded-full left-[22%] top-[70%] animate-ping" style={{ animationDuration: "3s" }} />
+              <span
+                className="eco-particle absolute w-2 h-2 bg-[#7C3AED]/20 rounded-full left-[22%] top-[70%] animate-ping"
+                style={{ animationDuration: "3s" }}
+              />
               <span className="eco-particle absolute w-1.5 h-1.5 bg-[#0891B2]/30 rounded-full left-[85%] top-[15%] animate-pulse" />
-              <span className="eco-particle absolute w-2.5 h-2.5 bg-pink-500/15 rounded-full left-[78%] top-[65%] animate-pulse" style={{ animationDuration: "4s" }} />
+              <span
+                className="eco-particle absolute w-2.5 h-2.5 bg-pink-500/15 rounded-full left-[78%] top-[65%] animate-pulse"
+                style={{ animationDuration: "4s" }}
+              />
               <span className="eco-particle absolute w-1 h-1 bg-[#10B981]/40 rounded-full left-[48%] top-[10%] animate-pulse" />
-              <span className="eco-particle absolute w-1.5 h-1.5 bg-amber-500/20 rounded-full left-[55%] top-[88%] animate-ping" style={{ animationDuration: "5s" }} />
+              <span
+                className="eco-particle absolute w-1.5 h-1.5 bg-amber-500/20 rounded-full left-[55%] top-[88%] animate-ping"
+                style={{ animationDuration: "5s" }}
+              />
             </div>
           </motion.div>
 
           {/* Parallax Foreground Layer (Central Hub, SVG Paths, Service Cards) */}
-          <motion.div
-            style={{ x: fgX, y: fgY }}
-            className="absolute inset-0 z-10"
-          >
-
+          <motion.div style={{ x: fgX, y: fgY }} className="absolute inset-0 z-10">
             {/* SVG Connection System */}
             <svg
               viewBox="0 0 1000 800"
@@ -393,11 +401,12 @@ export default function ServicesSection() {
                       stroke={node.color}
                       strokeWidth={isNodeHovered ? 3.5 : 2}
                       strokeDasharray={isNodeHovered ? "6 24" : "4 40"}
-                      className={`flowing-dash-line transition-all duration-300 ${isNodeHovered ? "flowing-dash-reverse" : "flowing-dash-forward"
-                        }`}
+                      className={`flowing-dash-line transition-all duration-300 ${
+                        isNodeHovered ? "flowing-dash-reverse" : "flowing-dash-forward"
+                      }`}
                       style={{
                         opacity: hoveredNode === null ? 0.65 : isNodeHovered ? 1.0 : 0.2,
-                        filter: `drop-shadow(0 0 4px ${node.color})`
+                        filter: `drop-shadow(0 0 4px ${node.color})`,
                       }}
                     />
 
@@ -410,7 +419,7 @@ export default function ServicesSection() {
                       className="transition-all duration-300"
                       style={{
                         boxShadow: `0 0 10px ${node.color}`,
-                        filter: `drop-shadow(0 0 6px ${node.color})`
+                        filter: `drop-shadow(0 0 6px ${node.color})`,
                       }}
                     />
                   </g>
@@ -433,28 +442,52 @@ export default function ServicesSection() {
                 className="absolute w-[275px] h-[275px] rounded-full border border-[#1155CC]/20 transition-all duration-500"
                 style={{
                   transform: hoveredNode !== null ? "scale(1.05)" : "scale(1)",
-                  boxShadow: hoveredNode !== null
-                    ? `0 0 30px ${serviceNodes[hoveredNode].color}15`
-                    : "0 0 20px rgba(17, 85, 204,0.05)"
+                  boxShadow:
+                    hoveredNode !== null
+                      ? `0 0 30px ${serviceNodes[hoveredNode].color}15`
+                      : "0 0 20px rgba(17, 85, 204,0.05)",
                 }}
               />
 
               {/* Interactive Core Engine Card */}
               <div
-                className={`w-[230px] h-[230px] rounded-full flex flex-col items-center justify-center p-6 text-center bg-[#07132B]/95 border border-[#1155CC]/35 shadow-[0_0_60px_rgba(17, 85, 204,0.3)] z-30 transition-all duration-500 ${hoveredNode !== null ? "scale-[1.03]" : "scale-100"
-                  }`}
+                className={`w-[230px] h-[230px] rounded-full flex flex-col items-center justify-center p-6 text-center bg-[#07132B]/95 border border-[#1155CC]/35 shadow-[0_0_60px_rgba(17, 85, 204,0.3)] z-30 transition-all duration-500 ${
+                  hoveredNode !== null ? "scale-[1.03]" : "scale-100"
+                }`}
                 style={{
-                  borderColor: hoveredNode !== null ? serviceNodes[hoveredNode].color : "#1155CC"
+                  borderColor: hoveredNode !== null ? serviceNodes[hoveredNode].color : "#1155CC",
                 }}
               >
                 {/* Tech logo mark */}
                 <div className="mb-2 shrink-0">
-                  <svg className="h-9 w-9 text-blue-400" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 10L18 4L30 10V26L18 32L6 26V10Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                    <path d="M18 4V32" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <svg
+                    className="h-9 w-9 text-blue-400"
+                    viewBox="0 0 36 36"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 10L18 4L30 10V26L18 32L6 26V10Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M18 4V32"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeDasharray="3 3"
+                    />
                     <path d="M6 10L30 26" stroke="currentColor" strokeWidth="1.5" />
                     <path d="M30 10L6 26" stroke="currentColor" strokeWidth="1.5" />
-                    <circle cx="18" cy="18" r="5" fill="#07132B" stroke="currentColor" strokeWidth="2" />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="5"
+                      fill="#07132B"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
                   </svg>
                 </div>
 
@@ -473,10 +506,22 @@ export default function ServicesSection() {
 
                 {/* Animated Mini status graph */}
                 <div className="flex items-end gap-1.5 mt-3 h-5 justify-center">
-                  <div className="w-1 bg-blue-500/60 rounded-t animate-[pulse_1.2s_infinite]" style={{ height: "40%" }} />
-                  <div className="w-1 bg-blue-400 rounded-t animate-[pulse_1.5s_infinite]" style={{ height: "65%" }} />
-                  <div className="w-1 bg-[#22B6F6] rounded-t animate-[pulse_1s_infinite]" style={{ height: "85%" }} />
-                  <div className="w-1 bg-blue-300 rounded-t animate-[pulse_1.8s_infinite]" style={{ height: "50%" }} />
+                  <div
+                    className="w-1 bg-blue-500/60 rounded-t animate-[pulse_1.2s_infinite]"
+                    style={{ height: "40%" }}
+                  />
+                  <div
+                    className="w-1 bg-blue-400 rounded-t animate-[pulse_1.5s_infinite]"
+                    style={{ height: "65%" }}
+                  />
+                  <div
+                    className="w-1 bg-[#22B6F6] rounded-t animate-[pulse_1s_infinite]"
+                    style={{ height: "85%" }}
+                  />
+                  <div
+                    className="w-1 bg-blue-300 rounded-t animate-[pulse_1.8s_infinite]"
+                    style={{ height: "50%" }}
+                  />
                 </div>
               </div>
             </div>
@@ -497,26 +542,23 @@ export default function ServicesSection() {
                     width: `${(node.w / 1000) * 100}%`,
                     height: `${(node.h / 800) * 100}%`,
                   }}
-                  animate={
-                    isHovered
-                      ? { scale: 1.04, y: -8 }
-                      : { scale: 1, y: 0 }
-                  }
+                  animate={isHovered ? { scale: 1.04, y: -8 } : { scale: 1, y: 0 }}
                   transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <Link href={`/services/${node.slug}`} className="block h-full">
                     {/* Glassmorphic Card Container */}
                     <div
-                      className={`h-full bg-white/90 backdrop-blur-md border rounded-[24px] p-5 shadow-[0_4px_16px_rgba(0,0,0,0.015)] transition-all duration-500 relative overflow-hidden flex flex-col justify-center ${isHovered
-                        ? "shadow-[0_16px_36px_rgba(0,0,0,0.04)] border-transparent"
-                        : "border-gray-100"
-                        }`}
+                      className={`h-full bg-white/90 backdrop-blur-md border rounded-[24px] p-5 shadow-[0_4px_16px_rgba(0,0,0,0.015)] transition-all duration-500 relative overflow-hidden flex flex-col justify-center ${
+                        isHovered
+                          ? "shadow-[0_16px_36px_rgba(0,0,0,0.04)] border-transparent"
+                          : "border-gray-100"
+                      }`}
                     >
                       {/* Interactive Glow Aura on Hover */}
                       <div
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                         style={{
-                          background: `radial-gradient(150px circle at 100% 100%, ${node.color}08, transparent)`
+                          background: `radial-gradient(150px circle at 100% 100%, ${node.color}08, transparent)`,
                         }}
                       />
 
@@ -526,7 +568,7 @@ export default function ServicesSection() {
                         style={{
                           borderColor: node.color,
                           opacity: isHovered ? 0.22 : 0,
-                          boxShadow: isHovered ? `0 0 16px ${node.color}15` : 'none'
+                          boxShadow: isHovered ? `0 0 16px ${node.color}15` : "none",
                         }}
                       />
 
@@ -538,7 +580,7 @@ export default function ServicesSection() {
                             backgroundColor: `${node.color}08`,
                             borderColor: `${node.color}18`,
                             color: node.color,
-                            transform: isHovered ? "scale(1.08) rotate(4deg)" : "none"
+                            transform: isHovered ? "scale(1.08) rotate(4deg)" : "none",
                           }}
                         >
                           <Icon name={node.icon as IconName} className="w-5 h-5" />
@@ -553,8 +595,11 @@ export default function ServicesSection() {
                             {node.description}
                           </p>
                           <div
-                            className={`text-[9px] font-black tracking-wider uppercase transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 pointer-events-none"
-                              }`}
+                            className={`text-[9px] font-black tracking-wider uppercase transition-all duration-300 ${
+                              isHovered
+                                ? "opacity-100 translate-y-0"
+                                : "opacity-0 translate-y-1 pointer-events-none"
+                            }`}
                             style={{ color: node.color }}
                           >
                             View Service
@@ -563,13 +608,11 @@ export default function ServicesSection() {
 
                         {/* End of content */}
                       </div>
-
                     </div>
                   </Link>
                 </motion.div>
               );
             })}
-
           </motion.div>
         </div>
 
@@ -593,7 +636,7 @@ export default function ServicesSection() {
                       style={{
                         backgroundColor: `${node.color}08`,
                         borderColor: `${node.color}15`,
-                        color: node.color
+                        color: node.color,
                       }}
                     >
                       <Icon name={node.icon as IconName} className="w-5 h-5" />
@@ -616,7 +659,6 @@ export default function ServicesSection() {
             </motion.div>
           ))}
         </div>
-
       </div>
 
       {/* Global CSS flows inside style block for high performant CSS SVG animations */}
@@ -639,7 +681,6 @@ export default function ServicesSection() {
           animation: flow-reverse-anim 2s linear infinite;
         }
       `}</style>
-
     </section>
   );
 }

@@ -24,7 +24,7 @@ const constellationNodes = Array.from({ length: 24 }, (_, i) => {
 const circuitLines = [
   { d: "M 0 30 C 20vw 10vh, 40vw 50vh, 60vw 20vh, 80vw 60vh, 100vw 30vh", duration: 16 },
   { d: "M 0 70 C 25vw 80vh, 45vw 30vh, 65vw 70vh, 85vw 20vh, 100vw 60vh", duration: 22 },
-  { d: "M 10vw 0 C 30vw 25vh, 20vw 65vh, 50vw 80vh, 70vw 45vh, 90vw 100vh", duration: 18 }
+  { d: "M 10vw 0 C 30vw 25vh, 20vw 65vh, 50vw 80vh, 70vw 45vh, 90vw 100vh", duration: 18 },
 ];
 
 const hiringProcessSteps = [
@@ -54,23 +54,23 @@ const cultureColors = [
   {
     text: "text-[#1155CC]",
     glow: "bg-blue-400/5",
-    iconBg: "bg-blue-100"
+    iconBg: "bg-blue-100",
   },
   {
     text: "text-cyan-600",
     glow: "bg-cyan-400/5",
-    iconBg: "bg-cyan-100"
+    iconBg: "bg-cyan-100",
   },
   {
     text: "text-violet-600",
     glow: "bg-violet-400/5",
-    iconBg: "bg-violet-100"
+    iconBg: "bg-violet-100",
   },
   {
     text: "text-emerald-600",
     glow: "bg-emerald-400/5",
-    iconBg: "bg-emerald-100"
-  }
+    iconBg: "bg-emerald-100",
+  },
 ];
 
 const cultureValues = [
@@ -236,7 +236,10 @@ export default function CareersClient() {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err: unknown) {
       console.error("Submission error:", err);
-      setErrorMessage((err instanceof Error ? err.message : "Failed to submit application.") || "Failed to submit application.");
+      setErrorMessage(
+        (err instanceof Error ? err.message : "Failed to submit application.") ||
+          "Failed to submit application.",
+      );
       setStatus("error");
     }
   };
@@ -245,7 +248,6 @@ export default function CareersClient() {
     <>
       <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen font-sans text-slate-900 overflow-x-hidden font-medium">
-
         {/* ==========================================
             HERO SECTION (Geometric Shape Landing - Light Theme)
             ========================================== */}
@@ -254,10 +256,11 @@ export default function CareersClient() {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl pointer-events-none z-0" />
 
           {/* Dot Grid Background */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, #1155CC 1.5px, transparent 0)`,
-              backgroundSize: "28px 28px"
+              backgroundSize: "28px 28px",
             }}
           />
 
@@ -349,13 +352,12 @@ export default function CareersClient() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6.5xl font-black text-slate-900 tracking-tight leading-tight mb-6">
               Build Your Engineering Career With <br />
-              <span className="text-[#1155CC]">
-                TechSonance InfoTech LLP
-              </span>
+              <span className="text-[#1155CC]">TechSonance InfoTech LLP</span>
             </h1>
 
             <p className="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed mb-8">
-              We design and construct production-grade SaaS, AI systems, and cloud architectures. Learn, create, and launch products that make an immediate business impact.
+              We design and construct production-grade SaaS, AI systems, and cloud architectures.
+              Learn, create, and launch products that make an immediate business impact.
             </p>
 
             <Button asChild variant="primary" showArrow={true}>
@@ -371,12 +373,14 @@ export default function CareersClient() {
             WHY JOIN OUR TEAM
             ========================================== */}
         <section className="w-full py-20 bg-[#f9f9ff] relative overflow-hidden border-b border-slate-100">
-
           {/* Background Animated Orbits */}
           <div className="absolute right-[-150px] top-[-150px] w-[500px] h-[500px] pointer-events-none hidden md:block opacity-90 z-0">
             <div className="absolute inset-0 border-2 border-dashed border-[#0066ff]/40 rounded-full animate-[spin_80s_linear_infinite]">
               <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
-                <Icon name="code" className="w-5 h-5 text-[#1155CC] animate-[spin_10s_linear_infinite]" />
+                <Icon
+                  name="code"
+                  className="w-5 h-5 text-[#1155CC] animate-[spin_10s_linear_infinite]"
+                />
               </div>
               <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
                 <Icon name="bolt" className="w-5 h-5 text-cyan-600" />
@@ -390,7 +394,13 @@ export default function CareersClient() {
             </div>
 
             <div className="absolute inset-32 border border-[#0066ff]/20 rounded-full flex items-center justify-center">
-              <svg className="w-full h-full text-[#0066ff]/20" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                className="w-full h-full text-[#0066ff]/20"
+                viewBox="0 0 100 100"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M 50 10 A 40 40 0 0 1 90 50" strokeDasharray="2 2" />
                 <path d="M 50 90 A 40 40 0 0 1 10 50" />
                 <path d="M 15 50 A 35 35 0 0 1 85 50" strokeDasharray="4 2" />
@@ -416,11 +426,17 @@ export default function CareersClient() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 bg-blue-50/50 border border-[#1155CC]/10 rounded-full px-4.5 py-1 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-ping" />
-                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">Core Values</span>
+                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">
+                  Core Values
+                </span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Why Join Our Team?</h3>
+              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+                Why Join Our Team?
+              </h3>
               <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto mt-3 leading-relaxed">
-                We look for engineers who are passionate about writing clean, robust code, architecting smart systems, and building solutions that deliver real-world business impact.
+                We look for engineers who are passionate about writing clean, robust code,
+                architecting smart systems, and building solutions that deliver real-world business
+                impact.
               </p>
             </div>
 
@@ -433,18 +449,38 @@ export default function CareersClient() {
                     whileHover={{ y: -8, scale: 1.02 }}
                     className={cn(
                       "relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm",
-                      "hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col justify-between"
+                      "hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col justify-between",
                     )}
                   >
-                    <div className={cn("absolute -top-10 -right-10 w-24 h-24 rounded-full blur-2xl pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100", theme.glow)} />
+                    <div
+                      className={cn(
+                        "absolute -top-10 -right-10 w-24 h-24 rounded-full blur-2xl pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+                        theme.glow,
+                      )}
+                    />
 
                     <div className="relative z-10">
-                      <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 shadow-sm", theme.iconBg)}>
-                        <Icon name={val.icon as IconName} className={cn("w-5 h-5 transition-transform duration-500 group-hover:rotate-12", theme.text)} />
+                      <div
+                        className={cn(
+                          "w-10 h-10 rounded-full flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 shadow-sm",
+                          theme.iconBg,
+                        )}
+                      >
+                        <Icon
+                          name={val.icon as IconName}
+                          className={cn(
+                            "w-5 h-5 transition-transform duration-500 group-hover:rotate-12",
+                            theme.text,
+                          )}
+                        />
                       </div>
 
-                      <h4 className="text-base font-bold text-slate-900 mb-3 group-hover:text-[#1155CC] transition-colors duration-200">{val.title}</h4>
-                      <p className="text-xs text-slate-450 leading-relaxed font-medium">{val.desc}</p>
+                      <h4 className="text-base font-bold text-slate-900 mb-3 group-hover:text-[#1155CC] transition-colors duration-200">
+                        {val.title}
+                      </h4>
+                      <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                        {val.desc}
+                      </p>
                     </div>
                   </motion.div>
                 );
@@ -460,22 +496,30 @@ export default function CareersClient() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
-                <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">Life at TechSonance</h2>
+                <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
+                  Life at TechSonance
+                </h2>
                 <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight mb-5">
                   Engineers Working Together, Scaling Limits.
                 </h3>
                 <p className="text-sm sm:text-base text-slate-500 font-medium leading-relaxed mb-6">
-                  At TechSonance, we are team-focused and engineering-obsessed. From intense architecture design sprints to lighthearted brainstorming calls, our work is defined by collaboration, respect, and constant technical improvement.
+                  At TechSonance, we are team-focused and engineering-obsessed. From intense
+                  architecture design sprints to lighthearted brainstorming calls, our work is
+                  defined by collaboration, respect, and constant technical improvement.
                 </p>
 
                 <div className="grid grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                   <div>
                     <span className="block text-2xl font-medium text-[#1155CC]">100%</span>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Engineering Culture</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Engineering Culture
+                    </span>
                   </div>
                   <div>
                     <span className="block text-2xl font-medium text-[#1155CC]">Direct</span>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Mentor Relationship</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                      Mentor Relationship
+                    </span>
                   </div>
                 </div>
               </div>
@@ -496,7 +540,10 @@ export default function CareersClient() {
         {/* ==========================================
             OPEN POSITIONS (FULL STACK DEVELOPER INTERN)
             ========================================== */}
-        <section id="positions" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative overflow-hidden border-b border-slate-100">
+        <section
+          id="positions"
+          className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative overflow-hidden border-b border-slate-100"
+        >
           <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-50 pointer-events-none" />
           <motion.div
             animate={{
@@ -506,7 +553,7 @@ export default function CareersClient() {
             transition={{
               duration: 8,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="absolute top-10 left-10 w-72 h-72 rounded-full bg-[#1155CC]/5 blur-3xl pointer-events-none"
           />
@@ -518,14 +565,18 @@ export default function CareersClient() {
             transition={{
               duration: 10,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-50/20 blur-3xl pointer-events-none"
           />
 
           <div className="text-center max-w-3xl mx-auto mb-16 relative z-10">
-            <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">Join Us</h2>
-            <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Open Opportunities</h3>
+            <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
+              Join Us
+            </h2>
+            <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+              Open Opportunities
+            </h3>
             <p className="text-sm sm:text-base text-slate-500 font-medium mt-2">
               Browse our currently open positions and find where you fit.
             </p>
@@ -542,7 +593,9 @@ export default function CareersClient() {
                 <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
                   Strategic Partnership • Active Opening
                 </span>
-                <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">Business Development Partner</h4>
+                <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">
+                  Business Development Partner
+                </h4>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
                   <span className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Remote / Flexible
@@ -550,7 +603,9 @@ export default function CareersClient() {
                   <span className="text-slate-200">•</span>
                   <span>Engagement: Project-Based / Commission-Based</span>
                   <span className="text-slate-200">•</span>
-                  <span className="text-[#1155CC]">Earning: Highly Competitive Commission &amp; Deal Revenue Share</span>
+                  <span className="text-[#1155CC]">
+                    Earning: Highly Competitive Commission &amp; Deal Revenue Share
+                  </span>
                 </div>
               </div>
               <Button asChild variant="primary" size="sm" showArrow={true}>
@@ -560,24 +615,37 @@ export default function CareersClient() {
 
             <div className="py-8 space-y-8 relative z-10">
               <div>
-                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">{"// Role Overview"}</h5>
+                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">
+                  {"// Role Overview"}
+                </h5>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                  We are looking for an entrepreneurial, results-driven <span className="font-bold text-slate-800">Business Development Partner</span> to spearhead client acquisition, enterprise technology partnerships, and high-value project deals. In this performance-driven role, you will connect with international startup founders, CTOs, and enterprises seeking custom AI automation, scalable SaaS platforms, and modern web/mobile systems, earning uncapped commissions and project-based revenue shares on every deal closed.
+                  We are looking for an entrepreneurial, results-driven{" "}
+                  <span className="font-bold text-slate-800">Business Development Partner</span> to
+                  spearhead client acquisition, enterprise technology partnerships, and high-value
+                  project deals. In this performance-driven role, you will connect with
+                  international startup founders, CTOs, and enterprises seeking custom AI
+                  automation, scalable SaaS platforms, and modern web/mobile systems, earning
+                  uncapped commissions and project-based revenue shares on every deal closed.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
                 <div>
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Key Responsibilities"}</h5>
+                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
+                    {"// Key Responsibilities"}
+                  </h5>
                   <ul className="space-y-3">
                     {[
                       "Prospect, identify, and close new client deals for custom software, SaaS products, AI automation, and cloud engineering.",
                       "Build and nurture relationships with international startup founders, CTOs, and enterprise executives across North America, Europe, UAE, and APAC.",
                       "Pitch TechSonance's technical capabilities, case studies, and engineering delivery workflows to prospective clients.",
                       "Collaborate with our solutions architecture team during technical scoping and contract negotiations.",
-                      "Drive recurring client retainers, strategic referral networks, and long-term agency partnerships."
+                      "Drive recurring client retainers, strategic referral networks, and long-term agency partnerships.",
                     ].map((resp, i) => (
-                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-xs text-slate-650 font-medium"
+                      >
                         <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
                           ✓
                         </span>
@@ -588,16 +656,21 @@ export default function CareersClient() {
                 </div>
 
                 <div>
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Requirements & Qualifications"}</h5>
+                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
+                    {"// Requirements & Qualifications"}
+                  </h5>
                   <ul className="space-y-3">
                     {[
                       "Proven track record in B2B tech sales, software agency business development, consulting, or client acquisition.",
                       "Strong professional network or outbound prospecting expertise targeting founders, CTOs, and C-level decision-makers.",
                       "Solid understanding of software solutions (Next.js, React, Node.js, Cloud, AI/LLMs) to communicate technical credibility.",
                       "Exceptional communication, presentation, negotiation, and contract closing abilities.",
-                      "High autonomy and hunger to unlock uncapped commission earnings on 5- and 6-figure technology projects."
+                      "High autonomy and hunger to unlock uncapped commission earnings on 5- and 6-figure technology projects.",
                     ].map((req, i) => (
-                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-xs text-slate-650 font-medium"
+                      >
                         <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
                           ✓
                         </span>
@@ -609,23 +682,49 @@ export default function CareersClient() {
               </div>
 
               <div className="pt-6 border-t border-slate-50">
-                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Domains & Solutions You Will Represent"}</h5>
+                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
+                  {"// Domains & Solutions You Will Represent"}
+                </h5>
                 <div className="flex flex-wrap gap-2.5">
                   {[
-                    { name: "Custom SaaS Development", bg: "bg-blue-50/50 border-blue-100 text-blue-700" },
-                    { name: "AI Automation & RAG Agents", bg: "bg-slate-50 border-slate-200 text-slate-800" },
-                    { name: "Full-Stack Web (Next.js/React/Node)", bg: "bg-emerald-50/50 border-emerald-100 text-emerald-700" },
-                    { name: "Cross-Platform Mobile (Flutter/RN)", bg: "bg-[#1155CC]/5 border-[#1155CC]/15 text-[#1155CC]" },
-                    { name: "Enterprise Cloud & DevOps", bg: "bg-cyan-50/50 border-cyan-100 text-cyan-700" },
-                    { name: "B2B Tech Sales", bg: "bg-indigo-50/50 border-indigo-100 text-indigo-750" },
-                    { name: "High Uncapped Commission", bg: "bg-violet-50/50 border-violet-100 text-violet-750" },
-                    { name: "Deal Closing & Retainers", bg: "bg-orange-50/50 border-orange-100 text-orange-700" }
+                    {
+                      name: "Custom SaaS Development",
+                      bg: "bg-blue-50/50 border-blue-100 text-blue-700",
+                    },
+                    {
+                      name: "AI Automation & RAG Agents",
+                      bg: "bg-slate-50 border-slate-200 text-slate-800",
+                    },
+                    {
+                      name: "Full-Stack Web (Next.js/React/Node)",
+                      bg: "bg-emerald-50/50 border-emerald-100 text-emerald-700",
+                    },
+                    {
+                      name: "Cross-Platform Mobile (Flutter/RN)",
+                      bg: "bg-[#1155CC]/5 border-[#1155CC]/15 text-[#1155CC]",
+                    },
+                    {
+                      name: "Enterprise Cloud & DevOps",
+                      bg: "bg-cyan-50/50 border-cyan-100 text-cyan-700",
+                    },
+                    {
+                      name: "B2B Tech Sales",
+                      bg: "bg-indigo-50/50 border-indigo-100 text-indigo-750",
+                    },
+                    {
+                      name: "High Uncapped Commission",
+                      bg: "bg-violet-50/50 border-violet-100 text-violet-750",
+                    },
+                    {
+                      name: "Deal Closing & Retainers",
+                      bg: "bg-orange-50/50 border-orange-100 text-orange-700",
+                    },
                   ].map((tech) => (
                     <span
                       key={tech.name}
                       className={cn(
                         "text-[10px] sm:text-xs font-mono font-semibold border px-3 py-1 rounded-lg transition-transform duration-200 hover:-translate-y-0.5 cursor-default shadow-2xs",
-                        tech.bg
+                        tech.bg,
                       )}
                     >
                       {tech.name}
@@ -751,11 +850,16 @@ export default function CareersClient() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 bg-[#1155CC]/5 border border-[#1155CC]/10 rounded-full px-4 py-1 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
-                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">Hiring Path</span>
+                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">
+                  Hiring Path
+                </span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">Our Hiring Process</h3>
+              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+                Our Hiring Process
+              </h3>
               <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-xl mx-auto mt-2 leading-relaxed">
-                We believe in a transparent, fast-paced assessment cycle designed to value your engineering and problem-solving abilities.
+                We believe in a transparent, fast-paced assessment cycle designed to value your
+                engineering and problem-solving abilities.
               </p>
             </div>
 
@@ -774,8 +878,12 @@ export default function CareersClient() {
                         {step.step}
                       </div>
 
-                      <h4 className="text-base font-bold text-slate-900 mb-2 group-hover:text-[#1155CC] transition-colors duration-200">{step.title}</h4>
-                      <p className="text-xs text-slate-500 leading-relaxed font-medium">{step.desc}</p>
+                      <h4 className="text-base font-bold text-slate-900 mb-2 group-hover:text-[#1155CC] transition-colors duration-200">
+                        {step.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                        {step.desc}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
@@ -789,14 +897,16 @@ export default function CareersClient() {
             ========================================== */}
         <section id="apply" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-
             <div className="lg:col-span-5 pr-0 lg:pr-6">
-              <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">Join Us Today</h2>
+              <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
+                Join Us Today
+              </h2>
               <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-4">
                 Submit Your Application
               </h3>
               <p className="text-sm text-slate-550 leading-relaxed font-medium mb-6">
-                Tell us about yourself and upload your latest resume. Once submitted, our team will review details and get back to you within 3 business days.
+                Tell us about yourself and upload your latest resume. Once submitted, our team will
+                review details and get back to you within 3 business days.
               </p>
 
               <div className="space-y-4 pt-4 border-t border-slate-100">
@@ -806,7 +916,9 @@ export default function CareersClient() {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-900">Immediate Reviews</h4>
-                    <p className="text-[10px] text-slate-400 font-medium">All applications are screened by real engineering leads directly.</p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      All applications are screened by real engineering leads directly.
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -815,7 +927,9 @@ export default function CareersClient() {
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-900">Direct Contact</h4>
-                    <p className="text-[10px] text-slate-400 font-medium">You will receive notifications at every single step of evaluation.</p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      You will receive notifications at every single step of evaluation.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -823,10 +937,12 @@ export default function CareersClient() {
 
             <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]">
               <form onSubmit={handleFormSubmit} className="space-y-6">
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="fullName" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <label
+                      htmlFor="fullName"
+                      className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                    >
                       Full Name <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
@@ -836,17 +952,22 @@ export default function CareersClient() {
                       required
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      onBlur={() => setTouched(prev => ({ ...prev, fullName: true }))}
+                      onBlur={() => setTouched((prev) => ({ ...prev, fullName: true }))}
                       placeholder="e.g. John Doe"
                       className={`w-full rounded-2xl border ${getValidationError("fullName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
                     />
                     {getValidationError("fullName") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("fullName")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("fullName")}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                    >
                       Email Address <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
@@ -856,18 +977,23 @@ export default function CareersClient() {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
+                      onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                       placeholder="john@example.com"
                       className={`w-full rounded-2xl border ${getValidationError("email") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
                     />
                     {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("email")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("email")}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="role" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  <label
+                    htmlFor="role"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                  >
                     Role Interested In <span className="text-red-500 font-bold">*</span>
                   </label>
                   <select
@@ -875,21 +1001,27 @@ export default function CareersClient() {
                     id="role"
                     required
                     value={formData.role}
-                    onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, role: e.target.value }))}
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-bold"
                   >
-                    <option value="Business Development Partner">Business Development Partner (Commission / Project-Based)</option>
+                    <option value="Business Development Partner">
+                      Business Development Partner (Commission / Project-Based)
+                    </option>
                     {/* <option value="Full Stack Developer Intern">Full Stack Developer Intern</option> */}
                   </select>
                 </div>
 
                 <div>
-                  <label htmlFor="resume" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Resume Upload (PDF / DOCX - Max 5MB) <span className="text-red-500 font-bold">*</span>
+                  <label
+                    htmlFor="resume"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                  >
+                    Resume Upload (PDF / DOCX - Max 5MB){" "}
+                    <span className="text-red-500 font-bold">*</span>
                   </label>
                   <div
                     onClick={() => {
-                      setTouched(prev => ({ ...prev, resume: true }));
+                      setTouched((prev) => ({ ...prev, resume: true }));
                       fileInputRef.current?.click();
                     }}
                     className={`w-full border-2 border-dashed ${getValidationError("resume") ? "border-red-500 bg-red-50/5 hover:bg-red-50/10" : "border-slate-200 hover:border-[#1155CC] hover:bg-slate-50/50"} rounded-2xl px-6 py-6 text-center cursor-pointer transition-all flex flex-col items-center`}
@@ -909,14 +1041,18 @@ export default function CareersClient() {
                     </div>
                     {resumeFile ? (
                       <div>
-                        <span className="block text-xs font-bold text-slate-900">{resumeFile.name}</span>
+                        <span className="block text-xs font-bold text-slate-900">
+                          {resumeFile.name}
+                        </span>
                         <span className="block text-[10px] text-slate-400 font-medium mt-0.5">
                           Click to select a different file
                         </span>
                       </div>
                     ) : (
                       <div>
-                        <span className="block text-xs font-bold text-slate-900">Drag or select your resume file</span>
+                        <span className="block text-xs font-bold text-slate-900">
+                          Drag or select your resume file
+                        </span>
                         <span className="block text-[10px] text-slate-400 font-medium mt-0.5">
                           PDF, DOCX formats supported
                         </span>
@@ -924,13 +1060,19 @@ export default function CareersClient() {
                     )}
                   </div>
                   {getValidationError("resume") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("resume")}</p>
+                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      {getValidationError("resume")}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Tell Us About Yourself / Cover Letter <span className="text-red-500 font-bold">*</span>
+                  <label
+                    htmlFor="message"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                  >
+                    Tell Us About Yourself / Cover Letter{" "}
+                    <span className="text-red-500 font-bold">*</span>
                   </label>
                   <textarea
                     name="message"
@@ -939,12 +1081,14 @@ export default function CareersClient() {
                     rows={4}
                     value={formData.message}
                     onChange={handleInputChange}
-                    onBlur={() => setTouched(prev => ({ ...prev, message: true }))}
+                    onBlur={() => setTouched((prev) => ({ ...prev, message: true }))}
                     placeholder="Briefly introduce yourself, your experience in software business development or sales, relevant target industries/networks, and why you are excited to partner with us..."
                     className={`w-full rounded-2xl border ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
                   />
                   {getValidationError("message") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("message")}</p>
+                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      {getValidationError("message")}
+                    </p>
                   )}
                 </div>
 
@@ -982,7 +1126,6 @@ export default function CareersClient() {
                 >
                   {status === "loading" ? "Submitting Application..." : "Submit Application"}
                 </Button>
-
               </form>
             </div>
           </div>
@@ -992,10 +1135,11 @@ export default function CareersClient() {
             CTA SECTION
             ========================================== */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none opacity-[0.08]"
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.08]"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, white 1.5px, transparent 0)`,
-              backgroundSize: "28px 28px"
+              backgroundSize: "28px 28px",
             }}
           />
 
@@ -1004,7 +1148,8 @@ export default function CareersClient() {
               Not Ready to Apply Yet?
             </h3>
             <p className="text-sm sm:text-base text-blue-50/90 max-w-xl mx-auto font-medium leading-relaxed mb-8">
-              Reach out to learn more about our company services, clients, or schedule a general introduction call.
+              Reach out to learn more about our company services, clients, or schedule a general
+              introduction call.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1025,7 +1170,6 @@ export default function CareersClient() {
             </div>
           </div>
         </section>
-
       </main>
       <SiteFooter />
     </>

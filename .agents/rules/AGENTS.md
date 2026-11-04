@@ -5,7 +5,7 @@ Applies to every AI agent and human contributor. Read this file first, then the 
 ## Precedence (how conflicts are resolved)
 
 1. This file's **NEVER list** and **Definition of Done** win over everything.
-2. Then the **owning** topic file (Ownership map). Other files only *reference* it, never redefine it. Names and paths come from the **Canonical registry** below.
+2. Then the **owning** topic file (Ownership map). Other files only _reference_ it, never redefine it. Names and paths come from the **Canonical registry** below.
 3. If two rules still conflict, the **stricter** one applies; stop, report it, and fix the docs in the same PR.
 4. Code samples are templates: they must pass `typecheck` and `lint`. If a sample and the installed library types disagree, the installed types win, then fix the sample.
 5. `package.json` + lockfile are the truth for versions. The stack list is a summary.
@@ -29,38 +29,38 @@ Next.js 16 (App Router, Turbopack) · React 19 · TypeScript (strict) · Tailwin
 
 ## Ownership map (one owner per topic)
 
-| File | Owns | Read when |
-| --- | --- | --- |
-| `00-code-intelligence-gitnexus-graphify.md` | Graph tooling, impact analysis, risk levels | **Always, first** |
-| `01-typescript-code-quality.md` | tsconfig, typing, naming, lint config | Writing any TS |
-| `02-nextjs-react.md` | RSC, caching, routing, `proxy.ts`, React 19, `next.config.ts` | Pages, layouts, components |
-| `03-supabase-security.md` | Supabase clients, auth, RLS, env, security headers, CSP | Auth, DB, storage, secrets |
-| `04-validation-api-errors.md` | Zod rules, `Result`/`AppError`, `runAction`, forms, logging | Server Actions, validation |
-| `05-ui-tailwind-motion-a11y.md` | Tailwind, components, form UI, motion, a11y | Styling, UI |
-| `06-performance-images-seo.md` | Budgets, `next/image`, sharp, uploads, SEO, release checklist | Images, bundle, metadata |
-| `07-git-tooling-ci.md` | Commits, scripts, deps, tests, CI | Commits, CI, dependencies |
-| `08-contracts-end-to-end-validation.md` | Contracts, `handleRoute`, `callApi`, API headers, events, drift checks, wiring checklist | Any client↔server data flow |
-| `09-ai-verification-anti-hallucination.md` | Verification protocol, trap list, report format | **Always** |
-| `10-directory-architecture-conventions.md` | Directory layout, route groups, features, file naming, DI | Creating new files, refactoring |
+| File                                        | Owns                                                                                     | Read when                       |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------- |
+| `00-code-intelligence-gitnexus-graphify.md` | Graph tooling, impact analysis, risk levels                                              | **Always, first**               |
+| `01-typescript-code-quality.md`             | tsconfig, typing, naming, lint config                                                    | Writing any TS                  |
+| `02-nextjs-react.md`                        | RSC, caching, routing, `proxy.ts`, React 19, `next.config.ts`                            | Pages, layouts, components      |
+| `03-supabase-security.md`                   | Supabase clients, auth, RLS, env, security headers, CSP                                  | Auth, DB, storage, secrets      |
+| `04-validation-api-errors.md`               | Zod rules, `Result`/`AppError`, `runAction`, forms, logging                              | Server Actions, validation      |
+| `05-ui-tailwind-motion-a11y.md`             | Tailwind, components, form UI, motion, a11y                                              | Styling, UI                     |
+| `06-performance-images-seo.md`              | Budgets, `next/image`, sharp, uploads, SEO, release checklist                            | Images, bundle, metadata        |
+| `07-git-tooling-ci.md`                      | Commits, scripts, deps, tests, CI                                                        | Commits, CI, dependencies       |
+| `08-contracts-end-to-end-validation.md`     | Contracts, `handleRoute`, `callApi`, API headers, events, drift checks, wiring checklist | Any client↔server data flow     |
+| `09-ai-verification-anti-hallucination.md`  | Verification protocol, trap list, report format                                          | **Always**                      |
+| `10-directory-architecture-conventions.md`  | Directory layout, route groups, features, file naming, DI                                | Creating new files, refactoring |
 
 ## Canonical registry (one name, one path, one owner)
 
-| Concept | Name and path | Owner |
-| --- | --- | --- |
-| Result envelope | `Result<T>`, `ok`, `fail` in `lib/result.ts` | 04 |
-| Errors | `AppError`, `ERROR_CODES`, `STATUS_BY_CODE`, `toFieldErrors` in `lib/errors.ts` | 04 |
-| DB error mapper | `mapDbError` in `server/db-error.ts` | 04 |
-| Server Action wrapper | `runAction` in `server/action.ts` | 04 |
-| Form helpers | `formDataToObject`, `echoValues`, `FormState` in `lib/validations/form-data.ts` | 04 |
-| Shared schemas | `lib/validations/{primitives,upload,events,<domain>}.ts` | 04 |
-| Logger | `logger` in `lib/logger.ts` | 04 |
-| Contracts | `defineContract`, `envelopeSchema` in `lib/contracts/define.ts`; `lib/contracts/<domain>.ts` | 08 |
-| Route wrappers | `handleRoute`, `handleWebhook` in `server/route.ts` | 08 |
-| Browser API client | `callApi` in `lib/api/call-api.ts` | 08 |
-| Request headers | `getRequestId`, header schemas in `lib/http/headers.ts` | 08 |
-| Env | `lib/env/public.ts`, `lib/env/server.ts` (server-only) | 03 |
-| Supabase | `lib/supabase/{client,server,admin,update-session}.ts` | 03 |
-| Auth | `requireUser`, `getOptionalUser`, `requireRole` in `server/auth.ts` | 03 |
+| Concept               | Name and path                                                                                | Owner |
+| --------------------- | -------------------------------------------------------------------------------------------- | ----- |
+| Result envelope       | `Result<T>`, `ok`, `fail` in `lib/result.ts`                                                 | 04    |
+| Errors                | `AppError`, `ERROR_CODES`, `STATUS_BY_CODE`, `toFieldErrors` in `lib/errors.ts`              | 04    |
+| DB error mapper       | `mapDbError` in `server/db-error.ts`                                                         | 04    |
+| Server Action wrapper | `runAction` in `server/action.ts`                                                            | 04    |
+| Form helpers          | `formDataToObject`, `echoValues`, `FormState` in `lib/validations/form-data.ts`              | 04    |
+| Shared schemas        | `lib/validations/{primitives,upload,events,<domain>}.ts`                                     | 04    |
+| Logger                | `logger` in `lib/logger.ts`                                                                  | 04    |
+| Contracts             | `defineContract`, `envelopeSchema` in `lib/contracts/define.ts`; `lib/contracts/<domain>.ts` | 08    |
+| Route wrappers        | `handleRoute`, `handleWebhook` in `server/route.ts`                                          | 08    |
+| Browser API client    | `callApi` in `lib/api/call-api.ts`                                                           | 08    |
+| Request headers       | `getRequestId`, header schemas in `lib/http/headers.ts`                                      | 08    |
+| Env                   | `lib/env/public.ts`, `lib/env/server.ts` (server-only)                                       | 03    |
+| Supabase              | `lib/supabase/{client,server,admin,update-session}.ts`                                       | 03    |
+| Auth                  | `requireUser`, `getOptionalUser`, `requireRole` in `server/auth.ts`                          | 03    |
 
 Never invent a second helper for any row. Need a new concept? Add it to its owner file and this table in the same PR.
 

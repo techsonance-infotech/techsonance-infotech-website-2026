@@ -9,7 +9,7 @@ import {
   getSessionMessages,
   clearAllChat,
   cleanupOldMessages,
-} from "@/lib/db";
+} from "@/lib/chat/storage";
 import { MessageList } from "./MessageList";
 import { Composer } from "./Composer";
 import { PrivacyNote } from "./PrivacyNote";
@@ -38,7 +38,12 @@ export default function ChatWidget() {
 
   // Initialize or restore session on mount
   useEffect(() => {
-    const sid = sessionId || (typeof window !== "undefined" ? localStorage.getItem("ts_chat_session_id") || crypto.randomUUID().replace(/-/g, "").slice(0, 16) : "");
+    const sid =
+      sessionId ||
+      (typeof window !== "undefined"
+        ? localStorage.getItem("ts_chat_session_id") ||
+          crypto.randomUUID().replace(/-/g, "").slice(0, 16)
+        : "");
     if (!sid) return;
 
     // Clean up messages older than 30 days
@@ -216,7 +221,7 @@ export default function ChatWidget() {
         setStreamingShowBooking(false);
       }
     },
-    [isStreaming, messages, sessionId]
+    [isStreaming, messages, sessionId],
   );
 
   const handleClearChat = async () => {
@@ -263,7 +268,8 @@ export default function ChatWidget() {
               <span className="font-semibold text-slate-900">Sonance AI from TechSonance</span>
             </div>
             <p className="text-slate-600 leading-relaxed mb-2.5">
-              Have a software project in mind? I can give you a quick estimate or schedule a free call with our team!
+              Have a software project in mind? I can give you a quick estimate or schedule a free
+              call with our team!
             </p>
             <button
               onClick={handleOpenWidget}

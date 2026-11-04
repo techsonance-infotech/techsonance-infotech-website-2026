@@ -64,6 +64,6 @@ export async function GET(req: Request) {
     {
       status: 200,
       headers: { "Content-Type": "application/json" },
-    }
+    },
   );
 }

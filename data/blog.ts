@@ -30,8 +30,10 @@ export const blogPosts: BlogPost[] = [
   // ── 1. CMS TechSonance (Featured Post) ───────────────────────────────────
   {
     slug: "cms-techsonance-enterprise-multi-tenant-architecture",
-    title: "Architecting an Enterprise Multi-Tenant CMS & HRMS: 23-Role RBAC, Dual Attendance & Supabase RLS",
-    excerpt: "How we engineered a unified operations platform for TechSonance consolidating HRMS, hardware NFC attendance, GPS geofencing, project sprints, client CRM, and automated payroll under strict Row-Level Security.",
+    title:
+      "Architecting an Enterprise Multi-Tenant CMS & HRMS: 23-Role RBAC, Dual Attendance & Supabase RLS",
+    excerpt:
+      "How we engineered a unified operations platform for TechSonance consolidating HRMS, hardware NFC attendance, GPS geofencing, project sprints, client CRM, and automated payroll under strict Row-Level Security.",
     category: "Software Engineering",
     date: "October 20, 2026",
     readTime: "8 min read",
@@ -48,20 +50,32 @@ export const blogPosts: BlogPost[] = [
       },
     ],
     heroImage: "/images/cms-techsonance/login-left-banner.jpg",
-    tags: ["Next.js 15", "Supabase", "PostgreSQL RLS", "HRMS", "Multi-Tenant", "RBAC", "Docker", "SaaS"],
+    tags: [
+      "Next.js 15",
+      "Supabase",
+      "PostgreSQL RLS",
+      "HRMS",
+      "Multi-Tenant",
+      "RBAC",
+      "Docker",
+      "SaaS",
+    ],
     faqs: [
       {
         question: "How does CMS TechSonance guarantee data isolation between organizations?",
-        answer: "CMS TechSonance enforces PostgreSQL Row-Level Security (RLS) via Supabase. Every database operation runs within a tenant context where tenant_id = current_setting('app.current_tenant_id'). This prevents cross-tenant data leakage even during direct SQL joins or batch mutations."
+        answer:
+          "CMS TechSonance enforces PostgreSQL Row-Level Security (RLS) via Supabase. Every database operation runs within a tenant context where tenant_id = current_setting('app.current_tenant_id'). This prevents cross-tenant data leakage even during direct SQL joins or batch mutations.",
       },
       {
         question: "How does the dual-source attendance system eliminate buddy-punching?",
-        answer: "The platform integrates physical NFC reader hardware that captures unique encrypted card UIDs at office entry points. For mobile remote check-ins, the app runs client-side GPS geofence radius calculations and checks against an approved office IP whitelist, automatically queuing discrepancies for HR review."
+        answer:
+          "The platform integrates physical NFC reader hardware that captures unique encrypted card UIDs at office entry points. For mobile remote check-ins, the app runs client-side GPS geofence radius calculations and checks against an approved office IP whitelist, automatically queuing discrepancies for HR review.",
       },
       {
         question: "How is the 23-role permission matrix enforced across Next.js 15 API routes?",
-        answer: "Permissions are structured across 13 modules using composable permission flags (canView, canCreate, canEdit, canDelete, canApprove). Every route is protected by a withApiHandler() wrapper that decodes the JWT bearer token, checks module capabilities, and rejects unauthorized requests with a 403 response before invoking business controllers."
-      }
+        answer:
+          "Permissions are structured across 13 modules using composable permission flags (canView, canCreate, canEdit, canDelete, canApprove). Every route is protected by a withApiHandler() wrapper that decodes the JWT bearer token, checks module capabilities, and rejects unauthorized requests with a 403 response before invoking business controllers.",
+      },
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
@@ -190,8 +204,10 @@ export const POST = withApiHandler({
   // ── 2. FreightFlow (Indian Logistics & Fleet Telemetry) ───────────────────
   {
     slug: "freightflow-logistics-fleet-management-architecture",
-    title: "Engineering FreightFlow: Real-Time Fleet Telemetry, Sub-150ms P&L Analytics, and Automated GST for Indian Logistics",
-    excerpt: "How we architected a multi-tenant logistics SaaS handling 500+ trucks per tenant, sub-150ms per-trip P&L calculations, NIC e-Way bill APIs, and offline-first React Native driver workflows.",
+    title:
+      "Engineering FreightFlow: Real-Time Fleet Telemetry, Sub-150ms P&L Analytics, and Automated GST for Indian Logistics",
+    excerpt:
+      "How we architected a multi-tenant logistics SaaS handling 500+ trucks per tenant, sub-150ms per-trip P&L calculations, NIC e-Way bill APIs, and offline-first React Native driver workflows.",
     category: "Software Engineering",
     date: "October 18, 2026",
     readTime: "7 min read",
@@ -203,20 +219,32 @@ export const POST = withApiHandler({
       },
     ],
     heroImage: "/images/projects/freightflow/freightflow-logistics-fleet-management-dashboard.png",
-    tags: ["Logistics SaaS", "Next.js 16", "PostgreSQL", "Row-Level Security", "NIC e-Way Bill", "React Native", "Fleet Management"],
+    tags: [
+      "Logistics SaaS",
+      "Next.js 16",
+      "PostgreSQL",
+      "Row-Level Security",
+      "NIC e-Way Bill",
+      "React Native",
+      "Fleet Management",
+    ],
     faqs: [
       {
         question: "How does FreightFlow compute real-time per-trip profitability under 150ms?",
-        answer: "FreightFlow uses indexed materialized views combining freight earnings against categorized operational expenses (fuel, toll FASTag, maintenance, driver wages). When trip vouchers are entered, background worker invalidates specific trip cache keys in Redis, rendering live P&L in under 150ms."
+        answer:
+          "FreightFlow uses indexed materialized views combining freight earnings against categorized operational expenses (fuel, toll FASTag, maintenance, driver wages). When trip vouchers are entered, background worker invalidates specific trip cache keys in Redis, rendering live P&L in under 150ms.",
       },
       {
-        question: "How do drivers upload proof-of-delivery (POD) in remote highway areas without network?",
-        answer: "The React Native driver application features an offline-first SQLite buffer. When drivers take receipt photos or collect customer signatures at delivery checkpoints, records are stored locally with cryptographic timestamps and automatically synced in batch requests once connectivity returns."
+        question:
+          "How do drivers upload proof-of-delivery (POD) in remote highway areas without network?",
+        answer:
+          "The React Native driver application features an offline-first SQLite buffer. When drivers take receipt photos or collect customer signatures at delivery checkpoints, records are stored locally with cryptographic timestamps and automatically synced in batch requests once connectivity returns.",
       },
       {
         question: "How does FreightFlow handle complex Indian transport tax compliance?",
-        answer: "FreightFlow integrates with the government NIC API portal. It validates GSTIN formats, handles CGST/SGST vs IGST rules, manages Reverse Charge Mechanism (RCM) calculations for Goods Transport Agencies, and registers e-Way bills with instant QR code generation."
-      }
+        answer:
+          "FreightFlow integrates with the government NIC API portal. It validates GSTIN formats, handles CGST/SGST vs IGST rules, manages Reverse Charge Mechanism (RCM) calculations for Goods Transport Agencies, and registers e-Way bills with instant QR code generation.",
+      },
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
@@ -323,8 +351,10 @@ $$ LANGUAGE plpgsql;
   // ── 3. Zion (Mobile Event Discovery, Social Ticketing & Flutter) ──────────
   {
     slug: "zion-event-discovery-social-ticketing-flutter-architecture",
-    title: "Building Zion: Architecting a 60 FPS Event Discovery & Social Ticketing Platform with Flutter, Isar DB & Riverpod",
-    excerpt: "Inside the cross-platform engineering of Zion: local-first Isar database caching for sub-100ms searches, 2-step frictionless ticket checkout, real-time social feeds, and organizer gate validation.",
+    title:
+      "Building Zion: Architecting a 60 FPS Event Discovery & Social Ticketing Platform with Flutter, Isar DB & Riverpod",
+    excerpt:
+      "Inside the cross-platform engineering of Zion: local-first Isar database caching for sub-100ms searches, 2-step frictionless ticket checkout, real-time social feeds, and organizer gate validation.",
     category: "Software Engineering",
     date: "October 16, 2026",
     readTime: "7 min read",
@@ -341,20 +371,34 @@ $$ LANGUAGE plpgsql;
       },
     ],
     heroImage: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
-    tags: ["Flutter", "Dart", "Isar DB", "Riverpod", "Mobile App", "Offline-First", "Stripe", "Event Ticketing"],
+    tags: [
+      "Flutter",
+      "Dart",
+      "Isar DB",
+      "Riverpod",
+      "Mobile App",
+      "Offline-First",
+      "Stripe",
+      "Event Ticketing",
+    ],
     faqs: [
       {
         question: "Why was Flutter selected for Zion rather than native Swift and Kotlin?",
-        answer: "Flutter's Impeller rendering engine compiles directly to native ARM64 machine code, rendering 60 FPS animations across iOS and Android from a single shared codebase. This unified architecture saved over 4 months of dual-platform engineering while maintaining native-grade performance."
+        answer:
+          "Flutter's Impeller rendering engine compiles directly to native ARM64 machine code, rendering 60 FPS animations across iOS and Android from a single shared codebase. This unified architecture saved over 4 months of dual-platform engineering while maintaining native-grade performance.",
       },
       {
-        question: "How does Zion ensure attendees can show their tickets in venue basements without internet?",
-        answer: "Zion uses an embedded Isar NoSQL database for local-first caching. When a ticket is purchased, its signed cryptographic token and QR pass are stored locally on the device keychain. Attendees can pull up passes and get scanned at gates without an active cellular data signal."
+        question:
+          "How does Zion ensure attendees can show their tickets in venue basements without internet?",
+        answer:
+          "Zion uses an embedded Isar NoSQL database for local-first caching. When a ticket is purchased, its signed cryptographic token and QR pass are stored locally on the device keychain. Attendees can pull up passes and get scanned at gates without an active cellular data signal.",
       },
       {
-        question: "How does the organizer dashboard prevent duplicate ticket scanning at different gates?",
-        answer: "Host scanner devices sync validated QR tokens over cloud websockets with local peer mesh fallbacks (Wi-Fi Direct and Bluetooth). When a ticket is scanned at Gate 1, all other scanners invalidate the ticket in under 50ms, preventing duplicate entry."
-      }
+        question:
+          "How does the organizer dashboard prevent duplicate ticket scanning at different gates?",
+        answer:
+          "Host scanner devices sync validated QR tokens over cloud websockets with local peer mesh fallbacks (Wi-Fi Direct and Bluetooth). When a ticket is scanned at Gate 1, all other scanners invalidate the ticket in under 50ms, preventing duplicate entry.",
+      },
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
@@ -449,8 +493,10 @@ Future&lt;List&lt;Event&gt;&gt; searchEventsLocally(String query, String categor
   // ── 4. Accunest (Indian Fiscal Invoicing & Accounting Software) ───────────
   {
     slug: "accunest-enterprise-gst-invoicing-architecture",
-    title: "Architecting Accunest: Building a Production-Grade GST Invoicing & Inventory Engine with Next.js 16, Zod, and Client-Side jsPDF",
-    excerpt: "How we engineered a compliant Indian accounting platform with dynamic CGST/SGST/IGST tax compilers, real-time PAN registry validation, and sub-second client-side PDF invoice generation.",
+    title:
+      "Architecting Accunest: Building a Production-Grade GST Invoicing & Inventory Engine with Next.js 16, Zod, and Client-Side jsPDF",
+    excerpt:
+      "How we engineered a compliant Indian accounting platform with dynamic CGST/SGST/IGST tax compilers, real-time PAN registry validation, and sub-second client-side PDF invoice generation.",
     category: "Software Engineering",
     date: "October 12, 2026",
     readTime: "6 min read",
@@ -462,20 +508,32 @@ Future&lt;List&lt;Event&gt;&gt; searchEventsLocally(String query, String categor
       },
     ],
     heroImage: "/images/accunest/accunest-dashboard.png",
-    tags: ["FinTech", "Next.js 16", "React 19", "Zod", "MongoDB", "Invoicing", "jsPDF", "Accounting Software"],
+    tags: [
+      "FinTech",
+      "Next.js 16",
+      "React 19",
+      "Zod",
+      "MongoDB",
+      "Invoicing",
+      "jsPDF",
+      "Accounting Software",
+    ],
     faqs: [
       {
         question: "How does Accunest automate intra-state vs. inter-state GST calculations?",
-        answer: "Accunest compares the buyer's state GST code with the supplier's registered state. Matching state codes trigger intra-state distribution (CGST + SGST), while differing state codes automatically route the calculation into IGST, mapped alongside mandated HSN/SAC codes."
+        answer:
+          "Accunest compares the buyer's state GST code with the supplier's registered state. Matching state codes trigger intra-state distribution (CGST + SGST), while differing state codes automatically route the calculation into IGST, mapped alongside mandated HSN/SAC codes.",
       },
       {
         question: "Why generate invoice PDFs in the client browser instead of a backend server?",
-        answer: "Generating PDFs via server-side headless browsers like Puppeteer incurs significant RAM overhead (250MB+ per process) and introduces queue latency. Utilizing jsPDF and AutoTable directly in client browser memory compiles invoices in under 300ms, slashing server CPU costs by 70%."
+        answer:
+          "Generating PDFs via server-side headless browsers like Puppeteer incurs significant RAM overhead (250MB+ per process) and introduces queue latency. Utilizing jsPDF and AutoTable directly in client browser memory compiles invoices in under 300ms, slashing server CPU costs by 70%.",
       },
       {
         question: "How do Quick-Add modals work without losing partially filled invoice data?",
-        answer: "Accunest uses TanStack React Query v5. When a user adds an unlisted customer or inventory item mid-invoice, the modal executes an atomic mutation and invalidates the cache, updating the parent form's selectable list instantly without triggering a component remount or state wipe."
-      }
+        answer:
+          "Accunest uses TanStack React Query v5. When a user adds an unlisted customer or inventory item mid-invoice, the modal executes an atomic mutation and invalidates the cache, updating the parent form's selectable list instantly without triggering a component remount or state wipe.",
+      },
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
@@ -554,7 +612,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "enterprise-rag-benchmark-2026-pgvector-vs-pinecone-vs-qdrant",
     title: "2026 Enterprise RAG Benchmark: pgvector vs. Pinecone vs. Qdrant Across 100K Documents",
-    excerpt: "Empirical benchmarks comparing retrieval latency, memory footprint, recall accuracy, and monthly cloud infrastructure costs across PostgreSQL pgvector, Pinecone, and Qdrant for enterprise AI workflows.",
+    excerpt:
+      "Empirical benchmarks comparing retrieval latency, memory footprint, recall accuracy, and monthly cloud infrastructure costs across PostgreSQL pgvector, Pinecone, and Qdrant for enterprise AI workflows.",
     category: "AI & Automation",
     date: "October 14, 2026",
     readTime: "9 min read",
@@ -563,19 +622,22 @@ export const InvoiceItemSchema = z.object({
         name: "Sajeshkumar Adeya",
         role: "CTO TechSonance",
         avatar: "SA",
-      }
+      },
     ],
     heroImage: "/images/blog/logistics-architecture.jpg",
     tags: ["AI Integrations", "RAG", "pgvector", "PostgreSQL", "Pinecone", "Qdrant", "Benchmarks"],
     faqs: [
       {
-        question: "Which vector database provides the best ROI for enterprise RAG under 500K embeddings?",
-        answer: "PostgreSQL with pgvector and HNSW indexing offers the best ROI. It eliminates dedicated vector infrastructure, leverages existing backups, and enforces Row-Level Security for multi-tenant data governance at under $90/month on AWS."
+        question:
+          "Which vector database provides the best ROI for enterprise RAG under 500K embeddings?",
+        answer:
+          "PostgreSQL with pgvector and HNSW indexing offers the best ROI. It eliminates dedicated vector infrastructure, leverages existing backups, and enforces Row-Level Security for multi-tenant data governance at under $90/month on AWS.",
       },
       {
         question: "When should an enterprise transition from pgvector to Qdrant or Pinecone?",
-        answer: "Transition to Qdrant or Pinecone when your vector collection exceeds 5 million high-dimensional embeddings or when steady-state query throughput exceeds 1,200 QPS with tight sub-10ms P99 SLAs."
-      }
+        answer:
+          "Transition to Qdrant or Pinecone when your vector collection exceeds 5 million high-dimensional embeddings or when steady-state query throughput exceeds 1,200 QPS with tight sub-10ms P99 SLAs.",
+      },
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
@@ -653,7 +715,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "nextjs-react-for-offline-pos",
     title: "Why We Chose React 19 and Next.js for SyncServe Retail POS",
-    excerpt: "Discover why offline-first IndexedDB structures and React 19 concurrent features are crucial for modern checkout terminals.",
+    excerpt:
+      "Discover why offline-first IndexedDB structures and React 19 concurrent features are crucial for modern checkout terminals.",
     category: "Software Engineering",
     date: "June 10, 2026",
     readTime: "5 min read",
@@ -662,7 +725,7 @@ export const InvoiceItemSchema = z.object({
         name: "Sajeshkumar Adeya",
         role: "CTO TechSonance",
         avatar: "SA",
-      }
+      },
     ],
     heroImage: "/images/blog/pos-react.jpg",
     tags: ["React 19", "Next.js", "IndexedDB", "PWA", "POS"],
@@ -696,7 +759,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "agentic-ai-business-automation",
     title: "Agentic AI Workflows: The Next Frontier in Business Automation",
-    excerpt: "Moving beyond simple chatbots. How we design autonomous AI agents to execute complex validation and internal operations.",
+    excerpt:
+      "Moving beyond simple chatbots. How we design autonomous AI agents to execute complex validation and internal operations.",
     category: "AI & Automation",
     date: "June 05, 2026",
     readTime: "6 min read",
@@ -705,7 +769,7 @@ export const InvoiceItemSchema = z.object({
         name: "Someshwari Adeya",
         role: "CEO",
         avatar: "SO",
-      }
+      },
     ],
     heroImage: "/images/blog/agentic-ai.jpg",
     tags: ["AI Agents", "LangChain", "Automation", "Workflows"],
@@ -734,7 +798,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "techsonance-marketplace-architecture",
     title: "Scaling a High-Throughput Multi-Vendor Marketplace Platform",
-    excerpt: "How we engineered sub-second product catalog search queries and order split algorithms for TechSonance Marketplace.",
+    excerpt:
+      "How we engineered sub-second product catalog search queries and order split algorithms for TechSonance Marketplace.",
     category: "Software Engineering",
     date: "May 25, 2026",
     readTime: "6 min read",
@@ -743,7 +808,7 @@ export const InvoiceItemSchema = z.object({
         name: "Manish Kushwaha",
         role: "Lead Developer",
         avatar: "MK",
-      }
+      },
     ],
     heroImage: "/images/blog/marketplace-architecture.jpg",
     tags: ["Marketplace", "Elasticsearch", "Next.js", "Redis", "Database"],
@@ -767,7 +832,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "nfc-attendance-hardware-integration",
     title: "Bridging Hardware and Web: Building an Offline-First NFC Attendance System",
-    excerpt: "A deep dive into writing standalone Node.js serial-port event listeners and syncing local SQLite tables with central cloud databases.",
+    excerpt:
+      "A deep dive into writing standalone Node.js serial-port event listeners and syncing local SQLite tables with central cloud databases.",
     category: "AI & Automation",
     date: "May 15, 2026",
     readTime: "6 min read",
@@ -776,7 +842,7 @@ export const InvoiceItemSchema = z.object({
         name: "Sajeshkumar Adeya",
         role: "CTO TechSonance",
         avatar: "SA",
-      }
+      },
     ],
     heroImage: "/images/blog/nfc-attendance.jpg",
     tags: ["NFC", "Turso", "SQLite", "PWA", "IoT"],
@@ -795,7 +861,8 @@ export const InvoiceItemSchema = z.object({
   {
     slug: "designing-for-the-developer",
     title: "Designing for the Developer: Creating High-Fidelity UI Systems",
-    excerpt: "How our design team collaborates with developers to build reusable systems that compile cleanly and feel extremely premium.",
+    excerpt:
+      "How our design team collaborates with developers to build reusable systems that compile cleanly and feel extremely premium.",
     category: "Product Design",
     date: "June 01, 2026",
     readTime: "4 min read",
@@ -804,7 +871,7 @@ export const InvoiceItemSchema = z.object({
         name: "Someshwari Adeya",
         role: "CEO",
         avatar: "SO",
-      }
+      },
     ],
     heroImage: "/images/blog/design-developer.jpg",
     tags: ["Figma", "UI/UX", "Design Tokens", "Tailwind CSS"],
@@ -823,10 +890,14 @@ export const InvoiceItemSchema = z.object({
 export function getPostBySlug(slug: string): BlogPost | undefined {
   // Support aliases for backwards compatibility
   if (slug === "multi-tenant-logistics-architecture") {
-    return blogPosts.find((p) => p.slug === "freightflow-logistics-fleet-management-architecture" || p.slug === slug);
+    return blogPosts.find(
+      (p) => p.slug === "freightflow-logistics-fleet-management-architecture" || p.slug === slug,
+    );
   }
   if (slug === "accunest-gst-invoicing") {
-    return blogPosts.find((p) => p.slug === "accunest-enterprise-gst-invoicing-architecture" || p.slug === slug);
+    return blogPosts.find(
+      (p) => p.slug === "accunest-enterprise-gst-invoicing-architecture" || p.slug === slug,
+    );
   }
   return blogPosts.find((p) => p.slug === slug);
 }

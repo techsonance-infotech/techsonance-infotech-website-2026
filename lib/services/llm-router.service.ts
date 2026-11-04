@@ -1,23 +1,15 @@
 import { inject } from "@needle-di/core";
 import { LLMHealthService } from "./llm-health.service";
 import { LLMProviderService } from "./llm-provider.service";
-import {
-  AllExhaustedError,
-  QuotaError,
-  type LLMChatRequest,
-  type LLMProvider,
-} from "../llm/types";
+import { AllExhaustedError, QuotaError, type LLMChatRequest, type LLMProvider } from "../llm/types";
 
 export class LLMRouterService {
   constructor(
     private healthService: LLMHealthService = inject(LLMHealthService),
-    private providerService: LLMProviderService = inject(LLMProviderService)
+    private providerService: LLMProviderService = inject(LLMProviderService),
   ) {}
 
-  async *routeChat(
-    req: LLMChatRequest,
-    customProviders?: LLMProvider[]
-  ): AsyncIterable<string> {
+  async *routeChat(req: LLMChatRequest, customProviders?: LLMProvider[]): AsyncIterable<string> {
     const now = Date.now();
     const allProviders = customProviders || this.providerService.getProviders();
 
@@ -50,10 +42,7 @@ export class LLMRouterService {
         if (err instanceof QuotaError) {
           await this.healthService.mark(provider.id, err);
         } else {
-          await this.healthService.mark(
-            provider.id,
-            new QuotaError("server", 120, String(err))
-          );
+          await this.healthService.mark(provider.id, new QuotaError("server", 120, String(err)));
         }
 
         // If tokens were already sent to client, DO NOT switch providers mid-stream

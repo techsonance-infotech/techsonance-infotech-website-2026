@@ -12,7 +12,10 @@ export function filterOutput(rawText: string): FilterResult {
   // 1. Detect and parse [[BOOKING]] token
   if (text.includes("[[BOOKING]]")) {
     showBooking = true;
-    text = text.replace(/\[\[BOOKING\]\]/g, "").replace(/\s+/g, " ").trim();
+    text = text
+      .replace(/\[\[BOOKING\]\]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   // 2. Strip code fences and inline code blocks
@@ -30,7 +33,7 @@ export function filterOutput(rawText: string): FilterResult {
   if (text.includes("{{")) {
     text = text.replace(
       /\{\{[^}]*\}\}/g,
-      "our team can provide specific details during a consultation"
+      "our team can provide specific details during a consultation",
     );
   }
 
@@ -50,7 +53,7 @@ export function filterOutput(rawText: string): FilterResult {
     const lastPunctuation = Math.max(
       trimmed.lastIndexOf("."),
       trimmed.lastIndexOf("!"),
-      trimmed.lastIndexOf("?")
+      trimmed.lastIndexOf("?"),
     );
     if (lastPunctuation > 60) {
       text = trimmed.slice(0, lastPunctuation + 1);

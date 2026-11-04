@@ -86,14 +86,26 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="shrink-0 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
               aria-label="View live demo"
             >
-              <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  d="M6 2H2v12h12v-4M10 2h4v4M6 10L14 2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </a>
           )}
         </div>
 
-        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{project.shortDescription}</p>
+        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
+          {project.shortDescription}
+        </p>
 
         {/* Result callout */}
         <div
@@ -139,16 +151,26 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 // ─── Category filter tabs ──────────────────────────────────────────────────────
-const categories = ["All", "Mobile App", "SaaS Platform", "E-Commerce Platform", "POS System", "Accounting Software", "Enterprise Tool", "Website Redesign"];
+const categories = [
+  "All",
+  "Mobile App",
+  "SaaS Platform",
+  "E-Commerce Platform",
+  "POS System",
+  "Accounting Software",
+  "Enterprise Tool",
+  "Website Redesign",
+];
 
 export default function PortfolioClient() {
   const allProjects = getAllProjects();
   const [activeCategory, setActiveCategory] = useState("All");
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
-  const filtered = activeCategory === "All"
-    ? allProjects
-    : allProjects.filter((p) => p.category === activeCategory);
+  const filtered =
+    activeCategory === "All"
+      ? allProjects
+      : allProjects.filter((p) => p.category === activeCategory);
 
   return (
     <main className="min-h-screen bg-[#FAFBFD] text-[#0F172A] overflow-x-clip">
@@ -172,7 +194,7 @@ export default function PortfolioClient() {
       >
         <div
           className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center relative z-10"
-          style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}
+          style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
         >
           <div className="inline-flex items-center gap-2 bg-white border border-[#1155CC]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
             <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
@@ -186,7 +208,8 @@ export default function PortfolioClient() {
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
-            We&apos;re proud to showcase a diverse collection of our work that highlights our expertise and creativity.
+            We&apos;re proud to showcase a diverse collection of our work that highlights our
+            expertise and creativity.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -205,13 +228,16 @@ export default function PortfolioClient() {
 
       {/* ── Filter + Grid Section Wrapper with Background Effects ───────────────── */}
       <div className="relative w-full overflow-hidden bg-[#FAFBFD] border-t border-slate-100">
-
         {/* Ambient Gradient Background Glows */}
         <div className="absolute top-10 left-[10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none z-0" />
         <div className="absolute bottom-20 right-[5%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
         {/* Premium SVG Wave Lines */}
-        <svg className="absolute top-[20%] left-0 w-full h-[250px] opacity-[0.04] text-[#1155CC] pointer-events-none z-0" viewBox="0 0 1440 250" fill="none">
+        <svg
+          className="absolute top-[20%] left-0 w-full h-[250px] opacity-[0.04] text-[#1155CC] pointer-events-none z-0"
+          viewBox="0 0 1440 250"
+          fill="none"
+        >
           <motion.path
             d="M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120"
             stroke="currentColor"
@@ -220,14 +246,17 @@ export default function PortfolioClient() {
               d: [
                 "M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120",
                 "M0 120 C300 20, 600 220, 900 20 C1200 220, 1350 110, 1440 120",
-                "M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120"
-              ]
+                "M0 120 C300 220, 600 20, 900 220 C1200 110, 1350 20, 1440 120",
+              ],
             }}
             transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
           />
         </svg>
 
-        <section id="projects-list" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+        <section
+          id="projects-list"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10"
+        >
           {/* Section label */}
           <div className="text-center mb-10">
             <h2 className="text-2xl sm:text-3xl font-medium text-gray-900">
@@ -244,10 +273,11 @@ export default function PortfolioClient() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${activeCategory === cat
-                  ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
-                  }`}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${
+                  activeCategory === cat
+                    ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
+                }`}
               >
                 {cat}
               </button>
@@ -281,10 +311,14 @@ export default function PortfolioClient() {
       {/* ── Bottom CTA ─────────────────────────────────────────────────────────── */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 brand-gradient opacity-95" />
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
         <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
@@ -302,7 +336,8 @@ export default function PortfolioClient() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-white/80 text-base mb-8"
           >
-            Let&apos;s turn your idea into a production-ready system. Free consultation, no commitments.
+            Let&apos;s turn your idea into a production-ready system. Free consultation, no
+            commitments.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}

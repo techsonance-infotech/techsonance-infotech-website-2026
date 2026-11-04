@@ -14,7 +14,7 @@ export function getMailTransporter() {
 }
 
 export async function sendMail(
-  options: SendMailOptions
+  options: SendMailOptions,
 ): Promise<{ ok: boolean; messageId?: string; error?: string }> {
   const service = getContainer().get(EmailService);
   return service.sendMail(options);
@@ -22,7 +22,7 @@ export async function sendMail(
 
 export async function sendConsultationEmails(
   booking: BookingPayload,
-  ref: string
+  ref: string,
 ): Promise<{ ok: boolean; messageId?: string }> {
   const service = getContainer().get(EmailService);
   return service.sendConsultationEmails(booking, ref);

@@ -17,7 +17,6 @@ interface ServicePageClientProps {
   service: Service;
 }
 
-
 export default function ServicePageClient({ service }: ServicePageClientProps) {
   const pageRef = useServicePageAnimations();
   const geoData = GEO_SERVICES[service.slug];
@@ -59,9 +58,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <h3 className="text-xs font-black uppercase text-gray-400 tracking-wider mb-2">
                     Who is it for?
                   </h3>
-                  <p className="text-sm text-gray-750 leading-relaxed">
-                    {geoData.whoIsItFor}
-                  </p>
+                  <p className="text-sm text-gray-750 leading-relaxed">{geoData.whoIsItFor}</p>
                 </div>
 
                 <div className="bg-blue-50/40 rounded-2xl p-6 border border-[#22B6F6]/10 space-y-4">
@@ -79,7 +76,10 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                     </h3>
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {geoData.technologiesUsed.map((tech) => (
-                        <span key={tech} className="bg-white border border-slate-150 text-[10px] font-bold text-gray-600 px-2.5 py-1 rounded-full">
+                        <span
+                          key={tech}
+                          className="bg-white border border-slate-150 text-[10px] font-bold text-gray-600 px-2.5 py-1 rounded-full"
+                        >
                           {tech}
                         </span>
                       ))}
@@ -108,9 +108,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <span className="text-[10px] font-black uppercase text-[#1155CC] tracking-wider block">
                     Our Solution Architecture
                   </span>
-                  <h4 className="text-lg font-medium text-gray-900">
-                    How do we address this?
-                  </h4>
+                  <h4 className="text-lg font-medium text-gray-900">How do we address this?</h4>
                   <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
                     {geoData.solution}
                   </p>
@@ -136,7 +134,10 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   </h4>
                   <ul className="space-y-3">
                     {geoData.expectedOutcomes.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-gray-700">
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-xs sm:text-sm text-gray-700"
+                      >
                         <span className="w-5 h-5 rounded-full bg-green-500/15 text-green-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                           ✓
                         </span>

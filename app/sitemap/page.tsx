@@ -45,19 +45,29 @@ export default function SitemapPage() {
       <SiteHeader transparent={true} />
       <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
         {/* Ambient background glows */}
-        <div className={cn(
-          "absolute top-0 left-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-          mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]"
-        )} />
-        <div className={cn(
-          "absolute top-[40%] right-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-          mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]"
-        )} />
+        <div
+          className={cn(
+            "absolute top-0 left-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
+            mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+          )}
+        />
+        <div
+          className={cn(
+            "absolute top-[40%] right-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
+            mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+          )}
+        />
 
         {/* Hero Banner Header */}
         <section className="relative py-16 sm:py-24 overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] text-white">
           <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-            <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(#22B6F6 1.5px, transparent 1.5px)", backgroundSize: "24px 24px" }} />
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "radial-gradient(#22B6F6 1.5px, transparent 1.5px)",
+                backgroundSize: "24px 24px",
+              }}
+            />
           </div>
 
           {/* Floating Elegant Shapes */}
@@ -153,7 +163,10 @@ export default function SitemapPage() {
                       className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold text-slate-700 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
                     >
                       <span>{link.label}</span>
-                      <Icon name="arrow" className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all" />
+                      <Icon
+                        name="arrow"
+                        className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all"
+                      />
                     </Link>
                   </li>
                 ))}
@@ -190,7 +203,10 @@ export default function SitemapPage() {
                       className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold text-slate-700 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
                     >
                       <span>{link.label}</span>
-                      <Icon name="arrow" className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all" />
+                      <Icon
+                        name="arrow"
+                        className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all"
+                      />
                     </Link>
                   </li>
                 ))}
@@ -230,7 +246,10 @@ export default function SitemapPage() {
                         {service.tagline}
                       </span>
                     </div>
-                    <Icon name="arrow" className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4" />
+                    <Icon
+                      name="arrow"
+                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                    />
                   </Link>
                 ))}
               </div>
@@ -269,7 +288,10 @@ export default function SitemapPage() {
                         {project.industry} &bull; {project.category}
                       </span>
                     </div>
-                    <Icon name="arrow" className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4" />
+                    <Icon
+                      name="arrow"
+                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                    />
                   </Link>
                 ))}
               </div>
@@ -308,12 +330,14 @@ export default function SitemapPage() {
                         {post.category} &bull; {post.readTime}
                       </span>
                     </div>
-                    <Icon name="arrow" className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4" />
+                    <Icon
+                      name="arrow"
+                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                    />
                   </Link>
                 ))}
               </div>
             </motion.div>
-
           </motion.div>
         </section>
       </main>

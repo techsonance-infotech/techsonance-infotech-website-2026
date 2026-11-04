@@ -12,7 +12,11 @@ const emptySubscribe = () => () => {};
 
 export default function AboutHero() {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
-  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -89,7 +93,10 @@ export default function AboutHero() {
           )}
 
           {/* Animated SVG Grid Lines & Light Beams */}
-          <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="absolute inset-0 w-full h-full opacity-60"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <defs>
               <linearGradient id="grid-glow" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#1155CC" stopOpacity="0" />
@@ -153,7 +160,6 @@ export default function AboutHero() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-
             {/* Left Column: Heading & Key Features */}
             <div className="lg:col-span-4 flex flex-col justify-between lg:min-h-[520px] relative">
               <div>
@@ -189,7 +195,9 @@ export default function AboutHero() {
                   }}
                 >
                   About TechSonance Infotech:{" "}
-                  <span className="text-[#1155CC] block lg:inline-block">Software &amp; AI Engineering Partner in Surat</span>
+                  <span className="text-[#1155CC] block lg:inline-block">
+                    Software &amp; AI Engineering Partner in Surat
+                  </span>
                 </motion.h1>
 
                 <motion.p
@@ -203,7 +211,8 @@ export default function AboutHero() {
                     WebkitBackfaceVisibility: "hidden",
                   }}
                 >
-                  We are a premium team of software architects and product engineers delivering scalable codebases that accelerate business outcomes.
+                  We are a premium team of software architects and product engineers delivering
+                  scalable codebases that accelerate business outcomes.
                 </motion.p>
               </div>
 
@@ -225,7 +234,8 @@ export default function AboutHero() {
                     Engineering that ships
                   </h3>
                   <p className="text-[12px] text-gray-500 leading-relaxed">
-                    Production systems built for scale - custom software, SaaS platforms, and AI automation for real businesses.
+                    Production systems built for scale - custom software, SaaS platforms, and AI
+                    automation for real businesses.
                   </p>
                 </motion.div>
 
@@ -245,7 +255,8 @@ export default function AboutHero() {
                     Accountable delivery
                   </h3>
                   <p className="text-[12px] text-gray-500 leading-relaxed">
-                    One engineering team from architecture through deployment. You own the code, we own the execution.
+                    One engineering team from architecture through deployment. You own the code, we
+                    own the execution.
                   </p>
                 </motion.div>
               </div>
@@ -329,31 +340,21 @@ export default function AboutHero() {
                     Our philosophy
                   </h2>
                   <p className="text-[13px] text-gray-500 leading-relaxed mb-6 font-medium">
-                    At TechSonance, we build software that runs real businesses - not slide decks. Every system is engineered for production from day one.
+                    At TechSonance, we build software that runs real businesses - not slide decks.
+                    Every system is engineered for production from day one.
                   </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-                  <Button
-                    onClick={() => setIsBookModalOpen(true)}
-                    variant="primary"
-                    size="sm"
-                  >
+                  <Button onClick={() => setIsBookModalOpen(true)} variant="primary" size="sm">
                     Book a call
                   </Button>
-                  <Button
-                    asChild
-                    variant="secondary"
-                    size="sm"
-                  >
-                    <Link href="/portfolio">
-                      View our work
-                    </Link>
+                  <Button asChild variant="secondary" size="sm">
+                    <Link href="/portfolio">View our work</Link>
                   </Button>
                 </div>
               </motion.div>
             </div>
-
           </div>
         </div>
       </section>

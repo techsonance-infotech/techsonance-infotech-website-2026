@@ -1,11 +1,11 @@
-import { sql } from 'drizzle-orm';
-import { timestamp, uuid } from 'drizzle-orm/pg-core';
+import { sql } from "drizzle-orm";
+import { timestamp, uuid } from "drizzle-orm/pg-core";
 
 /**
  * Standard createdAt timestamp column
  */
 export const baseCreatedAt = {
-  createdAt: timestamp('created_at', { withTimezone: true })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 };
@@ -14,7 +14,7 @@ export const baseCreatedAt = {
  * Standard updatedAt timestamp column with auto-update
  */
 export const baseUpdatedAt = {
-  updatedAt: timestamp('updated_at', { withTimezone: true })
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
     .$onUpdate(() => new Date()),
@@ -32,14 +32,14 @@ export const baseTimestamps = {
  * Soft-deletion timestamp column
  */
 export const baseSoftDelete = {
-  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 };
 
 /**
  * Full audit fields (UUID id + createdAt + updatedAt + deletedAt)
  */
 export const baseAuditFields = {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().defaultRandom(),
   ...baseTimestamps,
   ...baseSoftDelete,
 };
@@ -48,6 +48,6 @@ export const baseAuditFields = {
  * Common fields for UUID-keyed entities with createdAt + updatedAt (no soft delete)
  */
 export const baseEntityFields = {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().defaultRandom(),
   ...baseTimestamps,
 };

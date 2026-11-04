@@ -9,14 +9,14 @@ import type { BlogPost, PostSource } from "./types";
 function safeCache<Args extends unknown[], R>(
   fn: (...args: Args) => Promise<R>,
   keyParts?: string[],
-  options?: { revalidate?: number | false; tags?: string[] }
+  options?: { revalidate?: number | false; tags?: string[] },
 ): (...args: Args) => Promise<R> {
   let cached: ((...args: Args) => Promise<R>) | null = null;
   try {
     cached = unstable_cache(
       fn as unknown as Parameters<typeof unstable_cache>[0],
       keyParts,
-      options
+      options,
     ) as (...args: Args) => Promise<R>;
   } catch {
     return fn;
@@ -126,23 +126,20 @@ async function fetchCmsSlugsRaw(): Promise<string[]> {
 }
 
 // ─── Cached CMS Fetchers with Next.js Tags ───────────────────────────────────
-const getCachedCmsPosts = safeCache(
-  fetchCmsPostsRaw,
-  ["cms-posts-list"],
-  { tags: ["posts"], revalidate: 3600 }
-);
+const getCachedCmsPosts = safeCache(fetchCmsPostsRaw, ["cms-posts-list"], {
+  tags: ["posts"],
+  revalidate: 3600,
+});
 
-const getCachedCmsPostBySlug = safeCache(
-  fetchCmsPostBySlugRaw,
-  ["cms-post-by-slug"],
-  { tags: ["posts"], revalidate: 3600 }
-);
+const getCachedCmsPostBySlug = safeCache(fetchCmsPostBySlugRaw, ["cms-post-by-slug"], {
+  tags: ["posts"],
+  revalidate: 3600,
+});
 
-const getCachedCmsSlugs = safeCache(
-  fetchCmsSlugsRaw,
-  ["cms-posts-slugs"],
-  { tags: ["posts"], revalidate: 3600 }
-);
+const getCachedCmsSlugs = safeCache(fetchCmsSlugsRaw, ["cms-posts-slugs"], {
+  tags: ["posts"],
+  revalidate: 3600,
+});
 
 // ─── CMS Post Source ─────────────────────────────────────────────────────────
 export const cmsPostSource: PostSource = {

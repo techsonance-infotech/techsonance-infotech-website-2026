@@ -59,8 +59,18 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
             <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#1155CC] to-[#22B6F6]" />
             <div className="flex items-start gap-3.5">
               <div className="w-8 h-8 rounded-lg bg-[#1155CC]/10 text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <div>
@@ -84,12 +94,7 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
             >
               Book Free Consultation
             </Button>
-            <Button
-              asChild
-              variant="secondary"
-              size="default"
-              showArrow
-            >
+            <Button asChild variant="secondary" size="default" showArrow>
               <Link href="/portfolio">Explore Production Work</Link>
             </Button>
           </div>
@@ -115,16 +120,28 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
             {/* Office Coordinates & Verified Contact Strip */}
             <div className="mt-8 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Headquarters</span>
-                <p className="text-xs font-semibold text-slate-800">UG-15, Palladium Plaza, VIP Road, Vesu, Surat 395007</p>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  Headquarters
+                </span>
+                <p className="text-xs font-semibold text-slate-800">
+                  UG-15, Palladium Plaza, VIP Road, Vesu, Surat 395007
+                </p>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Direct Engineering Contact</span>
-                <p className="text-xs font-semibold text-slate-800">+91 9173101711 &bull; info@techsonance.co.in</p>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  Direct Engineering Contact
+                </span>
+                <p className="text-xs font-semibold text-slate-800">
+                  +91 9173101711 &bull; info@techsonance.co.in
+                </p>
               </div>
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Timezone Coverage</span>
-                <p className="text-xs font-semibold text-slate-800">IST (UTC+5:30) with US/UK/Gulf Overlap</p>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  Timezone Coverage
+                </span>
+                <p className="text-xs font-semibold text-slate-800">
+                  IST (UTC+5:30) with US/UK/Gulf Overlap
+                </p>
               </div>
             </div>
           </div>
@@ -153,12 +170,8 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
                   <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-[#1155CC] flex items-center justify-center font-bold text-sm mb-4">
                     0{idx + 1}
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 mb-2">
-                    {cap.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {cap.description}
-                  </p>
+                  <h3 className="text-base font-bold text-slate-900 mb-2">{cap.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">{cap.description}</p>
                 </div>
               </div>
             ))}
@@ -232,15 +245,16 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
                   <div className="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-lg inline-block mb-3">
                     {cs.metric}
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                    {cs.description}
-                  </p>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-4">{cs.description}</p>
                 </div>
 
                 <div>
                   <div className="flex flex-wrap gap-1.5 mb-6 pt-4 border-t border-slate-100">
                     {cs.tags.map((t) => (
-                      <span key={t} className="text-[9px] font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded">
+                      <span
+                        key={t}
+                        className="text-[9px] font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded"
+                      >
                         {t}
                       </span>
                     ))}
@@ -250,7 +264,10 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
                     className="text-xs font-bold text-[#1155CC] hover:underline flex items-center gap-1.5 group/link"
                   >
                     Read Detailed Case Study
-                    <Icon name="arrow" className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
+                    <Icon
+                      name="arrow"
+                      className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform"
+                    />
                   </Link>
                 </div>
               </div>
@@ -281,16 +298,18 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
                   <span className="text-[9px] font-black text-[#1155CC] bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-4">
                     {model.badge}
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
-                    {model.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-6">
-                    {model.description}
-                  </p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{model.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-6">{model.description}</p>
                   <ul className="space-y-2.5 text-xs text-slate-700 font-medium border-t border-slate-100 pt-5">
                     {model.features.map((feat, fIdx) => (
                       <li key={fIdx} className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-[#00D26A] shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4 text-[#00D26A] shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          viewBox="0 0 24 24"
+                        >
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{feat}</span>
@@ -341,7 +360,9 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
                     aria-expanded={isOpen}
                   >
                     <span>{faq.question}</span>
-                    <span className={`w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 bg-blue-50 text-[#1155CC]" : "text-slate-400"}`}>
+                    <span
+                      className={`w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 bg-blue-50 text-[#1155CC]" : "text-slate-400"}`}
+                    >
                       &darr;
                     </span>
                   </button>
@@ -378,11 +399,12 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
               >
                 <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#1155CC] transition-colors mb-1.5 flex items-center justify-between">
                   {service.title}
-                  <Icon name="arrow" className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  <Icon
+                    name="arrow"
+                    className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+                  />
                 </h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  {service.description}
-                </p>
+                <p className="text-xs text-slate-500 leading-relaxed">{service.description}</p>
               </Link>
             ))}
           </div>
@@ -398,7 +420,8 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
               Ready to Scope Your Software Architecture?
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto mb-8 relative z-10 leading-relaxed">
-              Meet directly with our technical leadership at our Vesu, Surat office or schedule a virtual scoping session across any global timezone.
+              Meet directly with our technical leadership at our Vesu, Surat office or schedule a
+              virtual scoping session across any global timezone.
             </p>
             <div className="relative z-10">
               <Button
@@ -412,7 +435,6 @@ export default function LandingPageTemplate({ data }: LandingPageTemplateProps) 
             </div>
           </div>
         </section>
-
       </main>
 
       <SiteFooter />

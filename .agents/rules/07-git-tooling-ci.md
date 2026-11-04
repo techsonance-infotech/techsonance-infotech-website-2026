@@ -3,7 +3,9 @@
 Owns: commits, scripts, dependencies, tests, CI. The `check` script below is the single definition of "green" referenced by `AGENTS.md`.
 
 ## Commits (commitlint + conventional commits)
+
 Format: `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, no trailing period.
+
 - Types: `feat`, `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, `chore`, `revert`.
 - Scope = area: `auth`, `db`, `ui`, `api`, `contracts`, `deps`, `config`, `rules` (e.g. `fix(auth): reject expired callback codes`).
 - Breaking change: `feat(api)!: …` plus a `BREAKING CHANGE:` footer explaining migration.
@@ -12,24 +14,28 @@ Format: `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, 
 - `commitlint.config.ts`: `export default { extends: ["@commitlint/config-conventional"] };`
 
 ## Branching & PRs
+
 - Trunk-based: short-lived `type/short-description` branches off `main`; `main` is always deployable and protected (PR + passing CI + review, no force-push).
 - PRs ≤ ~400 changed lines where possible. Description: what/why, screenshots for UI, impact note (`00`), migration notes, test evidence, risk/rollback.
 - Squash-merge with a conventional-commit title.
 - Schema migrations ship in the same PR as the code that needs them and stay backward-compatible with the previous deploy (expand → migrate → contract). Contract changes follow the same rule: add optional fields first, remove only after clients no longer send/read them (`08`).
 
 ## Husky hooks
+
 - `.husky/pre-commit` → `npx lint-staged`
 - `.husky/commit-msg` → `npx --no -- commitlint --edit "$1"`
 - `.husky/pre-push` → `npm run typecheck`
 - Hooks are fast and a convenience; **CI is the authority** and re-runs everything.
 
 ## lint-staged and formatting
+
 ```json
 {
   "*.{ts,tsx,js,jsx,mjs}": ["oxlint --fix --deny-warnings", "prettier --write"],
   "*.{json,md,css,yml,yaml}": ["prettier --write"]
 }
 ```
+
 Formatter is **Prettier** with `prettier-plugin-tailwindcss` (the one formatter; never debated in review).
 
 ```
@@ -79,3 +85,4 @@ Never edit `check` to drop a step. Scripts only reference tools listed under "Re
 - `.env.example` stays in sync with `lib/env/public.ts` and `lib/env/server.ts` in the same PR as any new variable; CI diffs the variable names.
 - Feature flags for risky releases; remove flags after rollout.
 
+```

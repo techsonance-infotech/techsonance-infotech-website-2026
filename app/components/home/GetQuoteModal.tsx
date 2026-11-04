@@ -93,14 +93,16 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
     if (field === "message") {
       if (!formData.message.trim()) return "Message is required.";
       const wordsCount = formData.message.trim().split(/\s+/).filter(Boolean).length;
-      if (wordsCount > 1000) return `Message cannot exceed 1000 words (Current: ${wordsCount}/1000).`;
+      if (wordsCount > 1000)
+        return `Message cannot exceed 1000 words (Current: ${wordsCount}/1000).`;
     }
     return undefined;
   };
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
   const cleanPhoneLength = formData.phone.replace(/\D/g, "").length;
-  const isPhoneValid = formData.countryCode === "+91" ? cleanPhoneLength === 10 : cleanPhoneLength >= 7;
+  const isPhoneValid =
+    formData.countryCode === "+91" ? cleanPhoneLength === 10 : cleanPhoneLength >= 7;
   const messageWordsCount = formData.message.trim().split(/\s+/).filter(Boolean).length;
   const isMessageValid = messageWordsCount > 0 && messageWordsCount <= 1000;
 
@@ -150,7 +152,8 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
       setTouched({});
     } catch (err: unknown) {
       setFormStatus("idle");
-      const errorMessage = err instanceof Error ? err.message : "Failed to send message. Please try again.";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to send message. Please try again.";
       showToast(errorMessage);
     }
   };
@@ -172,9 +175,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
   };
 
   const inputBaseClass = (field: string) =>
-    `w-full px-4 py-3 bg-white border ${getValidationError(field)
-      ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
-      : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
+    `w-full px-4 py-3 bg-white border ${
+      getValidationError(field)
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+        : "border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10"
     } rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`;
 
   return (
@@ -223,7 +227,13 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 className="absolute top-4 sm:top-5 right-4 sm:right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-all cursor-pointer"
                 aria-label="Close modal"
               >
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -236,10 +246,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-medium text-[#0F172A] leading-tight mb-1.5">
-                Let&apos;s Build{" "}
-                <span className="text-[#1155CC]">
-                  Something Together
-                </span>
+                Let&apos;s Build <span className="text-[#1155CC]">Something Together</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 font-medium">
                 Tell us about your project - we&apos;ll respond within 24 hours.
@@ -265,21 +272,14 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   </div>
                   <h3 className="text-xl font-bold text-black mb-3">Message Sent Successfully</h3>
                   <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-8">
-                    Thank you for reaching out. A senior engineer will review your project details and get back to you within 24 hours.
+                    Thank you for reaching out. A senior engineer will review your project details
+                    and get back to you within 24 hours.
                   </p>
                   <div className="flex gap-3">
-                    <Button
-                      onClick={() => setFormStatus("idle")}
-                      variant="secondary"
-                      size="sm"
-                    >
+                    <Button onClick={() => setFormStatus("idle")} variant="secondary" size="sm">
                       Send another
                     </Button>
-                    <Button
-                      onClick={resetAndClose}
-                      variant="primary"
-                      size="sm"
-                    >
+                    <Button onClick={resetAndClose} variant="primary" size="sm">
                       Close
                     </Button>
                   </div>
@@ -310,14 +310,19 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                         placeholder="John"
                         value={formData.firstName}
                         onChange={(e) => {
-                          setFormData({ ...formData, firstName: e.target.value.replace(/[^a-zA-Z\s-]/g, "") });
+                          setFormData({
+                            ...formData,
+                            firstName: e.target.value.replace(/[^a-zA-Z\s-]/g, ""),
+                          });
                           setTouched((prev) => ({ ...prev, firstName: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, firstName: true }))}
                         className={inputBaseClass("firstName")}
                       />
                       {getValidationError("firstName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("firstName")}</p>
+                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                          {getValidationError("firstName")}
+                        </p>
                       )}
                     </div>
                     <div className="space-y-1.5">
@@ -330,14 +335,19 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                         placeholder="Doe"
                         value={formData.lastName}
                         onChange={(e) => {
-                          setFormData({ ...formData, lastName: e.target.value.replace(/[^a-zA-Z\s-]/g, "") });
+                          setFormData({
+                            ...formData,
+                            lastName: e.target.value.replace(/[^a-zA-Z\s-]/g, ""),
+                          });
                           setTouched((prev) => ({ ...prev, lastName: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, lastName: true }))}
                         className={inputBaseClass("lastName")}
                       />
                       {getValidationError("lastName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("lastName")}</p>
+                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                          {getValidationError("lastName")}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -360,7 +370,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       className={inputBaseClass("email")}
                     />
                     {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("email")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("email")}
+                      </p>
                     )}
                   </div>
 
@@ -386,7 +398,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       <input
                         type="tel"
                         required
-                        placeholder={formData.countryCode === "+91" ? "99099 12345" : "Phone number"}
+                        placeholder={
+                          formData.countryCode === "+91" ? "99099 12345" : "Phone number"
+                        }
                         value={formData.phone}
                         onChange={(e) => {
                           const cleanVal = e.target.value.replace(/[^0-9\s\-()]/g, "");
@@ -398,7 +412,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       />
                     </div>
                     {getValidationError("phone") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("phone")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("phone")}
+                      </p>
                     )}
                   </div>
 
@@ -439,7 +455,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       className={`${inputBaseClass("message")} resize-none`}
                     />
                     {getValidationError("message") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">{getValidationError("message")}</p>
+                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        {getValidationError("message")}
+                      </p>
                     )}
                   </div>
 
