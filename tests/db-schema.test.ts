@@ -112,4 +112,55 @@ describe("Database Schema & Migration Verification", () => {
     expect(sql).toContain("TechSonance Infotech");
     expect(sql).toContain("techsonance");
   });
+
+  describe("Phase 3 AI Blog & Image Automation Schemas", () => {
+    const aiMigrationPath = path.resolve(
+      process.cwd(),
+      "supabase/migrations/20261104160000_ai_automation_phase3.sql",
+    );
+
+    it("should have the phase 3 migration file present", () => {
+      expect(fs.existsSync(aiMigrationPath)).toBe(true);
+    });
+
+    const getAiSql = () => fs.readFileSync(aiMigrationPath, "utf-8");
+
+    const expectedAiTables = [
+      "ts_ai_topics",
+      "ts_ai_generation_jobs",
+      "ts_ai_job_steps",
+      "ts_ai_approval_requests",
+      "ts_ai_prompt_templates",
+      "ts_ai_usage_events",
+      "ts_ai_provider_accounts",
+    ];
+
+    it("should create all 7 AI automation tables with RLS enabled", () => {
+      const sql = getAiSql();
+      for (const table of expectedAiTables) {
+        const createRegex = new RegExp(
+          `CREATE\\s+TABLE\\s+(IF\\s+NOT\\s+EXISTS\\s+)?(public\\.)?${table}\\b`,
+          "i",
+        );
+        expect(sql).toMatch(createRegex);
+
+        const rlsRegex = new RegExp(
+          `ALTER\\s+TABLE\\s+(ONLY\\s+)?(public\\.)?${table}\\s+ENABLE\\s+ROW\\s+LEVEL\\s+SECURITY`,
+          "i",
+        );
+        expect(sql).toMatch(rlsRegex);
+      }
+    });
+
+    it("should add AI and thumbnail columns to ts_content_posts", () => {
+      const sql = getAiSql();
+      expect(sql).toMatch(/ALTER\s+TABLE\s+(IF\s+EXISTS\s+)?(public\.)?ts_content_posts/i);
+      expect(sql).toContain("thumbnail_missing");
+      expect(sql).toContain("thumbnail_provider");
+      expect(sql).toContain("thumbnail_prompt");
+      expect(sql).toContain("thumbnail_alt");
+      expect(sql).toContain("ai_generated");
+      expect(sql).toContain("ai_job_id");
+    });
+  });
 });

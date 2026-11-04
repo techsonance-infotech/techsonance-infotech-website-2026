@@ -25,6 +25,10 @@ import { MediaService } from "../services/media.service";
 import { AdminPostsService } from "../services/admin-posts.service";
 import { AdminJobsService } from "../services/admin-jobs.service";
 import { AdminAuthService } from "../services/admin-auth.service";
+import { ImageStepService } from "../services/image/image-step.service";
+import { AIWriterService } from "../services/ai-writer.service";
+import { ApprovalService } from "../services/approval.service";
+import { JobOrchestratorService } from "../services/job-orchestrator.service";
 
 let rootContainer: Container | null = null;
 
@@ -48,6 +52,10 @@ export function configureContainer(container: Container): Container {
   container.bind(AdminPostsService);
   container.bind(AdminJobsService);
   container.bind(AdminAuthService);
+  container.bind(ImageStepService);
+  container.bind(AIWriterService);
+  container.bind(ApprovalService);
+  container.bind(JobOrchestratorService);
   return container;
 }
 

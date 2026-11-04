@@ -8,6 +8,7 @@ export * from "./core/job.schema";
 export * from "./core/application.schema";
 export * from "./core/version.schema";
 export * from "./core/audit.schema";
+export * from "./ai/index";
 
 // Backward compatibility table alias exports
 export {

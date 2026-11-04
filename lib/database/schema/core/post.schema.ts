@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, integer, jsonb, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, integer, boolean, jsonb, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { sitesTable } from "./site.schema";
 import { categoriesTable } from "./category.schema";
@@ -18,6 +18,12 @@ export const postsTable = pgTable(
       onDelete: "set null",
     }),
     heroImage: text("hero_image"),
+    thumbnailMissing: boolean("thumbnail_missing").notNull().default(false),
+    thumbnailProvider: text("thumbnail_provider"),
+    thumbnailPrompt: text("thumbnail_prompt"),
+    thumbnailAlt: text("thumbnail_alt"),
+    aiGenerated: boolean("ai_generated").notNull().default(false),
+    aiJobId: uuid("ai_job_id"),
     tags: text("tags").array().notNull().default([]),
     authorIds: uuid("author_ids").array().notNull().default([]),
     readTime: text("read_time"),
