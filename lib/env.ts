@@ -1,6 +1,14 @@
 import { z } from "zod";
 
 const envSchema = z.object({
+  // Supabase Configuration
+  NEXT_PUBLIC_SUPABASE_URL: z.url().optional(),
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
+  SUPABASE_URL: z.url().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+  SUPABASE_JWT_SECRET: z.string().optional(),
+
   // LLM Providers (optional, but at least one should be active for full RAG mode)
   GROQ_API_KEY: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),

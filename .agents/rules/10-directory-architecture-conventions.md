@@ -77,6 +77,10 @@ All new implementations and refactors must strictly follow this structure:
 | **Services (Needle DI)**| `kebab-case.service.ts` | `email.service.ts`, `booking.service.ts` |
 | **Validation Schemas** | `kebab-case.schema.ts` | `booking.schema.ts`, `contact.schema.ts` |
 | **Config Objects** | `camelCaseConfig.ts` | `botConfig.ts`, `seoConfig.ts` |
+| **Database Tables (Postgres)** | `ts_web_snake_case` | `ts_web_chat_messages`, `ts_web_consultation_bookings` |
+
+> [!CAUTION]
+> **Shared Supabase Instance Rule**: The connected Supabase project is shared with other applications (HRMS, ERP, CMS). NEVER drop, alter, rename, or write to any existing non-website tables. All tables, functions, indexes, and policies for this website MUST use the `ts_web_` prefix.
 
 ---
 

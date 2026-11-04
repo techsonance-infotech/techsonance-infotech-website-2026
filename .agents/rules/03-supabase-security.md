@@ -35,7 +35,9 @@ Exactly three client factories, nothing else:
 - Tests (`supabase/tests/<domain>.test.sql`): at least anon, user A, user B, admin; allowed **and** denied cases. A policy without a negative test is unverified.
 
 ## Migrations & schema
-- Schema changes **only** via `supabase/migrations/*.sql` (`supabase migration new <name>`); never edit prod via the dashboard. Forward-only, idempotent where possible, reviewed in PR, backward-compatible with the previous deploy (`07`).
+- **Shared DB Isolation (CRITICAL)**: This Supabase project is shared with other systems (ERP, HRMS, CMS). **NEVER modify, drop, alter, or touch any existing non-website tables.**
+- **Table Namespacing**: All new tables, indexes, triggers, and policies created for this website must strictly use the **`ts_web_`** prefix (e.g. `ts_web_chat_messages`, `ts_web_consultation_bookings`, `ts_web_inquiries`, `ts_web_visitor_leads`, `ts_web_career_applications`).
+- Schema changes **only** via `supabase/migrations/*.sql` (`supabase migration new <name>`); never edit prod via the dashboard. Forward-only, idempotent where possible (`CREATE TABLE IF NOT EXISTS`), reviewed in PR, backward-compatible with the previous deploy (`07`).
 - Conventions: `snake_case`, plural tables, `id uuid primary key default gen_random_uuid()`, `created_at timestamptz not null default now()`, `updated_at` via trigger, `not null` by default, FKs with explicit `on delete`, check constraints for enums/ranges (values mirror the shared `as const` arrays, `01`), indexes on FKs and filter columns.
 - Run Supabase security/performance advisors after schema changes and fix findings.
 - Column limits mirror Zod bounds (`varchar`/check length = schema `.max`); a mismatch is a bug in one of them.
