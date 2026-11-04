@@ -41,6 +41,7 @@ Next.js 16 (App Router, Turbopack) · React 19 · TypeScript (strict) · Tailwin
 | `07-git-tooling-ci.md` | Commits, scripts, deps, tests, CI | Commits, CI, dependencies |
 | `08-contracts-end-to-end-validation.md` | Contracts, `handleRoute`, `callApi`, API headers, events, drift checks, wiring checklist | Any client↔server data flow |
 | `09-ai-verification-anti-hallucination.md` | Verification protocol, trap list, report format | **Always** |
+| `10-directory-architecture-conventions.md` | Directory layout, route groups, features, file naming, DI | Creating new files, refactoring |
 
 ## Canonical registry (one name, one path, one owner)
 
@@ -144,6 +145,7 @@ docs/adr/  .rules/  .env.example  .nvmrc
 - NEVER add a dependency without justification (`07`).
 - NEVER fetch data in `useEffect` when a Server Component or Server Action can.
 - NEVER mutate data from a `GET` handler.
+- NEVER edit, rewrite, or modify third-party or vendored UI component library code; only consume or wrap them externally.
 - NEVER invent APIs, package names, table/column names, env vars, or config keys (`09`).
 
 ## Stack housekeeping (fix once)
