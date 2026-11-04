@@ -1,20 +1,21 @@
+import { inject } from "@needle-di/core";
 import { evaluateGate, type GateResult } from "../rag/gate";
-import { retrieve, type RetrievedChunk } from "../rag/search";
-import { kbChunks, faqList } from "../rag/kb";
+import { KBSearchService, type RetrievedChunk } from "./kb-search.service";
 
 export class RAGService {
+  constructor(
+    private searchService: KBSearchService = inject(KBSearchService)
+  ) {}
+
   evaluateGate(query: string): GateResult {
     return evaluateGate(query);
   }
 
   search(query: string, k = 3): RetrievedChunk[] {
-    return retrieve(query, k);
+    return this.searchService.retrieve(query, k);
   }
 
   getKBStats(): { totalChunks: number; faqCount: number } {
-    return {
-      totalChunks: kbChunks.length,
-      faqCount: faqList.length,
-    };
+    return this.searchService.getKBStats();
   }
 }

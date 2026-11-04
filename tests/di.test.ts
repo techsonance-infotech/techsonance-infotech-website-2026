@@ -4,10 +4,13 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../lib/di/tokens";
 import { RateLimiterService } from "../lib/services/ratelimit.service";
 import { EmailService } from "../lib/services/email.service";
 import { BookingService } from "../lib/services/booking.service";
+import { KBSearchService } from "../lib/services/kb-search.service";
 import { RAGService } from "../lib/services/rag.service";
 import { LLMHealthService } from "../lib/services/llm-health.service";
 import { LLMProviderService } from "../lib/services/llm-provider.service";
 import { LLMRouterService } from "../lib/services/llm-router.service";
+import { ChatStorageService } from "../lib/services/chat-storage.service";
+import { AnalyticsService } from "../lib/services/analytics.service";
 import { QuotaError } from "../lib/llm/types";
 
 describe("Needle DI Container Infrastructure", () => {
@@ -196,5 +199,44 @@ describe("Needle DI Container Infrastructure", () => {
     }
 
     expect(output).toBe("Hello World");
+  });
+
+  it("should resolve KBSearchService and perform search retrieval", () => {
+    const container = getContainer();
+    const searchService = container.get(KBSearchService);
+    expect(searchService).toBeInstanceOf(KBSearchService);
+
+    const results = searchService.retrieve("nextjs web development", 3);
+    expect(Array.isArray(results)).toBe(true);
+  });
+
+  it("should resolve ChatStorageService and manage in-memory fallback messages", async () => {
+    const container = getContainer();
+    const storageService = container.get(ChatStorageService);
+    expect(storageService).toBeInstanceOf(ChatStorageService);
+
+    await storageService.saveMessage({
+      sessionId: "test-sess",
+      role: "user",
+      text: "Testing storage",
+      ts: Date.now(),
+    });
+
+    const msgs = await storageService.getSessionMessages("test-sess");
+    expect(msgs.length).toBeGreaterThan(0);
+    expect(msgs[0].text).toBe("Testing storage");
+
+    await storageService.clearAllChat();
+    const clearedMsgs = await storageService.getSessionMessages("test-sess");
+    expect(clearedMsgs.length).toBe(0);
+  });
+
+  it("should resolve AnalyticsService and track events gracefully", () => {
+    const container = getContainer();
+    const analytics = container.get(AnalyticsService);
+    expect(analytics).toBeInstanceOf(AnalyticsService);
+
+    // Should run safely in Node / test environment without window
+    expect(() => analytics.track("booking_modal_open")).not.toThrow();
   });
 });

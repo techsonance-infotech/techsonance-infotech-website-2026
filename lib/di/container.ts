@@ -5,10 +5,13 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "./tokens";
 import { RateLimiterService } from "../services/ratelimit.service";
 import { EmailService } from "../services/email.service";
 import { BookingService } from "../services/booking.service";
+import { KBSearchService } from "../services/kb-search.service";
 import { RAGService } from "../services/rag.service";
 import { LLMHealthService } from "../services/llm-health.service";
 import { LLMProviderService } from "../services/llm-provider.service";
 import { LLMRouterService } from "../services/llm-router.service";
+import { ChatStorageService } from "../services/chat-storage.service";
+import { AnalyticsService } from "../services/analytics.service";
 
 let rootContainer: Container | null = null;
 
@@ -18,10 +21,13 @@ export function configureContainer(container: Container): Container {
   container.bind(RateLimiterService);
   container.bind(EmailService);
   container.bind(BookingService);
+  container.bind(KBSearchService);
   container.bind(RAGService);
   container.bind(LLMHealthService);
   container.bind(LLMProviderService);
   container.bind(LLMRouterService);
+  container.bind(ChatStorageService);
+  container.bind(AnalyticsService);
   return container;
 }
 
