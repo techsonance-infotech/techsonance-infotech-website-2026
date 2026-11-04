@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getContainer, createTestContainer } from "../lib/di/container";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../lib/di/tokens";
 import { RateLimiterService } from "../lib/services/ratelimit.service";
+import { EmailService } from "../lib/services/email.service";
 
 describe("Needle DI Container Infrastructure", () => {
   it("should initialize root container and provide configuration tokens", () => {
@@ -47,5 +48,27 @@ describe("Needle DI Container Infrastructure", () => {
     const r3 = await rateLimiter.check(testKey, cfg);
     expect(r3.success).toBe(false);
     expect(r3.retryAfter).toBeGreaterThan(0);
+  });
+
+  it("should resolve EmailService and generate valid ICS calendar invites", () => {
+    const container = getContainer();
+    const emailService = container.get(EmailService);
+    expect(emailService).toBeInstanceOf(EmailService);
+
+    const ics = emailService.createICSCalendar(
+      {
+        name: "John Doe",
+        email: "john@example.com",
+        projectType: "Web App",
+        budgetRange: "$10k+",
+        timeline: "1 Month",
+        slotIso: new Date(Date.now() + 86400000).toISOString(),
+        visitorTimezone: "Asia/Kolkata",
+      },
+      "TS-REF123"
+    );
+
+    expect(ics).toContain("BEGIN:VCALENDAR");
+    expect(ics).toContain("TS-REF123");
   });
 });

@@ -3,6 +3,7 @@ import { BOT_CONFIG } from "../config";
 import { getEnv } from "../env";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "./tokens";
 import { RateLimiterService } from "../services/ratelimit.service";
+import { EmailService } from "../services/email.service";
 
 let rootContainer: Container | null = null;
 
@@ -10,6 +11,7 @@ export function configureContainer(container: Container): Container {
   container.bind({ provide: BOT_CONFIG_TOKEN, useValue: BOT_CONFIG });
   container.bind({ provide: ENV_CONFIG_TOKEN, useFactory: () => getEnv() });
   container.bind(RateLimiterService);
+  container.bind(EmailService);
   return container;
 }
 
