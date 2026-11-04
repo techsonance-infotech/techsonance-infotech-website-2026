@@ -1,6 +1,10 @@
 import { pgTable, text, uuid, integer, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { postsTable } from "../core/post.schema";
+import { AiApprovalStatusEnum, AiApprovalDecisionEnum } from "../enum.schema";
+import { AiApprovalStatus, AiApprovalDecision } from "../../enum/ai.enum";
+
+export { AiApprovalStatus, AiApprovalDecision };
 
 export const approvalRequestsTable = pgTable(
   "ts_ai_approval_requests",
@@ -11,8 +15,8 @@ export const approvalRequestsTable = pgTable(
       .references(() => postsTable.id, { onDelete: "cascade" }),
     postVersion: integer("post_version").notNull().default(1),
     tokenHash: text("token_hash").notNull(), // SHA-256 hash of single-use 32-byte secret token
-    status: text("status").notNull().default("PENDING"), // 'PENDING' | 'APPROVED' | 'REJECTED' | 'IMPROVE' | 'EXPIRED'
-    decision: text("decision"), // 'approve' | 'reject' | 'improve'
+    status: AiApprovalStatusEnum("status").notNull().default(AiApprovalStatus.PENDING),
+    decision: AiApprovalDecisionEnum("decision"),
     feedback: text("feedback"),
     decidedBy: text("decided_by"),
     decidedAt: timestamp("decided_at", { withTimezone: true }),

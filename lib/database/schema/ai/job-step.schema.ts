@@ -1,6 +1,10 @@
 import { pgTable, text, uuid, integer, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { generationJobsTable } from "./generation-job.schema";
+import { AiStepStatusEnum } from "../enum.schema";
+import { AiStepStatus } from "../../enum/ai.enum";
+
+export { AiStepStatus };
 
 export const jobStepsTable = pgTable(
   "ts_ai_job_steps",
@@ -10,7 +14,7 @@ export const jobStepsTable = pgTable(
       .notNull()
       .references(() => generationJobsTable.id, { onDelete: "cascade" }),
     stepName: text("step_name").notNull(), // 'outline' | 'section_1' | 'meta' | 'image' | 'validate' | 'critic'
-    status: text("status").notNull().default("PENDING"), // 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED'
+    status: AiStepStatusEnum("status").notNull().default(AiStepStatus.PENDING),
     idempotencyKey: text("idempotency_key").notNull(), // `${jobId}:${stepName}:${version}`
     inputData: jsonb("input_data"),
     outputData: jsonb("output_data"),

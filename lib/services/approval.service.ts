@@ -5,7 +5,11 @@ import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
-import { approvalRequestsTable } from "../database/schema/ai/approval-request.schema";
+import {
+  approvalRequestsTable,
+  AiApprovalStatus,
+  AiApprovalDecision,
+} from "../database/schema/ai/approval-request.schema";
 import { postsTable } from "../database/schema/core/post.schema";
 import { auditLogsTable } from "../database/schema/core/audit.schema";
 import { EmailService } from "./email.service";
@@ -46,7 +50,7 @@ export class ApprovalService {
       postId,
       postVersion,
       tokenHash,
-      status: "PENDING",
+      status: AiApprovalStatus.PENDING,
       expiresAt,
     });
 
@@ -257,12 +261,19 @@ export class ApprovalService {
         .where(eq(postsTable.id, post.id));
     }
 
+    const approvalStatus =
+      decision === "approve"
+        ? AiApprovalStatus.APPROVED
+        : decision === "reject"
+          ? AiApprovalStatus.REJECTED
+          : AiApprovalStatus.IMPROVE;
+
     // Mark approval request as completed
     await this.db
       .update(approvalRequestsTable)
       .set({
-        decision,
-        status: decision.toUpperCase(),
+        decision: decision as AiApprovalDecision,
+        status: approvalStatus,
         feedback: feedback || null,
         decidedBy,
         decidedAt: now,

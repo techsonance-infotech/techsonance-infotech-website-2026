@@ -1,6 +1,10 @@
 import { pgTable, text, uuid, integer } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { sitesTable } from "../core/site.schema";
+import { AiTopicStatusEnum } from "../enum.schema";
+import { AiTopicStatus } from "../../enum/ai.enum";
+
+export { AiTopicStatus };
 
 export const topicsTable = pgTable("ts_ai_topics", {
   ...baseEntityFields,
@@ -12,7 +16,7 @@ export const topicsTable = pgTable("ts_ai_topics", {
   category: text("category").default("Engineering"),
   targetAudience: text("target_audience").default("Tech Leads & Engineers"),
   difficulty: text("difficulty").default("intermediate"),
-  status: text("status").notNull().default("SUGGESTED"), // 'SUGGESTED' | 'ACCEPTED' | 'QUEUED' | 'GENERATED' | 'REJECTED'
+  status: AiTopicStatusEnum("status").notNull().default(AiTopicStatus.SUGGESTED),
   priority: integer("priority").notNull().default(0),
   suggestedBy: text("suggested_by").default("ai"), // 'ai' | 'admin'
   notes: text("notes"),

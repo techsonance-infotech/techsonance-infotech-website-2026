@@ -1,6 +1,10 @@
 import { pgTable, text, uuid, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { sitesTable } from "../core/site.schema";
+import { AiJobStatusEnum, AiJobStepEnum } from "../enum.schema";
+import { AiJobStatus, AiJobStep } from "../../enum/ai.enum";
+
+export { AiJobStatus, AiJobStep };
 
 export const generationJobsTable = pgTable("ts_ai_generation_jobs", {
   ...baseEntityFields,
@@ -10,8 +14,8 @@ export const generationJobsTable = pgTable("ts_ai_generation_jobs", {
   topicId: uuid("topic_id"),
   topicText: text("topic_text").notNull(),
   category: text("category").default("Engineering"),
-  status: text("status").notNull().default("QUEUED"), // 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'WAITING_QUOTA' | 'NEEDS_REVIEW' | 'FAILED'
-  currentStep: text("current_step").default("outline"), // 'outline' | 'sections' | 'meta' | 'image' | 'validate' | 'save-pending'
+  status: AiJobStatusEnum("status").notNull().default(AiJobStatus.QUEUED),
+  currentStep: AiJobStepEnum("current_step").default(AiJobStep.OUTLINE),
   attempt: integer("attempt").notNull().default(0),
   maxAttempts: integer("max_attempts").notNull().default(3),
   priority: integer("priority").notNull().default(0),

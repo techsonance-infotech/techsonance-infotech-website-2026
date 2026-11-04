@@ -3,7 +3,12 @@ import { inject } from "@needle-di/core";
 import { eq } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
-import { generationJobsTable, type GenerationJob } from "../database/schema/ai/generation-job.schema";
+import {
+  generationJobsTable,
+  AiJobStatus,
+  AiJobStep,
+  type GenerationJob,
+} from "../database/schema/ai/generation-job.schema";
 import { jobStepsTable } from "../database/schema/ai/job-step.schema";
 import { postsTable } from "../database/schema/core/post.schema";
 import { sitesTable } from "../database/schema/core/site.schema";
@@ -58,8 +63,8 @@ export class JobOrchestratorService {
         siteId,
         topicText: options.topicText,
         category: options.category || "Engineering",
-        status: "QUEUED",
-        currentStep: "outline",
+        status: AiJobStatus.QUEUED,
+        currentStep: AiJobStep.OUTLINE,
       })
       .returning();
 
@@ -72,7 +77,7 @@ export class JobOrchestratorService {
   async executeJob(jobId: string): Promise<{ success: boolean; postId?: string; error?: string }> {
     const [job] = await this.db.select().from(generationJobsTable).where(eq(generationJobsTable.id, jobId)).limit(1)
 
-    if (!job.id) {
+    if (!job?.id) {
       return { success: false, error: "Job not found" };
     }
 
@@ -80,7 +85,7 @@ export class JobOrchestratorService {
     await this.db
       .update(generationJobsTable)
       .set({
-        status: "RUNNING",
+        status: AiJobStatus.RUNNING,
         attempt: (job.attempt || 0) + 1,
         leaseExpiresAt: new Date(Date.now() + 180_000), // 3 min lease
         updatedAt: now,
@@ -89,7 +94,7 @@ export class JobOrchestratorService {
 
     try {
       // Step 1: Outline
-      await this.updateJobStep(jobId, "outline");
+      await this.updateJobStep(jobId, AiJobStep.OUTLINE);
       const outlineKey = `${jobId}:outline:${job.version}`;
       let outline = await this.getCachedStepData<OutlineResult>(outlineKey);
       if (!outline) {
@@ -100,7 +105,7 @@ export class JobOrchestratorService {
       }
 
       // Step 2: Section generation
-      await this.updateJobStep(jobId, "sections");
+      await this.updateJobStep(jobId, AiJobStep.SECTIONS);
       const sections: string[] = [];
       const headings = outline.headings || [];
 
@@ -128,7 +133,7 @@ export class JobOrchestratorService {
       const fullDraft = sections.join("\n\n");
 
       // Step 3: Metadata & SEO
-      await this.updateJobStep(jobId, "meta");
+      await this.updateJobStep(jobId, AiJobStep.META);
       const metaKey = `${jobId}:meta:${job.version}`;
       let meta = await this.getCachedStepData<MetadataResult>(metaKey);
       if (!meta) {
@@ -137,7 +142,7 @@ export class JobOrchestratorService {
       }
 
       // Step 4: AI Thumbnail Generation
-      await this.updateJobStep(jobId, "image");
+      await this.updateJobStep(jobId, AiJobStep.IMAGE);
       const imageKey = `${jobId}:image:${job.version}`;
       let imageRes = await this.getCachedStepData<ThumbnailGenerationResult>(imageKey);
       if (!imageRes) {
@@ -149,7 +154,7 @@ export class JobOrchestratorService {
       }
 
       // Step 5: Content Validation
-      await this.updateJobStep(jobId, "validate");
+      await this.updateJobStep(jobId, AiJobStep.VALIDATE);
       this.aiWriter.validateArticle({
         title: meta.title,
         content: fullDraft,
@@ -157,7 +162,7 @@ export class JobOrchestratorService {
       });
 
       // Step 6: Save as Pending and Dispatch Approval Request
-      await this.updateJobStep(jobId, "save-pending");
+      await this.updateJobStep(jobId, AiJobStep.SAVE_PENDING);
       const [post] = await this.db
         .insert(postsTable)
         .values({
@@ -191,8 +196,8 @@ export class JobOrchestratorService {
       await this.db
         .update(generationJobsTable)
         .set({
-          status: "COMPLETED",
-          currentStep: "completed",
+          status: AiJobStatus.COMPLETED,
+          currentStep: AiJobStep.COMPLETED,
           resultPostId: post.id,
           updatedAt: new Date(),
         })
@@ -204,7 +209,7 @@ export class JobOrchestratorService {
       await this.db
         .update(generationJobsTable)
         .set({
-          status: "FAILED",
+          status: AiJobStatus.FAILED,
           errorDetails: { error: err instanceof Error ? err.message : String(err) },
           updatedAt: new Date(),
         })
@@ -217,7 +222,7 @@ export class JobOrchestratorService {
     }
   }
 
-  private async updateJobStep(jobId: string, currentStep: string) {
+  private async updateJobStep(jobId: string, currentStep: AiJobStep) {
     await this.db
       .update(generationJobsTable)
       .set({ currentStep, updatedAt: new Date() })
