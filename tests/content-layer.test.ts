@@ -159,7 +159,7 @@ describe("Content Abstraction Layer", () => {
     it("allows mocking ContentDbService or DRIZZLE_DB_TOKEN via createTestContainer", async () => {
       const mockDrizzle: any = {
         query: {
-          tsContentPosts: {
+          postsTable: {
             findMany: vi.fn().mockResolvedValue([
               {
                 id: "test-id",
@@ -176,7 +176,7 @@ describe("Content Abstraction Layer", () => {
               },
             ]),
           },
-          tsContentAuthors: {
+          authorsTable: {
             findMany: vi.fn().mockResolvedValue([]),
           },
         },

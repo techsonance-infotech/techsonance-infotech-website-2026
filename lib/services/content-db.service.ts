@@ -1,6 +1,6 @@
 import { inject } from "@needle-di/core";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
-import type { DrizzleDatabase } from "../db/drizzle";
+import type { Database } from "../database/index";
 import type { BlogPost, BlogPostStatus, JobPosting, JobStatus } from "../content/types";
 
 /**
@@ -10,16 +10,16 @@ import type { BlogPost, BlogPostStatus, JobPosting, JobStatus } from "../content
  */
 export class ContentDbService {
   constructor(
-    private db: DrizzleDatabase = inject(DRIZZLE_DB_TOKEN)
+    private db: Database = inject(DRIZZLE_DB_TOKEN)
   ) {}
 
-  getDb(): DrizzleDatabase {
+  getDb(): Database {
     return this.db;
   }
 
   async fetchPublishedPosts(category?: string): Promise<BlogPost[]> {
     try {
-      const postsData = await this.db.query.tsContentPosts.findMany({
+      const postsData = await this.db.query.postsTable.findMany({
         where: {
           status: "PUBLISHED",
         },
@@ -33,7 +33,7 @@ export class ContentDbService {
 
       if (!postsData || postsData.length === 0) return [];
 
-      const authorsData = await this.db.query.tsContentAuthors.findMany();
+      const authorsData = await this.db.query.authorsTable.findMany();
       const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
       for (const a of authorsData) {
         authorMap.set(a.id, {
@@ -102,7 +102,7 @@ export class ContentDbService {
 
   async fetchPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      const row = await this.db.query.tsContentPosts.findFirst({
+      const row = await this.db.query.postsTable.findFirst({
         where: {
           slug,
         },
@@ -113,7 +113,7 @@ export class ContentDbService {
 
       if (!row) return null;
 
-      const authorsData = await this.db.query.tsContentAuthors.findMany();
+      const authorsData = await this.db.query.authorsTable.findMany();
       const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
       for (const a of authorsData) {
         authorMap.set(a.id, {
@@ -172,7 +172,7 @@ export class ContentDbService {
 
   async fetchPostSlugs(): Promise<string[]> {
     try {
-      const posts = await this.db.query.tsContentPosts.findMany({
+      const posts = await this.db.query.postsTable.findMany({
         where: {
           status: "PUBLISHED",
         },
@@ -189,7 +189,7 @@ export class ContentDbService {
   async fetchJobs(status?: string): Promise<JobPosting[]> {
     try {
       const targetStatus = status || "OPEN";
-      const jobs = await this.db.query.tsContentJobs.findMany({
+      const jobs = await this.db.query.jobsTable.findMany({
         where: {
           status: targetStatus,
         },
@@ -220,7 +220,7 @@ export class ContentDbService {
 
   async fetchJobBySlug(slug: string): Promise<JobPosting | null> {
     try {
-      const row = await this.db.query.tsContentJobs.findFirst({
+      const row = await this.db.query.jobsTable.findFirst({
         where: {
           slug,
         },
@@ -250,7 +250,7 @@ export class ContentDbService {
 
   async fetchJobSlugs(): Promise<string[]> {
     try {
-      const jobs = await this.db.query.tsContentJobs.findMany({
+      const jobs = await this.db.query.jobsTable.findMany({
         where: {
           status: "OPEN",
         },

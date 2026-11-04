@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build:kb": "tsx scripts/build-kb.ts",
     "check:env": "tsx scripts/check-env.ts",
+    "db:check": "tsx scripts/check-db.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "npm run build:kb && next build",
