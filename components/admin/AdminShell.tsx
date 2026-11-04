@@ -11,14 +11,10 @@ import {
   Sparkles,
   ExternalLink,
   LogOut,
-  Plus,
   RefreshCw,
   Menu,
   X,
-  Layers,
-  ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface AdminShellProps {
@@ -91,12 +87,9 @@ export function AdminShell({
     setIsRevalidating(true);
     setRevalidateMsg(null);
     try {
-      const res = await fetch("/api/revalidate", {
+      const res = await fetch("/api/admin/revalidate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-revalidate-secret": "your-32-char-random-revalidate-secret",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tags: ["posts", "jobs"] }),
       });
       if (res.ok) {
@@ -158,30 +151,6 @@ export function AdminShell({
             </div>
           </div>
 
-          {/* Site Selector Pill */}
-          <div className="px-5 py-3 border-b border-slate-100/80 bg-slate-50/50">
-            <div className="flex items-center justify-between text-xs text-slate-600 px-3 py-2 rounded-xl bg-white border border-slate-200/80 shadow-2xs">
-              <div className="flex items-center gap-2 truncate">
-                <Layers className="w-3.5 h-3.5 text-[#1155CC] shrink-0" />
-                <span className="font-semibold text-slate-900 truncate">techsonance.co.in</span>
-              </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-            </div>
-          </div>
-
-          {/* Quick Create Action */}
-          <div className="p-4">
-            <Link href="/admin/blog/new">
-              <Button
-                variant="default"
-                size="sm"
-                className="w-full rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-md shadow-[#1155CC]/20 flex items-center justify-center gap-2 py-2.5 font-bold normal-case tracking-normal text-xs"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create New Post</span>
-              </Button>
-            </Link>
-          </div>
 
           {/* Main Navigation Links */}
           <nav className="flex-1 px-3 py-2 space-y-1">

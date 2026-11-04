@@ -6,8 +6,6 @@ import {
   Clock,
   Sparkles,
   ArrowUpRight,
-  Plus,
-  TrendingUp,
 } from "lucide-react";
 import { getContainer } from "@/lib/di/container";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
@@ -32,9 +30,8 @@ export default async function AdminDashboardPage() {
     {
       title: "Total Articles",
       value: postsRes.total.toString(),
-      subtext: `${publishedRes.total} live on techsonance.co.in`,
+      subtext: `${publishedRes.total} published live`,
       icon: FileText,
-      trend: "+12% this month",
       color: "from-blue-600 to-indigo-600",
       textColor: "text-blue-600",
       bgColor: "bg-blue-50",
@@ -60,13 +57,12 @@ export default async function AdminDashboardPage() {
     },
     {
       title: "AI Generation Pipeline",
-      value: "Ready",
-      subtext: "QStash + FLUX.1-schnell",
+      value: "Active",
+      subtext: "Autonomous Content & Images",
       icon: Sparkles,
       color: "from-purple-600 to-pink-600",
       textColor: "text-purple-600",
       bgColor: "bg-purple-50",
-      badge: "FD-1–7",
     },
   ];
 
@@ -75,12 +71,6 @@ export default async function AdminDashboardPage() {
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold text-[#1155CC] uppercase tracking-wider bg-[#1155CC]/10 px-2 py-0.5 rounded-full">
-              Main Agency Workspace
-            </span>
-            <span className="text-[10px] font-semibold text-slate-400">• Native Postgres DB Live</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
             Studio Dashboard
           </h1>
@@ -90,6 +80,16 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <Link href="/admin/blog">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl border-slate-200 text-slate-700 hover:text-[#1155CC] font-bold text-xs"
+            >
+              <FileText className="w-3.5 h-3.5 mr-1.5" />
+              <span>Blog Articles</span>
+            </Button>
+          </Link>
           <Link href="/admin/careers/jobs">
             <Button
               variant="outline"
@@ -98,16 +98,6 @@ export default async function AdminDashboardPage() {
             >
               <Briefcase className="w-3.5 h-3.5 mr-1.5" />
               <span>Manage Jobs</span>
-            </Button>
-          </Link>
-          <Link href="/admin/blog/new">
-            <Button
-              variant="default"
-              size="sm"
-              className="rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-md shadow-[#1155CC]/20 font-bold text-xs"
-            >
-              <Plus className="w-4 h-4 mr-1.5" />
-              <span>New Article</span>
             </Button>
           </Link>
         </div>
@@ -141,14 +131,8 @@ export default async function AdminDashboardPage() {
                     </Badge>
                   )}
                 </div>
-                <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-50">
+                <div className="mt-2 pt-2 border-t border-slate-50">
                   <p className="text-[11px] font-medium text-slate-400">{kpi.subtext}</p>
-                  {kpi.trend && (
-                    <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-0.5">
-                      <TrendingUp className="w-3 h-3" />
-                      {kpi.trend}
-                    </span>
-                  )}
                 </div>
               </CardContent>
             </Card>
