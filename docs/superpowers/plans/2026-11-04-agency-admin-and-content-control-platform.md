@@ -43,6 +43,8 @@ components/
     tabs.tsx                                # GodUI animated tabs
     tooltip.tsx                             # GodUI animated tooltip
     badge.tsx                               # Status badge
+    phone-mockup.tsx                        # Opensource UI device frame for draft preview
+    stat-card.tsx                           # Opensource UI KPI metric widget for dashboard
 app/
   (admin)/
     layout.tsx                              # Admin root layout with sidebar and auth guard
@@ -209,7 +211,7 @@ git commit -m "feat(content): implement dual-source content abstraction layer an
 
 ---
 
-### Task 3: GodUI & Motion Animated Component Primitives
+### Task 3: GodUI & Opensource UI Animated Component Primitives
 
 **Files:**
 - Create: `components/ui/dialog.tsx`
@@ -217,13 +219,15 @@ git commit -m "feat(content): implement dual-source content abstraction layer an
 - Create: `components/ui/tabs.tsx`
 - Create: `components/ui/tooltip.tsx`
 - Create: `components/ui/badge.tsx`
+- Create: `components/ui/phone-mockup.tsx`
+- Create: `components/ui/stat-card.tsx`
 - Test: `tests/godui-components.test.tsx`
 
 **Interfaces:**
-- Consumes: `motion/react`, `@radix-ui/react-dialog`, `@radix-ui/react-tabs`, `@radix-ui/react-tooltip`.
-- Produces: GodUI animated UI components for Admin Dialogs, Drawers, Tabs, and Tooltips.
+- Consumes: `motion/react`, `@radix-ui/react-dialog`, `@radix-ui/react-tabs`, `@radix-ui/react-tooltip`, Opensource UI component patterns.
+- Produces: GodUI animated UI components (Dialog, Sheet, Tabs, Tooltip, Badge) and Opensource UI components (Phone Mockup frame, Dashboard Stat Cards).
 
-- [ ] **Step 1: Write the failing test for GodUI components**
+- [ ] **Step 1: Write the failing test for UI components**
 
 Create `tests/godui-components.test.tsx`:
 ```tsx
@@ -232,8 +236,9 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { PhoneMockup } from "@/components/ui/phone-mockup";
 
-describe("GodUI Primitives", () => {
+describe("GodUI & Opensource UI Primitives", () => {
   it("renders a Badge with variant styling", () => {
     render(<Badge variant="outline">Published</Badge>);
     expect(screen.getByText("Published")).toBeDefined();
@@ -251,6 +256,11 @@ describe("GodUI Primitives", () => {
     );
     expect(screen.getByText("Drafts")).toBeDefined();
   });
+
+  it("renders PhoneMockup frame with child content", () => {
+    render(<PhoneMockup><div>Mobile View Content</div></PhoneMockup>);
+    expect(screen.getByText("Mobile View Content")).toBeDefined();
+  });
 });
 ```
 
@@ -259,13 +269,15 @@ describe("GodUI Primitives", () => {
 Run: `npm test tests/godui-components.test.tsx`  
 Expected: FAIL ("Cannot find module '@/components/ui/badge'")
 
-- [ ] **Step 3: Implement GodUI primitives with Tailwind CSS v4 and Motion**
+- [ ] **Step 3: Implement GodUI and Opensource UI primitives with Tailwind CSS v4 and Motion**
 
 - Implement `components/ui/badge.tsx` with variants (`default`, `secondary`, `destructive`, `outline`, `success`).
 - Implement `components/ui/dialog.tsx` with GodUI spring animations (`initial={{ scale: 0.95, opacity: 0 }}` -> `animate={{ scale: 1, opacity: 1 }}`).
 - Implement `components/ui/sheet.tsx` with slide-over drawer transitions.
 - Implement `components/ui/tabs.tsx` with layoutId spring indicator.
 - Implement `components/ui/tooltip.tsx` with scale/fade animations.
+- Implement `components/ui/phone-mockup.tsx` from Opensource UI with modern bezel, camera pill, and responsive viewport scale.
+- Implement `components/ui/stat-card.tsx` for clean dashboard metrics and trending indicators.
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -276,7 +288,7 @@ Expected: PASS
 
 ```bash
 git add components/ui/ tests/godui-components.test.tsx
-git commit -m "feat(ui): add GodUI and Motion animated primitives for admin and interactive dialogs"
+git commit -m "feat(ui): add GodUI and Opensource UI animated primitives for admin and mockups"
 ```
 
 ---

@@ -168,18 +168,22 @@ Public pages interact solely via domain contracts in `lib/content/`:
 
 ---
 
-## 5. UI System & GodUI Animated Components Integration
+## 5. UI System: GodUI & Opensource UI Integration
 
-The user interface will leverage **GodUI** alongside Motion and Tailwind CSS v4 to provide fluid, responsive, accessible animations without building primitive widgets from scratch:
+The user interface leverages **GodUI** and **Opensource UI** (MIT licensed, React/Next.js/Tailwind CSS v4 & Motion components) to provide production-ready animated components and rich widgets without building from scratch:
 
-1. **Component Registry Setup**:
-   - Initialize `@godui` registry compatibility and core dependencies (`motion`, `@radix-ui/react-*`, `lucide-react`).
-2. **Key GodUI Elements Applied to Admin**:
+1. **GodUI Animated Motion Primitives**:
    - **GodUI Animated Dialog / Modal**: For candidate application review, delete confirmations, and version history diff comparisons.
    - **GodUI Animated Sheet / Drawer**: Slide-over panel for quick editing, SEO settings inspector, and filter drawers.
    - **GodUI Tooltip & Popovers**: Contextual help for SEO limits, author badges, and status pills.
    - **GodUI Animated Button & Micro-Interactions**: Smooth state transitions on "Save Draft", "Publishing...", and copy-link triggers.
-   - **GodUI Tabs & Segmented Controls**: Smooth sliding tab indicator for filtering by status (`All`, `Drafts`, `In Review`, `Published`).
+   - **GodUI Tabs & Segmented Controls**: Smooth sliding layoutId spring tab indicator for filtering by status (`All`, `Drafts`, `In Review`, `Published`).
+
+2. **Opensource UI Widgets & Mockups (`opensourceui`)**:
+   - **Phone & Device Mockup Frames**: Interactive responsive device simulator in the admin preview mode (desktop, tablet, and mobile frame toggles) showing the real Next.js draft page inside realistic hardware frames.
+   - **Form Fields & Specialized Input Controls**: Polished tag inputs, character-limit counter inputs, clean file dropzone widgets with progress animations.
+   - **Dashboard Stat Cards & Metrics**: Clean KPI cards with trends, applicant pipeline counters, and activity feed widgets.
+
 3. **Careers Public Application Flow**:
    - Enhanced modal application form built with GodUI Dialog and spring animations for file upload feedback, validation error shaking, and confirmation celebratory feedback.
 
