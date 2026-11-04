@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { services } from "@/data/services";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { ServiceIllustration } from "@/app/components/services/ServiceIllustrations";

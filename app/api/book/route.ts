@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { nanoid } from "nanoid";
 import { isValidSlot } from "@/lib/slots";
 import { sendConsultationEmails } from "@/lib/email";
 import { checkRateLimit, getClientIp } from "@/lib/ratelimit";
@@ -92,7 +91,7 @@ export async function POST(req: Request) {
   // 4. Honeypot check (bot trap)
   if (body.website && body.website.trim().length > 0) {
     // Silently succeed to fool spam bots
-    return new Response(JSON.stringify({ ok: true, ref: `TS-${nanoid(8).toUpperCase()}` }), {
+    return new Response(JSON.stringify({ ok: true, ref: `TS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}` }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -137,7 +136,7 @@ export async function POST(req: Request) {
   }
 
   // 7. Generate Reference Code
-  const ref = `TS-${nanoid(8).toUpperCase()}`;
+  const ref = `TS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`;
 
   // 8. Sanitize fields and send notification emails
   const sanitizedBooking = {

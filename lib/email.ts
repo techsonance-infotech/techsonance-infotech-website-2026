@@ -62,21 +62,81 @@ export function createICSCalendar(
   return value;
 }
 
-function getTransporter() {
+export function getMailTransporter() {
   const env = getEnv();
-  const smtpUser = env.SMTP_USER;
-  const smtpPass = env.SMTP_PASS;
+  const smtpUser = env.SMTP_USER || process.env.EMAIL_USER;
+  const smtpPass = env.SMTP_PASS || process.env.EMAIL_PASS;
+  const smtpHost = env.SMTP_HOST || process.env.SMTP_HOST || "smtp.gmail.com";
+  const smtpPort = Number(env.SMTP_PORT || process.env.SMTP_PORT || 465);
+  const isSecure =
+    process.env.SMTP_SECURE !== undefined
+      ? process.env.SMTP_SECURE === "true"
+      : smtpPort === 465;
 
   if (smtpUser && smtpPass) {
     return nodemailer.createTransport({
-      host: env.SMTP_HOST || "smtp.gmail.com",
-      port: Number(env.SMTP_PORT || 465),
-      secure: Number(env.SMTP_PORT || 465) === 465,
+      host: smtpHost,
+      port: smtpPort,
+      secure: isSecure,
       auth: { user: smtpUser, pass: smtpPass },
     });
   }
   return null;
 }
+
+export interface SendMailOptions {
+  to: string | string[];
+  subject: string;
+  text?: string;
+  html?: string;
+  replyTo?: string;
+  from?: string;
+  attachments?: Array<{
+    filename: string;
+    content: string | Buffer;
+    contentType?: string;
+  }>;
+}
+
+export async function sendMail(
+  options: SendMailOptions
+): Promise<{ ok: boolean; messageId?: string; error?: string }> {
+  const env = getEnv();
+  const fromEmail =
+    options.from || env.FROM_EMAIL || `"TechSonance Infotech" <info@techsonance.co.in>`;
+  const transporter = getMailTransporter();
+
+  if (!transporter) {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[Dev Mail Simulation] Subject: "${options.subject}" to:`, options.to);
+      return { ok: true, messageId: "dev-simulated-id" };
+    }
+    return { ok: false, error: "SMTP configuration is missing on the server." };
+  }
+
+  try {
+    const info = await transporter.sendMail({
+      from: fromEmail,
+      to: options.to,
+      subject: options.subject,
+      text: options.text,
+      html: options.html,
+      replyTo: options.replyTo,
+      attachments: options.attachments,
+    });
+    return { ok: true, messageId: info.messageId };
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Failed to send email";
+    console.error("Nodemailer transmission error:", errorMessage);
+    return { ok: false, error: errorMessage };
+  }
+}
+
+function getTransporter() {
+  return getMailTransporter();
+}
+
+
 
 export async function sendConsultationEmails(
   booking: BookingPayload,

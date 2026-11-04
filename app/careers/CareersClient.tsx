@@ -2,11 +2,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
-import { Icon } from "@/app/components/icons/Icon";
+import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -234,9 +234,9 @@ export default function CareersClient() {
       setResumeFile(null);
       setTouched({});
       if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Submission error:", err);
-      setErrorMessage(err.message || "Failed to submit application.");
+      setErrorMessage((err instanceof Error ? err.message : "Failed to submit application.") || "Failed to submit application.");
       setStatus("error");
     }
   };
@@ -440,7 +440,7 @@ export default function CareersClient() {
 
                     <div className="relative z-10">
                       <div className={cn("w-10 h-10 rounded-full flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 shadow-sm", theme.iconBg)}>
-                        <Icon name={val.icon as any} className={cn("w-5 h-5 transition-transform duration-500 group-hover:rotate-12", theme.text)} />
+                        <Icon name={val.icon as IconName} className={cn("w-5 h-5 transition-transform duration-500 group-hover:rotate-12", theme.text)} />
                       </div>
 
                       <h4 className="text-base font-bold text-slate-900 mb-3 group-hover:text-[#1155CC] transition-colors duration-200">{val.title}</h4>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useTransform, animate, useMotionTemplate } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate, useMotionTemplate } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { services, type Service } from "@/data/services";
