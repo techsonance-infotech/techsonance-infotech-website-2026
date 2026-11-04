@@ -1,6 +1,10 @@
+import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   allowedDevOrigins: ["*.ngrok-free.app", "localhost:3000"],
   images: {
     formats: ["image/avif", "image/webp"],
