@@ -2,12 +2,14 @@ import { Container, type Provider } from "@needle-di/core";
 import { BOT_CONFIG } from "../config";
 import { getEnv } from "../env";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "./tokens";
+import { RateLimiterService } from "../services/ratelimit.service";
 
 let rootContainer: Container | null = null;
 
 export function configureContainer(container: Container): Container {
   container.bind({ provide: BOT_CONFIG_TOKEN, useValue: BOT_CONFIG });
   container.bind({ provide: ENV_CONFIG_TOKEN, useFactory: () => getEnv() });
+  container.bind(RateLimiterService);
   return container;
 }
 
@@ -19,7 +21,7 @@ export function getContainer(): Container {
   return rootContainer;
 }
 
-export function createTestContainer(overrides: Provider[] = []): Container {
+export function createTestContainer(overrides: Provider<any>[] = []): Container {
   const container = new Container();
   configureContainer(container);
   for (const provider of overrides) {
