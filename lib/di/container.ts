@@ -29,7 +29,7 @@ export function getContainer(): Container {
   return rootContainer;
 }
 
-export function createTestContainer(overrides: Provider<any>[] = []): Container {
+export function createTestContainer(overrides: Provider<unknown>[] = []): Container {
   const container = new Container();
   configureContainer(container);
   for (const provider of overrides) {
