@@ -6,6 +6,8 @@ import { RateLimiterService } from "../services/ratelimit.service";
 import { EmailService } from "../services/email.service";
 import { BookingService } from "../services/booking.service";
 import { RAGService } from "../services/rag.service";
+import { LLMHealthService } from "../services/llm-health.service";
+import { LLMProviderService } from "../services/llm-provider.service";
 import { LLMRouterService } from "../services/llm-router.service";
 
 let rootContainer: Container | null = null;
@@ -17,6 +19,8 @@ export function configureContainer(container: Container): Container {
   container.bind(EmailService);
   container.bind(BookingService);
   container.bind(RAGService);
+  container.bind(LLMHealthService);
+  container.bind(LLMProviderService);
   container.bind(LLMRouterService);
   return container;
 }

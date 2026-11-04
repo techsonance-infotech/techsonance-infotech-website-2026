@@ -1,6 +1,7 @@
-import { health } from "@/lib/llm/health";
-import { getProviders } from "@/lib/llm/providers";
-import { kbChunks, faqList } from "@/lib/rag/kb";
+import { getContainer } from "@/lib/di/container";
+import { LLMHealthService } from "@/lib/services/llm-health.service";
+import { LLMProviderService } from "@/lib/services/llm-provider.service";
+import { RAGService } from "@/lib/services/rag.service";
 import { getEnv } from "@/lib/env";
 
 export const runtime = "nodejs";
@@ -24,12 +25,17 @@ export async function GET(req: Request) {
     // env not loaded
   }
 
-  const providers = getProviders();
+  const container = getContainer();
+  const healthService = container.get(LLMHealthService);
+  const providerService = container.get(LLMProviderService);
+  const ragService = container.get(RAGService);
+
+  const providers = providerService.getProviders();
   const providerStatuses = [];
 
   for (const p of providers) {
     const enabled = p.enabled();
-    const rec = await health.getRecord(p.id);
+    const rec = await healthService.getRecord(p.id);
     providerStatuses.push({
       id: p.id,
       name: p.name,
@@ -46,14 +52,13 @@ export async function GET(req: Request) {
     timeStyle: "medium",
   }).format(new Date());
 
+  const kbStats = ragService.getKBStats();
+
   return new Response(
     JSON.stringify({
       status: "healthy",
       timestampIST: istTime,
-      knowledgeBase: {
-        totalChunks: kbChunks.length,
-        faqCount: faqList.length,
-      },
+      knowledgeBase: kbStats,
       providers: providerStatuses,
     }),
     {
