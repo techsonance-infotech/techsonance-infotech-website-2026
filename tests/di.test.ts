@@ -4,6 +4,8 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../lib/di/tokens";
 import { RateLimiterService } from "../lib/services/ratelimit.service";
 import { EmailService } from "../lib/services/email.service";
 import { BookingService } from "../lib/services/booking.service";
+import { RAGService } from "../lib/services/rag.service";
+import { LLMRouterService } from "../lib/services/llm-router.service";
 
 describe("Needle DI Container Infrastructure", () => {
   it("should initialize root container and provide configuration tokens", () => {
@@ -106,5 +108,17 @@ describe("Needle DI Container Infrastructure", () => {
     expect(result.success).toBe(true);
     expect(result.ref).toMatch(/^TS-[A-Z0-9]+$/);
     expect(emailSent).toBe(true);
+  });
+
+  it("should resolve RAGService and LLMRouterService", () => {
+    const container = getContainer();
+    const ragService = container.get(RAGService);
+    const routerService = container.get(LLMRouterService);
+
+    expect(ragService).toBeInstanceOf(RAGService);
+    expect(routerService).toBeInstanceOf(LLMRouterService);
+
+    const gateResult = ragService.evaluateGate("hello");
+    expect(gateResult.decision).toBe("GREETING");
   });
 });
