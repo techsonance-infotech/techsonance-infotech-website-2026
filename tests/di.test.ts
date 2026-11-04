@@ -3,6 +3,7 @@ import { getContainer, createTestContainer } from "../lib/di/container";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../lib/di/tokens";
 import { RateLimiterService } from "../lib/services/ratelimit.service";
 import { EmailService } from "../lib/services/email.service";
+import { BookingService } from "../lib/services/booking.service";
 
 describe("Needle DI Container Infrastructure", () => {
   it("should initialize root container and provide configuration tokens", () => {
@@ -70,5 +71,40 @@ describe("Needle DI Container Infrastructure", () => {
 
     expect(ics).toContain("BEGIN:VCALENDAR");
     expect(ics).toContain("TS-REF123");
+  });
+
+  it("should resolve BookingService with injected EmailService", async () => {
+    let emailSent = false;
+    const testContainer = createTestContainer([
+      {
+        provide: EmailService,
+        useValue: {
+          createICSCalendar: () => "mock-ics",
+          sendConsultationEmails: async () => {
+            emailSent = true;
+            return { ok: true };
+          },
+        } as any,
+      },
+      BookingService,
+    ]);
+
+    const bookingService = testContainer.get(BookingService);
+    const slots = bookingService.getAvailableSlots();
+    expect(slots.length).toBeGreaterThan(0);
+
+    const result = await bookingService.processBooking({
+      name: "Alice",
+      email: "alice@example.com",
+      projectType: "Mobile",
+      budgetRange: "$15k",
+      timeline: "2 Months",
+      slotIso: slots[5].iso,
+      visitorTimezone: "UTC",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.ref).toMatch(/^TS-[A-Z0-9]+$/);
+    expect(emailSent).toBe(true);
   });
 });
