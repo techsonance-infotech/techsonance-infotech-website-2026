@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { BOT_CONFIG } from "@/lib/config";
-import { evaluateGate } from "@/lib/rag/gate";
+import { getContainer } from "@/lib/di/container";
+import { RateLimiterService } from "@/lib/services/ratelimit.service";
+import { RAGService } from "@/lib/services/rag.service";
+import { LLMRouterService } from "@/lib/services/llm-router.service";
 import { buildSystemPrompt } from "@/lib/prompt";
-import { routeChat } from "@/lib/llm/router";
 import { filterOutput } from "@/lib/rag/filter";
 import { AllExhaustedError } from "@/lib/llm/types";
-import { checkRateLimit, getClientIp } from "@/lib/ratelimit";
 import { sanitizeInput, isAllowedOrigin } from "@/lib/text";
 
 export const runtime = "nodejs";
@@ -24,6 +25,10 @@ const chatRequestSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const container = getContainer();
+  const rateLimiter = container.get(RateLimiterService);
+  const ragService = container.get(RAGService);
+  const routerService = container.get(LLMRouterService);
   // 1. Origin Check
   const origin = req.headers.get("origin");
   if (!isAllowedOrigin(origin)) {
@@ -34,8 +39,8 @@ export async function POST(req: Request) {
   }
 
   // 2. IP Rate Limiting (20 msgs / 10 mins)
-  const clientIp = getClientIp(req);
-  const rateCheck = await checkRateLimit(`chat:${clientIp}`, BOT_CONFIG.rateLimits.chat);
+  const clientIp = rateLimiter.getClientIp(req);
+  const rateCheck = await rateLimiter.check(`chat:${clientIp}`, BOT_CONFIG.rateLimits.chat);
   if (!rateCheck.success) {
     return new Response(
       JSON.stringify({
@@ -90,7 +95,7 @@ export async function POST(req: Request) {
   const cleanQuery = sanitizeInput(lastUserMsgObj.content);
 
   // 4. Relevance Gate Evaluation
-  const gateResult = evaluateGate(cleanQuery);
+  const gateResult = ragService.evaluateGate(cleanQuery);
 
   // Setup SSE stream response
   const encoder = new TextEncoder();
@@ -137,7 +142,7 @@ export async function POST(req: Request) {
 
       let rawOutput = "";
       try {
-        for await (const chunk of routeChat({ messages: llmMessages })) {
+        for await (const chunk of routerService.routeChat({ messages: llmMessages })) {
           rawOutput += chunk;
           await sendSSE("token", chunk);
         }

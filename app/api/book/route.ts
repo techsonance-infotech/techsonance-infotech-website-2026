@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { isValidSlot } from "@/lib/slots";
-import { sendConsultationEmails } from "@/lib/email";
-import { checkRateLimit, getClientIp } from "@/lib/ratelimit";
+import { getContainer } from "@/lib/di/container";
+import { RateLimiterService } from "@/lib/services/ratelimit.service";
+import { BookingService } from "@/lib/services/booking.service";
 import { sanitizeInput, isAllowedOrigin } from "@/lib/text";
 import { BOT_CONFIG } from "@/lib/config";
 import { getEnv } from "@/lib/env";
@@ -33,6 +33,9 @@ const bookingSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const container = getContainer();
+  const rateLimiter = container.get(RateLimiterService);
+  const bookingService = container.get(BookingService);
   // 1. Origin Check
   const origin = req.headers.get("origin");
   if (!isAllowedOrigin(origin)) {
@@ -43,8 +46,8 @@ export async function POST(req: Request) {
   }
 
   // 2. IP Rate Limit (5 bookings / 1 hour)
-  const clientIp = getClientIp(req);
-  const rateCheck = await checkRateLimit(`book:${clientIp}`, BOT_CONFIG.rateLimits.booking);
+  const clientIp = rateLimiter.getClientIp(req);
+  const rateCheck = await rateLimiter.check(`book:${clientIp}`, BOT_CONFIG.rateLimits.booking);
   if (!rateCheck.success) {
     return new Response(
       JSON.stringify({
@@ -123,7 +126,7 @@ export async function POST(req: Request) {
   }
 
   // 6. Validate Selected Time Slot
-  if (!isValidSlot(body.slotIso)) {
+  if (!bookingService.validateSlot(body.slotIso)) {
     return new Response(
       JSON.stringify({
         error: "Selected time slot is unavailable or invalid. Please select another slot.",
@@ -135,10 +138,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // 7. Generate Reference Code
-  const ref = `TS-${crypto.randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`;
-
-  // 8. Sanitize fields and send notification emails
+  // 7. Sanitize fields and process booking
   const sanitizedBooking = {
     name: sanitizeInput(body.name),
     email: sanitizeInput(body.email),
@@ -154,7 +154,11 @@ export async function POST(req: Request) {
   };
 
   try {
-    await sendConsultationEmails(sanitizedBooking, ref);
+    const bookingResult = await bookingService.processBooking(sanitizedBooking);
+    return new Response(JSON.stringify({ ok: true, ref: bookingResult.ref }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("Failed to send booking notification email:", msg);
@@ -169,9 +173,4 @@ export async function POST(req: Request) {
       }
     );
   }
-
-  return new Response(JSON.stringify({ ok: true, ref }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
 }
