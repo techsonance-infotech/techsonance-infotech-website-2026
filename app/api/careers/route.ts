@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { sendMail } from "@/lib/email";
+import { getContainer } from "@/lib/di/container";
+import { EmailService } from "@/lib/services/email.service";
 import { getEnv } from "@/lib/env";
 
 export async function POST(request: Request) {
   try {
+    const emailService = getContainer().get(EmailService);
     const formData = await request.formData();
     const fullName = formData.get("fullName") as string;
     const email = formData.get("email") as string;
@@ -131,7 +133,7 @@ ${message}
       </div>
     `;
 
-        const result = await sendMail({
+        const result = await emailService.sendMail({
       from: `"${fullName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,

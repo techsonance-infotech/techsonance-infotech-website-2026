@@ -1,57 +1,28 @@
 import { NextResponse } from "next/server";
-import { sendMail } from '@/lib/email';
-import { getEnv } from '@/lib/env';
-
-// In-memory rate limiting map
-const ipCache = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes window
-const MAX_REQUESTS_PER_WINDOW = 5; // Max 5 requests per 15 minutes per IP
-
-function getClientIp(request: Request): string {
-  const xForwardedFor = request.headers.get("x-forwarded-for");
-  if (xForwardedFor) {
-    return xForwardedFor.split(",")[0].trim();
-  }
-  return request.headers.get("x-real-ip") || "127.0.0.1";
-}
-
-function checkRateLimit(ip: string): { allowed: boolean; remaining: number; reset: number } {
-  const now = Date.now();
-  const record = ipCache.get(ip);
-
-  // Clear expired records from cache to avoid memory leaks
-  for (const [key, val] of ipCache.entries()) {
-    if (now > val.resetTime) {
-      ipCache.delete(key);
-    }
-  }
-
-  if (!record || now > record.resetTime) {
-    const newRecord = { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS };
-    ipCache.set(ip, newRecord);
-    return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - 1, reset: newRecord.resetTime };
-  }
-
-  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
-    return { allowed: false, remaining: 0, reset: record.resetTime };
-  }
-
-  record.count += 1;
-  return { allowed: true, remaining: MAX_REQUESTS_PER_WINDOW - record.count, reset: record.resetTime };
-}
+import { getContainer } from "@/lib/di/container";
+import { EmailService } from "@/lib/services/email.service";
+import { RateLimiterService } from "@/lib/services/ratelimit.service";
+import { getEnv } from "@/lib/env";
 
 export async function POST(request: Request) {
   try {
-    const clientIp = getClientIp(request);
-    const rateLimitResult = checkRateLimit(clientIp);
+    const container = getContainer();
+    const rateLimiter = container.get(RateLimiterService);
+    const emailService = container.get(EmailService);
 
-    if (!rateLimitResult.allowed) {
+    const clientIp = rateLimiter.getClientIp(request);
+    const rateLimitResult = await rateLimiter.check(`contact:${clientIp}`, {
+      maxRequests: 5,
+      windowSeconds: 15 * 60,
+    });
+
+    if (!rateLimitResult.success) {
       return NextResponse.json(
         { error: "Too many requests. Please try again after 15 minutes." },
         { 
           status: 429,
           headers: {
-            "Retry-After": Math.ceil((rateLimitResult.reset - Date.now()) / 1000).toString()
+            "Retry-After": String(rateLimitResult.retryAfter || 900)
           }
         }
       );
@@ -312,7 +283,7 @@ ${message}
     }
 
         const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
-    const result = await sendMail({
+    const result = await emailService.sendMail({
       from: `"${senderName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
