@@ -8,6 +8,8 @@ const envSchema = z.object({
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_JWT_SECRET: z.string().optional(),
+  DATABASE_URL: z.string().optional(),
+  SUPABASE_DB_URL: z.string().optional(),
 
   // LLM Providers (optional, but at least one should be active for full RAG mode)
   GROQ_API_KEY: z.string().optional(),
@@ -41,6 +43,10 @@ const envSchema = z.object({
   TURNSTILE_SITE_KEY: z.string().optional(),
   TURNSTILE_SECRET: z.string().optional(),
 
+  // Content Abstraction Layer Sources
+  CONTENT_SOURCE_BLOG: z.enum(["legacy", "cms"]).optional().default("legacy"),
+  CONTENT_SOURCE_CAREERS: z.enum(["legacy", "cms"]).optional().default("legacy"),
+
   // App & Security
   NEXT_PUBLIC_SITE_URL: z.string().optional().default("http://localhost:3000"),
   ALLOWED_ORIGINS: z
@@ -71,4 +77,8 @@ export function getEnv(): Env {
   }
   parsedEnv = result.data;
   return parsedEnv;
+}
+
+export function resetEnv(): void {
+  parsedEnv = null;
 }

@@ -82,60 +82,11 @@ server/
 - Consumes: Supabase database connection via `@supabase/supabase-js`.
 - Produces: Tables `ts_admin_sites`, `ts_admin_memberships`, `ts_content_authors`, `ts_content_categories`, `ts_content_posts`, `ts_content_jobs`, `ts_content_applications`, `ts_content_versions`, `ts_content_audit_log`, and storage buckets `ts_media`, `ts_resumes`.
 
-- [ ] **Step 1: Write the failing schema test**
-
-Create `tests/db-schema.test.ts`:
-```ts
-import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
-describe("Phase 1 Supabase Migration", () => {
-  it("contains all required table definitions and RLS policies", () => {
-    const migrationPath = join(process.cwd(), "supabase/migrations/20261104120000_agency_admin_phase1.sql");
-    const sql = readFileSync(migrationPath, "utf-8");
-
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_admin_sites");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_admin_memberships");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_content_posts");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_content_jobs");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_content_applications");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_content_versions");
-    expect(sql).toContain("CREATE TABLE IF NOT EXISTS public.ts_content_audit_log");
-    expect(sql).toContain("ENABLE ROW LEVEL SECURITY");
-    expect(sql).toContain("site_id");
-  });
-});
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `npm test tests/db-schema.test.ts`  
-Expected: FAIL ("no such file or directory")
-
-- [ ] **Step 3: Create the migration SQL file**
-
-Create `supabase/migrations/20261104120000_agency_admin_phase1.sql` containing:
-- Multi-site table `ts_admin_sites` (with default TechSonance row).
-- RBAC memberships `ts_admin_memberships` (with roles: `owner`, `admin`, `editor`, `author`, `viewer`).
-- Blog taxonomy tables: `ts_content_authors`, `ts_content_categories`.
-- Content tables: `ts_content_posts`, `ts_content_jobs`.
-- Interaction tables: `ts_content_applications`.
-- Audit tables: `ts_content_versions`, `ts_content_audit_log`.
-- Storage bucket configurations for `ts_media` and `ts_resumes`.
-- RLS enabled on all tables with policies for public reads of published items and admin-only writes.
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `npm test tests/db-schema.test.ts`  
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add supabase/migrations/20261104120000_agency_admin_phase1.sql tests/db-schema.test.ts
-git commit -m "feat(db): add agency admin phase 1 migration with rls and multi-site"
-```
+- [x] **Step 1: Write the failing schema test**
+- [x] **Step 2: Run test to verify it fails**
+- [x] **Step 3: Create the migration SQL file**
+- [x] **Step 4: Run test to verify it passes**
+- [x] **Step 5: Commit**
 
 ---
 
