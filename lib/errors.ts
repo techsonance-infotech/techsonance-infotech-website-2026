@@ -1,5 +1,19 @@
 import type { z } from "zod";
 
+export enum ErrorCode {
+  BAD_REQUEST = "BAD_REQUEST",
+  VALIDATION = "VALIDATION",
+  UNAUTHENTICATED = "UNAUTHENTICATED",
+  FORBIDDEN = "FORBIDDEN",
+  NOT_FOUND = "NOT_FOUND",
+  CONFLICT = "CONFLICT",
+  PAYLOAD_TOO_LARGE = "PAYLOAD_TOO_LARGE",
+  UNSUPPORTED_MEDIA = "UNSUPPORTED_MEDIA",
+  RATE_LIMITED = "RATE_LIMITED",
+  UNAVAILABLE = "UNAVAILABLE",
+  INTERNAL = "INTERNAL",
+}
+
 export const ERROR_CODES = [
   "BAD_REQUEST",
   "VALIDATION",
@@ -13,31 +27,32 @@ export const ERROR_CODES = [
   "UNAVAILABLE",
   "INTERNAL",
 ] as const;
-export type ErrorCode = (typeof ERROR_CODES)[number];
 
-export const STATUS_BY_CODE = {
-  BAD_REQUEST: 400,
-  VALIDATION: 422,
-  UNAUTHENTICATED: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  PAYLOAD_TOO_LARGE: 413,
-  UNSUPPORTED_MEDIA: 415,
-  RATE_LIMITED: 429,
-  UNAVAILABLE: 503,
-  INTERNAL: 500,
-} as const satisfies Record<ErrorCode, number>;
+export type ErrorCodeType = ErrorCode | `${ErrorCode}`;
+
+export const STATUS_BY_CODE: Record<ErrorCodeType, number> = {
+  [ErrorCode.BAD_REQUEST]: 400,
+  [ErrorCode.VALIDATION]: 422,
+  [ErrorCode.UNAUTHENTICATED]: 401,
+  [ErrorCode.FORBIDDEN]: 403,
+  [ErrorCode.NOT_FOUND]: 404,
+  [ErrorCode.CONFLICT]: 409,
+  [ErrorCode.PAYLOAD_TOO_LARGE]: 413,
+  [ErrorCode.UNSUPPORTED_MEDIA]: 415,
+  [ErrorCode.RATE_LIMITED]: 429,
+  [ErrorCode.UNAVAILABLE]: 503,
+  [ErrorCode.INTERNAL]: 500,
+};
 
 export type FieldErrors = Record<string, string[]>;
 
 export class AppError extends Error {
-  readonly code: ErrorCode;
+  readonly code: ErrorCodeType;
   readonly fieldErrors: FieldErrors | undefined;
   readonly retryAfterSec: number | undefined;
 
   constructor(
-    code: ErrorCode,
+    code: ErrorCodeType,
     message: string,
     opts: { fieldErrors?: FieldErrors; retryAfterSec?: number; cause?: unknown } = {},
   ) {

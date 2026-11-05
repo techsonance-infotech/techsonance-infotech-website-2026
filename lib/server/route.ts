@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { unstable_rethrow } from "next/navigation";
 import type { z } from "zod";
 import type { Contract } from "@/lib/contracts/define";
-import { AppError, toFieldErrors, STATUS_BY_CODE } from "@/lib/errors";
+import { AppError, ErrorCode, toFieldErrors, STATUS_BY_CODE } from "@/lib/errors";
 import { mapDbError } from "@/lib/dbErrors";
 import { logger } from "@/lib/logger";
 import { getRequestId } from "@/lib/server/requestContext";
@@ -123,7 +123,7 @@ export function handleRoute<
       // 7. Parse Response
       const responseParsed = contract.response.safeParse(data);
       if (!responseParsed.success) {
-        throw new AppError("INTERNAL", "Response schema drift", { cause: responseParsed.error });
+        throw new AppError(ErrorCode.INTERNAL, "Response schema drift", { cause: responseParsed.error });
       }
 
       return NextResponse.json(
@@ -133,7 +133,7 @@ export function handleRoute<
     } catch (e) {
       unstable_rethrow(e);
       const err = mapDbError(e);
-      if (err.code === "INTERNAL") {
+      if (err.code === ErrorCode.INTERNAL) {
         logger.error("Route handler error", { requestId, cause: e, path: contract.path });
       }
 

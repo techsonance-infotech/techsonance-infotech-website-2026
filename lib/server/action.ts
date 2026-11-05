@@ -1,7 +1,7 @@
 import "server-only";
 import { unstable_rethrow } from "next/navigation";
 import type { z } from "zod";
-import { AppError, toFieldErrors } from "@/lib/errors";
+import { AppError, ErrorCode, toFieldErrors } from "@/lib/errors";
 import { mapDbError } from "@/lib/dbErrors";
 import { fail, ok, type Result } from "@/lib/result";
 import { logger } from "@/lib/logger";
@@ -26,7 +26,7 @@ async function execute<I extends z.ZodType, O extends z.ZodType, U>(
     const input = def.input.safeParse(raw); // 2. validate
     if (!input.success) {
       return fail({
-        code: "VALIDATION",
+        code: ErrorCode.VALIDATION,
         message: "Invalid input",
         fieldErrors: toFieldErrors(input.error),
         requestId,
@@ -34,16 +34,16 @@ async function execute<I extends z.ZodType, O extends z.ZodType, U>(
     }
     const data = await def.handler({ input: input.data, user, requestId }); // 3. authorise + act + invalidate
     const out = def.output.safeParse(data); // 4. parse output (strips extra columns)
-    if (!out.success) throw new AppError("INTERNAL", "Response drift", { cause: out.error });
+    if (!out.success) throw new AppError(ErrorCode.INTERNAL, "Response drift", { cause: out.error });
     return ok(out.data);
   } catch (e) {
     unstable_rethrow(e); // never swallow redirect/notFound
     const err = mapDbError(e); // AppError passes through; driver errors are classified
-    if (err.code === "INTERNAL") logger.error("action failed", { requestId, cause: e });
-    else if (err.code === "UNAVAILABLE") logger.warn("action unavailable", { requestId, cause: e });
+    if (err.code === ErrorCode.INTERNAL) logger.error("action failed", { requestId, cause: e });
+    else if (err.code === ErrorCode.UNAVAILABLE) logger.warn("action unavailable", { requestId, cause: e });
     return fail({
       code: err.code,
-      message: err.code === "INTERNAL" ? "Something went wrong" : err.message,
+      message: err.code === ErrorCode.INTERNAL ? "Something went wrong" : err.message,
       requestId,
       ...(err.fieldErrors ? { fieldErrors: err.fieldErrors } : {}),
       ...(err.retryAfterSec !== undefined ? { retryAfterSec: err.retryAfterSec } : {}),

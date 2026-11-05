@@ -1,7 +1,7 @@
-import type { ErrorCode, FieldErrors } from "@/lib/errors";
+import type { ErrorCode, ErrorCodeType, FieldErrors } from "@/lib/errors";
 
 export type ErrorPayload = {
-  code: ErrorCode;
+  code: ErrorCode | ErrorCodeType;
   message: string;
   fieldErrors?: FieldErrors;
   retryAfterSec?: number;

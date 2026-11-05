@@ -1,4 +1,4 @@
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 
 export type DbErrorInfo = { code: string; constraint?: string };
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
@@ -42,21 +42,27 @@ export type DbErrorContext = Record<string, unknown>;
 export function mapDbError(error: unknown, _context?: DbErrorContext): AppError {
   if (error instanceof AppError) return error;
   const code = dbErrorInfo(error)?.code;
-  if (code === undefined) return new AppError("INTERNAL", "Something went wrong", { cause: error });
+  if (code === undefined)
+    return new AppError(ErrorCode.INTERNAL, "Something went wrong", { cause: error });
   if (code === "23505")
-    return new AppError("CONFLICT", "That record already exists", { cause: error });
+    return new AppError(ErrorCode.CONFLICT, "That record already exists", { cause: error });
   if (code === "23503")
-    return new AppError("CONFLICT", "A related record is missing or still in use", {
+    return new AppError(ErrorCode.CONFLICT, "A related record is missing or still in use", {
       cause: error,
     });
-  if (code === "42501") return new AppError("FORBIDDEN", "Not allowed", { cause: error });
+  if (code === "42501")
+    return new AppError(ErrorCode.FORBIDDEN, "Not allowed", { cause: error });
   if (code === "23514" || code.startsWith("22"))
-    return new AppError("VALIDATION", "Invalid value", { cause: error });
+    return new AppError(ErrorCode.VALIDATION, "Invalid value", { cause: error });
   if (UNAVAILABLE.has(code) || code.startsWith("08") || code.startsWith("53")) {
-    return new AppError("UNAVAILABLE", "Service temporarily unavailable. Please retry.", {
-      retryAfterSec: 2,
-      cause: error,
-    });
+    return new AppError(
+      ErrorCode.UNAVAILABLE,
+      "Service temporarily unavailable. Please retry.",
+      {
+        retryAfterSec: 2,
+        cause: error,
+      },
+    );
   }
-  return new AppError("INTERNAL", "Something went wrong", { cause: error });
+  return new AppError(ErrorCode.INTERNAL, "Something went wrong", { cause: error });
 }

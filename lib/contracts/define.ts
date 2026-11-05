@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ERROR_CODES } from "@/lib/errors";
+import { ErrorCode } from "@/lib/errors";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -34,7 +34,7 @@ export const noQuery = z.strictObject({});
 export const noBody = z.undefined();
 
 export const errorPayloadSchema = z.object({
-  code: z.enum(ERROR_CODES),
+  code: z.enum(ErrorCode),
   message: z.string().max(500),
   fieldErrors: z.record(z.string(), z.array(z.string())).optional(),
   requestId: z.string().max(64).optional(),

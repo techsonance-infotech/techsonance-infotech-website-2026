@@ -1,5 +1,5 @@
 import "server-only";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import {
   getSessionFromCookies,
   type SessionPayload,
@@ -19,7 +19,7 @@ export async function getOptionalUser(): Promise<SessionPayload | null> {
 export async function requireUser(): Promise<SessionPayload> {
   const user = await getOptionalUser();
   if (!user) {
-    throw new AppError("UNAUTHENTICATED", "Authentication required");
+    throw new AppError(ErrorCode.UNAUTHENTICATED, "Authentication required");
   }
   return user;
 }

@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # 01 — TypeScript, Enums, Constants & Code Quality
 
 Owns: tsconfig, typing, closed sets (enums), constants, symbol naming, function design, lint. File/folder naming is in `10`; `Result`/`AppError` in `04`; contracts in `08`; layers in `AGENTS.md`.

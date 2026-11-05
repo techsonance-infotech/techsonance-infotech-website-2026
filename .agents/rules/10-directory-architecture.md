@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # 10 — Directory Architecture, Naming & DI
 
 Owns: folder layout, file naming, feature slices, DI wiring. Layer direction and the import matrix are in `AGENTS.md` §4. Symbol naming: `01` §4. New-feature steps: `08` §8.
@@ -67,18 +71,35 @@ Every folder under `lib/` must be listed above; an unclassified folder fails `ch
 
 ## 4. Needle DI workflow
 
-1. Write `lib/repositories/<a>.repository.ts` and `lib/services/<d>.service.ts`:
+1. Repositories inject database client cleanly:
    ```ts
    import "server-only";
-   //imports
+   import { inject } from "@needle-di/core";
+   import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
+   import type { Database } from "@/lib/database/index";
+
+   export class BookingRepository {
+     constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
+   }
+   ```
+   **Banned**: `constructor(executor?: Database | DbTransaction)` and `if (this.db.select)`.
+   For transactional operations, pass `tx: DbTransaction` explicitly as a method parameter.
+
+2. Services inject repositories and tokens:
+   ```ts
+   import "server-only";
+   import { inject } from "@needle-di/core";
+   import { BookingRepository } from "@/lib/repositories/booking.repository";
+
    export class BookingService {
      constructor(
-       private readonly bookings = inject(BookingRepository),
-       private readonly env = inject(ENV_CONFIG_TOKEN),
+       private bookingsRepo: BookingRepository = inject(BookingRepository),
      ) {}
    }
    ```
-2. Bind in `lib/di/container.ts` (`configureContainer()`); bind the database to `DATABASE_TOKEN` → `getDrizzleDb()`; never import the `db` proxy in services.
-3. Resolve in actions/routes/queries with `getContainer().get(BookingService)`. Never `new BookingService()` outside tests.
-4. Services are singletons: no per-request fields; pass `userId`, `requestId`, `tx` as arguments.
-5. Tests: `createTestContainer([...overrides])`; mock repositories by token, not module patching.
+   Services NEVER import `drizzle-orm` or query tables directly.
+
+3. Bind in `lib/di/container.ts` (`configureContainer()`); bind database to `DRIZZLE_DB_TOKEN` → `getDrizzleDb()`.
+4. Resolve in routes/controllers with `getContainer().get(BookingService)`.
+5. Services are singletons: no per-request state; pass `userId`, `requestId` as arguments.
+6. Tests: pass mocks into constructors or local test containers; mock `db.query[table]` alongside `select` for RQB v2.

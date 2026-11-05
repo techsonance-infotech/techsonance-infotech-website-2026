@@ -3,7 +3,7 @@ import { inject } from "@needle-di/core";
 import { AdminUsersRepository } from "@/lib/repositories/admin-users.repository";
 import { getSessionFromCookies } from "../auth/session";
 import { verifyPassword } from "@/lib/auth/password";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { getEnv } from "../env";
 import { AUTH_ERRORS, AUTH_DEFAULT_ROLES } from "@/lib/constants/auth.constants";
@@ -40,12 +40,12 @@ export class AdminAuthService {
 
     if (user) {
       if (!user.isActive) {
-        throw new AppError("FORBIDDEN", AUTH_ERRORS.ACCOUNT_DISABLED);
+        throw new AppError(ErrorCode.FORBIDDEN, AUTH_ERRORS.ACCOUNT_DISABLED);
       }
 
       const isValid = await verifyPassword(password, user.passwordHash);
       if (!isValid) {
-        throw new AppError("UNAUTHENTICATED", AUTH_ERRORS.INVALID_CREDENTIALS);
+        throw new AppError(ErrorCode.UNAUTHENTICATED, AUTH_ERRORS.INVALID_CREDENTIALS);
       }
 
       // Record last login timestamp non-blockingly
@@ -76,7 +76,7 @@ export class AdminAuthService {
       };
     }
 
-    throw new AppError("UNAUTHENTICATED", AUTH_ERRORS.INVALID_CREDENTIALS);
+    throw new AppError(ErrorCode.UNAUTHENTICATED, AUTH_ERRORS.INVALID_CREDENTIALS);
   }
 
   /**

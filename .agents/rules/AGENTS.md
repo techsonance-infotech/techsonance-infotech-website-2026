@@ -2,66 +2,63 @@
 trigger: always_on
 ---
 
-# AGENTS.md (Part 1 of 2) — Techsonance Website 2026
+# AGENTS.md (Part 1 of 2) — Master Invariants & Boundaries
 
-Master rules for every AI agent and developer. Read first. **Part 1: principles, facts, precedence, Definition of Done, NEVER. Part 2 (`AGENTS-2.md`): layers and import matrix, canonical registry, owner map.** Section numbers are shared across both parts. These two files win on precedence, layers, Definition of Done and the NEVER list. Every rule has one owner file (`AGENTS-2.md` §8); other files link to it and never restate it.
+Master rules for every AI agent. Part 1: principles, facts, precedence, DoD, NEVER. Part 2 (`AGENTS-2.md`): layers, import matrix, canonical registry.
+
+## 0. Version & Syntax Invariant Matrix
+
+| Topic | Active Tech | Breaking Point / Critical Syntax |
+| --- | --- | --- |
+| **Framework** | Next 16, React 19 | App Router, Server Components default. Async `params` & `cookies()`. |
+| **ORM** | Drizzle `^0.38` (RQB v2) | Object syntax: `where: { id: 1 }`. Mandatory callback `(t)` scoping. |
+| **Database** | Supabase Postgres (:6543) | Pooler: `prepare: false`. Shared DB: ONLY modify `ts_web_*` / `ts_ai_*`. |
+| **DI** | Needle DI (`@needle-di/core`) | `inject(DRIZZLE_DB_TOKEN)`. Zero dual signatures, zero `any`, zero `if (this.db.select)`. |
+| **Architecture** | 3-Tier Layering | Controller (`app/api/**`) -> Service (`lib/services/`) -> Repository (`lib/repositories/`). |
+| **Boundaries** | Client/Server Isolation | `"use client"` never imports server layers. Types in `@/lib/types/`, enums in `@/lib/constants/enums/`. |
+| **Environment** | `lib/env/{public,server}` | No bare `process.env`. Access via `getEnv()` / `getPublicEnv()`. |
+| **AppError** | `lib/errors.ts` | Enum `ErrorCode`: `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `VALIDATION`. |
+| **Validation** | Zod 4 | Bounds on everything. `z.strictObject()` on inbound inputs. |
 
 ## 1. Principles
 
-1. **Contract-first, typed end to end.** DB row → `ResponseDto` (wire) → `ViewModel` (UI); `RequestDto` flows back. Every hop is a schema or a typed mapper (`08`). A Row is never sent to a client; a DTO is never passed to a presentational component.
-2. **Validate on both sides.** Server parses every request and response DTO. Client pre-validates requests, parses every response, then maps to a view model before rendering (`08`).
-3. **Nothing is assumed.** No field, argument, column or response key exists unless a declared type says so. Optional data is typed `| undefined` and has a fallback (`01`).
-4. **Closed sets are enums, fixed values are constants** (`01` §3). No `string` for an option, no hardcoded literal.
-5. **Failures are designed.** Every data view handles loading, empty, error, partial, stale, forbidden, offline (`05`, `11`). Fail fast with typed `AppError` (`04`).
-6. **Evidence over memory** (`09`). Scripts do the repetitive checks (`07`).
+1. **Contract-first**: DB row → `ResponseDto` → `ViewModel`; `RequestDto` flows back. DTOs never pass directly to presentational UI.
+2. **Dual validation**: Server parses all requests/responses. Client pre-validates inputs & parses API responses before view-model mapping.
+3. **No assumptions**: Unspecified fields are typed `| undefined` with explicit fallbacks.
+4. **Enums over strings**: Closed sets use TypeScript `enum`s from `lib/constants/enums/`.
+5. **Designed failures**: UI handles loading, empty, error, partial, stale, forbidden, offline. Throw typed `AppError`.
+6. **Evidence over memory**: Verify with automated test scripts before claiming completion.
 
-## 2. Project facts (⚠ re-verify per `09`)
+## 2. Project Facts
 
-- Next.js 16 App Router, React 19, TypeScript strict, Zod 4, Tailwind 4 (⚠ `package.json`).
-- Root layout, **no `src/`**: `app/ components/ features/ lib/ public/ drizzle/ scripts/`. Alias `@/*` → `./*` (⚠ `tsconfig.json`).
-- Data: Supabase Postgres via **Drizzle + postgres.js**, Supavisor transaction pooler `:6543`, `prepare: false`. Supabase Auth for identity only; supabase-js never reads/writes tables. Row types come from Drizzle `$inferSelect`.
-- **Shared database** with HRMS, ERP, CMS. Our objects carry `ts_web_`; everything else is untouchable (`03` §2).
-- DI: Needle DI, stateless singleton services. Developers use Windows/PowerShell: scripts are Node `.mjs`.
+- Next.js 16, React 19, TypeScript strict, Zod 4, Tailwind 4.
+- Root layout (no `src/`): `app/`, `components/`, `features/`, `lib/`, `drizzle/`, `scripts/`.
+- Data: Supabase Postgres via Drizzle + `postgres.js`, Supavisor pooler `:6543`, `prepare: false`.
+- Shared DB: only touch tables prefixed with `ts_web_` or `ts_ai_`.
+- DI: Needle DI stateless singletons.
 
-## 3. Precedence
+## 3. Precedence & Definition of Done
 
-Stricter rule wins. If two files disagree: stop, report (`09` §6), propose the doc fix.
+Stricter rule wins: 1. Shared-DB safety (`03`) 2. This file 3. Owner rule file (`AGENTS-2.md`) 4. Everything else.
 
-1. Shared-DB safety (`03` §2) 2. This file 3. The owner file (`AGENTS-2.md` §8) 4. Everything else.
-
-## 5. Definition of Done
-
-Run and paste the real summary lines (`09` §4):
-
-```
-npm run check      # typecheck, lint, format:check, boundaries, unused, test (07 §5)
-npm run build
-npm run db:check   # when schema or migrations changed
+**Required Verification Commands:**
+```bash
+npm run typecheck                  # tsc --noEmit
+node scripts/check-boundaries.mjs  # client/server & layer boundary check
+npm test                           # vitest run (all unit test suites)
+npm run build                      # next build
 ```
 
-- [ ] Impact analysis for each modified exported symbol; `detect_changes` matched scope; graphs refreshed if structure changed (`00`)
-- [ ] New data flow walked through the wiring checklist (`08`)
-- [ ] Every new failure path has an outcome in `11` §1 and a test
-- [ ] Enums/constants used, no literals (`01` §3); UI has all async states (`05`)
-- [ ] Schema change: migration reviewed, `ts_web_` prefix, grants/RLS, rollback note (`03` §9)
-- [ ] `.env.example` in sync with `lib/env/*`; no secret/token/PII in code, logs, fixtures
+## 4. NEVER
 
-## 6. NEVER
-
-- Touch anything in the DB that is not `ts_web_*`; run `drizzle-kit push`/`pull`; `update`/`delete` without a mandatory `where`.
-- Authorize from `getSession()`, cookies, `user_metadata` or hidden UI.
-- Read `process.env` outside `lib/env` and root config (`lib/database/index.ts` bootstrap excepted).
-- Import `server-only` code into a client component, or `drizzle-orm` into a service.
-- Return raw `Error`, SQL, stacks or constraint names to a client.
-- Use `any`, casual `unknown`, `as X`, `!`, `@ts-ignore`, empty `catch {}`, `console.*`.
-- Type an option as `string`; hardcode an option value, message, path, header, limit or user-facing text.
-- Read a field that no declared type contains; render a response that was not parsed.
-- Use a stale-stack pattern from `09` §2 (`middleware.ts`, sync `params`/`cookies()`, Zod 3, `bg-gradient-to-r`, …).
-- Weaken a type, schema, test or lint rule to make a check pass.
-- Edit `components/ui` primitives or tool-generated files (`.claude/skills`).
-- Claim a command passed that you did not run.
-- Leave a DB call in a repository without a `try/catch` mapping to `mapDbError` (`12` §2).
-- Hardcode a string literal (message, event name, config key) in a service, repository or route; it goes in a constants file first (`12` §1).
-- Let a service call Drizzle/ORM directly or import table schemas; that is the repository's job (`12` §4).
-- Extend a shared interface instead of creating a new one when the caller has a distinct use case (`12` §3).
-- Cache HTTP responses in middleware keyed by IP or URL — user-scoped caching lives in the service layer only (`12` §7).
+- Touch any non-`ts_web_*`/`ts_ai_*` DB table; run `drizzle-kit push`/`pull`; bare `update`/`delete` without `where`.
+- Authorize from `getSession()`, cookies, or untrusted client metadata.
+- Read `process.env` outside `lib/env` (exception: `NODE_ENV`).
+- Import `server-only` code into client components, or `drizzle-orm` into services/controllers.
+- Return raw `Error`, SQL, or stack traces to clients.
+- Use `any`, loose `unknown`, `as any`, `!`, `@ts-ignore`, empty `catch {}`, or `console.*`.
+- Type options as raw `string`; hardcode messages, paths, headers, or limits.
+- Carry overloaded repository signatures (`executor?: Database | DbTransaction`) or defensive `if (this.db.select)`.
+- Use obsolete stack patterns (`middleware.ts`, sync `cookies()`, Zod 3, `bg-gradient-to-r`).
+- Hardcode strings in services/repos/routes (use `lib/constants/`).
+- Let services run Drizzle queries directly or import table schemas (delegate to repository).

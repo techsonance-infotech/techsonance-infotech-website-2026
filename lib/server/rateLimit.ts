@@ -1,5 +1,5 @@
 import "server-only";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import { checkRateLimit, type RateLimitConfig } from "@/lib/ratelimit";
 
 export type RateLimitPolicy = {
@@ -18,7 +18,7 @@ export async function enforceRateLimit(policy: RateLimitPolicy, identifier: stri
 
   if (!res.success) {
     const retryAfterSec = res.retryAfter ?? 1;
-    throw new AppError("RATE_LIMITED", "Too many requests. Please slow down.", {
+    throw new AppError(ErrorCode.RATE_LIMITED, "Too many requests. Please slow down.", {
       retryAfterSec,
     });
   }
