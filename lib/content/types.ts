@@ -52,16 +52,41 @@ export interface JobPosting {
   id?: string;
   slug: string;
   title: string;
+  referenceCode?: string;
   department: string;
   location: string;
+  workMode?: string;
+  remoteEligibility?: string;
+  visaSupport?: string;
   type: string;
   experienceLevel?: string;
+  summary?: string;
   description: string;
   responsibilities: string[];
   requirements: string[];
+  preferredQualifications?: string[];
+  skills?: string[];
   benefits: string[];
+  aboutTeam?: string;
+  hiringProcess?: Array<{ step: string; title: string; desc?: string }>;
+  equalOpportunityStatement?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: string;
+  salaryPeriod?: string;
+  showSalaryPublicly?: boolean;
+  compensationNotes?: string;
+  applicationMethod?: string;
+  externalApplyUrl?: string;
+  resumeRequired?: boolean;
+  coverLetterRequirement?: string;
+  screeningQuestions?: any[];
   closesAt?: string;
   status: JobStatus;
+  publishedAt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
 }
 
 export interface PostSource {

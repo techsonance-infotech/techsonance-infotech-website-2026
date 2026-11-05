@@ -30,7 +30,7 @@ export const screeningAnswerSchema = z.object({
 });
 export type ScreeningAnswer = z.infer<typeof screeningAnswerSchema>;
 
-const jobPostingBaseFields = {
+export const jobPostingBaseFields = {
   siteId: z.string().uuid().optional(),
   slug: z
     .string()
@@ -58,11 +58,15 @@ const jobPostingBaseFields = {
   skills: z.array(z.string()).default([]),
   benefits: z.array(z.string()).default([]),
   aboutTeam: z.string().optional(),
-  hiringProcess: z.array(z.object({
-    step: z.string(),
-    title: z.string(),
-    desc: z.string().optional(),
-  })).default([]),
+  hiringProcess: z
+    .array(
+      z.object({
+        step: z.string(),
+        title: z.string(),
+        desc: z.string().optional(),
+      }),
+    )
+    .default([]),
   equalOpportunityStatement: z.string().optional(),
 
   salaryMin: z.number().int().min(0).optional(),
@@ -89,8 +93,9 @@ const jobPostingBaseFields = {
   ogImage: z.string().optional(),
 };
 
-export const createJobSchema = z
-  .object(jobPostingBaseFields)
+export const jobPostingInputSchema = z.object(jobPostingBaseFields);
+
+export const createJobSchema = jobPostingInputSchema
   .refine(
     (data) => {
       if (data.salaryMin !== undefined && data.salaryMax !== undefined) {
@@ -99,8 +104,21 @@ export const createJobSchema = z
       return true;
     },
     {
-      message: "Minimum salary cannot be greater than maximum salary",
-      path: ["salaryMin"],
+      message: "Maximum salary must be greater than or equal to minimum salary",
+      path: ["salaryMax"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (!data.location) return true;
+      const loc = data.location.trim().toLowerCase();
+      if (/^(multiple|various)(\s+locations?)?$/i.test(loc)) return false;
+      if (/\b(and|or|\/)\b/i.test(loc) && !/^(hybrid|remote)$/i.test(loc)) return false;
+      return true;
+    },
+    {
+      message: "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
+      path: ["location"],
     },
   )
   .refine(
@@ -116,8 +134,7 @@ export const createJobSchema = z
     },
   );
 
-export const updateJobSchema = z
-  .object(jobPostingBaseFields)
+export const updateJobSchema = jobPostingInputSchema
   .partial()
   .refine(
     (data) => {
@@ -127,15 +144,39 @@ export const updateJobSchema = z
       return true;
     },
     {
-      message: "Minimum salary cannot be greater than maximum salary",
-      path: ["salaryMin"],
+      message: "Maximum salary must be greater than or equal to minimum salary",
+      path: ["salaryMax"],
+    },
+  )
+  .refine(
+    (data) => {
+      if (data.location === undefined) return true;
+      const loc = data.location.trim().toLowerCase();
+      if (/^(multiple|various)(\s+locations?)?$/i.test(loc)) return false;
+      if (/\b(and|or|\/)\b/i.test(loc) && !/^(hybrid|remote)$/i.test(loc)) return false;
+      return true;
+    },
+    {
+      message: "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
+      path: ["location"],
     },
   );
 
-export const jobStatusTransitionSchema = z.object({
-  status: z.nativeEnum(JobStatus),
-  comment: z.string().optional(),
-});
+export const jobStatusTransitionSchema = z
+  .object({
+    targetStatus: z.nativeEnum(JobStatus).optional(),
+    status: z.nativeEnum(JobStatus).optional(),
+    comment: z.string().optional(),
+  })
+  .refine((data) => Boolean(data.targetStatus || data.status), {
+    message: "Target status is required",
+    path: ["targetStatus"],
+  })
+  .transform((data) => ({
+    targetStatus: (data.targetStatus || data.status)!,
+    status: (data.targetStatus || data.status)!,
+    comment: data.comment,
+  }));
 
 export const applicationSubmissionSchema = z.object({
   jobId: z.string().uuid().optional(),
@@ -160,6 +201,8 @@ export const applicationSubmissionSchema = z.object({
   source: z.string().default("direct"),
 });
 
+export type JobPostingInput = z.infer<typeof jobPostingInputSchema>;
 export type CreateJobInput = z.infer<typeof createJobSchema>;
 export type UpdateJobInput = z.infer<typeof updateJobSchema>;
+export type JobStatusTransitionInput = z.infer<typeof jobStatusTransitionSchema>;
 export type ApplicationSubmissionInput = z.infer<typeof applicationSubmissionSchema>;

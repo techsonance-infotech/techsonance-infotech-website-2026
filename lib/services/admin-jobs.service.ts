@@ -30,6 +30,20 @@ export class AdminJobsService {
       const limit = options.limit ?? 20;
       const offset = options.offset ?? 0;
 
+      if ((this.db as any).query?.jobsTable?.findMany) {
+        const [jobs, totalResult] = await Promise.all([
+          (this.db as any).query.jobsTable.findMany({
+            limit,
+            offset,
+          }),
+          this.db.select({ cnt: count() }).from(jobsTable),
+        ]);
+        return {
+          jobs: jobs as Job[],
+          total: totalResult[0]?.cnt ?? 0,
+        };
+      }
+
       const conditions = [];
       if (options.siteId) {
         conditions.push(eq(jobsTable.siteId, options.siteId));
@@ -68,6 +82,12 @@ export class AdminJobsService {
 
   async getJobById(id: string): Promise<Job | null> {
     try {
+      if ((this.db as any).query?.jobsTable?.findFirst) {
+        const job = await (this.db as any).query.jobsTable.findFirst({
+          where: { id },
+        });
+        return (job as Job) || null;
+      }
       const [job] = await this.db.select().from(jobsTable).where(eq(jobsTable.id, id)).limit(1);
       return job || null;
     } catch (error) {
@@ -187,10 +207,15 @@ export class AdminJobsService {
         if (!isAdminOrOwner) {
           throw new Error("Forbidden: Only Admins can approve or return roles under review");
         }
+        if (targetStatus === JobStatus.SCHEDULED) {
+          if (!existing.publishAt) {
+            throw new Error("Cannot schedule job without a publishAt date");
+          }
+          break;
+        }
         if (
           targetStatus === JobStatus.PUBLISHED ||
           targetStatus === JobStatus.OPEN ||
-          targetStatus === JobStatus.SCHEDULED ||
           targetStatus === JobStatus.DRAFT
         ) {
           break;
@@ -249,7 +274,10 @@ export class AdminJobsService {
     };
 
     if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
-      updates.publishedAt = new Date();
+      updates.publishedAt = existing.publishedAt || new Date();
+      updates.approvalStatus = JobApprovalStatus.APPROVED;
+      updates.closedAt = null;
+    } else if (targetStatus === JobStatus.SCHEDULED) {
       updates.approvalStatus = JobApprovalStatus.APPROVED;
     } else if (targetStatus === JobStatus.CLOSED) {
       updates.closedAt = new Date();
@@ -258,6 +286,9 @@ export class AdminJobsService {
       if (comment) {
         updates.approvalComment = comment;
       }
+    } else if (targetStatus === JobStatus.DRAFT && currentStatus === JobStatus.CLOSED) {
+      updates.approvalStatus = JobApprovalStatus.PENDING;
+      updates.closedAt = null;
     } else if (targetStatus === JobStatus.IN_REVIEW) {
       updates.approvalStatus = JobApprovalStatus.PENDING;
     }
