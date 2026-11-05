@@ -11,7 +11,7 @@ function mapEmploymentType(type?: string): string {
   if (normalized.includes("contract")) return "CONTRACTOR";
   if (normalized.includes("temporary") || normalized.includes("temp")) return "TEMPORARY";
   if (normalized.includes("commission") || normalized.includes("project")) return "OTHER";
-  return normalized.toUpperCase().replace(/[\s\/-]+/g, "_");
+  return normalized.toUpperCase().replace(/[\s/-]+/g, "_");
 }
 
 export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknown> {

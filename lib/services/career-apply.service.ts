@@ -50,11 +50,11 @@ export interface TalentPoolSubmitPayload {
   notes?: string;
 }
 
-const ALLOWED_MIME_TYPES = [
+const ALLOWED_MIME_TYPES = new Set([
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/msword",
-];
+]);
 
 const MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -116,7 +116,7 @@ export class CareerApplyService {
     const isAllowedExt =
       fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".doc");
 
-    if (!ALLOWED_MIME_TYPES.includes(file.type) && !isAllowedExt) {
+    if (!ALLOWED_MIME_TYPES.has(file.type) && !isAllowedExt) {
       throw new AppError(
         "UNSUPPORTED_MEDIA",
         "Unsupported resume format. Please upload a PDF or Word document (.pdf, .docx, .doc).",
