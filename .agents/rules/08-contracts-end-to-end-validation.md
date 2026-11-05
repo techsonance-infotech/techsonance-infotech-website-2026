@@ -30,20 +30,9 @@ Owns: API contracts, `handleRoute`, `callApi`, API headers, events, the pipeline
 import { z } from "zod";
 import { ERROR_CODES } from "@/lib/errors";
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-export type Contract<P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType> = {
-  readonly method: HttpMethod;
-  readonly path: `/api/${string}`;
-  readonly auth: "required" | "optional" | "none";
-  readonly params: P;
-  readonly query: Q;
-  readonly body: B;
-  readonly response: R;
-  readonly status?: 200 | 201;
-  readonly idempotent?: boolean;
+export type Contract<P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType> = {readonly method: HttpMethod;readonly path: `/api/${string}`;readonly auth: "required" | "optional" | "none";readonly params: P;readonly query: Q;readonly body: B;readonly response: R;readonly status?: 200 | 201;readonly idempotent?: boolean;
 };
-export const defineContract = <P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType>(
-  c: Contract<P, Q, B, R>,
-): Contract<P, Q, B, R> => c;
+export const defineContract = <P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType>(c: Contract<P, Q, B, R>,): Contract<P, Q, B, R> => c;
 export const noParams = z.strictObject({});
 export const noQuery = z.strictObject({});
 export const noBody = z.undefined();
@@ -81,7 +70,6 @@ Every step returns the standard envelope with the status from `STATUS_BY_CODE`:
 Mutations only via POST/PUT/PATCH/DELETE; GET is side-effect free. Idempotent replay and webhooks: `11` §2.
 
 ## 5. `callApi` invariants (`lib/api/callApi.ts`)
-
 - `callApi(contract, input, opts?) → Promise<Result<z.output<R>>>`; the only client helper for `/api`. Never throws.
 - Pre-validates input, serializes params/query, attaches `x-request-id` and `Idempotency-Key`.
 - Default timeout 15 s (`AbortSignal.timeout`). Retries idempotent GETs only (max 2); never POST without an idempotency key.

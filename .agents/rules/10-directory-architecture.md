@@ -70,10 +70,7 @@ Every folder under `lib/` must be listed above; an unclassified folder fails `ch
 1. Write `lib/repositories/<a>.repository.ts` and `lib/services/<d>.service.ts`:
    ```ts
    import "server-only";
-   import { inject } from "@needle-di/core";
-   import { BookingRepository } from "@/lib/repositories/booking.repository";
-   import { ENV_CONFIG_TOKEN } from "@/lib/di/tokens";
-
+   //imports
    export class BookingService {
      constructor(
        private readonly bookings = inject(BookingRepository),

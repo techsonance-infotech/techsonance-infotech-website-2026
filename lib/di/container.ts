@@ -24,6 +24,7 @@ import { ContentDbService } from "../services/content-db.service";
 import { MediaService } from "../services/media.service";
 import { AdminPostsService } from "../services/admin-posts.service";
 import { AdminJobsService } from "../services/admin-jobs.service";
+import { CareerApplyService } from "../services/career-apply.service";
 import { AdminAuthService } from "../services/admin-auth.service";
 import { ImageStepService } from "../services/image/image-step.service";
 import { AIWriterService } from "../services/ai-writer.service";
@@ -54,6 +55,7 @@ export function configureContainer(container: Container): Container {
   container.bind(MediaService);
   container.bind(AdminPostsService);
   container.bind(AdminJobsService);
+  container.bind(CareerApplyService);
   container.bind(AdminAuthService);
   container.bind(ImageStepService);
   container.bind(AIWriterService);
