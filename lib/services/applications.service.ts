@@ -1,9 +1,11 @@
-import { eq, and, desc, sql, ilike, or } from "drizzle-orm";
+import "server-only";
+import { eq, and, desc, ilike, or, count } from "drizzle-orm";
 import { getDrizzleDb } from "@/lib/database";
 import { applicationsTable, jobsTable, auditLogsTable } from "@/lib/database/schema/index.schema";
 import { ApplicationStatus } from "@/lib/database/enum/content.enum";
 import { AppError } from "@/lib/errors";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/logger";
 
 export interface ListApplicationsOptions {
   jobId?: string;
@@ -16,15 +18,15 @@ export interface ListApplicationsOptions {
 
 export class ApplicationsService {
   constructor(
-    private db = getDrizzleDb(),
-    private supabaseAdmin = createAdminClient(),
+    private db: any = getDrizzleDb(),
+    private supabaseAdmin: any = createAdminClient(),
   ) {}
 
   async listApplications(options: ListApplicationsOptions = {}) {
     const { jobId, status, knockoutTriggered, search, limit = 50, offset = 0 } = options;
 
-    if ((this.db as any).query?.applicationsTable?.findMany) {
-      const items = await (this.db as any).query.applicationsTable.findMany({
+    if (this.db?.query?.applicationsTable?.findMany) {
+      const items = await this.db.query.applicationsTable.findMany({
         limit,
         offset,
         orderBy: [desc(applicationsTable.createdAt)],
@@ -58,42 +60,62 @@ export class ApplicationsService {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    const applications = await this.db
-      .select({
-        application: applicationsTable,
-        jobTitle: jobsTable.title,
-      })
-      .from(applicationsTable)
-      .leftJoin(jobsTable, eq(applicationsTable.jobId, jobsTable.id))
-      .where(whereClause)
-      .orderBy(desc(applicationsTable.createdAt))
-      .limit(limit)
-      .offset(offset);
+    const [applications, totalResult] = await Promise.all([
+      this.db
+        .select({
+          application: applicationsTable,
+          jobTitle: jobsTable.title,
+        })
+        .from(applicationsTable)
+        .leftJoin(jobsTable, eq(applicationsTable.jobId, jobsTable.id))
+        .where(whereClause)
+        .orderBy(desc(applicationsTable.createdAt))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ count: count() })
+        .from(applicationsTable)
+        .where(whereClause),
+    ]);
+
+    const total = totalResult?.[0]?.count !== undefined
+      ? Number(totalResult[0].count)
+      : applications.length;
 
     return {
-      applications: applications.map((item) => ({
+      applications: applications.map((item: any) => ({
         ...item.application,
         jobTitle: item.jobTitle || "Unknown Position",
       })),
-      total: applications.length,
+      total,
     };
   }
 
   async getApplicationById(id: string) {
     let app: any = null;
-    if ((this.db as any).query?.applicationsTable?.findFirst) {
-      app = await (this.db as any).query.applicationsTable.findFirst({
-        where: (a: any, { eq }: any) => eq(a.id, id),
+    if (this.db?.query?.applicationsTable?.findFirst) {
+      app = await this.db.query.applicationsTable.findFirst({
+        where: (a: any, { eq: eqOp }: any) => eqOp(a.id, id),
       });
     }
 
-    if (!app && this.db.select) {
-      const [found] = await this.db
-        .select()
+    if (!app && this.db?.select) {
+      const rows = await this.db
+        .select({
+          application: applicationsTable,
+          jobTitle: jobsTable.title,
+        })
         .from(applicationsTable)
+        .leftJoin(jobsTable, eq(applicationsTable.jobId, jobsTable.id))
         .where(eq(applicationsTable.id, id))
         .limit(1);
-      app = found;
+
+      if (rows && rows.length > 0) {
+        app = {
+          ...rows[0].application,
+          jobTitle: rows[0].jobTitle || "Unknown Position",
+        };
+      }
     }
 
     if (!app) {
@@ -113,6 +135,7 @@ export class ApplicationsService {
 
     const updateData: Record<string, unknown> = {
       status: newStage,
+      updatedAt: new Date(),
     };
 
     if (newStage === ApplicationStatus.REJECTED && rejectionReason) {
@@ -136,7 +159,7 @@ export class ApplicationsService {
         afterState: { status: newStage, rejectionReason: rejectionReason || null },
       });
     } catch (auditErr) {
-      console.warn("Failed to write audit log:", auditErr);
+      logger.warn("Failed to write audit log:", { error: String(auditErr) });
     }
 
     return updated;
@@ -152,9 +175,11 @@ export class ApplicationsService {
       throw new AppError("BAD_REQUEST", "Rating must be between 1 and 5");
     }
 
-    await this.getApplicationById(id);
+    const current = await this.getApplicationById(id);
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: Record<string, unknown> = {
+      updatedAt: new Date(),
+    };
     if (internalNotes !== undefined) updateData.internalNotes = internalNotes;
     if (rating !== undefined) updateData.rating = rating;
 
@@ -164,17 +189,31 @@ export class ApplicationsService {
       .where(eq(applicationsTable.id, id))
       .returning();
 
+    // Log audit event
+    try {
+      await this.db.insert(auditLogsTable).values({
+        actorId: actorId || null,
+        action: "APPLICATION_REVIEW_UPDATED",
+        entityType: "application",
+        entityId: id,
+        beforeState: { internalNotes: current.internalNotes, rating: current.rating },
+        afterState: { internalNotes, rating },
+      });
+    } catch (auditErr) {
+      logger.warn("Failed to write audit log:", { error: String(auditErr) });
+    }
+
     return updated;
   }
 
-  async getSignedResumeUrl(id: string) {
+  async getSignedResumeUrl(id: string, _actorRole?: string): Promise<string> {
     const application = await this.getApplicationById(id);
 
     if (!application.resumeStoragePath) {
       throw new AppError("NOT_FOUND", "No resume document attached to this application.");
     }
 
-    if (this.supabaseAdmin) {
+    if (this.supabaseAdmin?.storage) {
       const { data, error } = await this.supabaseAdmin.storage
         .from("resumes")
         .createSignedUrl(application.resumeStoragePath, 300); // 5-minute signed URL
@@ -194,8 +233,8 @@ export class ApplicationsService {
   async exportApplicationsCsv(jobId?: string): Promise<string> {
     let items: any[] = [];
 
-    if ((this.db as any).query?.applicationsTable?.findMany) {
-      items = await (this.db as any).query.applicationsTable.findMany();
+    if (this.db?.query?.applicationsTable?.findMany) {
+      items = await this.db.query.applicationsTable.findMany();
     } else {
       const rows = await this.db
         .select({
@@ -207,7 +246,7 @@ export class ApplicationsService {
         .where(jobId ? eq(applicationsTable.jobId, jobId) : undefined)
         .orderBy(desc(applicationsTable.createdAt));
 
-      items = rows.map((r) => ({ ...r.app, jobTitle: r.jobTitle }));
+      items = rows.map((r: any) => ({ ...r.app, jobTitle: r.jobTitle }));
     }
 
     const headers = [

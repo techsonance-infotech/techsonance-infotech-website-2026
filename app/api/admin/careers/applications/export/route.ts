@@ -14,6 +14,13 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (session.role !== "owner" && session.role !== "admin") {
+      return NextResponse.json(
+        { error: "Forbidden: Admin or Owner role required" },
+        { status: 403 },
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const jobId = searchParams.get("jobId") || undefined;
 

@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: RouteParams) {
     }
 
     const applicationsService = container.get(ApplicationsService);
-    const signedUrl = await applicationsService.getSignedResumeUrl(id);
+    const signedUrl = await applicationsService.getSignedResumeUrl(id, session.role);
 
     return NextResponse.json({ ok: true, signedUrl });
   } catch (error: any) {

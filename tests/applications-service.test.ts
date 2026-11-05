@@ -39,6 +39,21 @@ describe("ApplicationsService", () => {
           findMany: vi.fn().mockResolvedValue([{ ...mockApp, job: mockJob }]),
         },
       },
+      select: vi.fn().mockReturnValue({
+        from: vi.fn().mockReturnValue({
+          leftJoin: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              orderBy: vi.fn().mockReturnValue({
+                limit: vi.fn().mockReturnValue({
+                  offset: vi.fn().mockResolvedValue([
+                    { application: mockApp, jobTitle: mockJob.title },
+                  ]),
+                }),
+              }),
+            }),
+          }),
+        }),
+      }),
       update: vi.fn().mockReturnValue({
         set: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue({
@@ -63,6 +78,36 @@ describe("ApplicationsService", () => {
     };
 
     service = new ApplicationsService(mockDb, mockSupabaseAdmin);
+  });
+
+  it("lists applications with pagination and filters", async () => {
+    const result = await service.listApplications({
+      jobId: "job-uuid",
+      status: ApplicationStatus.NEW,
+      knockoutTriggered: false,
+      search: "Alex",
+      limit: 10,
+      offset: 0,
+    });
+
+    expect(result.applications).toHaveLength(1);
+    expect(result.total).toBe(1);
+    expect(mockDb.query.applicationsTable.findMany).toHaveBeenCalled();
+  });
+
+  it("retrieves application by ID", async () => {
+    const result = await service.getApplicationById(mockApp.id);
+    expect(result.id).toBe(mockApp.id);
+    expect(result.candidateName).toBe("Alex Rivera");
+  });
+
+  it("throws NOT_FOUND when application ID does not exist", async () => {
+    mockDb.query.applicationsTable.findFirst.mockResolvedValueOnce(null);
+    delete mockDb.select;
+
+    await expect(service.getApplicationById("non-existent")).rejects.toThrow(
+      "Application record could not be found."
+    );
   });
 
   it("transitions applicant between stages and logs audit event", async () => {
@@ -126,12 +171,27 @@ describe("ApplicationsService", () => {
     await expect(
       service.updateNotesAndRating(mockApp.id, "Note", 6)
     ).rejects.toThrow("Rating must be between 1 and 5");
+
+    await expect(
+      service.updateNotesAndRating(mockApp.id, "Note", 0)
+    ).rejects.toThrow("Rating must be between 1 and 5");
   });
 
   it("generates short-lived signed URL for resume download", async () => {
-    const signedUrl = await service.getSignedResumeUrl(mockApp.id);
+    const signedUrl = await service.getSignedResumeUrl(mockApp.id, "admin");
     expect(signedUrl).toContain("https://supabase.co/signed/resumes");
     expect(mockSupabaseAdmin.storage.from).toHaveBeenCalledWith("resumes");
+  });
+
+  it("throws NOT_FOUND when generating signed URL without resume path", async () => {
+    mockDb.query.applicationsTable.findFirst.mockResolvedValueOnce({
+      ...mockApp,
+      resumeStoragePath: "",
+    });
+
+    await expect(service.getSignedResumeUrl(mockApp.id)).rejects.toThrow(
+      "No resume document attached to this application."
+    );
   });
 
   it("exports applications as CSV string with proper headers", async () => {

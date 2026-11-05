@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { ApplicationsService } from "@/lib/services/applications.service";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import type { ApplicationStatus } from "@/lib/database/enum/content.enum";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 
 interface RouteParams {
