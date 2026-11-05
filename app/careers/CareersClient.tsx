@@ -10,6 +10,7 @@ import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import type { JobPosting } from "@/lib/content/types";
 
 const constellationNodes = Array.from({ length: 24 }, (_, i) => {
   const x = `${((i * 17) % 95) + 2}%`;
@@ -96,7 +97,7 @@ const cultureValues = [
   },
 ];
 
-export default function CareersClient() {
+export default function CareersClient({ initialJobs }: { initialJobs?: JobPosting[] } = {}) {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -360,7 +361,7 @@ export default function CareersClient() {
               Learn, create, and launch products that make an immediate business impact.
             </p>
 
-            <Button asChild variant="primary" showArrow={true}>
+            <Button asChild variant="default">
               <a href="#positions">View Open Positions</a>
             </Button>
           </div>
@@ -583,8 +584,102 @@ export default function CareersClient() {
           </div>
 
           {/* =========================================================================
-              ACTIVE OPEN POSITION: BUSINESS DEVELOPMENT PARTNER (Commission / Project-Based)
+              ACTIVE OPEN POSITIONS (Dynamic from CMS / Fallback)
               ========================================================================= */}
+          {initialJobs && initialJobs.length > 0 ? (
+            <div className="space-y-8 max-w-4xl mx-auto">
+              {initialJobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
+                    <div>
+                      <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
+                        {job.department} • Active Opening
+                      </span>
+                      <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">
+                        {job.title}
+                      </h4>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {job.location}
+                        </span>
+                        <span className="text-slate-200">•</span>
+                        <span>Engagement: {job.type}</span>
+                        {job.experienceLevel && (
+                          <>
+                            <span className="text-slate-200">•</span>
+                            <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <Button asChild variant="default" size="sm">
+                      <a href="#apply">Apply Now</a>
+                    </Button>
+                  </div>
+
+                  <div className="py-8 space-y-8 relative z-10">
+                    <div>
+                      <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">
+                        {"// Role Overview"}
+                      </h5>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                        {job.description}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
+                      {job.responsibilities && job.responsibilities.length > 0 && (
+                        <div>
+                          <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
+                            {"// Key Responsibilities"}
+                          </h5>
+                          <ul className="space-y-3">
+                            {job.responsibilities.map((resp, i) => (
+                              <li
+                                key={i}
+                                className="flex items-start gap-3 text-xs text-slate-650 font-medium"
+                              >
+                                <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
+                                  ✓
+                                </span>
+                                <span>{resp}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {job.requirements && job.requirements.length > 0 && (
+                        <div>
+                          <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
+                            {"// Requirements & Qualifications"}
+                          </h5>
+                          <ul className="space-y-3">
+                            {job.requirements.map((req, i) => (
+                              <li
+                                key={i}
+                                className="flex items-start gap-3 text-xs text-slate-650 font-medium"
+                              >
+                                <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
+                                  ✓
+                                </span>
+                                <span>{req}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 max-w-4xl mx-auto group relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -608,7 +703,7 @@ export default function CareersClient() {
                   </span>
                 </div>
               </div>
-              <Button asChild variant="primary" size="sm" showArrow={true}>
+              <Button asChild variant="default" size="sm">
                 <a href="#apply">Apply as Partner</a>
               </Button>
             </div>
@@ -734,6 +829,7 @@ export default function CareersClient() {
               </div>
             </div>
           </div>
+          )}
 
           {/* =========================================================================
               COMMENTED OUT: Full Stack Developer Intern (Saved for future reopening)
@@ -757,7 +853,7 @@ export default function CareersClient() {
                   <span className="text-[#1155CC]">Stipend: Competitive</span>
                 </div>
               </div>
-              <Button asChild variant="primary" size="sm" showArrow={true}>
+              <Button asChild variant="default" size="sm" showArrow={true}>
                 <a href="#apply">Apply Now</a>
               </Button>
             </div>
@@ -1120,8 +1216,7 @@ export default function CareersClient() {
                 <Button
                   type="submit"
                   disabled={status === "loading" || !isFormValid}
-                  variant="primary"
-                  showArrow={status !== "loading"}
+                  variant="default"
                   className="w-full"
                 >
                   {status === "loading" ? "Submitting Application..." : "Submit Application"}

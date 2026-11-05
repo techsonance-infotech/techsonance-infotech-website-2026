@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import CareersClient from "./CareersClient";
 import { SEO_METADATA } from "@/lib/seo-aeo-geo-config";
+import { getJobSource } from "@/lib/content/jobs";
 
 export const metadata: Metadata = {
   title: SEO_METADATA.careers.title,
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CareersPage() {
-  return <CareersClient />;
+export default async function CareersPage() {
+  const jobSource = getJobSource();
+  const jobs = await jobSource.list({ status: "OPEN" });
+  return <CareersClient initialJobs={jobs} />;
 }
