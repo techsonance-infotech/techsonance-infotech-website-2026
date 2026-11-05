@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import type { Job } from "@/lib/database/schema/core/job.schema";
-import { JobStatus } from "@/lib/database/enum";
+import type { Job } from "@/lib/types/careers";
+import { JobStatus } from "@/lib/constants/enums";
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);

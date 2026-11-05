@@ -76,7 +76,12 @@ const SERVER_IMPORTS = [
 for (const file of clientFiles) {
   const content = fs.readFileSync(file, "utf-8");
   for (const forbidden of SERVER_IMPORTS) {
-    if (content.includes(`from "${forbidden}`) || content.includes(`from '${forbidden}`)) {
+    const isMatched =
+      content.includes(`from "${forbidden}"`) ||
+      content.includes(`from '${forbidden}'`) ||
+      content.includes(`from "${forbidden}/`) ||
+      content.includes(`from '${forbidden}/`);
+    if (isMatched) {
       report(file, `Client component imports server layer: "${forbidden}"`);
     }
   }
@@ -95,7 +100,16 @@ for (const sDir of serverLayerDirs) {
   for (const file of sFiles) {
     const rel = path.relative(ROOT, file).replace(/\\/g, "/");
     // Sibling schemas loaded by drizzle-kit or types do not need server-only
-    if (rel.includes("schema/") || rel.endsWith(".types.ts") || rel.endsWith(".d.ts")) continue;
+    if (
+      rel.includes("schema/") ||
+      rel.includes("enum/") ||
+      rel.includes("relation/") ||
+      rel.endsWith(".enum.ts") ||
+      rel.endsWith(".types.ts") ||
+      rel.endsWith(".d.ts")
+    ) {
+      continue;
+    }
 
     const content = fs.readFileSync(file, "utf-8");
     if (!content.includes('import "server-only"') && !content.includes("import 'server-only'")) {

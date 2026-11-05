@@ -12,7 +12,7 @@ import {
   Calendar,
   Briefcase,
 } from "lucide-react";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import { ApplicationStatus } from "@/lib/constants/enums";
 import type { ApplicationItem } from "./ApplicationsTable";
 import { STAGE_CONFIG } from "./CandidateDrawer";
 import { RejectionReasonDialog } from "./RejectionReasonDialog";

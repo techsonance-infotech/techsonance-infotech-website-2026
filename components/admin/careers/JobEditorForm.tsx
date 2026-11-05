@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import {
   Briefcase,
   MapPin,
@@ -62,6 +63,7 @@ export interface JobFormData extends JobCompletenessState {
   status?: string;
   approvalStatus?: string;
   approvalComment?: string;
+  versionId?: number;
   publishAt?: string | Date | null;
   visibility?: string;
   featured?: boolean;
@@ -142,17 +144,46 @@ export function JobEditorForm({
   className = "",
   isNew = false,
 }: JobEditorFormProps) {
-  const [job, setJob] = useState<JobFormData>({
-    ...DEFAULT_JOB_FORM,
-    ...initialJob,
-    responsibilities: initialJob?.responsibilities || DEFAULT_JOB_FORM.responsibilities,
-    requirements: initialJob?.requirements || DEFAULT_JOB_FORM.requirements,
-    preferredQualifications: initialJob?.preferredQualifications || [],
-    skills: initialJob?.skills || [],
-    benefits: initialJob?.benefits || DEFAULT_JOB_FORM.benefits,
-    screeningQuestions: initialJob?.screeningQuestions || [],
-    hiringProcess: initialJob?.hiringProcess || DEFAULT_JOB_FORM.hiringProcess,
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors, isDirty },
+  } = useForm<JobFormData>({
+    defaultValues: {
+      ...DEFAULT_JOB_FORM,
+      ...initialJob,
+      responsibilities: initialJob?.responsibilities || DEFAULT_JOB_FORM.responsibilities,
+      requirements: initialJob?.requirements || DEFAULT_JOB_FORM.requirements,
+      preferredQualifications: initialJob?.preferredQualifications || [],
+      skills: initialJob?.skills || [],
+      benefits: initialJob?.benefits || DEFAULT_JOB_FORM.benefits,
+      screeningQuestions: initialJob?.screeningQuestions || [],
+      hiringProcess: initialJob?.hiringProcess || DEFAULT_JOB_FORM.hiringProcess,
+    },
   });
+
+  const job = watch();
+
+  useEffect(() => {
+    if (initialJob) {
+      reset({
+        ...DEFAULT_JOB_FORM,
+        ...initialJob,
+        responsibilities: initialJob?.responsibilities || DEFAULT_JOB_FORM.responsibilities,
+        requirements: initialJob?.requirements || DEFAULT_JOB_FORM.requirements,
+        preferredQualifications: initialJob?.preferredQualifications || [],
+        skills: initialJob?.skills || [],
+        benefits: initialJob?.benefits || DEFAULT_JOB_FORM.benefits,
+        screeningQuestions: initialJob?.screeningQuestions || [],
+        hiringProcess: initialJob?.hiringProcess || DEFAULT_JOB_FORM.hiringProcess,
+      });
+    }
+  }, [initialJob, reset]);
 
   const [activeTab, setActiveTab] = useState<
     "basics" | "location" | "content" | "compensation" | "application" | "review"
@@ -169,16 +200,13 @@ export function JobEditorForm({
   const [newBenefit, setNewBenefit] = useState("");
 
   const updateField = <K extends keyof JobFormData>(key: K, value: JobFormData[K]) => {
-    setJob((prev) => {
-      const updated = { ...prev, [key]: value };
-      // Auto-generate slug if updating title and slug was untouched
-      if (key === "title" && typeof value === "string") {
-        if (!prev.slug || prev.slug === slugify(prev.title || "")) {
-          updated.slug = slugify(value);
-        }
+    setValue(key as any, value as any, { shouldDirty: true });
+    if (key === "title" && typeof value === "string") {
+      const currentSlug = getValues("slug");
+      if (!currentSlug || currentSlug === slugify(getValues("title") || "")) {
+        setValue("slug", slugify(value), { shouldDirty: true });
       }
-      return updated;
-    });
+    }
   };
 
   const slugify = (text: string) => {
@@ -193,85 +221,85 @@ export function JobEditorForm({
   // Add items to arrays
   const handleAddResponsibility = () => {
     if (!newResp.trim()) return;
-    setJob((prev) => ({
-      ...prev,
-      responsibilities: [...(prev.responsibilities || []), newResp.trim()],
-    }));
+    const current = getValues("responsibilities") || [];
+    setValue("responsibilities", [...current, newResp.trim()], { shouldDirty: true });
     setNewResp("");
   };
 
   const handleRemoveResponsibility = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      responsibilities: (prev.responsibilities || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("responsibilities") || [];
+    setValue(
+      "responsibilities",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   const handleAddRequirement = () => {
     if (!newReq.trim()) return;
-    setJob((prev) => ({
-      ...prev,
-      requirements: [...(prev.requirements || []), newReq.trim()],
-    }));
+    const current = getValues("requirements") || [];
+    setValue("requirements", [...current, newReq.trim()], { shouldDirty: true });
     setNewReq("");
   };
 
   const handleRemoveRequirement = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      requirements: (prev.requirements || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("requirements") || [];
+    setValue(
+      "requirements",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   const handleAddPreferred = () => {
     if (!newPref.trim()) return;
-    setJob((prev) => ({
-      ...prev,
-      preferredQualifications: [...(prev.preferredQualifications || []), newPref.trim()],
-    }));
+    const current = getValues("preferredQualifications") || [];
+    setValue("preferredQualifications", [...current, newPref.trim()], { shouldDirty: true });
     setNewPref("");
   };
 
   const handleRemovePreferred = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      preferredQualifications: (prev.preferredQualifications || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("preferredQualifications") || [];
+    setValue(
+      "preferredQualifications",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   const handleAddSkill = () => {
     if (!newSkill.trim()) return;
     const cleaned = newSkill.trim();
-    if (!(job.skills || []).includes(cleaned)) {
-      setJob((prev) => ({
-        ...prev,
-        skills: [...(prev.skills || []), cleaned],
-      }));
+    const current = getValues("skills") || [];
+    if (!current.includes(cleaned)) {
+      setValue("skills", [...current, cleaned], { shouldDirty: true });
     }
     setNewSkill("");
   };
 
   const handleRemoveSkill = (skillToRemove: string) => {
-    setJob((prev) => ({
-      ...prev,
-      skills: (prev.skills || []).filter((s) => s !== skillToRemove),
-    }));
+    const current = getValues("skills") || [];
+    setValue(
+      "skills",
+      current.filter((s) => s !== skillToRemove),
+      { shouldDirty: true },
+    );
   };
 
   const handleAddBenefit = () => {
     if (!newBenefit.trim()) return;
-    setJob((prev) => ({
-      ...prev,
-      benefits: [...(prev.benefits || []), newBenefit.trim()],
-    }));
+    const current = getValues("benefits") || [];
+    setValue("benefits", [...current, newBenefit.trim()], { shouldDirty: true });
     setNewBenefit("");
   };
 
   const handleRemoveBenefit = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      benefits: (prev.benefits || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("benefits") || [];
+    setValue(
+      "benefits",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   // Screening questions management
@@ -282,57 +310,56 @@ export function JobEditorForm({
       type: "short_text",
       required: true,
     };
-    setJob((prev) => ({
-      ...prev,
-      screeningQuestions: [...(prev.screeningQuestions || []), newQuestion],
-    }));
+    const current = getValues("screeningQuestions") || [];
+    setValue("screeningQuestions", [...current, newQuestion], { shouldDirty: true });
   };
 
   const handleUpdateScreeningQuestion = (index: number, updates: Partial<ScreeningQuestion>) => {
-    setJob((prev) => {
-      const current = [...(prev.screeningQuestions || [])];
-      if (current[index]) {
-        current[index] = { ...current[index], ...updates };
-      }
-      return { ...prev, screeningQuestions: current };
-    });
+    const current = [...(getValues("screeningQuestions") || [])];
+    if (current[index]) {
+      current[index] = { ...current[index], ...updates };
+      setValue("screeningQuestions", current, { shouldDirty: true });
+    }
   };
 
   const handleRemoveScreeningQuestion = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      screeningQuestions: (prev.screeningQuestions || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("screeningQuestions") || [];
+    setValue(
+      "screeningQuestions",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   // Hiring Process Step Management
   const handleAddHiringStep = () => {
-    const currentSteps = job.hiringProcess || [];
+    const currentSteps = getValues("hiringProcess") || [];
     const nextStepNum = String(currentSteps.length + 1).padStart(2, "0");
-    setJob((prev) => ({
-      ...prev,
-      hiringProcess: [
-        ...(prev.hiringProcess || []),
+    setValue(
+      "hiringProcess",
+      [
+        ...currentSteps,
         { step: nextStepNum, title: "New Interview Step", desc: "Description of the assessment or meeting." },
       ],
-    }));
+      { shouldDirty: true },
+    );
   };
 
   const handleUpdateHiringStep = (index: number, updates: { title?: string; desc?: string }) => {
-    setJob((prev) => {
-      const steps = [...(prev.hiringProcess || [])];
-      if (steps[index]) {
-        steps[index] = { ...steps[index], ...updates };
-      }
-      return { ...prev, hiringProcess: steps };
-    });
+    const steps = [...(getValues("hiringProcess") || [])];
+    if (steps[index]) {
+      steps[index] = { ...steps[index], ...updates };
+      setValue("hiringProcess", steps, { shouldDirty: true });
+    }
   };
 
   const handleRemoveHiringStep = (index: number) => {
-    setJob((prev) => ({
-      ...prev,
-      hiringProcess: (prev.hiringProcess || []).filter((_, i) => i !== index),
-    }));
+    const current = getValues("hiringProcess") || [];
+    setValue(
+      "hiringProcess",
+      current.filter((_, i) => i !== index),
+      { shouldDirty: true },
+    );
   };
 
   const completeness = evaluateCompleteness(job);
@@ -432,7 +459,7 @@ export function JobEditorForm({
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => onSave?.(job)}
+            onClick={() => onSave?.(getValues())}
             disabled={isSaving}
             className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
           >
@@ -1490,8 +1517,8 @@ export function JobEditorForm({
         <div className="lg:col-span-4 sticky top-6 space-y-6">
           <CompletenessChecklist
             job={job}
-            onSubmitForReview={() => onSubmitForReview?.(job)}
-            onPublish={() => onPublish?.(job)}
+            onSubmitForReview={() => onSubmitForReview?.(getValues())}
+            onPublish={() => onPublish?.(getValues())}
             canPublishDirectly={job.status === "DRAFT" || job.status === "IN_REVIEW"}
             isSaving={isSaving}
           />

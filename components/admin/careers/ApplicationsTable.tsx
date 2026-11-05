@@ -3,7 +3,7 @@
 import React from "react";
 import { Star, AlertTriangle, Eye, Clock, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import { ApplicationStatus } from "@/lib/constants/enums";
 
 export interface ApplicationItem {
   id: string;

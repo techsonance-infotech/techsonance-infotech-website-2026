@@ -1,4 +1,4 @@
-import { BOT_CONFIG } from "../../config";
+import { BOT_CONFIG } from "@/lib/config";
 import { QuotaError, type LLMChatRequest, type LLMProvider } from "../types";
 
 export interface OpenAICompatibleOptions {

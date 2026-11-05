@@ -19,7 +19,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import { ApplicationStatus } from "@/lib/constants/enums";
 import { RejectionReasonDialog } from "./RejectionReasonDialog";
 
 interface CandidateDrawerProps {

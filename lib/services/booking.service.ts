@@ -1,3 +1,4 @@
+import "server-only";
 import { inject } from "@needle-di/core";
 import { EmailService, type BookingPayload } from "./email.service";
 import { generateAvailableSlots, isValidSlot, type Slot } from "../slots";

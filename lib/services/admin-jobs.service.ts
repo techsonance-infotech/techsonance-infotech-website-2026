@@ -339,6 +339,195 @@ export class AdminJobsService {
     return true;
   }
 
+  async approveJob(
+    jobId: string,
+    actorId?: string,
+    comment?: string,
+    ipAddress?: string,
+  ): Promise<Job> {
+    const existing = await this.getJobById(jobId);
+    if (!existing) {
+      throw new Error(`Job with id "${jobId}" not found`);
+    }
+
+    const isFuturePublish =
+      existing.publishAt && new Date(existing.publishAt).getTime() > Date.now();
+    const targetStatus = isFuturePublish ? JobStatus.SCHEDULED : JobStatus.PUBLISHED;
+    const nextVersionId = (existing.versionId || 1) + 1;
+
+    const updates = {
+      status: targetStatus,
+      approvalStatus: JobApprovalStatus.APPROVED,
+      approvalComment: comment || null,
+      publishedAt: targetStatus === JobStatus.PUBLISHED ? new Date() : null,
+      versionId: nextVersionId,
+      updatedAt: new Date(),
+    };
+
+    let updated: Job;
+    if ((this.db as any).update) {
+      const [res] = await this.db
+        .update(jobsTable)
+        .set(updates)
+        .where(eq(jobsTable.id, jobId))
+        .returning();
+      updated = res || ({ ...existing, ...updates } as Job);
+    } else {
+      updated = { ...existing, ...updates } as Job;
+    }
+
+    await this.db.insert(auditLogsTable).values({
+      actorId,
+      action: "job.approve",
+      entityType: "job",
+      entityId: jobId,
+      beforeState: existing as unknown as Record<string, unknown>,
+      afterState: updated as unknown as Record<string, unknown>,
+      ipAddress,
+    });
+
+    await this.db.insert(versionsTable).values({
+      entityType: "job",
+      entityId: jobId,
+      snapshot: updated as unknown as Record<string, unknown>,
+      changedBy: actorId,
+    });
+
+    this.revalidateJobCache(updated.slug);
+    return updated;
+  }
+
+  async returnJob(
+    jobId: string,
+    comment: string,
+    actorId?: string,
+    ipAddress?: string,
+  ): Promise<Job> {
+    if (!comment || !comment.trim()) {
+      throw new Error("Approval comment is required when returning a role to draft");
+    }
+
+    const existing = await this.getJobById(jobId);
+    if (!existing) {
+      throw new Error(`Job with id "${jobId}" not found`);
+    }
+
+    const nextVersionId = (existing.versionId || 1) + 1;
+    const updates = {
+      status: JobStatus.DRAFT,
+      approvalStatus: JobApprovalStatus.RETURNED,
+      approvalComment: comment.trim(),
+      versionId: nextVersionId,
+      updatedAt: new Date(),
+    };
+
+    let updated: Job;
+    if ((this.db as any).update) {
+      const [res] = await this.db
+        .update(jobsTable)
+        .set(updates)
+        .where(eq(jobsTable.id, jobId))
+        .returning();
+      updated = res || ({ ...existing, ...updates } as Job);
+    } else {
+      updated = { ...existing, ...updates } as Job;
+    }
+
+    await this.db.insert(auditLogsTable).values({
+      actorId,
+      action: "job.return",
+      entityType: "job",
+      entityId: jobId,
+      beforeState: existing as unknown as Record<string, unknown>,
+      afterState: updated as unknown as Record<string, unknown>,
+      ipAddress,
+    });
+
+    await this.db.insert(versionsTable).values({
+      entityType: "job",
+      entityId: jobId,
+      snapshot: updated as unknown as Record<string, unknown>,
+      changedBy: actorId,
+    });
+
+    this.revalidateJobCache(updated.slug);
+    return updated;
+  }
+
+  async listVersions(jobId: string): Promise<any[]> {
+    try {
+      const versions = await this.db
+        .select()
+        .from(versionsTable)
+        .where(and(eq(versionsTable.entityType, "job"), eq(versionsTable.entityId, jobId)))
+        .orderBy(desc(versionsTable.createdAt));
+      return versions || [];
+    } catch (error) {
+      console.error("AdminJobsService.listVersions error:", error);
+      return [];
+    }
+  }
+
+  async restoreVersion(
+    jobId: string,
+    versionId: string,
+    actorId?: string,
+    ipAddress?: string,
+  ): Promise<Job> {
+    const existing = await this.getJobById(jobId);
+    if (!existing) {
+      throw new Error(`Job with id "${jobId}" not found`);
+    }
+
+    const versions = await this.listVersions(jobId);
+    const targetVersion = versions.find((v: any) => v.id === versionId);
+    if (!targetVersion || !targetVersion.snapshot) {
+      throw new Error(`Version "${versionId}" not found for job "${jobId}"`);
+    }
+
+    const snapshot = targetVersion.snapshot as Record<string, any>;
+    const nextVersionId = (existing.versionId || 1) + 1;
+
+    const { id: _id, createdAt: _c, updatedAt: _u, ...restSnapshot } = snapshot;
+    const updates = {
+      ...restSnapshot,
+      versionId: nextVersionId,
+      updatedAt: new Date(),
+    };
+
+    let updated: Job;
+    if ((this.db as any).update) {
+      const [res] = await this.db
+        .update(jobsTable)
+        .set(updates)
+        .where(eq(jobsTable.id, jobId))
+        .returning();
+      updated = res || ({ ...existing, ...updates } as Job);
+    } else {
+      updated = { ...existing, ...updates } as Job;
+    }
+
+    await this.db.insert(auditLogsTable).values({
+      actorId,
+      action: "job.restore_version",
+      entityType: "job",
+      entityId: jobId,
+      beforeState: existing as unknown as Record<string, unknown>,
+      afterState: updated as unknown as Record<string, unknown>,
+      ipAddress,
+    });
+
+    await this.db.insert(versionsTable).values({
+      entityType: "job",
+      entityId: jobId,
+      snapshot: updated as unknown as Record<string, unknown>,
+      changedBy: actorId,
+    });
+
+    this.revalidateJobCache(updated.slug);
+    return updated;
+  }
+
   private revalidateJobCache(slug?: string): void {
     try {
       revalidateTag("jobs", "default");

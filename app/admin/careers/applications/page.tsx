@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import { ApplicationStatus } from "@/lib/constants/enums";
 import { ApplicationsTable, type ApplicationItem } from "@/components/admin/careers/ApplicationsTable";
 import { ApplicationsKanban } from "@/components/admin/careers/ApplicationsKanban";
 import { CandidateDrawer } from "@/components/admin/careers/CandidateDrawer";

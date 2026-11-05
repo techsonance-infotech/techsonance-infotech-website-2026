@@ -1,6 +1,6 @@
 import MiniSearch from "minisearch";
-import rawKbData from "../../data/kb.index.json";
-import rawFaqData from "../../data/faq.json";
+import rawKbData from "@/data/kb.index.json";
+import rawFaqData from "@/data/faq.json";
 
 export interface KBChunk {
   id: string;

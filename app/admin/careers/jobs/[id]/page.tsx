@@ -14,6 +14,9 @@ import {
   ExternalLink,
   ShieldCheck,
   RefreshCw,
+  History,
+  CheckCheck,
+  Undo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +30,8 @@ import {
 import { JobEditorForm, type JobFormData, DEFAULT_JOB_FORM } from "@/components/admin/careers/JobEditorForm";
 import { JobLivePreview } from "@/components/admin/careers/JobLivePreview";
 import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
+import { ApprovalActionDialog } from "@/components/admin/careers/ApprovalActionDialog";
+import { VersionHistoryDialog } from "@/components/admin/careers/VersionHistoryDialog";
 
 interface JobEditorPageProps {
   params: Promise<{ id: string }>;
@@ -44,6 +49,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
+  const [approvalMode, setApprovalMode] = useState<"approve" | "return">("approve");
+  const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
 
   // Fetch existing job if not "new"
   const fetchJob = useCallback(async () => {
@@ -279,7 +287,49 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         </div>
 
         {/* Action Header Buttons */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {!isNew && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setVersionHistoryOpen(true)}
+              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+            >
+              <History className="w-4 h-4 text-slate-500" />
+              <span>History</span>
+            </Button>
+          )}
+
+          {!isNew && jobData.status === "IN_REVIEW" && (
+            <>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  setApprovalMode("return");
+                  setApprovalDialogOpen(true);
+                }}
+                className="rounded-xl text-xs font-bold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white cursor-pointer"
+              >
+                <Undo2 className="w-4 h-4" />
+                <span>Return to Draft</span>
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  setApprovalMode("approve");
+                  setApprovalDialogOpen(true);
+                }}
+                className="rounded-xl text-xs font-bold gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+              >
+                <CheckCheck className="w-4 h-4" />
+                <span>Approve Role</span>
+              </Button>
+            </>
+          )}
+
           <Button
             type="button"
             variant="outline"
@@ -304,6 +354,17 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           )}
         </div>
       </div>
+
+      {/* Reviewer Feedback Warning if Returned */}
+      {jobData.approvalStatus === "RETURNED" && jobData.approvalComment && (
+        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs animate-in fade-in duration-200">
+          <div className="flex items-center gap-2 font-bold mb-1">
+            <Undo2 className="w-4 h-4 text-amber-600" />
+            <span>Reviewer Feedback (Changes Requested):</span>
+          </div>
+          <p className="pl-6 text-amber-800 dark:text-amber-300 font-normal">{jobData.approvalComment}</p>
+        </div>
+      )}
 
       {/* Alert Notifications */}
       {alertMessage && (
@@ -360,6 +421,48 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Approval / Return Action Modal */}
+      {!isNew && (
+        <ApprovalActionDialog
+          isOpen={approvalDialogOpen}
+          onClose={() => setApprovalDialogOpen(false)}
+          job={{
+            id,
+            title: jobData.title || "Untitled Position",
+            status: jobData.status || "DRAFT",
+            publishAt: jobData.publishAt,
+          }}
+          mode={approvalMode}
+          onSuccess={(updatedJob) => {
+            setJobData(updatedJob);
+            setAlertMessage({
+              type: "success",
+              text:
+                approvalMode === "approve"
+                  ? "Position successfully approved!"
+                  : "Position returned to draft with reviewer feedback.",
+            });
+          }}
+        />
+      )}
+
+      {/* Version History Modal */}
+      {!isNew && (
+        <VersionHistoryDialog
+          isOpen={versionHistoryOpen}
+          onClose={() => setVersionHistoryOpen(false)}
+          jobId={id}
+          currentVersionId={jobData.versionId}
+          onRestoreSuccess={(restoredJob) => {
+            setJobData(restoredJob);
+            setAlertMessage({
+              type: "success",
+              text: `Restored to version ${restoredJob.versionId}. Form updated.`,
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

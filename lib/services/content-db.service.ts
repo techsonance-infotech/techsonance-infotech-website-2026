@@ -1,3 +1,4 @@
+import "server-only";
 import { inject } from "@needle-di/core";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
