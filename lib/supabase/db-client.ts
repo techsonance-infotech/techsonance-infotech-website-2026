@@ -1,14 +1,13 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getEnv } from "../env";
-import type { Database } from "@/types/database.types";
 
-let sharedClient: SupabaseClient<Database> | null = null;
+let sharedClient: SupabaseClient | null = null;
 
 /**
  * Returns a reusable singleton Supabase client for server-side content queries.
  * Driven strictly by validated `getEnv()` settings.
  */
-export function getSharedSupabaseClient(): SupabaseClient<Database> | null {
+export function getSharedSupabaseClient(): SupabaseClient | null {
   if (sharedClient) return sharedClient;
 
   let env;
@@ -26,7 +25,7 @@ export function getSharedSupabaseClient(): SupabaseClient<Database> | null {
 
   if (!url || !key) return null;
 
-  sharedClient = createClient<Database>(url, key, {
+  sharedClient = createClient(url, key, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
