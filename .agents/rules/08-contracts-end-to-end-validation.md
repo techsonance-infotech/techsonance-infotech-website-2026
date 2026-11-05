@@ -29,7 +29,6 @@ Owns: API contracts, `handleRoute`, `callApi`, API headers, events, the pipeline
 ```ts
 import { z } from "zod";
 import { ERROR_CODES } from "@/lib/errors";
-
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export type Contract<P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType> = {
   readonly method: HttpMethod;

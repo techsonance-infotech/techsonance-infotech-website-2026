@@ -2,29 +2,6 @@
 
 Owns: tsconfig, typing, closed sets (enums), constants, symbol naming, function design, lint. File/folder naming is in `10`; `Result`/`AppError` in `04`; contracts in `08`; layers in `AGENTS.md`.
 
-## 1. tsconfig (required flags)
-
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowUnreachableCode": false,
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "paths": { "@/*": ["./*"] }
-  }
-}
-```
-
 Keep Next-generated defaults (`module`, `moduleResolution: "bundler"`, `jsx`, `incremental`, `plugins`). Never loosen a flag; fix the code. With `exactOptionalPropertyTypes`, build optional props conditionally (`...(x ? { key: x } : {})`), never assign `undefined`.
 
 ## 2. Typing rules

@@ -33,9 +33,7 @@ export const STATUS_BY_CODE = {
   CONFLICT: 409, PAYLOAD_TOO_LARGE: 413, UNSUPPORTED_MEDIA: 415, RATE_LIMITED: 429,
   UNAVAILABLE: 503, INTERNAL: 500,
 } as const satisfies Record<ErrorCode, number>;
-
 export type FieldErrors = Record<string, string[]>;
-
 export class AppError extends Error {
   readonly code: ErrorCode;
   readonly fieldErrors: FieldErrors | undefined;
@@ -51,7 +49,6 @@ export class AppError extends Error {
     this.retryAfterSec = opts.retryAfterSec;
   }
 }
-
 export function toFieldErrors(error: z.ZodError): FieldErrors {
   const out: FieldErrors = {};
   for (const issue of error.issues) {
@@ -65,7 +62,6 @@ export function toFieldErrors(error: z.ZodError): FieldErrors {
 ```ts
 // lib/result.ts
 import type { ErrorCode, FieldErrors } from "@/lib/errors";
-
 export type ErrorPayload = {
   code: ErrorCode;
   message: string;
@@ -88,23 +84,12 @@ export const fail = (error: ErrorPayload): Result<never> => ({ ok: false, error 
 
 ```ts
 import "server-only";
-import { unstable_rethrow } from "next/navigation";
-import type { User } from "@supabase/supabase-js";
-import type { z } from "zod";
-import { AppError, toFieldErrors } from "@/lib/errors";
-import { mapDbError } from "@/lib/dbErrors";
-import { fail, ok, type Result } from "@/lib/result";
-import { logger } from "@/lib/logger";
-import { getRequestId } from "@/lib/server/requestContext";
-import { requireUser, getOptionalUser } from "@/lib/server/auth";
-import { enforceRateLimit, type RateLimitPolicy } from "@/lib/server/rateLimit";
-
+//imports
 type Def<I extends z.ZodType, O extends z.ZodType, U> = {
   input: I;
   output: O;
   handler: (ctx: { input: z.output<I>; user: U; requestId: string }) => Promise<z.input<O>>;
 };
-
 async function execute<I extends z.ZodType, O extends z.ZodType, U>(
   def: Def<I, O, U>,
   authenticate: (requestId: string) => Promise<U>,
@@ -135,11 +120,9 @@ async function execute<I extends z.ZodType, O extends z.ZodType, U>(
     });
   }
 }
-
 export function runAction<I extends z.ZodType, O extends z.ZodType>(def: Def<I, O, User>) {
   return (raw: unknown): Promise<Result<z.output<O>>> => execute(def, () => requireUser(), raw);
 }
-
 /** Unauthenticated forms (contact, careers, booking). Rate limiting is mandatory. */
 export function runPublicAction<I extends z.ZodType, O extends z.ZodType>(
   policy: RateLimitPolicy,

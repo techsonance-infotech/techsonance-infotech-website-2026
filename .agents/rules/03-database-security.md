@@ -146,10 +146,8 @@ Use a transaction when two or more writes must succeed together or a read-then-w
 
 ```ts
 import { AppError } from "@/lib/errors";
-
 export type DbErrorInfo = { code: string; constraint?: string };
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null;
-
 /** Walks the `cause` chain (Drizzle wraps driver errors) for a SQLSTATE or postgres.js code. */
 export function dbErrorInfo(error: unknown): DbErrorInfo | undefined {
   let cur: unknown = error;
@@ -163,13 +161,11 @@ export function dbErrorInfo(error: unknown): DbErrorInfo | undefined {
   }
   return undefined;
 }
-
 const UNAVAILABLE = new Set([
   "CONNECT_TIMEOUT", "CONNECTION_CLOSED", "CONNECTION_ENDED", "CONNECTION_DESTROYED",
   "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "ENOTFOUND", "EAI_AGAIN",
   "40001", "40P01", "55P03", "57014", "57P01", "57P02", "57P03", "53300",
 ]);
-
 export function mapDbError(error: unknown): AppError {
   if (error instanceof AppError) return error;
   const code = dbErrorInfo(error)?.code;

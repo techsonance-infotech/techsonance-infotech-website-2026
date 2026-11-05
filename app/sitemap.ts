@@ -4,10 +4,11 @@ import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
 import { landingPages } from "@/data/landing-pages";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
+import { getJobSource } from "@/lib/content/jobs";
 
 const STATIC_LAST_MOD = new Date("2026-10-14T00:00:00.000Z");
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
     "",
     "/about",
@@ -72,5 +73,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  return [...staticUrls, ...landingPageUrls, ...serviceUrls, ...projectUrls, ...blogUrls];
+  // Dynamically map active, published career openings
+  let activeJobs = await getJobSource().list({ status: "PUBLISHED" });
+  if (!activeJobs || activeJobs.length === 0) {
+    activeJobs = await getJobSource().list({ status: "OPEN" });
+  }
+
+  const jobUrls = (activeJobs || [])
+    .filter(
+      (job) =>
+        job.visibility !== "UNLISTED" &&
+        job.visibility !== "INTERNAL" &&
+        (job.status === "PUBLISHED" || job.status === "OPEN"),
+    )
+    .map((job) => {
+      let lastMod = STATIC_LAST_MOD;
+      if (job.updatedAt || job.publishedAt) {
+        const parsed = new Date(job.updatedAt || job.publishedAt || "");
+        if (!isNaN(parsed.getTime())) {
+          lastMod = parsed;
+        }
+      }
+
+      return {
+        url: `${BASE_URL}/careers/${job.slug}`,
+        lastModified: lastMod,
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      };
+    });
+
+  return [
+    ...staticUrls,
+    ...landingPageUrls,
+    ...serviceUrls,
+    ...projectUrls,
+    ...blogUrls,
+    ...jobUrls,
+  ];
 }

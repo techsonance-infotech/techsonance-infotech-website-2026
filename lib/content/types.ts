@@ -83,7 +83,9 @@ export interface JobPosting {
   screeningQuestions?: any[];
   closesAt?: string;
   status: JobStatus;
+  visibility?: string;
   publishedAt?: string;
+  updatedAt?: string;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;
