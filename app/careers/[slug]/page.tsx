@@ -1,8 +1,10 @@
+import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getJobSource } from "@/lib/content/jobs";
-import { JobDetailClient } from "./JobDetailClient";
-import { JobPostingJsonLd } from "@/components/careers/JobPostingJsonLd";
+import { BASE_URL } from "@/lib/seo-aeo-geo-config";
+import JobPostingJsonLd from "@/components/careers/JobPostingJsonLd";
+import JobDetailClient from "./JobDetailClient";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -13,9 +15,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const jobSource = getJobSource();
   const job = await jobSource.get(slug);
 
-  if (!job || job.status === "DRAFT" || job.status === "IN_REVIEW") {
+  if (!job) {
     return {
       title: "Job Opening Not Found | TechSonance Careers",
+      description: "The requested career opening could not be located.",
     };
   }
 
@@ -23,8 +26,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description =
     job.seoDescription ||
     job.summary ||
-    `Join TechSonance Infotech as a ${job.title} in ${job.location}. Explore responsibilities, requirements, and apply today.`;
-  const canonical = `https://techsonance.com/careers/${job.slug}`;
+    `Join TechSonance Infotech as a ${job.title} in ${job.location}. Explore role overview, key responsibilities, qualifications, and apply online today.`;
+  const canonical = `${BASE_URL}/careers/${job.slug}`;
 
   return {
     title,
@@ -39,13 +42,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       images: job.ogImage
         ? [{ url: job.ogImage }]
-        : [{ url: "https://techsonance.com/og/careers.png", width: 1200, height: 630 }],
+        : [{ url: `${BASE_URL}/images/og/careers.png` }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: job.ogImage ? [job.ogImage] : ["https://techsonance.com/og/careers.png"],
     },
   };
 }
@@ -55,15 +57,26 @@ export default async function JobDetailPage({ params }: PageProps) {
   const jobSource = getJobSource();
   const job = await jobSource.get(slug);
 
-  // Draft and in-review positions are not publicly accessible
-  if (!job || job.status === "DRAFT" || job.status === "IN_REVIEW") {
+  if (!job) {
     notFound();
   }
 
-  // Fetch similar active jobs in the same department for closed banners and recommendations
-  const allJobs = await jobSource.list({ status: "OPEN" });
+  // Unpublished internal workflow states return 404
+  if (
+    job.status === "DRAFT" ||
+    job.status === "IN_REVIEW" ||
+    job.status === "ARCHIVED"
+  ) {
+    notFound();
+  }
+
+  // Fetch similar active jobs for recommendations
+  const allJobs = await jobSource.list();
   const similarJobs = allJobs.filter(
-    (j) => j.slug !== job.slug && j.department === job.department,
+    (j) =>
+      j.department.toLowerCase() === job.department.toLowerCase() &&
+      j.slug !== job.slug &&
+      (j.status === "OPEN" || j.status === "PUBLISHED"),
   );
 
   return (

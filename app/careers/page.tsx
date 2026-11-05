@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import CareersClient from "./CareersClient";
 import { SEO_METADATA } from "@/lib/seo-aeo-geo-config";
 import { getJobSource } from "@/lib/content/jobs";
@@ -20,6 +21,14 @@ export const metadata: Metadata = {
 
 export default async function CareersPage() {
   const jobSource = getJobSource();
-  const jobs = await jobSource.list({ status: "OPEN" });
-  return <CareersClient initialJobs={jobs} />;
+  let jobs = await jobSource.list({ status: "PUBLISHED" });
+  if (!jobs || jobs.length === 0) {
+    jobs = await jobSource.list({ status: "OPEN" });
+  }
+
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-slate-950" />}>
+      <CareersClient initialJobs={jobs} />
+    </Suspense>
+  );
 }

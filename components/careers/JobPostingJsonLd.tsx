@@ -1,12 +1,28 @@
 import React from "react";
 import type { JobPosting } from "@/lib/content/types";
+import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 
-export function generateJobPostingJsonLd(job: JobPosting): Record<string, any> {
-  const isRemote =
+function mapEmploymentType(type?: string): string {
+  if (!type) return "FULL_TIME";
+  const normalized = type.toLowerCase().trim();
+  if (normalized.includes("full")) return "FULL_TIME";
+  if (normalized.includes("part")) return "PART_TIME";
+  if (normalized.includes("intern")) return "INTERN";
+  if (normalized.includes("contract")) return "CONTRACTOR";
+  if (normalized.includes("temporary") || normalized.includes("temp")) return "TEMPORARY";
+  if (normalized.includes("commission") || normalized.includes("project")) return "OTHER";
+  return normalized.toUpperCase().replace(/[\s\/-]+/g, "_");
+}
+
+export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknown> {
+  const isRemote = Boolean(
     (job.workMode && job.workMode.toLowerCase() === "remote") ||
-    job.location.toLowerCase().includes("remote");
+      (job.location && job.location.toLowerCase().includes("remote")),
+  );
 
-  const jsonLd: Record<string, any> = {
+  const siteUrl = BASE_URL || "https://www.techsonance.co.in";
+
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title,
@@ -17,12 +33,12 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, any> {
       value: job.referenceCode || job.slug,
     },
     datePosted: job.publishedAt || new Date().toISOString(),
-    employmentType: (job.type || "full_time").toUpperCase(),
+    employmentType: mapEmploymentType(job.type),
     hiringOrganization: {
       "@type": "Organization",
       name: "TechSonance Infotech",
-      sameAs: "https://techsonance.com",
-      logo: "https://techsonance.com/icons/icon-512x512.png",
+      sameAs: siteUrl,
+      logo: `${siteUrl}/icons/icon-512x512.png`,
     },
     jobLocation: {
       "@type": "Place",
@@ -40,22 +56,40 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, any> {
 
   if (isRemote) {
     jsonLd.jobLocationType = "TELECOMMUTE";
+    jsonLd.applicantLocationRequirements = {
+      "@type": "Country",
+      name: job.remoteEligibility || "India",
+    };
   }
 
   if (job.showSalaryPublicly && (job.salaryMin !== undefined || job.salaryMax !== undefined)) {
     const period = (job.salaryPeriod || "year").toUpperCase();
     const unitText = period === "HOUR" ? "HOUR" : period === "MONTH" ? "MONTH" : "YEAR";
 
+    const valueObj: Record<string, unknown> = {
+      "@type": "QuantitativeValue",
+      unitText,
+    };
+    if (job.salaryMin !== undefined) {
+      valueObj.minValue = job.salaryMin;
+    }
+    if (job.salaryMax !== undefined) {
+      valueObj.maxValue = job.salaryMax;
+    }
+
     jsonLd.baseSalary = {
       "@type": "MonetaryAmount",
       currency: job.salaryCurrency || "INR",
-      value: {
-        "@type": "QuantitativeValue",
-        ...(job.salaryMin !== undefined ? { minValue: job.salaryMin } : {}),
-        ...(job.salaryMax !== undefined ? { maxValue: job.salaryMax } : {}),
-        unitText,
-      },
+      value: valueObj,
     };
+  }
+
+  if (job.skills && job.skills.length > 0) {
+    jsonLd.skills = job.skills.join(", ");
+  }
+
+  if (job.responsibilities && job.responsibilities.length > 0) {
+    jsonLd.responsibilities = job.responsibilities.join("\n");
   }
 
   return jsonLd;

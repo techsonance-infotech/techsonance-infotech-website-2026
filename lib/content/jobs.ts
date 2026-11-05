@@ -40,8 +40,11 @@ export const legacyJobs: JobPosting[] = [
     title: "Business Development Partner",
     department: "Business Development",
     location: "International Remote / Hybrid",
+    workMode: "Remote",
     type: "Commission / Project-Based",
     experienceLevel: "Partner",
+    summary:
+      "Spearhead client acquisition, enterprise technology partnerships, and high-value project deals with international startup founders and enterprises.",
     description:
       "We are looking for an entrepreneurial, results-driven Business Development Partner to spearhead client acquisition, enterprise technology partnerships, and high-value project deals. In this performance-driven role, you will connect with international startup founders, CTOs, and enterprises seeking custom AI automation, scalable SaaS platforms, and modern web/mobile systems, earning uncapped commissions and project-based revenue shares on every deal closed.",
     responsibilities: [
@@ -58,12 +61,52 @@ export const legacyJobs: JobPosting[] = [
       "Exceptional communication, presentation, negotiation, and contract closing abilities.",
       "High autonomy and hunger to unlock uncapped commission earnings on 5- and 6-figure technology projects.",
     ],
+    preferredQualifications: [
+      "Experience selling to US, European, or UAE technology startups and enterprises.",
+      "Familiarity with agency retainers and high-ticket software service contracts.",
+      "Background in developer tooling, AI integrations, or custom SaaS systems.",
+    ],
+    skills: [
+      "B2B Tech Sales",
+      "SaaS",
+      "Enterprise Partnerships",
+      "Client Acquisition",
+      "Consulting",
+      "Contract Negotiation",
+    ],
     benefits: [
       "Uncapped commission earnings and project revenue share",
       "Flexible international remote working schedule",
       "Direct collaboration with solutions architects and leadership",
       "Access to comprehensive agency case studies and pitch materials",
     ],
+    aboutTeam:
+      "You will collaborate closely with executive leadership, solutions architects, and technical delivery managers to turn prospective client visions into structured contracts and long-term agency partnerships.",
+    hiringProcess: [
+      {
+        step: "01",
+        title: "Application Review",
+        desc: "We evaluate your background, outbound track record, and agency network.",
+      },
+      {
+        step: "02",
+        title: "Discovery Call",
+        desc: "A 30-minute introductory call to discuss commission structure, target verticals, and alignment.",
+      },
+      {
+        step: "03",
+        title: "Strategy Session",
+        desc: "A collaborative review of past deals, agency positioning, and enterprise client acquisition.",
+      },
+      {
+        step: "04",
+        title: "Partnership Agreement",
+        desc: "Sign partner agreement and receive sales enablement decks and direct Slack access.",
+      },
+    ],
+    equalOpportunityStatement:
+      "TechSonance Infotech LLP is an Equal Opportunity Employer. We evaluate all candidates on talent, drive, and client impact, irrespective of race, religion, gender, sexual orientation, age, or disability status.",
+    publishedAt: "2026-01-15T09:00:00.000Z",
     status: "OPEN",
   },
   {
@@ -72,8 +115,11 @@ export const legacyJobs: JobPosting[] = [
     title: "Full Stack Developer Intern",
     department: "Engineering",
     location: "Remote / Hybrid",
+    workMode: "Hybrid",
     type: "Internship",
     experienceLevel: "Entry / Internship",
+    summary:
+      "Work alongside senior engineers to design responsive UI components in React & Next.js and build scalable Node.js backend services.",
     description:
       "We are looking for a highly motivated Full Stack Developer Intern who is passionate about web development, UI design, and cloud services. You will work side-by-side with senior developers to construct premium products, write production-ready code, and implement state-of-the-art APIs.",
     responsibilities: [
@@ -88,12 +134,58 @@ export const legacyJobs: JobPosting[] = [
       "Comfortable with Git command workflows and clean commit management.",
       "Strong willingness to receive feedback, learn fast, and solve complex problems.",
     ],
+    preferredQualifications: [
+      "Prior side projects or open-source contributions in React / TypeScript.",
+      "Familiarity with Supabase, Prisma, or Drizzle ORM.",
+      "Understanding of responsive design principles and web accessibility.",
+    ],
+    skills: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "PostgreSQL",
+      "Git",
+    ],
     benefits: [
       "Competitive internship stipend",
       "Mentorship from experienced senior full-stack engineers",
       "Hands-on experience with production Next.js 16 and Supabase architecture",
       "Certificate of internship & potential PPO opportunity",
     ],
+    aboutTeam:
+      "You will join our engineering squad, collaborating with seasoned full-stack engineers and product architects on modern cloud architectures and AI-driven platforms.",
+    hiringProcess: [
+      {
+        step: "01",
+        title: "Application Review",
+        desc: "We evaluate your resume, GitHub profile, and past project works.",
+      },
+      {
+        step: "02",
+        title: "Technical Assessment",
+        desc: "A hands-on coding task to evaluate frontend and backend engineering skills.",
+      },
+      {
+        step: "03",
+        title: "Technical Interview",
+        desc: "A 1-on-1 virtual call to discuss your solution, engineering interests, and culture fit.",
+      },
+      {
+        step: "04",
+        title: "Offer",
+        desc: "Welcome onboard! Receive details on onboarding, mentors, and stipend.",
+      },
+    ],
+    equalOpportunityStatement:
+      "TechSonance Infotech LLP is an Equal Opportunity Employer. We evaluate all candidates on merit, passion, and engineering craftsmanship.",
+    publishedAt: "2025-12-01T09:00:00.000Z",
+    salaryMin: 15000,
+    salaryMax: 25000,
+    salaryCurrency: "INR",
+    salaryPeriod: "month",
+    showSalaryPublicly: true,
     status: "CLOSED",
   },
 ];

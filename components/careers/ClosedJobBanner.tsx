@@ -16,8 +16,12 @@ export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerPro
     return null;
   }
 
+  const activeSimilarJobs = similarJobs.filter(
+    (job) => job.status === "OPEN" || job.status === "PUBLISHED",
+  );
+
   return (
-    <div className="w-full mb-8">
+    <aside aria-label="Role status notification" className="w-full mb-8">
       <div
         className={`rounded-2xl p-6 border ${
           isPaused
@@ -40,15 +44,15 @@ export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerPro
             )}
           </div>
           <div className="space-y-1.5 flex-1">
-            <h3 className="text-lg font-bold font-sora">
+            <h3 className="text-lg font-bold">
               {isPaused
                 ? "This position is temporarily paused"
                 : "This position is now closed"}
             </h3>
             <p className="text-sm opacity-90 leading-relaxed font-sans">
               {isPaused
-                ? "We have temporarily paused applications for this opening while our hiring team reviews existing candidates. Please check back soon or browse our other active roles."
-                : "We are no longer accepting new applications for this specific position. However, we are actively hiring across multiple departments and would love to review your profile for other opportunities."}
+                ? "This opening is temporarily on hold and not accepting applications. We are reviewing existing candidates. Please check back soon or browse our other active roles."
+                : "This opening is now closed and no longer accepting applications. We are actively hiring across multiple departments and would love to review your profile for other opportunities."}
             </p>
             <div className="pt-3">
               <Link
@@ -63,14 +67,14 @@ export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerPro
         </div>
       </div>
 
-      {isClosed && similarJobs.length > 0 && (
+      {isClosed && activeSimilarJobs.length > 0 && (
         <div className="mt-8 space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
-            <span>Similar Active Positions in {similarJobs[0]?.department}</span>
+            <span>Similar Active Positions in {activeSimilarJobs[0]?.department}</span>
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {similarJobs.slice(0, 2).map((job) => (
+            {activeSimilarJobs.slice(0, 2).map((job) => (
               <Link
                 key={job.slug}
                 href={`/careers/${job.slug}`}
@@ -92,7 +96,7 @@ export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerPro
           </div>
         </div>
       )}
-    </div>
+    </aside>
   );
 }
 

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useSyncExternalStore } from "react";
+import React, { useState, useRef, useSyncExternalStore, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { Search, X, Sparkles, MapPin, Briefcase, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import SiteHeader from "@/app/components/home/SiteHeader";
@@ -11,6 +13,8 @@ import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { JobPosting } from "@/lib/content/types";
+import { filterJobs } from "./filterUtils";
+import { TalentPoolCaptureModal } from "@/components/careers/TalentPoolCaptureModal";
 
 const subscribeResize = (callback: () => void) => {
   window.addEventListener("resize", callback);
@@ -87,6 +91,108 @@ const cultureValues = [
 ];
 
 export default function CareersClient({ initialJobs }: { initialJobs?: JobPosting[] } = {}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
+  const [selectedDept, setSelectedDept] = useState(
+    searchParams.get("dept") || searchParams.get("department") || "all",
+  );
+  const [selectedMode, setSelectedMode] = useState(
+    searchParams.get("mode") || searchParams.get("workMode") || "all",
+  );
+  const [selectedType, setSelectedType] = useState(searchParams.get("type") || "all");
+  const [selectedExp, setSelectedExp] = useState(
+    searchParams.get("exp") || searchParams.get("experienceLevel") || "all",
+  );
+  const [isTalentPoolOpen, setIsTalentPoolOpen] = useState(false);
+
+  // Sync state from URL when user navigates back/forward
+  useEffect(() => {
+    setSearchTerm(searchParams.get("search") || "");
+    setSelectedDept(searchParams.get("dept") || searchParams.get("department") || "all");
+    setSelectedMode(searchParams.get("mode") || searchParams.get("workMode") || "all");
+    setSelectedType(searchParams.get("type") || "all");
+    setSelectedExp(searchParams.get("exp") || searchParams.get("experienceLevel") || "all");
+  }, [searchParams]);
+
+  // Sync state to URL with shallow replace
+  const updateUrl = useCallback(
+    (overrides: { search?: string; dept?: string; mode?: string; type?: string; exp?: string }) => {
+      const nextSearch = overrides.search !== undefined ? overrides.search : searchTerm;
+      const nextDept = overrides.dept !== undefined ? overrides.dept : selectedDept;
+      const nextMode = overrides.mode !== undefined ? overrides.mode : selectedMode;
+      const nextType = overrides.type !== undefined ? overrides.type : selectedType;
+      const nextExp = overrides.exp !== undefined ? overrides.exp : selectedExp;
+
+      const params = new URLSearchParams();
+      if (nextSearch.trim()) params.set("search", nextSearch.trim());
+      if (nextDept && nextDept.toLowerCase() !== "all") params.set("dept", nextDept);
+      if (nextMode && nextMode.toLowerCase() !== "all") params.set("mode", nextMode);
+      if (nextType && nextType.toLowerCase() !== "all") params.set("type", nextType);
+      if (nextExp && nextExp.toLowerCase() !== "all") params.set("exp", nextExp);
+
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname, searchTerm, selectedDept, selectedMode, selectedType, selectedExp]
+  );
+
+  // Debounced search sync to URL
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const currentParam = searchParams.get("search") || "";
+      if (searchTerm.trim() !== currentParam) {
+        updateUrl({ search: searchTerm });
+      }
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm, searchParams, updateUrl]);
+
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setSelectedDept("all");
+    setSelectedMode("all");
+    setSelectedType("all");
+    setSelectedExp("all");
+    router.replace(pathname, { scroll: false });
+  };
+
+  const allJobs = useMemo(() => initialJobs || [], [initialJobs]);
+
+  const filteredJobs = useMemo(() => {
+    return filterJobs(allJobs, {
+      search: searchTerm,
+      department: selectedDept,
+      workMode: selectedMode,
+      type: selectedType,
+      experienceLevel: selectedExp,
+    });
+  }, [allJobs, searchTerm, selectedDept, selectedMode, selectedType, selectedExp]);
+
+  const departments = useMemo(() => {
+    const set = new Set<string>();
+    allJobs.forEach((j) => {
+      if (j.department) set.add(j.department);
+    });
+    return ["All", ...Array.from(set)];
+  }, [allJobs]);
+
+  const workModes = [
+    { label: "All Modes", value: "all" },
+    { label: "Remote", value: "remote" },
+    { label: "Hybrid", value: "hybrid" },
+    { label: "On-site", value: "on_site" },
+  ];
+
+  const jobTypes = [
+    { label: "All Types", value: "all" },
+    { label: "Full Time", value: "full_time" },
+    { label: "Contract", value: "contract" },
+    { label: "Internship", value: "internship" },
+  ];
+
   const isMobile = useSyncExternalStore(
     subscribeResize,
     () => window.innerWidth < 768,
@@ -553,7 +659,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
             className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-50/20 blur-3xl pointer-events-none"
           />
 
-          <div className="text-center max-w-3xl mx-auto mb-16 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-10 relative z-10">
             <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
               Join Us
             </h2>
@@ -561,362 +667,277 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               Open Opportunities
             </h3>
             <p className="text-sm sm:text-base text-slate-500 font-medium mt-2">
-              Browse our currently open positions and find where you fit.
+              Browse our currently open positions, filter by discipline, and find where you fit.
             </p>
           </div>
 
-          {/* =========================================================================
-              ACTIVE OPEN POSITIONS (Dynamic from CMS / Fallback)
-              ========================================================================= */}
-          {initialJobs && initialJobs.length > 0 ? (
-            <div className="space-y-8 max-w-4xl mx-auto">
-              {initialJobs.map((job) => (
+          {/* Search & Filter Bar */}
+          <div className="max-w-4xl mx-auto mb-10 space-y-4 relative z-10">
+            {/* Search Input Box */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search by title, technology (React, Node, Next.js), department, or location..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-12 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1155CC]/20 focus:border-[#1155CC] shadow-xs transition-all"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchTerm("");
+                    updateUrl({ search: "" });
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Department Filter Chips */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+                Department:
+              </span>
+              {departments.map((dept) => {
+                const isActive =
+                  selectedDept.toLowerCase() === dept.toLowerCase() ||
+                  (dept === "All" && (!selectedDept || selectedDept.toLowerCase() === "all"));
+                return (
+                  <button
+                    key={dept}
+                    type="button"
+                    onClick={() => {
+                      const next = dept === "All" ? "all" : dept;
+                      setSelectedDept(next);
+                      updateUrl({ dept: next });
+                    }}
+                    className={cn(
+                      "text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all shrink-0 cursor-pointer",
+                      isActive
+                        ? "bg-[#1155CC] text-white shadow-xs"
+                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                    )}
+                  >
+                    {dept}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Additional Filter Selects / Chips */}
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+                Work Mode:
+              </span>
+              {workModes.map((wm) => {
+                const isActive = selectedMode === wm.value;
+                return (
+                  <button
+                    key={wm.value}
+                    type="button"
+                    onClick={() => {
+                      setSelectedMode(wm.value);
+                      updateUrl({ mode: wm.value });
+                    }}
+                    className={cn(
+                      "text-xs font-semibold px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer",
+                      isActive
+                        ? "bg-slate-800 text-white shadow-xs"
+                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                    )}
+                  >
+                    {wm.label}
+                  </button>
+                );
+              })}
+
+              <span className="text-slate-200 mx-2 hidden sm:inline">|</span>
+
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+                Type:
+              </span>
+              {jobTypes.map((jt) => {
+                const isActive = selectedType === jt.value;
+                return (
+                  <button
+                    key={jt.value}
+                    type="button"
+                    onClick={() => {
+                      setSelectedType(jt.value);
+                      updateUrl({ type: jt.value });
+                    }}
+                    className={cn(
+                      "text-xs font-semibold px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer",
+                      isActive
+                        ? "bg-slate-800 text-white shadow-xs"
+                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                    )}
+                  >
+                    {jt.label}
+                  </button>
+                );
+              })}
+
+              {/* Active filters reset button */}
+              {(searchTerm ||
+                selectedDept !== "all" ||
+                selectedMode !== "all" ||
+                selectedType !== "all" ||
+                selectedExp !== "all") && (
+                <button
+                  type="button"
+                  onClick={handleResetFilters}
+                  className="inline-flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-semibold ml-auto px-2 py-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset filters
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Job Listings / Empty State */}
+          <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+            {filteredJobs.length > 0 ? (
+              filteredJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+                  className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-all duration-300 group relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
                     <div>
-                      <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
-                        {job.department} • Active Opening
-                      </span>
-                      <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
+                          {job.department} • Active Opening
+                        </span>
+                        {job.workMode && (
+                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-full inline-block">
+                            {job.workMode}
+                          </span>
+                        )}
+                      </div>
+                      <Link
+                        href={`/careers/${job.slug}`}
+                        className="block text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight hover:text-[#1155CC] transition-colors"
+                      >
                         {job.title}
-                      </h4>
+                      </Link>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
-                        <span className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{" "}
+                        <span className="flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-emerald-500" />
                           {job.location}
                         </span>
                         <span className="text-slate-200">•</span>
-                        <span>Engagement: {job.type}</span>
+                        <span className="flex items-center gap-1.5">
+                          <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                          {job.type}
+                        </span>
                         {job.experienceLevel && (
                           <>
                             <span className="text-slate-200">•</span>
                             <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
                           </>
                         )}
+                        {job.showSalaryPublicly && job.salaryMin && (
+                          <>
+                            <span className="text-slate-200">•</span>
+                            <span className="text-emerald-600 font-bold">
+                              {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString()}
+                              {job.salaryMax ? ` - ${job.salaryMax.toLocaleString()}` : ""} /{" "}
+                              {job.salaryPeriod || "month"}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <Button asChild variant="default" size="sm">
-                      <a href="#apply">Apply Now</a>
-                    </Button>
+                    <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <Link href={`/careers/${job.slug}`}>View Details</Link>
+                      </Button>
+                      <Button asChild variant="default" size="sm" className="rounded-xl">
+                        <Link href={`/careers/${job.slug}#apply-form`}>Apply Now</Link>
+                      </Button>
+                    </div>
                   </div>
 
-                  <div className="py-8 space-y-8 relative z-10">
-                    <div>
-                      <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">
-                        {"// Role Overview"}
-                      </h5>
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                        {job.description}
-                      </p>
-                    </div>
+                  <div className="pt-6 space-y-4">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium line-clamp-3">
+                      {job.summary || job.description}
+                    </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
-                      {job.responsibilities && job.responsibilities.length > 0 && (
-                        <div>
-                          <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
-                            {"// Key Responsibilities"}
-                          </h5>
-                          <ul className="space-y-3">
-                            {job.responsibilities.map((resp) => (
-                              <li
-                                key={resp}
-                                className="flex items-start gap-3 text-xs text-slate-650 font-medium"
-                              >
-                                <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
-                                  ✓
-                                </span>
-                                <span>{resp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {job.requirements && job.requirements.length > 0 && (
-                        <div>
-                          <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
-                            {"// Requirements & Qualifications"}
-                          </h5>
-                          <ul className="space-y-3">
-                            {job.requirements.map((req) => (
-                              <li
-                                key={req}
-                                className="flex items-start gap-3 text-xs text-slate-650 font-medium"
-                              >
-                                <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
-                                  ✓
-                                </span>
-                                <span>{req}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    {job.skills && job.skills.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-2">
+                        {job.skills.slice(0, 7).map((skill) => (
+                          <span
+                            key={skill}
+                            className="text-[11px] font-medium bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-md"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 max-w-4xl mx-auto group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
-                <div>
-                  <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
-                    Strategic Partnership • Active Opening
-                  </span>
-                  <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">
-                    Business Development Partner
+              ))
+            ) : (
+              <div className="bg-white border border-dashed border-slate-200 rounded-3xl p-10 sm:p-14 text-center max-w-2xl mx-auto space-y-5">
+                <div className="w-16 h-16 mx-auto rounded-full bg-blue-50 text-[#1155CC] flex items-center justify-center">
+                  <Search className="w-8 h-8" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-xl sm:text-2xl font-bold text-slate-900">
+                    No roles found matching your criteria
                   </h4>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Remote / Flexible
-                    </span>
-                    <span className="text-slate-200">•</span>
-                    <span>Engagement: Project-Based / Commission-Based</span>
-                    <span className="text-slate-200">•</span>
-                    <span className="text-[#1155CC]">
-                      Earning: Highly Competitive Commission &amp; Deal Revenue Share
-                    </span>
-                  </div>
-                </div>
-                <Button asChild variant="default" size="sm">
-                  <a href="#apply">Apply as Partner</a>
-                </Button>
-              </div>
-
-              <div className="py-8 space-y-8 relative z-10">
-                <div>
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">
-                    {"// Role Overview"}
-                  </h5>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                    We are looking for an entrepreneurial, results-driven{" "}
-                    <span className="font-bold text-slate-800">Business Development Partner</span>{" "}
-                    to spearhead client acquisition, enterprise technology partnerships, and
-                    high-value project deals. In this performance-driven role, you will connect with
-                    international startup founders, CTOs, and enterprises seeking custom AI
-                    automation, scalable SaaS platforms, and modern web/mobile systems, earning
-                    uncapped commissions and project-based revenue shares on every deal closed.
+                  <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                    We couldn't find any positions matching your selected filters. Try clearing
+                    filters or joining our talent pool for future opportunities.
                   </p>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
-                  <div>
-                    <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
-                      {"// Key Responsibilities"}
-                    </h5>
-                    <ul className="space-y-3">
-                      {[
-                        "Prospect, identify, and close new client deals for custom software, SaaS products, AI automation, and cloud engineering.",
-                        "Build and nurture relationships with international startup founders, CTOs, and enterprise executives across North America, Europe, UAE, and APAC.",
-                        "Pitch TechSonance's technical capabilities, case studies, and engineering delivery workflows to prospective clients.",
-                        "Collaborate with our solutions architecture team during technical scoping and contract negotiations.",
-                        "Drive recurring client retainers, strategic referral networks, and long-term agency partnerships.",
-                      ].map((resp) => (
-                        <li
-                          key={resp}
-                          className="flex items-start gap-3 text-xs text-slate-650 font-medium"
-                        >
-                          <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
-                            ✓
-                          </span>
-                          <span>{resp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
-                      {"// Requirements & Qualifications"}
-                    </h5>
-                    <ul className="space-y-3">
-                      {[
-                        "Proven track record in B2B tech sales, software agency business development, consulting, or client acquisition.",
-                        "Strong professional network or outbound prospecting expertise targeting founders, CTOs, and C-level decision-makers.",
-                        "Solid understanding of software solutions (Next.js, React, Node.js, Cloud, AI/LLMs) to communicate technical credibility.",
-                        "Exceptional communication, presentation, negotiation, and contract closing abilities.",
-                        "High autonomy and hunger to unlock uncapped commission earnings on 5- and 6-figure technology projects.",
-                      ].map((req) => (
-                        <li
-                          key={req}
-                          className="flex items-start gap-3 text-xs text-slate-650 font-medium"
-                        >
-                          <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
-                            ✓
-                          </span>
-                          <span>{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-slate-50">
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">
-                    {"// Domains & Solutions You Will Represent"}
-                  </h5>
-                  <div className="flex flex-wrap gap-2.5">
-                    {[
-                      {
-                        name: "Custom SaaS Development",
-                        bg: "bg-blue-50/50 border-blue-100 text-blue-700",
-                      },
-                      {
-                        name: "AI Automation & RAG Agents",
-                        bg: "bg-slate-50 border-slate-200 text-slate-800",
-                      },
-                      {
-                        name: "Full-Stack Web (Next.js/React/Node)",
-                        bg: "bg-emerald-50/50 border-emerald-100 text-emerald-700",
-                      },
-                      {
-                        name: "Cross-Platform Mobile (Flutter/RN)",
-                        bg: "bg-[#1155CC]/5 border-[#1155CC]/15 text-[#1155CC]",
-                      },
-                      {
-                        name: "Enterprise Cloud & DevOps",
-                        bg: "bg-cyan-50/50 border-cyan-100 text-cyan-700",
-                      },
-                      {
-                        name: "B2B Tech Sales",
-                        bg: "bg-indigo-50/50 border-indigo-100 text-indigo-750",
-                      },
-                      {
-                        name: "High Uncapped Commission",
-                        bg: "bg-violet-50/50 border-violet-100 text-violet-750",
-                      },
-                      {
-                        name: "Deal Closing & Retainers",
-                        bg: "bg-orange-50/50 border-orange-100 text-orange-700",
-                      },
-                    ].map((tech) => (
-                      <span
-                        key={tech.name}
-                        className={cn(
-                          "text-[10px] sm:text-xs font-mono font-semibold border px-3 py-1 rounded-lg transition-transform duration-200 hover:-translate-y-0.5 cursor-default shadow-2xs",
-                          tech.bg,
-                        )}
-                      >
-                        {tech.name}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleResetFilters}
+                    className="rounded-xl px-5"
+                  >
+                    Reset all filters
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={() => setIsTalentPoolOpen(true)}
+                    className="rounded-xl px-5 bg-[#1155CC] hover:bg-[#0d44a4] text-white flex items-center gap-2"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    Join our Talent Pool
+                  </Button>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* =========================================================================
-              COMMENTED OUT: Full Stack Developer Intern (Saved for future reopening)
-              =========================================================================
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-sm hover:shadow-md transition-all duration-300 max-w-4xl mx-auto group relative overflow-hidden mt-8 opacity-75">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-[#1155CC]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-8 border-b border-slate-100 relative z-10">
-              <div>
-                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full mb-3 inline-block">
-                  Active Internship
-                </span>
-                <h4 className="text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight">Full Stack Developer Intern</h4>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> On-Site
-                  </span>
-                  <span className="text-slate-200">•</span>
-                  <span>Duration: 3-6 Months</span>
-                  <span className="text-slate-200">•</span>
-                  <span className="text-[#1155CC]">Stipend: Competitive</span>
-                </div>
-              </div>
-              <Button asChild variant="default" size="sm" showArrow={true}>
-                <a href="#apply">Apply Now</a>
-              </Button>
-            </div>
-
-            <div className="py-8 space-y-8 relative z-10">
-              <div>
-                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 font-mono">{"// Role Overview"}</h5>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                  We are looking for a highly motivated Full Stack Developer Intern who is passionate about web development, UI design, and cloud services. You will work side-by-side with senior developers to construct premium products, write production-ready code, and implement state-of-the-art APIs.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
-                <div>
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Key Responsibilities"}</h5>
-                  <ul className="space-y-3">
-                    {[
-                      "Design and build clean, responsive client-side UI components in React and Next.js.",
-                      "Develop scalable backend logic and RESTful API integrations in Node.js & TypeScript.",
-                      "Optimize databases (PostgreSQL/MongoDB) and manage state flow.",
-                      "Collaborate in Git workflows, code reviews, and project scoping processes."
-                    ].map((resp, i) => (
-                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
-                        <span className="w-5 h-5 rounded-full bg-blue-50/50 border border-blue-100/50 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 font-bold">
-                          ✓
-                        </span>
-                        <span>{resp}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Technical Requirements"}</h5>
-                  <ul className="space-y-3">
-                    {[
-                      "Familiarity with JS/TS, React, Tailwind CSS, and HTML5 semantic markup.",
-                      "Basic understanding of database schemas and backend query models.",
-                      "Comfortable with Git command workflows and clean commit management.",
-                      "Strong willingness to receive feedback, learn fast, and solve complex problems."
-                    ].map((req, i) => (
-                      <li key={i} className="flex items-start gap-3 text-xs text-slate-650 font-medium">
-                        <span className="w-5 h-5 rounded-full bg-indigo-50/50 border border-indigo-100/50 flex items-center justify-center text-indigo-650 shrink-0 mt-0.5 font-bold">
-                          ✓
-                        </span>
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-slate-50">
-                <h5 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-4 font-mono">{"// Tech Stack / Tools You Will Use"}</h5>
-                <div className="flex flex-wrap gap-2.5">
-                  {[
-                    { name: "React", bg: "bg-blue-50/50 border-blue-100 text-blue-700" },
-                    { name: "Next.js", bg: "bg-slate-50 border-slate-200 text-slate-800" },
-                    { name: "Node.js", bg: "bg-emerald-50/50 border-emerald-100 text-emerald-700" },
-                    { name: "TypeScript", bg: "bg-[#1155CC]/5 border-[#1155CC]/15 text-[#1155CC]" },
-                    { name: "Tailwind CSS", bg: "bg-cyan-50/50 border-cyan-100 text-cyan-700" },
-                    { name: "PostgreSQL", bg: "bg-indigo-50/50 border-indigo-100 text-indigo-750" },
-                    { name: "Framer Motion", bg: "bg-violet-50/50 border-violet-100 text-violet-750" },
-                    { name: "Git", bg: "bg-orange-50/50 border-orange-100 text-orange-700" }
-                  ].map((tech) => (
-                    <span
-                      key={tech.name}
-                      className={cn(
-                        "text-[10px] sm:text-xs font-mono font-semibold border px-3 py-1 rounded-lg transition-transform duration-200 hover:-translate-y-0.5 cursor-default shadow-2xs",
-                        tech.bg
-                      )}
-                    >
-                      {tech.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            )}
           </div>
-          */}
+
+          {/* Bottom Talent Pool CTA card */}
+          <div className="max-w-4xl mx-auto mt-12 p-6 sm:p-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="space-y-1 text-center sm:text-left">
+              <h4 className="text-lg font-bold text-slate-900 flex items-center justify-center sm:justify-start gap-2">
+                <Sparkles className="w-5 h-5 text-[#1155CC]" />
+                Don't see your specific role?
+              </h4>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-lg">
+                We're constantly expanding. Join our Talent Pool and our engineering recruitment team
+                will reach out directly when matching roles open up.
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsTalentPoolOpen(true)}
+              className="bg-[#1155CC] hover:bg-[#0d44a4] text-white shrink-0 rounded-xl px-6"
+            >
+              Join Talent Pool
+            </Button>
+          </div>
         </section>
 
         {/* ==========================================
@@ -1259,6 +1280,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         </section>
       </main>
       <SiteFooter />
+      <TalentPoolCaptureModal
+        isOpen={isTalentPoolOpen}
+        onClose={() => setIsTalentPoolOpen(false)}
+      />
     </>
   );
 }
