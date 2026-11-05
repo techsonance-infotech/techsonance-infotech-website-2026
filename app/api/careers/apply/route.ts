@@ -3,6 +3,7 @@ import { getContainer } from "@/lib/di/container";
 import { CareerApplyService } from "@/lib/services/career-apply.service";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/server/rateLimit";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   try {
@@ -10,23 +11,25 @@ export async function POST(req: Request) {
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
     try {
       await enforceRateLimit({ key: "career-apply", limit: 5, windowSec: 60 }, ip);
-    } catch (rlErr: any) {
+    } catch (rlErr: unknown) {
       if (rlErr instanceof AppError) {
         return NextResponse.json(
-          { error: rlErr.message },
+          { ok: false, error: rlErr.message },
           { status: STATUS_BY_CODE[rlErr.code] || 429 },
         );
       }
+      throw rlErr;
     }
 
     // 2. Parse FormData
     const formData = await req.formData();
 
-    // 3. Bot Honeypot Check (hidden field "_hp" or "botCheck")
-    const honeypot = formData.get("_hp") || formData.get("botCheck");
+    // 3. Bot Honeypot Check (hidden fields "website_url", "_hp", or "botCheck")
+    const honeypot =
+      formData.get("website_url") || formData.get("_hp") || formData.get("botCheck");
     if (honeypot && String(honeypot).trim().length > 0) {
-      // Return 200 OK without saving to defeat spam bot loops
-      return NextResponse.json({ ok: true, applicationId: "simulated" });
+      // Silently succeed to defeat spam bot retry loops
+      return NextResponse.json({ ok: true, applicationId: "simulated-id" });
     }
 
     const jobId = String(formData.get("jobId") || "").trim();
@@ -68,22 +71,22 @@ export async function POST(req: Request) {
       }
     }
 
-    const resumeFile = formData.get("resume") as File | null;
+    const resumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
 
     if (!jobId) {
-      return NextResponse.json({ error: "Job ID is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Job ID is required" }, { status: 400 });
     }
 
     if (!candidateName) {
-      return NextResponse.json({ error: "Candidate name is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Candidate name is required" }, { status: 400 });
     }
 
     if (!email) {
-      return NextResponse.json({ error: "Email address is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Email address is required" }, { status: 400 });
     }
 
     if (!resumeFile) {
-      return NextResponse.json({ error: "Resume document is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Resume document is required" }, { status: 400 });
     }
 
     // 4. Execute CareerApplyService
@@ -113,16 +116,16 @@ export async function POST(req: Request) {
       applicationId: application.id,
       status: application.status,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
-        { error: error.message },
+        { ok: false, error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    console.error("Career application submission error:", error);
+    logger.error(`Career application submission error: ${String(error)}`);
     return NextResponse.json(
-      { error: "An unexpected error occurred while processing your application." },
+      { ok: false, error: "An unexpected error occurred while processing your application." },
       { status: 500 },
     );
   }

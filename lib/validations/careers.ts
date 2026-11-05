@@ -76,15 +76,15 @@ export const jobPostingBaseFields = {
   showSalaryPublicly: z.boolean().default(false),
   compensationNotes: z.string().optional(),
 
-  applicationMethod: z.nativeEnum(JobApplicationMethod).default(JobApplicationMethod.BUILTIN),
-  externalApplyUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  applicationMethod: z.enum(JobApplicationMethod).default(JobApplicationMethod.BUILTIN),
+  externalApplyUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
   resumeRequired: z.boolean().default(true),
   coverLetterRequirement: z.nativeEnum(JobCoverLetterRequirement).default(JobCoverLetterRequirement.OPTIONAL),
   screeningQuestions: z.array(screeningQuestionSchema).default([]),
 
   status: z.nativeEnum(JobStatus).default(JobStatus.DRAFT),
-  publishAt: z.union([z.string().datetime(), z.date()]).optional(),
-  closesAt: z.union([z.string().datetime(), z.date()]).optional(),
+  publishAt: z.union([z.date()]).optional(),
+  closesAt: z.union([z.date()]).optional(),
   visibility: z.nativeEnum(JobVisibility).default(JobVisibility.PUBLIC),
   featured: z.boolean().default(false),
 
@@ -201,8 +201,22 @@ export const applicationSubmissionSchema = z.object({
   source: z.string().default("direct"),
 });
 
+export const talentPoolSubmissionSchema = z.object({
+  siteId: z.uuid().optional(),
+  name: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().optional(),
+  skills: z.array(z.string()).default([]),
+  preferredRole: z.string().optional(),
+  experienceLevel: z.nativeEnum(JobExperienceLevel).default(JobExperienceLevel.MID),
+  portfolioUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
+  resumeStoragePath: z.string().optional(),
+  notes: z.string().optional(),
+});
+
 export type JobPostingInput = z.infer<typeof jobPostingInputSchema>;
 export type CreateJobInput = z.infer<typeof createJobSchema>;
 export type UpdateJobInput = z.infer<typeof updateJobSchema>;
 export type JobStatusTransitionInput = z.infer<typeof jobStatusTransitionSchema>;
 export type ApplicationSubmissionInput = z.infer<typeof applicationSubmissionSchema>;
+export type TalentPoolSubmissionInput = z.infer<typeof talentPoolSubmissionSchema>;

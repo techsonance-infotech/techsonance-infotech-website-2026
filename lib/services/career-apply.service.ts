@@ -1,10 +1,17 @@
+import "server-only";
+import crypto from "node:crypto";
+import { inject } from "@needle-di/core";
 import { eq, and, sql } from "drizzle-orm";
-import { getDrizzleDb } from "@/lib/database";
-import { applicationsTable, jobsTable } from "@/lib/database/schema/index.schema";
-import { ApplicationStatus } from "@/lib/database/enum/content.enum";
+import { DRIZZLE_DB_TOKEN, ENV_CONFIG_TOKEN, SUPABASE_CLIENT_TOKEN } from "@/lib/di/tokens";
+import type { Database } from "@/lib/database/index";
+import { applicationsTable, jobsTable, talentPoolTable, sitesTable } from "@/lib/database/schema/index.schema";
+import { ApplicationStatus, JobExperienceLevel } from "@/lib/database/enum/content.enum";
 import { AppError } from "@/lib/errors";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/logger";
+import { getEnv, type Env } from "@/lib/env";
 import { EmailService } from "./email.service";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export interface ScreeningAnswerInput {
   questionId: string;
@@ -21,13 +28,26 @@ export interface ApplicationSubmitPayload {
   portfolioUrl?: string;
   githubUrl?: string;
   linkedinUrl?: string;
-  resumeFile: File;
+  resumeFile: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer };
   coverLetter?: string;
   noticePeriodWeeks?: number;
   screeningAnswers?: ScreeningAnswerInput[];
   privacyConsent: boolean;
   talentPoolConsent?: boolean;
   source?: string;
+}
+
+export interface TalentPoolSubmitPayload {
+  siteId?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  skills?: string[];
+  preferredRole?: string;
+  experienceLevel?: string;
+  portfolioUrl?: string;
+  resumeFile?: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer };
+  notes?: string;
 }
 
 const ALLOWED_MIME_TYPES = [
@@ -38,21 +58,52 @@ const ALLOWED_MIME_TYPES = [
 
 const MAX_RESUME_SIZE = 5 * 1024 * 1024; // 5 MB
 
-export class CareerApplyService {
-  constructor(
-    private db = getDrizzleDb(),
-    private emailService?: EmailService,
-    private supabaseAdmin = createAdminClient(),
-  ) {}
+// Magic bytes:
+// PDF: starts with %PDF- (0x25, 0x50, 0x44, 0x46, 0x2D)
+const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46, 0x2d];
+// DOCX: PK\x03\x04 (0x50, 0x4B, 0x03, 0x04)
+const DOCX_MAGIC = [0x50, 0x4b, 0x03, 0x04];
 
-  async submitApplication(payload: ApplicationSubmitPayload) {
-    // 1. Consent validation
-    if (!payload.privacyConsent) {
-      throw new AppError("BAD_REQUEST", "You must accept the privacy policy to submit an application.");
+export class CareerApplyService {
+  private emailService?: EmailService;
+  private supabaseAdmin?: SupabaseClient | null;
+  private envConfig: Env;
+
+  constructor(
+    private db: Database = inject(DRIZZLE_DB_TOKEN),
+    emailService?: EmailService,
+    supabaseAdmin?: SupabaseClient | null,
+    env?: Env,
+  ) {
+    this.emailService = emailService;
+    this.supabaseAdmin = supabaseAdmin;
+    try {
+      this.envConfig = env || inject(ENV_CONFIG_TOKEN) || getEnv();
+    } catch {
+      this.envConfig = env || ({} as Env);
     }
 
-    // 2. Resume file validation
-    const file = payload.resumeFile;
+    if (!this.emailService) {
+      try {
+        this.emailService = inject(EmailService);
+      } catch {
+        // injected at runtime if container available
+      }
+    }
+
+    if (this.supabaseAdmin === undefined) {
+      try {
+        this.supabaseAdmin = inject(SUPABASE_CLIENT_TOKEN) || createAdminClient();
+      } catch {
+        this.supabaseAdmin = null;
+      }
+    }
+  }
+
+  /**
+   * Validates resume file size, extension, MIME type, and binary magic bytes.
+   */
+  async validateResume(file: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer }): Promise<Uint8Array> {
     if (!file) {
       throw new AppError("BAD_REQUEST", "A resume file is required to submit an application.");
     }
@@ -71,6 +122,105 @@ export class CareerApplyService {
         "Unsupported resume format. Please upload a PDF or Word document (.pdf, .docx, .doc).",
       );
     }
+
+    // Read bytes for magic byte verification
+    let bytes: Uint8Array;
+    if ("arrayBuffer" in file && typeof file.arrayBuffer === "function") {
+      const ab = await file.arrayBuffer();
+      bytes = new Uint8Array(ab);
+    } else if ("buffer" in file && file.buffer) {
+      bytes = new Uint8Array(file.buffer as ArrayBuffer);
+    } else {
+      bytes = new Uint8Array(0);
+    }
+
+    if (bytes.length >= 4) {
+      const isPdfExt = fileName.endsWith(".pdf") || file.type === "application/pdf";
+      const isDocxExt =
+        fileName.endsWith(".docx") ||
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+      if (isPdfExt) {
+        const matchesPdf =
+          bytes.length >= 5 &&
+          bytes[0] === PDF_MAGIC[0] &&
+          bytes[1] === PDF_MAGIC[1] &&
+          bytes[2] === PDF_MAGIC[2] &&
+          bytes[3] === PDF_MAGIC[3] &&
+          bytes[4] === PDF_MAGIC[4];
+
+        if (!matchesPdf) {
+          throw new AppError(
+            "UNSUPPORTED_MEDIA",
+            "File content does not match allowed format. PDF magic bytes verification failed.",
+          );
+        }
+      } else if (isDocxExt) {
+        const matchesDocx =
+          bytes[0] === DOCX_MAGIC[0] &&
+          bytes[1] === DOCX_MAGIC[1] &&
+          bytes[2] === DOCX_MAGIC[2] &&
+          bytes[3] === DOCX_MAGIC[3];
+
+        if (!matchesDocx) {
+          throw new AppError(
+            "UNSUPPORTED_MEDIA",
+            "File content does not match allowed format. DOCX magic bytes verification failed.",
+          );
+        }
+      }
+    }
+
+    return bytes;
+  }
+
+  /**
+   * Uploads resume to private Supabase Storage bucket under `${siteId}/${jobId}/${uuid}_${sanitizedName}`.
+   */
+  async uploadResumeToPrivateStorage(
+    fileBuffer: Uint8Array | Buffer | ArrayBuffer,
+    fileName: string,
+    mimeType: string,
+    siteId: string,
+    jobId: string,
+  ): Promise<string> {
+    const sanitizedName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const uniqueId = crypto.randomUUID();
+    const storagePath = `${siteId}/${jobId}/${uniqueId}_${sanitizedName}`;
+
+    if (this.supabaseAdmin?.storage) {
+      try {
+        const { error: uploadError } = await this.supabaseAdmin.storage
+          .from("resumes")
+          .upload(storagePath, fileBuffer, {
+            contentType: mimeType || "application/pdf",
+            upsert: false,
+          });
+
+        if (uploadError) {
+          logger.warn(`Storage upload warning: ${uploadError.message}`);
+        }
+      } catch (uploadErr) {
+        logger.warn(`Supabase storage upload error: ${String(uploadErr)}`);
+      }
+    }
+
+    return storagePath;
+  }
+
+  /**
+   * Submits a candidate job application with duplicate prevention, knockout screening,
+   * private resume storage, and background dual notification emails.
+   */
+  async submitApplication(payload: ApplicationSubmitPayload) {
+    // 1. Consent validation
+    if (!payload.privacyConsent) {
+      throw new AppError("BAD_REQUEST", "You must accept the privacy policy to submit an application.");
+    }
+
+    // 2. Resume file validation (including magic bytes)
+    const fileBytes = await this.validateResume(payload.resumeFile);
+    const file = payload.resumeFile;
 
     // 3. Verify Job exists and is accepting applications
     let job: any = null;
@@ -147,33 +297,26 @@ export class CareerApplyService {
     }
 
     // 6. Upload resume to private Supabase Storage bucket
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const storagePath = `resumes/${job.id}/${Date.now()}_${sanitizedName}`;
+    const storagePath = await this.uploadResumeToPrivateStorage(
+      fileBytes,
+      file.name,
+      file.type || "application/pdf",
+      job.siteId,
+      job.id,
+    );
+
     let resumeUrl: string | undefined;
-
-    if (this.supabaseAdmin) {
+    if (this.supabaseAdmin?.storage) {
       try {
-        const fileBuffer = await file.arrayBuffer();
-        const { error: uploadError } = await this.supabaseAdmin.storage
+        const { data: signedData } = await this.supabaseAdmin.storage
           .from("resumes")
-          .upload(storagePath, fileBuffer, {
-            contentType: file.type || "application/pdf",
-            upsert: false,
-          });
+          .createSignedUrl(storagePath, 60 * 60 * 24 * 7);
 
-        if (uploadError) {
-          console.warn("Storage upload warning:", uploadError.message);
-        } else {
-          const { data: signedData } = await this.supabaseAdmin.storage
-            .from("resumes")
-            .createSignedUrl(storagePath, 60 * 60 * 24 * 7); // 7-day initial signed URL
-
-          if (signedData?.signedUrl) {
-            resumeUrl = signedData.signedUrl;
-          }
+        if (signedData?.signedUrl) {
+          resumeUrl = signedData.signedUrl;
         }
-      } catch (uploadErr) {
-        console.warn("Supabase storage upload error:", uploadErr);
+      } catch {
+        // signed URL creation optional
       }
     }
 
@@ -214,7 +357,7 @@ export class CareerApplyService {
         .set({ applyCount: sql`${jobsTable.applyCount} + 1` })
         .where(eq(jobsTable.id, job.id));
     } catch (countErr) {
-      console.warn("Failed to increment apply count:", countErr);
+      logger.warn(`Failed to increment apply count: ${String(countErr)}`);
     }
 
     // 9. Dispatch background dual notification emails
@@ -239,10 +382,14 @@ export class CareerApplyService {
             </div>
           `,
         })
-        .catch((err) => console.error("Failed to send candidate confirmation email:", err));
+        .catch((err) => logger.error(`Failed to send candidate confirmation email: ${String(err)}`));
 
       // Email B: Recruiter notification
-      const recruiterRecipient = process.env.RECRUITER_NOTIFICATION_EMAIL || "careers@techsonance.co.in";
+      const recruiterRecipient =
+        (this.envConfig as any)?.RECRUITER_NOTIFICATION_EMAIL ||
+        this.envConfig?.ADMIN_EMAIL ||
+        "careers@techsonance.co.in";
+
       this.emailService
         .sendMail({
           to: recruiterRecipient,
@@ -266,16 +413,108 @@ export class CareerApplyService {
                 <tr><td style="padding: 8px 0; color: #64748b;">Application ID:</td><td style="padding: 8px 0; font-family: monospace;">${application.id}</td></tr>
               </table>
               <div style="margin-top: 24px;">
-                <a href="https://www.techsonance.co.in/admin/careers/applications?id=${application.id}" style="display: inline-block; background-color: #1155cc; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500;">
+                <a href="https://www.techsonance.co.in/admin/careers/applications?id=${application.id}" style="display: inline-block background-color: #1155cc; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500;">
                   Review in ATS Inbox
                 </a>
               </div>
             </div>
           `,
         })
-        .catch((err) => console.error("Failed to send recruiter alert email:", err));
+        .catch((err) => logger.error(`Failed to send recruiter alert email: ${String(err)}`));
     }
 
     return application;
+  }
+
+  /**
+   * Submits general interest / talent pool candidate.
+   */
+  async submitTalentPool(payload: TalentPoolSubmitPayload) {
+    if (!payload.name || payload.name.trim().length < 2) {
+      throw new AppError("BAD_REQUEST", "Full name must be at least 2 characters.");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const normalizedEmail = (payload.email || "").trim().toLowerCase();
+    if (!emailRegex.test(normalizedEmail)) {
+      throw new AppError("BAD_REQUEST", "Please provide a valid email address.");
+    }
+
+    // Resolve site ID
+    let siteId = payload.siteId;
+    if (!siteId) {
+      try {
+        if ((this.db as any).query?.sitesTable?.findFirst) {
+          const site = await (this.db as any).query.sitesTable.findFirst();
+          if (site?.id) siteId = site.id;
+        }
+      } catch {
+        // fallback
+      }
+    }
+    if (!siteId) {
+      siteId = "00000000-0000-0000-0000-000000000000";
+    }
+
+    // Upload resume if provided
+    let resumeStoragePath: string | null = null;
+    if (payload.resumeFile) {
+      const fileBytes = await this.validateResume(payload.resumeFile);
+      const sanitizedName = (payload.resumeFile.name || "resume.pdf").replace(/[^a-zA-Z0-9._-]/g, "_");
+      const uniqueId = crypto.randomUUID();
+      resumeStoragePath = `${siteId}/talent-pool/${uniqueId}_${sanitizedName}`;
+
+      if (this.supabaseAdmin?.storage) {
+        try {
+          await this.supabaseAdmin.storage
+            .from("resumes")
+            .upload(resumeStoragePath, fileBytes, {
+              contentType: payload.resumeFile.type || "application/pdf",
+              upsert: false,
+            });
+        } catch (uploadErr) {
+          logger.warn(`Talent pool resume storage upload warning: ${String(uploadErr)}`);
+        }
+      }
+    }
+
+    const [talent] = await this.db
+      .insert(talentPoolTable)
+      .values({
+        siteId,
+        name: payload.name.trim(),
+        email: normalizedEmail,
+        phone: payload.phone?.trim() || null,
+        skills: payload.skills || [],
+        preferredRole: payload.preferredRole?.trim() || null,
+        experienceLevel: (payload.experienceLevel as any) || JobExperienceLevel.MID,
+        portfolioUrl: payload.portfolioUrl?.trim() || null,
+        resumeStoragePath,
+        notes: payload.notes?.trim() || null,
+        consentDate: new Date(),
+      })
+      .returning();
+
+    // Confirmation email
+    if (this.emailService) {
+      this.emailService
+        .sendMail({
+          to: normalizedEmail,
+          subject: "Welcome to TechSonance Talent Pool",
+          text: `Dear ${payload.name},\n\nThank you for joining the TechSonance Infotech Talent Pool!\n\nWe have received your profile and resume. As new career opportunities and engineering initiatives open that match your skills, our talent team will reach out directly.\n\nBest regards,\nTechSonance Talent Acquisition\nhttps://www.techsonance.co.in`,
+          html: `
+            <div style="font-family: sans-serif; color: #1e293b; max-width: 600px; margin: 0 auto; padding: 24px;">
+              <h2 style="color: #1155cc; margin-bottom: 16px;">Welcome to Our Talent Pool</h2>
+              <p>Dear <strong>${payload.name}</strong>,</p>
+              <p>Thank you for submitting your details to the <strong>TechSonance Infotech LLP</strong> Talent Pool.</p>
+              <p>Our team keeps your profile active for upcoming engineering, product, and leadership roles. When an opportunity aligns with your experience and interests, our team will get in touch with you.</p>
+              <p style="margin-top: 32px; font-size: 14px; color: #64748b;">Best regards,<br/><strong>TechSonance Talent Team</strong><br/><a href="https://www.techsonance.co.in" style="color: #1155cc;">techsonance.co.in</a></p>
+            </div>
+          `,
+        })
+        .catch((err) => logger.error(`Failed to send talent pool confirmation email: ${String(err)}`));
+    }
+
+    return talent;
   }
 }
