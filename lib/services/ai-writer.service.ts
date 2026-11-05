@@ -51,6 +51,10 @@ export class AIWriterService {
     return result.trim();
   }
 
+  async generateRaw(systemPrompt: string, userPrompt: string): Promise<string> {
+    return this.completePrompt(systemPrompt, userPrompt);
+  }
+
   /**
    * Step 1: Generate structured outline
    */

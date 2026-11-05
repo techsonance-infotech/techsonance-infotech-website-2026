@@ -9,6 +9,9 @@ import {
   Briefcase,
   ImageIcon,
   Sparkles,
+  Lightbulb,
+  Sliders,
+  BarChart3,
   ExternalLink,
   LogOut,
   RefreshCw,
@@ -50,7 +53,32 @@ export function AdminShell({
       title: "Blog Articles",
       href: "/admin/blog",
       icon: FileText,
-      active: pathname.startsWith("/admin/blog") && !pathname.includes("/ai"),
+      active: pathname === "/admin/blog" || pathname.startsWith("/admin/blog/new") || pathname.match(/\/admin\/blog\/[^\/]+$/) !== null,
+    },
+    {
+      title: "Topic Backlog",
+      href: "/admin/blog/topics",
+      icon: Lightbulb,
+      active: pathname.startsWith("/admin/blog/topics"),
+    },
+    {
+      title: "Prompt Studio",
+      href: "/admin/blog/prompts",
+      icon: Sliders,
+      active: pathname.startsWith("/admin/blog/prompts"),
+    },
+    {
+      title: "AI Pipeline",
+      href: "/admin/blog/ai",
+      icon: Sparkles,
+      active: pathname === "/admin/blog/ai",
+      badge: "Autonomous",
+    },
+    {
+      title: "AI Telemetry",
+      href: "/admin/blog/ai/usage",
+      icon: BarChart3,
+      active: pathname.startsWith("/admin/blog/ai/usage"),
     },
     {
       title: "Careers & Jobs",
@@ -63,13 +91,6 @@ export function AdminShell({
       href: "/admin/media",
       icon: ImageIcon,
       active: pathname.startsWith("/admin/media"),
-    },
-    {
-      title: "AI Automation",
-      href: "/admin/blog/ai",
-      icon: Sparkles,
-      active: pathname.startsWith("/admin/blog/ai"),
-      badge: "Beta",
     },
   ];
 

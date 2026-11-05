@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   FileText,
   Briefcase,
@@ -8,6 +9,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { getContainer } from "@/lib/di/container";
+import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -16,6 +18,13 @@ import { Button } from "@/components/ui/button";
 
 export default async function AdminDashboardPage() {
   const container = getContainer();
+  const authService = container.get(AdminAuthService);
+  const session = await authService.getCurrentSession();
+
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const postsService = container.get(AdminPostsService);
   const jobsService = container.get(AdminJobsService);
 

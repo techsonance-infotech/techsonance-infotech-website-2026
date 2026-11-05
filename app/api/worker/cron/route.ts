@@ -1,0 +1,100 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getContainer } from "@/lib/di/container";
+import { AdminTelemetryService } from "@/lib/services/admin-telemetry.service";
+import { AdminTopicsService } from "@/lib/services/admin-topics.service";
+import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
+import { getEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
+
+export async function POST(req: NextRequest) {
+  const env = getEnv();
+  const authHeader = req.headers.get("Authorization");
+  const providedSecret = authHeader?.replace(/^Bearer\s+/i, "") || req.headers.get("x-cron-secret");
+
+  const validSecrets = [
+    process.env.CRON_SECRET,
+    env.REVALIDATE_SECRET,
+  ].filter(Boolean);
+
+  // If a secret is configured in env, require it
+  if (validSecrets.length > 0 && (!providedSecret || !validSecrets.includes(providedSecret))) {
+    return NextResponse.json({ error: "Unauthorized cron trigger" }, { status: 401 });
+  }
+
+  const container = getContainer();
+  const telemetry = container.get(AdminTelemetryService);
+  const topicsService = container.get(AdminTopicsService);
+
+  try {
+    const summary = await telemetry.getTelemetrySummary();
+
+    // Check caps
+    if (summary.dailyPostsUsed >= summary.dailyPostCap) {
+      logger.info("Autonomous cron skipped: daily post cap reached", {
+        used: summary.dailyPostsUsed,
+        cap: summary.dailyPostCap,
+      });
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "Daily cap reached",
+        dailyUsage: `${summary.dailyPostsUsed}/${summary.dailyPostCap}`,
+      });
+    }
+
+    if (summary.weeklyPostsUsed >= summary.weeklyPostCap) {
+      logger.info("Autonomous cron skipped: weekly post cap reached", {
+        used: summary.weeklyPostsUsed,
+        cap: summary.weeklyPostCap,
+      });
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "Weekly cap reached",
+        weeklyUsage: `${summary.weeklyPostsUsed}/${summary.weeklyPostCap}`,
+      });
+    }
+
+    // Look for next accepted topic
+    const { topics } = await topicsService.listTopics({
+      status: AiTopicStatus.ACCEPTED,
+      limit: 1,
+    });
+
+    if (topics.length === 0) {
+      logger.info("Autonomous cron: No accepted topics waiting in backlog");
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "No accepted topics in queue",
+      });
+    }
+
+    const topic = topics[0];
+    const { jobId } = await topicsService.launchTopicGeneration(topic.id);
+
+    logger.info("Autonomous cron triggered job successfully", {
+      jobId,
+      topicId: topic.id,
+      topicTitle: topic.title,
+    });
+
+    return NextResponse.json({
+      success: true,
+      action: "job_started",
+      jobId,
+      topic: topic.title,
+    });
+  } catch (error) {
+    logger.error("Autonomous cron failed", { error });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Cron execution failed" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  // Allow health check / status inspection of cron endpoint
+  return POST(req);
+}

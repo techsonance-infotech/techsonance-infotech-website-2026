@@ -29,6 +29,9 @@ import { ImageStepService } from "../services/image/image-step.service";
 import { AIWriterService } from "../services/ai-writer.service";
 import { ApprovalService } from "../services/approval.service";
 import { JobOrchestratorService } from "../services/job-orchestrator.service";
+import { AdminTopicsService } from "../services/admin-topics.service";
+import { AdminPromptsService } from "../services/admin-prompts.service";
+import { AdminTelemetryService } from "../services/admin-telemetry.service";
 
 let rootContainer: Container | null = null;
 
@@ -56,6 +59,9 @@ export function configureContainer(container: Container): Container {
   container.bind(AIWriterService);
   container.bind(ApprovalService);
   container.bind(JobOrchestratorService);
+  container.bind(AdminTopicsService);
+  container.bind(AdminPromptsService);
+  container.bind(AdminTelemetryService);
   return container;
 }
 
