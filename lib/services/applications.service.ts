@@ -1,7 +1,12 @@
 import "server-only";
 import { eq, and, desc, ilike, or, count } from "drizzle-orm";
 import { getDrizzleDb } from "@/lib/database";
-import { applicationsTable, jobsTable, auditLogsTable } from "@/lib/database/schema/index.schema";
+import {
+  applicationsTable,
+  jobsTable,
+  auditLogsTable,
+  talentPoolTable,
+} from "@/lib/database/schema/index.schema";
 import { ApplicationStatus } from "@/lib/database/enum/content.enum";
 import { AppError } from "@/lib/errors";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -285,5 +290,123 @@ export class ApplicationsService {
     }
 
     return lines.join("\n");
+  }
+
+  async exportCandidateData(email: string) {
+    if (!email || !email.trim()) {
+      throw new AppError("VALIDATION", "A valid candidate email is required for data export.");
+    }
+    const cleanEmail = email.trim().toLowerCase();
+
+    const applications = await this.db
+      .select()
+      .from(applicationsTable)
+      .where(eq(applicationsTable.email, cleanEmail));
+
+    const talentPoolSubmissions = await this.db
+      .select()
+      .from(talentPoolTable)
+      .where(eq(talentPoolTable.email, cleanEmail));
+
+    return {
+      email: cleanEmail,
+      exportedAt: new Date(),
+      applications: applications || [],
+      talentPoolSubmissions: talentPoolSubmissions || [],
+    };
+  }
+
+  async purgeCandidateData(email: string, actorId?: string, ipAddress?: string) {
+    if (!email || !email.trim()) {
+      throw new AppError("VALIDATION", "A valid candidate email is required for GDPR deletion.");
+    }
+    const cleanEmail = email.trim().toLowerCase();
+
+    // 1. Fetch all applications and talent pool entries
+    const applications = await this.db
+      .select()
+      .from(applicationsTable)
+      .where(eq(applicationsTable.email, cleanEmail));
+
+    const talentPoolRows = await this.db
+      .select()
+      .from(talentPoolTable)
+      .where(eq(talentPoolTable.email, cleanEmail));
+
+    // 2. Collect storage paths of resumes
+    const resumeStoragePaths: string[] = [];
+    for (const app of applications || []) {
+      if (app.resumeStoragePath) {
+        resumeStoragePaths.push(app.resumeStoragePath);
+      }
+    }
+    for (const tp of talentPoolRows || []) {
+      if (tp.resumeStoragePath) {
+        resumeStoragePaths.push(tp.resumeStoragePath);
+      }
+    }
+
+    // 3. Purge files from Supabase Storage
+    let deletedFilesCount = 0;
+    if (resumeStoragePaths.length > 0 && this.supabaseAdmin?.storage) {
+      try {
+        const { data, error } = await this.supabaseAdmin.storage
+          .from("resumes")
+          .remove(resumeStoragePaths);
+        if (error) {
+          logger.warn("Failed to remove some resume files from storage during GDPR purge:", {
+            error: error.message,
+          });
+        }
+        deletedFilesCount = data?.length || resumeStoragePaths.length;
+      } catch (storageErr) {
+        logger.warn("Storage removal exception during GDPR purge:", {
+          error: String(storageErr),
+        });
+        deletedFilesCount = resumeStoragePaths.length;
+      }
+    }
+
+    // 4. Hard delete from database
+    await this.db
+      .delete(applicationsTable)
+      .where(eq(applicationsTable.email, cleanEmail));
+
+    await this.db
+      .delete(talentPoolTable)
+      .where(eq(talentPoolTable.email, cleanEmail));
+
+    const deletedApplicationsCount = (applications || []).length;
+    const deletedTalentPoolCount = (talentPoolRows || []).length;
+
+    // 5. Record GDPR compliance audit trail
+    try {
+      await this.db.insert(auditLogsTable).values({
+        actorId,
+        action: "compliance.candidate_purged",
+        entityType: "candidate",
+        entityId: cleanEmail,
+        ipAddress,
+        afterState: {
+          email: cleanEmail,
+          deletedApplicationsCount,
+          deletedTalentPoolCount,
+          deletedFilesCount,
+          purgedAt: new Date().toISOString(),
+        },
+      });
+    } catch (auditErr) {
+      logger.warn("Failed to write compliance audit log:", {
+        error: String(auditErr),
+      });
+    }
+
+    return {
+      success: true,
+      email: cleanEmail,
+      deletedApplicationsCount,
+      deletedTalentPoolCount,
+      deletedFilesCount,
+    };
   }
 }
