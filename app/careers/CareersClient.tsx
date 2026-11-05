@@ -106,7 +106,12 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
   const [selectedExp, setSelectedExp] = useState(
     searchParams.get("exp") || searchParams.get("experienceLevel") || "all",
   );
+
+  const [selectedSort, setSelectedSort] = useState(searchParams.get("sort") || "newest");
   const [isTalentPoolOpen, setIsTalentPoolOpen] = useState(false);
+
+  const PAGE_SIZE = 6;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   // Sync state from URL when user navigates back/forward
   useEffect(() => {
@@ -115,16 +120,26 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
     setSelectedMode(searchParams.get("mode") || searchParams.get("workMode") || "all");
     setSelectedType(searchParams.get("type") || "all");
     setSelectedExp(searchParams.get("exp") || searchParams.get("experienceLevel") || "all");
+    setSelectedSort(searchParams.get("sort") || "newest");
+    setVisibleCount(PAGE_SIZE);
   }, [searchParams]);
 
   // Sync state to URL with shallow replace
   const updateUrl = useCallback(
-    (overrides: { search?: string; dept?: string; mode?: string; type?: string; exp?: string }) => {
+    (overrides: {
+      search?: string;
+      dept?: string;
+      mode?: string;
+      type?: string;
+      exp?: string;
+      sort?: string;
+    }) => {
       const nextSearch = overrides.search !== undefined ? overrides.search : searchTerm;
       const nextDept = overrides.dept !== undefined ? overrides.dept : selectedDept;
       const nextMode = overrides.mode !== undefined ? overrides.mode : selectedMode;
       const nextType = overrides.type !== undefined ? overrides.type : selectedType;
       const nextExp = overrides.exp !== undefined ? overrides.exp : selectedExp;
+      const nextSort = overrides.sort !== undefined ? overrides.sort : selectedSort;
 
       const params = new URLSearchParams();
       if (nextSearch.trim()) params.set("search", nextSearch.trim());
@@ -132,11 +147,12 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
       if (nextMode && nextMode.toLowerCase() !== "all") params.set("mode", nextMode);
       if (nextType && nextType.toLowerCase() !== "all") params.set("type", nextType);
       if (nextExp && nextExp.toLowerCase() !== "all") params.set("exp", nextExp);
+      if (nextSort && nextSort !== "newest") params.set("sort", nextSort);
 
       const qs = params.toString();
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     },
-    [router, pathname, searchTerm, selectedDept, selectedMode, selectedType, selectedExp]
+    [router, pathname, searchTerm, selectedDept, selectedMode, selectedType, selectedExp, selectedSort]
   );
 
   // Debounced search sync to URL
@@ -156,6 +172,8 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
     setSelectedMode("all");
     setSelectedType("all");
     setSelectedExp("all");
+    setSelectedSort("newest");
+    setVisibleCount(PAGE_SIZE);
     router.replace(pathname, { scroll: false });
   };
 
@@ -168,8 +186,13 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
       workMode: selectedMode,
       type: selectedType,
       experienceLevel: selectedExp,
+      sortBy: selectedSort as "newest" | "closing_soon" | "title",
     });
-  }, [allJobs, searchTerm, selectedDept, selectedMode, selectedType, selectedExp]);
+  }, [allJobs, searchTerm, selectedDept, selectedMode, selectedType, selectedExp, selectedSort]);
+
+  const displayedJobs = useMemo(() => {
+    return filteredJobs.slice(0, visibleCount);
+  }, [filteredJobs, visibleCount]);
 
   const departments = useMemo(() => {
     const set = new Set<string>();
@@ -198,140 +221,6 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
     () => window.innerWidth < 768,
     () => false,
   );
-
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    role: "Business Development Partner",
-    message: "",
-  });
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [touched, setTouched] = useState<{
-    fullName?: boolean;
-    email?: boolean;
-    message?: boolean;
-    resume?: boolean;
-  }>({});
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setTouched((prev) => ({ ...prev, [name]: true }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTouched((prev) => ({ ...prev, resume: true }));
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage("File size must be under 5MB");
-        setStatus("error");
-        setResumeFile(file);
-        return;
-      }
-      setResumeFile(file);
-      setErrorMessage("");
-      if (status === "error") setStatus("idle");
-    }
-  };
-
-  const getValidationError = (field: string) => {
-    if (!touched[field as keyof typeof touched]) return undefined;
-
-    if (field === "fullName") {
-      if (!formData.fullName.trim()) return "Full name is required.";
-    }
-    if (field === "email") {
-      if (!formData.email.trim()) {
-        return "Email address is required.";
-      }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        return "Please enter a valid email address.";
-      }
-    }
-    if (field === "message") {
-      if (!formData.message.trim()) {
-        return "Message / Cover letter is required.";
-      }
-    }
-    if (field === "resume") {
-      if (!resumeFile) return "Resume file is required.";
-      if (resumeFile.size > 5 * 1024 * 1024) return "Resume size must be under 5MB.";
-    }
-    return undefined;
-  };
-
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim());
-  const isFormValid =
-    !!formData.fullName.trim() &&
-    !!formData.email.trim() &&
-    !!formData.message.trim() &&
-    isEmailValid &&
-    !!resumeFile &&
-    resumeFile.size <= 5 * 1024 * 1024;
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setTouched({
-      fullName: true,
-      email: true,
-      message: true,
-      resume: true,
-    });
-
-    if (!isFormValid) {
-      setErrorMessage("Please fill all fields correctly.");
-      setStatus("error");
-      return;
-    }
-
-    setStatus("loading");
-    setErrorMessage("");
-
-    try {
-      const data = new FormData();
-      data.append("fullName", formData.fullName);
-      data.append("email", formData.email);
-      data.append("role", formData.role);
-      data.append("message", formData.message);
-      if (resumeFile) {
-        data.append("resume", resumeFile);
-      }
-
-      const response = await fetch("/api/careers", {
-        method: "POST",
-        body: data,
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Something went wrong.");
-      }
-
-      setStatus("success");
-      setFormData({
-        fullName: "",
-        email: "",
-        role: "Business Development Partner",
-        message: "",
-      });
-      setResumeFile(null);
-      setTouched({});
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err: unknown) {
-      console.error("Submission error:", err);
-      setErrorMessage(
-        (err instanceof Error ? err.message : "Failed to submit application.") ||
-          "Failed to submit application.",
-      );
-      setStatus("error");
-    }
-  };
 
   return (
     <>
@@ -782,12 +671,31 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 );
               })}
 
+              <span className="text-slate-200 mx-2 hidden sm:inline">|</span>
+
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+                Sort:
+              </span>
+              <select
+                value={selectedSort}
+                onChange={(e) => {
+                  setSelectedSort(e.target.value);
+                  updateUrl({ sort: e.target.value });
+                }}
+                className="text-xs font-semibold px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+              >
+                <option value="newest">Newest First</option>
+                <option value="closing_soon">Closing Soon</option>
+                <option value="title">Role Title (A-Z)</option>
+              </select>
+
               {/* Active filters reset button */}
               {(searchTerm ||
                 selectedDept !== "all" ||
                 selectedMode !== "all" ||
                 selectedType !== "all" ||
-                selectedExp !== "all") && (
+                selectedExp !== "all" ||
+                selectedSort !== "newest") && (
                 <button
                   type="button"
                   onClick={handleResetFilters}
@@ -802,88 +710,145 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
 
           {/* Job Listings / Empty State */}
           <div className="max-w-4xl mx-auto space-y-6 relative z-10">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-all duration-300 group relative overflow-hidden"
-                >
-                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
-                          {job.department} • Active Opening
-                        </span>
-                        {job.workMode && (
-                          <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-full inline-block">
-                            {job.workMode}
-                          </span>
-                        )}
-                      </div>
-                      <Link
-                        href={`/careers/${job.slug}`}
-                        className="block text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight hover:text-[#1155CC] transition-colors"
-                      >
-                        {job.title}
-                      </Link>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-emerald-500" />
-                          {job.location}
-                        </span>
-                        <span className="text-slate-200">•</span>
-                        <span className="flex items-center gap-1.5">
-                          <Briefcase className="w-3.5 h-3.5 text-slate-400" />
-                          {job.type}
-                        </span>
-                        {job.experienceLevel && (
-                          <>
-                            <span className="text-slate-200">•</span>
-                            <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
-                          </>
-                        )}
-                        {job.showSalaryPublicly && job.salaryMin && (
-                          <>
-                            <span className="text-slate-200">•</span>
-                            <span className="text-emerald-600 font-bold">
-                              {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString()}
-                              {job.salaryMax ? ` - ${job.salaryMax.toLocaleString()}` : ""} /{" "}
-                              {job.salaryPeriod || "month"}
+            {displayedJobs.length > 0 ? (
+              <>
+                {displayedJobs.map((job) => {
+                  const isNew = Boolean(
+                    job.publishedAt &&
+                      Date.now() - new Date(job.publishedAt).getTime() <=
+                        14 * 24 * 60 * 60 * 1000,
+                  );
+                  const isClosingSoon = Boolean(
+                    job.closesAt &&
+                      new Date(job.closesAt).getTime() > Date.now() &&
+                      new Date(job.closesAt).getTime() - Date.now() <=
+                        7 * 24 * 60 * 60 * 1000,
+                  );
+
+                  return (
+                    <div
+                      key={job.id}
+                      className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+                    >
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
+                              {job.department} • Active Opening
                             </span>
-                          </>
+                            {isNew && (
+                              <span className="text-[10px] font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                                ✨ New
+                              </span>
+                            )}
+                            {isClosingSoon && (
+                              <span className="text-[10px] font-black text-amber-700 uppercase tracking-wider bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                                ⏰ Closing Soon
+                              </span>
+                            )}
+                            {job.workMode && (
+                              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-full inline-block">
+                                {job.workMode}
+                              </span>
+                            )}
+                          </div>
+                          <Link
+                            href={`/careers/${job.slug}`}
+                            className="block text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight hover:text-[#1155CC] transition-colors"
+                          >
+                            {job.title}
+                          </Link>
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
+                            <span className="flex items-center gap-1.5">
+                              <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+                              {job.location}
+                            </span>
+                            <span className="text-slate-200">•</span>
+                            <span className="flex items-center gap-1.5">
+                              <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                              {job.type}
+                            </span>
+                            {job.experienceLevel && (
+                              <>
+                                <span className="text-slate-200">•</span>
+                                <span className="text-[#1155CC]">
+                                  Level: {job.experienceLevel}
+                                </span>
+                              </>
+                            )}
+                            {job.showSalaryPublicly && job.salaryMin && (
+                              <>
+                                <span className="text-slate-200">•</span>
+                                <span className="text-emerald-600 font-bold">
+                                  {job.salaryCurrency || "INR"}{" "}
+                                  {job.salaryMin.toLocaleString()}
+                                  {job.salaryMax
+                                    ? ` - ${job.salaryMax.toLocaleString()}`
+                                    : ""}{" "}
+                                  / {job.salaryPeriod || "month"}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl"
+                          >
+                            <Link href={`/careers/${job.slug}`}>View Details</Link>
+                          </Button>
+                          <Button
+                            asChild
+                            variant="default"
+                            size="sm"
+                            className="rounded-xl"
+                          >
+                            <Link href={`/careers/${job.slug}#apply-form`}>
+                              Apply Now
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="pt-6 space-y-4">
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium line-clamp-3">
+                          {job.summary || job.description}
+                        </p>
+
+                        {job.skills && job.skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-2">
+                            {job.skills.slice(0, 7).map((skill) => (
+                              <span
+                                key={skill}
+                                className="text-[11px] font-medium bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-md"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
-                      <Button asChild variant="outline" size="sm" className="rounded-xl">
-                        <Link href={`/careers/${job.slug}`}>View Details</Link>
-                      </Button>
-                      <Button asChild variant="default" size="sm" className="rounded-xl">
-                        <Link href={`/careers/${job.slug}#apply-form`}>Apply Now</Link>
-                      </Button>
-                    </div>
-                  </div>
+                  );
+                })}
 
-                  <div className="pt-6 space-y-4">
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium line-clamp-3">
-                      {job.summary || job.description}
-                    </p>
-
-                    {job.skills && job.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-2">
-                        {job.skills.slice(0, 7).map((skill) => (
-                          <span
-                            key={skill}
-                            className="text-[11px] font-medium bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-md"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                {filteredJobs.length > visibleCount && (
+                  <div className="pt-6 text-center">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="lg"
+                      onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                      className="rounded-2xl border-slate-300 hover:border-[#1155CC] hover:text-[#1155CC] font-bold px-8 shadow-xs"
+                    >
+                      Load More Positions ({filteredJobs.length - visibleCount} remaining)
+                    </Button>
                   </div>
-                </div>
-              ))
+                )}
+              </>
             ) : (
               <div className="bg-white border border-dashed border-slate-200 rounded-3xl p-10 sm:p-14 text-center max-w-2xl mx-auto space-y-5">
                 <div className="w-16 h-16 mx-auto rounded-full bg-blue-50 text-[#1155CC] flex items-center justify-center">
@@ -993,248 +958,34 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         </section>
 
         {/* ==========================================
-            HIRING APPLICATION FORM
+            TALENT POOL INVITATION
             ========================================== */}
-        <section id="apply" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-5 pr-0 lg:pr-6">
-              <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
-                Join Us Today
+        <section id="talent-pool" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white rounded-3xl p-8 sm:p-14 shadow-xl border border-slate-800 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-2xl space-y-5 relative z-10">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#22B6F6] bg-blue-500/20 px-3.5 py-1.5 rounded-full inline-block border border-blue-400/20">
+                General Engineering Network
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                Don't See Your Specific Role Open?
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-4">
-                Submit Your Application
-              </h3>
-              <p className="text-sm text-slate-550 leading-relaxed font-medium mb-6">
-                Tell us about yourself and upload your latest resume. Once submitted, our team will
-                review details and get back to you within 3 business days.
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+                Join the TechSonance Talent Pool. We evaluate every submission directly through our engineering leadership and actively reach out when initiatives matching your technical skills and systems experience launch.
               </p>
 
-              <div className="space-y-4 pt-4 border-t border-slate-100">
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon name="check" className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">Immediate Reviews</h4>
-                    <p className="text-[10px] text-slate-400 font-medium">
-                      All applications are screened by real engineering leads directly.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon name="check" className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">Direct Contact</h4>
-                    <p className="text-[10px] text-slate-400 font-medium">
-                      You will receive notifications at every single step of evaluation.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]">
-              <form onSubmit={handleFormSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="fullName"
-                      className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
-                    >
-                      Full Name <span className="text-red-500 font-bold">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      id="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      onBlur={() => setTouched((prev) => ({ ...prev, fullName: true }))}
-                      placeholder="e.g. John Doe"
-                      className={`w-full rounded-2xl border ${getValidationError("fullName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
-                    />
-                    {getValidationError("fullName") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
-                        {getValidationError("fullName")}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
-                    >
-                      Email Address <span className="text-red-500 font-bold">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-                      placeholder="john@example.com"
-                      className={`w-full rounded-2xl border ${getValidationError("email") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
-                    />
-                    {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
-                        {getValidationError("email")}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="role"
-                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
-                  >
-                    Role Interested In <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <select
-                    name="role"
-                    id="role"
-                    required
-                    value={formData.role}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, role: e.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-bold"
-                  >
-                    <option value="Business Development Partner">
-                      Business Development Partner (Commission / Project-Based)
-                    </option>
-                    {/* <option value="Full Stack Developer Intern">Full Stack Developer Intern</option> */}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="resume"
-                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
-                  >
-                    Resume Upload (PDF / DOCX - Max 5MB){" "}
-                    <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      setTouched((prev) => ({ ...prev, resume: true }));
-                      fileInputRef.current?.click();
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setTouched((prev) => ({ ...prev, resume: true }));
-                        fileInputRef.current?.click();
-                      }
-                    }}
-                    className={`w-full border-2 border-dashed ${getValidationError("resume") ? "border-red-500 bg-red-50/5 hover:bg-red-50/10" : "border-slate-200 hover:border-[#1155CC] hover:bg-slate-50/50"} rounded-2xl px-6 py-6 text-center cursor-pointer transition-all flex flex-col items-center`}
-                  >
-                    <input
-                      type="file"
-                      name="resume"
-                      id="resume"
-                      ref={fileInputRef}
-                      required
-                      accept=".pdf,.docx,.doc"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                    <div className="w-10 h-10 rounded-2xl bg-blue-50/50 text-[#1155CC] border border-blue-150 flex items-center justify-center mb-3">
-                      <Icon name="chevron" className="w-5 h-5 rotate-180" />
-                    </div>
-                    {resumeFile ? (
-                      <div>
-                        <span className="block text-xs font-bold text-slate-900">
-                          {resumeFile.name}
-                        </span>
-                        <span className="block text-[10px] text-slate-400 font-medium mt-0.5">
-                          Click to select a different file
-                        </span>
-                      </div>
-                    ) : (
-                      <div>
-                        <span className="block text-xs font-bold text-slate-900">
-                          Drag or select your resume file
-                        </span>
-                        <span className="block text-[10px] text-slate-400 font-medium mt-0.5">
-                          PDF, DOCX formats supported
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  {getValidationError("resume") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">
-                      {getValidationError("resume")}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
-                  >
-                    Tell Us About Yourself / Cover Letter{" "}
-                    <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <textarea
-                    name="message"
-                    id="message"
-                    required
-                    rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    onBlur={() => setTouched((prev) => ({ ...prev, message: true }))}
-                    placeholder="Briefly introduce yourself, your experience in software business development or sales, relevant target industries/networks, and why you are excited to partner with us..."
-                    className={`w-full rounded-2xl border ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 outline-none focus:bg-white transition-all font-medium`}
-                  />
-                  {getValidationError("message") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">
-                      {getValidationError("message")}
-                    </p>
-                  )}
-                </div>
-
-                {/* Status Banners */}
-                <AnimatePresence mode="wait">
-                  {status === "error" && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-xs font-bold"
-                    >
-                      {errorMessage || "An error occurred. Please check your inputs."}
-                    </motion.div>
-                  )}
-
-                  {status === "success" && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl text-xs font-bold"
-                    >
-                      🎉 Application submitted successfully! We will get in touch with you soon.
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
                 <Button
-                  type="submit"
-                  disabled={status === "loading" || !isFormValid}
-                  variant="default"
-                  className="w-full"
+                  onClick={() => setIsTalentPoolOpen(true)}
+                  className="bg-[#1155CC] hover:bg-[#0d44a4] text-white font-bold px-8 py-6 rounded-2xl shadow-lg shadow-blue-500/20 text-sm w-full sm:w-auto"
                 >
-                  {status === "loading" ? "Submitting Application..." : "Submit Application"}
+                  Join Talent Pool &rarr;
                 </Button>
-              </form>
+                <span className="text-xs text-slate-400 font-medium">
+                  Takes under 60 seconds • Direct review by technical leads
+                </span>
+              </div>
             </div>
           </div>
         </section>

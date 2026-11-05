@@ -3,6 +3,9 @@ import { getContainer } from "@/lib/di/container";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { updateJobSchema } from "@/lib/validations/careers";
+import { logger } from "@/lib/logger";
+import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -16,20 +19,26 @@ export async function GET(_req: Request, { params }: RouteParams) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const jobsService = container.get(AdminJobsService);
     const job = await jobsService.getJobById(id);
 
     if (!job) {
-      return NextResponse.json({ error: "Job not found" }, { status: 404 });
+      return NextResponse.json({ error: CAREER_ERRORS.JOB_NOT_FOUND }, { status: 404 });
     }
 
     return NextResponse.json({ ok: true, job });
-  } catch (error) {
-    console.error("Get job error:", error);
-    return NextResponse.json({ error: "Failed to fetch job" }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: STATUS_BY_CODE[error.code] || 400 },
+      );
+    }
+    logger.error("Get job error", { error: String(error) });
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_GET_JOB }, { status: 500 });
   }
 }
 
@@ -41,14 +50,14 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const body = await req.json();
     const parseResult = updateJobSchema.safeParse(body);
     if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: parseResult.error.format() },
+        { error: CAREER_ERRORS.VALIDATION_FAILED, details: parseResult.error.format() },
         { status: 400 },
       );
     }
@@ -61,9 +70,15 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     );
 
     return NextResponse.json({ ok: true, job: updated });
-  } catch (error) {
-    console.error("Update job error:", error);
-    return NextResponse.json({ error: "Failed to update job" }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: STATUS_BY_CODE[error.code] || 400 },
+      );
+    }
+    logger.error("Update job error", { error: String(error) });
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_UPDATE_JOB }, { status: 500 });
   }
 }
 
@@ -75,15 +90,21 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const jobsService = container.get(AdminJobsService);
     await jobsService.deleteJob(id, session.userId);
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error("Delete job error:", error);
-    return NextResponse.json({ error: "Failed to delete job" }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: STATUS_BY_CODE[error.code] || 400 },
+      );
+    }
+    logger.error("Delete job error", { error: String(error) });
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_DELETE_JOB }, { status: 500 });
   }
 }

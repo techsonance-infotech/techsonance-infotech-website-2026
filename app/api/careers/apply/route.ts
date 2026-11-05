@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
-import { CareerApplyService } from "@/lib/services/career-apply.service";
+import { CareerApplyService, type ScreeningAnswerInput } from "@/lib/services/career-apply.service";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/server/rateLimit";
 import { logger } from "@/lib/logger";
+import {
+  CAREER_ERRORS,
+  DEFAULT_APPLICATION_SOURCE,
+} from "@/lib/constants/careers.constants";
 
 export async function POST(req: Request) {
   try {
@@ -35,6 +39,10 @@ export async function POST(req: Request) {
     const jobId = String(formData.get("jobId") || "").trim();
     const candidateName = String(formData.get("candidateName") || "").trim();
     const email = String(formData.get("email") || "").trim();
+
+    logger.info(
+      `[API Careers Apply] Incoming application for jobId="${jobId}", candidate="${candidateName}" <${email}>`,
+    );
     const phone = formData.get("phone") ? String(formData.get("phone")).trim() : undefined;
     const currentLocation = formData.get("currentLocation")
       ? String(formData.get("currentLocation")).trim()
@@ -58,10 +66,10 @@ export async function POST(req: Request) {
       formData.get("privacyConsent") === "true" || formData.get("privacyConsent") === "on";
     const talentPoolConsent =
       formData.get("talentPoolConsent") === "true" || formData.get("talentPoolConsent") === "on";
-    const source = formData.get("source") ? String(formData.get("source")).trim() : "direct";
+    const source = formData.get("source") ? String(formData.get("source")).trim() : DEFAULT_APPLICATION_SOURCE;
 
     // Parse screening answers if provided
-    let screeningAnswers: any[] = [];
+    let screeningAnswers: ScreeningAnswerInput[] = [];
     const rawScreening = formData.get("screeningAnswers");
     if (rawScreening && typeof rawScreening === "string") {
       try {
@@ -71,22 +79,56 @@ export async function POST(req: Request) {
       }
     }
 
+    // Parse optional voluntary EEOC answers if provided
+    let eeoc:
+      | {
+          gender?: string;
+          ethnicity?: string;
+          veteranStatus?: string;
+          disabilityStatus?: string;
+        }
+      | undefined;
+    const rawEeoc = formData.get("eeoc");
+    if (rawEeoc && typeof rawEeoc === "string") {
+      try {
+        eeoc = JSON.parse(rawEeoc);
+      } catch {
+        eeoc = undefined;
+      }
+    } else {
+      const gender = formData.get("eeocGender")
+        ? String(formData.get("eeocGender")).trim()
+        : undefined;
+      const ethnicity = formData.get("eeocEthnicity")
+        ? String(formData.get("eeocEthnicity")).trim()
+        : undefined;
+      const veteranStatus = formData.get("eeocVeteranStatus")
+        ? String(formData.get("eeocVeteranStatus")).trim()
+        : undefined;
+      const disabilityStatus = formData.get("eeocDisabilityStatus")
+        ? String(formData.get("eeocDisabilityStatus")).trim()
+        : undefined;
+      if (gender || ethnicity || veteranStatus || disabilityStatus) {
+        eeoc = { gender, ethnicity, veteranStatus, disabilityStatus };
+      }
+    }
+
     const resumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
 
     if (!jobId) {
-      return NextResponse.json({ ok: false, error: "Job ID is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.JOB_ID_REQUIRED }, { status: 400 });
     }
 
     if (!candidateName) {
-      return NextResponse.json({ ok: false, error: "Candidate name is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.CANDIDATE_NAME_REQUIRED }, { status: 400 });
     }
 
     if (!email) {
-      return NextResponse.json({ ok: false, error: "Email address is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.EMAIL_REQUIRED }, { status: 400 });
     }
 
     if (!resumeFile) {
-      return NextResponse.json({ ok: false, error: "Resume document is required" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED }, { status: 400 });
     }
 
     // 4. Execute CareerApplyService
@@ -108,8 +150,13 @@ export async function POST(req: Request) {
       screeningAnswers,
       privacyConsent,
       talentPoolConsent,
+      eeoc,
       source,
     });
+
+    logger.info(
+      `[API Careers Apply] Success! Created application ID="${application.id}" for jobId="${jobId}"`,
+    );
 
     return NextResponse.json({
       ok: true,
@@ -118,14 +165,17 @@ export async function POST(req: Request) {
     });
   } catch (error: unknown) {
     if (error instanceof AppError) {
+      logger.warn(
+        `[API Careers Apply] Application rejected (${error.code}): ${error.message}`,
+      );
       return NextResponse.json(
         { ok: false, error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    logger.error(`Career application submission error: ${String(error)}`);
+    logger.error(`[API Careers Apply] Unhandled error: ${String(error)}`);
     return NextResponse.json(
-      { ok: false, error: "An unexpected error occurred while processing your application." },
+      { ok: false, error: CAREER_ERRORS.UNEXPECTED_APPLICATION_ERROR },
       { status: 500 },
     );
   }

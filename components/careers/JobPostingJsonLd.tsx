@@ -50,7 +50,9 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
     },
   };
 
-  if (job.closesAt) {
+  if (job.status === "PAUSED") {
+    jsonLd.validThrough = job.closesAt || "1970-01-01T00:00:00.000Z";
+  } else if (job.closesAt) {
     jsonLd.validThrough = job.closesAt;
   }
 

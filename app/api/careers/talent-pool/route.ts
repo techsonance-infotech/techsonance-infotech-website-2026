@@ -4,6 +4,7 @@ import { CareerApplyService } from "@/lib/services/career-apply.service";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/server/rateLimit";
 import { logger } from "@/lib/logger";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 export async function POST(req: Request) {
   try {
@@ -100,11 +101,11 @@ export async function POST(req: Request) {
     }
 
     if (!name) {
-      return NextResponse.json({ ok: false, error: "Full name is required." }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.FULL_NAME_REQUIRED }, { status: 400 });
     }
 
     if (!email) {
-      return NextResponse.json({ ok: false, error: "Email address is required." }, { status: 400 });
+      return NextResponse.json({ ok: false, error: CAREER_ERRORS.EMAIL_REQUIRED }, { status: 400 });
     }
 
     const container = getContainer();
@@ -136,7 +137,7 @@ export async function POST(req: Request) {
     }
     logger.error(`Talent pool submission error: ${String(error)}`);
     return NextResponse.json(
-      { ok: false, error: "An unexpected error occurred while processing your submission." },
+      { ok: false, error: CAREER_ERRORS.UNEXPECTED_TALENT_POOL_ERROR },
       { status: 500 },
     );
   }

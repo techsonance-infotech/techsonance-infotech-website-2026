@@ -22,9 +22,6 @@ import {
   Shield,
   Layers,
   Save,
-  Eye,
-  Monitor,
-  Smartphone,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,7 +31,6 @@ import {
   evaluateCompleteness,
   type JobCompletenessState,
 } from "./CompletenessChecklist";
-import { JobLivePreview } from "./JobLivePreview";
 import type { ScreeningQuestion } from "@/lib/validations/careers";
 
 export interface JobFormData extends JobCompletenessState {
@@ -188,9 +184,6 @@ export function JobEditorForm({
   const [activeTab, setActiveTab] = useState<
     "basics" | "location" | "content" | "compensation" | "application" | "review"
   >("basics");
-
-  const [showLivePreview, setShowLivePreview] = useState(false);
-  const [previewViewport, setPreviewViewport] = useState<"desktop" | "mobile">("desktop");
 
   // Temporary input buffers for tag / list additions
   const [newResp, setNewResp] = useState("");
@@ -410,48 +403,6 @@ export function JobEditorForm({
               </>
             ) : (
               <span>All changes local</span>
-            )}
-          </div>
-
-          {/* Live Preview Toggle */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-            <Button
-              type="button"
-              variant={showLivePreview ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setShowLivePreview(!showLivePreview)}
-              className="rounded-lg text-xs font-bold gap-1.5 h-8 px-2.5 cursor-pointer"
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>{showLivePreview ? "Hide Preview" : "Live Preview"}</span>
-            </Button>
-            {showLivePreview && (
-              <div className="flex items-center gap-0.5 ml-1 border-l border-slate-200 dark:border-slate-700 pl-1">
-                <button
-                  type="button"
-                  onClick={() => setPreviewViewport("desktop")}
-                  className={`p-1.5 rounded-lg text-xs ${
-                    previewViewport === "desktop"
-                      ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-2xs"
-                      : "text-slate-400 hover:text-slate-600"
-                  }`}
-                  title="Desktop View"
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewViewport("mobile")}
-                  className={`p-1.5 rounded-lg text-xs ${
-                    previewViewport === "mobile"
-                      ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-2xs"
-                      : "text-slate-400 hover:text-slate-600"
-                  }`}
-                  title="Mobile View"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
             )}
           </div>
 
@@ -1522,16 +1473,6 @@ export function JobEditorForm({
             canPublishDirectly={job.status === "DRAFT" || job.status === "IN_REVIEW"}
             isSaving={isSaving}
           />
-
-          {showLivePreview && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400 font-bold px-1">
-                <span>Real-Time Public Preview</span>
-                <span className="uppercase font-mono text-[10px]">{previewViewport}</span>
-              </div>
-              <JobLivePreview job={job} viewport={previewViewport} />
-            </div>
-          )}
         </div>
       </div>
     </div>

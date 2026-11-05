@@ -3,6 +3,8 @@ import { getContainer } from "@/lib/di/container";
 import { ApplicationsService } from "@/lib/services/applications.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { logger } from "@/lib/logger";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 export async function GET(req: Request) {
   try {
@@ -11,12 +13,12 @@ export async function GET(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
       return NextResponse.json(
-        { error: "Forbidden: Admin or Owner role required for compliance data export" },
+        { error: CAREER_ERRORS.FORBIDDEN_COMPLIANCE_EXPORT },
         { status: 403 },
       );
     }
@@ -26,7 +28,7 @@ export async function GET(req: Request) {
 
     if (!email || !email.trim()) {
       return NextResponse.json(
-        { error: "Candidate email query parameter is required" },
+        { error: CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED },
         { status: 400 },
       );
     }
@@ -35,16 +37,16 @@ export async function GET(req: Request) {
     const candidateData = await applicationsService.exportCandidateData(email.trim());
 
     return NextResponse.json({ ok: true, data: candidateData });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    console.error("GDPR export error:", error);
+    logger.error("GDPR export error", { error: String(error) });
     return NextResponse.json(
-      { error: error.message || "Failed to export candidate compliance data" },
+      { error: CAREER_ERRORS.FAILED_EXPORT_COMPLIANCE },
       { status: 500 },
     );
   }
@@ -57,12 +59,12 @@ export async function POST(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
       return NextResponse.json(
-        { error: "Forbidden: Admin or Owner role required for candidate data purge" },
+        { error: CAREER_ERRORS.FORBIDDEN_COMPLIANCE_PURGE },
         { status: 403 },
       );
     }
@@ -72,7 +74,7 @@ export async function POST(req: Request) {
 
     if (!email || typeof email !== "string" || !email.trim()) {
       return NextResponse.json(
-        { error: "Candidate email is required in request body" },
+        { error: CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED_GDPR },
         { status: 400 },
       );
     }
@@ -86,16 +88,16 @@ export async function POST(req: Request) {
     );
 
     return NextResponse.json({ ok: true, result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    console.error("GDPR purge error:", error);
+    logger.error("GDPR purge error", { error: String(error) });
     return NextResponse.json(
-      { error: error.message || "Failed to purge candidate records" },
+      { error: CAREER_ERRORS.FAILED_PURGE_CANDIDATE },
       { status: 500 },
     );
   }

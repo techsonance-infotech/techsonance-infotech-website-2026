@@ -14,7 +14,6 @@ import {
   BarChart3,
   ExternalLink,
   LogOut,
-  RefreshCw,
   Menu,
   X,
 } from "lucide-react";
@@ -34,8 +33,6 @@ export function AdminShell({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isRevalidating, setIsRevalidating] = useState(false);
-  const [revalidateMsg, setRevalidateMsg] = useState<string | null>(null);
 
   // Do not render admin shell if on login page
   if (pathname === "/admin/login") {
@@ -104,28 +101,6 @@ export function AdminShell({
       router.refresh();
     } catch {
       router.push("/admin/login");
-    }
-  };
-
-  const handlePurgeCache = async () => {
-    setIsRevalidating(true);
-    setRevalidateMsg(null);
-    try {
-      const res = await fetch("/api/admin/revalidate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tags: ["posts", "jobs"] }),
-      });
-      if (res.ok) {
-        setRevalidateMsg("Cache purged!");
-      } else {
-        setRevalidateMsg("Failed to purge");
-      }
-    } catch {
-      setRevalidateMsg("Network error");
-    } finally {
-      setIsRevalidating(false);
-      setTimeout(() => setRevalidateMsg(null), 3000);
     }
   };
 
@@ -213,25 +188,6 @@ export function AdminShell({
               );
             })}
           </nav>
-
-          {/* Cache Revalidation Button */}
-          <div className="p-3 border-t border-slate-100">
-            <button
-              onClick={handlePurgeCache}
-              disabled={isRevalidating}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-[11px] font-medium text-slate-600 hover:text-[#1155CC] hover:bg-blue-50/50 transition-colors border border-dashed border-slate-200"
-            >
-              <div className="flex items-center gap-2">
-                <RefreshCw
-                  className={`w-3.5 h-3.5 text-slate-400 ${isRevalidating ? "animate-spin text-[#1155CC]" : ""}`}
-                />
-                <span>Purge Edge Cache</span>
-              </div>
-              {revalidateMsg && (
-                <span className="text-[10px] font-bold text-emerald-600">{revalidateMsg}</span>
-              )}
-            </button>
-          </div>
 
           {/* User profile & Logout */}
           <div className="p-4 border-t border-slate-100 bg-slate-50/40">

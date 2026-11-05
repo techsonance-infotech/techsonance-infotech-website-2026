@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { EmailService } from "@/lib/services/email.service";
 import { getEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
+import { DEFAULT_RECRUITER_EMAIL } from "@/lib/constants/careers.constants";
 
 export async function POST(request: Request) {
   try {
@@ -24,7 +26,7 @@ export async function POST(request: Request) {
     }
 
     const env = getEnv();
-    const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
+    const adminEmail = env.ADMIN_EMAIL || DEFAULT_RECRUITER_EMAIL;
 
     // Handle File Attachment
     const attachments = [];
@@ -134,7 +136,7 @@ ${message}
     `;
 
     const result = await emailService.sendMail({
-      from: `"${fullName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
+      from: `"${fullName}" <${env.SMTP_USER || DEFAULT_RECRUITER_EMAIL}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
@@ -152,7 +154,7 @@ ${message}
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
-    console.error("Error sending career application email via SMTP:", error);
+    logger.error("Error sending career application email via SMTP:", { error: String(error) });
     return NextResponse.json(
       {
         error:

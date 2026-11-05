@@ -1,7 +1,7 @@
-import { serverEnvSchema, type ServerEnv, getServerEnv } from "./server";
+import { serverEnvSchema, type ServerEnv, getServerEnv, resetServerEnv } from "./server";
 import { publicEnvSchema, type PublicEnv, getPublicEnv } from "./public";
 
-export { serverEnvSchema, publicEnvSchema, getServerEnv, getPublicEnv };
+export { serverEnvSchema, publicEnvSchema, getServerEnv, getPublicEnv, resetServerEnv };
 export type { ServerEnv, PublicEnv };
 export type Env = ServerEnv;
 
@@ -10,5 +10,5 @@ export function getEnv(): ServerEnv {
 }
 
 export function resetEnv(): void {
-  // noop
+  resetServerEnv();
 }

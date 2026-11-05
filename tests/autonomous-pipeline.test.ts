@@ -76,6 +76,19 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
 
     it("prevents double-decision on already used approval requests", async () => {
       const mockDb = {
+        select: vi.fn().mockReturnValue({
+          from: vi.fn().mockReturnValue({
+            where: vi.fn().mockReturnValue({
+              limit: vi.fn().mockResolvedValue([
+                {
+                  id: "req-1",
+                  usedAt: new Date(), // Already used!
+                  expiresAt: new Date(Date.now() + 100000),
+                },
+              ]),
+            }),
+          }),
+        }),
         query: {
           approvalRequestsTable: {
             findFirst: vi.fn().mockResolvedValue({

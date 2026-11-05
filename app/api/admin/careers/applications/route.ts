@@ -4,6 +4,8 @@ import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { ApplicationsService } from "@/lib/services/applications.service";
 import type { ApplicationStatus } from "@/lib/database/enum/content.enum";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { logger } from "@/lib/logger";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 export async function GET(req: Request) {
   try {
@@ -12,7 +14,7 @@ export async function GET(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -36,14 +38,17 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({ ok: true, ...result });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    console.error("List applications error:", error);
-    return NextResponse.json({ error: "Failed to list applications" }, { status: 500 });
+    logger.error("List applications error", { error: String(error) });
+    return NextResponse.json(
+      { error: CAREER_ERRORS.FAILED_LIST_APPLICATIONS },
+      { status: 500 },
+    );
   }
 }

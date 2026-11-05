@@ -7,7 +7,15 @@ import type { Database } from "../database/index";
 import { jobsTable, type Job, type InsertJob } from "../database/schema/core/job.schema";
 import { JobStatus, JobApprovalStatus } from "../database/enum";
 import { auditLogsTable } from "../database/schema/core/audit.schema";
-import { versionsTable } from "../database/schema/core/version.schema";
+import { versionsTable, type ContentVersion } from "../database/schema/core/version.schema";
+import { AppError } from "@/lib/errors";
+import { mapDbError } from "@/lib/dbErrors";
+import { logger } from "@/lib/logger";
+import {
+  CAREER_ERRORS,
+  CAREER_AUDIT_ACTIONS,
+  DEFAULT_APPLICATIONS_PAGE_SIZE,
+} from "@/lib/constants/careers.constants";
 
 export interface ListJobsOptions {
   siteId?: string;
@@ -26,13 +34,21 @@ export class AdminJobsService {
   constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
 
   async listJobs(options: ListJobsOptions = {}): Promise<ListJobsResult> {
-    try {
-      const limit = options.limit ?? 20;
-      const offset = options.offset ?? 0;
+    const limit = options.limit ?? 20;
+    const offset = options.offset ?? 0;
 
-      if ((this.db as any).query?.jobsTable?.findMany) {
+    try {
+      const dbAny = this.db as unknown as {
+        query?: {
+          jobsTable?: {
+            findMany: (opts?: unknown) => Promise<unknown[]>;
+          };
+        };
+      };
+
+      if (typeof dbAny.query?.jobsTable?.findMany === "function") {
         const [jobs, totalResult] = await Promise.all([
-          (this.db as any).query.jobsTable.findMany({
+          dbAny.query.jobsTable.findMany({
             limit,
             offset,
           }),
@@ -40,7 +56,7 @@ export class AdminJobsService {
         ]);
         return {
           jobs: jobs as Job[],
-          total: totalResult[0]?.cnt ?? 0,
+          total: (totalResult as Array<{ cnt: number }>)[0]?.cnt ?? 0,
         };
       }
 
@@ -75,47 +91,79 @@ export class AdminJobsService {
         total: totalResult[0]?.cnt ?? 0,
       };
     } catch (error) {
-      console.error("AdminJobsService.listJobs error:", error);
-      return { jobs: [], total: 0 };
+      logger.error("AdminJobsService.listJobs error", { error: String(error) });
+      throw mapDbError(error);
     }
   }
 
   async getJobById(id: string): Promise<Job | null> {
+    if (!id || !id.trim()) return null;
+
     try {
-      if ((this.db as any).query?.jobsTable?.findFirst) {
-        const job = await (this.db as any).query.jobsTable.findFirst({
-          where: { id },
+      const dbAny = this.db as unknown as {
+        query?: {
+          jobsTable?: {
+            findFirst: (opts?: unknown) => Promise<Job | null>;
+          };
+        };
+      };
+
+      if (typeof dbAny.query?.jobsTable?.findFirst === "function") {
+        const job = await dbAny.query.jobsTable.findFirst({
+          where: (j: Record<string, unknown>, ops: { eq: (a: unknown, b: unknown) => unknown }) =>
+            ops.eq(j.id, id),
         });
-        return (job as Job) || null;
+        return job ?? null;
       }
-      const [job] = await this.db.select().from(jobsTable).where(eq(jobsTable.id, id)).limit(1);
-      return job || null;
+
+      const [job] = await this.db
+        .select()
+        .from(jobsTable)
+        .where(eq(jobsTable.id, id))
+        .limit(1);
+      return job ?? null;
     } catch (error) {
-      console.error("AdminJobsService.getJobById error:", error);
-      return null;
+      logger.error("AdminJobsService.getJobById error", { id, error: String(error) });
+      throw mapDbError(error);
     }
   }
 
   async createJob(data: InsertJob, actorId?: string, ipAddress?: string): Promise<Job> {
-    const [created] = await this.db.insert(jobsTable).values(data).returning();
+    if (!data.title || !data.slug) {
+      throw new AppError("VALIDATION", CAREER_ERRORS.JOB_TITLE_AND_SLUG_REQUIRED);
+    }
 
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.create",
-      entityType: "job",
-      entityId: created.id,
-      afterState: created as unknown as Record<string, unknown>,
-      ipAddress,
-    });
+    try {
+      const [created] = await this.db.insert(jobsTable).values(data).returning();
 
-    await this.db.insert(versionsTable).values({
-      entityType: "job",
-      entityId: created.id,
-      snapshot: created as unknown as Record<string, unknown>,
-      changedBy: actorId,
-    });
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_CREATE,
+          entityType: "job",
+          entityId: created.id,
+          afterState: created as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.createJob audit log failed", { error: String(auditErr) });
+      }
 
-    return created;
+      try {
+        await this.db.insert(versionsTable).values({
+          entityType: "job",
+          entityId: created.id,
+          snapshot: created as unknown as Record<string, unknown>,
+          changedBy: actorId,
+        });
+      } catch (verErr) {
+        logger.warn("AdminJobsService.createJob version snapshot failed", { error: String(verErr) });
+      }
+
+      return created;
+    } catch (error) {
+      throw mapDbError(error);
+    }
   }
 
   async updateJob(
@@ -126,40 +174,52 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(id);
     if (!existing) {
-      throw new Error(`Job with id "${id}" not found`);
+      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const nextVersionId = (existing.versionId || 1) + 1;
 
-    const [updated] = await this.db
-      .update(jobsTable)
-      .set({
-        ...updates,
-        versionId: nextVersionId,
-        updatedAt: new Date(),
-      })
-      .where(eq(jobsTable.id, id))
-      .returning();
+    try {
+      const [updated] = await this.db
+        .update(jobsTable)
+        .set({
+          ...updates,
+          versionId: nextVersionId,
+          updatedAt: new Date(),
+        })
+        .where(eq(jobsTable.id, id))
+        .returning();
 
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.update",
-      entityType: "job",
-      entityId: id,
-      beforeState: existing as unknown as Record<string, unknown>,
-      afterState: updated as unknown as Record<string, unknown>,
-      ipAddress,
-    });
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_UPDATE,
+          entityType: "job",
+          entityId: id,
+          beforeState: existing as unknown as Record<string, unknown>,
+          afterState: updated as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.updateJob audit log failed", { error: String(auditErr) });
+      }
 
-    await this.db.insert(versionsTable).values({
-      entityType: "job",
-      entityId: id,
-      snapshot: updated as unknown as Record<string, unknown>,
-      changedBy: actorId,
-    });
+      try {
+        await this.db.insert(versionsTable).values({
+          entityType: "job",
+          entityId: id,
+          snapshot: updated as unknown as Record<string, unknown>,
+          changedBy: actorId,
+        });
+      } catch (verErr) {
+        logger.warn("AdminJobsService.updateJob version snapshot failed", { error: String(verErr) });
+      }
 
-    this.revalidateJobCache(updated.slug);
-    return updated;
+      this.revalidateJobCache(updated.slug);
+      return updated;
+    } catch (error) {
+      throw mapDbError(error);
+    }
   }
 
   async transitionStatus(
@@ -171,7 +231,7 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new Error(`Job with id "${jobId}" not found`);
+      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     if (existing.status === targetStatus) {
@@ -184,7 +244,7 @@ export class AdminJobsService {
     const isRecruiter = role === "recruiter" || role === "editor";
 
     if (!isAdminOrOwner && !isRecruiter) {
-      throw new Error(`Forbidden: Role "${actor.role}" cannot transition job status`);
+      throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_TRANSITION);
     }
 
     // Enforce 7-status state machine transitions
@@ -195,21 +255,19 @@ export class AdminJobsService {
         }
         if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
           if (!isAdminOrOwner) {
-            throw new Error(
-              "Approval required: Recruiters must submit role to IN_REVIEW for approval before publishing",
-            );
+            throw new AppError("BAD_REQUEST", CAREER_ERRORS.RECRUITER_APPROVAL_REQUIRED);
           }
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.IN_REVIEW:
         if (!isAdminOrOwner) {
-          throw new Error("Forbidden: Only Admins can approve or return roles under review");
+          throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_APPROVE);
         }
         if (targetStatus === JobStatus.SCHEDULED) {
           if (!existing.publishAt) {
-            throw new Error("Cannot schedule job without a publishAt date");
+            throw new AppError("BAD_REQUEST", CAREER_ERRORS.CANNOT_SCHEDULE_WITHOUT_DATE);
           }
           break;
         }
@@ -220,7 +278,7 @@ export class AdminJobsService {
         ) {
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.SCHEDULED:
         if (
@@ -230,14 +288,14 @@ export class AdminJobsService {
         ) {
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.PUBLISHED:
       case JobStatus.OPEN:
         if (targetStatus === JobStatus.PAUSED || targetStatus === JobStatus.CLOSED) {
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.PAUSED:
         if (
@@ -247,11 +305,11 @@ export class AdminJobsService {
         ) {
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.CLOSED:
         if (!isAdminOrOwner) {
-          throw new Error("Forbidden: Only Admins can re-open or archive closed roles");
+          throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_REOPEN);
         }
         if (
           targetStatus === JobStatus.ARCHIVED ||
@@ -261,11 +319,11 @@ export class AdminJobsService {
         ) {
           break;
         }
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
 
       case JobStatus.ARCHIVED:
       default:
-        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+        throw new AppError("BAD_REQUEST", `Illegal transition from ${currentStatus} to ${targetStatus}`);
     }
 
     // Build status-specific fields
@@ -324,19 +382,27 @@ export class AdminJobsService {
       return false;
     }
 
-    await this.db.delete(jobsTable).where(eq(jobsTable.id, id));
+    try {
+      await this.db.delete(jobsTable).where(eq(jobsTable.id, id));
 
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.delete",
-      entityType: "job",
-      entityId: id,
-      beforeState: existing as unknown as Record<string, unknown>,
-      ipAddress,
-    });
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_DELETE,
+          entityType: "job",
+          entityId: id,
+          beforeState: existing as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.deleteJob audit log failed", { error: String(auditErr) });
+      }
 
-    this.revalidateJobCache(existing.slug);
-    return true;
+      this.revalidateJobCache(existing.slug);
+      return true;
+    } catch (error) {
+      throw mapDbError(error);
+    }
   }
 
   async approveJob(
@@ -347,7 +413,7 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new Error(`Job with id "${jobId}" not found`);
+      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const isFuturePublish =
@@ -364,37 +430,43 @@ export class AdminJobsService {
       updatedAt: new Date(),
     };
 
-    let updated: Job;
-    if ((this.db as any).update) {
-      const [res] = await this.db
+    try {
+      const [updated] = await this.db
         .update(jobsTable)
         .set(updates)
         .where(eq(jobsTable.id, jobId))
         .returning();
-      updated = res || ({ ...existing, ...updates } as Job);
-    } else {
-      updated = { ...existing, ...updates } as Job;
+
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_APPROVE,
+          entityType: "job",
+          entityId: jobId,
+          beforeState: existing as unknown as Record<string, unknown>,
+          afterState: updated as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.approveJob audit log failed", { error: String(auditErr) });
+      }
+
+      try {
+        await this.db.insert(versionsTable).values({
+          entityType: "job",
+          entityId: jobId,
+          snapshot: updated as unknown as Record<string, unknown>,
+          changedBy: actorId,
+        });
+      } catch (verErr) {
+        logger.warn("AdminJobsService.approveJob version snapshot failed", { error: String(verErr) });
+      }
+
+      this.revalidateJobCache(updated.slug);
+      return updated;
+    } catch (error) {
+      throw mapDbError(error);
     }
-
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.approve",
-      entityType: "job",
-      entityId: jobId,
-      beforeState: existing as unknown as Record<string, unknown>,
-      afterState: updated as unknown as Record<string, unknown>,
-      ipAddress,
-    });
-
-    await this.db.insert(versionsTable).values({
-      entityType: "job",
-      entityId: jobId,
-      snapshot: updated as unknown as Record<string, unknown>,
-      changedBy: actorId,
-    });
-
-    this.revalidateJobCache(updated.slug);
-    return updated;
   }
 
   async returnJob(
@@ -404,12 +476,12 @@ export class AdminJobsService {
     ipAddress?: string,
   ): Promise<Job> {
     if (!comment || !comment.trim()) {
-      throw new Error("Approval comment is required when returning a role to draft");
+      throw new AppError("BAD_REQUEST", CAREER_ERRORS.RETURN_FEEDBACK_REQUIRED);
     }
 
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new Error(`Job with id "${jobId}" not found`);
+      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const nextVersionId = (existing.versionId || 1) + 1;
@@ -421,40 +493,46 @@ export class AdminJobsService {
       updatedAt: new Date(),
     };
 
-    let updated: Job;
-    if (this.db.update) {
-      const [res] = await this.db
+    try {
+      const [updated] = await this.db
         .update(jobsTable)
         .set(updates)
         .where(eq(jobsTable.id, jobId))
         .returning();
-      updated = res || ({ ...existing, ...updates } as Job);
-    } else {
-      updated = { ...existing, ...updates } as Job;
+
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_RETURN,
+          entityType: "job",
+          entityId: jobId,
+          beforeState: existing as unknown as Record<string, unknown>,
+          afterState: updated as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.returnJob audit log failed", { error: String(auditErr) });
+      }
+
+      try {
+        await this.db.insert(versionsTable).values({
+          entityType: "job",
+          entityId: jobId,
+          snapshot: updated as unknown as Record<string, unknown>,
+          changedBy: actorId,
+        });
+      } catch (verErr) {
+        logger.warn("AdminJobsService.returnJob version snapshot failed", { error: String(verErr) });
+      }
+
+      this.revalidateJobCache(updated.slug);
+      return updated;
+    } catch (error) {
+      throw mapDbError(error);
     }
-
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.return",
-      entityType: "job",
-      entityId: jobId,
-      beforeState: existing as unknown as Record<string, unknown>,
-      afterState: updated as unknown as Record<string, unknown>,
-      ipAddress,
-    });
-
-    await this.db.insert(versionsTable).values({
-      entityType: "job",
-      entityId: jobId,
-      snapshot: updated as unknown as Record<string, unknown>,
-      changedBy: actorId,
-    });
-
-    this.revalidateJobCache(updated.slug);
-    return updated;
   }
 
-  async listVersions(jobId: string): Promise<any[]> {
+  async listVersions(jobId: string): Promise<ContentVersion[]> {
     try {
       const versions = await this.db
         .select()
@@ -463,8 +541,8 @@ export class AdminJobsService {
         .orderBy(desc(versionsTable.createdAt));
       return versions || [];
     } catch (error) {
-      console.error("AdminJobsService.listVersions error:", error);
-      return [];
+      logger.error("AdminJobsService.listVersions error", { jobId, error: String(error) });
+      throw mapDbError(error);
     }
   }
 
@@ -476,16 +554,16 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new Error(`Job with id "${jobId}" not found`);
+      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const versions = await this.listVersions(jobId);
-    const targetVersion = versions.find((v: any) => v.id === versionId);
+    const targetVersion = versions.find((v) => v.id === versionId);
     if (!targetVersion || !targetVersion.snapshot) {
-      throw new Error(`Version "${versionId}" not found for job "${jobId}"`);
+      throw new AppError("NOT_FOUND", `Version "${versionId}" not found for job "${jobId}"`);
     }
 
-    const snapshot = targetVersion.snapshot as Record<string, any>;
+    const snapshot = targetVersion.snapshot as Record<string, unknown>;
     const nextVersionId = (existing.versionId || 1) + 1;
 
     const { id: _id, createdAt: _c, updatedAt: _u, ...restSnapshot } = snapshot;
@@ -495,37 +573,43 @@ export class AdminJobsService {
       updatedAt: new Date(),
     };
 
-    let updated: Job;
-    if ((this.db as any).update) {
-      const [res] = await this.db
+    try {
+      const [updated] = await this.db
         .update(jobsTable)
         .set(updates)
         .where(eq(jobsTable.id, jobId))
         .returning();
-      updated = res || ({ ...existing, ...updates } as Job);
-    } else {
-      updated = { ...existing, ...updates } as Job;
+
+      try {
+        await this.db.insert(auditLogsTable).values({
+          actorId,
+          action: CAREER_AUDIT_ACTIONS.JOB_RESTORE_VERSION,
+          entityType: "job",
+          entityId: jobId,
+          beforeState: existing as unknown as Record<string, unknown>,
+          afterState: updated as unknown as Record<string, unknown>,
+          ipAddress,
+        });
+      } catch (auditErr) {
+        logger.warn("AdminJobsService.restoreVersion audit log failed", { error: String(auditErr) });
+      }
+
+      try {
+        await this.db.insert(versionsTable).values({
+          entityType: "job",
+          entityId: jobId,
+          snapshot: updated as unknown as Record<string, unknown>,
+          changedBy: actorId,
+        });
+      } catch (verErr) {
+        logger.warn("AdminJobsService.restoreVersion version snapshot failed", { error: String(verErr) });
+      }
+
+      this.revalidateJobCache(updated.slug);
+      return updated;
+    } catch (error) {
+      throw mapDbError(error);
     }
-
-    await this.db.insert(auditLogsTable).values({
-      actorId,
-      action: "job.restore_version",
-      entityType: "job",
-      entityId: jobId,
-      beforeState: existing as unknown as Record<string, unknown>,
-      afterState: updated as unknown as Record<string, unknown>,
-      ipAddress,
-    });
-
-    await this.db.insert(versionsTable).values({
-      entityType: "job",
-      entityId: jobId,
-      snapshot: updated as unknown as Record<string, unknown>,
-      changedBy: actorId,
-    });
-
-    this.revalidateJobCache(updated.slug);
-    return updated;
   }
 
   private revalidateJobCache(slug?: string): void {

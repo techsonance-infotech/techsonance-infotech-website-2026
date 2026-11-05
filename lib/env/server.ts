@@ -86,6 +86,10 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 let parsedServerEnv: ServerEnv | null = null;
 
+export function resetServerEnv(): void {
+  parsedServerEnv = null;
+}
+
 export function getServerEnv(): ServerEnv {
   if (parsedServerEnv) return parsedServerEnv;
   const result = serverEnvSchema.safeParse(process.env);

@@ -3,6 +3,8 @@ import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { ApplicationsService } from "@/lib/services/applications.service";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { logger } from "@/lib/logger";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 export async function GET(req: Request) {
   try {
@@ -11,12 +13,12 @@ export async function GET(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
       return NextResponse.json(
-        { error: "Forbidden: Admin or Owner role required" },
+        { error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER },
         { status: 403 },
       );
     }
@@ -39,14 +41,17 @@ export async function GET(req: Request) {
         "Content-Disposition": `attachment; filename="${filename}"`,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
         { error: error.message },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
-    console.error("Export applications CSV error:", error);
-    return NextResponse.json({ error: "Failed to export applications" }, { status: 500 });
+    logger.error("Export applications CSV error", { error: String(error) });
+    return NextResponse.json(
+      { error: CAREER_ERRORS.FAILED_EXPORT_APPLICATIONS },
+      { status: 500 },
+    );
   }
 }

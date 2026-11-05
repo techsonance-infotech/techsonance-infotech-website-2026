@@ -3,9 +3,11 @@ import type { JobPosting } from "@/lib/content/types";
 export interface FilterOptions {
   search?: string;
   department?: string;
+  location?: string;
   workMode?: string;
   type?: string;
   experienceLevel?: string;
+  sortBy?: "newest" | "closing_soon" | "title";
 }
 
 export type JobFilterCriteria = FilterOptions;
@@ -15,11 +17,12 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
 
   const searchKeyword = (filters.search || "").trim().toLowerCase();
   const departmentFilter = (filters.department || "").trim().toLowerCase();
+  const locationFilter = (filters.location || "").trim().toLowerCase();
   const workModeFilter = (filters.workMode || "").trim().toLowerCase();
   const typeFilter = (filters.type || "").trim().toLowerCase();
   const experienceFilter = (filters.experienceLevel || "").trim().toLowerCase();
 
-  return jobs.filter((job) => {
+  const filtered = jobs.filter((job) => {
     // 1. Department filter
     if (departmentFilter && departmentFilter !== "all") {
       if ((job.department || "").toLowerCase() !== departmentFilter) {
@@ -27,7 +30,15 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
       }
     }
 
-    // 2. Work Mode filter
+    // 2. Location filter
+    if (locationFilter && locationFilter !== "all") {
+      const loc = (job.location || "").toLowerCase();
+      if (!loc.includes(locationFilter)) {
+        return false;
+      }
+    }
+
+    // 3. Work Mode filter
     if (workModeFilter && workModeFilter !== "all") {
       const mode = (job.workMode || "").toLowerCase();
       const loc = (job.location || "").toLowerCase();
@@ -48,7 +59,7 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
       }
     }
 
-    // 3. Employment Type filter
+    // 4. Employment Type filter
     if (typeFilter && typeFilter !== "all") {
       const normType = (job.type || "").toLowerCase().replace(/[\s_-]/g, "");
       const normFilter = typeFilter.replace(/[\s_-]/g, "");
@@ -57,7 +68,7 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
       }
     }
 
-    // 4. Experience Level filter
+    // 5. Experience Level filter
     if (experienceFilter && experienceFilter !== "all") {
       const exp = (job.experienceLevel || "").toLowerCase();
       if (!exp.includes(experienceFilter)) {
@@ -65,7 +76,7 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
       }
     }
 
-    // 5. Search query across title, description, skills, department, and location
+    // 6. Search query across title, description, skills, department, and location
     if (searchKeyword) {
       const inTitle = (job.title || "").toLowerCase().includes(searchKeyword);
       const inDept = (job.department || "").toLowerCase().includes(searchKeyword);
@@ -82,5 +93,25 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
     }
 
     return true;
+  });
+
+  // Sort
+  if (filters.sortBy === "closing_soon") {
+    return filtered.sort((a, b) => {
+      const aTime = a.closesAt ? new Date(a.closesAt).getTime() : Infinity;
+      const bTime = b.closesAt ? new Date(b.closesAt).getTime() : Infinity;
+      return aTime - bTime;
+    });
+  }
+
+  if (filters.sortBy === "title") {
+    return filtered.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+  }
+
+  // Default: newest first (if dates are available)
+  return filtered.sort((a, b) => {
+    const aTime = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+    const bTime = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    return bTime - aTime;
   });
 }

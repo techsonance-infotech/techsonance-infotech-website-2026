@@ -82,6 +82,15 @@ async function main() {
           );
           const count = countRes[0]?.cnt ?? 0;
           console.log(`   🟢 ${tbl.padEnd(25)} (found, ${count} rows)`);
+
+          if (tbl === "ts_admin_sites" && count === 0) {
+            await db.execute(sql`
+              INSERT INTO "ts_admin_sites" (name, slug, domain)
+              VALUES ('TechSonance Agency', 'techsonance-agency', 'techsonance.co.in')
+              ON CONFLICT (slug) DO NOTHING
+            `);
+            console.log(`   ✨ Seeded default site into ts_admin_sites`);
+          }
         } catch {
           console.log(`   🟢 ${tbl.padEnd(25)} (found)`);
         }

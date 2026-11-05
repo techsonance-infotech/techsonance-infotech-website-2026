@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Eye,
   Save,
   CheckCircle2,
   AlertCircle,
@@ -28,7 +27,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { JobEditorForm, type JobFormData, DEFAULT_JOB_FORM } from "@/components/admin/careers/JobEditorForm";
-import { JobLivePreview } from "@/components/admin/careers/JobLivePreview";
 import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
 import { ApprovalActionDialog } from "@/components/admin/careers/ApprovalActionDialog";
 import { VersionHistoryDialog } from "@/components/admin/careers/VersionHistoryDialog";
@@ -47,7 +45,6 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
   const [approvalMode, setApprovalMode] = useState<"approve" | "return">("approve");
@@ -281,7 +278,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
               </Badge>
             </div>
             <p className="text-xs font-medium text-slate-500 mt-0.5">
-              Multi-section job authoring with live completeness audit and viewport preview.
+              Multi-section job authoring with live completeness audit.
             </p>
           </div>
         </div>
@@ -329,17 +326,6 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
               </Button>
             </>
           )}
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreviewOpen(true)}
-            className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
-          >
-            <Eye className="w-4 h-4 text-[#1155CC]" />
-            <span>Live Preview</span>
-          </Button>
 
           {jobData.slug && (jobData.status === "PUBLISHED" || jobData.status === "OPEN") && (
             <Link
@@ -403,24 +389,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         lastSavedAt={lastSavedAt}
       />
 
-      {/* Full-Screen / Large Viewport Preview Modal */}
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto rounded-3xl p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-          <DialogHeader className="pb-3 border-b border-slate-200 dark:border-slate-800">
-            <DialogTitle className="text-lg font-black font-sora text-slate-900 dark:text-white flex items-center gap-2">
-              <Eye className="w-5 h-5 text-[#1155CC]" />
-              Role Live Preview
-            </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500">
-              Interactive preview rendering public applicant view with responsive device simulation.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="py-4">
-            <JobLivePreview job={jobData} showViewportControls={true} />
-          </div>
-        </DialogContent>
-      </Dialog>
+    
 
       {/* Approval / Return Action Modal */}
       {!isNew && (

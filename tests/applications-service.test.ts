@@ -32,27 +32,24 @@ describe("ApplicationsService", () => {
   };
 
   beforeEach(() => {
+    const createChain = (resolvedValue: any) => {
+      const chain: any = {};
+      chain.from = vi.fn().mockReturnValue(chain);
+      chain.leftJoin = vi.fn().mockReturnValue(chain);
+      chain.where = vi.fn().mockReturnValue(chain);
+      chain.orderBy = vi.fn().mockReturnValue(chain);
+      chain.limit = vi.fn().mockReturnValue(chain);
+      chain.offset = vi.fn().mockReturnValue(chain);
+      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      return chain;
+    };
+
     mockDb = {
-      query: {
-        applicationsTable: {
-          findFirst: vi.fn().mockResolvedValue(mockApp),
-          findMany: vi.fn().mockResolvedValue([{ ...mockApp, job: mockJob }]),
-        },
-      },
-      select: vi.fn().mockReturnValue({
-        from: vi.fn().mockReturnValue({
-          leftJoin: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnValue({
-              orderBy: vi.fn().mockReturnValue({
-                limit: vi.fn().mockReturnValue({
-                  offset: vi.fn().mockResolvedValue([
-                    { application: mockApp, jobTitle: mockJob.title },
-                  ]),
-                }),
-              }),
-            }),
-          }),
-        }),
+      select: vi.fn().mockImplementation((fields?: any) => {
+        if (fields && typeof fields === "object" && "count" in fields) {
+          return createChain([{ count: 1 }]);
+        }
+        return createChain([{ application: mockApp, app: mockApp, jobTitle: mockJob.title }]);
       }),
       update: vi.fn().mockReturnValue({
         set: vi.fn().mockReturnValue({
@@ -92,7 +89,7 @@ describe("ApplicationsService", () => {
 
     expect(result.applications).toHaveLength(1);
     expect(result.total).toBe(1);
-    expect(mockDb.query.applicationsTable.findMany).toHaveBeenCalled();
+    expect(mockDb.select).toHaveBeenCalled();
   });
 
   it("retrieves application by ID", async () => {
@@ -102,8 +99,16 @@ describe("ApplicationsService", () => {
   });
 
   it("throws NOT_FOUND when application ID does not exist", async () => {
-    mockDb.query.applicationsTable.findFirst.mockResolvedValueOnce(null);
-    delete mockDb.select;
+    const createChain = (resolvedValue: any) => {
+      const chain: any = {};
+      chain.from = vi.fn().mockReturnValue(chain);
+      chain.leftJoin = vi.fn().mockReturnValue(chain);
+      chain.where = vi.fn().mockReturnValue(chain);
+      chain.limit = vi.fn().mockReturnValue(chain);
+      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      return chain;
+    };
+    mockDb.select.mockImplementationOnce(() => createChain([]));
 
     await expect(service.getApplicationById("non-existent")).rejects.toThrow(
       "Application record could not be found."
@@ -184,10 +189,18 @@ describe("ApplicationsService", () => {
   });
 
   it("throws NOT_FOUND when generating signed URL without resume path", async () => {
-    mockDb.query.applicationsTable.findFirst.mockResolvedValueOnce({
-      ...mockApp,
-      resumeStoragePath: "",
-    });
+    const createChain = (resolvedValue: any) => {
+      const chain: any = {};
+      chain.from = vi.fn().mockReturnValue(chain);
+      chain.leftJoin = vi.fn().mockReturnValue(chain);
+      chain.where = vi.fn().mockReturnValue(chain);
+      chain.limit = vi.fn().mockReturnValue(chain);
+      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      return chain;
+    };
+    mockDb.select.mockImplementationOnce(() =>
+      createChain([{ application: { ...mockApp, resumeStoragePath: "" }, jobTitle: mockJob.title }])
+    );
 
     await expect(service.getSignedResumeUrl(mockApp.id)).rejects.toThrow(
       "No resume document attached to this application."

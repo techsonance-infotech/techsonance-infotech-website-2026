@@ -30,6 +30,31 @@ export const screeningAnswerSchema = z.object({
 });
 export type ScreeningAnswer = z.infer<typeof screeningAnswerSchema>;
 
+function caseInsensitiveEnum<T extends Record<string, string>>(
+  enumObj: T,
+  defaultValue?: T[keyof T],
+) {
+  const values = Object.values(enumObj) as string[];
+  const schema = z.preprocess((val) => {
+    if (typeof val !== "string") return val;
+    const trimmed = val.trim();
+    if (values.includes(trimmed)) return trimmed;
+
+    const normalized = trimmed.toLowerCase().replace(/[\s-]+/g, "_");
+    for (const v of values) {
+      if (
+        v.toLowerCase() === trimmed.toLowerCase() ||
+        v.toLowerCase().replace(/[\s-]+/g, "_") === normalized
+      ) {
+        return v;
+      }
+    }
+    return val;
+  }, z.enum(enumObj));
+
+  return defaultValue ? schema.default(defaultValue) : schema;
+}
+
 export const jobPostingBaseFields = {
   siteId: z.string().uuid().optional(),
   slug: z
@@ -40,18 +65,18 @@ export const jobPostingBaseFields = {
   referenceCode: z.string().optional(),
   department: z.string().min(2, "Department is required"),
   openingsCount: z.number().int().min(1, "Openings count must be at least 1").default(1),
-  ownerId: z.string().uuid().optional(),
-  hiringManagerId: z.string().uuid().optional(),
+  ownerId: z.uuid().optional(),
+  hiringManagerId: z.uuid().optional(),
   summary: z.string().min(5, "Summary must be at least 5 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
 
-  workMode: z.nativeEnum(JobWorkMode).default(JobWorkMode.HYBRID),
+  workMode: caseInsensitiveEnum(JobWorkMode, JobWorkMode.HYBRID),
   location: z.string().min(2, "Location is required"),
   remoteEligibility: z.string().optional(),
-  visaSupport: z.nativeEnum(JobVisaSupport).default(JobVisaSupport.NO),
+  visaSupport: caseInsensitiveEnum(JobVisaSupport, JobVisaSupport.NO),
 
-  type: z.nativeEnum(JobType).default(JobType.FULL_TIME),
-  experienceLevel: z.nativeEnum(JobExperienceLevel).default(JobExperienceLevel.MID),
+  type: caseInsensitiveEnum(JobType, JobType.FULL_TIME),
+  experienceLevel: caseInsensitiveEnum(JobExperienceLevel, JobExperienceLevel.MID),
   responsibilities: z.array(z.string()).default([]),
   requirements: z.array(z.string()).default([]),
   preferredQualifications: z.array(z.string()).default([]),
@@ -72,20 +97,23 @@ export const jobPostingBaseFields = {
   salaryMin: z.number().int().min(0).optional(),
   salaryMax: z.number().int().min(0).optional(),
   salaryCurrency: z.string().default("INR"),
-  salaryPeriod: z.nativeEnum(JobSalaryPeriod).default(JobSalaryPeriod.YEAR),
+  salaryPeriod: caseInsensitiveEnum(JobSalaryPeriod, JobSalaryPeriod.YEAR),
   showSalaryPublicly: z.boolean().default(false),
   compensationNotes: z.string().optional(),
 
-  applicationMethod: z.enum(JobApplicationMethod).default(JobApplicationMethod.BUILTIN),
+  applicationMethod: caseInsensitiveEnum(JobApplicationMethod, JobApplicationMethod.BUILTIN),
   externalApplyUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
   resumeRequired: z.boolean().default(true),
-  coverLetterRequirement: z.nativeEnum(JobCoverLetterRequirement).default(JobCoverLetterRequirement.OPTIONAL),
+  coverLetterRequirement: caseInsensitiveEnum(
+    JobCoverLetterRequirement,
+    JobCoverLetterRequirement.OPTIONAL,
+  ),
   screeningQuestions: z.array(screeningQuestionSchema).default([]),
 
-  status: z.nativeEnum(JobStatus).default(JobStatus.DRAFT),
+  status: caseInsensitiveEnum(JobStatus, JobStatus.DRAFT),
   publishAt: z.coerce.date().optional().nullable(),
   closesAt: z.coerce.date().optional().nullable(),
-  visibility: z.nativeEnum(JobVisibility).default(JobVisibility.PUBLIC),
+  visibility: caseInsensitiveEnum(JobVisibility, JobVisibility.PUBLIC),
   featured: z.boolean().default(false),
 
   seoTitle: z.string().optional(),
@@ -202,16 +230,26 @@ export const applicationSubmissionSchema = z.object({
 });
 
 export const talentPoolSubmissionSchema = z.object({
-  siteId: z.uuid().optional(),
+  siteId: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().uuid().optional()),
   name: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().optional(),
-  skills: z.array(z.string()).default([]),
-  preferredRole: z.string().optional(),
-  experienceLevel: z.nativeEnum(JobExperienceLevel).default(JobExperienceLevel.MID),
-  portfolioUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
+  phone: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  skills: z.preprocess((val) => {
+    if (Array.isArray(val)) return val.map((s) => String(s).trim()).filter(Boolean);
+    if (typeof val === "string") return val.split(",").map((s) => s.trim()).filter(Boolean);
+    return [];
+  }, z.array(z.string()).default([])),
+  preferredRole: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  experienceLevel: caseInsensitiveEnum(JobExperienceLevel, JobExperienceLevel.MID),
+  portfolioUrl: z.preprocess((val) => {
+    if (!val || typeof val !== "string") return undefined;
+    const trimmed = val.trim();
+    if (!trimmed || trimmed === "https://" || trimmed.endsWith("/...")) return undefined;
+    return trimmed;
+  }, z.string().optional()),
   resumeStoragePath: z.string().optional(),
-  notes: z.string().optional(),
+  notes: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  privacyConsent: z.boolean().default(true),
 });
 
 export type JobPostingInput = z.infer<typeof jobPostingInputSchema>;

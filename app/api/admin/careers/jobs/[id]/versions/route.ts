@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
+import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { logger } from "@/lib/logger";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -15,17 +18,23 @@ export async function GET(_req: Request, { params }: RouteParams) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const jobsService = container.get(AdminJobsService);
     const versions = await jobsService.listVersions(id);
 
     return NextResponse.json({ ok: true, versions });
-  } catch (error: any) {
-    console.error("List versions error:", error);
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: STATUS_BY_CODE[error.code] || 400 },
+      );
+    }
+    logger.error("List versions error", { error: String(error) });
     return NextResponse.json(
-      { error: error.message || "Failed to list versions" },
+      { error: CAREER_ERRORS.FAILED_LIST_VERSIONS },
       { status: 500 },
     );
   }
@@ -39,14 +48,14 @@ export async function POST(req: Request, { params }: RouteParams) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
     }
 
     const body = await req.json();
     const versionId = body?.versionId;
     if (!versionId || typeof versionId !== "string") {
       return NextResponse.json(
-        { error: "Valid versionId is required" },
+        { error: CAREER_ERRORS.VERSION_ID_REQUIRED },
         { status: 400 },
       );
     }
@@ -61,10 +70,16 @@ export async function POST(req: Request, { params }: RouteParams) {
     );
 
     return NextResponse.json({ ok: true, job: restored });
-  } catch (error: any) {
-    console.error("Restore version error:", error);
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: STATUS_BY_CODE[error.code] || 400 },
+      );
+    }
+    logger.error("Restore version error", { error: String(error) });
     return NextResponse.json(
-      { error: error.message || "Failed to restore version" },
+      { error: CAREER_ERRORS.FAILED_RESTORE_VERSION },
       { status: 500 },
     );
   }
