@@ -1,125 +1,102 @@
-# 10 — Project Directory Architecture & Development Conventions
+# 10 — Directory Architecture, Layers & Naming
 
-Owns: Directory layout, route group structure, feature-slice boundaries, file naming conventions, and service wiring for all new implementations.
+Owns: folder layout, file naming, feature slices, route-group files, DI wiring. Layer direction and the import matrix are in `AGENTS.md` §3 and enforced by `scripts/check-boundaries.mjs`.
 
----
-
-## 1. Directory Structure
-
-All new implementations and refactors must strictly follow this structure:
+## 1. Layout
 
 ```
-📂 app/                      # Route groups, pages, layouts, and API routes
-  🔐 (auth)/                 # Auth routes (/login, /register, etc.)
-  📊 (dashboard)/            # Authenticated user & admin dashboard routes
-  🌐 (marketing)/            # Public marketing routes (/about, /services, /blog, etc.)
-  🔗 api/                    # API route handlers (/api/chat, /api/book, etc.)
-  layout.tsx                 # Root layout
-  globals.css
-  not-found.tsx
-
-🧩 components/               # Cross-feature and primitive presentation components
-  🎨 ui/                     # Base design system primitives (Button, Input, Modal, Badge)
-  📝 forms/                  # Generic reusable form controls (FormField, FormError)
-  🧱 layouts/                # Universal shell components (Navbar, SiteFooter, LenisProvider)
-
-⚙️ features/                 # Domain-driven business modules (co-located logic)
-  🔐 auth/                   # Auth components, session hooks, and auth state
-  💬 chat/                   # Chat widget, message lists, streaming UI
-  📅 booking/                # Consultation booking modal, slot pickers
-  ✉️ contact/                # Scoping estimator, inquiry forms
-  💼 careers/                # Job boards, application modal
-
-🗄️ lib/                      # Core infrastructure, services, and utilities
-  💉 di/                     # Needle DI container (`container.ts`) & tokens (`tokens.ts`)
-  🧠 services/               # Injectable business logic & I/O services (Needle DI)
-  🗃️ db/                     # Database configurations (Client Dexie, Supabase client)
-  ✅ validations/            # Zod validation schemas (*.schema.ts)
-  ⚙️ config/                 # Centralized configuration objects (*Config.ts)
-  🪝 hooks/                  # Project-wide reusable React hooks (use*.ts)
-  📐 types/                  # Project-wide TypeScript types & declarations
-  🛠️ utils/                  # Pure helper functions (camelCase: cn.ts, text.ts)
-🖼️ public/                   # Static public assets (images, fonts, icons)
+app/
+  (auth)/ (marketing)/ (dashboard)/     each: layout.tsx loading.tsx error.tsx not-found.tsx
+  api/                                  route.ts files only (handleRoute/handleWebhook)
+    health/route.ts                     liveness: no DB, no auth
+    ready/route.ts                      readiness: DB ping via health service
+  layout.tsx  global-error.tsx  not-found.tsx  globals.css  sitemap.ts  robots.ts  manifest.ts
+components/
+  ui/            primitives (third-party/vendored: do not edit)
+  forms/         FormField, FormError
+  layouts/       Navbar, SiteFooter, LenisProvider
+  feedback/      WidgetBoundary, ErrorState, EmptyState, Skeletons
+features/<domain>/            auth chat booking contact careers admin-* ...
+  components/  hooks/
+  actions.ts     "use server": thin wrappers over runAction
+  queries.ts     server-only reads: wrap services in React.cache
+lib/
+  env/ config/ constants/ utils/ types/ validations/ contracts/ http/ api/ hooks/ client-storage/
+  errors.ts dbErrors.ts result.ts logger.ts cache-tags.ts errorCopy.ts motion.ts
+  supabase/      client.ts (browser) server.ts admin.ts
+  database/      index.ts transaction.ts relation.ts schema/
+  repositories/  <aggregate>.repository.ts
+  services/      <domain>.service.ts  <domain>.mapper.ts
+  di/            container.ts tokens.ts
+  server/        action.ts route.ts auth.ts rateLimit.ts requestContext.ts
+drizzle/         generated SQL + meta; rollback/ holds hand-written rollback plans
+supabase/tests/  pgTAP
+scripts/         check-boundaries.mjs db-check.mjs
+proxy.ts  instrumentation.ts  drizzle.config.ts
 ```
 
----
+Every file under `lib/` must live in one of the folders above; an unclassified folder fails `check:boundaries`.
 
-## 2. Best Practices for New Implementations
+## 2. Rules
 
-1. **Use Route Groups `( )`**:
-   - Organize routes by lifecycle and access: `(marketing)` for public pages, `(auth)` for login/registration, `(dashboard)` for authenticated portals.
-   - Route groups keep URLs clean without polluting path segments.
+1. **Route groups** organise by access: `(marketing)` public, `(auth)` login/registration, `(dashboard)` authenticated and admin.
+2. **Boundary files**: each route group and each dynamic data segment has `loading.tsx` and `error.tsx`; the root has `global-error.tsx` and `not-found.tsx` (`11b` §4).
+3. **Co-location**: code used by one feature stays in `features/<domain>`. Promote to `components/` or `lib/` only when a second feature needs it.
+4. **Imports**: `@/` alias only; `../../` is banned (exception: `lib/database/schema/**`, which imports sibling files and `lib/constants` relatively so `drizzle-kit` can load them ⚠ drop the exception if the installed drizzle-kit resolves `@/`).
+5. **Depth**: at most 4 folders below `components/`, `features/`, `lib/`.
+6. **One component per file.** Named exports; default exports only where Next requires them. No barrel files (exception: `lib/database/schema/index.schema.ts`, required by drizzle-kit).
+7. **Third-party UI** (`components/ui`, Radix, Lucide, GSAP/Lenis internals) is consumed, never edited.
+8. **Constants shared by schema, Zod and UI** (enum arrays, limits) live in dependency-free `lib/constants/<d>.constants.ts` so the Drizzle schema, Zod schemas and forms import one source.
 
-2. **Always Provide `loading.tsx` and `error.tsx`**:
-   - Every route group (`(marketing)`, `(auth)`, `(dashboard)`) must declare `loading.tsx` and `error.tsx` boundaries to prevent waterfall flash and unhandled error screens.
-3. **Keep Related Files Together (Co-location)**:
-   - Business features (`features/<domain>`) group their specific components, hooks, and presentation state in one place.
-   - If a component or utility is used exclusively by one feature, it stays inside that feature folder. Only promote to `components/` or `lib/` when shared across multiple features.
+## 3. File and symbol naming
 
-4. **Always Use Absolute Imports (`@/`)**:
-   - Imports must use `@/` alias (e.g. `@/lib/di/container`, `@/components/ui/Button`).
-   - Deep relative imports (`../../../`) are banned.
+| Entity | Convention | Example |
+|---|---|---|
+| React components | `PascalCase.tsx` | `ChatWidget.tsx` |
+| Hooks | `useCamelCase.ts(x)` | `useBooking.ts` |
+| Utilities | `camelCase.ts` | `formatDate.ts`, `formData.ts` |
+| Services / mappers | `kebab-case.service.ts` / `.mapper.ts` | `booking.service.ts` |
+| Repositories | `kebab-case.repository.ts` | `booking.repository.ts` |
+| Zod schemas | `kebab-case.schema.ts` | `booking.schema.ts`, `primitives.schema.ts` |
+| Contracts | `kebab-case.contract.ts` | `chat.contract.ts` |
+| Constants files | `kebab-case.constants.ts` | `booking.constants.ts` |
+| Config objects | `camelCaseConfig.ts` | `seoConfig.ts` |
+| Drizzle schema files | `kebab-case.schema.ts` | `booking.schema.ts` |
+| Constants | `UPPER_SNAKE_CASE` | `RATE_LIMIT_WINDOW_MS` |
+| Zod schema symbols | `camelCase` + `Schema` | `bookingInputSchema` |
+| Contracts, actions | `getXContract`, `createXAction` | `createBookingAction` |
+| Postgres objects | `ts_web_` + `snake_case`, tables plural | `ts_web_consultation_bookings` |
+| Indexes / constraints | `ts_web_<table>_<cols>_idx|_uq|_chk|_fk` | `ts_web_consultation_bookings_slot_uq` |
 
-5. **Limit Folder Depth**:
-   - Keep folder nesting shallow (maximum 3–4 levels from root). Avoid excessive subdirectories.
+> **Shared database rule**: every table, index, enum type, constraint, trigger, function and policy for this site carries `ts_web_`. Nothing else may be created, altered or dropped.
 
-6. **One Component = One File**:
-   - Every UI component lives in its own dedicated file. No multi-component bundle files.
+## 4. Needle DI workflow
 
-7. **DO NOT Touch Third-Party Component Library UI Code**:
-   - Never edit, modify, or rewrite third-party or vendored UI library code (e.g. Radix UI primitives, Lucide icons, GSAP/Lenis wrappers, or pre-installed base UI components in `components/ui/`).
-   - Treat third-party UI primitives as immutable external dependencies: consume and compose them from the outside, never alter their internals.
+1. Define `lib/repositories/<a>.repository.ts` (pure functions or a class taking an executor) and `lib/services/<d>.service.ts`:
+   ```ts
+   import "server-only";
+   import { inject } from "@needle-di/core";
+   import { BookingRepository } from "@/lib/repositories/booking.repository";
+   import { ENV_CONFIG_TOKEN } from "@/lib/di/tokens";
 
-## 3. File & Symbol Naming Rules
+   export class BookingService {
+     constructor(
+       private readonly bookings = inject(BookingRepository),
+       private readonly env = inject(ENV_CONFIG_TOKEN),
+     ) {}
+   }
+   ```
+2. Bind in `lib/di/container.ts` (`configureContainer()`); bind the database to a token (`DATABASE_TOKEN` → `getDrizzleDb()`), never import the `db` proxy inside services.
+3. Resolve in actions/routes/queries: `getContainer().get(BookingService)`. Never `new BookingService()` outside tests.
+4. Services are singletons: no per-request fields. Pass `userId`, `requestId`, `tx` as arguments.
+5. Tests: `createTestContainer([...overrides])`; repositories are mocked by token, not by module patching.
 
-| Entity                         | Convention              | Example                                                  |
-| ------------------------------ | ----------------------- | -------------------------------------------------------- |
-| **React Components**           | `PascalCase.tsx`        | `Button.tsx`, `ChatWidget.tsx`, `Navbar.tsx`             |
-| **Helper Utilities**           | `camelCase.ts`          | `formatDate.ts`, `cn.ts`, `text.ts`                      |
-| **Custom Hooks**               | `useCamelCase.ts`       | `useAuth.ts`, `useChat.ts`, `useBooking.ts`              |
-| **Constants & Tokens**         | `UPPER_CASE`            | `BOT_CONFIG`, `RATE_LIMIT_WINDOW_MS`, `ENV_CONFIG_TOKEN` |
-| **Services (Needle DI)**       | `kebab-case.service.ts` | `email.service.ts`, `booking.service.ts`                 |
-| **Validation Schemas**         | `kebab-case.schema.ts`  | `booking.schema.ts`, `contact.schema.ts`                 |
-| **Config Objects**             | `camelCaseConfig.ts`    | `botConfig.ts`, `seoConfig.ts`                           |
-| **Database Tables (Postgres)** | `ts_web_snake_case`     | `ts_web_chat_messages`, `ts_web_consultation_bookings`   |
+## 5. New feature checklist
 
-> [!CAUTION]
-> **Shared Supabase Instance Rule**: The connected Supabase project is shared with other applications (HRMS, ERP, CMS). NEVER drop, alter, rename, or write to any existing non-website tables. All tables, functions, indexes, and policies for this website MUST use the `ts_web_` prefix.
-
----
-
-## 4. Needle Dependency Injection (DI) Workflow
-
-For any new service, I/O operation, or stateful backend workflow:
-
-1. **Define the Service**:
-   - Create the service in `lib/services/<name>.service.ts`.
-   - Inject required dependencies using Needle DI's `inject(...)` constructor injection:
-     ```typescript
-     import { inject } from "@needle-di/core";
-     import { ENV_CONFIG_TOKEN } from "@/lib/di/tokens";
-     import { EmailService } from "@/lib/services/email.service";
-
-     export class OrderService {
-       constructor(
-         private emailService = inject(EmailService),
-         private env = inject(ENV_CONFIG_TOKEN),
-       ) {}
-     }
-     ```
-
-2. **Register in the Container**:
-   - Add the service to `lib/di/container.ts` inside `configureContainer()`:
-     ```typescript
-     container.bind(OrderService);
-     ```
-
-3. **Consume in Route Handlers and Server Actions**:
-   - Resolve the service via the root container:
-     ```typescript
-     const orderService = getContainer().get(OrderService);
-     ```
-   - Never instantiate stateful services directly with `new OrderService()` inside route handlers or actions.
-
-4. **Testing with Test Containers**:
-   - Unit tests use `createTestContainer([...overrides])` to mock external APIs or databases cleanly without monkey-patching modules.
+1. `lib/constants/<d>.constants.ts` (enums/limits) → `lib/validations/<d>.schema.ts` (+ tests).
+2. `lib/database/schema/<d>.schema.ts` → export from `index.schema.ts` → `npm run db:generate` → review SQL, add grants/RLS block (`03c` §9).
+3. `lib/repositories/<d>.repository.ts`, `lib/services/<d>.service.ts` (+ mapper), bind in container.
+4. `features/<d>/actions.ts` (`runAction`) and/or `app/api/.../route.ts` + `lib/contracts/<d>.contract.ts`.
+5. UI with the four states and a `WidgetBoundary` where the feature is optional (`11b` §4).
+6. Tests for success, `VALIDATION`, `UNAUTHENTICATED`, `FORBIDDEN`, `CONFLICT`, `UNAVAILABLE` (`11b` §6).
+7. `npm run check`, then the report in `09` §5.

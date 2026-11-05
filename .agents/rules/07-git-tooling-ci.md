@@ -2,32 +2,30 @@
 
 Owns: commits, scripts, dependencies, tests, CI. The `check` script below is the single definition of "green" referenced by `AGENTS.md`.
 
-## Commits (commitlint + conventional commits)
+## 1. Commits (commitlint + conventional commits)
 
-Format: `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, no trailing period.
+Format `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, no trailing period.
 
-- Types: `feat`, `fix`, `perf`, `refactor`, `docs`, `style`, `test`, `build`, `ci`, `chore`, `revert`.
-- Scope = area: `auth`, `db`, `ui`, `api`, `contracts`, `deps`, `config`, `rules` (e.g. `fix(auth): reject expired callback codes`).
-- Breaking change: `feat(api)!: …` plus a `BREAKING CHANGE:` footer explaining migration.
-- Body explains **why**, wraps at 100 chars; reference issues (`Closes #123`).
-- One logical change per commit; no "wip" or mixed refactor+feature commits. Never `--no-verify`.
+- Types: `feat fix perf refactor docs style test build ci chore revert`.
+- Scopes: `auth db repo services di ui api contracts deps config rules resilience`.
+- Breaking: `feat(api)!: …` plus a `BREAKING CHANGE:` footer with migration steps.
+- Body explains why, wraps at 100 chars; reference issues (`Closes #123`). One logical change per commit. Never `--no-verify`.
 - `commitlint.config.ts`: `export default { extends: ["@commitlint/config-conventional"] };`
 
-## Branching & PRs
+## 2. Branching and PRs
 
-- Trunk-based: short-lived `type/short-description` branches off `main`; `main` is always deployable and protected (PR + passing CI + review, no force-push).
-- PRs ≤ ~400 changed lines where possible. Description: what/why, screenshots for UI, impact note (`00`), migration notes, test evidence, risk/rollback.
-- Squash-merge with a conventional-commit title.
-- Schema migrations ship in the same PR as the code that needs them and stay backward-compatible with the previous deploy (expand → migrate → contract). Contract changes follow the same rule: add optional fields first, remove only after clients no longer send/read them (`08`).
+- Trunk-based: short-lived `type/short-description` branches off `main`; `main` protected (PR + green CI + review, no force-push).
+- PRs ≤ ~400 changed lines. Description: what/why, screenshots for UI, impact note (`00`), migration and rollback notes, test evidence.
+- Squash-merge with a conventional title.
+- Schema migrations ship in the same PR as the code that needs them and stay backward-compatible with the previous deploy (`03c` §9).
 
-## Husky hooks
+## 3. Husky and Windows
 
-- `.husky/pre-commit` → `npx lint-staged`
-- `.husky/commit-msg` → `npx --no -- commitlint --edit "$1"`
-- `.husky/pre-push` → `npm run typecheck`
-- Hooks are fast and a convenience; **CI is the authority** and re-runs everything.
+- `.husky/pre-commit` → `npx lint-staged`; `.husky/commit-msg` → `npx --no -- commitlint --edit "$1"`; `.husky/pre-push` → `npm run typecheck`.
+- Hooks are a convenience; **CI is the authority**.
+- Windows: commit `.gitattributes` with `* text=auto eol=lf` so hook scripts never get CRLF. All repo scripts are Node (`scripts/*.mjs`), not bash.
 
-## lint-staged and formatting
+## 4. lint-staged and formatting
 
 ```json
 {
@@ -36,53 +34,63 @@ Format: `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, 
 }
 ```
 
-Formatter is **Prettier** with `prettier-plugin-tailwindcss` (the one formatter; never debated in review).
+Prettier with `prettier-plugin-tailwindcss` is the only formatter.
 
+## 5. Scripts (`package.json`)
+
+```json
+{
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint --deny-warnings",
+    "format:check": "prettier --check .",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:unused": "knip",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run check:boundaries && npm run check:unused && npm run test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:check": "drizzle-kit check",
+    "db:ping": "node scripts/db-check.mjs",
+    "test:rls": "supabase test db"
+  }
+}
 ```
-Never edit `check` to drop a step. Scripts only reference tools listed under "Required now".
 
-## Dependency policy
-- **Exact versions** (no `^`/`~`); one committed lockfile; `engines` (Node LTS) and `.nvmrc`; `npm ci` in CI.
-- Before adding a package answer: can native/platform do it? Maintained (recent releases, >1 maintainer)? Bundle cost? License? Bundled types? Security record? If unsure, don't add it. Verify the exact package name on the registry first (`09`).
-- Runtime deps → `dependencies`; tooling/types → `devDependencies`. `@types/*` only when the package has no bundled types (**not** `sharp`).
-- Major upgrades: dedicated PR, read the migration guide, run full checks, never mixed with feature work.
-- `npm audit --omit=dev` plus Dependabot/Renovate (grouped, weekly).
-- No duplicates of an existing package (second animation lib, validator, icon set, class-merge util).
+Never edit `check` to drop a step. There is deliberately no `db:push` and no `db:pull` script (`03` §2).
 
-## Required now (install in the first tooling PR; not for rule readers to install ad hoc)
-| Need | Package |
-|---|---|
-| Server-only guard | `server-only` |
-| Unit/integration tests | `vitest`, `@testing-library/react`, `jsdom` |
-| E2E tests | `@playwright/test` |
-| Formatting | `prettier`, `prettier-plugin-tailwindcss` |
-| Unused exports/files | `knip` |
-| Error tracking | `@sentry/nextjs` (before production launch) |
-| Bundle inspection | `@next/bundle-analyzer` |
-| Rate limiting | `@upstash/ratelimit` (or equivalent) |
+## 6. Dependency policy
 
-## Testing policy
-- Pyramid: many **unit** tests (utils, Zod schemas, services, mappers), some **integration** tests (Server Actions/route handlers against local Supabase via `supabase start`), few **E2E** (login, core money/critical flows).
-- Every bug fix ships with a regression test. Every non-trivial Zod schema has valid/invalid/boundary tests (`04`).
-- **Contract tests** (`08`) run for every contract: path params ↔ schema keys, response schema not `any`/`unknown`, fixture round-trip through `envelopeSchema`, method/body consistency. Each route/action gets one integration test per outcome class: success, `VALIDATION`, `UNAUTHENTICATED`, `FORBIDDEN`.
-- Form tests assert input `name` values equal schema keys and that server `fieldErrors` render next to the right inputs.
-- **RLS tests are mandatory** per table (pgTAP): allowed and denied cases (`03`).
-- Type tests (`expectTypeOf`) for `Result`, contracts, and DTO mappers (`01`).
-- Deterministic: no real network/time/randomness (mock clock, fixtures). No snapshot tests of large DOM trees. Query by role/label.
-- Coverage ≥ 80% on `lib/` and `server/`; a floor, not a goal.
+- Exact versions (no `^`/`~`); one committed lockfile; `engines` (Node LTS) and `.nvmrc`; `npm ci` in CI. ⚠ the dev machine reports Node 26.x: pin the LTS that CI and the host use.
+- Before adding a package: native alternative? maintained? bundle cost? license? bundled types? security record? Verify the exact name on the registry (`09`).
+- Runtime deps in `dependencies`, tooling/types in `devDependencies`. No `@types/sharp`.
+- Major upgrades in a dedicated PR with the migration guide read and full checks run.
+- `npm audit --omit=dev` plus Dependabot/Renovate (grouped, weekly). No duplicate libraries (second animation lib, validator, icon set). ⚠ the project references both framer-motion (`05`) and GSAP/Lenis (`10`): confirm in `package.json` which are installed and list them in the registry; do not add a third.
 
-## CI pipeline (GitHub Actions or equivalent), all required for merge
-1. Install (frozen lockfile) with cache → 2. `typecheck` → 3. `lint` → 4. `format:check` → 5. `check:boundaries` → 6. `check:unused` → 7. `test` → 8. `next build`
-9. `db:types:check` (against a shadow/local DB after migrations) and `test:rls`
-10. E2E against the preview deployment (critical paths) and Lighthouse CI against the budgets in `06`
-11. `npm audit --omit=dev` (fail on high+) and secret scanning (gitleaks/push protection)
-12. `supabase db lint` / migration dry-run on a shadow DB
-- Preview deployment per PR; production deploy only from `main` after green CI; instant rollback path.
-- Concurrency group cancels superseded runs. Minimal `permissions:`; secrets via environment protection rules.
+**Required now:** `server-only`, `drizzle-orm`, `drizzle-kit`, `postgres`, `@needle-di/core`, `zod`, `vitest`, `@testing-library/react`, `jsdom`, `@playwright/test`, `prettier`, `prettier-plugin-tailwindcss`, `knip`, `@sentry/nextjs` (before launch), `@next/bundle-analyzer`, `@upstash/ratelimit`, `supabase` CLI (dev).
 
-## Environments & config
-- Separate Supabase projects for `dev`, `staging`, `prod`; never point local dev at prod data.
-- `.env.example` stays in sync with `lib/env/public.ts` and `lib/env/server.ts` in the same PR as any new variable; CI diffs the variable names.
-- Feature flags for risky releases; remove flags after rollout.
+## 7. Testing policy
 
-```
+- Pyramid: many unit tests (utils, Zod schemas, mappers, services with a test container), some integration tests (actions/routes against a local Postgres with migrations applied), few E2E (booking, contact, login, admin critical paths).
+- Every bug fix ships with a regression test; every non-trivial schema has valid/invalid/boundary tests (`04`).
+- **Failure-path tests are mandatory** (`11b` §6).
+- Contract tests (`08`) for every contract. Form tests assert input `name` equals schema key and that `fieldErrors` render next to the right inputs.
+- **Database tests**: repositories run against a real local Postgres (`supabase start`, migrations applied through `drizzle-kit migrate`); cover uniqueness, `version` conflicts, empty-array guards, keyset pagination ordering, and that no query touches non-`ts_web_` tables. pgTAP (`test:rls`) proves anon/authenticated are denied on every `ts_web_*` table.
+- Type tests (`expectTypeOf`) for `Result`, contracts, mappers.
+- Deterministic: no real network, time or randomness. No large DOM snapshots. Query by role/label.
+- Coverage ≥ 80% on `lib/` (a floor, not a goal). `server-only` is aliased to an empty module in the Vitest config.
+
+## 8. CI (all required for merge)
+
+1. Install (`npm ci`, cached) → 2. `typecheck` → 3. `lint` → 4. `format:check` → 5. `check:boundaries` → 6. `check:unused` → 7. `test` → 8. `next build`
+9. Start local Supabase, run `drizzle-kit migrate` against it, `drizzle-kit check`, then `drizzle-kit generate` and fail if `git status --porcelain drizzle` is non-empty (schema/migration drift); run `test:rls`.
+10. E2E on the preview deployment and Lighthouse CI against the budgets in `06`.
+11. `npm audit --omit=dev` (fail on high+) and secret scanning.
+- Preview deployment per PR; production deploys only from `main` after green CI, with an instant rollback path. Concurrency group cancels superseded runs; minimal `permissions:`; secrets via environment protection.
+- Production migrations are applied by a separate, manually approved job using `DIRECT_URL`, before the new code is promoted.
+
+## 9. Environments
+
+- Separate Supabase projects for dev, staging, prod; never point local dev at prod data. Runtime and migration credentials differ (`03` §2).
+- `.env.example` stays in sync with `lib/env/*` in the same PR; CI diffs variable names.
+- Feature flags for risky releases; remove after rollout.

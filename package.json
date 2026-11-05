@@ -8,6 +8,7 @@
     "check:env": "tsx --conditions=react-server scripts/check-env.ts",
     "db:check": "tsx --conditions=react-server scripts/check-db.ts",
     "typecheck": "tsc --noEmit",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
     "test": "vitest run",
     "build": "npm run build:kb && next build",
     "start": "next start",
