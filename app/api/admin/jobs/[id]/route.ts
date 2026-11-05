@@ -6,6 +6,7 @@ import { updateJobSchema } from "@/lib/validations/careers";
 import { logger } from "@/lib/logger";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
+import type { InsertJob } from "@/lib/database/schema/index.schema";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -65,7 +66,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     const jobsService = container.get(AdminJobsService);
     const updated = await jobsService.updateJob(
       id,
-      parseResult.data as any,
+      parseResult.data as Partial<InsertJob>,
       session.userId,
     );
 

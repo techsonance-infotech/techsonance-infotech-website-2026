@@ -7,12 +7,7 @@ import {
   type JobCompletenessState,
 } from "@/components/admin/careers/CompletenessChecklist";
 import { JobLivePreview } from "@/components/admin/careers/JobLivePreview";
-import {
-  JobStatus,
-  JobType,
-  JobWorkMode,
-  JobSalaryPeriod,
-} from "@/lib/database/enum";
+import { JobStatus, JobType, JobWorkMode, JobSalaryPeriod } from "@/lib/database/enum";
 
 describe("Job Editor - Completeness Checklist Engine", () => {
   it("evaluates an empty job as incomplete with low score and isReady=false", () => {
@@ -101,11 +96,7 @@ describe("CompletenessChecklist Component Rendering", () => {
     };
 
     const html = renderToString(
-      <CompletenessChecklist
-        job={partialJob}
-        onSubmitForReview={() => {}}
-        onPublish={() => {}}
-      />,
+      <CompletenessChecklist job={partialJob} onSubmitForReview={() => {}} onPublish={() => {}} />,
     );
 
     expect(html).toContain("Readiness Checklist");
@@ -137,12 +128,7 @@ describe("JobLivePreview Component Rendering", () => {
   };
 
   it("renders desktop preview with title, workMode, compensation, and requirements", () => {
-    const html = renderToString(
-      <JobLivePreview
-        job={previewJob}
-        viewport="desktop"
-      />,
-    );
+    const html = renderToString(<JobLivePreview job={previewJob} viewport="desktop" />);
 
     expect(html).toContain("Lead Cloud Architect");
     expect(html).toContain("Cloud Engineering");
@@ -156,22 +142,14 @@ describe("JobLivePreview Component Rendering", () => {
 
   it("hides salary compensation when showSalaryPublicly is false", () => {
     const html = renderToString(
-      <JobLivePreview
-        job={{ ...previewJob, showSalaryPublicly: false }}
-        viewport="desktop"
-      />,
+      <JobLivePreview job={{ ...previewJob, showSalaryPublicly: false }} viewport="desktop" />,
     );
 
     expect(html).not.toContain("3,500,000");
   });
 
   it("renders mobile device frame when viewport is mobile", () => {
-    const html = renderToString(
-      <JobLivePreview
-        job={previewJob}
-        viewport="mobile"
-      />,
-    );
+    const html = renderToString(<JobLivePreview job={previewJob} viewport="mobile" />);
 
     expect(html).toContain("w-[375px]");
     expect(html).toContain("Lead Cloud Architect");

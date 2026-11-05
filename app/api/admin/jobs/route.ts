@@ -7,6 +7,7 @@ import { logger } from "@/lib/logger";
 import { AppError, STATUS_BY_CODE } from "@/lib/errors";
 import { CAREER_ERRORS, NIL_SITE_ID } from "@/lib/constants/careers.constants";
 import type { JobStatus } from "@/lib/database/enum";
+import type { InsertJob } from "@/lib/database/schema/index.schema";
 
 export async function GET(req: Request) {
   try {
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
       {
         ...parseResult.data,
         siteId,
-      } as any,
+      } as InsertJob,
       session.userId,
     );
 

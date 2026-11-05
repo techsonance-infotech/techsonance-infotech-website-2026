@@ -327,7 +327,10 @@ export default function ContactClient() {
                   {/* First Name & Last Name */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label htmlFor="contact-first-name" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <label
+                        htmlFor="contact-first-name"
+                        className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      >
                         First Name <span className="text-red-500 font-bold">*</span>
                       </label>
                       <input
@@ -353,7 +356,10 @@ export default function ContactClient() {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label htmlFor="contact-last-name" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <label
+                        htmlFor="contact-last-name"
+                        className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      >
                         Last Name <span className="text-red-500 font-bold">*</span>
                       </label>
                       <input
@@ -382,7 +388,10 @@ export default function ContactClient() {
 
                   {/* Email Address */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-email" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label
+                      htmlFor="contact-email"
+                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                    >
                       Email Address <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
@@ -407,7 +416,10 @@ export default function ContactClient() {
 
                   {/* Phone Number with Country Selector */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-phone" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label
+                      htmlFor="contact-phone"
+                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                    >
                       Phone Number <span className="text-red-500 font-bold">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
@@ -452,7 +464,10 @@ export default function ContactClient() {
 
                   {/* Interested in Select Dropdown */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-interest" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label
+                      htmlFor="contact-interest"
+                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                    >
                       I&apos;m interested in
                     </label>
                     <select
@@ -472,7 +487,10 @@ export default function ContactClient() {
 
                   {/* Message Textarea */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-message" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label
+                      htmlFor="contact-message"
+                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                    >
                       Message <span className="text-red-500 font-bold">*</span>
                     </label>
                     <textarea

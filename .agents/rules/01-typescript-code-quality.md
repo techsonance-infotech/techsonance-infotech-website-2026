@@ -40,18 +40,18 @@ export const JOB_STATUS_VALUES = Object.values(JobStatus) as [JobStatus, ...JobS
 
 ## 4. Symbol naming (file/folder naming: `10`)
 
-| Thing | Convention | Example |
-| --- | --- | --- |
-| Components, types, enum objects | `PascalCase` | `UserCard`, `JobStatus` |
-| Functions, variables | `camelCase` | `getUserById` |
-| Constants | `SCREAMING_SNAKE_CASE` | `MAX_UPLOAD_BYTES` |
-| Booleans | `is/has/can/should` | `isLoading` |
-| Zod schemas | `camelCase` + `Schema` | `signUpSchema` |
-| Schema types | `<Name>Input` / `Data` / `Dto` / `ViewModel` | `SignUpInput` |
-| Contracts | verb + noun + `Contract` | `getPostContract` |
-| Server Actions | verb-first + `Action` | `createPostAction` |
-| Events | dotted `domain.verb`, schema `<name>EventSchema` | `post.created` |
-| Hooks | `use` prefix | `useDebouncedValue` |
+| Thing                           | Convention                                       | Example                 |
+| ------------------------------- | ------------------------------------------------ | ----------------------- |
+| Components, types, enum objects | `PascalCase`                                     | `UserCard`, `JobStatus` |
+| Functions, variables            | `camelCase`                                      | `getUserById`           |
+| Constants                       | `SCREAMING_SNAKE_CASE`                           | `MAX_UPLOAD_BYTES`      |
+| Booleans                        | `is/has/can/should`                              | `isLoading`             |
+| Zod schemas                     | `camelCase` + `Schema`                           | `signUpSchema`          |
+| Schema types                    | `<Name>Input` / `Data` / `Dto` / `ViewModel`     | `SignUpInput`           |
+| Contracts                       | verb + noun + `Contract`                         | `getPostContract`       |
+| Server Actions                  | verb-first + `Action`                            | `createPostAction`      |
+| Events                          | dotted `domain.verb`, schema `<name>EventSchema` | `post.created`          |
+| Hooks                           | `use` prefix                                     | `useDebouncedValue`     |
 
 ## 5. Function and module design
 

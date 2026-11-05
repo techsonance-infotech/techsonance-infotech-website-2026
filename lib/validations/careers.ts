@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 import {
   JobStatus,
   JobType,
@@ -145,7 +146,8 @@ export const createJobSchema = jobPostingInputSchema
       return true;
     },
     {
-      message: "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
+      message:
+        "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
       path: ["location"],
     },
   )
@@ -185,7 +187,8 @@ export const updateJobSchema = jobPostingInputSchema
       return true;
     },
     {
-      message: "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
+      message:
+        "Please specify a single location or 'Remote'. Multiple locations must be posted as separate roles.",
       path: ["location"],
     },
   );
@@ -230,16 +233,29 @@ export const applicationSubmissionSchema = z.object({
 });
 
 export const talentPoolSubmissionSchema = z.object({
-  siteId: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().uuid().optional()),
+  siteId: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
+    z.string().uuid().optional(),
+  ),
   name: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  phone: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
+    z.string().optional(),
+  ),
   skills: z.preprocess((val) => {
     if (Array.isArray(val)) return val.map((s) => String(s).trim()).filter(Boolean);
-    if (typeof val === "string") return val.split(",").map((s) => s.trim()).filter(Boolean);
+    if (typeof val === "string")
+      return val
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
     return [];
   }, z.array(z.string()).default([])),
-  preferredRole: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  preferredRole: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
+    z.string().optional(),
+  ),
   experienceLevel: caseInsensitiveEnum(JobExperienceLevel, JobExperienceLevel.MID),
   portfolioUrl: z.preprocess((val) => {
     if (!val || typeof val !== "string") return undefined;
@@ -248,7 +264,10 @@ export const talentPoolSubmissionSchema = z.object({
     return trimmed;
   }, z.string().optional()),
   resumeStoragePath: z.string().optional(),
-  notes: z.preprocess((val) => (typeof val === "string" && val.trim() ? val.trim() : undefined), z.string().optional()),
+  notes: z.preprocess(
+    (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
+    z.string().optional(),
+  ),
   privacyConsent: z.boolean().default(true),
 });
 
@@ -258,3 +277,64 @@ export type UpdateJobInput = z.infer<typeof updateJobSchema>;
 export type JobStatusTransitionInput = z.infer<typeof jobStatusTransitionSchema>;
 export type ApplicationSubmissionInput = z.infer<typeof applicationSubmissionSchema>;
 export type TalentPoolSubmissionInput = z.infer<typeof talentPoolSubmissionSchema>;
+
+export const careerInquirySchema = z.object({
+  fullName: z.string().trim().min(2, CAREER_ERRORS.FULL_NAME_REQUIRED),
+  email: z.string().trim().email(CAREER_ERRORS.TALENT_EMAIL_INVALID),
+  role: z.string().trim().min(2, CAREER_ERRORS.ROLE_REQUIRED),
+  message: z.string().trim().min(5, CAREER_ERRORS.MESSAGE_REQUIRED),
+  website_url: z.string().optional(),
+  _hp: z.string().optional(),
+  botCheck: z.string().optional(),
+});
+export type CareerInquiryInput = z.infer<typeof careerInquirySchema>;
+
+export const careerApplyFormSchema = z.object({
+  jobId: z.string().trim().min(1, CAREER_ERRORS.JOB_ID_REQUIRED),
+  candidateName: z.string().trim().min(2, CAREER_ERRORS.CANDIDATE_NAME_REQUIRED),
+  email: z.string().trim().email(CAREER_ERRORS.EMAIL_REQUIRED),
+  phone: z.string().trim().optional(),
+  currentLocation: z.string().trim().optional(),
+  portfolioUrl: z.string().trim().url().optional().or(z.literal("")),
+  githubUrl: z.string().trim().url().optional().or(z.literal("")),
+  linkedinUrl: z.string().trim().url().optional().or(z.literal("")),
+  coverLetter: z.string().trim().optional(),
+  noticePeriodWeeks: z.coerce.number().int().min(0).optional(),
+  privacyConsent: z.preprocess(
+    (val) => val === true || val === "true" || val === "on" || val === 1 || val === "1",
+    z.literal(true, {
+      message: CAREER_ERRORS.PRIVACY_CONSENT_REQUIRED,
+    }),
+  ),
+  talentPoolConsent: z.preprocess(
+    (val) => val === true || val === "true" || val === "on" || val === 1 || val === "1",
+    z.boolean().default(false),
+  ),
+  source: z.string().trim().optional(),
+  screeningAnswers: z.preprocess(
+    (val) => {
+      if (!val) return [];
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return [];
+        }
+      }
+      return val;
+    },
+    z
+      .array(
+        z.object({
+          questionId: z.string(),
+          question: z.string(),
+          answer: z.any(),
+        }),
+      )
+      .default([]),
+  ),
+  website_url: z.string().optional(),
+  _hp: z.string().optional(),
+  botCheck: z.string().optional(),
+});
+export type CareerApplyFormInput = z.infer<typeof careerApplyFormSchema>;

@@ -1,47 +1,23 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { DRIZZLE_DB_TOKEN } from "../di/tokens";
-import type { Database } from "../database/index";
-import type {
-  BlogPost,
-  BlogPostStatus,
-  JobPosting,
-} from "../content/types";
+import { PublicContentRepository } from "../repositories/public-content.repository";
+import type { BlogPost, BlogPostStatus, JobPosting } from "../content/types";
 import { JobStatus } from "../database/enum";
 
 /**
  * Production Content Database Service
- * Fully type-safe Drizzle ORM query service with compile-time relation joins
- * and Needle DI container injection.
+ * Maps database entities to public blog and job posting models.
  */
 export class ContentDbService {
-  constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
-
-  getDb(): Database {
-    return this.db;
-  }
+  constructor(private contentRepo: PublicContentRepository = inject(PublicContentRepository)) {}
 
   async fetchPublishedPosts(category?: string): Promise<BlogPost[]> {
     try {
-      const postsData = await this.db.query.postsTable.findMany({
-        where: {
-          status: "PUBLISHED",
-        },
-        with: {
-          category: true,
-        },
-        orderBy: {
-          publishedAt: "desc",
-        },
-      });
-
+      const postsData = await this.contentRepo.findPublishedPosts();
       if (!postsData || postsData.length === 0) return [];
 
-      const authorsData = await this.db.query.authorsTable.findMany();
-      const authorMap = new Map<
-        string,
-        { name: string; role: string; avatar: string }
-      >();
+      const authorsData = await this.contentRepo.findAllAuthors();
+      const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
       for (const a of authorsData) {
         authorMap.set(a.id, {
           name: a.name,
@@ -55,9 +31,7 @@ export class ContentDbService {
         const resolvedAuthors = Array.isArray(row.authorIds)
           ? row.authorIds
               .map((id) => authorMap.get(id))
-              .filter(
-                (a): a is { name: string; role: string; avatar: string } => !!a,
-              )
+              .filter((a): a is { name: string; role: string; avatar: string } => !!a)
           : [];
 
         const authors =
@@ -111,22 +85,11 @@ export class ContentDbService {
 
   async fetchPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      const row = await this.db.query.postsTable.findFirst({
-        where: {
-          slug,
-        },
-        with: {
-          category: true,
-        },
-      });
-
+      const row = await this.contentRepo.findPostBySlug(slug);
       if (!row) return null;
 
-      const authorsData = await this.db.query.authorsTable.findMany();
-      const authorMap = new Map<
-        string,
-        { name: string; role: string; avatar: string }
-      >();
+      const authorsData = await this.contentRepo.findAllAuthors();
+      const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
       for (const a of authorsData) {
         authorMap.set(a.id, {
           name: a.name,
@@ -138,9 +101,7 @@ export class ContentDbService {
       const resolvedAuthors = Array.isArray(row.authorIds)
         ? row.authorIds
             .map((id) => authorMap.get(id))
-            .filter(
-              (a): a is { name: string; role: string; avatar: string } => !!a,
-            )
+            .filter((a): a is { name: string; role: string; avatar: string } => !!a)
         : [];
 
       const authors =
@@ -186,15 +147,7 @@ export class ContentDbService {
 
   async fetchPostSlugs(): Promise<string[]> {
     try {
-      const posts = await this.db.query.postsTable.findMany({
-        where: {
-          status: "PUBLISHED",
-        },
-        columns: {
-          slug: true,
-        },
-      });
-      return posts.map((p) => p.slug);
+      return await this.contentRepo.findPostSlugs();
     } catch {
       return [];
     }
@@ -202,15 +155,7 @@ export class ContentDbService {
 
   async fetchJobs(status?: JobStatus): Promise<JobPosting[]> {
     try {
-      const targetStatus = status || JobStatus.OPEN;
-      const jobs = await this.db.query.jobsTable.findMany({
-        where: {
-          status: targetStatus as any,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
+      const jobs = await this.contentRepo.findPublishedJobs(status || JobStatus.OPEN);
 
       return jobs.map((row) => ({
         id: row.id,
@@ -226,9 +171,7 @@ export class ContentDbService {
         experienceLevel: row.experienceLevel || "mid",
         summary: row.summary,
         description: row.description,
-        responsibilities: Array.isArray(row.responsibilities)
-          ? row.responsibilities
-          : [],
+        responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
         requirements: Array.isArray(row.requirements) ? row.requirements : [],
         preferredQualifications: Array.isArray(row.preferredQualifications)
           ? row.preferredQualifications
@@ -236,7 +179,9 @@ export class ContentDbService {
         skills: Array.isArray(row.skills) ? row.skills : [],
         benefits: Array.isArray(row.benefits) ? row.benefits : [],
         aboutTeam: row.aboutTeam || undefined,
-        hiringProcess: Array.isArray(row.hiringProcess) ? (row.hiringProcess as any) : [],
+        hiringProcess: Array.isArray(row.hiringProcess)
+          ? (row.hiringProcess as Array<{ step: string; title: string; desc?: string }>)
+          : [],
         equalOpportunityStatement: row.equalOpportunityStatement || undefined,
         salaryMin: row.salaryMin ?? undefined,
         salaryMax: row.salaryMax ?? undefined,
@@ -263,12 +208,7 @@ export class ContentDbService {
 
   async fetchJobBySlug(slug: string): Promise<JobPosting | null> {
     try {
-      const row = await this.db.query.jobsTable.findFirst({
-        where: {
-          slug,
-        },
-      });
-
+      const row = await this.contentRepo.findJobBySlug(slug);
       if (!row) return null;
 
       return {
@@ -285,9 +225,7 @@ export class ContentDbService {
         experienceLevel: row.experienceLevel || "mid",
         summary: row.summary,
         description: row.description,
-        responsibilities: Array.isArray(row.responsibilities)
-          ? row.responsibilities
-          : [],
+        responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
         requirements: Array.isArray(row.requirements) ? row.requirements : [],
         preferredQualifications: Array.isArray(row.preferredQualifications)
           ? row.preferredQualifications
@@ -295,7 +233,9 @@ export class ContentDbService {
         skills: Array.isArray(row.skills) ? row.skills : [],
         benefits: Array.isArray(row.benefits) ? row.benefits : [],
         aboutTeam: row.aboutTeam || undefined,
-        hiringProcess: Array.isArray(row.hiringProcess) ? (row.hiringProcess as any) : [],
+        hiringProcess: Array.isArray(row.hiringProcess)
+          ? (row.hiringProcess as Array<{ step: string; title: string; desc?: string }>)
+          : [],
         equalOpportunityStatement: row.equalOpportunityStatement || undefined,
         salaryMin: row.salaryMin ?? undefined,
         salaryMax: row.salaryMax ?? undefined,
@@ -322,15 +262,7 @@ export class ContentDbService {
 
   async fetchJobSlugs(): Promise<string[]> {
     try {
-      const jobs = await this.db.query.jobsTable.findMany({
-        where: {
-          status: "OPEN" as any,
-        },
-        columns: {
-          slug: true,
-        },
-      });
-      return jobs.map((j) => j.slug);
+      return await this.contentRepo.findJobSlugs();
     } catch {
       return [];
     }

@@ -28,6 +28,16 @@ const sora = Sora({
   display: "swap",
 });
 
+import { getPublicEnv } from "@/lib/env/public";
+
+const publicEnv = (() => {
+  try {
+    return getPublicEnv();
+  } catch {
+    return {} as ReturnType<typeof getPublicEnv>;
+  }
+})();
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "TechSonance - Custom Software & AI Engineering Partner",
@@ -42,9 +52,9 @@ export const metadata: Metadata = {
     shortcut: "/images/favicons/favicon.ico",
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google: publicEnv.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     other: {
-      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
+      "msvalidate.01": publicEnv.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
     },
   },
 };
@@ -54,7 +64,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gaId = publicEnv.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
     <html

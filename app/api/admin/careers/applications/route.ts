@@ -46,9 +46,6 @@ export async function GET(req: Request) {
       );
     }
     logger.error("List applications error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_LIST_APPLICATIONS },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_LIST_APPLICATIONS }, { status: 500 });
   }
 }

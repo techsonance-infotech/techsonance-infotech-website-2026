@@ -37,13 +37,18 @@ const UNAVAILABLE = new Set([
   "53300",
 ]);
 
-export function mapDbError(error: unknown): AppError {
+export type DbErrorContext = Record<string, unknown>;
+
+export function mapDbError(error: unknown, _context?: DbErrorContext): AppError {
   if (error instanceof AppError) return error;
   const code = dbErrorInfo(error)?.code;
   if (code === undefined) return new AppError("INTERNAL", "Something went wrong", { cause: error });
-  if (code === "23505") return new AppError("CONFLICT", "That record already exists", { cause: error });
+  if (code === "23505")
+    return new AppError("CONFLICT", "That record already exists", { cause: error });
   if (code === "23503")
-    return new AppError("CONFLICT", "A related record is missing or still in use", { cause: error });
+    return new AppError("CONFLICT", "A related record is missing or still in use", {
+      cause: error,
+    });
   if (code === "42501") return new AppError("FORBIDDEN", "Not allowed", { cause: error });
   if (code === "23514" || code.startsWith("22"))
     return new AppError("VALIDATION", "Invalid value", { cause: error });

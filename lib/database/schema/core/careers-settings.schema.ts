@@ -14,9 +14,7 @@ export const careersSettingsTable = pgTable(
     documentRetentionDays: integer("document_retention_days").notNull().default(90),
     adminAlertRecipients: text("admin_alert_recipients").array().notNull().default([]),
   },
-  (table) => [
-    uniqueIndex("ts_content_careers_settings_site_idx").on(table.siteId),
-  ],
+  (table) => [uniqueIndex("ts_content_careers_settings_site_idx").on(table.siteId)],
 );
 
 export type CareersSettings = typeof careersSettingsTable.$inferSelect;

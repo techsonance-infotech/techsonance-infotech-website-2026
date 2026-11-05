@@ -225,9 +225,7 @@ export function JobLivePreview({
                 TechSonance Infotech
               </span>
               {job.openingsCount && job.openingsCount > 1 && (
-                <span className="text-[#1155CC] font-bold">
-                  {job.openingsCount} Openings
-                </span>
+                <span className="text-[#1155CC] font-bold">{job.openingsCount} Openings</span>
               )}
             </div>
           </div>
@@ -387,9 +385,7 @@ export function JobLivePreview({
                     <div className="font-bold text-slate-900 dark:text-white text-xs mt-0.5">
                       {step.title}
                     </div>
-                    {step.desc && (
-                      <p className="text-[11px] text-slate-500 mt-1">{step.desc}</p>
-                    )}
+                    {step.desc && <p className="text-[11px] text-slate-500 mt-1">{step.desc}</p>}
                   </div>
                 ))}
               </div>

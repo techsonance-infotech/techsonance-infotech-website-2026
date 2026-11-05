@@ -120,10 +120,7 @@ describe("CompletenessChecklist Component Rendering", () => {
     };
 
     const html = renderToString(
-      <CompletenessChecklist
-        job={incompleteJob}
-        onSubmitForReview={vi.fn()}
-      />,
+      <CompletenessChecklist job={incompleteJob} onSubmitForReview={vi.fn()} />,
     );
 
     expect(html).toContain("Completeness Checklist");
@@ -144,10 +141,7 @@ describe("CompletenessChecklist Component Rendering", () => {
     };
 
     const html = renderToString(
-      <CompletenessChecklist
-        job={completeJob}
-        onSubmitForReview={vi.fn()}
-      />,
+      <CompletenessChecklist job={completeJob} onSubmitForReview={vi.fn()} />,
     );
 
     expect(html).toContain("Completeness Checklist");
@@ -190,14 +184,10 @@ describe("JobLivePreview Component Rendering", () => {
   });
 
   it("supports desktop and mobile viewport rendering", () => {
-    const desktopHtml = renderToString(
-      <JobLivePreview job={sampleJob} viewport="desktop" />,
-    );
+    const desktopHtml = renderToString(<JobLivePreview job={sampleJob} viewport="desktop" />);
     expect(desktopHtml).toContain("max-w-4xl");
 
-    const mobileHtml = renderToString(
-      <JobLivePreview job={sampleJob} viewport="mobile" />,
-    );
+    const mobileHtml = renderToString(<JobLivePreview job={sampleJob} viewport="mobile" />);
     expect(mobileHtml).toContain("w-[375px]");
   });
 });

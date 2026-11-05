@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminPostsService } from "../lib/services/admin-posts.service";
+import { AdminPostsRepository } from "../lib/repositories/admin-posts.repository";
 import { AdminJobsService } from "../lib/services/admin-jobs.service";
+import { AdminJobsRepository } from "../lib/repositories/admin-jobs.repository";
 
 describe("AdminPostsService & AdminJobsService Tests", () => {
   let mockDb: any;
@@ -13,17 +15,15 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
     mockDb = {
       query: {
         postsTable: {
-          findMany: vi
-            .fn()
-            .mockResolvedValue([
-              {
-                id: "p1",
-                title: "Test Post 1",
-                slug: "test-post-1",
-                status: "DRAFT",
-                siteId: "s1",
-              },
-            ]),
+          findMany: vi.fn().mockResolvedValue([
+            {
+              id: "p1",
+              title: "Test Post 1",
+              slug: "test-post-1",
+              status: "DRAFT",
+              siteId: "s1",
+            },
+          ]),
           findFirst: vi.fn().mockResolvedValue({
             id: "p1",
             title: "Test Post 1",
@@ -34,17 +34,15 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
           }),
         },
         jobsTable: {
-          findMany: vi
-            .fn()
-            .mockResolvedValue([
-              {
-                id: "j1",
-                title: "Fullstack Engineer",
-                slug: "fullstack-engineer",
-                status: "DRAFT",
-                siteId: "s1",
-              },
-            ]),
+          findMany: vi.fn().mockResolvedValue([
+            {
+              id: "j1",
+              title: "Fullstack Engineer",
+              slug: "fullstack-engineer",
+              status: "DRAFT",
+              siteId: "s1",
+            },
+          ]),
           findFirst: vi.fn().mockResolvedValue({
             id: "j1",
             title: "Fullstack Engineer",
@@ -85,10 +83,11 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
       delete: vi.fn().mockReturnValue({
         where: vi.fn().mockResolvedValue({}),
       }),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
-    postsService = new AdminPostsService(mockDb);
-    jobsService = new AdminJobsService(mockDb);
+    postsService = new AdminPostsService(new AdminPostsRepository(mockDb));
+    jobsService = new AdminJobsService(new AdminJobsRepository(mockDb));
   });
 
   describe("AdminPostsService", () => {

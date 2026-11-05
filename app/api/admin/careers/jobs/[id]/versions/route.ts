@@ -33,10 +33,7 @@ export async function GET(_req: Request, { params }: RouteParams) {
       );
     }
     logger.error("List versions error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_LIST_VERSIONS },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_LIST_VERSIONS }, { status: 500 });
   }
 }
 
@@ -54,20 +51,12 @@ export async function POST(req: Request, { params }: RouteParams) {
     const body = await req.json();
     const versionId = body?.versionId;
     if (!versionId || typeof versionId !== "string") {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.VERSION_ID_REQUIRED },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.VERSION_ID_REQUIRED }, { status: 400 });
     }
 
     const ipAddress = req.headers.get("x-forwarded-for") || undefined;
     const jobsService = container.get(AdminJobsService);
-    const restored = await jobsService.restoreVersion(
-      id,
-      versionId,
-      session.userId,
-      ipAddress,
-    );
+    const restored = await jobsService.restoreVersion(id, versionId, session.userId, ipAddress);
 
     return NextResponse.json({ ok: true, job: restored });
   } catch (error: unknown) {
@@ -78,9 +67,6 @@ export async function POST(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Restore version error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_RESTORE_VERSION },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_RESTORE_VERSION }, { status: 500 });
   }
 }

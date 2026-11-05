@@ -3,7 +3,7 @@
 **Date:** 2026-11-05  
 **Author:** TechSonance Engineering & AI Assistant  
 **Source Document:** [`Agency Careers Page and CMS Admin Production-Ready Project Doc.md`](file:///c:/Users/manis/Downloads/Agency%20Careers%20Page%20and%20CMS%20Admin%20Production-Ready%20Project%20Doc.md)  
-**Status:** Approved for Implementation Planning  
+**Status:** Approved for Implementation Planning
 
 ---
 
@@ -78,7 +78,9 @@ export const jobsTable = pgTable(
   "ts_content_jobs",
   {
     ...baseEntityFields, // id, createdAt, updatedAt
-    siteId: uuid("site_id").notNull().references(() => sitesTable.id, { onDelete: "cascade" }),
+    siteId: uuid("site_id")
+      .notNull()
+      .references(() => sitesTable.id, { onDelete: "cascade" }),
     slug: text("slug").notNull(),
     title: text("title").notNull(),
     referenceCode: text("reference_code"), // e.g. "ENG-2026-04"
@@ -148,7 +150,7 @@ export const jobsTable = pgTable(
     uniqueIndex("ts_content_jobs_site_slug_idx").on(table.siteId, table.slug),
     index("ts_content_jobs_status_idx").on(table.status),
     index("ts_content_jobs_dept_idx").on(table.department),
-  ]
+  ],
 );
 ```
 
@@ -159,8 +161,12 @@ export const applicationsTable = pgTable(
   "ts_content_applications",
   {
     ...baseEntityFields,
-    siteId: uuid("site_id").notNull().references(() => sitesTable.id, { onDelete: "cascade" }),
-    jobId: uuid("job_id").notNull().references(() => jobsTable.id, { onDelete: "cascade" }),
+    siteId: uuid("site_id")
+      .notNull()
+      .references(() => sitesTable.id, { onDelete: "cascade" }),
+    jobId: uuid("job_id")
+      .notNull()
+      .references(() => jobsTable.id, { onDelete: "cascade" }),
     jobVersionId: integer("job_version_id").notNull().default(1), // Snapshot version applied to
     candidateName: text("candidate_name").notNull(),
     email: text("email").notNull(),
@@ -191,14 +197,16 @@ export const applicationsTable = pgTable(
     rating: integer("rating"), // 1 to 5 stars
 
     // Compliance & Consent
-    privacyConsentDate: timestamp("privacy_consent_date", { withTimezone: true }).notNull().defaultNow(),
+    privacyConsentDate: timestamp("privacy_consent_date", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     privacyNoticeVersion: text("privacy_notice_version").notNull().default("2026-v1"),
     talentPoolConsent: boolean("talent_pool_consent").notNull().default(false),
   },
   (table) => [
     index("ts_content_app_job_email_idx").on(table.jobId, table.email),
     index("ts_content_app_status_idx").on(table.status),
-  ]
+  ],
 );
 ```
 
@@ -235,6 +243,7 @@ stateDiagram-v2
 ```
 
 ### Permission Rules
+
 - **Recruiter:** Can create/edit `DRAFT`, submit to `IN_REVIEW`, `PAUSE` and `CLOSE` own roles. Cannot publish directly if `requireApprovalToPublish` is active.
 - **Admin/Owner:** Can approve/return roles in `IN_REVIEW`, bypass approval, publish, schedule, reassign role owners, alter settings, and permanently delete data.
 - **Hiring Manager:** Read-only access to assigned roles; can view applicants, submit internal notes, and assign ratings.
@@ -244,12 +253,13 @@ stateDiagram-v2
 ## 5. Public Careers Experience
 
 ### 5.1 Dynamic Route: `app/careers/[slug]/page.tsx`
+
 - **Cache Strategy:** Statically rendered using `getJobSource().get(slug)` with cache tag `job:${slug}`.
 - **Immediate Revalidation:** When an admin edits, publishes, pauses, or closes a role, `revalidateTag("jobs")` and `revalidateTag("job:${slug}")` are invoked.
 - **Role States on Detail Page:**
   - `PUBLISHED`: Displays full job details, compensation (if toggled), and interactive Apply CTA (sticky on mobile).
-  - `PAUSED`: Displays banner: *"This opening is temporarily on hold and not accepting applications."* Apply button is disabled.
-  - `CLOSED`: Permanent URL retained (zero 404s). Displays banner: *"This opening is now closed and no longer accepting applications."* Form is hidden, but similar active roles in the same department are recommended.
+  - `PAUSED`: Displays banner: _"This opening is temporarily on hold and not accepting applications."_ Apply button is disabled.
+  - `CLOSED`: Permanent URL retained (zero 404s). Displays banner: _"This opening is now closed and no longer accepting applications."_ Form is hidden, but similar active roles in the same department are recommended.
   - `DRAFT` / `IN_REVIEW` / `UNLISTED`: Returns standard 404 unless accessed via a signed preview token.
 - **SEO & Schema.org:** Generates JSON-LD `JobPosting`:
   ```json
@@ -285,12 +295,14 @@ stateDiagram-v2
   ```
 
 ### 5.2 Upgraded Listing: `app/careers/page.tsx` & `CareersClient.tsx`
+
 - Real-time client-side search with debouncing across `title`, `summary`, and `skills`.
 - Facet chips: Department, Work Mode (`Remote`, `Hybrid`, `On-site`), Employment Type, Experience Level.
 - State synced bi-directionally to URL search parameters (`?dept=Engineering&mode=remote`).
 - Empty State: When no roles match, renders a warm "No open roles matching your criteria" state with a one-click "Reset Filters" button and a **"Join our Talent Pool"** capture form.
 
 ### 5.3 Dynamic Sitemap: `app/sitemap.ts`
+
 - Queries `jobsTable` for all `status = 'PUBLISHED'` and `visibility = 'public'`.
 - Includes `/careers/${job.slug}` with `lastModified = job.updatedAt`.
 - Automatically excludes closed, paused, or unlisted roles.
@@ -300,6 +312,7 @@ stateDiagram-v2
 ## 6. Application Intake, Resume Storage & Background Notifications
 
 ### 6.1 Private Resume Storage
+
 - Resumes are validated on the server:
   - Allowed types: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (DOCX).
   - Maximum size: 5 MB.
@@ -309,8 +322,9 @@ stateDiagram-v2
 - Candidates and public visitors **never** receive raw public links. Admin recruiters access resumes through short-lived signed download URLs (5-minute expiry).
 
 ### 6.2 Application Submission Flow & Edge Cases
+
 1. **Closing Race Condition:** The server verifies `job.status === 'PUBLISHED'` and `now() <= job.closesAt`. If closed while the applicant was typing, the submission fails with a helpful error, and the candidate's input is preserved.
-2. **Duplicate Prevention:** Checks `ts_content_applications` for an existing entry matching `(jobId, candidateEmail)`. If found, returns: *"You have already submitted an application for this role."*
+2. **Duplicate Prevention:** Checks `ts_content_applications` for an existing entry matching `(jobId, candidateEmail)`. If found, returns: _"You have already submitted an application for this role."_
 3. **Knockout Screening:** If a candidate answers a knockout question incorrectly, the application is accepted but flagged with `knockoutTriggered = true` so recruiters can filter appropriately (no automated cold rejections without human review).
 4. **Dual Email Notification:** Dispatches two emails via `EmailService`:
    - To Candidate: Branded confirmation email detailing application receipt and what to expect next.
@@ -321,6 +335,7 @@ stateDiagram-v2
 ## 7. Admin CMS Experience
 
 ### 7.1 Rich Job Editor (`/admin/careers/jobs/[id]`)
+
 - Grouped into 6 logical sections:
   1. **Basics:** Title, reference code, department, openings, role owner, hiring manager, summary.
   2. **Location & Mode:** Work mode, single office location or Remote, remote eligibility, visa support.
@@ -332,6 +347,7 @@ stateDiagram-v2
 - **Live Preview:** Instant toggle between Desktop and Mobile preview widths mimicking the public `/careers/[slug]` layout.
 
 ### 7.2 Applications Inbox (`/admin/careers/applications`)
+
 - Filterable by Role, Stage, Date Range, and Knockout Status.
 - Toggle between **Table View** and **Kanban Board** (8 columns: `New` → `Screening` → `Shortlisted` → `Interview` → `Offer` → `Hired` → `Rejected` → `Withdrawn`).
 - **Candidate Profile Drawer:**
@@ -348,12 +364,12 @@ stateDiagram-v2
 
 ## 8. Rollout Plan & Implementation Phases
 
-| Phase | Milestone | Deliverables | Verification Exit Gate |
-| :--- | :--- | :--- | :--- |
-| **Phase 1** | Foundation & Data Model | Drizzle migration for `jobsTable`, `applicationsTable`, companion tables. `AdminJobsService` status state machine. | Migration applies cleanly; status transition unit tests pass. |
-| **Phase 2** | Public Careers Portal | `/careers` search/filters/empty talent pool. Dedicated `/careers/[slug]` detail page with closed role handling, sticky CTA, and Schema.org `JobPosting` JSON-LD. Dynamic `sitemap.ts`. | Lighthouse SEO/accessibility = 100%; Google Rich Results Test passes. |
+| Phase       | Milestone                | Deliverables                                                                                                                                                                                           | Verification Exit Gate                                                                                        |
+| :---------- | :----------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| **Phase 1** | Foundation & Data Model  | Drizzle migration for `jobsTable`, `applicationsTable`, companion tables. `AdminJobsService` status state machine.                                                                                     | Migration applies cleanly; status transition unit tests pass.                                                 |
+| **Phase 2** | Public Careers Portal    | `/careers` search/filters/empty talent pool. Dedicated `/careers/[slug]` detail page with closed role handling, sticky CTA, and Schema.org `JobPosting` JSON-LD. Dynamic `sitemap.ts`.                 | Lighthouse SEO/accessibility = 100%; Google Rich Results Test passes.                                         |
 | **Phase 3** | Application Intake & ATS | Private resume Supabase storage, submission API with duplicate & knockout checks, candidate confirmation + recruiter alert emails, `/admin/careers/applications` inbox with Kanban & candidate drawer. | Successful test application submission with resume stored, candidate notified, and profile reviewable in CMS. |
-| **Phase 4** | Job Editor & Admin CMS | Multi-section Job Editor with completeness checklist, live preview, approval workflow (Submit -> Approve/Return), and GDPR candidate purge tool. | Recruiter creates draft -> submits -> Admin approves -> publishes immediately to public site. |
+| **Phase 4** | Job Editor & Admin CMS   | Multi-section Job Editor with completeness checklist, live preview, approval workflow (Submit -> Approve/Return), and GDPR candidate purge tool.                                                       | Recruiter creates draft -> submits -> Admin approves -> publishes immediately to public site.                 |
 
 ---
 

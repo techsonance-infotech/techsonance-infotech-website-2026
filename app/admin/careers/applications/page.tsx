@@ -19,7 +19,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ApplicationStatus } from "@/lib/constants/enums";
-import { ApplicationsTable, type ApplicationItem } from "@/components/admin/careers/ApplicationsTable";
+import {
+  ApplicationsTable,
+  type ApplicationItem,
+} from "@/components/admin/careers/ApplicationsTable";
 import { ApplicationsKanban } from "@/components/admin/careers/ApplicationsKanban";
 import { CandidateDrawer } from "@/components/admin/careers/CandidateDrawer";
 
@@ -66,11 +69,13 @@ export default function ApplicationsInboxPage() {
       .then((res) => res.json())
       .then((data) => {
         if (isMounted && data.items) {
-          const mappedJobs = data.items.map((j: { id: string; title: string; department?: string }) => ({
-            id: j.id,
-            title: j.title,
-            department: j.department,
-          }));
+          const mappedJobs = data.items.map(
+            (j: { id: string; title: string; department?: string }) => ({
+              id: j.id,
+              title: j.title,
+              department: j.department,
+            }),
+          );
           setJobs(mappedJobs);
         }
       })
@@ -158,7 +163,9 @@ export default function ApplicationsInboxPage() {
 
   // Quick stats
   const newCount = applications.filter((a) => a.status === ApplicationStatus.NEW).length;
-  const interviewCount = applications.filter((a) => a.status === ApplicationStatus.INTERVIEW).length;
+  const interviewCount = applications.filter(
+    (a) => a.status === ApplicationStatus.INTERVIEW,
+  ).length;
   const knockoutCount = applications.filter((a) => a.knockoutTriggered).length;
 
   return (
@@ -201,7 +208,9 @@ export default function ApplicationsInboxPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Total In Pipeline</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">
+              Total In Pipeline
+            </span>
             <Users className="w-4 h-4 text-blue-500" />
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-sora">
@@ -231,7 +240,9 @@ export default function ApplicationsInboxPage() {
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
           <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Knockouts Flagged</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">
+              Knockouts Flagged
+            </span>
             <AlertTriangle className="w-4 h-4 text-rose-500" />
           </div>
           <p className="text-2xl font-black text-rose-600 dark:text-rose-400 font-sora">

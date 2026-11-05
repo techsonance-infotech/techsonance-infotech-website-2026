@@ -263,7 +263,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Name & Email */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label htmlFor="booking-name" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-name"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Your Name <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -281,7 +284,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label htmlFor="booking-email" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-email"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Work Email <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -302,7 +308,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Phone & Company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label htmlFor="booking-phone" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-phone"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Phone / WhatsApp (Optional)
             </label>
             <div className="relative">
@@ -319,7 +328,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label htmlFor="booking-company" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-company"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Company (Optional)
             </label>
             <div className="relative">
@@ -339,7 +351,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Project Type & Budget */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label htmlFor="booking-project-type" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-project-type"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Project Type
             </label>
             <div className="relative">
@@ -360,7 +375,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label htmlFor="booking-budget" className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label
+              htmlFor="booking-budget"
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
               Target Budget
             </label>
             <div className="relative">
@@ -383,7 +401,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
         {/* Time Slot Selection */}
         <div>
-          <label htmlFor="booking-slot" className="block text-[11px] font-medium text-slate-600 mb-1">
+          <label
+            htmlFor="booking-slot"
+            className="block text-[11px] font-medium text-slate-600 mb-1"
+          >
             Select Preferred Time Slot ({visitorTimezone}) <span className="text-red-500">*</span>
           </label>
           {loadingSlots ? (
@@ -417,7 +438,10 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
         {/* Short Message / Idea */}
         <div>
-          <label htmlFor="booking-overview" className="block text-[11px] font-medium text-slate-600 mb-1">
+          <label
+            htmlFor="booking-overview"
+            className="block text-[11px] font-medium text-slate-600 mb-1"
+          >
             Brief Project Overview (Optional)
           </label>
           <textarea

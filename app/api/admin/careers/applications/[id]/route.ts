@@ -34,10 +34,7 @@ export async function GET(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Get application error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_GET_APPLICATION },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_GET_APPLICATION }, { status: 500 });
   }
 }
 
@@ -84,9 +81,6 @@ export async function PATCH(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Update application error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_UPDATE_APPLICATION },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_UPDATE_APPLICATION }, { status: 500 });
   }
 }

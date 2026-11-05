@@ -29,11 +29,13 @@ const STAGE_STYLES: Record<ApplicationStatus, { label: string; class: string }> 
   },
   [ApplicationStatus.SCREENING]: {
     label: "Screening",
-    class: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300",
+    class:
+      "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300",
   },
   [ApplicationStatus.SHORTLISTED]: {
     label: "Shortlisted",
-    class: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300",
+    class:
+      "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300",
   },
   [ApplicationStatus.INTERVIEW]: {
     label: "Interview",
@@ -41,7 +43,8 @@ const STAGE_STYLES: Record<ApplicationStatus, { label: string; class: string }> 
   },
   [ApplicationStatus.OFFER]: {
     label: "Offer",
-    class: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300",
+    class:
+      "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300",
   },
   [ApplicationStatus.HIRED]: {
     label: "Hired",
@@ -57,10 +60,7 @@ const STAGE_STYLES: Record<ApplicationStatus, { label: string; class: string }> 
   },
 };
 
-export function ApplicationsTable({
-  applications,
-  onSelectApplication,
-}: ApplicationsTableProps) {
+export function ApplicationsTable({ applications, onSelectApplication }: ApplicationsTableProps) {
   if (applications.length === 0) {
     return (
       <div className="p-12 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-2">

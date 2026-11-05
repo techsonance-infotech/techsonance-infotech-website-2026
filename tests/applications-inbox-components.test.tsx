@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { ApplicationsTable, type ApplicationItem } from "@/components/admin/careers/ApplicationsTable";
+import {
+  ApplicationsTable,
+  type ApplicationItem,
+} from "@/components/admin/careers/ApplicationsTable";
 import { ApplicationsKanban } from "@/components/admin/careers/ApplicationsKanban";
 import {
   RejectionReasonDialog,
@@ -50,10 +53,7 @@ describe("Applications Inbox UI Components", () => {
   describe("ApplicationsTable", () => {
     it("renders applications table with candidates, roles, stages, and ratings", () => {
       const html = renderToString(
-        <ApplicationsTable
-          applications={sampleApplications}
-          onSelectApplication={vi.fn()}
-        />,
+        <ApplicationsTable applications={sampleApplications} onSelectApplication={vi.fn()} />,
       );
 
       expect(html).toContain("Ada Lovelace");
@@ -80,10 +80,7 @@ describe("Applications Inbox UI Components", () => {
   describe("ApplicationsKanban", () => {
     it("renders all 8 Kanban stages", () => {
       const html = renderToString(
-        <ApplicationsKanban
-          applications={sampleApplications}
-          onSelectApplication={vi.fn()}
-        />,
+        <ApplicationsKanban applications={sampleApplications} onSelectApplication={vi.fn()} />,
       );
 
       expect(html).toContain("New");
@@ -116,11 +113,7 @@ describe("Applications Inbox UI Components", () => {
   describe("RejectionReasonDialog", () => {
     it("renders null when isOpen is false", () => {
       const html = renderToString(
-        <RejectionReasonDialog
-          isOpen={false}
-          onClose={vi.fn()}
-          onConfirm={vi.fn()}
-        />,
+        <RejectionReasonDialog isOpen={false} onClose={vi.fn()} onConfirm={vi.fn()} />,
       );
 
       expect(html).toBe("");
@@ -148,11 +141,7 @@ describe("Applications Inbox UI Components", () => {
   describe("CandidateDrawer", () => {
     it("renders null when closed", () => {
       const html = renderToString(
-        <CandidateDrawer
-          applicationId={null}
-          isOpen={false}
-          onClose={vi.fn()}
-        />,
+        <CandidateDrawer applicationId={null} isOpen={false} onClose={vi.fn()} />,
       );
 
       expect(html).toBe("");
@@ -160,11 +149,7 @@ describe("Applications Inbox UI Components", () => {
 
     it("renders candidate evaluation slide-over when open", () => {
       const html = renderToString(
-        <CandidateDrawer
-          applicationId="app-1"
-          isOpen={true}
-          onClose={vi.fn()}
-        />,
+        <CandidateDrawer applicationId="app-1" isOpen={true} onClose={vi.fn()} />,
       );
 
       expect(html).toContain("Candidate Evaluation");

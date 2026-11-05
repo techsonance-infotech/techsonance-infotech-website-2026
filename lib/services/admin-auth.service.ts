@@ -1,12 +1,13 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { eq } from "drizzle-orm";
+import { AdminUsersRepository } from "@/lib/repositories/admin-users.repository";
 import { getSessionFromCookies } from "../auth/session";
-import { DRIZZLE_DB_TOKEN } from "../di/tokens";
-import type { Database } from "../database/index";
-import { type Site, type Membership } from "../database/schema/core/site.schema";
-import { usersTable } from "../database/schema/core/user.schema";
+import { verifyPassword } from "@/lib/auth/password";
+import { AppError } from "@/lib/errors";
+import { logger } from "@/lib/logger";
 import { getEnv } from "../env";
+import { AUTH_ERRORS, AUTH_DEFAULT_ROLES } from "@/lib/constants/auth.constants";
+import type { Site, Membership } from "../database/schema/core/site.schema";
 
 export interface AdminSession {
   userId: string;
@@ -16,8 +17,67 @@ export interface AdminSession {
   membership?: Membership | null;
 }
 
+export interface AuthenticatedUser {
+  id: string;
+  email: string;
+  name: string;
+  role: "owner" | "admin" | "editor" | "author" | "viewer";
+}
+
 export class AdminAuthService {
-  constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
+  constructor(private usersRepo: AdminUsersRepository = inject(AdminUsersRepository)) {}
+
+  /**
+   * Authenticates user via email and password.
+   * Updates last login timestamp on success.
+   */
+  async authenticate(email: string, password: string): Promise<AuthenticatedUser> {
+    const env = getEnv();
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 1. Look up user in database via repository
+    const user = await this.usersRepo.findByEmail(normalizedEmail);
+
+    if (user) {
+      if (!user.isActive) {
+        throw new AppError("FORBIDDEN", AUTH_ERRORS.ACCOUNT_DISABLED);
+      }
+
+      const isValid = await verifyPassword(password, user.passwordHash);
+      if (!isValid) {
+        throw new AppError("UNAUTHENTICATED", AUTH_ERRORS.INVALID_CREDENTIALS);
+      }
+
+      // Record last login timestamp non-blockingly
+      try {
+        await this.usersRepo.updateLastLogin(user.id);
+      } catch (err) {
+        logger.warn("AdminAuthService.authenticate: updateLastLogin failed", {
+          userId: user.id,
+          error: String(err),
+        });
+      }
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role as AuthenticatedUser["role"],
+      };
+    }
+
+    // 2. Dev mode fallback when ALLOW_PLACEHOLDERS is true
+    if (env.ALLOW_PLACEHOLDERS) {
+      return {
+        id: "00000000-0000-0000-0000-000000000000",
+        email: normalizedEmail,
+        name: "Admin User",
+        role: AUTH_DEFAULT_ROLES.OWNER,
+      };
+    }
+
+    throw new AppError("UNAUTHENTICATED", AUTH_ERRORS.INVALID_CREDENTIALS);
+  }
 
   /**
    * Retrieves the current authenticated admin session.
@@ -32,12 +92,7 @@ export class AdminAuthService {
 
       if (cookieSession) {
         try {
-          // Query user from main database
-          const [user] = await this.db
-            .select()
-            .from(usersTable)
-            .where(eq(usersTable.id, cookieSession.userId))
-            .limit(1);
+          const user = await this.usersRepo.findById(cookieSession.userId);
 
           if (user && user.isActive) {
             return {
@@ -55,7 +110,7 @@ export class AdminAuthService {
             };
           }
         } catch {
-          // If users table is not yet migrated, trust verified signed cookie
+          // If users table is not yet accessible, trust verified signed cookie
           return {
             userId: cookieSession.userId,
             email: cookieSession.email,
@@ -69,7 +124,7 @@ export class AdminAuthService {
         return {
           userId: "00000000-0000-0000-0000-000000000000",
           email: "admin@techsonance.co.in",
-          role: "owner",
+          role: AUTH_DEFAULT_ROLES.OWNER,
           site: {
             id: "00000000-0000-0000-0000-000000000001",
             name: "TechSonance Main Site",
@@ -83,12 +138,11 @@ export class AdminAuthService {
 
       return null;
     } catch (err) {
-      console.error("AdminAuthService.getCurrentSession error:", err);
-      // Failsafe fallback in local development
+      logger.error("AdminAuthService.getCurrentSession error", { error: String(err) });
       return {
         userId: "00000000-0000-0000-0000-000000000000",
         email: "admin@techsonance.co.in",
-        role: "owner",
+        role: AUTH_DEFAULT_ROLES.OWNER,
       };
     }
   }

@@ -1,4 +1,4 @@
-import type { NextRequest} from "next/server";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminTelemetryService } from "@/lib/services/admin-telemetry.service";
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const authHeader = req.headers.get("Authorization");
   const providedSecret = authHeader?.replace(/^Bearer\s+/i, "") || req.headers.get("x-cron-secret");
 
-  const validSecrets = [process.env.CRON_SECRET, env.REVALIDATE_SECRET].filter(Boolean);
+  const validSecrets = [env.CRON_SECRET, env.REVALIDATE_SECRET].filter(Boolean);
 
   // If a secret is configured in env, require it
   if (validSecrets.length > 0 && (!providedSecret || !validSecrets.includes(providedSecret))) {

@@ -48,20 +48,20 @@ Every folder under `lib/` must be listed above; an unclassified folder fails `ch
 
 ## 3. File naming (this file owns it)
 
-| Entity | Convention | Example |
-| --- | --- | --- |
-| React components | `PascalCase.tsx` | `ChatWidget.tsx` |
-| Hooks | `useCamelCase.ts(x)` | `useBooking.ts` |
-| Utilities, API helpers | `camelCase.ts` | `formatDate.ts`, `callApi.ts` |
-| Services / mappers / repositories | `kebab-case.service.ts` / `.mapper.ts` / `.repository.ts` | `booking.service.ts` |
-| Zod schemas | `kebab-case.schema.ts` | `booking.schema.ts` |
-| Contracts | `kebab-case.contract.ts` | `chat.contract.ts` |
-| Constants | `kebab-case.constants.ts` | `booking.constants.ts` |
-| Enums (one per file) | `kebab-case.enum.ts` | `job-status.enum.ts` |
-| Config objects | `camelCaseConfig.ts` | `seoConfig.ts` |
-| Drizzle schema files | `kebab-case.schema.ts` | `booking.schema.ts` |
-| Postgres objects | `ts_web_` + `snake_case`, tables plural | `ts_web_consultation_bookings` |
-| Indexes / constraints | `ts_web_<table>_<cols>_idx\|_uq\|_chk\|_fk` | `ts_web_consultation_bookings_slot_uq` |
+| Entity                            | Convention                                                | Example                                |
+| --------------------------------- | --------------------------------------------------------- | -------------------------------------- |
+| React components                  | `PascalCase.tsx`                                          | `ChatWidget.tsx`                       |
+| Hooks                             | `useCamelCase.ts(x)`                                      | `useBooking.ts`                        |
+| Utilities, API helpers            | `camelCase.ts`                                            | `formatDate.ts`, `callApi.ts`          |
+| Services / mappers / repositories | `kebab-case.service.ts` / `.mapper.ts` / `.repository.ts` | `booking.service.ts`                   |
+| Zod schemas                       | `kebab-case.schema.ts`                                    | `booking.schema.ts`                    |
+| Contracts                         | `kebab-case.contract.ts`                                  | `chat.contract.ts`                     |
+| Constants                         | `kebab-case.constants.ts`                                 | `booking.constants.ts`                 |
+| Enums (one per file)              | `kebab-case.enum.ts`                                      | `job-status.enum.ts`                   |
+| Config objects                    | `camelCaseConfig.ts`                                      | `seoConfig.ts`                         |
+| Drizzle schema files              | `kebab-case.schema.ts`                                    | `booking.schema.ts`                    |
+| Postgres objects                  | `ts_web_` + `snake_case`, tables plural                   | `ts_web_consultation_bookings`         |
+| Indexes / constraints             | `ts_web_<table>_<cols>_idx\|_uq\|_chk\|_fk`               | `ts_web_consultation_bookings_slot_uq` |
 
 > **Shared database rule**: every table, index, enum type, constraint, trigger, function and policy for this site carries `ts_web_`. Nothing else may be created, altered or dropped.
 

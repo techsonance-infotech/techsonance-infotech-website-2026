@@ -2,7 +2,7 @@
 
 Owns: API contracts, `handleRoute`, `callApi`, API headers, events, the pipeline Row → ResponseDto → ViewModel, and the feature wiring checklist. Zod conventions and `Result`: `04`. Webhooks, idempotency, rate limits: `11` §2.
 
-**Principle:** every packet crossing a boundary has a Zod schema; both sides import the *same* schema; drift checks (`AGENTS.md` §4) fail the build.
+**Principle:** every packet crossing a boundary has a Zod schema; both sides import the _same_ schema; drift checks (`AGENTS.md` §4) fail the build.
 
 ## 1. Pipeline
 
@@ -10,19 +10,19 @@ Owns: API contracts, `handleRoute`, `callApi`, API headers, events, the pipeline
 
 ## 2. Boundary matrix
 
-| Boundary | Validated by | Schema location |
-| --- | --- | --- |
-| Form → Server Action | `runAction` input (`formDataToObject`) | `lib/validations/<d>.schema.ts` |
-| Action result → UI | `runAction` output parse, typed `Result<T>` | `lib/validations/<d>.schema.ts` |
-| Browser ↔ Route | `handleRoute` (params, query, body, headers) both ways; `callApi` parses again | `lib/contracts/<d>.contract.ts` |
-| Page params / query | `safeParse` then `notFound()`/defaults (`02`) | `lib/validations/<d>.schema.ts` |
-| Cookies, headers | header schemas | `lib/http/headers.ts` |
-| Webhooks | raw body + signature, then schema | `lib/contracts/<d>.contract.ts` |
-| `jsonb`, RPC args/results | Zod on read and write | `lib/validations/<d>.schema.ts` |
-| Uploads | `imageFileSchema` + sharp (`06`) | `lib/validations/upload.schema.ts` |
-| Realtime, storage, `CustomEvent`, `BroadcastChannel` | event schema, origin allowlist | `lib/validations/events.schema.ts` |
-| Env | boot validation (`03` §12) | `lib/env/*` |
-| AI / third-party output | strict schema, bounded length, untrusted | `lib/validations/<d>.schema.ts` |
+| Boundary                                             | Validated by                                                                   | Schema location                    |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+| Form → Server Action                                 | `runAction` input (`formDataToObject`)                                         | `lib/validations/<d>.schema.ts`    |
+| Action result → UI                                   | `runAction` output parse, typed `Result<T>`                                    | `lib/validations/<d>.schema.ts`    |
+| Browser ↔ Route                                      | `handleRoute` (params, query, body, headers) both ways; `callApi` parses again | `lib/contracts/<d>.contract.ts`    |
+| Page params / query                                  | `safeParse` then `notFound()`/defaults (`02`)                                  | `lib/validations/<d>.schema.ts`    |
+| Cookies, headers                                     | header schemas                                                                 | `lib/http/headers.ts`              |
+| Webhooks                                             | raw body + signature, then schema                                              | `lib/contracts/<d>.contract.ts`    |
+| `jsonb`, RPC args/results                            | Zod on read and write                                                          | `lib/validations/<d>.schema.ts`    |
+| Uploads                                              | `imageFileSchema` + sharp (`06`)                                               | `lib/validations/upload.schema.ts` |
+| Realtime, storage, `CustomEvent`, `BroadcastChannel` | event schema, origin allowlist                                                 | `lib/validations/events.schema.ts` |
+| Env                                                  | boot validation (`03` §12)                                                     | `lib/env/*`                        |
+| AI / third-party output                              | strict schema, bounded length, untrusted                                       | `lib/validations/<d>.schema.ts`    |
 
 ## 3. Contract definition (`lib/contracts/define.ts`)
 
@@ -30,9 +30,30 @@ Owns: API contracts, `handleRoute`, `callApi`, API headers, events, the pipeline
 import { z } from "zod";
 import { ERROR_CODES } from "@/lib/errors";
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-export type Contract<P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType> = {readonly method: HttpMethod;readonly path: `/api/${string}`;readonly auth: "required" | "optional" | "none";readonly params: P;readonly query: Q;readonly body: B;readonly response: R;readonly status?: 200 | 201;readonly idempotent?: boolean;
+export type Contract<
+  P extends z.ZodObject,
+  Q extends z.ZodObject,
+  B extends z.ZodType,
+  R extends z.ZodType,
+> = {
+  readonly method: HttpMethod;
+  readonly path: `/api/${string}`;
+  readonly auth: "required" | "optional" | "none";
+  readonly params: P;
+  readonly query: Q;
+  readonly body: B;
+  readonly response: R;
+  readonly status?: 200 | 201;
+  readonly idempotent?: boolean;
 };
-export const defineContract = <P extends z.ZodObject, Q extends z.ZodObject, B extends z.ZodType, R extends z.ZodType>(c: Contract<P, Q, B, R>,): Contract<P, Q, B, R> => c;
+export const defineContract = <
+  P extends z.ZodObject,
+  Q extends z.ZodObject,
+  B extends z.ZodType,
+  R extends z.ZodType,
+>(
+  c: Contract<P, Q, B, R>,
+): Contract<P, Q, B, R> => c;
 export const noParams = z.strictObject({});
 export const noQuery = z.strictObject({});
 export const noBody = z.undefined();
@@ -57,6 +78,7 @@ export const envelopeSchema = <R extends z.ZodType>(data: R) =>
 ## 4. `handleRoute` invariants (`lib/server/route.ts`)
 
 Every step returns the standard envelope with the status from `STATUS_BY_CODE`:
+
 1. Resolve `requestId` (echo on response, log).
 2. Reject method/media mismatches (`UNSUPPORTED_MEDIA`) and oversized bodies (`PAYLOAD_TOO_LARGE`) before buffering.
 3. Parse header schema; require `Idempotency-Key` when `idempotent: true`.
@@ -70,6 +92,7 @@ Every step returns the standard envelope with the status from `STATUS_BY_CODE`:
 Mutations only via POST/PUT/PATCH/DELETE; GET is side-effect free. Idempotent replay and webhooks: `11` §2.
 
 ## 5. `callApi` invariants (`lib/api/callApi.ts`)
+
 - `callApi(contract, input, opts?) → Promise<Result<z.output<R>>>`; the only client helper for `/api`. Never throws.
 - Pre-validates input, serializes params/query, attaches `x-request-id` and `Idempotency-Key`.
 - Default timeout 15 s (`AbortSignal.timeout`). Retries idempotent GETs only (max 2); never POST without an idempotency key.
@@ -78,14 +101,14 @@ Mutations only via POST/PUT/PATCH/DELETE; GET is side-effect free. Idempotent re
 
 ## 6. Headers (`lib/http/headers.ts`, names are constants)
 
-| Header | Direction | Rule |
-| --- | --- | --- |
-| `x-request-id` | req/res | UUID; set by `proxy.ts` if absent; in every log |
-| `content-type` | req | `application/json` or `multipart/form-data`, else 415 |
-| `idempotency-key` | req | UUID; required when `idempotent: true` |
-| `cache-control` | res | `private, no-store` by default |
-| `retry-after` | res | seconds, on 429 and 503 |
-| `authorization` | req | external API clients only; browsers use cookies |
+| Header            | Direction | Rule                                                  |
+| ----------------- | --------- | ----------------------------------------------------- |
+| `x-request-id`    | req/res   | UUID; set by `proxy.ts` if absent; in every log       |
+| `content-type`    | req       | `application/json` or `multipart/form-data`, else 415 |
+| `idempotency-key` | req       | UUID; required when `idempotent: true`                |
+| `cache-control`   | res       | `private, no-store` by default                        |
+| `retry-after`     | res       | seconds, on 429 and 503                               |
+| `authorization`   | req       | external API clients only; browsers use cookies       |
 
 ## 7. Events (`lib/validations/events.schema.ts`)
 
@@ -95,6 +118,7 @@ export const appEventSchema = z.discriminatedUnion("type", [
 ]);
 export type AppEvent = z.infer<typeof appEventSchema>;
 ```
+
 One union per channel family; handler maps use `satisfies` for exhaustiveness. Parse every incoming payload and check origins against an allowlist. Payloads carry ids and timestamps, never secrets/PII.
 
 ## 8. Feature wiring checklist

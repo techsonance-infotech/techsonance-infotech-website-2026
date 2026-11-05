@@ -4,18 +4,18 @@ Owns: how agents verify facts, the trap list, evidence rules, report format. **E
 
 ## 1. Verify before you write
 
-| About to use… | Verify by… |
-| --- | --- |
-| Package or import | `package.json` + lockfile; installed `.d.ts`/`package.json` in `node_modules`. Absent: `npm view <name> version` before proposing (`07`) |
-| Library API (Next 16, React 19, Zod 4, Tailwind 4, Drizzle, Supabase) | installed type definitions; training memory is not evidence |
-| Table or column | `lib/database/schema/*.schema.ts` **and** latest `drizzle/*.sql` |
-| Env var | `lib/env/{public,server}.ts`, `.env.example` |
-| Route, contract, action, event, schema, enum | open `lib/contracts/*`, `lib/validations/*`, `lib/constants/enums/*`, `app/**` |
-| Component or prop | open the component file; never infer props from its name |
-| Design token / Tailwind class | `app/globals.css` `@theme`; v4 names (`05`) |
-| Script or config key | `package.json` scripts; installed `NextConfig` type |
-| File path or helper | graph/glob; `AGENTS.md` registry |
-| Icon name | exports of installed `lucide-react` |
+| About to use…                                                         | Verify by…                                                                                                                               |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Package or import                                                     | `package.json` + lockfile; installed `.d.ts`/`package.json` in `node_modules`. Absent: `npm view <name> version` before proposing (`07`) |
+| Library API (Next 16, React 19, Zod 4, Tailwind 4, Drizzle, Supabase) | installed type definitions; training memory is not evidence                                                                              |
+| Table or column                                                       | `lib/database/schema/*.schema.ts` **and** latest `drizzle/*.sql`                                                                         |
+| Env var                                                               | `lib/env/{public,server}.ts`, `.env.example`                                                                                             |
+| Route, contract, action, event, schema, enum                          | open `lib/contracts/*`, `lib/validations/*`, `lib/constants/enums/*`, `app/**`                                                           |
+| Component or prop                                                     | open the component file; never infer props from its name                                                                                 |
+| Design token / Tailwind class                                         | `app/globals.css` `@theme`; v4 names (`05`)                                                                                              |
+| Script or config key                                                  | `package.json` scripts; installed `NextConfig` type                                                                                      |
+| File path or helper                                                   | graph/glob; `AGENTS.md` registry                                                                                                         |
+| Icon name                                                             | exports of installed `lucide-react`                                                                                                      |
 
 If a check is impossible (tool missing, no network/access): say "unverified", state the assumption, and ask or choose the smallest change the compiler can check.
 

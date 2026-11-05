@@ -3,12 +3,15 @@ import { z } from "zod";
 
 export const serverEnvSchema = z.object({
   // Supabase Configuration
-  NEXT_PUBLIC_SUPABASE_URL: z.url().optional(),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
-  SUPABASE_URL: z.url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_URL: z.string().url().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_JWT_SECRET: z.string().optional(),
+  JWT_ACCESS_SECRET: z.string().optional(),
+  BETTER_AUTH_SECRET: z.string().optional(),
   DATABASE_URL: z.string().optional(),
   SUPABASE_DB_URL: z.string().optional(),
 
@@ -32,7 +35,20 @@ export const serverEnvSchema = z.object({
   SMTP_PORT: z.coerce.number().optional().default(465),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
+  EMAIL_USER: z.string().optional(),
+  EMAIL_PASS: z.string().optional(),
+  SMTP_SECURE: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+
+  // Cron & Debug
+  CRON_SECRET: z.string().optional(),
+  DEBUG: z.string().optional(),
+
+  // Site verification & Analytics
+  NEXT_PUBLIC_SITE_URL: z.string().url().optional().default("http://localhost:3000"),
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional(),
+  NEXT_PUBLIC_BING_SITE_VERIFICATION: z.string().optional(),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
 
   // Optional Redis
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
@@ -68,7 +84,6 @@ export const serverEnvSchema = z.object({
   CONTENT_SOURCE_CAREERS: z.enum(["legacy", "cms"]).optional().default("legacy"),
 
   // App & Security
-  NEXT_PUBLIC_SITE_URL: z.string().optional().default("http://localhost:3000"),
   ALLOWED_ORIGINS: z
     .string()
     .optional()

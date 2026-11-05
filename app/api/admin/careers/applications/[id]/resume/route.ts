@@ -33,9 +33,6 @@ export async function GET(_req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Resume download error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_GENERATE_RESUME_LINK },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_GENERATE_RESUME_LINK }, { status: 500 });
   }
 }

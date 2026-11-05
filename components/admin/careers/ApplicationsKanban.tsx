@@ -20,7 +20,11 @@ import { RejectionReasonDialog } from "./RejectionReasonDialog";
 interface ApplicationsKanbanProps {
   applications: ApplicationItem[];
   onSelectApplication: (id: string) => void;
-  onStageChange?: (id: string, newStage: ApplicationStatus, reason?: string) => Promise<void> | void;
+  onStageChange?: (
+    id: string,
+    newStage: ApplicationStatus,
+    reason?: string,
+  ) => Promise<void> | void;
 }
 
 const KANBAN_STAGES: {
@@ -125,7 +129,11 @@ export function ApplicationsKanban({
     }
   };
 
-  const handleAdvanceStage = async (e: React.MouseEvent, app: ApplicationItem, nextStage?: ApplicationStatus) => {
+  const handleAdvanceStage = async (
+    e: React.MouseEvent,
+    app: ApplicationItem,
+    nextStage?: ApplicationStatus,
+  ) => {
     e.stopPropagation();
     if (!nextStage || !onStageChange) return;
 

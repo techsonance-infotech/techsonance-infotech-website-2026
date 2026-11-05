@@ -22,29 +22,18 @@ export async function POST(req: Request, { params }: RouteParams) {
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER }, { status: 403 });
     }
 
     const body = await req.json();
     const comment = body?.comment;
     if (!comment || typeof comment !== "string" || !comment.trim()) {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.RETURN_FEEDBACK_REQUIRED },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.RETURN_FEEDBACK_REQUIRED }, { status: 400 });
     }
 
     const ipAddress = req.headers.get("x-forwarded-for") || undefined;
     const jobsService = container.get(AdminJobsService);
-    const updated = await jobsService.returnJob(
-      id,
-      comment.trim(),
-      session.userId,
-      ipAddress,
-    );
+    const updated = await jobsService.returnJob(id, comment.trim(), session.userId, ipAddress);
 
     return NextResponse.json({ ok: true, job: updated });
   } catch (error: unknown) {
@@ -55,9 +44,6 @@ export async function POST(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Return job error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_RETURN_JOB },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_RETURN_JOB }, { status: 500 });
   }
 }

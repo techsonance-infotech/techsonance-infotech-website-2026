@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminTopicsService } from "../lib/services/admin-topics.service";
+import { AdminTopicsRepository } from "../lib/repositories/admin-topics.repository";
 import { AdminPromptsService } from "../lib/services/admin-prompts.service";
+import { AdminPromptsRepository } from "../lib/repositories/admin-prompts.repository";
 import { AdminTelemetryService } from "../lib/services/admin-telemetry.service";
+import { AdminTelemetryRepository } from "../lib/repositories/admin-telemetry.repository";
 import { AiTopicStatus } from "../lib/database/enum/ai.enum";
 
 describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
@@ -113,10 +116,14 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
       executeJob: vi.fn().mockResolvedValue({ success: true, postId: "post-1" }),
     };
 
-    topicsService = new AdminTopicsService(mockDb, mockAiWriter as any, mockJobOrchestrator as any);
+    topicsService = new AdminTopicsService(
+      new AdminTopicsRepository(mockDb),
+      mockAiWriter as any,
+      mockJobOrchestrator as any,
+    );
 
-    promptsService = new AdminPromptsService(mockDb);
-    telemetryService = new AdminTelemetryService(mockDb);
+    promptsService = new AdminPromptsService(new AdminPromptsRepository(mockDb));
+    telemetryService = new AdminTelemetryService(new AdminTelemetryRepository(mockDb));
   });
 
   describe("AdminTopicsService", () => {

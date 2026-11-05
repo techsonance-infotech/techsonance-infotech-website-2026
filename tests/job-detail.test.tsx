@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import {
-  generateJobPostingJsonLd,
-  JobPostingJsonLd,
-} from "@/components/careers/JobPostingJsonLd";
+import { generateJobPostingJsonLd, JobPostingJsonLd } from "@/components/careers/JobPostingJsonLd";
 import { ClosedJobBanner } from "@/components/careers/ClosedJobBanner";
 import { legacyJobSource } from "@/lib/content/jobs";
 import type { JobPosting } from "@/lib/content/types";
@@ -138,9 +135,7 @@ describe("ClosedJobBanner Component", () => {
   });
 
   it("renders closed banner and recommends active similar positions when CLOSED", () => {
-    const html = renderToString(
-      <ClosedJobBanner status="CLOSED" similarJobs={similarJobs} />,
-    );
+    const html = renderToString(<ClosedJobBanner status="CLOSED" similarJobs={similarJobs} />);
     expect(html).toContain("This opening is now closed and no longer accepting applications");
     expect(html).toContain("Senior Backend Engineer");
     // Draft job should NOT be rendered in similar jobs

@@ -164,9 +164,7 @@ export function getPostSource(): PostSource {
       return cmsPostSource;
     }
   } catch {
-    if (process.env.CONTENT_SOURCE_BLOG === "cms") {
-      return cmsPostSource;
-    }
+    // fallback to legacy source
   }
   return legacyPostSource;
 }

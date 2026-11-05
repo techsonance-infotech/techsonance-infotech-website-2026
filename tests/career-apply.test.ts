@@ -37,7 +37,9 @@ describe("CareerApplyService", () => {
   };
 
   // Valid PDF header bytes "%PDF-1.5..."
-  const validPdfContent = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x35, 0x0a, 0x25]);
+  const validPdfContent = new Uint8Array([
+    0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x35, 0x0a, 0x25,
+  ]);
   // Valid DOCX zip header bytes "PK\x03\x04..."
   const validDocxContent = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00]);
   // Executable header bytes "MZ..."
@@ -240,11 +242,9 @@ describe("CareerApplyService", () => {
   });
 
   it("accepts valid DOCX file with proper magic bytes PK\x03\x04", async () => {
-    const docxFile = new File(
-      [validDocxContent],
-      "resume.docx",
-      { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
-    );
+    const docxFile = new File([validDocxContent], "resume.docx", {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
 
     const result = await service.submitApplication({
       jobId: mockJob.id,
@@ -433,4 +433,3 @@ describe("Careers API Endpoints", () => {
     expect(body.error).toMatch(/required/i);
   });
 });
-

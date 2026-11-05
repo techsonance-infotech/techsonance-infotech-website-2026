@@ -206,3 +206,118 @@ ${websiteUrl}`;
 
   return { subject, text, html };
 }
+
+export interface CareerInquiryEmailParams {
+  fullName: string;
+  email: string;
+  role: string;
+  message: string;
+  hasResume: boolean;
+  resumeName?: string;
+  submissionDate?: Date;
+}
+
+/**
+ * Generates the recruiter alert email for a general career inquiry.
+ */
+export function renderCareerInquiryEmail(params: CareerInquiryEmailParams): RenderedEmail {
+  const {
+    fullName,
+    email,
+    role,
+    message,
+    hasResume,
+    resumeName,
+    submissionDate = new Date(),
+  } = params;
+
+  const subject = `[Career Inquiry] ${fullName} - ${role}`;
+
+  const text = `New Career / Partnership Inquiry Received:
+
+Candidate Name: ${fullName}
+Email: ${email}
+Role Applied / Interested In: ${role}
+Resume: ${hasResume ? `Attached (${resumeName || "resume"})` : "None"}
+
+Message / Cover Note:
+${message}
+
+Submission Date: ${submissionDate.toISOString()}
+`;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; padding: 40px 10px; color: #0f172a; line-height: 1.6;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+        <!-- Branded Header -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1155cc 100%); padding: 32px 24px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">
+            TECHSONANCE
+          </h1>
+          <span style="color: #94a3b8; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-top: 4px;">
+            INFOTECH LLP
+          </span>
+          <div style="display: inline-block; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 5px 14px; margin-top: 18px;">
+            <span style="font-size: 10px; color: #38bdf8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              💼 General Career Inquiry
+            </span>
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div style="padding: 32px 24px;">
+          <h2 style="color: #0f172a; margin: 0 0 16px 0; font-size: 18px; font-weight: 700;">
+            New Career Inquiry Received
+          </h2>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+            <tbody>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b; width: 140px;">Candidate Name</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #0f172a;">${fullName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Email Address</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #1155cc;">
+                  <a href="mailto:${email}" style="color: #1155cc; text-decoration: none;">${email}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Role Interested In</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #0f172a;">
+                  <span style="background-color: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid #dbeafe;">
+                    ${role}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #64748b;">Resume Attached</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #0f172a;">
+                  ${hasResume ? `📄 ${resumeName || "Attached"}` : "❌ No resume attached"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <h4 style="margin: 0 0 10px 0; color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase;">Message / Cover Note:</h4>
+            <p style="margin: 0; font-size: 13px; color: #334155; white-space: pre-wrap; line-height: 1.6;">${message}</p>
+          </div>
+
+          <div style="text-align: center; margin-top: 10px;">
+            <a href="mailto:${email}" style="display: inline-block; background-color: #1155cc; color: #ffffff; font-weight: 700; font-size: 13px; padding: 12px 24px; text-decoration: none; border-radius: 8px;">
+              Reply to Candidate ✉
+            </a>
+          </div>
+        </div>
+
+        <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 24px; text-align: center;">
+          <p style="margin: 0; font-size: 11px; color: #94a3b8;">
+            Received securely by the TechSonance Careers gateway at ${submissionDate.toUTCString()}.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return { subject, text, html };
+}

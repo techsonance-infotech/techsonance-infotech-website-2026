@@ -1,51 +1,25 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { eq } from "drizzle-orm";
-import { DRIZZLE_DB_TOKEN } from "../di/tokens";
-import type { Database } from "../database/index";
+import { GenerationJobsRepository } from "../repositories/generation-jobs.repository";
+import { AdminPostsRepository } from "../repositories/admin-posts.repository";
 import {
-  generationJobsTable,
   AiJobStatus,
   AiJobStep,
   type GenerationJob,
 } from "../database/schema/ai/generation-job.schema";
-import { jobStepsTable } from "../database/schema/ai/job-step.schema";
-import { postsTable } from "../database/schema/core/post.schema";
-import { sitesTable } from "../database/schema/core/site.schema";
 import { AIWriterService, type OutlineResult, type MetadataResult } from "./ai-writer.service";
 import { ImageStepService, type ThumbnailGenerationResult } from "./image/image-step.service";
 import { ApprovalService } from "./approval.service";
-import { getEnv } from "../env";
+import { logger } from "../logger";
 
 export class JobOrchestratorService {
   constructor(
-    private db: Database = inject(DRIZZLE_DB_TOKEN),
+    private jobsRepo: GenerationJobsRepository = inject(GenerationJobsRepository),
+    private postsRepo: AdminPostsRepository = inject(AdminPostsRepository),
     private aiWriter: AIWriterService = inject(AIWriterService),
     private imageStep: ImageStepService = inject(ImageStepService),
     private approvalService: ApprovalService = inject(ApprovalService),
   ) {}
-
-  private async getOrCreateSiteId(requestedSiteId?: string): Promise<string> {
-    if (requestedSiteId) return requestedSiteId;
-
-    const env = getEnv();
-    if (env.AI_BLOG_SITE_ID) return env.AI_BLOG_SITE_ID;
-
-    const existingSite = await this.db.query.sitesTable.findFirst();
-    if (existingSite) return existingSite.id;
-
-    // Create default site if none exists
-    const [newSite] = await this.db
-      .insert(sitesTable)
-      .values({
-        name: "TechSonance Infotech",
-        slug: "techsonance",
-        domain: "techsonance.co.in",
-      })
-      .returning();
-
-    return newSite.id;
-  }
 
   /**
    * Enqueues a new autonomous blog post generation job
@@ -55,61 +29,47 @@ export class JobOrchestratorService {
     category?: string;
     siteId?: string;
   }): Promise<GenerationJob> {
-    const siteId = await this.getOrCreateSiteId(options.siteId);
+    const siteId = await this.jobsRepo.getOrCreateSiteId(options.siteId);
 
-    const [job] = await this.db
-      .insert(generationJobsTable)
-      .values({
-        siteId,
-        topicText: options.topicText,
-        category: options.category || "Engineering",
-        status: AiJobStatus.QUEUED,
-        currentStep: AiJobStep.OUTLINE,
-      })
-      .returning();
-
-    return job;
+    return await this.jobsRepo.create({
+      siteId,
+      topicText: options.topicText,
+      category: options.category || "Engineering",
+      status: AiJobStatus.QUEUED,
+      currentStep: AiJobStep.OUTLINE,
+    });
   }
 
   /**
    * Executes the 6-step autonomous generation pipeline
    */
   async executeJob(jobId: string): Promise<{ success: boolean; postId?: string; error?: string }> {
-    const [job] = await this.db
-      .select()
-      .from(generationJobsTable)
-      .where(eq(generationJobsTable.id, jobId))
-      .limit(1);
+    const job = await this.jobsRepo.findById(jobId);
 
     if (!job?.id) {
       return { success: false, error: "Job not found" };
     }
 
-    const now = new Date();
-    await this.db
-      .update(generationJobsTable)
-      .set({
-        status: AiJobStatus.RUNNING,
-        attempt: (job.attempt || 0) + 1,
-        leaseExpiresAt: new Date(Date.now() + 180_000), // 3 min lease
-        updatedAt: now,
-      })
-      .where(eq(generationJobsTable.id, jobId));
+    await this.jobsRepo.update(jobId, {
+      status: AiJobStatus.RUNNING,
+      attempt: (job.attempt || 0) + 1,
+      leaseExpiresAt: new Date(Date.now() + 180_000), // 3 min lease
+    });
 
     try {
       // Step 1: Outline
-      await this.updateJobStep(jobId, AiJobStep.OUTLINE);
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.OUTLINE });
       const outlineKey = `${jobId}:outline:${job.version}`;
       let outline = await this.getCachedStepData<OutlineResult>(outlineKey);
       if (!outline) {
         outline = await this.aiWriter.generateOutline(job.topicText, {
           category: job.category || undefined,
         });
-        await this.saveStep(jobId, "outline", outlineKey, outline);
+        await this.jobsRepo.upsertStep(jobId, "outline", outlineKey, outline);
       }
 
       // Step 2: Section generation
-      await this.updateJobStep(jobId, AiJobStep.SECTIONS);
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.SECTIONS });
       const sections: string[] = [];
       const headings = outline.headings || [];
 
@@ -126,7 +86,9 @@ export class JobOrchestratorService {
             keyPoints: outline.keyPoints?.[heading],
             previousSectionsSummary: sections.slice(-2).join("\n\n"),
           });
-          await this.saveStep(jobId, `section_${i + 1}`, sectionKey, { content: sectionMarkdown });
+          await this.jobsRepo.upsertStep(jobId, `section_${i + 1}`, sectionKey, {
+            content: sectionMarkdown,
+          });
         } else {
           sectionMarkdown = cached.content;
         }
@@ -137,16 +99,16 @@ export class JobOrchestratorService {
       const fullDraft = sections.join("\n\n");
 
       // Step 3: Metadata & SEO
-      await this.updateJobStep(jobId, AiJobStep.META);
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.META });
       const metaKey = `${jobId}:meta:${job.version}`;
       let meta = await this.getCachedStepData<MetadataResult>(metaKey);
       if (!meta) {
         meta = await this.aiWriter.generateMetadata(fullDraft, job.topicText);
-        await this.saveStep(jobId, "meta", metaKey, meta);
+        await this.jobsRepo.upsertStep(jobId, "meta", metaKey, meta);
       }
 
       // Step 4: AI Thumbnail Generation
-      await this.updateJobStep(jobId, AiJobStep.IMAGE);
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.IMAGE });
       const imageKey = `${jobId}:image:${job.version}`;
       let imageRes = await this.getCachedStepData<ThumbnailGenerationResult>(imageKey);
       if (!imageRes) {
@@ -154,11 +116,11 @@ export class JobOrchestratorService {
           title: meta.title,
           jobId,
         });
-        await this.saveStep(jobId, "image", imageKey, imageRes);
+        await this.jobsRepo.upsertStep(jobId, "image", imageKey, imageRes);
       }
 
       // Step 5: Content Validation
-      await this.updateJobStep(jobId, AiJobStep.VALIDATE);
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.VALIDATE });
       this.aiWriter.validateArticle({
         title: meta.title,
         content: fullDraft,
@@ -166,58 +128,50 @@ export class JobOrchestratorService {
       });
 
       // Step 6: Save as Pending and Dispatch Approval Request
-      await this.updateJobStep(jobId, AiJobStep.SAVE_PENDING);
-      const [post] = await this.db
-        .insert(postsTable)
-        .values({
-          siteId: job.siteId,
-          title: meta.title,
-          slug: meta.slug,
-          content: fullDraft,
-          excerpt: meta.excerpt,
-          heroImage: imageRes.url,
-          thumbnailMissing: imageRes.thumbnailMissing,
-          thumbnailProvider: imageRes.provider,
-          thumbnailPrompt: imageRes.prompt,
-          thumbnailAlt: imageRes.alt,
-          aiGenerated: true,
-          aiJobId: jobId,
-          tags: meta.tags,
-          readTime: meta.readTime,
-          status: "IN_REVIEW",
-          seo: {
-            metaTitle: meta.seoTitle,
-            metaDescription: meta.seoDescription,
-          },
-        })
-        .returning();
+      await this.jobsRepo.update(jobId, { currentStep: AiJobStep.SAVE_PENDING });
+      const post = await this.postsRepo.createPostWithAudit({
+        siteId: job.siteId,
+        title: meta.title,
+        slug: meta.slug,
+        content: fullDraft,
+        excerpt: meta.excerpt,
+        heroImage: imageRes.url,
+        thumbnailMissing: imageRes.thumbnailMissing,
+        thumbnailProvider: imageRes.provider,
+        thumbnailPrompt: imageRes.prompt,
+        thumbnailAlt: imageRes.alt,
+        aiGenerated: true,
+        aiJobId: jobId,
+        tags: meta.tags,
+        readTime: meta.readTime,
+        status: "IN_REVIEW",
+        seo: {
+          metaTitle: meta.seoTitle,
+          metaDescription: meta.seoDescription,
+        },
+      });
 
       // Create Tokenized Approval & Send Review Email
       const approval = await this.approvalService.createApprovalRequest(post.id, job.version);
       await this.approvalService.sendApprovalEmail(approval.token, post);
 
       // Mark Job Completed
-      await this.db
-        .update(generationJobsTable)
-        .set({
-          status: AiJobStatus.COMPLETED,
-          currentStep: AiJobStep.COMPLETED,
-          resultPostId: post.id,
-          updatedAt: new Date(),
-        })
-        .where(eq(generationJobsTable.id, jobId));
+      await this.jobsRepo.update(jobId, {
+        status: AiJobStatus.COMPLETED,
+        currentStep: AiJobStep.COMPLETED,
+        resultPostId: post.id,
+      });
 
       return { success: true, postId: post.id };
     } catch (err) {
-      console.error(`Generation Job ${jobId} failed:`, err);
-      await this.db
-        .update(generationJobsTable)
-        .set({
-          status: AiJobStatus.FAILED,
-          errorDetails: { error: err instanceof Error ? err.message : String(err) },
-          updatedAt: new Date(),
-        })
-        .where(eq(generationJobsTable.id, jobId));
+      logger.error(`Generation Job ${jobId} failed:`, {
+        error: err instanceof Error ? err.message : String(err),
+      });
+
+      await this.jobsRepo.update(jobId, {
+        status: AiJobStatus.FAILED,
+        errorDetails: { error: err instanceof Error ? err.message : String(err) },
+      });
 
       return {
         success: false,
@@ -226,44 +180,8 @@ export class JobOrchestratorService {
     }
   }
 
-  private async updateJobStep(jobId: string, currentStep: AiJobStep) {
-    await this.db
-      .update(generationJobsTable)
-      .set({ currentStep, updatedAt: new Date() })
-      .where(eq(generationJobsTable.id, jobId));
-  }
-
-  private async getCachedStepData<T = any>(idempotencyKey: string): Promise<T | null> {
-    const [step] = await this.db
-      .select()
-      .from(jobStepsTable)
-      .where(eq(jobStepsTable.idempotencyKey, idempotencyKey))
-      .limit(1);
+  private async getCachedStepData<T = unknown>(idempotencyKey: string): Promise<T | null> {
+    const step = await this.jobsRepo.findStepByIdempotencyKey(idempotencyKey);
     return step?.status === "DONE" ? (step.outputData as unknown as T) : null;
-  }
-
-  private async saveStep(
-    jobId: string,
-    stepName: string,
-    idempotencyKey: string,
-    outputData: unknown,
-  ) {
-    await this.db
-      .insert(jobStepsTable)
-      .values({
-        jobId,
-        stepName,
-        idempotencyKey,
-        status: "DONE",
-        outputData: outputData as Record<string, unknown>,
-      })
-      .onConflictDoUpdate({
-        target: jobStepsTable.idempotencyKey,
-        set: {
-          status: "DONE",
-          outputData: outputData as Record<string, unknown>,
-          updatedAt: new Date(),
-        },
-      });
   }
 }

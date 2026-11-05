@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
+import { AdminJobsRepository } from "@/lib/repositories/admin-jobs.repository";
 import { JobStatus, JobApprovalStatus } from "@/lib/database/enum/content.enum";
 import {
   jobPostingInputSchema,
@@ -16,7 +17,8 @@ describe("Careers Validation Schemas", () => {
     referenceCode: "ENG-2026-01",
     department: "Engineering",
     openingsCount: 2,
-    summary: "Lead the development of next-generation web applications using Next.js 16 and React 19.",
+    summary:
+      "Lead the development of next-generation web applications using Next.js 16 and React 19.",
     workMode: "hybrid" as const,
     location: "Bhubaneswar, India",
     type: "full_time" as const,
@@ -93,7 +95,10 @@ describe("Careers Validation Schemas", () => {
   });
 
   it("validates job status transitions with jobStatusTransitionSchema", () => {
-    const validTransition = { targetStatus: "PUBLISHED", comment: "Approved by Head of Engineering" };
+    const validTransition = {
+      targetStatus: "PUBLISHED",
+      comment: "Approved by Head of Engineering",
+    };
     const parsed = jobStatusTransitionSchema.safeParse(validTransition);
     expect(parsed.success).toBe(true);
 
@@ -160,6 +165,12 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     };
 
     mockDb = {
+      query: {
+        jobsTable: {
+          findFirst: vi.fn().mockImplementation(() => Promise.resolve(mockJobRecord)),
+          findMany: vi.fn().mockImplementation(() => Promise.resolve([mockJobRecord])),
+        },
+      },
       select: vi.fn().mockReturnValue({
         from: vi.fn().mockReturnValue({
           where: vi.fn().mockImplementation(() => {
@@ -192,18 +203,15 @@ describe("AdminJobsService Lifecycle State Machine", () => {
       delete: vi.fn().mockReturnValue({
         where: vi.fn().mockResolvedValue({}),
       }),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
-    jobsService = new AdminJobsService(mockDb);
+    jobsService = new AdminJobsService(new AdminJobsRepository(mockDb));
   });
 
   it("allows transition from DRAFT to IN_REVIEW", async () => {
     const actor = { userId: "recruiter-001", role: "recruiter" };
-    const updated = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.IN_REVIEW,
-      actor,
-    );
+    const updated = await jobsService.transitionStatus("job-123", JobStatus.IN_REVIEW, actor);
 
     expect(updated.status).toBe(JobStatus.IN_REVIEW);
     expect(updated.approvalStatus).toBe(JobApprovalStatus.PENDING);
@@ -218,11 +226,7 @@ describe("AdminJobsService Lifecycle State Machine", () => {
 
   it("allows Admin to bypass approval and publish DRAFT directly", async () => {
     const adminActor = { userId: "admin-001", role: "admin" };
-    const updated = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.PUBLISHED,
-      adminActor,
-    );
+    const updated = await jobsService.transitionStatus("job-123", JobStatus.PUBLISHED, adminActor);
 
     expect(updated.status).toBe(JobStatus.PUBLISHED);
     expect(updated.approvalStatus).toBe(JobApprovalStatus.APPROVED);
@@ -253,7 +257,9 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     );
     expect(returned.status).toBe(JobStatus.DRAFT);
     expect(returned.approvalStatus).toBe(JobApprovalStatus.RETURNED);
-    expect(returned.approvalComment).toBe("Please add salary details and clarify responsibilities.");
+    expect(returned.approvalComment).toBe(
+      "Please add salary details and clarify responsibilities.",
+    );
   });
 
   it("allows Admin to schedule IN_REVIEW when publishAt date is set", async () => {
@@ -284,18 +290,10 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     mockJobRecord.status = JobStatus.PUBLISHED;
     const actor = { userId: "recruiter-001", role: "recruiter" };
 
-    const paused = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.PAUSED,
-      actor,
-    );
+    const paused = await jobsService.transitionStatus("job-123", JobStatus.PAUSED, actor);
     expect(paused.status).toBe(JobStatus.PAUSED);
 
-    const reopened = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.PUBLISHED,
-      actor,
-    );
+    const reopened = await jobsService.transitionStatus("job-123", JobStatus.PUBLISHED, actor);
     expect(reopened.status).toBe(JobStatus.PUBLISHED);
   });
 
@@ -312,11 +310,7 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     expect(closedFromPublished.closedAt).toBeDefined();
 
     mockJobRecord.status = JobStatus.PAUSED;
-    const closedFromPaused = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.CLOSED,
-      actor,
-    );
+    const closedFromPaused = await jobsService.transitionStatus("job-123", JobStatus.CLOSED, actor);
     expect(closedFromPaused.status).toBe(JobStatus.CLOSED);
   });
 
@@ -324,11 +318,7 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     mockJobRecord.status = JobStatus.CLOSED;
     const adminActor = { userId: "admin-001", role: "admin" };
 
-    const archived = await jobsService.transitionStatus(
-      "job-123",
-      JobStatus.ARCHIVED,
-      adminActor,
-    );
+    const archived = await jobsService.transitionStatus("job-123", JobStatus.ARCHIVED, adminActor);
     expect(archived.status).toBe(JobStatus.ARCHIVED);
   });
 

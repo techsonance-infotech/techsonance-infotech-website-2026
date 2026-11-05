@@ -1,12 +1,11 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { desc } from "drizzle-orm";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
-import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
-import { generationJobsTable } from "@/lib/database/schema/index.schema";
+import { GenerationJobsRepository } from "@/lib/repositories/generation-jobs.repository";
+import { logger } from "@/lib/logger";
 
 const createJobSchema = z.object({
   topicText: z.string().min(5, "Topic must be at least 5 characters"),
@@ -23,16 +22,12 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const db = container.get(DRIZZLE_DB_TOKEN);
-    const jobs = await db
-      .select()
-      .from(generationJobsTable)
-      .orderBy(desc(generationJobsTable.createdAt))
-      .limit(30);
+    const jobsRepo = container.get(GenerationJobsRepository);
+    const jobs = await jobsRepo.listRecent(30);
 
     return NextResponse.json({ ok: true, jobs });
   } catch (err) {
-    console.error("Admin list AI jobs error:", err);
+    logger.error("Admin list AI jobs error", { error: String(err) });
     return NextResponse.json({ error: "Failed to list AI jobs" }, { status: 500 });
   }
 }
@@ -67,7 +62,7 @@ export async function POST(req: Request) {
 
     // Execute in background
     orchestrator.executeJob(job.id).catch((e) => {
-      console.error(`Background job ${job.id} execution failed:`, e);
+      logger.error(`Background job ${job.id} execution failed`, { error: String(e) });
     });
 
     return NextResponse.json({
@@ -76,7 +71,7 @@ export async function POST(req: Request) {
       message: "Job enqueued and generation started in background",
     });
   } catch (err) {
-    console.error("Admin trigger AI job error:", err);
+    logger.error("Admin trigger AI job error", { error: String(err) });
     return NextResponse.json({ error: "Failed to trigger AI job" }, { status: 500 });
   }
 }

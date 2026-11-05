@@ -2,10 +2,10 @@
 
 Use the graphs before grep/glob and before every non-trivial edit. Blind edits are a rule violation. Owns graph tooling, impact analysis, risk levels. (This file includes the rules from the tool-generated `graphify.md`; do not maintain that file by hand.)
 
-| Tool | Purpose | Use for |
-| --- | --- | --- |
-| **GitNexus** (MCP) | call graph, dependencies, flows | locating symbols, callers/callees, **impact analysis**, safe rename, change detection |
-| **Graphify** (CLI/skill) | code + docs + config graph, `GRAPH_REPORT.md` | architecture questions, "how is X connected to Y", god nodes |
+| Tool                     | Purpose                                       | Use for                                                                               |
+| ------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **GitNexus** (MCP)       | call graph, dependencies, flows               | locating symbols, callers/callees, **impact analysis**, safe rename, change detection |
+| **Graphify** (CLI/skill) | code + docs + config graph, `GRAPH_REPORT.md` | architecture questions, "how is X connected to Y", god nodes                          |
 
 ## Setup (developer machine only, never app dependencies)
 
@@ -28,12 +28,12 @@ graphify install && graphify claude install
 
 ## Risk levels (use these exact labels)
 
-| Level | Examples |
-| --- | --- |
-| LOW | used in one module, ≤ 3 callers, no schema/contract/DB/auth |
-| MEDIUM | callers across modules; `ui/*` primitive used in < 10 places |
-| HIGH | any contract, Zod schema in `lib/validations/*`, `lib/env/*`, `lib/supabase/*`, `runAction`/`handleRoute`/`callApi`, widely used `ui/*` |
-| CRITICAL | auth, RLS, payments, migrations, `proxy.ts` |
+| Level    | Examples                                                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| LOW      | used in one module, ≤ 3 callers, no schema/contract/DB/auth                                                                             |
+| MEDIUM   | callers across modules; `ui/*` primitive used in < 10 places                                                                            |
+| HIGH     | any contract, Zod schema in `lib/validations/*`, `lib/env/*`, `lib/supabase/*`, `runAction`/`handleRoute`/`callApi`, widely used `ui/*` |
+| CRITICAL | auth, RLS, payments, migrations, `proxy.ts`                                                                                             |
 
 Contract or schema changes are never below HIGH. For HIGH/CRITICAL list every affected caller, route, action, form and test, and update all in the same PR.
 

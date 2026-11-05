@@ -52,7 +52,12 @@ for (const file of appAndLibFiles) {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (line.includes("from \"../../") || line.includes("from '../../") || line.includes("import(\"../../") || line.includes("import('../../")) {
+    if (
+      line.includes('from "../../') ||
+      line.includes("from '../../") ||
+      line.includes('import("../../') ||
+      line.includes("import('../../")
+    ) {
       report(file, `Line ${i + 1}: Relative import '../../' is banned; use '@/...' alias instead.`);
     }
   }

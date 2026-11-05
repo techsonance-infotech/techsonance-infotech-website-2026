@@ -3,204 +3,132 @@
   "version": "9",
   "dialect": "postgres",
   "id": "07dd1334-738f-4620-8a70-a2ca728a0676",
-  "prevIds": [
-    "7d027a7d-f80c-4cba-8045-aca463ae91da"
-  ],
+  "prevIds": ["7d027a7d-f80c-4cba-8045-aca463ae91da"],
   "footprints": [
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_application_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_application_status"],
       "writes": [
         "s|enum|public.ts_content_application_status",
         "n|enum|public.ts_content_application_status",
         "e|enum|public.ts_content_application_status",
         "n|type|public.ts_content_application_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_application_method"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_application_method"],
       "writes": [
         "s|enum|public.ts_content_job_application_method",
         "n|enum|public.ts_content_job_application_method",
         "e|enum|public.ts_content_job_application_method",
         "n|type|public.ts_content_job_application_method"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_approval_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_approval_status"],
       "writes": [
         "s|enum|public.ts_content_job_approval_status",
         "n|enum|public.ts_content_job_approval_status",
         "e|enum|public.ts_content_job_approval_status",
         "n|type|public.ts_content_job_approval_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_cover_letter_requirement"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_cover_letter_requirement"],
       "writes": [
         "s|enum|public.ts_content_job_cover_letter_requirement",
         "n|enum|public.ts_content_job_cover_letter_requirement",
         "e|enum|public.ts_content_job_cover_letter_requirement",
         "n|type|public.ts_content_job_cover_letter_requirement"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_experience_level"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_experience_level"],
       "writes": [
         "s|enum|public.ts_content_job_experience_level",
         "n|enum|public.ts_content_job_experience_level",
         "e|enum|public.ts_content_job_experience_level",
         "n|type|public.ts_content_job_experience_level"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_salary_period"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_salary_period"],
       "writes": [
         "s|enum|public.ts_content_job_salary_period",
         "n|enum|public.ts_content_job_salary_period",
         "e|enum|public.ts_content_job_salary_period",
         "n|type|public.ts_content_job_salary_period"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_status"],
       "writes": [
         "s|enum|public.ts_content_job_status",
         "n|enum|public.ts_content_job_status",
         "e|enum|public.ts_content_job_status",
         "n|type|public.ts_content_job_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_type"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_type"],
       "writes": [
         "s|enum|public.ts_content_job_type",
         "n|enum|public.ts_content_job_type",
         "e|enum|public.ts_content_job_type",
         "n|type|public.ts_content_job_type"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_visa_support"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_visa_support"],
       "writes": [
         "s|enum|public.ts_content_job_visa_support",
         "n|enum|public.ts_content_job_visa_support",
         "e|enum|public.ts_content_job_visa_support",
         "n|type|public.ts_content_job_visa_support"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_visibility"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_visibility"],
       "writes": [
         "s|enum|public.ts_content_job_visibility",
         "n|enum|public.ts_content_job_visibility",
         "e|enum|public.ts_content_job_visibility",
         "n|type|public.ts_content_job_visibility"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_job_work_mode"
-      ],
+      "statementTarget": ["enum", "public", "ts_content_job_work_mode"],
       "writes": [
         "s|enum|public.ts_content_job_work_mode",
         "n|enum|public.ts_content_job_work_mode",
         "e|enum|public.ts_content_job_work_mode",
         "n|type|public.ts_content_job_work_mode"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_talent_pool"
-      ],
+      "statementTarget": ["table", "public", "ts_content_talent_pool"],
       "writes": [
         "s|tbl|public.ts_content_talent_pool",
         "n|tbl|public.ts_content_talent_pool",
@@ -209,18 +137,11 @@
         "n|type|public.ts_content_talent_pool",
         "n|rel|public.ts_content_talent_pool_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_content_job_experience_level"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_content_job_experience_level"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_careers_settings"
-      ],
+      "statementTarget": ["table", "public", "ts_content_careers_settings"],
       "writes": [
         "s|tbl|public.ts_content_careers_settings",
         "n|tbl|public.ts_content_careers_settings",
@@ -229,17 +150,11 @@
         "n|type|public.ts_content_careers_settings",
         "n|rel|public.ts_content_careers_settings_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_eeoc_responses"
-      ],
+      "statementTarget": ["table", "public", "ts_content_eeoc_responses"],
       "writes": [
         "s|tbl|public.ts_content_eeoc_responses",
         "n|tbl|public.ts_content_eeoc_responses",
@@ -248,108 +163,61 @@
         "n|type|public.ts_content_eeoc_responses",
         "n|rel|public.ts_content_eeoc_responses_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "reference_code"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "reference_code"],
       "writes": [
         "s|col|public.ts_content_jobs.reference_code",
         "n|col|public.ts_content_jobs.reference_code",
         "e|col|public.ts_content_jobs.reference_code"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "openings_count"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "openings_count"],
       "writes": [
         "s|col|public.ts_content_jobs.openings_count",
         "n|col|public.ts_content_jobs.openings_count",
         "e|col|public.ts_content_jobs.openings_count"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "owner_id"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "owner_id"],
       "writes": [
         "s|col|public.ts_content_jobs.owner_id",
         "n|col|public.ts_content_jobs.owner_id",
         "e|col|public.ts_content_jobs.owner_id"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "hiring_manager_id"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "hiring_manager_id"],
       "writes": [
         "s|col|public.ts_content_jobs.hiring_manager_id",
         "n|col|public.ts_content_jobs.hiring_manager_id",
         "e|col|public.ts_content_jobs.hiring_manager_id"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "summary"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "summary"],
       "writes": [
         "s|col|public.ts_content_jobs.summary",
         "n|col|public.ts_content_jobs.summary",
         "e|col|public.ts_content_jobs.summary"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "work_mode"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "work_mode"],
       "writes": [
         "s|col|public.ts_content_jobs.work_mode",
         "n|col|public.ts_content_jobs.work_mode",
@@ -363,30 +231,17 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "remote_eligibility"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "remote_eligibility"],
       "writes": [
         "s|col|public.ts_content_jobs.remote_eligibility",
         "n|col|public.ts_content_jobs.remote_eligibility",
         "e|col|public.ts_content_jobs.remote_eligibility"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "visa_support"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "visa_support"],
       "writes": [
         "s|col|public.ts_content_jobs.visa_support",
         "n|col|public.ts_content_jobs.visa_support",
@@ -400,156 +255,87 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "preferred_qualifications"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "preferred_qualifications"],
       "writes": [
         "s|col|public.ts_content_jobs.preferred_qualifications",
         "n|col|public.ts_content_jobs.preferred_qualifications",
         "e|col|public.ts_content_jobs.preferred_qualifications"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "skills"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "skills"],
       "writes": [
         "s|col|public.ts_content_jobs.skills",
         "n|col|public.ts_content_jobs.skills",
         "e|col|public.ts_content_jobs.skills"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "about_team"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "about_team"],
       "writes": [
         "s|col|public.ts_content_jobs.about_team",
         "n|col|public.ts_content_jobs.about_team",
         "e|col|public.ts_content_jobs.about_team"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "hiring_process"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "hiring_process"],
       "writes": [
         "s|col|public.ts_content_jobs.hiring_process",
         "n|col|public.ts_content_jobs.hiring_process",
         "e|col|public.ts_content_jobs.hiring_process"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "equal_opportunity_statement"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "equal_opportunity_statement"],
       "writes": [
         "s|col|public.ts_content_jobs.equal_opportunity_statement",
         "n|col|public.ts_content_jobs.equal_opportunity_statement",
         "e|col|public.ts_content_jobs.equal_opportunity_statement"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "salary_min"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "salary_min"],
       "writes": [
         "s|col|public.ts_content_jobs.salary_min",
         "n|col|public.ts_content_jobs.salary_min",
         "e|col|public.ts_content_jobs.salary_min"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "salary_max"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "salary_max"],
       "writes": [
         "s|col|public.ts_content_jobs.salary_max",
         "n|col|public.ts_content_jobs.salary_max",
         "e|col|public.ts_content_jobs.salary_max"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "salary_currency"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "salary_currency"],
       "writes": [
         "s|col|public.ts_content_jobs.salary_currency",
         "n|col|public.ts_content_jobs.salary_currency",
         "e|col|public.ts_content_jobs.salary_currency"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "salary_period"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "salary_period"],
       "writes": [
         "s|col|public.ts_content_jobs.salary_period",
         "n|col|public.ts_content_jobs.salary_period",
@@ -563,48 +349,27 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "show_salary_publicly"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "show_salary_publicly"],
       "writes": [
         "s|col|public.ts_content_jobs.show_salary_publicly",
         "n|col|public.ts_content_jobs.show_salary_publicly",
         "e|col|public.ts_content_jobs.show_salary_publicly"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "compensation_notes"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "compensation_notes"],
       "writes": [
         "s|col|public.ts_content_jobs.compensation_notes",
         "n|col|public.ts_content_jobs.compensation_notes",
         "e|col|public.ts_content_jobs.compensation_notes"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "application_method"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "application_method"],
       "writes": [
         "s|col|public.ts_content_jobs.application_method",
         "n|col|public.ts_content_jobs.application_method",
@@ -618,48 +383,27 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "external_apply_url"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "external_apply_url"],
       "writes": [
         "s|col|public.ts_content_jobs.external_apply_url",
         "n|col|public.ts_content_jobs.external_apply_url",
         "e|col|public.ts_content_jobs.external_apply_url"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "resume_required"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "resume_required"],
       "writes": [
         "s|col|public.ts_content_jobs.resume_required",
         "n|col|public.ts_content_jobs.resume_required",
         "e|col|public.ts_content_jobs.resume_required"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "cover_letter_requirement"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "cover_letter_requirement"],
       "writes": [
         "s|col|public.ts_content_jobs.cover_letter_requirement",
         "n|col|public.ts_content_jobs.cover_letter_requirement",
@@ -673,30 +417,17 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "screening_questions"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "screening_questions"],
       "writes": [
         "s|col|public.ts_content_jobs.screening_questions",
         "n|col|public.ts_content_jobs.screening_questions",
         "e|col|public.ts_content_jobs.screening_questions"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "approval_status"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "approval_status"],
       "writes": [
         "s|col|public.ts_content_jobs.approval_status",
         "n|col|public.ts_content_jobs.approval_status",
@@ -710,48 +441,27 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "approval_comment"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "approval_comment"],
       "writes": [
         "s|col|public.ts_content_jobs.approval_comment",
         "n|col|public.ts_content_jobs.approval_comment",
         "e|col|public.ts_content_jobs.approval_comment"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "publish_at"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "publish_at"],
       "writes": [
         "s|col|public.ts_content_jobs.publish_at",
         "n|col|public.ts_content_jobs.publish_at",
         "e|col|public.ts_content_jobs.publish_at"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "visibility"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "visibility"],
       "writes": [
         "s|col|public.ts_content_jobs.visibility",
         "n|col|public.ts_content_jobs.visibility",
@@ -765,426 +475,237 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "featured"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "featured"],
       "writes": [
         "s|col|public.ts_content_jobs.featured",
         "n|col|public.ts_content_jobs.featured",
         "e|col|public.ts_content_jobs.featured"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "seo_title"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "seo_title"],
       "writes": [
         "s|col|public.ts_content_jobs.seo_title",
         "n|col|public.ts_content_jobs.seo_title",
         "e|col|public.ts_content_jobs.seo_title"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "seo_description"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "seo_description"],
       "writes": [
         "s|col|public.ts_content_jobs.seo_description",
         "n|col|public.ts_content_jobs.seo_description",
         "e|col|public.ts_content_jobs.seo_description"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "og_image"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "og_image"],
       "writes": [
         "s|col|public.ts_content_jobs.og_image",
         "n|col|public.ts_content_jobs.og_image",
         "e|col|public.ts_content_jobs.og_image"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "view_count"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "view_count"],
       "writes": [
         "s|col|public.ts_content_jobs.view_count",
         "n|col|public.ts_content_jobs.view_count",
         "e|col|public.ts_content_jobs.view_count"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "apply_count"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "apply_count"],
       "writes": [
         "s|col|public.ts_content_jobs.apply_count",
         "n|col|public.ts_content_jobs.apply_count",
         "e|col|public.ts_content_jobs.apply_count"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "published_at"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "published_at"],
       "writes": [
         "s|col|public.ts_content_jobs.published_at",
         "n|col|public.ts_content_jobs.published_at",
         "e|col|public.ts_content_jobs.published_at"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "closed_at"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "closed_at"],
       "writes": [
         "s|col|public.ts_content_jobs.closed_at",
         "n|col|public.ts_content_jobs.closed_at",
         "e|col|public.ts_content_jobs.closed_at"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_jobs",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_jobs", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "job_version_id"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "job_version_id"],
       "writes": [
         "s|col|public.ts_content_applications.job_version_id",
         "n|col|public.ts_content_applications.job_version_id",
         "e|col|public.ts_content_applications.job_version_id"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "current_location"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "current_location"],
       "writes": [
         "s|col|public.ts_content_applications.current_location",
         "n|col|public.ts_content_applications.current_location",
         "e|col|public.ts_content_applications.current_location"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "linkedin_url"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "linkedin_url"],
       "writes": [
         "s|col|public.ts_content_applications.linkedin_url",
         "n|col|public.ts_content_applications.linkedin_url",
         "e|col|public.ts_content_applications.linkedin_url"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "resume_storage_path"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "resume_storage_path"],
       "writes": [
         "s|col|public.ts_content_applications.resume_storage_path",
         "n|col|public.ts_content_applications.resume_storage_path",
         "e|col|public.ts_content_applications.resume_storage_path"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "resume_file_name"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "resume_file_name"],
       "writes": [
         "s|col|public.ts_content_applications.resume_file_name",
         "n|col|public.ts_content_applications.resume_file_name",
         "e|col|public.ts_content_applications.resume_file_name"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "resume_mime_type"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "resume_mime_type"],
       "writes": [
         "s|col|public.ts_content_applications.resume_mime_type",
         "n|col|public.ts_content_applications.resume_mime_type",
         "e|col|public.ts_content_applications.resume_mime_type"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "notice_period_weeks"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "notice_period_weeks"],
       "writes": [
         "s|col|public.ts_content_applications.notice_period_weeks",
         "n|col|public.ts_content_applications.notice_period_weeks",
         "e|col|public.ts_content_applications.notice_period_weeks"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "screening_answers"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "screening_answers"],
       "writes": [
         "s|col|public.ts_content_applications.screening_answers",
         "n|col|public.ts_content_applications.screening_answers",
         "e|col|public.ts_content_applications.screening_answers"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "knockout_triggered"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "knockout_triggered"],
       "writes": [
         "s|col|public.ts_content_applications.knockout_triggered",
         "n|col|public.ts_content_applications.knockout_triggered",
         "e|col|public.ts_content_applications.knockout_triggered"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "source"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "source"],
       "writes": [
         "s|col|public.ts_content_applications.source",
         "n|col|public.ts_content_applications.source",
         "e|col|public.ts_content_applications.source"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "rejection_reason"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "rejection_reason"],
       "writes": [
         "s|col|public.ts_content_applications.rejection_reason",
         "n|col|public.ts_content_applications.rejection_reason",
         "e|col|public.ts_content_applications.rejection_reason"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "rating"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "rating"],
       "writes": [
         "s|col|public.ts_content_applications.rating",
         "n|col|public.ts_content_applications.rating",
         "e|col|public.ts_content_applications.rating"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "privacy_consent_date"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "privacy_consent_date"],
       "writes": [
         "s|col|public.ts_content_applications.privacy_consent_date",
         "n|col|public.ts_content_applications.privacy_consent_date",
         "e|col|public.ts_content_applications.privacy_consent_date"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "privacy_notice_version"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "privacy_notice_version"],
       "writes": [
         "s|col|public.ts_content_applications.privacy_notice_version",
         "n|col|public.ts_content_applications.privacy_notice_version",
         "e|col|public.ts_content_applications.privacy_notice_version"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "talent_pool_consent"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "talent_pool_consent"],
       "writes": [
         "s|col|public.ts_content_applications.talent_pool_consent",
         "n|col|public.ts_content_applications.talent_pool_consent",
         "e|col|public.ts_content_applications.talent_pool_consent"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "status"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "status"],
       "writes": [
         "s|colprop|public.ts_content_applications.status.type",
         "s|colprop|public.ts_content_applications.status.default"
@@ -1199,12 +720,7 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "type"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "type"],
       "writes": [
         "s|colprop|public.ts_content_jobs.type.default",
         "s|colprop|public.ts_content_jobs.type.type"
@@ -1219,12 +735,7 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "experience_level"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "experience_level"],
       "writes": [
         "s|colprop|public.ts_content_jobs.experience_level.default",
         "s|colprop|public.ts_content_jobs.experience_level.type"
@@ -1239,12 +750,7 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "status"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "status"],
       "writes": [
         "s|colprop|public.ts_content_jobs.status.type",
         "s|colprop|public.ts_content_jobs.status.default"
@@ -1259,12 +765,7 @@
     },
     {
       "statementType": "create_index",
-      "statementTarget": [
-        "index",
-        "public",
-        "ts_content_jobs",
-        "ts_content_jobs_status_idx"
-      ],
+      "statementTarget": ["index", "public", "ts_content_jobs", "ts_content_jobs_status_idx"],
       "writes": [
         "s|idx|public.ts_content_jobs_status_idx",
         "n|idx|public.ts_content_jobs_status_idx",
@@ -1279,12 +780,7 @@
     },
     {
       "statementType": "create_index",
-      "statementTarget": [
-        "index",
-        "public",
-        "ts_content_jobs",
-        "ts_content_jobs_dept_idx"
-      ],
+      "statementTarget": ["index", "public", "ts_content_jobs", "ts_content_jobs_dept_idx"],
       "writes": [
         "s|idx|public.ts_content_jobs_dept_idx",
         "n|idx|public.ts_content_jobs_dept_idx",
@@ -1420,11 +916,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_content_jobs"],
       "writes": [
         "s|fk|public.ts_content_jobs.ts_content_jobs_owner_id_ts_admin_users_id_fkey",
         "n|fk|public.ts_content_jobs.ts_content_jobs_owner_id_ts_admin_users_id_fkey",
@@ -1443,11 +935,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_content_jobs"],
       "writes": [
         "s|fk|public.ts_content_jobs.ts_content_jobs_hiring_manager_id_ts_admin_users_id_fkey",
         "n|fk|public.ts_content_jobs.ts_content_jobs_hiring_manager_id_ts_admin_users_id_fkey",
@@ -1466,11 +954,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_talent_pool"
-      ],
+      "statementTarget": ["table", "public", "ts_content_talent_pool"],
       "writes": [
         "s|fk|public.ts_content_talent_pool.ts_content_talent_pool_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_talent_pool.ts_content_talent_pool_site_id_ts_admin_sites_id_fkey",
@@ -1489,11 +973,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_careers_settings"
-      ],
+      "statementTarget": ["table", "public", "ts_content_careers_settings"],
       "writes": [
         "s|fk|public.ts_content_careers_settings.ts_content_careers_settings_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_content_careers_settings.ts_content_careers_settings_site_id_ts_admin_sites_id_fkey",
@@ -1512,11 +992,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_content_eeoc_responses"
-      ],
+      "statementTarget": ["table", "public", "ts_content_eeoc_responses"],
       "writes": [
         "s|fk|public.ts_content_eeoc_responses.ts_content_eeoc_responses_job_id_ts_content_jobs_id_fkey",
         "n|fk|public.ts_content_eeoc_responses.ts_content_eeoc_responses_job_id_ts_content_jobs_id_fkey",
@@ -1535,54 +1011,36 @@
     },
     {
       "statementType": "drop_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "application_status"
-      ],
+      "statementTarget": ["enum", "public", "application_status"],
       "writes": [
         "s|enum|public.application_status",
         "n|enum|public.application_status",
         "e|enum|public.application_status",
         "n|type|public.application_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "drop_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "job_status"
-      ],
+      "statementTarget": ["enum", "public", "job_status"],
       "writes": [
         "s|enum|public.job_status",
         "n|enum|public.job_status",
         "e|enum|public.job_status",
         "n|type|public.job_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "drop_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "job_type"
-      ],
+      "statementTarget": ["enum", "public", "job_type"],
       "writes": [
         "s|enum|public.job_type",
         "n|enum|public.job_type",
         "e|enum|public.job_type",
         "n|type|public.job_type"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     }
   ],
   "deltas": [
@@ -1636,10 +1094,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_application_method",
-        "values": [
-          "builtin",
-          "external"
-        ],
+        "values": ["builtin", "external"],
         "entityType": "enums"
       }
     },
@@ -1648,11 +1103,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_approval_status",
-        "values": [
-          "pending",
-          "approved",
-          "returned"
-        ],
+        "values": ["pending", "approved", "returned"],
         "entityType": "enums"
       }
     },
@@ -1661,11 +1112,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_cover_letter_requirement",
-        "values": [
-          "off",
-          "optional",
-          "required"
-        ],
+        "values": ["off", "optional", "required"],
         "entityType": "enums"
       }
     },
@@ -1674,14 +1121,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_experience_level",
-        "values": [
-          "entry",
-          "mid",
-          "senior",
-          "lead",
-          "executive",
-          "Mid-Senior"
-        ],
+        "values": ["entry", "mid", "senior", "lead", "executive", "Mid-Senior"],
         "entityType": "enums"
       }
     },
@@ -1690,11 +1130,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_salary_period",
-        "values": [
-          "hour",
-          "month",
-          "year"
-        ],
+        "values": ["hour", "month", "year"],
         "entityType": "enums"
       }
     },
@@ -1741,11 +1177,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_visa_support",
-        "values": [
-          "yes",
-          "no",
-          "case_by_case"
-        ],
+        "values": ["yes", "no", "case_by_case"],
         "entityType": "enums"
       }
     },
@@ -1754,10 +1186,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_visibility",
-        "values": [
-          "public",
-          "unlisted"
-        ],
+        "values": ["public", "unlisted"],
         "entityType": "enums"
       }
     },
@@ -1766,11 +1195,7 @@
       "row": {
         "schema": "public",
         "name": "ts_content_job_work_mode",
-        "values": [
-          "on_site",
-          "hybrid",
-          "remote"
-        ],
+        "values": ["on_site", "hybrid", "remote"],
         "entityType": "enums"
       }
     },
@@ -3260,14 +2685,10 @@
         "table": "ts_content_jobs",
         "name": "ts_content_jobs_owner_id_ts_admin_users_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "owner_id"
-        ],
+        "columns": ["owner_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_users",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "NO ACTION",
         "entityType": "fks"
@@ -3280,14 +2701,10 @@
         "table": "ts_content_jobs",
         "name": "ts_content_jobs_hiring_manager_id_ts_admin_users_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "hiring_manager_id"
-        ],
+        "columns": ["hiring_manager_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_users",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "NO ACTION",
         "entityType": "fks"
@@ -3300,14 +2717,10 @@
         "table": "ts_content_talent_pool",
         "name": "ts_content_talent_pool_site_id_ts_admin_sites_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "site_id"
-        ],
+        "columns": ["site_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_sites",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3320,14 +2733,10 @@
         "table": "ts_content_careers_settings",
         "name": "ts_content_careers_settings_site_id_ts_admin_sites_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "site_id"
-        ],
+        "columns": ["site_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_sites",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3340,14 +2749,10 @@
         "table": "ts_content_eeoc_responses",
         "name": "ts_content_eeoc_responses_job_id_ts_content_jobs_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "job_id"
-        ],
+        "columns": ["job_id"],
         "schemaTo": "public",
         "tableTo": "ts_content_jobs",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3359,9 +2764,7 @@
         "schema": "public",
         "table": "ts_content_talent_pool",
         "name": "ts_content_talent_pool_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3372,9 +2775,7 @@
         "schema": "public",
         "table": "ts_content_careers_settings",
         "name": "ts_content_careers_settings_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3385,9 +2786,7 @@
         "schema": "public",
         "table": "ts_content_eeoc_responses",
         "name": "ts_content_eeoc_responses_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }

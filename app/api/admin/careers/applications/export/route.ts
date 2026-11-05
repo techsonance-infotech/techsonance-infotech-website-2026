@@ -17,10 +17,7 @@ export async function GET(req: Request) {
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -49,9 +46,6 @@ export async function GET(req: Request) {
       );
     }
     logger.error("Export applications CSV error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_EXPORT_APPLICATIONS },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_EXPORT_APPLICATIONS }, { status: 500 });
   }
 }

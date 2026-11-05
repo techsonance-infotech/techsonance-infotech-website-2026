@@ -15,9 +15,7 @@ export const eeocResponsesTable = pgTable(
     disabilityStatus: text("disability_status"),
     ...baseCreatedAt,
   },
-  (table) => [
-    index("ts_content_eeoc_job_idx").on(table.jobId),
-  ],
+  (table) => [index("ts_content_eeoc_job_idx").on(table.jobId)],
 );
 
 export type EEOCResponse = typeof eeocResponsesTable.$inferSelect;

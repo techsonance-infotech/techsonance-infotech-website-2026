@@ -22,10 +22,7 @@ export async function POST(req: Request, { params }: RouteParams) {
     }
 
     if (session.role !== "owner" && session.role !== "admin") {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.FORBIDDEN_ADMIN_OR_OWNER }, { status: 403 });
     }
 
     const ipAddress = req.headers.get("x-forwarded-for") || undefined;
@@ -41,9 +38,6 @@ export async function POST(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Approve job error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_APPROVE_JOB },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_APPROVE_JOB }, { status: 500 });
   }
 }

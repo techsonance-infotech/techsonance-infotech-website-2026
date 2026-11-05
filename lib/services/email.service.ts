@@ -80,12 +80,12 @@ export class EmailService {
   }
 
   getTransporter() {
-    const smtpUser = this.env.SMTP_USER || process.env.EMAIL_USER;
-    const smtpPass = this.env.SMTP_PASS || process.env.EMAIL_PASS;
-    const smtpHost = this.env.SMTP_HOST || process.env.SMTP_HOST || "smtp.gmail.com";
-    const smtpPort = Number(this.env.SMTP_PORT || process.env.SMTP_PORT || 465);
+    const smtpUser = this.env.SMTP_USER || this.env.EMAIL_USER;
+    const smtpPass = this.env.SMTP_PASS || this.env.EMAIL_PASS;
+    const smtpHost = this.env.SMTP_HOST || "smtp.gmail.com";
+    const smtpPort = Number(this.env.SMTP_PORT || 465);
     const isSecure =
-      process.env.SMTP_SECURE !== undefined ? process.env.SMTP_SECURE === "true" : smtpPort === 465;
+      this.env.SMTP_SECURE !== undefined ? this.env.SMTP_SECURE === "true" : smtpPort === 465;
 
     if (smtpUser && smtpPass) {
       return nodemailer.createTransport({

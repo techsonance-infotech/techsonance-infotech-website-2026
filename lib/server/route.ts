@@ -27,10 +27,7 @@ export function handleRoute<
   Q extends z.ZodObject<z.ZodRawShape>,
   B extends z.ZodType,
   R extends z.ZodType,
->(
-  contract: Contract<P, Q, B, R>,
-  handler: (ctx: RouteContext<P, Q, B>) => Promise<z.input<R>>,
-) {
+>(contract: Contract<P, Q, B, R>, handler: (ctx: RouteContext<P, Q, B>) => Promise<z.input<R>>) {
   return async (req: NextRequest, segmentData?: { params?: Promise<Record<string, string>> }) => {
     const requestId = await getRequestId();
     const headers = new Headers();

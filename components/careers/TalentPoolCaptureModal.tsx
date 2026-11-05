@@ -91,7 +91,8 @@ export function TalentPoolCaptureModal({ isOpen, onClose }: TalentPoolCaptureMod
               You're in our Talent Pool!
             </h3>
             <p className="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-              Thank you for connecting with TechSonance Infotech. Our recruiting team will reach out directly when roles matching your skill set become available.
+              Thank you for connecting with TechSonance Infotech. Our recruiting team will reach out
+              directly when roles matching your skill set become available.
             </p>
             <div className="pt-4">
               <Button onClick={onClose} className="rounded-xl px-6">
@@ -110,7 +111,8 @@ export function TalentPoolCaptureModal({ isOpen, onClose }: TalentPoolCaptureMod
                 Join our Global Talent Pool
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                Don't see an exact match right now? Share your details and we'll keep you in mind for upcoming projects.
+                Don't see an exact match right now? Share your details and we'll keep you in mind
+                for upcoming projects.
               </p>
             </div>
 
@@ -231,14 +233,21 @@ export function TalentPoolCaptureModal({ isOpen, onClose }: TalentPoolCaptureMod
                     className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
                   <span>
-                    I consent to TechSonance storing my submitted profile and contacting me regarding relevant employment opportunities in accordance with privacy laws.
+                    I consent to TechSonance storing my submitted profile and contacting me
+                    regarding relevant employment opportunities in accordance with privacy laws.
                   </span>
                 </label>
               </div>
             </div>
 
             <div className="pt-4 flex items-center justify-end gap-3">
-              <Button type="button" variant="outline" onClick={onClose} disabled={loading} className="rounded-xl">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={loading}
+                className="rounded-xl"
+              >
                 Cancel
               </Button>
               <Button

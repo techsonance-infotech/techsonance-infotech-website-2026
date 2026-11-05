@@ -1,105 +1,70 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
 import { getContainer } from "@/lib/di/container";
-import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
-import type { Database } from "@/lib/database/index";
-import { usersTable } from "@/lib/database/schema/core/user.schema";
-import { verifyPassword, hashPassword } from "@/lib/auth/password";
+import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { createSessionToken, setSessionCookie } from "@/lib/auth/session";
-import { getEnv } from "@/lib/env";
+import { AppError } from "@/lib/errors";
+import { logger } from "@/lib/logger";
+import { AUTH_ERRORS } from "@/lib/constants/auth.constants";
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.email(AUTH_ERRORS.EMAIL_REQUIRED),
+  password: z.string().min(6, AUTH_ERRORS.PASSWORD_REQUIRED),
 });
 
 export async function POST(req: Request) {
   try {
-    const env = getEnv();
     const body = await req.json();
     const result = loginSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: result.error.format() },
+        { error: AUTH_ERRORS.VALIDATION_FAILED, details: result.error.format() },
         { status: 400 },
       );
     }
 
     const { email, password } = result.data;
     const container = getContainer();
-    const db = container.get<Database>(DRIZZLE_DB_TOKEN);
+    const authService = container.get(AdminAuthService);
 
-    // 1. Try to find user in native database
-    try {
-      const normalizedEmail = email.trim().toLowerCase();
-      const [user] = await db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, normalizedEmail))
-        .limit(1);
+    const user = await authService.authenticate(email, password);
 
-      if (user) {
-        if (!user.isActive) {
-          return NextResponse.json({ error: "User account is disabled" }, { status: 403 });
-        }
+    const token = createSessionToken({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    });
 
-        const isValid = await verifyPassword(password, user.passwordHash);
-        if (!isValid) {
-          return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
-        }
+    await setSessionCookie(token);
 
-        // Record last login timestamp non-blockingly
-        try {
-          await db
-            .update(usersTable)
-            .set({ lastLoginAt: new Date(), updatedAt: new Date() })
-            .where(eq(usersTable.id, user.id));
-        } catch {
-          // Non-blocking
-        }
-
-        const token = createSessionToken({
-          userId: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role as "owner" | "admin" | "editor" | "author" | "viewer",
-        });
-
-        await setSessionCookie(token);
-
-        return NextResponse.json({
-          ok: true,
-          user: { id: user.id, email: user.email, name: user.name, role: user.role },
-        });
-      }
-    } catch (dbErr) {
-      console.warn("Native DB user lookup failed, checking fallback:", dbErr);
-    }
-
-    // 2. Dev mode fallback when ALLOW_PLACEHOLDERS is true
-    if (env.ALLOW_PLACEHOLDERS) {
-      const token = createSessionToken({
-        userId: "00000000-0000-0000-0000-000000000000",
-        email,
-        name: "Admin User",
-        role: "owner",
-      });
-
-      await setSessionCookie(token);
-
-      return NextResponse.json({
-        ok: true,
-        user: { email, role: "owner", name: "Admin User" },
-      });
-    }
-
-    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+    return NextResponse.json({
+      ok: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    });
   } catch (error) {
-    console.error("Admin login error:", error);
+    if (error instanceof AppError) {
+      const status =
+        error.code === "UNAUTHENTICATED"
+          ? 401
+          : error.code === "FORBIDDEN"
+            ? 403
+            : error.code === "BAD_REQUEST" || error.code === "VALIDATION"
+              ? 400
+              : 500;
+
+      return NextResponse.json({ error: error.message }, { status });
+    }
+
+    logger.error("Admin login unhandled error", { error: String(error) });
     return NextResponse.json(
-      { error: "Internal server error during authentication" },
+      { error: "An unexpected error occurred during login" },
       { status: 500 },
     );
   }

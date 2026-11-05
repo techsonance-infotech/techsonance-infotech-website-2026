@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
+import { AdminJobsRepository } from "@/lib/repositories/admin-jobs.repository";
 import { CareerApplyService } from "@/lib/services/career-apply.service";
 import { ApplicationsService } from "@/lib/services/applications.service";
+import { AdminApplicationsRepository } from "@/lib/repositories/admin-applications.repository";
 import {
   JobStatus,
   JobApprovalStatus,
@@ -56,7 +58,9 @@ describe("Agency Careers End-to-End Scenario Lifecycle", () => {
           }),
           createSignedUrl: vi.fn().mockImplementation((path: string, expiresIn: number) => {
             return Promise.resolve({
-              data: { signedUrl: `https://mock-storage.supabase.co/signed/${path}?expires=${expiresIn}` },
+              data: {
+                signedUrl: `https://mock-storage.supabase.co/signed/${path}?expires=${expiresIn}`,
+              },
               error: null,
             });
           }),
@@ -65,6 +69,27 @@ describe("Agency Careers End-to-End Scenario Lifecycle", () => {
     };
 
     mockDb = {
+      query: {
+        sitesTable: {
+          findFirst: vi.fn().mockResolvedValue({ id: "site-001" }),
+        },
+        jobsTable: {
+          findFirst: vi.fn().mockImplementation(({ where }: any = {}) => {
+            if (!currentJob) return Promise.resolve(null);
+            if (where?.id && currentJob.id !== where.id) return Promise.resolve(null);
+            if (where?.slug && currentJob.slug !== where.slug) return Promise.resolve(null);
+            return Promise.resolve(currentJob);
+          }),
+        },
+        applicationsTable: {
+          findFirst: vi.fn().mockImplementation(({ where }: any = {}) => {
+            const found = applicationsStore.find(
+              (a) => a.jobId === where?.jobId && a.email === where?.email,
+            );
+            return Promise.resolve(found ?? null);
+          }),
+        },
+      },
       select: vi.fn().mockImplementation(() => {
         const queryBuilder: any = {
           from: vi.fn().mockImplementation((table: any) => {
@@ -114,7 +139,11 @@ describe("Agency Careers End-to-End Scenario Lifecycle", () => {
             };
           }
           if (table === applicationsTable || (val.jobId && val.candidateName)) {
-            const newApp = { id: `app-${applicationsStore.length + 1}`, ...val, createdAt: new Date() };
+            const newApp = {
+              id: `app-${applicationsStore.length + 1}`,
+              ...val,
+              createdAt: new Date(),
+            };
             applicationsStore.push(newApp);
             return {
               returning: vi.fn().mockResolvedValue([newApp]),
@@ -157,11 +186,15 @@ describe("Agency Careers End-to-End Scenario Lifecycle", () => {
       delete: vi.fn().mockReturnValue({
         where: vi.fn().mockResolvedValue({ rowCount: 1 }),
       }),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
-    adminJobsService = new AdminJobsService(mockDb);
+    adminJobsService = new AdminJobsService(new AdminJobsRepository(mockDb));
     careerApplyService = new CareerApplyService(mockDb, mockEmailService, mockSupabaseAdmin);
-    applicationsService = new ApplicationsService(mockDb, mockSupabaseAdmin);
+    applicationsService = new ApplicationsService(
+      new AdminApplicationsRepository(mockDb),
+      mockSupabaseAdmin,
+    );
   });
 
   it("walks the complete 10-step recruitment and candidate lifecycle", async () => {
@@ -177,9 +210,18 @@ describe("Agency Careers End-to-End Scenario Lifecycle", () => {
       workMode: JobWorkMode.HYBRID,
       type: JobType.FULL_TIME,
       experienceLevel: JobExperienceLevel.LEAD,
-      description: "Architect and lead enterprise microservices infrastructure and multi-cloud resilience.",
-      responsibilities: ["Lead cloud architecture", "Oversee Kubernetes clustering", "Mentor senior engineers"],
-      requirements: ["10+ years engineering", "Deep AWS/GCP expertise", "Terraform & IaC proficiency"],
+      description:
+        "Architect and lead enterprise microservices infrastructure and multi-cloud resilience.",
+      responsibilities: [
+        "Lead cloud architecture",
+        "Oversee Kubernetes clustering",
+        "Mentor senior engineers",
+      ],
+      requirements: [
+        "10+ years engineering",
+        "Deep AWS/GCP expertise",
+        "Terraform & IaC proficiency",
+      ],
       openingsCount: 2,
       salaryMin: 4500000,
       salaryMax: 6500000,

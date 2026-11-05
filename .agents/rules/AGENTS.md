@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # AGENTS.md (Part 1 of 2) — Techsonance Website 2026
 
 Master rules for every AI agent and developer. Read first. **Part 1: principles, facts, precedence, Definition of Done, NEVER. Part 2 (`AGENTS-2.md`): layers and import matrix, canonical registry, owner map.** Section numbers are shared across both parts. These two files win on precedence, layers, Definition of Done and the NEVER list. Every rule has one owner file (`AGENTS-2.md` §8); other files link to it and never restate it.

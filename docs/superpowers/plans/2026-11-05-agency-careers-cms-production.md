@@ -78,6 +78,7 @@ app/
 ### Task 1: Database Schema Expansion & Migration
 
 **Files:**
+
 - Modify: `lib/database/schema/core/job.schema.ts`
 - Modify: `lib/database/schema/core/application.schema.ts`
 - Create: `lib/database/schema/core/talent-pool.schema.ts`
@@ -86,11 +87,13 @@ app/
 - Modify: `lib/database/schema/index.schema.ts`
 
 **Interfaces:**
+
 - Produces: `jobsTable`, `applicationsTable`, `talentPoolTable`, `careersSettingsTable`, `eeocResponsesTable`.
 
 - [ ] **Step 1: Write test verifying schema types and exported tables**
 
 Create `tests/careers-schema.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { jobsTable } from "@/lib/database/schema/core/job.schema";
@@ -149,16 +152,19 @@ git commit -m "feat(careers): extend jobs and applications schemas with producti
 ### Task 2: Validation Schemas & Status Lifecycle State Machine
 
 **Files:**
+
 - Create: `lib/validations/careers.ts`
 - Modify: `lib/services/admin-jobs.service.ts`
 - Test: `tests/careers-lifecycle.test.ts`
 
 **Interfaces:**
+
 - Produces: `jobPostingInputSchema`, `applicationSubmissionSchema`, `AdminJobsService.transitionStatus(id, newStatus, user, comment?)`.
 
 - [ ] **Step 1: Write failing test for allowed/forbidden lifecycle transitions**
 
 Create `tests/careers-lifecycle.test.ts`:
+
 ```typescript
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
@@ -213,18 +219,21 @@ git commit -m "feat(careers): implement 7-state job lifecycle engine and validat
 ### Task 3: Dynamic Job Detail Page (`/careers/[slug]`) & Schema.org JSON-LD
 
 **Files:**
+
 - Create: `app/careers/[slug]/page.tsx`
 - Create: `app/careers/[slug]/JobDetailClient.tsx`
 - Create: `components/careers/JobPostingJsonLd.tsx`
 - Create: `components/careers/ClosedJobBanner.tsx`
 
 **Interfaces:**
+
 - Consumes: `getJobSource().get(slug)` from `lib/content/jobs.ts`.
 - Produces: Statically cached job detail page at `/careers/[slug]` with SEO metadata, structured data, sticky CTA, and closed/paused banners.
 
 - [ ] **Step 1: Write test for JobPosting JSON-LD generation and status banner rendering**
 
 Create `tests/job-detail.test.tsx`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { generateJobPostingJsonLd } from "@/components/careers/JobPostingJsonLd";
@@ -284,17 +293,20 @@ git commit -m "feat(careers): add dynamic job detail page with Schema.org JSON-L
 ### Task 4: Upgraded Careers Listing with Facet Filters & URL Sync
 
 **Files:**
+
 - Modify: `app/careers/page.tsx`
 - Modify: `app/careers/CareersClient.tsx`
 - Create: `components/careers/TalentPoolCaptureModal.tsx`
 
 **Interfaces:**
+
 - Consumes: `getJobSource().list({ status: "PUBLISHED" })`.
 - Produces: Debounced search, facet chips (Dept, Work Mode, Type, Experience), URL search params synchronization, and Talent Pool empty state capture.
 
 - [ ] **Step 1: Write test for filter matching logic**
 
 Create `tests/careers-filter.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { filterJobs } from "@/app/careers/filterUtils";
@@ -345,15 +357,18 @@ git commit -m "feat(careers): add search, facet filters, URL sync, and talent po
 ### Task 5: Dynamic Sitemap Generation
 
 **Files:**
+
 - Modify: `app/sitemap.ts`
 
 **Interfaces:**
+
 - Consumes: `getJobSource().list({ status: "PUBLISHED" })`.
 - Produces: Dynamic inclusion of `/careers/${job.slug}` for all published roles in sitemap.
 
 - [ ] **Step 1: Write test for dynamic sitemap containing published jobs**
 
 Create `tests/sitemap.test.ts`:
+
 ```typescript
 import { describe, it, expect, vi } from "vitest";
 import sitemap from "@/app/sitemap";
@@ -394,17 +409,20 @@ git commit -m "feat(seo): dynamically include published job openings in sitemap"
 ### Task 6: Private Resume Storage & Application Submission Service
 
 **Files:**
+
 - Create: `lib/services/career-apply.service.ts`
 - Create: `app/api/careers/apply/route.ts`
 - Modify: `lib/di/container.ts`
 
 **Interfaces:**
+
 - Consumes: Supabase Storage (`resumes` private bucket), `EmailService`.
 - Produces: `CareerApplyService.submitApplication(formData, job)` returning created application.
 
 - [ ] **Step 1: Write unit test for application submission validation and duplicate detection**
 
 Create `tests/career-apply.test.ts`:
+
 ```typescript
 import { describe, it, expect, vi } from "vitest";
 import { CareerApplyService } from "@/lib/services/career-apply.service";
@@ -457,6 +475,7 @@ git commit -m "feat(careers): implement secure resume upload, duplicate check, a
 ### Task 7: Candidate Pipeline Management & Applications API
 
 **Files:**
+
 - Create: `lib/services/applications.service.ts`
 - Create: `app/api/admin/careers/applications/route.ts`
 - Create: `app/api/admin/careers/applications/[id]/route.ts`
@@ -464,12 +483,14 @@ git commit -m "feat(careers): implement secure resume upload, duplicate check, a
 - Create: `app/api/admin/careers/applications/export/route.ts`
 
 **Interfaces:**
+
 - Consumes: `applicationsTable`, Supabase Storage client.
 - Produces: Pipeline stage transition, internal notes/rating updates, short-lived signed resume download URLs, and CSV exports.
 
 - [ ] **Step 1: Write test for candidate stage movement and signed resume URL generation**
 
 Create `tests/applications-service.test.ts`:
+
 ```typescript
 import { describe, it, expect, vi } from "vitest";
 import { ApplicationsService } from "@/lib/services/applications.service";
@@ -517,18 +538,21 @@ git commit -m "feat(careers): implement applicant pipeline service, signed resum
 ### Task 8: Applications Inbox CMS Interface (Table & Kanban)
 
 **Files:**
+
 - Modify: `app/admin/careers/applications/page.tsx`
 - Create: `components/admin/careers/ApplicationsTable.tsx`
 - Create: `components/admin/careers/ApplicationsKanban.tsx`
 - Create: `components/admin/careers/CandidateDrawer.tsx`
 
 **Interfaces:**
+
 - Consumes: `/api/admin/careers/applications` endpoints.
 - Produces: Interactive ATS inbox with stage transitions, inline resume view, notes, ratings, and rejection modals.
 
 - [ ] **Step 1: Implement CandidateDrawer component**
 
 Create `components/admin/careers/CandidateDrawer.tsx`:
+
 - Display candidate profile (name, email, phone, location, links).
 - Render screening question answers with knockout badge if triggered.
 - Inline resume viewer with "Open in New Tab" signed URL link.
@@ -543,6 +567,7 @@ Create `components/admin/careers/CandidateDrawer.tsx`:
 - [ ] **Step 3: Wire up `app/admin/careers/applications/page.tsx`**
 
 Replace static mockup with:
+
 - Top bar: Role filter dropdown, search input, Stage tabs, and View Toggle (Table / Kanban).
 - "Export CSV" action button.
 - Selection of applicant opens `CandidateDrawer`.
@@ -566,18 +591,21 @@ git commit -m "feat(admin): build interactive applications inbox with table, kan
 ### Task 9: Full-Page Job Editor with Completeness Checklist & Live Preview
 
 **Files:**
+
 - Create: `app/admin/careers/jobs/[id]/page.tsx`
 - Create: `components/admin/careers/JobEditorForm.tsx`
 - Create: `components/admin/careers/CompletenessChecklist.tsx`
 - Create: `components/admin/careers/JobLivePreview.tsx`
 
 **Interfaces:**
+
 - Consumes: `AdminJobsService.getJobById(id)`.
 - Produces: 6-section job editing experience, real-time completeness checklist, desktop/mobile preview, and save/submit controls.
 
 - [ ] **Step 1: Implement CompletenessChecklist component**
 
 Create `components/admin/careers/CompletenessChecklist.tsx`:
+
 - Evaluates required fields: Title, Department, Single Location or Remote, Employment Type, Description, Responsibilities ($\ge 1$), Requirements ($\ge 1$), EEOC Statement.
 - Validates salary range: If entered, `salaryMin <= salaryMax`.
 - Validates deadline: If entered, must be in the future.
@@ -586,12 +614,14 @@ Create `components/admin/careers/CompletenessChecklist.tsx`:
 - [ ] **Step 2: Implement JobLivePreview component**
 
 Create `components/admin/careers/JobLivePreview.tsx`:
+
 - Renders the exact UI of `/careers/[slug]` inside a responsive viewport container.
 - Desktop / Mobile width toggle.
 
 - [ ] **Step 3: Implement JobEditorForm and page layout**
 
 In `app/admin/careers/jobs/[id]/page.tsx`:
+
 - 6 organized tabs: Basics, Location & Mode, Content, Compensation, Application Settings, Review & Publish.
 - Auto-save draft indicator with debounced save.
 - Unsaved changes prompt on navigation.
@@ -613,6 +643,7 @@ git commit -m "feat(admin): build multi-section job editor with completeness che
 ### Task 10: Approval Workflow & Version Restoration
 
 **Files:**
+
 - Modify: `lib/services/admin-jobs.service.ts`
 - Create: `app/api/admin/careers/jobs/[id]/approve/route.ts`
 - Create: `app/api/admin/careers/jobs/[id]/return/route.ts`
@@ -620,12 +651,14 @@ git commit -m "feat(admin): build multi-section job editor with completeness che
 - Create: `components/admin/careers/VersionHistoryDialog.tsx`
 
 **Interfaces:**
+
 - Consumes: `ts_content_versions`, `ts_content_careers_settings`.
 - Produces: Role submission for review, admin approval/rejection with comments, and version restoration.
 
 - [ ] **Step 1: Write test for version snapshot comparison and approval decisions**
 
 Create `tests/careers-approval.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
@@ -671,17 +704,20 @@ git commit -m "feat(careers): implement approval workflow, reviewer comments, an
 ### Task 11: GDPR Compliance: Candidate Data Export & Permanent Deletion
 
 **Files:**
+
 - Create: `app/api/admin/careers/compliance/route.ts`
 - Modify: `lib/services/applications.service.ts`
 - Test: `tests/careers-gdpr.test.ts`
 
 **Interfaces:**
+
 - Consumes: `applicationsTable`, `talentPoolTable`, Supabase Storage client.
 - Produces: Search candidate by email $\rightarrow$ export all records $\rightarrow$ permanently purge resumes and database rows with audit trail.
 
 - [ ] **Step 1: Write test for candidate GDPR purge**
 
 Create `tests/careers-gdpr.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { ApplicationsService } from "@/lib/services/applications.service";
@@ -728,11 +764,13 @@ git commit -m "feat(compliance): implement candidate GDPR export and permanent p
 ### Task 12: End-to-End Verification & Quality Audit
 
 **Files:**
+
 - Create: `tests/careers-e2e-suite.test.ts`
 
 - [ ] **Step 1: Write end-to-end regression test suite**
 
 Verify the full scenario flow:
+
 1. Recruiter creates role in `DRAFT`.
 2. Completeness checklist passes; submitted to `IN_REVIEW`.
 3. Admin approves; role transitions to `PUBLISHED`.

@@ -4,21 +4,21 @@ Owns: what happens when things fail (§1), API/server rules (§2), DB edge cases
 
 ## 1. Failure policy
 
-| Failure | Detected by | Server outcome | User sees | Logged |
-| --- | --- | --- | --- | --- |
-| Invalid input | Zod `safeParse` | `VALIDATION` 422 + `fieldErrors` | inline field errors, input preserved | no |
-| Session expired/missing | `requireUser` | `UNAUTHENTICATED` 401 | redirect `/login?next=<path>` | no |
-| Not allowed | service role/ownership check | `FORBIDDEN` 403 | "no access" panel | warn (+ audit for admin) |
-| Missing resource / bad id | service, `idSchema` | `NOT_FOUND` 404 | `not-found` UI | no |
-| Unique / stale version / FK | `23505`, `23503`, version check | `CONFLICT` 409 | specific message + refresh/choose-again | no |
-| Too many requests | rate limiter | `RATE_LIMITED` 429 + `Retry-After` | submit disabled with countdown | info |
-| DB/third party down, timeout, deadlock, pool exhausted | `mapDbError`, timeouts | `UNAVAILABLE` 503 + `Retry-After` | "temporarily unavailable" + retry | warn |
-| Unexpected exception | catch-all in wrapper | `INTERNAL` 500 + `requestId` | generic error + reference id | error |
-| Render crash in a route | `error.tsx` | n/a | error panel + `reset` | error |
-| Crash in optional widget | `WidgetBoundary` | n/a | compact fallback; page lives | error |
-| Crash in root layout | `global-error.tsx` | n/a | minimal full-page error + reload | error |
-| Stale deployment / chunk failure | error text match | n/a | one auto-reload, then prompt | warn |
-| Offline / fetch failure | `callApi` catches `TypeError`/abort | client-side `UNAVAILABLE` | offline banner + retry | no |
+| Failure                                                | Detected by                         | Server outcome                     | User sees                               | Logged                   |
+| ------------------------------------------------------ | ----------------------------------- | ---------------------------------- | --------------------------------------- | ------------------------ |
+| Invalid input                                          | Zod `safeParse`                     | `VALIDATION` 422 + `fieldErrors`   | inline field errors, input preserved    | no                       |
+| Session expired/missing                                | `requireUser`                       | `UNAUTHENTICATED` 401              | redirect `/login?next=<path>`           | no                       |
+| Not allowed                                            | service role/ownership check        | `FORBIDDEN` 403                    | "no access" panel                       | warn (+ audit for admin) |
+| Missing resource / bad id                              | service, `idSchema`                 | `NOT_FOUND` 404                    | `not-found` UI                          | no                       |
+| Unique / stale version / FK                            | `23505`, `23503`, version check     | `CONFLICT` 409                     | specific message + refresh/choose-again | no                       |
+| Too many requests                                      | rate limiter                        | `RATE_LIMITED` 429 + `Retry-After` | submit disabled with countdown          | info                     |
+| DB/third party down, timeout, deadlock, pool exhausted | `mapDbError`, timeouts              | `UNAVAILABLE` 503 + `Retry-After`  | "temporarily unavailable" + retry       | warn                     |
+| Unexpected exception                                   | catch-all in wrapper                | `INTERNAL` 500 + `requestId`       | generic error + reference id            | error                    |
+| Render crash in a route                                | `error.tsx`                         | n/a                                | error panel + `reset`                   | error                    |
+| Crash in optional widget                               | `WidgetBoundary`                    | n/a                                | compact fallback; page lives            | error                    |
+| Crash in root layout                                   | `global-error.tsx`                  | n/a                                | minimal full-page error + reload        | error                    |
+| Stale deployment / chunk failure                       | error text match                    | n/a                                | one auto-reload, then prompt            | warn                     |
+| Offline / fetch failure                                | `callApi` catches `TypeError`/abort | client-side `UNAVAILABLE`          | offline banner + retry                  | no                       |
 
 Never show SQL, stack, table or constraint names. Retryable-by-user codes: `04` §2.
 

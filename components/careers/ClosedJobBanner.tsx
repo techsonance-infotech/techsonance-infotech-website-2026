@@ -45,9 +45,7 @@ export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerPro
           </div>
           <div className="space-y-1.5 flex-1">
             <h3 className="text-lg font-bold">
-              {isPaused
-                ? "This position is temporarily paused"
-                : "This position is now closed"}
+              {isPaused ? "This position is temporarily paused" : "This position is now closed"}
             </h3>
             <p className="text-sm opacity-90 leading-relaxed font-sans">
               {isPaused

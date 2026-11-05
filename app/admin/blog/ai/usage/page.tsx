@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { TelemetrySummary } from "@/lib/services/admin-telemetry.service";
+import type { TelemetrySummary } from "@/lib/types/admin.types";
 
 export default function AIUsageTelemetryPage() {
   const [data, setData] = useState<TelemetrySummary | null>(null);

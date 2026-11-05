@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
+import { logger } from "@/lib/logger";
 
 const updatePostSchema = z.object({
   slug: z
@@ -44,7 +45,7 @@ export async function GET(_req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ ok: true, post });
   } catch (error) {
-    console.error("Get post error:", error);
+    logger.error("Get post error", { error: String(error) });
     return NextResponse.json({ error: "Failed to fetch post" }, { status: 500 });
   }
 }
@@ -74,7 +75,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ ok: true, post: updated });
   } catch (error) {
-    console.error("Update post error:", error);
+    logger.error("Update post error", { error: String(error) });
     return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
   }
 }
@@ -103,7 +104,7 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
 
     return NextResponse.json({ ok: true, message: "Post deleted successfully" });
   } catch (error) {
-    console.error("Delete post error:", error);
+    logger.error("Delete post error", { error: String(error) });
     return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
   }
 }

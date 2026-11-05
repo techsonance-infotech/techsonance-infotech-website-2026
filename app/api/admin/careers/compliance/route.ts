@@ -27,10 +27,7 @@ export async function GET(req: Request) {
     const email = searchParams.get("email");
 
     if (!email || !email.trim()) {
-      return NextResponse.json(
-        { error: CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED }, { status: 400 });
     }
 
     const applicationsService = container.get(ApplicationsService);
@@ -45,10 +42,7 @@ export async function GET(req: Request) {
       );
     }
     logger.error("GDPR export error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_EXPORT_COMPLIANCE },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_EXPORT_COMPLIANCE }, { status: 500 });
   }
 }
 
@@ -96,9 +90,6 @@ export async function POST(req: Request) {
       );
     }
     logger.error("GDPR purge error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_PURGE_CANDIDATE },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_PURGE_CANDIDATE }, { status: 500 });
   }
 }

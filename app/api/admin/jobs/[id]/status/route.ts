@@ -48,9 +48,6 @@ export async function POST(req: Request, { params }: RouteParams) {
       );
     }
     logger.error("Job status transition error", { error: String(error) });
-    return NextResponse.json(
-      { error: CAREER_ERRORS.FAILED_UPDATE_JOB_STATUS },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: CAREER_ERRORS.FAILED_UPDATE_JOB_STATUS }, { status: 400 });
   }
 }

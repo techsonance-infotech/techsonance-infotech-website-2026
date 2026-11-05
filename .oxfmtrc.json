@@ -13,6 +13,7 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "ignorePatterns": [
+    "*.md",
     "node_modules/**",
     ".next/**",
     "out/**",

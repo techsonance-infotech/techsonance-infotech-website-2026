@@ -31,8 +31,7 @@ export function ApprovalActionDialog({
   if (!isOpen) return null;
 
   const isApprove = mode === "approve";
-  const isScheduled =
-    isApprove && job.publishAt && new Date(job.publishAt) > new Date();
+  const isScheduled = isApprove && job.publishAt && new Date(job.publishAt) > new Date();
 
   const handleConfirm = async () => {
     if (!isApprove && !comment.trim()) {
@@ -121,12 +120,13 @@ export function ApprovalActionDialog({
             <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
               {isScheduled ? (
                 <span>
-                  This role will transition to <strong>SCHEDULED</strong> and will automatically publish on{" "}
-                  <strong>{new Date(job.publishAt!).toLocaleDateString()}</strong>.
+                  This role will transition to <strong>SCHEDULED</strong> and will automatically
+                  publish on <strong>{new Date(job.publishAt!).toLocaleDateString()}</strong>.
                 </span>
               ) : (
                 <span>
-                  This role will immediately transition to <strong>PUBLISHED</strong> and become live on the public careers portal.
+                  This role will immediately transition to <strong>PUBLISHED</strong> and become
+                  live on the public careers portal.
                 </span>
               )}
             </div>
@@ -185,7 +185,11 @@ export function ApprovalActionDialog({
                 Processing...
               </span>
             ) : isApprove ? (
-              isScheduled ? "Approve & Schedule" : "Approve & Publish"
+              isScheduled ? (
+                "Approve & Schedule"
+              ) : (
+                "Approve & Publish"
+              )
             ) : (
               "Return to Draft"
             )}

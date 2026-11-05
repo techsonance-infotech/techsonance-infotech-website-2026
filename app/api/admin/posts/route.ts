@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
+import { logger } from "@/lib/logger";
 
 const createPostSchema = z.object({
   siteId: z.string().uuid().optional(),
@@ -48,7 +49,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {
-    console.error("List posts error:", error);
+    logger.error("List posts error", { error: String(error) });
     return NextResponse.json({ error: "Failed to list posts" }, { status: 500 });
   }
 }
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true, post }, { status: 201 });
   } catch (error) {
-    console.error("Create post error:", error);
+    logger.error("Create post error", { error: String(error) });
     return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
   }
 }

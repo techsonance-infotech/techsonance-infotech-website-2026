@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
+import { AdminJobsRepository } from "@/lib/repositories/admin-jobs.repository";
 import { JobStatus, JobApprovalStatus } from "@/lib/database/enum/content.enum";
 import { versionsTable } from "@/lib/database/schema/core/version.schema";
 
@@ -52,6 +53,12 @@ describe("Careers Approval Workflow & Version Restoration", () => {
     mockAuditLogs = [];
 
     mockDb = {
+      query: {
+        jobsTable: {
+          findFirst: vi.fn().mockImplementation(() => Promise.resolve(mockJobRecord)),
+          findMany: vi.fn().mockImplementation(() => Promise.resolve([mockJobRecord])),
+        },
+      },
       select: vi.fn().mockImplementation(() => ({
         from: vi.fn().mockImplementation((table: any) => ({
           where: vi.fn().mockImplementation((condition: any) => {
@@ -75,7 +82,9 @@ describe("Careers Approval Workflow & Version Restoration", () => {
               }),
             });
 
-            return table === versionsTable || table?._?.name === "ts_content_versions" || (table && String(table).includes("versions"))
+            return table === versionsTable ||
+              table?._?.name === "ts_content_versions" ||
+              (table && String(table).includes("versions"))
               ? resultPromise
               : jobPromise;
           }),
@@ -111,9 +120,10 @@ describe("Careers Approval Workflow & Version Restoration", () => {
       delete: vi.fn().mockReturnValue({
         where: vi.fn().mockResolvedValue({}),
       }),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
-    jobsService = new AdminJobsService(mockDb);
+    jobsService = new AdminJobsService(new AdminJobsRepository(mockDb));
   });
 
   it("approves IN_REVIEW job to PUBLISHED status", async () => {

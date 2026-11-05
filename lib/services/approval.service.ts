@@ -1,20 +1,13 @@
 import "server-only";
 import crypto from "node:crypto";
 import { inject } from "@needle-di/core";
-import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
-import { DRIZZLE_DB_TOKEN } from "../di/tokens";
-import type { Database } from "../database/index";
-import type {
-  AiApprovalDecision} from "../database/schema/ai/approval-request.schema";
-import {
-  approvalRequestsTable,
-  AiApprovalStatus
-} from "../database/schema/ai/approval-request.schema";
-import { postsTable } from "../database/schema/core/post.schema";
-import { auditLogsTable } from "../database/schema/core/audit.schema";
+import { ApprovalRequestsRepository } from "@/lib/repositories/approval-requests.repository";
+import { AiApprovalStatus, type AiApprovalDecision } from "@/lib/database/enum/ai.enum";
 import { EmailService } from "./email.service";
+import { logger } from "@/lib/logger";
 import { getEnv } from "../env";
+import { AppError } from "@/lib/errors";
 
 export interface CreateApprovalResult {
   token: string;
@@ -26,7 +19,7 @@ export type ApprovalDecision = "approve" | "reject" | "improve";
 
 export class ApprovalService {
   constructor(
-    private db: Database = inject(DRIZZLE_DB_TOKEN),
+    private approvalRepo: ApprovalRequestsRepository = inject(ApprovalRequestsRepository),
     private emailService: EmailService = inject(EmailService),
   ) {}
 
@@ -47,7 +40,7 @@ export class ApprovalService {
     const tokenHash = this.hashToken(token);
     const expiresAt = new Date(Date.now() + expiryHours * 3600 * 1000);
 
-    await this.db.insert(approvalRequestsTable).values({
+    await this.approvalRepo.create({
       postId,
       postVersion,
       tokenHash,
@@ -161,12 +154,9 @@ export class ApprovalService {
       });
 
       const tokenHash = this.hashToken(token);
-      await this.db
-        .update(approvalRequestsTable)
-        .set({ emailStatus: "SENT" })
-        .where(eq(approvalRequestsTable.tokenHash, tokenHash));
+      await this.approvalRepo.updateEmailStatus(tokenHash, "SENT");
     } catch (err) {
-      console.error("Failed to send approval email:", err);
+      logger.error("Failed to send approval email", { error: String(err) });
     }
   }
 
@@ -175,21 +165,7 @@ export class ApprovalService {
    */
   async getRequestByToken(token: string) {
     const tokenHash = this.hashToken(token);
-    const [req] = await this.db
-      .select()
-      .from(approvalRequestsTable)
-      .where(eq(approvalRequestsTable.tokenHash, tokenHash))
-      .limit(1);
-
-    if (!req) return null;
-
-    const [post] = await this.db
-      .select()
-      .from(postsTable)
-      .where(eq(postsTable.id, req.postId))
-      .limit(1);
-
-    return { request: req, post: post ?? null };
+    return this.approvalRepo.findByTokenHash(tokenHash);
   }
 
   /**
@@ -202,72 +178,40 @@ export class ApprovalService {
     decidedBy: string = "approver",
   ) {
     const tokenHash = this.hashToken(token);
+    const existing = await this.approvalRepo.findByTokenHash(tokenHash);
 
-    const [req] = await this.db
-      .select()
-      .from(approvalRequestsTable)
-      .where(eq(approvalRequestsTable.tokenHash, tokenHash))
-      .limit(1);
-
-    if (!req) {
-      throw new Error("Invalid or unknown approval token.");
+    if (!existing || !existing.request) {
+      throw new AppError("NOT_FOUND", "Invalid or unknown approval token.");
     }
 
+    const { request: req, post } = existing;
+
     if (req.usedAt) {
-      throw new Error("This approval link has already been used.");
+      throw new AppError("CONFLICT", "This approval link has already been used.");
     }
 
     if (new Date() > req.expiresAt) {
-      throw new Error("This approval link has expired.");
+      throw new AppError("BAD_REQUEST", "This approval link has expired.");
     }
 
-    const [post] = await this.db
-      .select()
-      .from(postsTable)
-      .where(eq(postsTable.id, req.postId))
-      .limit(1);
-
     if (!post) {
-      throw new Error("Associated post not found.");
+      throw new AppError("NOT_FOUND", "Associated post not found.");
     }
 
     const now = new Date();
     let newStatus = post.status;
+    const postUpdates: { status: string; publishedAt?: Date } = { status: newStatus };
 
     if (decision === "approve") {
       newStatus = "PUBLISHED";
-      await this.db
-        .update(postsTable)
-        .set({
-          status: "PUBLISHED",
-          publishedAt: now,
-          updatedAt: now,
-        })
-        .where(eq(postsTable.id, post.id));
-
-      try {
-        revalidateTag("posts", "default");
-      } catch (err) {
-        console.warn("Edge revalidation error on approval:", err);
-      }
+      postUpdates.status = "PUBLISHED";
+      postUpdates.publishedAt = now;
     } else if (decision === "reject") {
       newStatus = "ARCHIVED";
-      await this.db
-        .update(postsTable)
-        .set({
-          status: "ARCHIVED",
-          updatedAt: now,
-        })
-        .where(eq(postsTable.id, post.id));
+      postUpdates.status = "ARCHIVED";
     } else if (decision === "improve") {
       newStatus = "DRAFT";
-      await this.db
-        .update(postsTable)
-        .set({
-          status: "DRAFT",
-          updatedAt: now,
-        })
-        .where(eq(postsTable.id, post.id));
+      postUpdates.status = "DRAFT";
     }
 
     const approvalStatus =
@@ -277,27 +221,26 @@ export class ApprovalService {
           ? AiApprovalStatus.REJECTED
           : AiApprovalStatus.IMPROVE;
 
-    // Mark approval request as completed
-    await this.db
-      .update(approvalRequestsTable)
-      .set({
+    await this.approvalRepo.applyDecisionWithPostUpdate(
+      req.id,
+      post.id,
+      {
         decision: decision as AiApprovalDecision,
         status: approvalStatus,
         feedback: feedback || null,
         decidedBy,
-        decidedAt: now,
-        usedAt: now,
-      })
-      .where(eq(approvalRequestsTable.id, req.id));
+      },
+      postUpdates,
+      `AI_APPROVAL_${decision.toUpperCase()}`,
+    );
 
-    // Audit log
-    await this.db.insert(auditLogsTable).values({
-      actorId: null,
-      entityType: "post",
-      entityId: post.id,
-      action: `AI_APPROVAL_${decision.toUpperCase()}`,
-      afterState: { decision, feedback, newStatus },
-    });
+    if (decision === "approve") {
+      try {
+        revalidateTag("posts", "default");
+      } catch (err) {
+        logger.warn("Edge revalidation error on approval", { error: String(err) });
+      }
+    }
 
     return {
       success: true,

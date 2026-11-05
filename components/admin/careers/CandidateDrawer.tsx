@@ -242,7 +242,10 @@ export function CandidateDrawer({
                 Candidate Evaluation
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                ID: <span className="font-mono text-slate-700 dark:text-slate-300">{applicationId}</span>
+                ID:{" "}
+                <span className="font-mono text-slate-700 dark:text-slate-300">
+                  {applicationId}
+                </span>
               </p>
             </div>
             <button
@@ -292,7 +295,8 @@ export function CandidateDrawer({
                       </h3>
                       <p className="text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                        Applied on {new Date(app.createdAt).toLocaleDateString("en-US", {
+                        Applied on{" "}
+                        {new Date(app.createdAt).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
                           year: "numeric",
@@ -306,7 +310,8 @@ export function CandidateDrawer({
                         className={`text-xs font-bold px-3 py-1 rounded-full border ${
                           STAGE_CONFIG[app.status as ApplicationStatus]?.bg || "bg-slate-100"
                         } ${STAGE_CONFIG[app.status as ApplicationStatus]?.text || "text-slate-700"} ${
-                          STAGE_CONFIG[app.status as ApplicationStatus]?.border || "border-slate-200"
+                          STAGE_CONFIG[app.status as ApplicationStatus]?.border ||
+                          "border-slate-200"
                         }`}
                       >
                         {STAGE_CONFIG[app.status as ApplicationStatus]?.label || app.status}

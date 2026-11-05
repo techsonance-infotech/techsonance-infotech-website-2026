@@ -1,13 +1,7 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { eq, desc, and } from "drizzle-orm";
-import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
-import type { Database } from "@/lib/database";
-import {
-  promptTemplatesTable,
-  sitesTable,
-  type PromptTemplate,
-} from "@/lib/database/schema/index.schema";
+import { AdminPromptsRepository } from "@/lib/repositories/admin-prompts.repository";
+import type { PromptTemplate } from "@/lib/database/schema/index.schema";
 import { logger } from "../logger";
 
 export const DEFAULT_PROMPT_TEMPLATES = [
@@ -91,30 +85,12 @@ Evaluate quality and output score.`,
 ];
 
 export class AdminPromptsService {
-  constructor(private readonly db: Database = inject(DRIZZLE_DB_TOKEN)) {}
-
-  private async getDefaultSiteId(): Promise<string> {
-    const existing = await this.db.query.sitesTable.findFirst();
-    if (existing) return existing.id;
-
-    const [created] = await this.db
-      .insert(sitesTable)
-      .values({
-        name: "TechSonance Agency",
-        slug: "techsonance-agency",
-        domain: "techsonance.co.in",
-      })
-      .returning();
-
-    return created.id;
-  }
+  constructor(
+    private readonly promptsRepo: AdminPromptsRepository = inject(AdminPromptsRepository),
+  ) {}
 
   async listTemplates(): Promise<PromptTemplate[]> {
-    const templates = await this.db
-      .select()
-      .from(promptTemplatesTable)
-      .where(eq(promptTemplatesTable.isActive, true))
-      .orderBy(desc(promptTemplatesTable.stepName));
+    const templates = await this.promptsRepo.listActiveTemplates();
 
     if (templates.length === 0) {
       return this.seedDefaults();
@@ -124,117 +100,64 @@ export class AdminPromptsService {
   }
 
   async getTemplateByStep(stepName: string): Promise<PromptTemplate | null> {
-    const [template] = await this.db
-      .select()
-      .from(promptTemplatesTable)
-      .where(
-        and(eq(promptTemplatesTable.stepName, stepName), eq(promptTemplatesTable.isActive, true)),
-      )
-      .limit(1);
+    const template = await this.promptsRepo.findByStep(stepName);
 
     if (!template) {
-      // Look up default
       const def = DEFAULT_PROMPT_TEMPLATES.find((d) => d.stepName === stepName);
       if (def) {
-        const siteId = await this.getDefaultSiteId();
-        const [inserted] = await this.db
-          .insert(promptTemplatesTable)
-          .values({
-            siteId,
-            stepName: def.stepName,
-            systemPrompt: def.systemPrompt,
-            userPromptTemplate: def.userPromptTemplate,
-            modelPreference: def.modelPreference,
-            temperature: def.temperature,
-            version: 1,
-            isActive: true,
-          })
-          .returning();
-        return inserted;
+        const siteId = await this.promptsRepo.getDefaultSiteId();
+        return this.promptsRepo.create({
+          siteId,
+          stepName: def.stepName,
+          systemPrompt: def.systemPrompt,
+          userPromptTemplate: def.userPromptTemplate,
+          modelPreference: def.modelPreference,
+          temperature: def.temperature,
+          isActive: true,
+          version: 1,
+        });
       }
-      return null;
     }
 
-    return template;
+    return template ?? null;
   }
 
   async updateTemplate(
-    stepName: string,
+    id: string,
     data: {
-      systemPrompt: string;
-      userPromptTemplate: string;
+      systemPrompt?: string;
+      userPromptTemplate?: string;
       modelPreference?: string;
       temperature?: number;
     },
-  ): Promise<PromptTemplate> {
-    const siteId = await this.getDefaultSiteId();
-    const existing = await this.getTemplateByStep(stepName);
-
-    if (existing) {
-      const [updated] = await this.db
-        .update(promptTemplatesTable)
-        .set({
-          systemPrompt: data.systemPrompt,
-          userPromptTemplate: data.userPromptTemplate,
-          modelPreference: data.modelPreference ?? existing.modelPreference,
-          temperature: data.temperature ?? existing.temperature,
-          version: existing.version + 1,
-          updatedAt: new Date(),
-        })
-        .where(eq(promptTemplatesTable.id, existing.id))
-        .returning();
-
-      return updated;
-    }
-
-    const [inserted] = await this.db
-      .insert(promptTemplatesTable)
-      .values({
-        siteId,
-        stepName,
-        systemPrompt: data.systemPrompt,
-        userPromptTemplate: data.userPromptTemplate,
-        modelPreference: data.modelPreference ?? "gemini-2.5-flash",
-        temperature: data.temperature ?? 70,
-        version: 1,
-        isActive: true,
-      })
-      .returning();
-
-    return inserted;
+  ): Promise<PromptTemplate | null> {
+    return this.promptsRepo.update(id, data);
   }
 
   async seedDefaults(): Promise<PromptTemplate[]> {
-    const siteId = await this.getDefaultSiteId();
-    const seeded: PromptTemplate[] = [];
+    const siteId = await this.promptsRepo.getDefaultSiteId();
+    const inserted: PromptTemplate[] = [];
 
     for (const def of DEFAULT_PROMPT_TEMPLATES) {
-      const [existing] = await this.db
-        .select()
-        .from(promptTemplatesTable)
-        .where(eq(promptTemplatesTable.stepName, def.stepName))
-        .limit(1);
-
-      if (!existing) {
-        const [inserted] = await this.db
-          .insert(promptTemplatesTable)
-          .values({
-            siteId,
-            stepName: def.stepName,
-            systemPrompt: def.systemPrompt,
-            userPromptTemplate: def.userPromptTemplate,
-            modelPreference: def.modelPreference,
-            temperature: def.temperature,
-            version: 1,
-            isActive: true,
-          })
-          .returning();
-        seeded.push(inserted);
-      } else {
-        seeded.push(existing);
+      try {
+        const row = await this.promptsRepo.create({
+          siteId,
+          stepName: def.stepName,
+          systemPrompt: def.systemPrompt,
+          userPromptTemplate: def.userPromptTemplate,
+          modelPreference: def.modelPreference,
+          temperature: def.temperature,
+          isActive: true,
+          version: 1,
+        });
+        inserted.push(row);
+      } catch (err) {
+        logger.warn(`Could not seed default template for step: ${def.stepName}`, {
+          error: String(err),
+        });
       }
     }
 
-    return seeded;
+    return inserted;
   }
 }

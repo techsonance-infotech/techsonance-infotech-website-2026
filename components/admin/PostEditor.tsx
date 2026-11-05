@@ -20,10 +20,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Post } from "@/lib/database/schema/core/post.schema";
+import type { AdminPost } from "@/lib/types/admin.types";
 
 interface PostEditorProps {
-  initialPost?: Partial<Post>;
+  initialPost?: Partial<AdminPost>;
   isNew?: boolean;
 }
 

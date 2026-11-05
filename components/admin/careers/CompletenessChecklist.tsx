@@ -39,9 +39,7 @@ export interface CompletenessEvaluation {
   warnings: string[];
 }
 
-export function evaluateCompleteness(
-  job: Partial<JobCompletenessState>,
-): CompletenessEvaluation {
+export function evaluateCompleteness(job: Partial<JobCompletenessState>): CompletenessEvaluation {
   const missingFields: string[] = [];
   const warnings: string[] = [];
 
@@ -256,7 +254,9 @@ export function computeCompleteness(job: Partial<JobCompletenessState>): Complet
   const requiredItems = items.filter((i) => i.required);
   const passedRequired = requiredItems.filter((i) => i.passed);
 
-  const percentage = Math.round((items.filter((i) => i.passed && !i.error).length / items.length) * 100);
+  const percentage = Math.round(
+    (items.filter((i) => i.passed && !i.error).length / items.length) * 100,
+  );
 
   return {
     percentage,
@@ -299,7 +299,8 @@ export function CompletenessChecklist({
             Completeness Checklist
           </h3>
           <p className="text-[11px] text-slate-400 mt-0.5">
-            Readiness Checklist &bull; {job.title ? `Auditing: "${job.title}"` : "Auditing role draft"}
+            Readiness Checklist &bull;{" "}
+            {job.title ? `Auditing: "${job.title}"` : "Auditing role draft"}
           </p>
         </div>
         <div className="text-right">
@@ -370,10 +371,10 @@ export function CompletenessChecklist({
               item.error
                 ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300"
                 : item.passed
-                ? "bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-100 dark:border-emerald-900/30 text-slate-700 dark:text-slate-300"
-                : item.required
-                ? "bg-amber-50/40 dark:bg-amber-950/10 border-amber-200/60 dark:border-amber-900/40 text-slate-700 dark:text-slate-300"
-                : "bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 text-slate-500"
+                  ? "bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-100 dark:border-emerald-900/30 text-slate-700 dark:text-slate-300"
+                  : item.required
+                    ? "bg-amber-50/40 dark:bg-amber-950/10 border-amber-200/60 dark:border-amber-900/40 text-slate-700 dark:text-slate-300"
+                    : "bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 text-slate-500"
             }`}
           >
             <div className="mt-0.5 shrink-0">

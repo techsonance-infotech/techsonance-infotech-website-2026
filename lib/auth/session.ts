@@ -1,12 +1,22 @@
 import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
+import { getEnv } from "@/lib/env";
 
 const SESSION_COOKIE = "ts_admin_session";
-const SECRET =
-  process.env.JWT_ACCESS_SECRET ||
-  process.env.BETTER_AUTH_SECRET ||
-  "techsonance-studio-admin-secret-minimum-32-chars";
+
+function getSecret(): string {
+  try {
+    const env = getEnv();
+    return (
+      env.JWT_ACCESS_SECRET ||
+      env.BETTER_AUTH_SECRET ||
+      "techsonance-studio-admin-secret-minimum-32-chars"
+    );
+  } catch {
+    return "techsonance-studio-admin-secret-minimum-32-chars";
+  }
+}
 
 export interface SessionPayload {
   userId: string;
@@ -20,7 +30,10 @@ export function createSessionToken(payload: Omit<SessionPayload, "exp">): string
   const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7; // 7 days
   const data: SessionPayload = { ...payload, exp };
   const encodedData = Buffer.from(JSON.stringify(data)).toString("base64url");
-  const signature = crypto.createHmac("sha256", SECRET).update(encodedData).digest("base64url");
+  const signature = crypto
+    .createHmac("sha256", getSecret())
+    .update(encodedData)
+    .digest("base64url");
   return `${encodedData}.${signature}`;
 }
 
@@ -30,7 +43,7 @@ export function verifySessionToken(token: string): SessionPayload | null {
     if (!encodedData || !signature) return null;
 
     const expectedSignature = crypto
-      .createHmac("sha256", SECRET)
+      .createHmac("sha256", getSecret())
       .update(encodedData)
       .digest("base64url");
 

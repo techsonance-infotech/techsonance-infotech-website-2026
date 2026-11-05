@@ -35,7 +35,10 @@ export async function POST(req: Request) {
     let resumeFile: File | undefined;
     let siteId: string | undefined;
 
-    if (contentType.includes("multipart/form-data") || contentType.includes("application/x-www-form-urlencoded")) {
+    if (
+      contentType.includes("multipart/form-data") ||
+      contentType.includes("application/x-www-form-urlencoded")
+    ) {
       const formData = await req.formData();
 
       // Honeypot check
@@ -65,9 +68,16 @@ export async function POST(req: Request) {
           try {
             const parsed = JSON.parse(rawSkills);
             if (Array.isArray(parsed)) skills = parsed.map(String);
-            else skills = rawSkills.split(",").map((s) => s.trim()).filter(Boolean);
+            else
+              skills = rawSkills
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
           } catch {
-            skills = rawSkills.split(",").map((s) => s.trim()).filter(Boolean);
+            skills = rawSkills
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean);
           }
         }
       }
@@ -96,12 +106,18 @@ export async function POST(req: Request) {
       if (Array.isArray(body.skills)) {
         skills = body.skills.map(String);
       } else if (typeof body.skills === "string") {
-        skills = body.skills.split(",").map((s: string) => s.trim()).filter(Boolean);
+        skills = body.skills
+          .split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean);
       }
     }
 
     if (!name) {
-      return NextResponse.json({ ok: false, error: CAREER_ERRORS.FULL_NAME_REQUIRED }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: CAREER_ERRORS.FULL_NAME_REQUIRED },
+        { status: 400 },
+      );
     }
 
     if (!email) {

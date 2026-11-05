@@ -42,15 +42,14 @@ export const CAREER_ERRORS = {
   RESUME_TOO_LARGE: `Resume file size exceeds the maximum limit of ${MAX_RESUME_SIZE_LABEL}.`,
   RESUME_BAD_FORMAT:
     "Unsupported resume format. Please upload a PDF or Word document (.pdf, .docx, .doc).",
-  RESUME_PDF_MAGIC: "File content does not match allowed format. PDF magic bytes verification failed.",
+  RESUME_PDF_MAGIC:
+    "File content does not match allowed format. PDF magic bytes verification failed.",
   RESUME_DOCX_MAGIC:
     "File content does not match allowed format. DOCX magic bytes verification failed.",
 
-  PRIVACY_CONSENT_REQUIRED:
-    "You must accept the privacy policy to submit an application.",
+  PRIVACY_CONSENT_REQUIRED: "You must accept the privacy policy to submit an application.",
   JOB_NOT_FOUND: "The specified job opening does not exist.",
-  JOB_NOT_ACCEPTING:
-    "This opening is currently closed and no longer accepting applications.",
+  JOB_NOT_ACCEPTING: "This opening is currently closed and no longer accepting applications.",
   JOB_DEADLINE_PASSED: "The application deadline for this opening has passed.",
   DUPLICATE_APPLICATION:
     "Already applied: You have already submitted an application for this role with this email address.",
@@ -98,6 +97,10 @@ export const CAREER_ERRORS = {
   EMAIL_REQUIRED: "Email address is required",
   RESUME_DOCUMENT_REQUIRED: "Resume document is required",
   FULL_NAME_REQUIRED: "Full name is required.",
+  ROLE_REQUIRED: "Role applied for is required.",
+  MESSAGE_REQUIRED: "Message or cover letter must be at least 5 characters.",
+  INQUIRY_RECEIVED_SUCCESS: "Career inquiry submitted successfully.",
+  CAREER_INQUIRY_EMAIL_FAIL: "Failed to send career inquiry notification email.",
   UNEXPECTED_APPLICATION_ERROR: "An unexpected error occurred while processing your application.",
   UNEXPECTED_TALENT_POOL_ERROR: "An unexpected error occurred while processing your submission.",
 
@@ -106,7 +109,8 @@ export const CAREER_ERRORS = {
   RETURN_FEEDBACK_REQUIRED: "Feedback comment is required when returning a role to draft",
   JOB_TITLE_AND_SLUG_REQUIRED: "Job title and slug are required",
   CANNOT_SCHEDULE_WITHOUT_DATE: "Cannot schedule job without a publishAt date",
-  RECRUITER_APPROVAL_REQUIRED: "Approval required: Recruiters must submit role to IN_REVIEW for approval before publishing",
+  RECRUITER_APPROVAL_REQUIRED:
+    "Approval required: Recruiters must submit role to IN_REVIEW for approval before publishing",
 } as const;
 
 // ─── Audit / action event names ───────────────────────────────────────────────

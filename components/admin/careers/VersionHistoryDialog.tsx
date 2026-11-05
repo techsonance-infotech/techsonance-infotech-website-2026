@@ -179,9 +179,7 @@ export function VersionHistoryDialog({
                   <div className="flex items-center justify-between gap-3">
                     <button
                       type="button"
-                      onClick={() =>
-                        setExpandedVersionId(isExpanded ? null : ver.id)
-                      }
+                      onClick={() => setExpandedVersionId(isExpanded ? null : ver.id)}
                       className="flex items-center gap-2 text-left flex-1"
                     >
                       {isExpanded ? (
@@ -199,9 +197,7 @@ export function VersionHistoryDialog({
                               Current Active
                             </span>
                           )}
-                          <span className="text-[11px] text-slate-400">
-                            {dateStr}
-                          </span>
+                          <span className="text-[11px] text-slate-400">{dateStr}</span>
                         </div>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
                           {ver.snapshot?.title || "Untitled Job"} &bull;{" "}
@@ -272,12 +268,7 @@ export function VersionHistoryDialog({
 
         {/* Footer */}
         <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onClose}
-            className="rounded-xl"
-          >
+          <Button type="button" variant="outline" onClick={onClose} className="rounded-xl">
             Close
           </Button>
         </div>

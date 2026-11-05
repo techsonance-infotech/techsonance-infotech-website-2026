@@ -41,7 +41,14 @@ export interface GeoServiceDetail {
   projectTimeline: string;
 }
 
-const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+import { getPublicEnv } from "@/lib/env/public";
+
+let envUrl: string | undefined;
+try {
+  envUrl = getPublicEnv().NEXT_PUBLIC_SITE_URL?.trim();
+} catch {
+  envUrl = undefined;
+}
 export const BASE_URL = (() => {
   if (!envUrl) return "https://www.techsonance.co.in";
   if (envUrl.includes("techsonance.co.in")) return "https://www.techsonance.co.in";

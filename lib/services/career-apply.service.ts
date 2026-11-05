@@ -1,7 +1,7 @@
 import "server-only";
 import crypto from "node:crypto";
 import { inject } from "@needle-di/core";
-import { DRIZZLE_DB_TOKEN, ENV_CONFIG_TOKEN, SUPABASE_CLIENT_TOKEN } from "@/lib/di/tokens";
+import { ENV_CONFIG_TOKEN, SUPABASE_CLIENT_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database/index";
 import { ApplicationStatus, JobExperienceLevel } from "@/lib/database/enum/content.enum";
 import { AppError } from "@/lib/errors";
@@ -15,6 +15,7 @@ import {
   renderCandidateConfirmationEmail,
   renderRecruiterAlertEmail,
   renderTalentPoolConfirmationEmail,
+  renderCareerInquiryEmail,
 } from "./career-email.template";
 import {
   CAREER_ERRORS,
@@ -52,7 +53,15 @@ export interface ApplicationSubmitPayload {
   portfolioUrl?: string;
   githubUrl?: string;
   linkedinUrl?: string;
-  resumeFile: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer };
+  resumeFile:
+    | File
+    | {
+        name: string;
+        size: number;
+        type: string;
+        arrayBuffer?: () => Promise<ArrayBuffer>;
+        buffer?: Buffer | ArrayBuffer;
+      };
   coverLetter?: string;
   noticePeriodWeeks?: number;
   screeningAnswers?: ScreeningAnswerInput[];
@@ -71,8 +80,33 @@ export interface TalentPoolSubmitPayload {
   preferredRole?: string;
   experienceLevel?: string;
   portfolioUrl?: string;
-  resumeFile?: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer };
+  resumeFile?:
+    | File
+    | {
+        name: string;
+        size: number;
+        type: string;
+        arrayBuffer?: () => Promise<ArrayBuffer>;
+        buffer?: Buffer | ArrayBuffer;
+      };
   notes?: string;
+}
+
+export interface CareerInquiryPayload {
+  fullName: string;
+  email: string;
+  role: string;
+  message: string;
+  resumeFile?:
+    | File
+    | {
+        name: string;
+        size: number;
+        type: string;
+        arrayBuffer?: () => Promise<ArrayBuffer>;
+        buffer?: Buffer | ArrayBuffer;
+      }
+    | null;
 }
 
 const ALLOWED_MIME_TYPES = ALLOWED_RESUME_MIME_TYPES;
@@ -91,7 +125,7 @@ export class CareerApplyService {
   private repository: CareerApplicationsRepository;
 
   constructor(
-    private db: Database = inject(DRIZZLE_DB_TOKEN),
+    repoOrDb: CareerApplicationsRepository | Database = inject(CareerApplicationsRepository),
     emailService?: EmailService,
     supabaseAdmin?: SupabaseClient | null,
     env?: Env,
@@ -107,12 +141,10 @@ export class CareerApplyService {
 
     if (repository) {
       this.repository = repository;
+    } else if (repoOrDb instanceof CareerApplicationsRepository) {
+      this.repository = repoOrDb;
     } else {
-      try {
-        this.repository = inject(CareerApplicationsRepository);
-      } catch {
-        this.repository = new CareerApplicationsRepository(this.db);
-      }
+      this.repository = new CareerApplicationsRepository(repoOrDb);
     }
 
     if (!this.emailService) {
@@ -135,7 +167,17 @@ export class CareerApplyService {
   /**
    * Validates resume file size, extension, MIME type, and binary magic bytes.
    */
-  async validateResume(file: File | { name: string; size: number; type: string; arrayBuffer?: () => Promise<ArrayBuffer>; buffer?: Buffer | ArrayBuffer }): Promise<Uint8Array> {
+  async validateResume(
+    file:
+      | File
+      | {
+          name: string;
+          size: number;
+          type: string;
+          arrayBuffer?: () => Promise<ArrayBuffer>;
+          buffer?: Buffer | ArrayBuffer;
+        },
+  ): Promise<Uint8Array> {
     if (!file) {
       throw new AppError("BAD_REQUEST", CAREER_ERRORS.RESUME_REQUIRED);
     }
@@ -149,10 +191,7 @@ export class CareerApplyService {
       fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".doc");
 
     if (!ALLOWED_MIME_TYPES.has(file.type) && !isAllowedExt) {
-      throw new AppError(
-        "UNSUPPORTED_MEDIA",
-        CAREER_ERRORS.RESUME_BAD_FORMAT,
-      );
+      throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_BAD_FORMAT);
     }
 
     // Read bytes for magic byte verification
@@ -182,10 +221,7 @@ export class CareerApplyService {
           bytes[4] === PDF_MAGIC[4];
 
         if (!matchesPdf) {
-          throw new AppError(
-            "UNSUPPORTED_MEDIA",
-            CAREER_ERRORS.RESUME_PDF_MAGIC,
-          );
+          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_PDF_MAGIC);
         }
       } else if (isDocxExt) {
         const matchesDocx =
@@ -195,10 +231,7 @@ export class CareerApplyService {
           bytes[3] === DOCX_MAGIC[3];
 
         if (!matchesDocx) {
-          throw new AppError(
-            "UNSUPPORTED_MEDIA",
-            CAREER_ERRORS.RESUME_DOCX_MAGIC,
-          );
+          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_DOCX_MAGIC);
         }
       }
     }
@@ -272,15 +305,14 @@ export class CareerApplyService {
     const normalizedEmail = payload.email.trim().toLowerCase();
     const existing = await this.repository.findExistingApplication(payload.jobId, normalizedEmail);
     if (existing) {
-      throw new AppError(
-        "CONFLICT",
-        CAREER_ERRORS.DUPLICATE_APPLICATION,
-      );
+      throw new AppError("CONFLICT", CAREER_ERRORS.DUPLICATE_APPLICATION);
     }
 
     // 5. Evaluate screening questions for knockout triggers
     let knockoutTriggered = false;
-    const questions = Array.isArray(job.screeningQuestions) ? (job.screeningQuestions as any[]) : [];
+    const questions = Array.isArray(job.screeningQuestions)
+      ? (job.screeningQuestions as any[])
+      : [];
 
     if (questions.length > 0 && payload.screeningAnswers && payload.screeningAnswers.length > 0) {
       for (const answer of payload.screeningAnswers) {
@@ -385,11 +417,15 @@ export class CareerApplyService {
           text: candidateEmail.text,
           html: candidateEmail.html,
         })
-        .catch((err) => logger.error(`Failed to send candidate confirmation email: ${String(err)}`));
+        .catch((err) =>
+          logger.error(`Failed to send candidate confirmation email: ${String(err)}`),
+        );
 
       // Email B: Recruiter notification
       const recruiterRecipient =
-        ((this.envConfig as Record<string, unknown>)?.RECRUITER_NOTIFICATION_EMAIL as string | undefined) ??
+        ((this.envConfig as Record<string, unknown>)?.RECRUITER_NOTIFICATION_EMAIL as
+          | string
+          | undefined) ??
         this.envConfig?.ADMIN_EMAIL ??
         DEFAULT_RECRUITER_EMAIL;
 
@@ -439,7 +475,10 @@ export class CareerApplyService {
     let resumeStoragePath: string | null = null;
     if (payload.resumeFile) {
       const fileBytes = await this.validateResume(payload.resumeFile);
-      const sanitizedName = (payload.resumeFile.name || "resume.pdf").replace(/[^a-zA-Z0-9._-]/g, "_");
+      const sanitizedName = (payload.resumeFile.name || "resume.pdf").replace(
+        /[^a-zA-Z0-9._-]/g,
+        "_",
+      );
       const uniqueId = crypto.randomUUID();
       resumeStoragePath = `${siteId}/talent-pool/${uniqueId}_${sanitizedName}`;
 
@@ -488,9 +527,122 @@ export class CareerApplyService {
           text: talentEmail.text,
           html: talentEmail.html,
         })
-        .catch((err) => logger.error(`Failed to send talent pool confirmation email: ${String(err)}`));
+        .catch((err) =>
+          logger.error(`Failed to send talent pool confirmation email: ${String(err)}`),
+        );
     }
 
     return talent;
+  }
+
+  /**
+   * Submits a general career inquiry:
+   * - Validates resume file if attached (extension, size, magic bytes)
+   * - Saves candidate inquiry to talent pool table for persistent tracking
+   * - Dispatches styled recruiter notification email with optional resume attachment
+   */
+  async submitCareerInquiry(
+    payload: CareerInquiryPayload,
+  ): Promise<{ ok: boolean; message: string }> {
+    const fullName = payload.fullName.trim();
+    const email = payload.email.trim().toLowerCase();
+    const role = payload.role.trim();
+    const message = payload.message.trim();
+
+    if (!fullName) {
+      throw new AppError("BAD_REQUEST", CAREER_ERRORS.FULL_NAME_REQUIRED);
+    }
+    if (!email) {
+      throw new AppError("BAD_REQUEST", CAREER_ERRORS.EMAIL_REQUIRED);
+    }
+    if (!role) {
+      throw new AppError("BAD_REQUEST", CAREER_ERRORS.ROLE_REQUIRED);
+    }
+    if (!message || message.length < 5) {
+      throw new AppError("BAD_REQUEST", CAREER_ERRORS.MESSAGE_REQUIRED);
+    }
+
+    let resumeStoragePath: string | null = null;
+    const attachments: Array<{ filename: string; content: Buffer }> = [];
+
+    if (payload.resumeFile && payload.resumeFile.size > 0) {
+      const resumeBytes = await this.validateResume(payload.resumeFile);
+      const buffer = Buffer.from(resumeBytes);
+      attachments.push({
+        filename: payload.resumeFile.name || "resume.pdf",
+        content: buffer,
+      });
+
+      const siteId = (await this.repository.getDefaultSiteId()) || NIL_SITE_ID;
+      const sanitizedName = (payload.resumeFile.name || "resume.pdf").replace(
+        /[^a-zA-Z0-9._-]/g,
+        "_",
+      );
+      const uniqueId = crypto.randomUUID();
+      resumeStoragePath = `${siteId}/inquiries/${uniqueId}_${sanitizedName}`;
+
+      if (this.supabaseAdmin?.storage) {
+        try {
+          await this.supabaseAdmin.storage
+            .from(RESUME_BUCKET)
+            .upload(resumeStoragePath, resumeBytes, {
+              contentType: payload.resumeFile.type || "application/pdf",
+              upsert: false,
+            });
+        } catch (uploadErr) {
+          logger.warn(`Inquiry resume storage upload warning: ${String(uploadErr)}`);
+        }
+      }
+    }
+
+    // Persist inquiry to talent pool table
+    const siteId = (await this.repository.getDefaultSiteId()) || NIL_SITE_ID;
+    try {
+      await this.repository.insertTalentPoolCandidate({
+        siteId,
+        name: fullName,
+        email,
+        phone: null,
+        skills: [],
+        preferredRole: role,
+        experienceLevel: JobExperienceLevel.MID,
+        portfolioUrl: null,
+        resumeStoragePath,
+        notes: message,
+        consentDate: new Date(),
+      });
+    } catch (dbErr) {
+      logger.warn(`Could not save inquiry candidate to talent pool: ${String(dbErr)}`);
+    }
+
+    // Render & dispatch recruiter alert email
+    if (this.emailService) {
+      const rendered = renderCareerInquiryEmail({
+        fullName,
+        email,
+        role,
+        message,
+        hasResume: attachments.length > 0,
+        resumeName: payload.resumeFile?.name,
+      });
+
+      const adminEmail = this.envConfig.ADMIN_EMAIL || DEFAULT_RECRUITER_EMAIL;
+
+      const result = await this.emailService.sendMail({
+        from: `"${fullName}" <${this.envConfig.SMTP_USER || DEFAULT_RECRUITER_EMAIL}>`,
+        to: adminEmail,
+        subject: rendered.subject,
+        text: rendered.text,
+        html: rendered.html,
+        replyTo: email,
+        attachments,
+      });
+
+      if (!result.ok) {
+        throw new AppError("INTERNAL", result.error || CAREER_ERRORS.CAREER_INQUIRY_EMAIL_FAIL);
+      }
+    }
+
+    return { ok: true, message: CAREER_ERRORS.INQUIRY_RECEIVED_SUCCESS };
   }
 }

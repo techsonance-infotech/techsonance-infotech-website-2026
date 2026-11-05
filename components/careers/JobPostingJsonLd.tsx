@@ -17,7 +17,7 @@ function mapEmploymentType(type?: string): string {
 export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknown> {
   const isRemote = Boolean(
     (job.workMode && job.workMode.toLowerCase() === "remote") ||
-      (job.location && job.location.toLowerCase().includes("remote")),
+    (job.location && job.location.toLowerCase().includes("remote")),
   );
 
   const siteUrl = BASE_URL || "https://www.techsonance.co.in";

@@ -23,15 +23,32 @@ Owns: Zod conventions, `AppError`/`Result`, `runAction`, form parsing, logging. 
 import type { z } from "zod";
 
 export const ERROR_CODES = [
-  "BAD_REQUEST", "VALIDATION", "UNAUTHENTICATED", "FORBIDDEN", "NOT_FOUND", "CONFLICT",
-  "PAYLOAD_TOO_LARGE", "UNSUPPORTED_MEDIA", "RATE_LIMITED", "UNAVAILABLE", "INTERNAL",
+  "BAD_REQUEST",
+  "VALIDATION",
+  "UNAUTHENTICATED",
+  "FORBIDDEN",
+  "NOT_FOUND",
+  "CONFLICT",
+  "PAYLOAD_TOO_LARGE",
+  "UNSUPPORTED_MEDIA",
+  "RATE_LIMITED",
+  "UNAVAILABLE",
+  "INTERNAL",
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 
 export const STATUS_BY_CODE = {
-  BAD_REQUEST: 400, VALIDATION: 422, UNAUTHENTICATED: 401, FORBIDDEN: 403, NOT_FOUND: 404,
-  CONFLICT: 409, PAYLOAD_TOO_LARGE: 413, UNSUPPORTED_MEDIA: 415, RATE_LIMITED: 429,
-  UNAVAILABLE: 503, INTERNAL: 500,
+  BAD_REQUEST: 400,
+  VALIDATION: 422,
+  UNAUTHENTICATED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  PAYLOAD_TOO_LARGE: 413,
+  UNSUPPORTED_MEDIA: 415,
+  RATE_LIMITED: 429,
+  UNAVAILABLE: 503,
+  INTERNAL: 500,
 } as const satisfies Record<ErrorCode, number>;
 export type FieldErrors = Record<string, string[]>;
 export class AppError extends Error {
@@ -100,7 +117,12 @@ async function execute<I extends z.ZodType, O extends z.ZodType, U>(
     const user = await authenticate(requestId); // 1. authenticate (+ rate limit for public)
     const input = def.input.safeParse(raw); // 2. validate
     if (!input.success) {
-      return fail({ code: "VALIDATION", message: "Invalid input", fieldErrors: toFieldErrors(input.error), requestId });
+      return fail({
+        code: "VALIDATION",
+        message: "Invalid input",
+        fieldErrors: toFieldErrors(input.error),
+        requestId,
+      });
     }
     const data = await def.handler({ input: input.data, user, requestId }); // 3. authorise + act
     const out = def.output.safeParse(data); // 4. parse output (strips extra columns)
@@ -129,10 +151,14 @@ export function runPublicAction<I extends z.ZodType, O extends z.ZodType>(
   def: Def<I, O, User | null>,
 ) {
   return (raw: unknown): Promise<Result<z.output<O>>> =>
-    execute(def, async (requestId) => {
-      await enforceRateLimit(policy, requestId); // throws AppError("RATE_LIMITED", …, { retryAfterSec })
-      return getOptionalUser();
-    }, raw);
+    execute(
+      def,
+      async (requestId) => {
+        await enforceRateLimit(policy, requestId); // throws AppError("RATE_LIMITED", …, { retryAfterSec })
+        return getOptionalUser();
+      },
+      raw,
+    );
 }
 ```
 
@@ -157,7 +183,8 @@ export async function createBookingAction(
   const result = await runPublicAction(RATE_LIMITS.bookingCreate, {
     input: createBookingSchema,
     output: createdBookingSchema,
-    handler: ({ input, requestId }) => getContainer().get(BookingService).create(input, { requestId }),
+    handler: ({ input, requestId }) =>
+      getContainer().get(BookingService).create(input, { requestId }),
   })(raw);
   return { result, values: echoValues(raw) };
 }

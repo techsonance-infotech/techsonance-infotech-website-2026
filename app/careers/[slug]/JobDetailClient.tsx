@@ -81,16 +81,11 @@ interface ApplicationFormValues {
   website_url?: string;
 }
 
-export default function JobDetailClient({
-  job,
-  similarJobs = [],
-}: JobDetailClientProps) {
+export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClientProps) {
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
-  const [formStatus, setFormStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -120,9 +115,7 @@ export default function JobDetailClient({
     name: string;
     email: string;
   } | null>(null);
-  const [screeningAnswers, setScreeningAnswers] = useState<
-    Record<string, string | boolean>
-  >({});
+  const [screeningAnswers, setScreeningAnswers] = useState<Record<string, string | boolean>>({});
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
 
@@ -182,13 +175,10 @@ export default function JobDetailClient({
     }
 
     const name = file.name.toLowerCase();
-    const isAllowedExt =
-      name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".doc");
+    const isAllowedExt = name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".doc");
 
     if (!isAllowedExt) {
-      setFileError(
-        "Invalid format. Please upload a PDF or Word (.doc/.docx) document.",
-      );
+      setFileError("Invalid format. Please upload a PDF or Word (.doc/.docx) document.");
       setResumeFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
@@ -224,9 +214,7 @@ export default function JobDetailClient({
         if (sq.required) {
           const val = screeningAnswers[sq.id];
           if (val === undefined || val === "") {
-            setFormError(
-              `Please answer the screening question: "${sq.question}"`,
-            );
+            setFormError(`Please answer the screening question: "${sq.question}"`);
             return;
           }
         }
@@ -247,21 +235,14 @@ export default function JobDetailClient({
       data.append("candidateName", values.fullName.trim());
       data.append("email", values.email.trim());
       if (values.phone) data.append("phone", values.phone.trim());
-      if (values.currentLocation)
-        data.append("currentLocation", values.currentLocation.trim());
-      if (values.portfolioUrl)
-        data.append("portfolioUrl", values.portfolioUrl.trim());
+      if (values.currentLocation) data.append("currentLocation", values.currentLocation.trim());
+      if (values.portfolioUrl) data.append("portfolioUrl", values.portfolioUrl.trim());
       if (values.githubUrl) data.append("githubUrl", values.githubUrl.trim());
-      if (values.linkedinUrl)
-        data.append("linkedinUrl", values.linkedinUrl.trim());
-      if (values.coverLetter)
-        data.append("coverLetter", values.coverLetter.trim());
+      if (values.linkedinUrl) data.append("linkedinUrl", values.linkedinUrl.trim());
+      if (values.coverLetter) data.append("coverLetter", values.coverLetter.trim());
       data.append("noticePeriodWeeks", String(values.noticePeriodWeeks || 0));
       data.append("privacyConsent", values.privacyConsent ? "true" : "false");
-      data.append(
-        "talentPoolConsent",
-        values.talentPoolConsent ? "true" : "false",
-      );
+      data.append("talentPoolConsent", values.talentPoolConsent ? "true" : "false");
       data.append("source", "careers_page");
 
       // Format screening answers
@@ -294,8 +275,7 @@ export default function JobDetailClient({
           );
         }
         throw new Error(
-          result.error ||
-            "Failed to submit application. Please verify your details.",
+          result.error || "Failed to submit application. Please verify your details.",
         );
       }
 
@@ -306,8 +286,7 @@ export default function JobDetailClient({
       if (fileInputRef.current) fileInputRef.current.value = "";
       reset();
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Something went wrong.";
+      const message = err instanceof Error ? err.message : "Something went wrong.";
       setFormError(message);
       setFormStatus("error");
     }
@@ -315,12 +294,7 @@ export default function JobDetailClient({
 
   const formatSalary = () => {
     if (!job.showSalaryPublicly) return null;
-    const {
-      salaryMin,
-      salaryMax,
-      salaryCurrency = "INR",
-      salaryPeriod = "year",
-    } = job;
+    const { salaryMin, salaryMax, salaryCurrency = "INR", salaryPeriod = "year" } = job;
     if (salaryMin === undefined && salaryMax === undefined) return null;
 
     const formatter = new Intl.NumberFormat("en-IN", {
@@ -351,9 +325,7 @@ export default function JobDetailClient({
   const formattedSalary = formatSalary();
 
   const hiringSteps =
-    job.hiringProcess && job.hiringProcess.length > 0
-      ? job.hiringProcess
-      : DEFAULT_HIRING_STEPS;
+    job.hiringProcess && job.hiringProcess.length > 0 ? job.hiringProcess : DEFAULT_HIRING_STEPS;
 
   const eeocStatement = job.equalOpportunityStatement || DEFAULT_EEOC_STATEMENT;
 
@@ -413,18 +385,13 @@ export default function JobDetailClient({
 
               {canApply && (
                 <div className="flex sm:flex-col gap-3 shrink-0">
-                  {job.applicationMethod === "external" &&
-                  job.externalApplyUrl ? (
+                  {job.applicationMethod === "external" && job.externalApplyUrl ? (
                     <Button
                       asChild
                       size="lg"
                       className="w-full sm:w-auto font-bold shadow-md shadow-blue-500/10"
                     >
-                      <a
-                        href={job.externalApplyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                         <span>Apply Externally</span>
                         <ExternalLink className="w-4 h-4 ml-1.5" />
                       </a>
@@ -543,11 +510,7 @@ export default function JobDetailClient({
                   className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-[#0A66C2] hover:border-[#0A66C2]/30 transition-colors"
                   aria-label="Share on LinkedIn"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                   </svg>
                 </a>
@@ -561,11 +524,7 @@ export default function JobDetailClient({
                   className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-black hover:border-black/30 transition-colors"
                   aria-label="Share on X / Twitter"
                 >
-                  <svg
-                    className="w-3.5 h-3.5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
                 </a>
@@ -646,30 +605,27 @@ export default function JobDetailClient({
               )}
 
               {/* 4. Preferred Qualifications */}
-              {job.preferredQualifications &&
-                job.preferredQualifications.length > 0 && (
-                  <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                    <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-violet-600" />
-                      <span>
-                        {"// Preferred Qualifications (Bonus Points)"}
-                      </span>
-                    </h2>
-                    <ul className="space-y-4">
-                      {job.preferredQualifications.map((pref, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700"
-                        >
-                          <span className="w-5 h-5 rounded-full bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 shrink-0 mt-0.5 text-xs font-bold">
-                            +
-                          </span>
-                          <span className="leading-snug">{pref}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                )}
+              {job.preferredQualifications && job.preferredQualifications.length > 0 && (
+                <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+                  <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-violet-600" />
+                    <span>{"// Preferred Qualifications (Bonus Points)"}</span>
+                  </h2>
+                  <ul className="space-y-4">
+                    {job.preferredQualifications.map((pref, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700"
+                      >
+                        <span className="w-5 h-5 rounded-full bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 shrink-0 mt-0.5 text-xs font-bold">
+                          +
+                        </span>
+                        <span className="leading-snug">{pref}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
               {/* 5. Benefits & Perks */}
               {job.benefits && job.benefits.length > 0 && (
@@ -723,9 +679,7 @@ export default function JobDetailClient({
                       <div className="text-xs font-black font-mono text-[#1155CC] tracking-wider">
                         STEP {step.step}
                       </div>
-                      <h3 className="text-base font-bold text-slate-900">
-                        {step.title}
-                      </h3>
+                      <h3 className="text-base font-bold text-slate-900">{step.title}</h3>
                       {step.desc && (
                         <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                           {step.desc}
@@ -760,36 +714,22 @@ export default function JobDetailClient({
 
                 <div className="space-y-4 text-xs">
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">
-                      Role Title
-                    </span>
-                    <span className="font-bold text-slate-800 text-sm">
-                      {job.title}
-                    </span>
+                    <span className="text-slate-400 font-semibold block mb-0.5">Role Title</span>
+                    <span className="font-bold text-slate-800 text-sm">{job.title}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">
-                      Department
-                    </span>
-                    <span className="font-bold text-slate-800">
-                      {job.department}
-                    </span>
+                    <span className="text-slate-400 font-semibold block mb-0.5">Department</span>
+                    <span className="font-bold text-slate-800">{job.department}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">
-                      Location
-                    </span>
-                    <span className="font-bold text-slate-800">
-                      {job.location}
-                    </span>
+                    <span className="text-slate-400 font-semibold block mb-0.5">Location</span>
+                    <span className="font-bold text-slate-800">{job.location}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 font-semibold block mb-0.5">
                       Work Arrangement
                     </span>
-                    <span className="font-bold text-slate-800">
-                      {job.workMode || "Hybrid"}
-                    </span>
+                    <span className="font-bold text-slate-800">{job.workMode || "Hybrid"}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 font-semibold block mb-0.5">
@@ -818,18 +758,13 @@ export default function JobDetailClient({
 
                 {canApply ? (
                   <div className="pt-4 border-t border-slate-100">
-                    {job.applicationMethod === "external" &&
-                    job.externalApplyUrl ? (
+                    {job.applicationMethod === "external" && job.externalApplyUrl ? (
                       <Button
                         asChild
                         size="lg"
                         className="w-full font-bold shadow-md shadow-blue-500/10"
                       >
-                        <a
-                          href={job.externalApplyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                        <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                           <span>Apply Externally</span>
                           <ExternalLink className="w-4 h-4 ml-1.5" />
                         </a>
@@ -862,20 +797,14 @@ export default function JobDetailClient({
           <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-3 shadow-lg">
             <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
               <div className="truncate">
-                <div className="text-xs font-bold text-slate-900 truncate">
-                  {job.title}
-                </div>
+                <div className="text-xs font-bold text-slate-900 truncate">{job.title}</div>
                 <div className="text-[11px] text-slate-500 truncate">
                   {job.location} • {job.type}
                 </div>
               </div>
               {job.applicationMethod === "external" && job.externalApplyUrl ? (
                 <Button asChild size="sm" className="font-bold shrink-0">
-                  <a
-                    href={job.externalApplyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                     <span>Apply</span>
                     <ExternalLink className="w-3.5 h-3.5 ml-1" />
                   </a>
@@ -932,13 +861,9 @@ export default function JobDetailClient({
                   Application Submitted!
                 </h4>
                 <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong>{submittedCandidate?.name}</strong>. We
-                  have received your application for{" "}
-                  <strong>{job.title}</strong> and sent a confirmation to{" "}
-                  <span className="font-semibold text-slate-900">
-                    {submittedCandidate?.email}
-                  </span>
-                  .
+                  Thank you, <strong>{submittedCandidate?.name}</strong>. We have received your
+                  application for <strong>{job.title}</strong> and sent a confirmation to{" "}
+                  <span className="font-semibold text-slate-900">{submittedCandidate?.email}</span>.
                 </p>
 
                 <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 max-w-md mx-auto text-left space-y-2 mt-4 text-xs text-slate-600">
@@ -946,28 +871,17 @@ export default function JobDetailClient({
                     What happens next:
                   </div>
                   <ul className="list-disc pl-4 space-y-1">
-                    <li>
-                      Our hiring team reviews your resume and project links.
-                    </li>
-                    <li>
-                      If aligned, our recruiter will reach out within 3 business
-                      days.
-                    </li>
+                    <li>Our hiring team reviews your resume and project links.</li>
+                    <li>If aligned, our recruiter will reach out within 3 business days.</li>
                     <li>
                       For questions or data requests, contact{" "}
-                      <span className="font-medium text-[#1155CC]">
-                        careers@techsonance.co.in
-                      </span>
-                      .
+                      <span className="font-medium text-[#1155CC]">careers@techsonance.co.in</span>.
                     </li>
                   </ul>
                 </div>
 
                 <div className="pt-4 flex items-center justify-center gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => handleDialogChange(false)}
-                  >
+                  <Button variant="outline" onClick={() => handleDialogChange(false)}>
                     Close
                   </Button>
                   <Button
@@ -1134,9 +1048,7 @@ export default function JobDetailClient({
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
                       Resume / CV (PDF or DOCX, max 5MB){" "}
-                      {job.resumeRequired !== false && (
-                        <span className="text-rose-500">*</span>
-                      )}
+                      {job.resumeRequired !== false && <span className="text-rose-500">*</span>}
                     </label>
                     <div className="mt-1 flex items-center justify-center px-4 py-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-blue-400 transition-colors bg-slate-50/50">
                       <input
@@ -1153,9 +1065,7 @@ export default function JobDetailClient({
                       >
                         <Upload className="w-5 h-5 text-slate-400" />
                         <span className="text-xs font-semibold text-slate-700">
-                          {resumeFile
-                            ? resumeFile.name
-                            : "Click to select a resume file"}
+                          {resumeFile ? resumeFile.name : "Click to select a resume file"}
                         </span>
                         <span className="text-[10px] text-slate-400">
                           PDF or Word (.docx) up to 5MB • Validated before upload
@@ -1163,9 +1073,7 @@ export default function JobDetailClient({
                       </label>
                     </div>
                     {fileError && (
-                      <p className="text-xs text-rose-600 font-semibold mt-1.5">
-                        {fileError}
-                      </p>
+                      <p className="text-xs text-rose-600 font-semibold mt-1.5">{fileError}</p>
                     )}
                   </div>
 
@@ -1177,9 +1085,7 @@ export default function JobDetailClient({
                         <span className="text-rose-500">*</span>
                       )}
                       {job.coverLetterRequirement === "OPTIONAL" && (
-                        <span className="text-slate-400 font-normal lowercase">
-                          (optional)
-                        </span>
+                        <span className="text-slate-400 font-normal lowercase">(optional)</span>
                       )}
                     </label>
                     <textarea
@@ -1202,9 +1108,7 @@ export default function JobDetailClient({
                           <div key={sq.id || index} className="space-y-1.5">
                             <label className="block text-xs font-semibold text-slate-800">
                               {sq.question}{" "}
-                              {sq.required && (
-                                <span className="text-rose-500">*</span>
-                              )}
+                              {sq.required && <span className="text-rose-500">*</span>}
                             </label>
                             {sq.type === "boolean" ? (
                               <div className="flex items-center gap-4 text-xs font-medium text-slate-700">
@@ -1237,9 +1141,7 @@ export default function JobDetailClient({
                                   <span>No</span>
                                 </label>
                               </div>
-                            ) : sq.type === "choice" &&
-                              sq.options &&
-                              sq.options.length > 0 ? (
+                            ) : sq.type === "choice" && sq.options && sq.options.length > 0 ? (
                               <select
                                 value={String(screeningAnswers[sq.id] || "")}
                                 onChange={(e) =>
@@ -1326,8 +1228,8 @@ export default function JobDetailClient({
                         {...register("talentPoolConsent")}
                       />
                       <span>
-                        Keep my profile and resume in the TechSonance Talent Pool
-                        for future roles matching my skills.
+                        Keep my profile and resume in the TechSonance Talent Pool for future roles
+                        matching my skills.
                       </span>
                     </label>
                   </div>
@@ -1349,9 +1251,7 @@ export default function JobDetailClient({
                     disabled={formStatus === "loading"}
                     className="font-bold bg-[#1155CC] hover:bg-[#0d44a4] text-white rounded-xl px-6 shadow-sm"
                   >
-                    {formStatus === "loading"
-                      ? "Submitting Application..."
-                      : "Submit Application"}
+                    {formStatus === "loading" ? "Submitting Application..." : "Submit Application"}
                   </Button>
                 </div>
               </form>

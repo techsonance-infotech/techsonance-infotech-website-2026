@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import type { GenerationJob } from "@/lib/database/schema/ai/generation-job.schema";
+import type { AdminGenerationJob } from "@/lib/types/admin.types";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -46,7 +46,7 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function AdminAIPage() {
-  const [jobs, setJobs] = useState<GenerationJob[]>([]);
+  const [jobs, setJobs] = useState<AdminGenerationJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [topicText, setTopicText] = useState("");
   const [category, setCategory] = useState("Engineering");

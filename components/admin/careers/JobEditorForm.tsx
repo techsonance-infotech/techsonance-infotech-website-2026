@@ -92,12 +92,29 @@ export const DEFAULT_JOB_FORM: JobFormData = {
     "Annual learning & conference allowance",
     "Flexible hybrid schedule with remote Fridays",
   ],
-  aboutTeam: "TechSonance Engineering builds scalable, high-throughput web architectures and enterprise platforms.",
+  aboutTeam:
+    "TechSonance Engineering builds scalable, high-throughput web architectures and enterprise platforms.",
   hiringProcess: [
-    { step: "01", title: "Profile & Portfolio Review", desc: "Our recruitment leads review your past systems and contributions." },
-    { step: "02", title: "Technical Architecture Session", desc: "Hands-on discussion on engineering patterns and problem solving." },
-    { step: "03", title: "Team & Values Conversation", desc: "Meet your future peers, learn about team dynamics and culture." },
-    { step: "04", title: "Offer & Onboarding", desc: "Formal offer discussion, compensation details, and welcome kit." },
+    {
+      step: "01",
+      title: "Profile & Portfolio Review",
+      desc: "Our recruitment leads review your past systems and contributions.",
+    },
+    {
+      step: "02",
+      title: "Technical Architecture Session",
+      desc: "Hands-on discussion on engineering patterns and problem solving.",
+    },
+    {
+      step: "03",
+      title: "Team & Values Conversation",
+      desc: "Meet your future peers, learn about team dynamics and culture.",
+    },
+    {
+      step: "04",
+      title: "Offer & Onboarding",
+      desc: "Formal offer discussion, compensation details, and welcome kit.",
+    },
   ],
   equalOpportunityStatement:
     "TechSonance Infotech LLP is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees regardless of race, gender, background, or identity.",
@@ -332,7 +349,11 @@ export function JobEditorForm({
       "hiringProcess",
       [
         ...currentSteps,
-        { step: nextStepNum, title: "New Interview Step", desc: "Description of the assessment or meeting." },
+        {
+          step: nextStepNum,
+          title: "New Interview Step",
+          desc: "Description of the assessment or meeting.",
+        },
       ],
       { shouldDirty: true },
     );
@@ -377,7 +398,10 @@ export function JobEditorForm({
           <div>
             <h2 className="text-base font-black text-slate-900 dark:text-white font-sora flex items-center gap-2">
               <span>{job.title || "Untitled Draft Position"}</span>
-              <Badge variant="outline" className="text-[10px] uppercase font-mono tracking-wider font-bold">
+              <Badge
+                variant="outline"
+                className="text-[10px] uppercase font-mono tracking-wider font-bold"
+              >
                 {job.status || "DRAFT"}
               </Badge>
             </h2>
@@ -399,7 +423,9 @@ export function JobEditorForm({
             ) : lastSavedAt ? (
               <>
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Saved {lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                <span>
+                  Saved {lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </span>
               </>
             ) : (
               <span>All changes local</span>
@@ -607,7 +633,8 @@ export function JobEditorForm({
                   className="rounded-xl text-xs font-medium"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Specify a single primary city hub or 'Remote'. Multiple locations must be posted as separate roles.
+                  Specify a single primary city hub or 'Remote'. Multiple locations must be posted
+                  as separate roles.
                 </p>
               </div>
 
@@ -670,7 +697,8 @@ export function JobEditorForm({
                   Role Description, Requirements & Perks
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Detailed job overview, core deliverables, technical requirements, and agency perks.
+                  Detailed job overview, core deliverables, technical requirements, and agency
+                  perks.
                 </p>
               </div>
 
@@ -730,7 +758,8 @@ export function JobEditorForm({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Key Responsibilities <span className="text-rose-500">*</span> ({(job.responsibilities || []).length})
+                    Key Responsibilities <span className="text-rose-500">*</span> (
+                    {(job.responsibilities || []).length})
                   </label>
                 </div>
                 <div className="flex gap-2">
@@ -738,7 +767,9 @@ export function JobEditorForm({
                     placeholder="Add a core responsibility or expected impact..."
                     value={newResp}
                     onChange={(e) => setNewResp(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddResponsibility())}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), handleAddResponsibility())
+                    }
                     className="rounded-xl text-xs"
                   />
                   <Button
@@ -776,14 +807,17 @@ export function JobEditorForm({
               {/* Requirements list */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Requirements & Qualifications <span className="text-rose-500">*</span> ({(job.requirements || []).length})
+                  Requirements & Qualifications <span className="text-rose-500">*</span> (
+                  {(job.requirements || []).length})
                 </label>
                 <div className="flex gap-2">
                   <Input
                     placeholder="Add a required skill, qualification, or experience..."
                     value={newReq}
                     onChange={(e) => setNewReq(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddRequirement())}
+                    onKeyDown={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), handleAddRequirement())
+                    }
                     className="rounded-xl text-xs"
                   />
                   <Button
@@ -998,7 +1032,8 @@ export function JobEditorForm({
                     Show Compensation Publicly
                   </div>
                   <div className="text-[11px] text-slate-400 mt-0.5">
-                    Displays salary band on the public careers portal and Schema.org JobPosting JSON-LD.
+                    Displays salary band on the public careers portal and Schema.org JobPosting
+                    JSON-LD.
                   </div>
                 </div>
                 <input
@@ -1126,7 +1161,8 @@ export function JobEditorForm({
                   Candidate Intake & Screening Setup
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Select application pipeline routing, resume requirements, and knockout screening criteria.
+                  Select application pipeline routing, resume requirements, and knockout screening
+                  criteria.
                 </p>
               </div>
 
@@ -1165,7 +1201,9 @@ export function JobEditorForm({
                     <div className="text-xs font-bold text-slate-900 dark:text-white">
                       Resume Required
                     </div>
-                    <div className="text-[10px] text-slate-400">PDF or DOCX upload strictly required</div>
+                    <div className="text-[10px] text-slate-400">
+                      PDF or DOCX upload strictly required
+                    </div>
                   </div>
                   <input
                     type="checkbox"
@@ -1199,7 +1237,8 @@ export function JobEditorForm({
                       Custom Screening Questions ({(job.screeningQuestions || []).length})
                     </div>
                     <p className="text-[11px] text-slate-400">
-                      Configure custom questions with optional knockout triggers for automated alerts.
+                      Configure custom questions with optional knockout triggers for automated
+                      alerts.
                     </p>
                   </div>
                   <Button
@@ -1326,7 +1365,8 @@ export function JobEditorForm({
                   Review, SEO & Publishing Schedule
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Verify role readiness, configure SEO metatags, and submit for executive review or publishing.
+                  Verify role readiness, configure SEO metatags, and submit for executive review or
+                  publishing.
                 </p>
               </div>
 
@@ -1359,7 +1399,9 @@ export function JobEditorForm({
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
                   >
                     <option value="public">Public (Visible in search & sitemap)</option>
-                    <option value="unlisted">Unlisted (Direct link only, excluded from sitemap)</option>
+                    <option value="unlisted">
+                      Unlisted (Direct link only, excluded from sitemap)
+                    </option>
                   </select>
                 </div>
               </div>
@@ -1371,11 +1413,7 @@ export function JobEditorForm({
                   </label>
                   <Input
                     type="datetime-local"
-                    value={
-                      job.publishAt
-                        ? new Date(job.publishAt).toISOString().slice(0, 16)
-                        : ""
-                    }
+                    value={job.publishAt ? new Date(job.publishAt).toISOString().slice(0, 16) : ""}
                     onChange={(e) =>
                       updateField("publishAt", e.target.value ? new Date(e.target.value) : null)
                     }
@@ -1389,11 +1427,7 @@ export function JobEditorForm({
                   </label>
                   <Input
                     type="datetime-local"
-                    value={
-                      job.closesAt
-                        ? new Date(job.closesAt).toISOString().slice(0, 16)
-                        : ""
-                    }
+                    value={job.closesAt ? new Date(job.closesAt).toISOString().slice(0, 16) : ""}
                     onChange={(e) =>
                       updateField("closesAt", e.target.value ? new Date(e.target.value) : null)
                     }

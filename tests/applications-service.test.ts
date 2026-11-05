@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ApplicationsService } from "@/lib/services/applications.service";
+import { AdminApplicationsRepository } from "@/lib/repositories/admin-applications.repository";
 import { ApplicationStatus } from "@/lib/database/enum/content.enum";
 import { AppError } from "@/lib/errors";
 
@@ -7,6 +8,7 @@ describe("ApplicationsService", () => {
   let mockDb: any;
   let mockSupabaseAdmin: any;
   let service: ApplicationsService;
+  let repository: AdminApplicationsRepository;
 
   const mockApp = {
     id: "app-1111-2222-3333",
@@ -40,7 +42,8 @@ describe("ApplicationsService", () => {
       chain.orderBy = vi.fn().mockReturnValue(chain);
       chain.limit = vi.fn().mockReturnValue(chain);
       chain.offset = vi.fn().mockReturnValue(chain);
-      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      chain.then = (resolve: any, reject?: any) =>
+        Promise.resolve(resolvedValue).then(resolve, reject);
       return chain;
     };
 
@@ -54,27 +57,33 @@ describe("ApplicationsService", () => {
       update: vi.fn().mockReturnValue({
         set: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue({
-            returning: vi.fn().mockResolvedValue([{ ...mockApp, status: ApplicationStatus.SCREENING }]),
+            returning: vi
+              .fn()
+              .mockResolvedValue([{ ...mockApp, status: ApplicationStatus.SCREENING }]),
           }),
         }),
       }),
       insert: vi.fn().mockReturnValue({
         values: vi.fn().mockResolvedValue([{ id: "audit-uuid" }]),
       }),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
     mockSupabaseAdmin = {
       storage: {
         from: vi.fn().mockReturnValue({
           createSignedUrl: vi.fn().mockResolvedValue({
-            data: { signedUrl: "https://supabase.co/signed/resumes/job-uuid/alex_resume.pdf?token=xyz" },
+            data: {
+              signedUrl: "https://supabase.co/signed/resumes/job-uuid/alex_resume.pdf?token=xyz",
+            },
             error: null,
           }),
         }),
       },
     };
 
-    service = new ApplicationsService(mockDb, mockSupabaseAdmin);
+    repository = new AdminApplicationsRepository(mockDb);
+    service = new ApplicationsService(repository, mockSupabaseAdmin);
   });
 
   it("lists applications with pagination and filters", async () => {
@@ -105,13 +114,14 @@ describe("ApplicationsService", () => {
       chain.leftJoin = vi.fn().mockReturnValue(chain);
       chain.where = vi.fn().mockReturnValue(chain);
       chain.limit = vi.fn().mockReturnValue(chain);
-      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      chain.then = (resolve: any, reject?: any) =>
+        Promise.resolve(resolvedValue).then(resolve, reject);
       return chain;
     };
     mockDb.select.mockImplementationOnce(() => createChain([]));
 
     await expect(service.getApplicationById("non-existent")).rejects.toThrow(
-      "Application record could not be found."
+      "Application record could not be found.",
     );
   });
 
@@ -120,7 +130,7 @@ describe("ApplicationsService", () => {
       mockApp.id,
       ApplicationStatus.SCREENING,
       undefined,
-      "recruiter-user-id"
+      "recruiter-user-id",
     );
 
     expect(result.status).toBe(ApplicationStatus.SCREENING);
@@ -133,7 +143,11 @@ describe("ApplicationsService", () => {
       set: vi.fn().mockReturnValue({
         where: vi.fn().mockReturnValue({
           returning: vi.fn().mockResolvedValue([
-            { ...mockApp, status: ApplicationStatus.REJECTED, rejectionReason: "Lacks required experience" },
+            {
+              ...mockApp,
+              status: ApplicationStatus.REJECTED,
+              rejectionReason: "Lacks required experience",
+            },
           ]),
         }),
       }),
@@ -143,7 +157,7 @@ describe("ApplicationsService", () => {
       mockApp.id,
       ApplicationStatus.REJECTED,
       "Lacks required experience",
-      "recruiter-user-id"
+      "recruiter-user-id",
     );
 
     expect(result.status).toBe(ApplicationStatus.REJECTED);
@@ -154,9 +168,11 @@ describe("ApplicationsService", () => {
     mockDb.update.mockReturnValueOnce({
       set: vi.fn().mockReturnValue({
         where: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([
-            { ...mockApp, rating: 5, internalNotes: "Exceptional architecture test solution" },
-          ]),
+          returning: vi
+            .fn()
+            .mockResolvedValue([
+              { ...mockApp, rating: 5, internalNotes: "Exceptional architecture test solution" },
+            ]),
         }),
       }),
     });
@@ -165,7 +181,7 @@ describe("ApplicationsService", () => {
       mockApp.id,
       "Exceptional architecture test solution",
       5,
-      "recruiter-user-id"
+      "recruiter-user-id",
     );
 
     expect(result.rating).toBe(5);
@@ -173,13 +189,13 @@ describe("ApplicationsService", () => {
   });
 
   it("rejects invalid rating outside 1-5 range", async () => {
-    await expect(
-      service.updateNotesAndRating(mockApp.id, "Note", 6)
-    ).rejects.toThrow("Rating must be between 1 and 5");
+    await expect(service.updateNotesAndRating(mockApp.id, "Note", 6)).rejects.toThrow(
+      "Rating must be between 1 and 5",
+    );
 
-    await expect(
-      service.updateNotesAndRating(mockApp.id, "Note", 0)
-    ).rejects.toThrow("Rating must be between 1 and 5");
+    await expect(service.updateNotesAndRating(mockApp.id, "Note", 0)).rejects.toThrow(
+      "Rating must be between 1 and 5",
+    );
   });
 
   it("generates short-lived signed URL for resume download", async () => {
@@ -195,21 +211,26 @@ describe("ApplicationsService", () => {
       chain.leftJoin = vi.fn().mockReturnValue(chain);
       chain.where = vi.fn().mockReturnValue(chain);
       chain.limit = vi.fn().mockReturnValue(chain);
-      chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+      chain.then = (resolve: any, reject?: any) =>
+        Promise.resolve(resolvedValue).then(resolve, reject);
       return chain;
     };
     mockDb.select.mockImplementationOnce(() =>
-      createChain([{ application: { ...mockApp, resumeStoragePath: "" }, jobTitle: mockJob.title }])
+      createChain([
+        { application: { ...mockApp, resumeStoragePath: "" }, jobTitle: mockJob.title },
+      ]),
     );
 
     await expect(service.getSignedResumeUrl(mockApp.id)).rejects.toThrow(
-      "No resume document attached to this application."
+      "No resume document attached to this application.",
     );
   });
 
   it("exports applications as CSV string with proper headers", async () => {
     const csv = await service.exportApplicationsCsv();
-    expect(csv).toContain("ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At");
+    expect(csv).toContain(
+      "ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At",
+    );
     expect(csv).toContain("Alex Rivera");
     expect(csv).toContain("alex@example.com");
   });

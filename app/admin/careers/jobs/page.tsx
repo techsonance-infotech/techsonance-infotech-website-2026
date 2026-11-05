@@ -74,7 +74,8 @@ export default function AdminJobsPage() {
             Careers & Job Openings
           </h1>
           <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
-            Manage open positions displayed on the agency careers portal and configure live application screening.
+            Manage open positions displayed on the agency careers portal and configure live
+            application screening.
           </p>
         </div>
 
@@ -153,7 +154,10 @@ export default function AdminJobsPage() {
                   </tr>
                 ) : (
                   jobs.map((job) => (
-                    <tr key={job.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group">
+                    <tr
+                      key={job.id}
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group"
+                    >
                       <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
                         <Link
                           href={`/admin/careers/jobs/${job.id}`}
@@ -183,8 +187,8 @@ export default function AdminJobsPage() {
                             job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
                               ? "success"
                               : job.status === JobStatus.IN_REVIEW
-                              ? "warning"
-                              : "secondary"
+                                ? "warning"
+                                : "secondary"
                           }
                           dot={job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED}
                         >

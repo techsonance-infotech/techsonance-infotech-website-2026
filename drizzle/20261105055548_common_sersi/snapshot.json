@@ -3,221 +3,143 @@
   "version": "9",
   "dialect": "postgres",
   "id": "7d027a7d-f80c-4cba-8045-aca463ae91da",
-  "prevIds": [
-    "e6cf85fe-7415-494c-9144-cc15c1fe0bdf"
-  ],
+  "prevIds": ["e6cf85fe-7415-494c-9144-cc15c1fe0bdf"],
   "footprints": [
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "admin_role"
-      ],
+      "statementTarget": ["enum", "public", "admin_role"],
       "writes": [
         "s|enum|public.admin_role",
         "n|enum|public.admin_role",
         "e|enum|public.admin_role",
         "n|type|public.admin_role"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_approval_decision"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_approval_decision"],
       "writes": [
         "s|enum|public.ts_ai_approval_decision",
         "n|enum|public.ts_ai_approval_decision",
         "e|enum|public.ts_ai_approval_decision",
         "n|type|public.ts_ai_approval_decision"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_approval_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_approval_status"],
       "writes": [
         "s|enum|public.ts_ai_approval_status",
         "n|enum|public.ts_ai_approval_status",
         "e|enum|public.ts_ai_approval_status",
         "n|type|public.ts_ai_approval_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_job_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_job_status"],
       "writes": [
         "s|enum|public.ts_ai_job_status",
         "n|enum|public.ts_ai_job_status",
         "e|enum|public.ts_ai_job_status",
         "n|type|public.ts_ai_job_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_job_step"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_job_step"],
       "writes": [
         "s|enum|public.ts_ai_job_step",
         "n|enum|public.ts_ai_job_step",
         "e|enum|public.ts_ai_job_step",
         "n|type|public.ts_ai_job_step"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_provider_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_provider_status"],
       "writes": [
         "s|enum|public.ts_ai_provider_status",
         "n|enum|public.ts_ai_provider_status",
         "e|enum|public.ts_ai_provider_status",
         "n|type|public.ts_ai_provider_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_step_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_step_status"],
       "writes": [
         "s|enum|public.ts_ai_step_status",
         "n|enum|public.ts_ai_step_status",
         "e|enum|public.ts_ai_step_status",
         "n|type|public.ts_ai_step_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_topic_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_topic_status"],
       "writes": [
         "s|enum|public.ts_ai_topic_status",
         "n|enum|public.ts_ai_topic_status",
         "e|enum|public.ts_ai_topic_status",
         "n|type|public.ts_ai_topic_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "application_status"
-      ],
+      "statementTarget": ["enum", "public", "application_status"],
       "writes": [
         "s|enum|public.application_status",
         "n|enum|public.application_status",
         "e|enum|public.application_status",
         "n|type|public.application_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "job_status"
-      ],
+      "statementTarget": ["enum", "public", "job_status"],
       "writes": [
         "s|enum|public.job_status",
         "n|enum|public.job_status",
         "e|enum|public.job_status",
         "n|type|public.job_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "job_type"
-      ],
+      "statementTarget": ["enum", "public", "job_type"],
       "writes": [
         "s|enum|public.job_type",
         "n|enum|public.job_type",
         "e|enum|public.job_type",
         "n|type|public.job_type"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "post_status"
-      ],
+      "statementTarget": ["enum", "public", "post_status"],
       "writes": [
         "s|enum|public.post_status",
         "n|enum|public.post_status",
         "e|enum|public.post_status",
         "n|type|public.post_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_admin_users"
-      ],
+      "statementTarget": ["table", "public", "ts_admin_users"],
       "writes": [
         "s|tbl|public.ts_admin_users",
         "n|tbl|public.ts_admin_users",
@@ -227,17 +149,11 @@
         "n|rel|public.ts_admin_users_pkey",
         "n|rel|public.ts_admin_users_email_key"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_generation_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_generation_jobs"],
       "writes": [
         "s|tbl|public.ts_ai_generation_jobs",
         "n|tbl|public.ts_ai_generation_jobs",
@@ -246,19 +162,11 @@
         "n|type|public.ts_ai_generation_jobs",
         "n|rel|public.ts_ai_generation_jobs_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_job_status",
-        "n|enum|public.ts_ai_job_step"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_job_status", "n|enum|public.ts_ai_job_step"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_job_steps"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_job_steps"],
       "writes": [
         "s|tbl|public.ts_ai_job_steps",
         "n|tbl|public.ts_ai_job_steps",
@@ -267,18 +175,11 @@
         "n|type|public.ts_ai_job_steps",
         "n|rel|public.ts_ai_job_steps_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_step_status"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_step_status"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_approval_requests"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_approval_requests"],
       "writes": [
         "s|tbl|public.ts_ai_approval_requests",
         "n|tbl|public.ts_ai_approval_requests",
@@ -295,11 +196,7 @@
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_topics"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_topics"],
       "writes": [
         "s|tbl|public.ts_ai_topics",
         "n|tbl|public.ts_ai_topics",
@@ -308,18 +205,11 @@
         "n|type|public.ts_ai_topics",
         "n|rel|public.ts_ai_topics_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_topic_status"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_topic_status"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_prompt_templates"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_prompt_templates"],
       "writes": [
         "s|tbl|public.ts_ai_prompt_templates",
         "n|tbl|public.ts_ai_prompt_templates",
@@ -328,17 +218,11 @@
         "n|type|public.ts_ai_prompt_templates",
         "n|rel|public.ts_ai_prompt_templates_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_usage_events"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_usage_events"],
       "writes": [
         "s|tbl|public.ts_ai_usage_events",
         "n|tbl|public.ts_ai_usage_events",
@@ -347,17 +231,11 @@
         "n|type|public.ts_ai_usage_events",
         "n|rel|public.ts_ai_usage_events_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_provider_accounts"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_provider_accounts"],
       "writes": [
         "s|tbl|public.ts_ai_provider_accounts",
         "n|tbl|public.ts_ai_provider_accounts",
@@ -366,130 +244,72 @@
         "n|type|public.ts_ai_provider_accounts",
         "n|rel|public.ts_ai_provider_accounts_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_provider_status"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_provider_status"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "thumbnail_missing"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "thumbnail_missing"],
       "writes": [
         "s|col|public.ts_content_posts.thumbnail_missing",
         "n|col|public.ts_content_posts.thumbnail_missing",
         "e|col|public.ts_content_posts.thumbnail_missing"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "thumbnail_provider"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "thumbnail_provider"],
       "writes": [
         "s|col|public.ts_content_posts.thumbnail_provider",
         "n|col|public.ts_content_posts.thumbnail_provider",
         "e|col|public.ts_content_posts.thumbnail_provider"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "thumbnail_prompt"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "thumbnail_prompt"],
       "writes": [
         "s|col|public.ts_content_posts.thumbnail_prompt",
         "n|col|public.ts_content_posts.thumbnail_prompt",
         "e|col|public.ts_content_posts.thumbnail_prompt"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "thumbnail_alt"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "thumbnail_alt"],
       "writes": [
         "s|col|public.ts_content_posts.thumbnail_alt",
         "n|col|public.ts_content_posts.thumbnail_alt",
         "e|col|public.ts_content_posts.thumbnail_alt"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "ai_generated"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "ai_generated"],
       "writes": [
         "s|col|public.ts_content_posts.ai_generated",
         "n|col|public.ts_content_posts.ai_generated",
         "e|col|public.ts_content_posts.ai_generated"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "ai_job_id"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "ai_job_id"],
       "writes": [
         "s|col|public.ts_content_posts.ai_job_id",
         "n|col|public.ts_content_posts.ai_job_id",
         "e|col|public.ts_content_posts.ai_job_id"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_posts",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_posts", "n|sch|public"]
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_admin_memberships",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_admin_memberships.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_admin_memberships", "created_at"],
+      "writes": ["s|colprop|public.ts_admin_memberships.created_at.default"],
       "reads": [
         "n|tbl|public.ts_admin_memberships",
         "n|sch|public",
@@ -499,15 +319,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_admin_memberships",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_admin_memberships.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_admin_memberships", "updated_at"],
+      "writes": ["s|colprop|public.ts_admin_memberships.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_admin_memberships",
         "n|sch|public",
@@ -517,15 +330,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_admin_sites",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_admin_sites.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_admin_sites", "created_at"],
+      "writes": ["s|colprop|public.ts_admin_sites.created_at.default"],
       "reads": [
         "n|tbl|public.ts_admin_sites",
         "n|sch|public",
@@ -535,15 +341,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_admin_sites",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_admin_sites.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_admin_sites", "updated_at"],
+      "writes": ["s|colprop|public.ts_admin_sites.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_admin_sites",
         "n|sch|public",
@@ -553,15 +352,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_applications.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "created_at"],
+      "writes": ["s|colprop|public.ts_content_applications.created_at.default"],
       "reads": [
         "n|tbl|public.ts_content_applications",
         "n|sch|public",
@@ -571,15 +363,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_applications.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "updated_at"],
+      "writes": ["s|colprop|public.ts_content_applications.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_content_applications",
         "n|sch|public",
@@ -589,15 +374,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_authors",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_authors.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_authors", "created_at"],
+      "writes": ["s|colprop|public.ts_content_authors.created_at.default"],
       "reads": [
         "n|tbl|public.ts_content_authors",
         "n|sch|public",
@@ -607,15 +385,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_authors",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_authors.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_authors", "updated_at"],
+      "writes": ["s|colprop|public.ts_content_authors.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_content_authors",
         "n|sch|public",
@@ -625,15 +396,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_categories",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_categories.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_categories", "created_at"],
+      "writes": ["s|colprop|public.ts_content_categories.created_at.default"],
       "reads": [
         "n|tbl|public.ts_content_categories",
         "n|sch|public",
@@ -643,15 +407,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_categories",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_categories.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_categories", "updated_at"],
+      "writes": ["s|colprop|public.ts_content_categories.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_content_categories",
         "n|sch|public",
@@ -661,15 +418,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_jobs.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "created_at"],
+      "writes": ["s|colprop|public.ts_content_jobs.created_at.default"],
       "reads": [
         "n|tbl|public.ts_content_jobs",
         "n|sch|public",
@@ -679,15 +429,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_jobs",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_jobs.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_jobs", "updated_at"],
+      "writes": ["s|colprop|public.ts_content_jobs.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_content_jobs",
         "n|sch|public",
@@ -697,15 +440,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "created_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_posts.created_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "created_at"],
+      "writes": ["s|colprop|public.ts_content_posts.created_at.default"],
       "reads": [
         "n|tbl|public.ts_content_posts",
         "n|sch|public",
@@ -715,15 +451,8 @@
     },
     {
       "statementType": "alter_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_posts",
-        "updated_at"
-      ],
-      "writes": [
-        "s|colprop|public.ts_content_posts.updated_at.default"
-      ],
+      "statementTarget": ["column", "public", "ts_content_posts", "updated_at"],
+      "writes": ["s|colprop|public.ts_content_posts.updated_at.default"],
       "reads": [
         "n|tbl|public.ts_content_posts",
         "n|sch|public",
@@ -733,12 +462,7 @@
     },
     {
       "statementType": "create_index",
-      "statementTarget": [
-        "index",
-        "public",
-        "ts_ai_job_steps",
-        "ts_ai_job_steps_idempotency_idx"
-      ],
+      "statementTarget": ["index", "public", "ts_ai_job_steps", "ts_ai_job_steps_idempotency_idx"],
       "writes": [
         "s|idx|public.ts_ai_job_steps_idempotency_idx",
         "n|idx|public.ts_ai_job_steps_idempotency_idx",
@@ -773,11 +497,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_generation_jobs"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_generation_jobs"],
       "writes": [
         "s|fk|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
@@ -796,11 +516,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_job_steps"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_job_steps"],
       "writes": [
         "s|fk|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
         "n|fk|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
@@ -819,11 +535,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_approval_requests"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_approval_requests"],
       "writes": [
         "s|fk|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
         "n|fk|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
@@ -842,11 +554,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_topics"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_topics"],
       "writes": [
         "s|fk|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey",
@@ -865,11 +573,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_prompt_templates"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_prompt_templates"],
       "writes": [
         "s|fk|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
         "n|fk|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
@@ -965,13 +669,7 @@
       "row": {
         "schema": "public",
         "name": "admin_role",
-        "values": [
-          "owner",
-          "admin",
-          "editor",
-          "author",
-          "viewer"
-        ],
+        "values": ["owner", "admin", "editor", "author", "viewer"],
         "entityType": "enums"
       }
     },
@@ -980,11 +678,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_approval_decision",
-        "values": [
-          "approve",
-          "reject",
-          "improve"
-        ],
+        "values": ["approve", "reject", "improve"],
         "entityType": "enums"
       }
     },
@@ -993,13 +687,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_approval_status",
-        "values": [
-          "PENDING",
-          "APPROVED",
-          "REJECTED",
-          "IMPROVE",
-          "EXPIRED"
-        ],
+        "values": ["PENDING", "APPROVED", "REJECTED", "IMPROVE", "EXPIRED"],
         "entityType": "enums"
       }
     },
@@ -1008,14 +696,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_job_status",
-        "values": [
-          "QUEUED",
-          "RUNNING",
-          "COMPLETED",
-          "WAITING_QUOTA",
-          "NEEDS_REVIEW",
-          "FAILED"
-        ],
+        "values": ["QUEUED", "RUNNING", "COMPLETED", "WAITING_QUOTA", "NEEDS_REVIEW", "FAILED"],
         "entityType": "enums"
       }
     },
@@ -1024,15 +705,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_job_step",
-        "values": [
-          "outline",
-          "sections",
-          "meta",
-          "image",
-          "validate",
-          "save-pending",
-          "completed"
-        ],
+        "values": ["outline", "sections", "meta", "image", "validate", "save-pending", "completed"],
         "entityType": "enums"
       }
     },
@@ -1041,12 +714,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_provider_status",
-        "values": [
-          "ACTIVE",
-          "EXHAUSTED",
-          "DISABLED",
-          "COOLDOWN"
-        ],
+        "values": ["ACTIVE", "EXHAUSTED", "DISABLED", "COOLDOWN"],
         "entityType": "enums"
       }
     },
@@ -1055,12 +723,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_step_status",
-        "values": [
-          "PENDING",
-          "RUNNING",
-          "DONE",
-          "FAILED"
-        ],
+        "values": ["PENDING", "RUNNING", "DONE", "FAILED"],
         "entityType": "enums"
       }
     },
@@ -1069,13 +732,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_topic_status",
-        "values": [
-          "SUGGESTED",
-          "ACCEPTED",
-          "QUEUED",
-          "GENERATED",
-          "REJECTED"
-        ],
+        "values": ["SUGGESTED", "ACCEPTED", "QUEUED", "GENERATED", "REJECTED"],
         "entityType": "enums"
       }
     },
@@ -1084,14 +741,7 @@
       "row": {
         "schema": "public",
         "name": "application_status",
-        "values": [
-          "NEW",
-          "REVIEWING",
-          "SHORTLISTED",
-          "INTERVIEW",
-          "OFFERED",
-          "REJECTED"
-        ],
+        "values": ["NEW", "REVIEWING", "SHORTLISTED", "INTERVIEW", "OFFERED", "REJECTED"],
         "entityType": "enums"
       }
     },
@@ -1100,12 +750,7 @@
       "row": {
         "schema": "public",
         "name": "job_status",
-        "values": [
-          "DRAFT",
-          "OPEN",
-          "CLOSED",
-          "ARCHIVED"
-        ],
+        "values": ["DRAFT", "OPEN", "CLOSED", "ARCHIVED"],
         "entityType": "enums"
       }
     },
@@ -1114,12 +759,7 @@
       "row": {
         "schema": "public",
         "name": "job_type",
-        "values": [
-          "Full Time",
-          "Internship",
-          "Contract",
-          "Partner"
-        ],
+        "values": ["Full Time", "Internship", "Contract", "Partner"],
         "entityType": "enums"
       }
     },
@@ -1128,12 +768,7 @@
       "row": {
         "schema": "public",
         "name": "post_status",
-        "values": [
-          "DRAFT",
-          "IN_REVIEW",
-          "PUBLISHED",
-          "ARCHIVED"
-        ],
+        "values": ["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"],
         "entityType": "enums"
       }
     },
@@ -3000,14 +2635,10 @@
         "table": "ts_ai_generation_jobs",
         "name": "ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "site_id"
-        ],
+        "columns": ["site_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_sites",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3020,14 +2651,10 @@
         "table": "ts_ai_job_steps",
         "name": "ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "job_id"
-        ],
+        "columns": ["job_id"],
         "schemaTo": "public",
         "tableTo": "ts_ai_generation_jobs",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3040,14 +2667,10 @@
         "table": "ts_ai_approval_requests",
         "name": "ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "post_id"
-        ],
+        "columns": ["post_id"],
         "schemaTo": "public",
         "tableTo": "ts_content_posts",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3060,14 +2683,10 @@
         "table": "ts_ai_topics",
         "name": "ts_ai_topics_site_id_ts_admin_sites_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "site_id"
-        ],
+        "columns": ["site_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_sites",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3080,14 +2699,10 @@
         "table": "ts_ai_prompt_templates",
         "name": "ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "site_id"
-        ],
+        "columns": ["site_id"],
         "schemaTo": "public",
         "tableTo": "ts_admin_sites",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "CASCADE",
         "entityType": "fks"
@@ -3099,9 +2714,7 @@
         "schema": "public",
         "table": "ts_admin_users",
         "name": "ts_admin_users_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3112,9 +2725,7 @@
         "schema": "public",
         "table": "ts_ai_generation_jobs",
         "name": "ts_ai_generation_jobs_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3125,9 +2736,7 @@
         "schema": "public",
         "table": "ts_ai_job_steps",
         "name": "ts_ai_job_steps_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3138,9 +2747,7 @@
         "schema": "public",
         "table": "ts_ai_approval_requests",
         "name": "ts_ai_approval_requests_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3151,9 +2758,7 @@
         "schema": "public",
         "table": "ts_ai_topics",
         "name": "ts_ai_topics_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3164,9 +2769,7 @@
         "schema": "public",
         "table": "ts_ai_prompt_templates",
         "name": "ts_ai_prompt_templates_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3177,9 +2780,7 @@
         "schema": "public",
         "table": "ts_ai_usage_events",
         "name": "ts_ai_usage_events_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3190,9 +2791,7 @@
         "schema": "public",
         "table": "ts_ai_provider_accounts",
         "name": "ts_ai_provider_accounts_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -3204,9 +2803,7 @@
         "table": "ts_admin_users",
         "name": "ts_admin_users_email_key",
         "nameExplicit": false,
-        "columns": [
-          "email"
-        ],
+        "columns": ["email"],
         "nullsNotDistinct": false,
         "entityType": "uniques"
       }

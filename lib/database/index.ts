@@ -4,8 +4,7 @@ import postgres from "postgres";
 import { relations } from "./relation";
 import { getEnv } from "@/lib/env";
 
-const LOCAL_DEFAULT_URL =
-  "postgresql://postgres:postgres@localhost:54322/postgres";
+const LOCAL_DEFAULT_URL = "postgresql://postgres:postgres@localhost:54322/postgres";
 
 export function resolveDatabaseUrl(): string {
   let env: ReturnType<typeof getEnv> | undefined;
@@ -13,10 +12,7 @@ export function resolveDatabaseUrl(): string {
     env = getEnv();
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn(
-        "env_validation_skipped:",
-        err instanceof Error ? err.message : "unknown",
-      );
+      console.warn("env_validation_skipped:", err instanceof Error ? err.message : "unknown");
     }
   }
 
@@ -51,14 +47,7 @@ export function resolveDatabaseUrl(): string {
 function isLocalUrl(connectionString: string): boolean {
   try {
     const host = new URL(connectionString).hostname;
-    return [
-      "localhost",
-      "127.0.0.1",
-      "::1",
-      "[::1]",
-      "db",
-      "host.docker.internal",
-    ].includes(host);
+    return ["localhost", "127.0.0.1", "::1", "[::1]", "db", "host.docker.internal"].includes(host);
   } catch {
     return false;
   }
@@ -87,9 +76,7 @@ function makeDrizzle(client: ReturnType<typeof createClient>) {
 }
 
 export type Database = ReturnType<typeof makeDrizzle>;
-export type DbTransaction = Parameters<
-  Parameters<Database["transaction"]>[0]
->[0];
+export type DbTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
 // Survives HMR in Next.js development
 const g = globalThis as unknown as {
@@ -131,27 +118,19 @@ export const db = new Proxy({} as Database, {
   },
 });
 
-export async function checkDatabaseConnection(
-  timeoutMs = 3000,
-): Promise<boolean> {
+export async function checkDatabaseConnection(timeoutMs = 3000): Promise<boolean> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     getDrizzleDb(); // ensures state.client exists
     await Promise.race([
       state.client!`SELECT 1`,
       new Promise((_, reject) => {
-        timer = setTimeout(
-          () => reject(new Error("health check timeout")),
-          timeoutMs,
-        );
+        timer = setTimeout(() => reject(new Error("health check timeout")), timeoutMs);
       }),
     ]);
     return true;
   } catch (error) {
-    console.error(
-      "db_connection_error:",
-      error instanceof Error ? error.message : "unknown",
-    );
+    console.error("db_connection_error:", error instanceof Error ? error.message : "unknown");
     return false;
   } finally {
     clearTimeout(timer);
@@ -164,10 +143,7 @@ export async function closeDatabaseConnections(): Promise<void> {
   state.db = null;
   if (client) {
     await client.end({ timeout: 2 }).catch((err: unknown) => {
-      console.error(
-        "db_pool_close_error:",
-        err instanceof Error ? err.message : "unknown",
-      );
+      console.error("db_pool_close_error:", err instanceof Error ? err.message : "unknown");
     });
   }
 }

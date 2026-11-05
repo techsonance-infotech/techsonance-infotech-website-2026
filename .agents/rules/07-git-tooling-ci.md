@@ -5,6 +5,7 @@ Owns: commits, scripts, dependencies, tests, CI. The `check` script (§5) is the
 ## 1. Commits (commitlint, conventional)
 
 `type(scope): imperative summary`, header ≤ 72 chars, lowercase type, no trailing period.
+
 - Types: `feat fix perf refactor docs style test build ci chore revert`. Scopes: `auth db repo services di ui api contracts deps config rules resilience`.
 - Breaking: `feat(api)!: …` + `BREAKING CHANGE:` footer with migration steps.
 - Body explains why (wrap 100); reference issues. One logical change per commit. Never `--no-verify`.

@@ -105,13 +105,22 @@ async function main() {
       console.log(
         `\n⚠️  ${existingTableNames.size}/${expectedTables.length} tables found in public schema:`,
       );
-      console.log([...existingTableNames].sort().map((t) => `   - ${t}`).join("\n"));
+      console.log(
+        [...existingTableNames]
+          .sort()
+          .map((t) => `   - ${t}`)
+          .join("\n"),
+      );
     }
   } catch (err: unknown) {
     const error = err as {
       message?: string;
       code?: string;
-      cause?: { message?: string; code?: string; errors?: Array<{ message?: string; code?: string }> };
+      cause?: {
+        message?: string;
+        code?: string;
+        errors?: Array<{ message?: string; code?: string }>;
+      };
     };
     console.error("❌ Database connection failed with in-app database client!");
     console.error(`💥 Error: ${error.message || String(err)}`);
@@ -123,7 +132,8 @@ async function main() {
         }
       }
     }
-    if (error.code || error.cause?.code) console.error(`🏷️  Code: ${error.code || error.cause?.code}`);
+    if (error.code || error.cause?.code)
+      console.error(`🏷️  Code: ${error.code || error.cause?.code}`);
   } finally {
     await closeDatabaseConnections();
     console.log("\n══════════════════════════════════════════════════════════\n");

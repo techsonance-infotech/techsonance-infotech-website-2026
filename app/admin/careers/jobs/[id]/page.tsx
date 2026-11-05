@@ -26,7 +26,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { JobEditorForm, type JobFormData, DEFAULT_JOB_FORM } from "@/components/admin/careers/JobEditorForm";
+import {
+  JobEditorForm,
+  type JobFormData,
+  DEFAULT_JOB_FORM,
+} from "@/components/admin/careers/JobEditorForm";
 import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
 import { ApprovalActionDialog } from "@/components/admin/careers/ApprovalActionDialog";
 import { VersionHistoryDialog } from "@/components/admin/careers/VersionHistoryDialog";
@@ -45,7 +49,10 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-  const [alertMessage, setAlertMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [alertMessage, setAlertMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
   const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
   const [approvalMode, setApprovalMode] = useState<"approve" | "return">("approve");
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
@@ -348,7 +355,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
             <Undo2 className="w-4 h-4 text-amber-600" />
             <span>Reviewer Feedback (Changes Requested):</span>
           </div>
-          <p className="pl-6 text-amber-800 dark:text-amber-300 font-normal">{jobData.approvalComment}</p>
+          <p className="pl-6 text-amber-800 dark:text-amber-300 font-normal">
+            {jobData.approvalComment}
+          </p>
         </div>
       )}
 
@@ -388,8 +397,6 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         saveStatus={saveStatus}
         lastSavedAt={lastSavedAt}
       />
-
-    
 
       {/* Approval / Return Action Modal */}
       {!isNew && (

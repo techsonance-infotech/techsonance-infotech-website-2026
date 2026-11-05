@@ -40,9 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: canonical,
       type: "website",
-      images: job.ogImage
-        ? [{ url: job.ogImage }]
-        : [{ url: `${BASE_URL}/images/og/careers.png` }],
+      images: job.ogImage ? [{ url: job.ogImage }] : [{ url: `${BASE_URL}/images/og/careers.png` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -62,11 +60,7 @@ export default async function JobDetailPage({ params }: PageProps) {
   }
 
   // Unpublished internal workflow states return 404
-  if (
-    job.status === "DRAFT" ||
-    job.status === "IN_REVIEW" ||
-    job.status === "ARCHIVED"
-  ) {
+  if (job.status === "DRAFT" || job.status === "IN_REVIEW" || job.status === "ARCHIVED") {
     notFound();
   }
 

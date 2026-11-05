@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ApplicationsService } from "@/lib/services/applications.service";
+import { AdminApplicationsRepository } from "@/lib/repositories/admin-applications.repository";
 import { applicationsTable } from "@/lib/database/schema/core/application.schema";
 import { talentPoolTable } from "@/lib/database/schema/core/talent-pool.schema";
 import { auditLogsTable } from "@/lib/database/schema/core/audit.schema";
@@ -76,17 +77,17 @@ describe("GDPR Compliance: Candidate Data Export & Permanent Deletion", () => {
       })),
       delete: vi.fn().mockImplementation((table: any) => ({
         where: vi.fn().mockImplementation(() => {
+          let rows: any[] = [];
           if (table === talentPoolTable || table?._?.name === "ts_content_talent_pool") {
-            const count = existingTalentPool.length;
+            rows = [...existingTalentPool];
             existingTalentPool = [];
-            return Promise.resolve({ rowCount: count });
-          }
-          if (table === applicationsTable || table?._?.name === "ts_content_applications") {
-            const count = existingApplications.length;
+          } else if (table === applicationsTable || table?._?.name === "ts_content_applications") {
+            rows = [...existingApplications];
             existingApplications = [];
-            return Promise.resolve({ rowCount: count });
           }
-          return Promise.resolve({ rowCount: 0 });
+          const p = Promise.resolve(rows);
+          (p as any).returning = vi.fn().mockResolvedValue(rows);
+          return p;
         }),
       })),
       insert: vi.fn().mockImplementation((table: any) => ({
@@ -97,9 +98,13 @@ describe("GDPR Compliance: Candidate Data Export & Permanent Deletion", () => {
           return Promise.resolve();
         }),
       })),
+      transaction: vi.fn().mockImplementation((fn: any) => fn(mockDb)),
     };
 
-    applicationsService = new ApplicationsService(mockDb, mockSupabaseAdmin);
+    applicationsService = new ApplicationsService(
+      new AdminApplicationsRepository(mockDb),
+      mockSupabaseAdmin,
+    );
   });
 
   it("exports candidate data across applications and talent pool records", async () => {

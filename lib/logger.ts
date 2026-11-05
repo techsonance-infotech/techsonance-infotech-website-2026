@@ -11,7 +11,7 @@ export const logger = {
     console.error(`[ERROR] ${message}`, context ? JSON.stringify(context) : "");
   },
   debug: (message: string, context?: Record<string, unknown>) => {
-    if (process.env.DEBUG) {
+    if (process.env.NODE_ENV === "development") {
       console.debug(`[DEBUG] ${message}`, context ? JSON.stringify(context) : "");
     }
   },

@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useSyncExternalStore, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useSyncExternalStore,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Search, X, Sparkles, MapPin, Briefcase, RotateCcw } from "lucide-react";
@@ -152,7 +159,16 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
       const qs = params.toString();
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     },
-    [router, pathname, searchTerm, selectedDept, selectedMode, selectedType, selectedExp, selectedSort]
+    [
+      router,
+      pathname,
+      searchTerm,
+      selectedDept,
+      selectedMode,
+      selectedType,
+      selectedExp,
+      selectedSort,
+    ],
   );
 
   // Debounced search sync to URL
@@ -715,14 +731,12 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 {displayedJobs.map((job) => {
                   const isNew = Boolean(
                     job.publishedAt &&
-                      Date.now() - new Date(job.publishedAt).getTime() <=
-                        14 * 24 * 60 * 60 * 1000,
+                    Date.now() - new Date(job.publishedAt).getTime() <= 14 * 24 * 60 * 60 * 1000,
                   );
                   const isClosingSoon = Boolean(
                     job.closesAt &&
-                      new Date(job.closesAt).getTime() > Date.now() &&
-                      new Date(job.closesAt).getTime() - Date.now() <=
-                        7 * 24 * 60 * 60 * 1000,
+                    new Date(job.closesAt).getTime() > Date.now() &&
+                    new Date(job.closesAt).getTime() - Date.now() <= 7 * 24 * 60 * 60 * 1000,
                   );
 
                   return (
@@ -771,44 +785,29 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             {job.experienceLevel && (
                               <>
                                 <span className="text-slate-200">•</span>
-                                <span className="text-[#1155CC]">
-                                  Level: {job.experienceLevel}
-                                </span>
+                                <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
                               </>
                             )}
                             {job.showSalaryPublicly && job.salaryMin && (
                               <>
                                 <span className="text-slate-200">•</span>
                                 <span className="text-emerald-600 font-bold">
-                                  {job.salaryCurrency || "INR"}{" "}
-                                  {job.salaryMin.toLocaleString()}
+                                  {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString()}
                                   {job.salaryMax
                                     ? ` - ${job.salaryMax.toLocaleString()}`
-                                    : ""}{" "}
-                                  / {job.salaryPeriod || "month"}
+                                    : ""} /{" "}
+                                  {job.salaryPeriod || "month"}
                                 </span>
                               </>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
-                          <Button
-                            asChild
-                            variant="outline"
-                            size="sm"
-                            className="rounded-xl"
-                          >
+                          <Button asChild variant="outline" size="sm" className="rounded-xl">
                             <Link href={`/careers/${job.slug}`}>View Details</Link>
                           </Button>
-                          <Button
-                            asChild
-                            variant="default"
-                            size="sm"
-                            className="rounded-xl"
-                          >
-                            <Link href={`/careers/${job.slug}#apply-form`}>
-                              Apply Now
-                            </Link>
+                          <Button asChild variant="default" size="sm" className="rounded-xl">
+                            <Link href={`/careers/${job.slug}#apply-form`}>Apply Now</Link>
                           </Button>
                         </div>
                       </div>
@@ -892,8 +891,8 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 Don't see your specific role?
               </h4>
               <p className="text-xs sm:text-sm text-slate-600 max-w-lg">
-                We're constantly expanding. Join our Talent Pool and our engineering recruitment team
-                will reach out directly when matching roles open up.
+                We're constantly expanding. Join our Talent Pool and our engineering recruitment
+                team will reach out directly when matching roles open up.
               </p>
             </div>
             <Button
@@ -960,7 +959,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         {/* ==========================================
             TALENT POOL INVITATION
             ========================================== */}
-        <section id="talent-pool" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <section
+          id="talent-pool"
+          className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10"
+        >
           <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white rounded-3xl p-8 sm:p-14 shadow-xl border border-slate-800 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -972,7 +974,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 Don't See Your Specific Role Open?
               </h2>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                Join the TechSonance Talent Pool. We evaluate every submission directly through our engineering leadership and actively reach out when initiatives matching your technical skills and systems experience launch.
+                Join the TechSonance Talent Pool. We evaluate every submission directly through our
+                engineering leadership and actively reach out when initiatives matching your
+                technical skills and systems experience launch.
               </p>
 
               <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">

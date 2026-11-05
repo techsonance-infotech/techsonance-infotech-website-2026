@@ -6,107 +6,106 @@ trigger: always_on
 
 Owns: hardcoded-string policy, DB-error handling in repositories, constants placement, separation of concerns enforcement, file-size discipline, auth/ownership checks, response-caching prohibition, shared-interface discipline. Typing and `any`/enum rules: `01`. DB layer rules: `03`. Failure policy: `11`. Layers and import matrix: `AGENTS-2.md §4`.
 
-## 0. Operating principle
+## 0. Project Main Versions & Syntax Breaking Points
 
-No shortcuts, no skipped steps, no deferring verification. If a rule applies to the code you are about to write, satisfy it in the **current file** BEFORE moving on. "I'll fix it after" is not allowed. If unsure whether a rule applies, assume it does; ambiguity resolves to stricter compliance.
+When reading or generating backend code, agents must immediately align with the project's active versions and breaking syntax boundaries:
+
+| Dependency / Tool            | Project Version     | Breaking Point / Syntax Transition                                                                                                                                                                                                                  |
+| ---------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Drizzle ORM**              | `^0.38.0` (RQB v2)  | **RQB v1 -> v2**: `where: { id: 1 }` (object, not callback). `orderBy: { id: "asc" }`. Cross-relation filter: `where: { posts: { content: { like: 'M%' } } }`. Relation offset: `with: { comments: { offset: 3, limit: 3 } }`.                      |
+| **Drizzle Callback Scoping** | RQB v2              | **Mandatory `(t)`**: Table columns in relational query callbacks (`orderBy`, `where.RAW`, `extras`) **MUST** use callback param `(t)` (e.g. `(t) => sql\`${t.id} asc\``), **NEVER** imported table objects.                                         |
+| **Supabase Pooler**          | Transaction `:6543` | **`prepare: false` is mandatory**: Supavisor transaction pooler breaks on prepared statements. Use `postgres(url, { prepare: false })`.                                                                                                             |
+| **Needle DI**                | `@needle-di/core`   | **Single-source DI**: Repositories inject `private db: Database = inject(DRIZZLE_DB_TOKEN)`. **NEVER** overload with `executor?: Database \| DbTransaction`, never use `(executor as any)`, and never write defensive `if (this.db.select)` checks. |
+| **Next.js & React**          | Next 16, React 19   | App Router, Server Actions, async `params` and `cookies()`.                                                                                                                                                                                         |
 
 ## 1. No hardcoded strings — constants placement
 
-- Fixed strings that carry meaning (error messages, log messages, config keys, event names, feature settings, copy) live in constants files; **never** inline in services, repositories, actions or route handlers.
+- Fixed strings that carry meaning (error messages, log messages, config keys, event names, feature settings, copy) live in constants files; **never** inline in services, repositories, actions, or route handlers.
 - **Domain-specific** (error codes, messages, validation constants, feature settings) → `lib/constants/<domain>.constants.ts`.
 - **Cross-cutting / shared by 2+ independent domains** (`api.constants.ts`, `validation.constants.ts`, `cache.constants.ts`, `rate-limit.constants.ts`, `http-status.constants.ts`) → `lib/constants/`.
-- Before writing any string literal ask: *domain-specific or global?* Put it in the right constants file immediately; never "temporarily" inline a string.
 
-## 2. Repository rules (extends `03 §14`)
+## 2. Repository rules (extends `03 §11`)
 
 Every `lib/repositories/*.repository.ts` file MUST:
 
-1. **Guard every DB call with structured error handling.** Wrap each Drizzle operation in `try/catch`; map to `AppError` via `mapDbError` from `lib/dbErrors.ts`; never let raw driver/DB errors propagate to the service layer.
-
-   ```ts
-   // ✅ correct
-   async findById(id: string): Promise<Row | null> {
-     try {
-       const [row] = await this.db.select().from(table).where(eq(table.id, id)).limit(1);
-       return row ?? null;
-     } catch (err) {
-       throw mapDbError(err, { context: 'findById', id });
-     }
-   }
-
-   // ❌ wrong — raw error surfaces
-   async findById(id: string) {
-     const [row] = await this.db.select().from(table).where(eq(table.id, id)).limit(1);
-     return row ?? null;
-   }
-   ```
-
-2. **Validate before writing.** Never pass raw incoming data straight into an insert/update. Confirm required fields are present, non-null and correctly typed before the Drizzle call; malformed inputs must be rejected before they reach the DB.
-
-3. **Validate DB-returned data before use.** Arrays and objects from the DB may be null/undefined; guard before accessing fields. A query that did not throw does not prove the record exists — check the returned value explicitly.
-
-4. **Throw `AppError("NOT_FOUND", …)` for missing expected records.** A silent `null` return is only valid when the caller explicitly handles absence; document this in the method's return type.
-
-5. **Transactions for multi-write atomicity.** Use `withTransaction` from `lib/database/transaction.ts` when two or more related writes must succeed together. Never issue dependent inserts sequentially without a transaction.
-
-6. **`where` is mandatory on every `update` and `delete`.** A bare update/delete without a `where` clause is a build-breaking violation (see `AGENTS.md §6`).
-
-7. **Return Drizzle row types only.** Repositories must not return DTOs, view models or mapped shapes — that is the service/mapper's job.
-
-8. **First param supports `Database | DbTransaction`.** Every method that participates in a transaction must accept an executor argument so services can pass the transaction context.
+1. **Guard every DB call with structured error handling**: Wrap each Drizzle operation in `try/catch`; map to `AppError` via `mapDbError(err, { context, id })` from `lib/dbErrors.ts`; never let raw driver/DB errors surface to services.
+2. **Validate before writing**: Never pass raw unvalidated payloads straight into insert/update. Reject malformed inputs before they reach the DB.
+3. **Validate DB-returned data before use**: Guard returned rows/objects for null/undefined before accessing properties.
+4. **Throw `AppError("NOT_FOUND", …)` in services**: Repositories return `Row | null` for expected lookups; services throw domain NOT_FOUND errors.
+5. **Transactions for multi-write atomicity**: Use `withTransaction` from `lib/database/transaction.ts` when two or more related writes must succeed together.
+6. **`where` is mandatory on every `update` and `delete`**: Bare updates or deletes without a `where` clause are build-breaking violations.
+7. **Return Drizzle row types only**: Repositories return `Row`, `Row | null`, or `Row[]`. Mappers and DTOs belong in the service layer.
+8. **Clean Needle DI injection & Zero `any`**:
+   - Inject `private db: Database = inject(DRIZZLE_DB_TOKEN)`.
+   - Do NOT carry dual signatures or overloaded parameters (`executor?: Database | DbTransaction`).
+   - NEVER use `(executor as any)`, `(this.db as any)`, or loose type assertions.
+   - For transactional operations, pass `tx: DbTransaction` explicitly as a typed parameter.
+   - NEVER write defensive `if (this.db.select)` or `if (this.db.query...)` branches.
 
 ## 3. Modifying shared TypeScript interfaces
 
-Before adding a field to a shared interface, check the data flow:
-
-- Module calls its own API/query, receives a different shape, or has a distinct use case → **create a new interface**; do not touch the shared one.
-- Same use case as existing dependents AND same upstream source/query → **extend the existing interface**.
-
-Never extend a shared interface just to avoid creating a new one — it silently couples unrelated features.
+- Caller has distinct use case or different shape → **create a new interface**; do not pollute the shared one.
+- Same use case and identical upstream source → **extend the existing interface**.
+- Never extend a shared interface merely to avoid creating a new type.
 
 ## 4. Separation of concerns (strict)
 
-| Layer | Allowed | Forbidden |
-|---|---|---|
-| `app/api/**/route.ts` | Parse request → one service call → serialize response | Queries, business rules, auth checks |
-| `lib/services/*.service.ts` | Business rules, auth (role + ownership), orchestration, calling repos, throwing `AppError` | Drizzle/ORM calls, importing `drizzle-orm` or table schemas directly |
-| `lib/repositories/*.repository.ts` | All Drizzle queries, joins, mutations, transactions | Business rules, HTTP concerns, email, auth |
+| Layer                              | Allowed                                                                                    | Forbidden                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| `app/api/**/route.ts`              | Parse request → one service call → serialize response                                      | DB queries, business rules, auth checks                              |
+| `lib/services/*.service.ts`        | Business rules, auth (role + ownership), orchestration, calling repos, throwing `AppError` | Drizzle/ORM calls, importing `drizzle-orm` or table schemas directly |
+| `lib/repositories/*.repository.ts` | All Drizzle queries, joins, mutations, transactions                                        | Business rules, HTTP concerns, email, auth                           |
 
-Violations fail `check:boundaries` and are build-breaking.
+Violations fail `npm run check` (`scripts/check-boundaries.mjs`) and break the build.
 
 ## 5. File size limit
 
-- No file grows past **~250 lines** (project convention, `10 §2 rule 5`). At or near the limit: split a cohesive group of methods into `<domain>-<feature>.repository.ts` or `<domain>-<feature>.service.ts` in the same folder.
-- Do **not** create a new file for every small addition. First check the existing same-domain same-layer file; add there while it has room.
+- No file grows past **~250 lines**. Split cohesive groups of methods into `<domain>-<feature>.repository.ts` or `<domain>-<feature>.service.ts` in the same directory.
+- Do not create a new file for trivial additions while existing domain files have room.
 
 ## 6. Authentication & authorization
 
-- Every handler touching user-owned data verifies **who** is calling (authentication) **and** whether they may act on that specific resource (authorization) — not just that a valid token exists.
-- Ownership check is mandatory on every read/update/delete of user-owned content: `resource.ownerId === currentUser.id`.
+- Handlers touching user-owned data verify **identity** (authentication) **and permissions** (authorization).
+- Ownership check is mandatory on read/update/delete of user data: `resource.ownerId === currentUser.id`.
 - Where **existence itself is sensitive**, return `NOT_FOUND` rather than `FORBIDDEN`.
-- Authorization lives in **services**, never in repositories or route handlers.
+- Authorization lives exclusively in **services**, never in repositories or route handlers.
 
 ## 7. No HTTP response caching in middleware
 
-- Never cache HTTP responses in global or route-level middleware keyed by IP, URL or headers; it leaks user-scoped data across users behind shared IPs (carrier NAT, proxies, office Wi-Fi, tunnels).
-- Response caching belongs only in the **service layer**, scoped and keyed by verified user ID and resource ID.
-- Authenticated user-scoped route handlers emit `Cache-Control: private, no-store`.
+- Never cache HTTP responses in global or route middleware keyed by IP or URL; it leaks user-scoped data across shared IPs.
+- Response caching belongs only in the **service layer**, scoped by verified user and resource ID.
+- Authenticated user-scoped routes emit `Cache-Control: private, no-store`.
 
 ## 8. Enums for matching & validation
 
-Any value checked, matched or validated across multiple files is a single `enum` from `lib/constants/enums/<name>.enum.ts` (or the cross-cutting `lib/database/enum/`) referenced everywhere. Never repeat a raw string literal across files.
+Any value checked or validated across multiple files must be an `enum` from `lib/constants/enums/<name>.enum.ts` (or `lib/database/enum/`). Never duplicate raw string literals.
 
-## 9. Code-generation checklist (repository additions)
+## 9. Drizzle Relational Query Builder (RQB v2) & Scoping Reference
 
-Before committing a new or modified repository method:
+- **Object-based filters & ordering**:
+  - `where`: `where: { id: jobId, email: normalizedEmail }`
+  - `orderBy`: `orderBy: { createdAt: "desc" }`
+  - Relational filter: `where: { posts: { content: { like: "M%" } } }`
+  - Relational offset: `with: { comments: { offset: 3, limit: 3 } }`
+- **Mandatory `(t)` Callback Scoping**:
+  Inside relational queries, column references in callbacks (`orderBy`, `where.RAW`, `extras`) MUST use the callback parameter `(t)` to preserve SQL table aliases.
+  - ❌ `where: { RAW: sql\`LOWER(${users.name}) LIKE 'john%'\` }`
+  - ✅ `where: { RAW: (t) => sql\`LOWER(${t.name}) LIKE 'john%'\` }`
+  - ✅ `extras: { count: (t) => db.$count(posts, eq(posts.authorId, t.id)) }`
 
-- [ ] Every DB call is in its own `try/catch` mapping to `AppError` via `mapDbError`?
-- [ ] All string literals moved to constants?
-- [ ] Input data validated before the Drizzle call?
-- [ ] DB-returned data checked before use (null-guard)?
-- [ ] Expected-missing record throws `AppError("NOT_FOUND", …)`?
-- [ ] Multi-write operations wrapped in `withTransaction`?
-- [ ] Every `update`/`delete` has a `where` clause?
-- [ ] Return type is a Drizzle row type (not a DTO or view model)?
-- [ ] File stays under 250 lines (split if needed)?
-- [ ] No shared interface widened unnecessarily?
+## 10. Code-generation checklist (repository additions)
+
+Before completing any repository method:
+
+- [ ] DB call wrapped in `try/catch` mapping via `mapDbError`?
+- [ ] Meaningful string literals placed in constants?
+- [ ] Input data validated before Drizzle call?
+- [ ] Returned data checked for null/undefined before use?
+- [ ] Expected missing record handled (returns `null`, service throws `AppError`)?
+- [ ] Dependent multi-writes wrapped in `withTransaction`?
+- [ ] Every `update` and `delete` has an explicit `where` clause?
+- [ ] Relational queries use RQB v2 object syntax (`where: { id }`, `orderBy: { id: "asc" }`)?
+- [ ] Relational query callbacks reference columns via `(t)`, NEVER imported table objects?
+- [ ] Injects `this.db` cleanly without `(executor as any)` or defensive `if (this.db.select)` checks?
+- [ ] Return type is a Drizzle row type (not a DTO)?
+- [ ] File stays under ~550 lines?

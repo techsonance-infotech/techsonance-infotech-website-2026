@@ -2,6 +2,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AIWriterService } from "../lib/services/ai-writer.service";
 import { ApprovalService } from "../lib/services/approval.service";
 import { JobOrchestratorService } from "../lib/services/job-orchestrator.service";
+import { ApprovalRequestsRepository } from "../lib/repositories/approval-requests.repository";
+import { GenerationJobsRepository } from "../lib/repositories/generation-jobs.repository";
+import { AdminPostsRepository } from "../lib/repositories/admin-posts.repository";
 import type { Database } from "../lib/database/index";
 import type { EmailService } from "../lib/services/email.service";
 
@@ -52,12 +55,15 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
 
   describe("ApprovalService Token Security & Decision Transitions", () => {
     it("creates a secure 32-byte hex token and inserts its sha256 hash", async () => {
-      const mockInsertValues = vi.fn().mockResolvedValue(true);
+      const mockInsertValues = vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([{ id: "req-1" }]),
+      });
       const mockDb = {
         insert: vi.fn(() => ({ values: mockInsertValues })),
       } as unknown as Database;
 
-      const approvalService = new ApprovalService(mockDb, {} as EmailService);
+      const approvalRepo = new ApprovalRequestsRepository(mockDb);
+      const approvalService = new ApprovalService(approvalRepo, {} as EmailService);
 
       const res = await approvalService.createApprovalRequest("post-123", 1);
 
@@ -100,7 +106,8 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
         },
       } as unknown as Database;
 
-      const approvalService = new ApprovalService(mockDb, {} as EmailService);
+      const approvalRepo = new ApprovalRequestsRepository(mockDb);
+      const approvalService = new ApprovalService(approvalRepo, {} as EmailService);
 
       await expect(approvalService.decide("fake-token", "approve")).rejects.toThrow(
         "already been used",
@@ -130,7 +137,15 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
         })),
       } as unknown as Database;
 
-      const orchestrator = new JobOrchestratorService(mockDb, {} as any, {} as any, {} as any);
+      const jobsRepo = new GenerationJobsRepository(mockDb);
+      const postsRepo = new AdminPostsRepository(mockDb);
+      const orchestrator = new JobOrchestratorService(
+        jobsRepo,
+        postsRepo,
+        {} as any,
+        {} as any,
+        {} as any,
+      );
 
       const job = await orchestrator.createJob({
         topicText: "Distributed Caching with Redis",

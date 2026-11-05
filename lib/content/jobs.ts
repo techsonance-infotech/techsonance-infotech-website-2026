@@ -139,15 +139,7 @@ export const legacyJobs: JobPosting[] = [
       "Familiarity with Supabase, Prisma, or Drizzle ORM.",
       "Understanding of responsive design principles and web accessibility.",
     ],
-    skills: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Node.js",
-      "PostgreSQL",
-      "Git",
-    ],
+    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Node.js", "PostgreSQL", "Git"],
     benefits: [
       "Competitive internship stipend",
       "Mentorship from experienced senior full-stack engineers",
@@ -276,9 +268,7 @@ export function getJobSource(): JobSource {
       return cmsJobSource;
     }
   } catch {
-    if (process.env.CONTENT_SOURCE_CAREERS === "cms") {
-      return cmsJobSource;
-    }
+    // fallback to legacy source
   }
   return legacyJobSource;
 }

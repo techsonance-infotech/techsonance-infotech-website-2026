@@ -20,9 +20,7 @@ export const talentPoolTable = pgTable(
     portfolioUrl: text("portfolio_url"),
     resumeStoragePath: text("resume_storage_path"),
     notes: text("notes"),
-    consentDate: timestamp("consent_date", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    consentDate: timestamp("consent_date", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("ts_content_talent_pool_email_idx").on(table.email),

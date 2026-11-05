@@ -97,7 +97,7 @@ export async function POST(request: Request) {
     }
 
     const env = getEnv();
-    const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
+    const adminEmail = env.ADMIN_EMAIL || "info@techsonance.co.in";
 
     let subject = "New Contact Inquiry - TechSonance";
     let textContent = "";
@@ -296,7 +296,7 @@ ${message}
 
     const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
     const result = await emailService.sendMail({
-      from: `"${senderName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
+      from: `"${senderName}" <${env.SMTP_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
