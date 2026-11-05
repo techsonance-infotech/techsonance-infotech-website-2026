@@ -422,7 +422,7 @@ export class AdminJobsService {
     };
 
     let updated: Job;
-    if ((this.db as any).update) {
+    if (this.db.update) {
       const [res] = await this.db
         .update(jobsTable)
         .set(updates)
