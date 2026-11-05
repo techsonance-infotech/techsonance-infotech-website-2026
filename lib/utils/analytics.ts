@@ -1,4 +1,4 @@
-import { AnalyticsService, type ConversionEvent } from "./services/analytics.service";
+import { AnalyticsService, type ConversionEvent } from "@/lib/services/analytics.service";
 
 export type { ConversionEvent };
 

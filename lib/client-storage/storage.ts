@@ -4,7 +4,7 @@ import {
   type Msg,
   type Visitor,
   type BookingCopy,
-} from "../services/chat-storage.service";
+} from "@/lib/services/chat-storage.service";
 
 export type { Msg, Visitor, BookingCopy };
 export { ChatDB };

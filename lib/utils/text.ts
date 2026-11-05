@@ -1,4 +1,4 @@
-import { getEnv } from "../env";
+import { getEnv } from "@/lib/env";
 
 
 export function sanitizeInput(text: string): string {
