@@ -1,0 +1,3313 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "7d027a7d-f80c-4cba-8045-aca463ae91da",
+  "prevIds": [
+    "e6cf85fe-7415-494c-9144-cc15c1fe0bdf"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "admin_role"
+      ],
+      "writes": [
+        "s|enum|public.admin_role",
+        "n|enum|public.admin_role",
+        "e|enum|public.admin_role",
+        "n|type|public.admin_role"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_approval_decision"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_approval_decision",
+        "n|enum|public.ts_ai_approval_decision",
+        "e|enum|public.ts_ai_approval_decision",
+        "n|type|public.ts_ai_approval_decision"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_approval_status"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_approval_status",
+        "n|enum|public.ts_ai_approval_status",
+        "e|enum|public.ts_ai_approval_status",
+        "n|type|public.ts_ai_approval_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_job_status"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_job_status",
+        "n|enum|public.ts_ai_job_status",
+        "e|enum|public.ts_ai_job_status",
+        "n|type|public.ts_ai_job_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_job_step"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_job_step",
+        "n|enum|public.ts_ai_job_step",
+        "e|enum|public.ts_ai_job_step",
+        "n|type|public.ts_ai_job_step"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_provider_status"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_provider_status",
+        "n|enum|public.ts_ai_provider_status",
+        "e|enum|public.ts_ai_provider_status",
+        "n|type|public.ts_ai_provider_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_step_status"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_step_status",
+        "n|enum|public.ts_ai_step_status",
+        "e|enum|public.ts_ai_step_status",
+        "n|type|public.ts_ai_step_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "ts_ai_topic_status"
+      ],
+      "writes": [
+        "s|enum|public.ts_ai_topic_status",
+        "n|enum|public.ts_ai_topic_status",
+        "e|enum|public.ts_ai_topic_status",
+        "n|type|public.ts_ai_topic_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "application_status"
+      ],
+      "writes": [
+        "s|enum|public.application_status",
+        "n|enum|public.application_status",
+        "e|enum|public.application_status",
+        "n|type|public.application_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "job_status"
+      ],
+      "writes": [
+        "s|enum|public.job_status",
+        "n|enum|public.job_status",
+        "e|enum|public.job_status",
+        "n|type|public.job_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "job_type"
+      ],
+      "writes": [
+        "s|enum|public.job_type",
+        "n|enum|public.job_type",
+        "e|enum|public.job_type",
+        "n|type|public.job_type"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "post_status"
+      ],
+      "writes": [
+        "s|enum|public.post_status",
+        "n|enum|public.post_status",
+        "e|enum|public.post_status",
+        "n|type|public.post_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_admin_users"
+      ],
+      "writes": [
+        "s|tbl|public.ts_admin_users",
+        "n|tbl|public.ts_admin_users",
+        "e|tbl|public.ts_admin_users",
+        "n|rel|public.ts_admin_users",
+        "n|type|public.ts_admin_users",
+        "n|rel|public.ts_admin_users_pkey",
+        "n|rel|public.ts_admin_users_email_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_generation_jobs"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_generation_jobs",
+        "n|tbl|public.ts_ai_generation_jobs",
+        "e|tbl|public.ts_ai_generation_jobs",
+        "n|rel|public.ts_ai_generation_jobs",
+        "n|type|public.ts_ai_generation_jobs",
+        "n|rel|public.ts_ai_generation_jobs_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.ts_ai_job_status",
+        "n|enum|public.ts_ai_job_step"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_job_steps"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_job_steps",
+        "n|tbl|public.ts_ai_job_steps",
+        "e|tbl|public.ts_ai_job_steps",
+        "n|rel|public.ts_ai_job_steps",
+        "n|type|public.ts_ai_job_steps",
+        "n|rel|public.ts_ai_job_steps_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.ts_ai_step_status"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_approval_requests"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_approval_requests",
+        "n|tbl|public.ts_ai_approval_requests",
+        "e|tbl|public.ts_ai_approval_requests",
+        "n|rel|public.ts_ai_approval_requests",
+        "n|type|public.ts_ai_approval_requests",
+        "n|rel|public.ts_ai_approval_requests_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.ts_ai_approval_status",
+        "n|enum|public.ts_ai_approval_decision"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_topics"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_topics",
+        "n|tbl|public.ts_ai_topics",
+        "e|tbl|public.ts_ai_topics",
+        "n|rel|public.ts_ai_topics",
+        "n|type|public.ts_ai_topics",
+        "n|rel|public.ts_ai_topics_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.ts_ai_topic_status"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_prompt_templates"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_prompt_templates",
+        "n|tbl|public.ts_ai_prompt_templates",
+        "e|tbl|public.ts_ai_prompt_templates",
+        "n|rel|public.ts_ai_prompt_templates",
+        "n|type|public.ts_ai_prompt_templates",
+        "n|rel|public.ts_ai_prompt_templates_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_usage_events"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_usage_events",
+        "n|tbl|public.ts_ai_usage_events",
+        "e|tbl|public.ts_ai_usage_events",
+        "n|rel|public.ts_ai_usage_events",
+        "n|type|public.ts_ai_usage_events",
+        "n|rel|public.ts_ai_usage_events_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_provider_accounts"
+      ],
+      "writes": [
+        "s|tbl|public.ts_ai_provider_accounts",
+        "n|tbl|public.ts_ai_provider_accounts",
+        "e|tbl|public.ts_ai_provider_accounts",
+        "n|rel|public.ts_ai_provider_accounts",
+        "n|type|public.ts_ai_provider_accounts",
+        "n|rel|public.ts_ai_provider_accounts_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.ts_ai_provider_status"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "thumbnail_missing"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.thumbnail_missing",
+        "n|col|public.ts_content_posts.thumbnail_missing",
+        "e|col|public.ts_content_posts.thumbnail_missing"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "thumbnail_provider"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.thumbnail_provider",
+        "n|col|public.ts_content_posts.thumbnail_provider",
+        "e|col|public.ts_content_posts.thumbnail_provider"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "thumbnail_prompt"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.thumbnail_prompt",
+        "n|col|public.ts_content_posts.thumbnail_prompt",
+        "e|col|public.ts_content_posts.thumbnail_prompt"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "thumbnail_alt"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.thumbnail_alt",
+        "n|col|public.ts_content_posts.thumbnail_alt",
+        "e|col|public.ts_content_posts.thumbnail_alt"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "ai_generated"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.ai_generated",
+        "n|col|public.ts_content_posts.ai_generated",
+        "e|col|public.ts_content_posts.ai_generated"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "ai_job_id"
+      ],
+      "writes": [
+        "s|col|public.ts_content_posts.ai_job_id",
+        "n|col|public.ts_content_posts.ai_job_id",
+        "e|col|public.ts_content_posts.ai_job_id"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_admin_memberships",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_admin_memberships.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_admin_memberships",
+        "n|sch|public",
+        "n|col|public.ts_admin_memberships.created_at"
+      ],
+      "sqlHash": "741cced6e97ff1ee"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_admin_memberships",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_admin_memberships.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_admin_memberships",
+        "n|sch|public",
+        "n|col|public.ts_admin_memberships.updated_at"
+      ],
+      "sqlHash": "76bdad956ff48e02"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_admin_sites",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_admin_sites.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_admin_sites",
+        "n|sch|public",
+        "n|col|public.ts_admin_sites.created_at"
+      ],
+      "sqlHash": "8c627b800eb59fd6"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_admin_sites",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_admin_sites.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_admin_sites",
+        "n|sch|public",
+        "n|col|public.ts_admin_sites.updated_at"
+      ],
+      "sqlHash": "891ad7e6579fbb42"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_applications",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_applications.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_applications",
+        "n|sch|public",
+        "n|col|public.ts_content_applications.created_at"
+      ],
+      "sqlHash": "d337a8796bcdd65a"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_applications",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_applications.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_applications",
+        "n|sch|public",
+        "n|col|public.ts_content_applications.updated_at"
+      ],
+      "sqlHash": "7ae093ee0f5676dd"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_authors",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_authors.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_authors",
+        "n|sch|public",
+        "n|col|public.ts_content_authors.created_at"
+      ],
+      "sqlHash": "590f771d44d4ef30"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_authors",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_authors.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_authors",
+        "n|sch|public",
+        "n|col|public.ts_content_authors.updated_at"
+      ],
+      "sqlHash": "bd73dff65bff07e5"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_categories",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_categories.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_categories",
+        "n|sch|public",
+        "n|col|public.ts_content_categories.created_at"
+      ],
+      "sqlHash": "d6c32a350e28c32a"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_categories",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_categories.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_categories",
+        "n|sch|public",
+        "n|col|public.ts_content_categories.updated_at"
+      ],
+      "sqlHash": "0ec6e9031f3da116"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_jobs",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_jobs.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_jobs",
+        "n|sch|public",
+        "n|col|public.ts_content_jobs.created_at"
+      ],
+      "sqlHash": "cb89949a0ff397b3"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_jobs",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_jobs.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_jobs",
+        "n|sch|public",
+        "n|col|public.ts_content_jobs.updated_at"
+      ],
+      "sqlHash": "53fb5d78f4d5e390"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_posts.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public",
+        "n|col|public.ts_content_posts.created_at"
+      ],
+      "sqlHash": "cc7016e2b0d8bdb9"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "ts_content_posts",
+        "updated_at"
+      ],
+      "writes": [
+        "s|colprop|public.ts_content_posts.updated_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public",
+        "n|col|public.ts_content_posts.updated_at"
+      ],
+      "sqlHash": "f4d62db558db5ab1"
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "ts_ai_job_steps",
+        "ts_ai_job_steps_idempotency_idx"
+      ],
+      "writes": [
+        "s|idx|public.ts_ai_job_steps_idempotency_idx",
+        "n|idx|public.ts_ai_job_steps_idempotency_idx",
+        "e|idx|public.ts_ai_job_steps_idempotency_idx",
+        "n|rel|public.ts_ai_job_steps_idempotency_idx"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_job_steps",
+        "n|sch|public",
+        "n|col|public.ts_ai_job_steps.idempotency_key"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "ts_ai_approval_requests",
+        "ts_ai_approval_requests_token_hash_idx"
+      ],
+      "writes": [
+        "s|idx|public.ts_ai_approval_requests_token_hash_idx",
+        "n|idx|public.ts_ai_approval_requests_token_hash_idx",
+        "e|idx|public.ts_ai_approval_requests_token_hash_idx",
+        "n|rel|public.ts_ai_approval_requests_token_hash_idx"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_approval_requests",
+        "n|sch|public",
+        "n|col|public.ts_ai_approval_requests.token_hash"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_generation_jobs"
+      ],
+      "writes": [
+        "s|fk|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
+        "n|fk|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
+        "e|fk|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
+        "n|con|public.ts_ai_generation_jobs.ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_generation_jobs",
+        "n|sch|public",
+        "n|tbl|public.ts_admin_sites",
+        "n|sch|public",
+        "n|col|public.ts_ai_generation_jobs.site_id",
+        "n|col|public.ts_admin_sites.id",
+        "e|uniqueness|public.ts_admin_sites.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_job_steps"
+      ],
+      "writes": [
+        "s|fk|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
+        "n|fk|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
+        "e|fk|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
+        "n|con|public.ts_ai_job_steps.ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_job_steps",
+        "n|sch|public",
+        "n|tbl|public.ts_ai_generation_jobs",
+        "n|sch|public",
+        "n|col|public.ts_ai_job_steps.job_id",
+        "n|col|public.ts_ai_generation_jobs.id",
+        "e|uniqueness|public.ts_ai_generation_jobs.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_approval_requests"
+      ],
+      "writes": [
+        "s|fk|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
+        "n|fk|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
+        "e|fk|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
+        "n|con|public.ts_ai_approval_requests.ts_ai_approval_requests_post_id_ts_content_posts_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_approval_requests",
+        "n|sch|public",
+        "n|tbl|public.ts_content_posts",
+        "n|sch|public",
+        "n|col|public.ts_ai_approval_requests.post_id",
+        "n|col|public.ts_content_posts.id",
+        "e|uniqueness|public.ts_content_posts.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_topics"
+      ],
+      "writes": [
+        "s|fk|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey",
+        "n|fk|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey",
+        "e|fk|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey",
+        "n|con|public.ts_ai_topics.ts_ai_topics_site_id_ts_admin_sites_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_topics",
+        "n|sch|public",
+        "n|tbl|public.ts_admin_sites",
+        "n|sch|public",
+        "n|col|public.ts_ai_topics.site_id",
+        "n|col|public.ts_admin_sites.id",
+        "e|uniqueness|public.ts_admin_sites.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ts_ai_prompt_templates"
+      ],
+      "writes": [
+        "s|fk|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
+        "n|fk|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
+        "e|fk|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
+        "n|con|public.ts_ai_prompt_templates.ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ts_ai_prompt_templates",
+        "n|sch|public",
+        "n|tbl|public.ts_admin_sites",
+        "n|sch|public",
+        "n|col|public.ts_ai_prompt_templates.site_id",
+        "n|col|public.ts_admin_sites.id",
+        "e|uniqueness|public.ts_admin_sites.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_admin_users",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_generation_jobs",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_job_steps",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_approval_requests",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_topics",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_prompt_templates",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_usage_events",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_provider_accounts",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "admin_role",
+        "values": [
+          "owner",
+          "admin",
+          "editor",
+          "author",
+          "viewer"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_approval_decision",
+        "values": [
+          "approve",
+          "reject",
+          "improve"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_approval_status",
+        "values": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED",
+          "IMPROVE",
+          "EXPIRED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_job_status",
+        "values": [
+          "QUEUED",
+          "RUNNING",
+          "COMPLETED",
+          "WAITING_QUOTA",
+          "NEEDS_REVIEW",
+          "FAILED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_job_step",
+        "values": [
+          "outline",
+          "sections",
+          "meta",
+          "image",
+          "validate",
+          "save-pending",
+          "completed"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_provider_status",
+        "values": [
+          "ACTIVE",
+          "EXHAUSTED",
+          "DISABLED",
+          "COOLDOWN"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_step_status",
+        "values": [
+          "PENDING",
+          "RUNNING",
+          "DONE",
+          "FAILED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "ts_ai_topic_status",
+        "values": [
+          "SUGGESTED",
+          "ACCEPTED",
+          "QUEUED",
+          "GENERATED",
+          "REJECTED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "application_status",
+        "values": [
+          "NEW",
+          "REVIEWING",
+          "SHORTLISTED",
+          "INTERVIEW",
+          "OFFERED",
+          "REJECTED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "job_status",
+        "values": [
+          "DRAFT",
+          "OPEN",
+          "CLOSED",
+          "ARCHIVED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "job_type",
+        "values": [
+          "Full Time",
+          "Internship",
+          "Contract",
+          "Partner"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "post_status",
+        "values": [
+          "DRAFT",
+          "IN_REVIEW",
+          "PUBLISHED",
+          "ARCHIVED"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "email",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "password_hash",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "role",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'admin'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "last_login_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "thumbnail_missing",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "thumbnail_provider",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "thumbnail_prompt",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "thumbnail_alt",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "ai_generated",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_content_posts",
+        "name": "ai_job_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "site_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "topic_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "topic_text",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "category",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'Engineering'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "status",
+        "type": "ts_ai_job_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'QUEUED'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "current_step",
+        "type": "ts_ai_job_step",
+        "typeSchema": "public",
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'outline'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "attempt",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "max_attempts",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "3",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "priority",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "version",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "1",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "worker_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "lease_expires_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "resume_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "result_post_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "error_details",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "job_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "step_name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "status",
+        "type": "ts_ai_step_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'PENDING'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "idempotency_key",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "input_data",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "output_data",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "provider",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "model",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "tokens_used",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "duration_ms",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "error",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "post_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "post_version",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "1",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "token_hash",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "status",
+        "type": "ts_ai_approval_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'PENDING'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "decision",
+        "type": "ts_ai_approval_decision",
+        "typeSchema": "public",
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "feedback",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "decided_by",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "decided_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "expires_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "used_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "email_message_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "email_status",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "site_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "title",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "keywords",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 1,
+        "default": "'{}'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "category",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'Engineering'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "target_audience",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'Tech Leads & Engineers'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "difficulty",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'intermediate'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "status",
+        "type": "ts_ai_topic_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'SUGGESTED'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "priority",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "suggested_by",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'ai'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "notes",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "site_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "step_name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "version",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "1",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "system_prompt",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "user_prompt_template",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "model_preference",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "'gemini-2.5-flash'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "temperature",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "70",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "job_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "step_name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "provider",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "model",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "prompt_tokens",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "completion_tokens",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "total_tokens",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "duration_ms",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "status",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "error_message",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "timestamp",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "CURRENT_TIMESTAMP",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "provider",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "label",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "capabilities",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 1,
+        "default": "'{}'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "models",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 1,
+        "default": "'{}'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "status",
+        "type": "ts_ai_provider_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'ACTIVE'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "priority",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "1",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "daily_quota_limit",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "daily_quota_used",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "quota_reset_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "cooldown_until",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "ts_ai_job_steps_idempotency_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "idempotency_key",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "ts_ai_approval_requests_token_hash_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "token_hash",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "ts_ai_generation_jobs_site_id_ts_admin_sites_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "site_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "ts_admin_sites",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "ts_ai_job_steps_job_id_ts_ai_generation_jobs_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "job_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "ts_ai_generation_jobs",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "ts_ai_approval_requests_post_id_ts_content_posts_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "post_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "ts_content_posts",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "ts_ai_topics_site_id_ts_admin_sites_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "site_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "ts_admin_sites",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "ts_ai_prompt_templates_site_id_ts_admin_sites_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "site_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "ts_admin_sites",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "ts_admin_users_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_generation_jobs",
+        "name": "ts_ai_generation_jobs_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_job_steps",
+        "name": "ts_ai_job_steps_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_approval_requests",
+        "name": "ts_ai_approval_requests_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_topics",
+        "name": "ts_ai_topics_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_prompt_templates",
+        "name": "ts_ai_prompt_templates_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_usage_events",
+        "name": "ts_ai_usage_events_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_ai_provider_accounts",
+        "name": "ts_ai_provider_accounts_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "ts_admin_users",
+        "name": "ts_admin_users_email_key",
+        "nameExplicit": false,
+        "columns": [
+          "email"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_admin_memberships\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_admin_memberships\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_admin_sites\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_admin_sites\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_applications\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_applications\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_authors\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_authors\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_categories\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_categories\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_jobs\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_jobs\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_posts\",\"created_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"ts_content_posts\",\"updated_at\"]",
+      "set": {
+        "default": "CURRENT_TIMESTAMP"
+      }
+    }
+  ]
+}

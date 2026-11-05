@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 
     const jobsService = container.get(AdminJobsService);
     const result = await jobsService.listJobs({
-      status,
+      status: status as any,
       search,
       siteId,
       limit,
@@ -83,6 +83,9 @@ export async function POST(req: Request) {
     const job = await jobsService.createJob(
       {
         ...parseResult.data,
+        type: parseResult.data.type as any,
+        status: parseResult.data.status as any,
+        experienceLevel: parseResult.data.experienceLevel as any,
         siteId,
       },
       session.userId,

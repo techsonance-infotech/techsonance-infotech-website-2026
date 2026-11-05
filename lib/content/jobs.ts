@@ -121,7 +121,7 @@ export const legacyJobSource: JobSource = {
 async function fetchCmsJobsRaw(status?: string): Promise<JobPosting[]> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchJobs(status);
+    return await db.fetchJobs(status as any);
   } catch {
     return [];
   }

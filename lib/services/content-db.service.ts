@@ -1,7 +1,12 @@
 import { inject } from "@needle-di/core";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
-import type { BlogPost, BlogPostStatus, JobPosting, JobStatus } from "../content/types";
+import type {
+  BlogPost,
+  BlogPostStatus,
+  JobPosting,
+} from "../content/types";
+import { JobStatus } from "../database/enum";
 
 /**
  * Production Content Database Service
@@ -32,7 +37,10 @@ export class ContentDbService {
       if (!postsData || postsData.length === 0) return [];
 
       const authorsData = await this.db.query.authorsTable.findMany();
-      const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
+      const authorMap = new Map<
+        string,
+        { name: string; role: string; avatar: string }
+      >();
       for (const a of authorsData) {
         authorMap.set(a.id, {
           name: a.name,
@@ -46,7 +54,9 @@ export class ContentDbService {
         const resolvedAuthors = Array.isArray(row.authorIds)
           ? row.authorIds
               .map((id) => authorMap.get(id))
-              .filter((a): a is { name: string; role: string; avatar: string } => !!a)
+              .filter(
+                (a): a is { name: string; role: string; avatar: string } => !!a,
+              )
           : [];
 
         const authors =
@@ -112,7 +122,10 @@ export class ContentDbService {
       if (!row) return null;
 
       const authorsData = await this.db.query.authorsTable.findMany();
-      const authorMap = new Map<string, { name: string; role: string; avatar: string }>();
+      const authorMap = new Map<
+        string,
+        { name: string; role: string; avatar: string }
+      >();
       for (const a of authorsData) {
         authorMap.set(a.id, {
           name: a.name,
@@ -124,7 +137,9 @@ export class ContentDbService {
       const resolvedAuthors = Array.isArray(row.authorIds)
         ? row.authorIds
             .map((id) => authorMap.get(id))
-            .filter((a): a is { name: string; role: string; avatar: string } => !!a)
+            .filter(
+              (a): a is { name: string; role: string; avatar: string } => !!a,
+            )
         : [];
 
       const authors =
@@ -184,12 +199,12 @@ export class ContentDbService {
     }
   }
 
-  async fetchJobs(status?: string): Promise<JobPosting[]> {
+  async fetchJobs(status?: JobStatus): Promise<JobPosting[]> {
     try {
-      const targetStatus = status || "OPEN";
+      const targetStatus = status || JobStatus.OPEN;
       const jobs = await this.db.query.jobsTable.findMany({
         where: {
-          status: targetStatus,
+          status: targetStatus as any,
         },
         orderBy: {
           createdAt: "desc",
@@ -205,7 +220,9 @@ export class ContentDbService {
         type: row.type,
         experienceLevel: row.experienceLevel || "Mid-Senior",
         description: row.description,
-        responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
+        responsibilities: Array.isArray(row.responsibilities)
+          ? row.responsibilities
+          : [],
         requirements: Array.isArray(row.requirements) ? row.requirements : [],
         benefits: Array.isArray(row.benefits) ? row.benefits : [],
         closesAt: row.closesAt ? row.closesAt.toISOString() : undefined,
@@ -235,7 +252,9 @@ export class ContentDbService {
         type: row.type,
         experienceLevel: row.experienceLevel || "Mid-Senior",
         description: row.description,
-        responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
+        responsibilities: Array.isArray(row.responsibilities)
+          ? row.responsibilities
+          : [],
         requirements: Array.isArray(row.requirements) ? row.requirements : [],
         benefits: Array.isArray(row.benefits) ? row.benefits : [],
         closesAt: row.closesAt ? row.closesAt.toISOString() : undefined,
@@ -250,7 +269,7 @@ export class ContentDbService {
     try {
       const jobs = await this.db.query.jobsTable.findMany({
         where: {
-          status: "OPEN",
+          status: "OPEN" as any,
         },
         columns: {
           slug: true,

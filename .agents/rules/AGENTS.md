@@ -2,6 +2,20 @@
 
 Master rules for every AI agent and developer. Read this first; it indexes the numbered rule files. This file wins on precedence, layers, Definition of Done and the NEVER list.
 
+## 1. No hardcoded strings; constants placement
+
+- Fixed strings that carry meaning (error, response and log messages, config keys, queue/event names, OpenAPI summaries/descriptions) live in constants files, never inline in services, controllers or providers.
+- Domain-specific (error codes, messages, validation constants, OpenAPI docs text, feature settings) -> `lib/<domain>/constants/<domain>.constant.ts`.
+- Cross-cutting, shared by multiple independent domains (`api.constant.ts` standard headers, `validation.constant.ts` global UUID/email regexes, `cache.constant.ts` Redis TTLs, `permissions.constant.ts` global RBAC, `http-status.constant.ts`) -> `lib/constants/`.
+- Before writing any string literal ask: domain-specific or global? Put it in the right constants file immediately, never "temporarily" inline.
+
+## 2. Strict typing & validation
+
+1. Zero `any` / `unknown` / implicit typing. Every variable, parameter, return type, DTO and object shape has an explicit, precise type; no quick-fix `any` casts.
+2. After defining or editing types, check that file for type errors immediately; do not batch type-checking to the end.
+3. Fix a type mismatch completely in the current file before touching the next file or step; never leave a known type error behind.
+4. **Barrel imports for database schemas & enums:** Always import database schema tables and models from `lib/database/schema/index.schema.js` and enums from `lib/database/enum/index.enum.js`. Never bypass index barrels to import individual schema files via deep relative paths (e.g. `lib/database/schema/core/*.schema.js`).
+
 ## 1. Project facts
 
 Taken from the project's own code. Items marked ⚠ must be re-verified (`09`) before you rely on them.

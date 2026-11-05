@@ -72,7 +72,16 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     }
 
     const jobsService = container.get(AdminJobsService);
-    const updated = await jobsService.updateJob(id, parseResult.data, session.userId);
+    const updated = await jobsService.updateJob(
+      id,
+      {
+        ...parseResult.data,
+        type: parseResult.data.type as any,
+        status: parseResult.data.status as any,
+        experienceLevel: parseResult.data.experienceLevel as any,
+      },
+      session.userId,
+    );
 
     return NextResponse.json({ ok: true, job: updated });
   } catch (error) {

@@ -9,14 +9,22 @@ import {
   AiProviderStatus,
 } from "../enum/ai.enum";
 import {
-  AdminRoleValues,
-  PostStatusValues,
-  JobStatusValues,
-  JobTypeValues,
-  ApplicationStatusValues,
+  AdminRole,
+  PostStatus,
+  JobStatus,
+  JobType,
+  JobWorkMode,
+  JobVisaSupport,
+  JobExperienceLevel,
+  JobSalaryPeriod,
+  JobApplicationMethod,
+  JobCoverLetterRequirement,
+  JobApprovalStatus,
+  JobVisibility,
+  ApplicationStatus,
 } from "../enum/content.enum";
 
-// AI Engine Enums (Matching zion-api Architecture)
+// AI Engine Enums
 export const AiJobStatusEnum = pgEnum(
   "ts_ai_job_status",
   Object.values(AiJobStatus) as [string, ...string[]],
@@ -55,22 +63,94 @@ export const AiProviderStatusEnum = pgEnum(
 // Content & Admin Enums
 export const AdminRoleEnum = pgEnum(
   "admin_role",
-  AdminRoleValues as unknown as [string, ...string[]],
+  Object.values(AdminRole) as [string, ...string[]],
 );
 
 export const PostStatusEnum = pgEnum(
   "post_status",
-  PostStatusValues as unknown as [string, ...string[]],
+  Object.values(PostStatus) as [string, ...string[]],
 );
 
-export const JobStatusEnum = pgEnum(
-  "job_status",
-  JobStatusValues as unknown as [string, ...string[]],
-);
+export const JobStatusEnum = pgEnum("ts_content_job_status", [
+  JobStatus.DRAFT,
+  JobStatus.IN_REVIEW,
+  JobStatus.SCHEDULED,
+  JobStatus.PUBLISHED,
+  JobStatus.OPEN,
+  JobStatus.PAUSED,
+  JobStatus.CLOSED,
+  JobStatus.ARCHIVED,
+]);
 
-export const JobTypeEnum = pgEnum("job_type", JobTypeValues as unknown as [string, ...string[]]);
+export const JobTypeEnum = pgEnum("ts_content_job_type", [
+  JobType.FULL_TIME,
+  JobType.PART_TIME,
+  JobType.CONTRACT,
+  JobType.INTERNSHIP,
+  JobType.FREELANCE,
+  JobType.TEMPORARY,
+  JobType.LEGACY_FULL_TIME,
+  JobType.LEGACY_CONTRACT,
+  JobType.LEGACY_INTERNSHIP,
+  JobType.LEGACY_PARTNER,
+]);
 
-export const ApplicationStatusEnum = pgEnum(
-  "application_status",
-  ApplicationStatusValues as unknown as [string, ...string[]],
-);
+export const JobWorkModeEnum = pgEnum("ts_content_job_work_mode", [
+  JobWorkMode.ON_SITE,
+  JobWorkMode.HYBRID,
+  JobWorkMode.REMOTE,
+]);
+
+export const JobVisaSupportEnum = pgEnum("ts_content_job_visa_support", [
+  JobVisaSupport.YES,
+  JobVisaSupport.NO,
+  JobVisaSupport.CASE_BY_CASE,
+]);
+
+export const JobExperienceLevelEnum = pgEnum("ts_content_job_experience_level", [
+  JobExperienceLevel.ENTRY,
+  JobExperienceLevel.MID,
+  JobExperienceLevel.SENIOR,
+  JobExperienceLevel.LEAD,
+  JobExperienceLevel.EXECUTIVE,
+  JobExperienceLevel.LEGACY_MID_SENIOR,
+]);
+
+export const JobSalaryPeriodEnum = pgEnum("ts_content_job_salary_period", [
+  JobSalaryPeriod.HOUR,
+  JobSalaryPeriod.MONTH,
+  JobSalaryPeriod.YEAR,
+]);
+
+export const JobApplicationMethodEnum = pgEnum("ts_content_job_application_method", [
+  JobApplicationMethod.BUILTIN,
+  JobApplicationMethod.EXTERNAL,
+]);
+
+export const JobCoverLetterRequirementEnum = pgEnum("ts_content_job_cover_letter_requirement", [
+  JobCoverLetterRequirement.OFF,
+  JobCoverLetterRequirement.OPTIONAL,
+  JobCoverLetterRequirement.REQUIRED,
+]);
+
+export const JobApprovalStatusEnum = pgEnum("ts_content_job_approval_status", [
+  JobApprovalStatus.PENDING,
+  JobApprovalStatus.APPROVED,
+  JobApprovalStatus.RETURNED,
+]);
+
+export const JobVisibilityEnum = pgEnum("ts_content_job_visibility", [
+  JobVisibility.PUBLIC,
+  JobVisibility.UNLISTED,
+]);
+
+export const ApplicationStatusEnum = pgEnum("ts_content_application_status", [
+  ApplicationStatus.NEW,
+  ApplicationStatus.SCREENING,
+  ApplicationStatus.SHORTLISTED,
+  ApplicationStatus.INTERVIEW,
+  ApplicationStatus.OFFER,
+  ApplicationStatus.HIRED,
+  ApplicationStatus.REJECTED,
+  ApplicationStatus.WITHDRAWN,
+]);

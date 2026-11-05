@@ -16,8 +16,8 @@ export async function enforceRateLimit(policy: RateLimitPolicy, identifier: stri
   const rateLimitKey = `${policy.key}:${identifier}`;
   const res = await checkRateLimit(rateLimitKey, config);
 
-  if (!res.allowed) {
-    const retryAfterSec = Math.max(1, Math.ceil((res.resetAt - Date.now()) / 1000));
+  if (!res.success) {
+    const retryAfterSec = res.retryAfter ?? 1;
     throw new AppError("RATE_LIMITED", "Too many requests. Please slow down.", {
       retryAfterSec,
     });

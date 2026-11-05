@@ -6,6 +6,7 @@ import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
+import { JobStatus } from "@/lib/database/enum";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ export default async function AdminDashboardPage() {
     postsService.listPosts({ limit: 10 }),
     postsService.listPosts({ status: "IN_REVIEW", limit: 5 }),
     postsService.listPosts({ status: "PUBLISHED", limit: 1 }),
-    jobsService.listJobs({ status: "OPEN", limit: 5 }),
+    jobsService.listJobs({ status: JobStatus.OPEN, limit: 5 }),
   ]);
 
   const kpis = [

@@ -5,12 +5,13 @@ import { revalidateTag } from "next/cache";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
 import { jobsTable, type Job, type InsertJob } from "../database/schema/core/job.schema";
+import { JobStatus } from "../database/enum";
 import { auditLogsTable } from "../database/schema/core/audit.schema";
 import { versionsTable } from "../database/schema/core/version.schema";
 
 export interface ListJobsOptions {
   siteId?: string;
-  status?: string;
+  status?: JobStatus;
   search?: string;
   limit?: number;
   offset?: number;
@@ -145,7 +146,7 @@ export class AdminJobsService {
     return this.updateJob(
       id,
       {
-        status: "OPEN",
+        status: JobStatus.OPEN,
       },
       actorId,
       ipAddress,
@@ -156,7 +157,7 @@ export class AdminJobsService {
     return this.updateJob(
       id,
       {
-        status: "CLOSED",
+        status: JobStatus.CLOSED,
       },
       actorId,
       ipAddress,

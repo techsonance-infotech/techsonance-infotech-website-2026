@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { Job } from "@/lib/database/schema/core/job.schema";
+import { JobStatus } from "@/lib/database/enum";
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -114,9 +115,9 @@ export default function AdminJobsPage() {
 
   const tabs = [
     { label: "All Roles", value: "ALL" },
-    { label: "Open Positions", value: "OPEN" },
-    { label: "Drafts", value: "DRAFT" },
-    { label: "Closed", value: "CLOSED" },
+    { label: "Open Positions", value: JobStatus.OPEN },
+    { label: "Drafts", value: JobStatus.DRAFT },
+    { label: "Closed", value: JobStatus.CLOSED },
   ];
 
   return (
@@ -341,8 +342,8 @@ export default function AdminJobsPage() {
                       <td className="py-3.5 px-4 text-slate-600 font-medium">{job.type}</td>
                       <td className="py-3.5 px-4">
                         <Badge
-                          variant={job.status === "OPEN" ? "success" : "secondary"}
-                          dot={job.status === "OPEN"}
+                          variant={job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED ? "success" : "secondary"}
+                          dot={job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED}
                         >
                           {job.status}
                         </Badge>

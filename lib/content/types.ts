@@ -38,7 +38,15 @@ export interface BlogPost {
   seo?: BlogPostSeo;
 }
 
-export type JobStatus = "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED";
+export type JobStatus =
+  | "DRAFT"
+  | "IN_REVIEW"
+  | "SCHEDULED"
+  | "PUBLISHED"
+  | "OPEN"
+  | "PAUSED"
+  | "CLOSED"
+  | "ARCHIVED";
 
 export interface JobPosting {
   id?: string;

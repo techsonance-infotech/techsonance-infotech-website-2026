@@ -69,8 +69,7 @@ async function main() {
     const existingTablesRes = await db.execute<{ table_name: string }>(sql`
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-        AND table_name = ANY(${expectedTables})
+      WHERE table_schema = 'public'
     `);
 
     const existingTableNames = new Set(existingTablesRes.map((r) => r.table_name));
@@ -95,8 +94,9 @@ async function main() {
       console.log("\n🎉 All 9 Phase 1 tables are present and ready!");
     } else {
       console.log(
-        `\n⚠️  ${existingTableNames.size}/${expectedTables.length} tables found in public schema.`,
+        `\n⚠️  ${existingTableNames.size}/${expectedTables.length} tables found in public schema:`,
       );
+      console.log([...existingTableNames].sort().map((t) => `   - ${t}`).join("\n"));
     }
   } catch (err: unknown) {
     const error = err as {
