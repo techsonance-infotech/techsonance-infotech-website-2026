@@ -1,3 +1,4 @@
+import "server-only";
 import { inject } from "@needle-di/core";
 import { evaluateGate, type GateResult } from "../rag/gate";
 import { KBSearchService, type RetrievedChunk } from "./kb-search.service";

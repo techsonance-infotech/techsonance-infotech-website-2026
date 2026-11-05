@@ -1,3 +1,4 @@
+import "server-only";
 import { inject } from "@needle-di/core";
 import { LLMHealthService } from "./llm-health.service";
 import { LLMProviderService } from "./llm-provider.service";

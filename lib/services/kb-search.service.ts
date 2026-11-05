@@ -1,3 +1,4 @@
+import "server-only";
 import { getKBIndex, kbChunks, faqList, type KBChunk } from "../rag/kb";
 import { expandQuerySynonyms } from "../rag/synonyms";
 

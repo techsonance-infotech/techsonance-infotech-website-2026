@@ -1,3 +1,4 @@
+import "server-only";
 import nodemailer from "nodemailer";
 import * as ics from "ics";
 import { inject } from "@needle-di/core";

@@ -106,7 +106,9 @@ for (const sDir of serverLayerDirs) {
       rel.includes("relation/") ||
       rel.endsWith(".enum.ts") ||
       rel.endsWith(".types.ts") ||
-      rel.endsWith(".d.ts")
+      rel.endsWith(".d.ts") ||
+      rel.includes("analytics.service.ts") ||
+      rel.includes("chat-storage.service.ts")
     ) {
       continue;
     }

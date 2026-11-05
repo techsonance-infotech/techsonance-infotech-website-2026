@@ -1,3 +1,4 @@
+import "server-only";
 import { inject } from "@needle-di/core";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../di/tokens";
 import type { BOT_CONFIG } from "../config";
