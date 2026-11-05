@@ -89,9 +89,9 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
 
       const approvalService = new ApprovalService(mockDb, {} as EmailService);
 
-      await expect(
-        approvalService.decide("fake-token", "approve"),
-      ).rejects.toThrow("already been used");
+      await expect(approvalService.decide("fake-token", "approve")).rejects.toThrow(
+        "already been used",
+      );
     });
   });
 
@@ -117,12 +117,7 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
         })),
       } as unknown as Database;
 
-      const orchestrator = new JobOrchestratorService(
-        mockDb,
-        {} as any,
-        {} as any,
-        {} as any,
-      );
+      const orchestrator = new JobOrchestratorService(mockDb, {} as any, {} as any, {} as any);
 
       const job = await orchestrator.createJob({
         topicText: "Distributed Caching with Redis",

@@ -24,9 +24,7 @@ export const jobStepsTable = pgTable(
     durationMs: integer("duration_ms").default(0),
     error: text("error"),
   },
-  (table) => [
-    uniqueIndex("ts_ai_job_steps_idempotency_idx").on(table.idempotencyKey),
-  ],
+  (table) => [uniqueIndex("ts_ai_job_steps_idempotency_idx").on(table.idempotencyKey)],
 );
 
 export type JobStep = typeof jobStepsTable.$inferSelect;

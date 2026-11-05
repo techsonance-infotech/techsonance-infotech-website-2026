@@ -183,7 +183,7 @@ function FeaturedProjectRow({
               transition={t(0.32)}
               className="flex items-center gap-4 pt-1"
             >
-              <Button asChild variant="primary" size="sm" showArrow={true}>
+              <Button asChild variant="default" size="sm">
                 <Link href={`/portfolio/${project.slug}`}>View Project</Link>
               </Button>
               {project.liveUrl && (
@@ -361,7 +361,7 @@ export default function FeaturedProjectsSection() {
                 See every product we&apos;ve shipped
               </h3>
             </div>
-            <Button asChild variant="primary" showArrow={true} className="shrink-0">
+            <Button asChild variant="default" className="shrink-0">
               <Link href="/portfolio">View All Projects</Link>
             </Button>
           </div>

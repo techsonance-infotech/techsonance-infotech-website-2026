@@ -14,7 +14,9 @@ export class CloudflareImageAdapter {
     const apiToken = env.CF_API_TOKEN;
 
     if (!accountId || !apiToken) {
-      throw new Error("Cloudflare AI credentials not configured (CF_ACCOUNT_ID or CF_API_TOKEN missing)");
+      throw new Error(
+        "Cloudflare AI credentials not configured (CF_ACCOUNT_ID or CF_API_TOKEN missing)",
+      );
     }
 
     const width = options.width ?? 1200;

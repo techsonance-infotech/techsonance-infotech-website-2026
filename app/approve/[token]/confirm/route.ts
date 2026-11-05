@@ -9,10 +9,7 @@ const confirmSchema = z.object({
   feedback: z.string().optional(),
 });
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ token: string }> },
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ token: string }> }) {
   try {
     const { token } = await params;
     if (!token) {

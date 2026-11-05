@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import nodemailer from "nodemailer";
+import { createTransport } from "nodemailer";
 import { BOT_CONFIG } from "../lib/config";
 
 // Simple env loader without external dependency
@@ -285,7 +285,7 @@ async function run() {
     console.log(`   • Admin Email: ${adminEmail ?? "(missing)"}`);
 
     try {
-      const transporter = nodemailer.createTransport({
+      const transporter = createTransport({
         host: process.env.SMTP_HOST || "smtp.gmail.com",
         port: Number(process.env.SMTP_PORT || 465),
         secure: Number(process.env.SMTP_PORT || 465) === 465,

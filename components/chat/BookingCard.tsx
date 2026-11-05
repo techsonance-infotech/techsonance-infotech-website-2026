@@ -263,12 +263,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Name & Email */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-name" className="block text-[11px] font-medium text-slate-600 mb-1">
               Your Name <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <User className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
+                id="booking-name"
                 type="text"
                 required
                 value={name}
@@ -280,12 +281,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-email" className="block text-[11px] font-medium text-slate-600 mb-1">
               Work Email <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
+                id="booking-email"
                 type="email"
                 required
                 value={email}
@@ -300,12 +302,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Phone & Company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-phone" className="block text-[11px] font-medium text-slate-600 mb-1">
               Phone / WhatsApp (Optional)
             </label>
             <div className="relative">
               <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
+                id="booking-phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -316,12 +319,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-company" className="block text-[11px] font-medium text-slate-600 mb-1">
               Company (Optional)
             </label>
             <div className="relative">
               <Building className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
               <input
+                id="booking-company"
                 type="text"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
@@ -335,12 +339,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         {/* Project Type & Budget */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-project-type" className="block text-[11px] font-medium text-slate-600 mb-1">
               Project Type
             </label>
             <div className="relative">
               <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
+                id="booking-project-type"
                 value={projectType}
                 onChange={(e) => setProjectType(e.target.value)}
                 className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-[#1155CC]"
@@ -355,12 +360,13 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-600 mb-1">
+            <label htmlFor="booking-budget" className="block text-[11px] font-medium text-slate-600 mb-1">
               Target Budget
             </label>
             <div className="relative">
               <DollarSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
+                id="booking-budget"
                 value={budgetRange}
                 onChange={(e) => setBudgetRange(e.target.value)}
                 className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-[#1155CC]"
@@ -377,7 +383,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
         {/* Time Slot Selection */}
         <div>
-          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+          <label htmlFor="booking-slot" className="block text-[11px] font-medium text-slate-600 mb-1">
             Select Preferred Time Slot ({visitorTimezone}) <span className="text-red-500">*</span>
           </label>
           {loadingSlots ? (
@@ -389,6 +395,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             <div className="relative">
               <Clock className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
+                id="booking-slot"
                 required
                 value={selectedSlotIso}
                 onChange={(e) => setSelectedSlotIso(e.target.value)}
@@ -410,10 +417,11 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
 
         {/* Short Message / Idea */}
         <div>
-          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+          <label htmlFor="booking-overview" className="block text-[11px] font-medium text-slate-600 mb-1">
             Brief Project Overview (Optional)
           </label>
           <textarea
+            id="booking-overview"
             rows={2}
             value={message}
             onChange={(e) => setMessage(e.target.value)}

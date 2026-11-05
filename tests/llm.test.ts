@@ -38,6 +38,7 @@ describe("LLM Router & Failover State Machine Tests", () => {
       name: "Mock Provider A",
       enabled: () => true,
       async *chat() {
+        if (false) yield "";
         throw new QuotaError("rate", 60, "Rate limit reached");
       },
     };
@@ -114,6 +115,7 @@ describe("LLM Router & Failover State Machine Tests", () => {
       name: "Mock Provider A",
       enabled: () => true,
       async *chat() {
+        if (false) yield "";
         aAttempts++;
         throw new QuotaError("daily", undefined, "Daily limit reached");
       },
@@ -124,6 +126,7 @@ describe("LLM Router & Failover State Machine Tests", () => {
       name: "Mock Provider B",
       enabled: () => true,
       async *chat() {
+        if (false) yield "";
         bAttempts++;
         throw new QuotaError("server", 120, "Server 500 error");
       },

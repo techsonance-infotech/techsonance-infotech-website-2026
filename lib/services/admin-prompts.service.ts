@@ -128,10 +128,7 @@ export class AdminPromptsService {
       .select()
       .from(promptTemplatesTable)
       .where(
-        and(
-          eq(promptTemplatesTable.stepName, stepName),
-          eq(promptTemplatesTable.isActive, true)
-        )
+        and(eq(promptTemplatesTable.stepName, stepName), eq(promptTemplatesTable.isActive, true)),
       )
       .limit(1);
 
@@ -168,7 +165,7 @@ export class AdminPromptsService {
       userPromptTemplate: string;
       modelPreference?: string;
       temperature?: number;
-    }
+    },
   ): Promise<PromptTemplate> {
     const siteId = await this.getDefaultSiteId();
     const existing = await this.getTemplateByStep(stepName);

@@ -31,20 +31,20 @@ export async function GET(req: Request) {
   const ragService = container.get(RAGService);
 
   const providers = providerService.getProviders();
-  const providerStatuses = [];
-
-  for (const p of providers) {
-    const enabled = p.enabled();
-    const rec = await healthService.getRecord(p.id);
-    providerStatuses.push({
-      id: p.id,
-      name: p.name,
-      enabled,
-      state: enabled ? rec.state : "DISABLED",
-      nextTry: rec.nextTry > 0 ? new Date(rec.nextTry).toISOString() : null,
-      consecutiveServerErrors: rec.consecutiveServerErrors,
-    });
-  }
+  const providerStatuses = await Promise.all(
+    providers.map(async (p) => {
+      const enabled = p.enabled();
+      const rec = await healthService.getRecord(p.id);
+      return {
+        id: p.id,
+        name: p.name,
+        enabled,
+        state: enabled ? rec.state : "DISABLED",
+        nextTry: rec.nextTry > 0 ? new Date(rec.nextTry).toISOString() : null,
+        consecutiveServerErrors: rec.consecutiveServerErrors,
+      };
+    }),
+  );
 
   const istTime = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Kolkata",

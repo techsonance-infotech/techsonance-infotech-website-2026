@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
     // Contact page form verification
     if (body.firstName !== undefined || body.lastName !== undefined) {
-      const { firstName, lastName, email, countryCode, phone, interest, message } = body;
+      const { firstName, lastName, email, countryCode, phone, interest: _interest, message } = body;
 
       if (
         !firstName?.trim() ||

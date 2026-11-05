@@ -90,7 +90,7 @@ export default function AIUsageTelemetryPage() {
               style={{
                 width: `${Math.min(
                   100,
-                  ((data?.dailyPostsUsed ?? 0) / (data?.dailyPostCap ?? 1)) * 100
+                  ((data?.dailyPostsUsed ?? 0) / (data?.dailyPostCap ?? 1)) * 100,
                 )}%`,
               }}
             />
@@ -119,7 +119,7 @@ export default function AIUsageTelemetryPage() {
               style={{
                 width: `${Math.min(
                   100,
-                  ((data?.weeklyPostsUsed ?? 0) / (data?.weeklyPostCap ?? 3)) * 100
+                  ((data?.weeklyPostsUsed ?? 0) / (data?.weeklyPostCap ?? 3)) * 100,
                 )}%`,
               }}
             />
@@ -212,9 +212,7 @@ export default function AIUsageTelemetryPage() {
 
       {/* Recent Usage Logs */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm space-y-4">
-        <h2 className="text-sm font-black text-slate-900 font-sora">
-          Recent AI Invocation Events
-        </h2>
+        <h2 className="text-sm font-black text-slate-900 font-sora">Recent AI Invocation Events</h2>
 
         {loading ? (
           <div className="py-8 text-center text-xs text-slate-400 font-semibold">
@@ -250,7 +248,9 @@ export default function AIUsageTelemetryPage() {
                     <td className="py-3 font-semibold text-slate-800">
                       {ev.totalTokens ? ev.totalTokens.toLocaleString() : "-"}
                     </td>
-                    <td className="py-3 text-slate-500">{ev.durationMs ? `${ev.durationMs}ms` : "-"}</td>
+                    <td className="py-3 text-slate-500">
+                      {ev.durationMs ? `${ev.durationMs}ms` : "-"}
+                    </td>
                     <td className="py-3">
                       <Badge
                         variant="outline"

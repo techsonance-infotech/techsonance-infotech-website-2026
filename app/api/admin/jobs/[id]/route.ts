@@ -5,7 +5,11 @@ import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 
 const updateJobSchema = z.object({
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/).optional(),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
   title: z.string().min(3).optional(),
   department: z.string().min(2).optional(),
   location: z.string().min(2).optional(),

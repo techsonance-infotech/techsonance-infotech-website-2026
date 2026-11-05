@@ -20,10 +20,7 @@ export function createSessionToken(payload: Omit<SessionPayload, "exp">): string
   const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7; // 7 days
   const data: SessionPayload = { ...payload, exp };
   const encodedData = Buffer.from(JSON.stringify(data)).toString("base64url");
-  const signature = crypto
-    .createHmac("sha256", SECRET)
-    .update(encodedData)
-    .digest("base64url");
+  const signature = crypto.createHmac("sha256", SECRET).update(encodedData).digest("base64url");
   return `${encodedData}.${signature}`;
 }
 

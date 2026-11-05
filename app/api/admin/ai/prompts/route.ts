@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest} from "next/server";
+import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPromptsService } from "@/lib/services/admin-prompts.service";
@@ -34,7 +35,7 @@ export async function PUT(req: NextRequest) {
     if (!stepName || !systemPrompt || !userPromptTemplate) {
       return NextResponse.json(
         { error: "stepName, systemPrompt, and userPromptTemplate are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,7 +51,7 @@ export async function PUT(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to save template" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

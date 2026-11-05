@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
@@ -12,19 +12,17 @@ import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
 import { cn } from "@/lib/utils";
 
-export default function SitemapPage() {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+const subscribeResize = (callback: () => void) => {
+  window.addEventListener("resize", callback);
+  return () => window.removeEventListener("resize", callback);
+};
 
-  useEffect(() => {
-    setMounted(true);
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+export default function SitemapPage() {
+  const isMobile = useSyncExternalStore(
+    subscribeResize,
+    () => window.innerWidth < 768,
+    () => false,
+  );
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -48,13 +46,13 @@ export default function SitemapPage() {
         <div
           className={cn(
             "absolute top-0 left-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-            mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+            isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
           )}
         />
         <div
           className={cn(
             "absolute top-[40%] right-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-            mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+            isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
           )}
         />
 
@@ -74,16 +72,16 @@ export default function SitemapPage() {
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <ElegantShape
               delay={0.3}
-              width={mounted && isMobile ? 200 : 400}
-              height={mounted && isMobile ? 60 : 120}
+              width={isMobile ? 200 : 400}
+              height={isMobile ? 60 : 120}
               rotate={12}
               gradient="from-[#1155CC]/20 to-transparent"
               className="left-[-10%] top-[10%]"
             />
             <ElegantShape
               delay={0.5}
-              width={mounted && isMobile ? 150 : 300}
-              height={mounted && isMobile ? 50 : 100}
+              width={isMobile ? 150 : 300}
+              height={isMobile ? 50 : 100}
               rotate={-15}
               gradient="from-[#22B6F6]/25 to-transparent"
               className="right-[-5%] bottom-[10%]"

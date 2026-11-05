@@ -1,9 +1,11 @@
 import "server-only";
 import { inject } from "@needle-di/core";
+import { eq } from "drizzle-orm";
 import { getSessionFromCookies } from "../auth/session";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
 import { type Site, type Membership } from "../database/schema/core/site.schema";
+import { usersTable } from "../database/schema/core/user.schema";
 import { getEnv } from "../env";
 
 export interface AdminSession {
@@ -31,9 +33,11 @@ export class AdminAuthService {
       if (cookieSession) {
         try {
           // Query user from main database
-          const user = await this.db.query.usersTable.findFirst({
-            where: { id: cookieSession.userId },
-          });
+          const [user] = await this.db
+            .select()
+            .from(usersTable)
+            .where(eq(usersTable.id, cookieSession.userId))
+            .limit(1);
 
           if (user && user.isActive) {
             return {

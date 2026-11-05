@@ -1,7 +1,15 @@
 import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, XCircle, AlertTriangle, ArrowRight, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
+import {
+  CheckCircle2,
+  XCircle,
+  ArrowRight,
+  Clock,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { getContainer } from "@/lib/di/container";
 import { ApprovalService } from "@/lib/services/approval.service";
 import { ApprovalActionForm } from "./ApprovalActionForm";
@@ -11,6 +19,10 @@ export const metadata: Metadata = {
   description: "Secure 1-click publishing approval for AI-drafted articles.",
   robots: { index: false, follow: false },
 };
+
+function checkIsExpired(expiresAt: Date | string): boolean {
+  return Date.now() > new Date(expiresAt).getTime();
+}
 
 export default async function ApprovePage({
   params,
@@ -36,7 +48,8 @@ export default async function ApprovePage({
           </div>
           <h1 className="text-xl font-black text-slate-900 font-sora">Invalid Approval Link</h1>
           <p className="text-xs text-slate-500 leading-relaxed">
-            This token does not exist or has been revoked. Please check your email or log into the Studio CMS.
+            This token does not exist or has been revoked. Please check your email or log into the
+            Studio CMS.
           </p>
           <Link
             href="/admin/blog"
@@ -51,7 +64,7 @@ export default async function ApprovePage({
   }
 
   const { request, post } = data;
-  const isExpired = new Date() > new Date(request.expiresAt);
+  const isExpired = checkIsExpired(request.expiresAt);
   const isUsed = !!request.usedAt;
 
   if (isUsed || isExpired) {
@@ -122,7 +135,9 @@ export default async function ApprovePage({
               <Sparkles className="w-3 h-3 text-blue-600" />
               Autonomous AI Draft (v{request.postVersion})
             </span>
-            <span className="text-[11px] font-medium text-slate-400">• Ready for publishing decision</span>
+            <span className="text-[11px] font-medium text-slate-400">
+              • Ready for publishing decision
+            </span>
           </div>
 
           <div>
@@ -136,10 +151,12 @@ export default async function ApprovePage({
 
           {post.heroImage && (
             <div className="rounded-2xl overflow-hidden border border-slate-200/80 max-h-80 relative bg-slate-50">
-              <img
+              <Image
                 src={post.heroImage}
                 alt={post.thumbnailAlt || post.title}
-                className="w-full h-full object-cover"
+                width={800}
+                height={450}
+                className="w-full h-auto object-cover max-h-80"
               />
             </div>
           )}
@@ -154,11 +171,7 @@ export default async function ApprovePage({
         </div>
 
         {/* Confirmation Form */}
-        <ApprovalActionForm
-          token={token}
-          postId={post.id}
-          initialDecision={initialDecision}
-        />
+        <ApprovalActionForm token={token} postId={post.id} initialDecision={initialDecision} />
       </main>
 
       {/* Footer */}

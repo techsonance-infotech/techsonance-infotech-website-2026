@@ -75,7 +75,11 @@ export class JobOrchestratorService {
    * Executes the 6-step autonomous generation pipeline
    */
   async executeJob(jobId: string): Promise<{ success: boolean; postId?: string; error?: string }> {
-    const [job] = await this.db.select().from(generationJobsTable).where(eq(generationJobsTable.id, jobId)).limit(1)
+    const [job] = await this.db
+      .select()
+      .from(generationJobsTable)
+      .where(eq(generationJobsTable.id, jobId))
+      .limit(1);
 
     if (!job?.id) {
       return { success: false, error: "Job not found" };
@@ -230,8 +234,12 @@ export class JobOrchestratorService {
   }
 
   private async getCachedStepData<T = any>(idempotencyKey: string): Promise<T | null> {
-    const [step] = await this.db.select().from(jobStepsTable).where(eq(jobStepsTable.idempotencyKey, idempotencyKey)).limit(1);
-    return step?.status === "DONE" ? ((step.outputData as unknown) as T) : null;
+    const [step] = await this.db
+      .select()
+      .from(jobStepsTable)
+      .where(eq(jobStepsTable.idempotencyKey, idempotencyKey))
+      .limit(1);
+    return step?.status === "DONE" ? (step.outputData as unknown as T) : null;
   }
 
   private async saveStep(

@@ -23,7 +23,8 @@ export default function ApplicationsInboxPage() {
           </div>
           <h3 className="text-sm font-bold text-slate-800 font-sora">No New Applications</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            When candidates submit applications through the careers portal, their profiles and resume links will appear here.
+            When candidates submit applications through the careers portal, their profiles and
+            resume links will appear here.
           </p>
         </CardContent>
       </Card>

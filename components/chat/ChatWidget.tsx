@@ -78,7 +78,7 @@ export default function ChatWidget() {
     }, 45000);
 
     return () => clearTimeout(nudgeTimer);
-  }, []);
+  }, [sessionId]);
 
   // Keyboard accessibility: Close on Escape key
   useEffect(() => {
@@ -202,7 +202,7 @@ export default function ChatWidget() {
 
         await saveMessage(assistantMsg);
         setMessages((prev) => [...prev, assistantMsg]);
-      } catch (err: unknown) {
+      } catch (_err: unknown) {
         const errorText =
           "I encountered a temporary connection issue. Feel free to ask again or schedule a free consultation with our team.";
         const assistantMsg: Msg = {
@@ -300,8 +300,7 @@ export default function ChatWidget() {
       {isOpen && (
         <div
           ref={panelRef}
-          role="dialog"
-          aria-modal="true"
+          role="region"
           aria-label="TechSonance AI Assistant"
           data-lenis-prevent
           data-lenis-prevent-wheel

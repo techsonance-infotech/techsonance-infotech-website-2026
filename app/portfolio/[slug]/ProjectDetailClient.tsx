@@ -407,7 +407,7 @@ function ProjectHero({ project }: { project: Project }) {
               {project.liveUrl && (
                 <Button
                   asChild
-                  variant="primary"
+                  variant="default"
                   style={{
                     background: `linear-gradient(135deg, ${project.accentColor}, ${project.accentColor}cc)`,
                     boxShadow: `0 4px 20px ${project.accentColor}30`,

@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Plus,
-  Search,
-  MapPin,
-  Trash2,
-  RefreshCw,
-} from "lucide-react";
+import { Plus, Search, MapPin, Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -35,7 +29,9 @@ export default function AdminJobsPage() {
   const [newSlug, setNewSlug] = useState("");
   const [newDept, setNewDept] = useState("Engineering");
   const [newLoc, setNewLoc] = useState("Remote / Hybrid");
-  const [newType, setNewType] = useState<"Full Time" | "Internship" | "Contract" | "Partner">("Full Time");
+  const [newType, setNewType] = useState<"Full Time" | "Internship" | "Contract" | "Partner">(
+    "Full Time",
+  );
   const [newDesc, setNewDesc] = useState("");
   const [savingJob, setSavingJob] = useState(false);
 
@@ -159,7 +155,10 @@ export default function AdminJobsPage() {
 
             <form onSubmit={handleCreateJob} className="space-y-4 py-2">
               <div>
-                <label htmlFor="job-title" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label
+                  htmlFor="job-title"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
+                >
                   Job Title
                 </label>
                 <Input
@@ -174,7 +173,10 @@ export default function AdminJobsPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="job-dept" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label
+                    htmlFor="job-dept"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
+                  >
                     Department
                   </label>
                   <Input
@@ -187,7 +189,10 @@ export default function AdminJobsPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="job-loc" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label
+                    htmlFor="job-loc"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
+                  >
                     Location
                   </label>
                   <Input
@@ -202,7 +207,10 @@ export default function AdminJobsPage() {
               </div>
 
               <div>
-                <label htmlFor="job-type" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label
+                  htmlFor="job-type"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
+                >
                   Employment Type
                 </label>
                 <select
@@ -219,7 +227,10 @@ export default function AdminJobsPage() {
               </div>
 
               <div>
-                <label htmlFor="job-desc" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label
+                  htmlFor="job-desc"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5"
+                >
                   Job Description & Qualifications
                 </label>
                 <textarea
@@ -322,16 +333,12 @@ export default function AdminJobsPage() {
                           /{job.slug}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 font-medium">
-                        {job.department}
-                      </td>
+                      <td className="py-3.5 px-4 text-slate-600 font-medium">{job.department}</td>
                       <td className="py-3.5 px-4 text-slate-600 font-medium flex items-center gap-1">
                         <MapPin className="w-3 h-3 text-slate-400" />
                         <span>{job.location}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 font-medium">
-                        {job.type}
-                      </td>
+                      <td className="py-3.5 px-4 text-slate-600 font-medium">{job.type}</td>
                       <td className="py-3.5 px-4">
                         <Badge
                           variant={job.status === "OPEN" ? "success" : "secondary"}

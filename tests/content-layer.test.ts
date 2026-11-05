@@ -4,7 +4,7 @@ import { getJobSource, legacyJobSource, cmsJobSource } from "@/lib/content/jobs"
 import { resetEnv } from "@/lib/env";
 import { getContainer, createTestContainer } from "@/lib/di/container";
 import { ContentDbService } from "@/lib/services/content-db.service";
-import { SUPABASE_CLIENT_TOKEN, DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
+import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 
 describe("Content Abstraction Layer", () => {
   const originalEnv = { ...process.env };

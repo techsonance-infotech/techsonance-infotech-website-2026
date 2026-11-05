@@ -35,12 +35,18 @@ export class ImageStepService {
     try {
       buffer = await this.cfAdapter.generateImage(styledPrompt, { width: 1200, height: 630 });
     } catch (cfError) {
-      console.warn("Cloudflare Workers AI generation failed, falling back to Pollinations.ai:", cfError);
-      
+      console.warn(
+        "Cloudflare Workers AI generation failed, falling back to Pollinations.ai:",
+        cfError,
+      );
+
       // 2. Try Pollinations.ai FLUX fallback
       try {
         providerName = "pollinations";
-        buffer = await this.pollinationsAdapter.generateImage(styledPrompt, { width: 1200, height: 630 });
+        buffer = await this.pollinationsAdapter.generateImage(styledPrompt, {
+          width: 1200,
+          height: 630,
+        });
       } catch (pollinationsError) {
         console.error("Pollinations.ai generation also failed:", pollinationsError);
       }

@@ -1,4 +1,13 @@
-import { pgTable, text, uuid, integer, boolean, jsonb, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  uuid,
+  integer,
+  boolean,
+  jsonb,
+  timestamp,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { sitesTable } from "./site.schema";
 import { categoriesTable } from "./category.schema";

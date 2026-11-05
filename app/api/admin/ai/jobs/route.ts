@@ -1,10 +1,12 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { desc } from "drizzle-orm";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
+import { generationJobsTable } from "@/lib/database/schema/index.schema";
 
 const createJobSchema = z.object({
   topicText: z.string().min(5, "Topic must be at least 5 characters"),
@@ -22,18 +24,16 @@ export async function GET() {
     }
 
     const db = container.get(DRIZZLE_DB_TOKEN);
-    const jobs = await db.query.generationJobsTable.findMany({
-      orderBy: { createdAt: "desc" },
-      limit: 30,
-    });
+    const jobs = await db
+      .select()
+      .from(generationJobsTable)
+      .orderBy(desc(generationJobsTable.createdAt))
+      .limit(30);
 
     return NextResponse.json({ ok: true, jobs });
   } catch (err) {
     console.error("Admin list AI jobs error:", err);
-    return NextResponse.json(
-      { error: "Failed to list AI jobs" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to list AI jobs" }, { status: 500 });
   }
 }
 
@@ -77,9 +77,6 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     console.error("Admin trigger AI job error:", err);
-    return NextResponse.json(
-      { error: "Failed to trigger AI job" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to trigger AI job" }, { status: 500 });
   }
 }

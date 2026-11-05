@@ -346,7 +346,7 @@ export default function AboutHero() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-                  <Button onClick={() => setIsBookModalOpen(true)} variant="primary" size="sm">
+                  <Button onClick={() => setIsBookModalOpen(true)} variant="default" size="sm">
                     Book a call
                   </Button>
                   <Button asChild variant="secondary" size="sm">

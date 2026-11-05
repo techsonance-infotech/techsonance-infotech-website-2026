@@ -4,38 +4,38 @@ This document settles how every AI call picks an account and model, and how the 
 
 ## 1. Purpose and traceability
 
-| Item | Value |
-| --- | --- |
-| Requirements | FR-7 (automatic account and model switching), NFR-3 (key safety), NFR-4 (audit) |
-| Owner component | Provider router, a library used by the worker |
-| Inputs | A capability (`text` or `image`), a step name, the prompt |
-| Output | The model result, or a classified failure that tells the worker what to do next |
+| Item            | Value                                                                           |
+| --------------- | ------------------------------------------------------------------------------- |
+| Requirements    | FR-7 (automatic account and model switching), NFR-3 (key safety), NFR-4 (audit) |
+| Owner component | Provider router, a library used by the worker                                   |
+| Inputs          | A capability (`text` or `image`), a step name, the prompt                       |
+| Output          | The model result, or a classified failure that tells the worker what to do next |
 
 Provider terms: free tiers usually forbid or limit running several accounts to avoid quotas. Treat multi-account switching as a feature to enable only where each provider allows it, and design the pool so paid keys and extra models can be added later with no code change.
 
 ## 2. Decisions
 
-| Decision | Options considered | Choice | Why |
-| --- | --- | --- | --- |
-| Where switching lives | Inside each agent; one shared router | One router in front of every call | One place for quota rules, logs and tests |
-| Provider abstraction | Call each SDK directly; one adapter interface | Adapter per provider behind one interface | New provider is one file |
-| Switch order | Round robin; fixed priority; scored | Scored: capability match, health, remaining quota, priority, then preferred model | Spreads load and avoids dead accounts |
-| Quota knowledge | Wait for errors; track usage ourselves plus errors | Both. Local counters pre-empt, provider errors are the truth | Avoids wasted failing calls |
-| Reset times | Guess; read headers; fixed schedule per provider | Use provider headers when present, else configured reset (for example midnight UTC) | Needed to set `resume_at` |
-| Failure memory | None; circuit breaker | Circuit breaker per account and per model | Stops hammering a dead target |
-| Key storage | Environment file; encrypted table | Encrypted `provider_accounts`, master key from a secrets manager | Rotatable from the admin page, never in logs |
+| Decision              | Options considered                                 | Choice                                                                              | Why                                          |
+| --------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------- |
+| Where switching lives | Inside each agent; one shared router               | One router in front of every call                                                   | One place for quota rules, logs and tests    |
+| Provider abstraction  | Call each SDK directly; one adapter interface      | Adapter per provider behind one interface                                           | New provider is one file                     |
+| Switch order          | Round robin; fixed priority; scored                | Scored: capability match, health, remaining quota, priority, then preferred model   | Spreads load and avoids dead accounts        |
+| Quota knowledge       | Wait for errors; track usage ourselves plus errors | Both. Local counters pre-empt, provider errors are the truth                        | Avoids wasted failing calls                  |
+| Reset times           | Guess; read headers; fixed schedule per provider   | Use provider headers when present, else configured reset (for example midnight UTC) | Needed to set `resume_at`                    |
+| Failure memory        | None; circuit breaker                              | Circuit breaker per account and per model                                           | Stops hammering a dead target                |
+| Key storage           | Environment file; encrypted table                  | Encrypted `provider_accounts`, master key from a secrets manager                    | Rotatable from the admin page, never in logs |
 
 ## 3. Structure
 
-| Part | Responsibility |
-| --- | --- |
-| Adapter | Translates one provider's request, response and errors to the common shape |
-| Registry | Loads `provider_accounts`, models and limits into memory, refreshed on change |
-| Scorer | Ranks eligible leases for a call |
-| Lease manager | Reserves an account and model for one call, records usage |
-| Classifier | Maps provider errors to the error classes in the Master design, section 7.2 |
-| Breaker | Opens, half-opens and closes per account and model |
-| Reporter | Writes `usage_events` and `audit_log`, raises alerts |
+| Part          | Responsibility                                                                |
+| ------------- | ----------------------------------------------------------------------------- |
+| Adapter       | Translates one provider's request, response and errors to the common shape    |
+| Registry      | Loads `provider_accounts`, models and limits into memory, refreshed on change |
+| Scorer        | Ranks eligible leases for a call                                              |
+| Lease manager | Reserves an account and model for one call, records usage                     |
+| Classifier    | Maps provider errors to the error classes in the Master design, section 7.2   |
+| Breaker       | Opens, half-opens and closes per account and model                            |
+| Reporter      | Writes `usage_events` and `audit_log`, raises alerts                          |
 
 ## 4. Flow
 
@@ -57,9 +57,9 @@ Provider terms: free tiers usually forbid or limit running several accounts to a
 ```ts
 interface ProviderAdapter {
   name: string;
-  capabilities: Array<'text' | 'image'>;
+  capabilities: Array<"text" | "image">;
   call(req: AdapterRequest, key: string, model: string): Promise<AdapterResponse>;
-  classify(err: unknown): ErrorClass;   // RATE_LIMIT | QUOTA | AUTH | SERVER | CONTEXT | SAFETY | BAD_OUTPUT
+  classify(err: unknown): ErrorClass; // RATE_LIMIT | QUOTA | AUTH | SERVER | CONTEXT | SAFETY | BAD_OUTPUT
 }
 
 async function run(step, input, opts) {
@@ -68,11 +68,11 @@ async function run(step, input, opts) {
     if (!lease) throw new NoCapacity(await registry.earliestReset(step.capability));
     try {
       const res = await lease.adapter.call(build(step, input), lease.key, lease.model);
-      await usage.record(lease, res, 'ok');
+      await usage.record(lease, res, "ok");
       return parse(step.schema, res);
     } catch (e) {
       const cls = lease.adapter.classify(e);
-      await health.apply(lease, cls, e);          // cooldown, exhausted, disabled, breaker
+      await health.apply(lease, cls, e); // cooldown, exhausted, disabled, breaker
       opts.exclude.push(lease.id);
     }
   }
@@ -82,25 +82,25 @@ async function run(step, input, opts) {
 
 The account row carries the state the scorer needs:
 
-| Column | Meaning |
-| --- | --- |
-| `status` | `ACTIVE`, `COOLDOWN`, `EXHAUSTED`, `DISABLED` |
-| `cooldown_until`, `reset_at` | When the router may use it again |
-| `daily_limit`, `used_today`, `rpm_limit` | Local pre-checks |
-| `models` | Ordered list with context size and capability per model |
-| `priority`, `tier` | `free` or `paid`, used to prefer free first and paid as the last resort |
+| Column                                   | Meaning                                                                 |
+| ---------------------------------------- | ----------------------------------------------------------------------- |
+| `status`                                 | `ACTIVE`, `COOLDOWN`, `EXHAUSTED`, `DISABLED`                           |
+| `cooldown_until`, `reset_at`             | When the router may use it again                                        |
+| `daily_limit`, `used_today`, `rpm_limit` | Local pre-checks                                                        |
+| `models`                                 | Ordered list with context size and capability per model                 |
+| `priority`, `tier`                       | `free` or `paid`, used to prefer free first and paid as the last resort |
 
 ## 6. Advanced control
 
-| Control | Where | Effect |
-| --- | --- | --- |
-| Add, disable, rotate a key | Admin page, providers tab | Pool changes at once, no deploy |
-| Model order per step | `site_settings.model_preference` | Cheap model for outline, stronger one for sections |
-| `prefer_free_first` | Setting | Paid accounts are used only when free ones are out |
-| `monthly_budget_cap` | Setting | Paid spend stops at the cap; jobs wait instead |
-| `max_switches_per_job` | Setting, default 8 | Prevents endless loops |
-| Manual cooldown or reset | Admin button | Overrides health state after a provider incident |
-| Dry-run test call | Admin button | One tiny call to confirm a key works |
+| Control                    | Where                            | Effect                                             |
+| -------------------------- | -------------------------------- | -------------------------------------------------- |
+| Add, disable, rotate a key | Admin page, providers tab        | Pool changes at once, no deploy                    |
+| Model order per step       | `site_settings.model_preference` | Cheap model for outline, stronger one for sections |
+| `prefer_free_first`        | Setting                          | Paid accounts are used only when free ones are out |
+| `monthly_budget_cap`       | Setting                          | Paid spend stops at the cap; jobs wait instead     |
+| `max_switches_per_job`     | Setting, default 8               | Prevents endless loops                             |
+| Manual cooldown or reset   | Admin button                     | Overrides health state after a provider incident   |
+| Dry-run test call          | Admin button                     | One tiny call to confirm a key works               |
 
 ## 7. Automation hooks
 
@@ -110,11 +110,11 @@ The account row carries the state the scorer needs:
 
 ## 8. Failure modes and acceptance
 
-| Failure | Handling |
-| --- | --- |
-| Provider returns quota error with no reset time | Use the configured reset rule and mark `reset_estimated` |
-| Provider changes a model name | Call fails as `NOT_FOUND`; model is disabled and an alert is sent |
-| All free accounts exhausted | `NoCapacity`; job waits, or uses a paid key if allowed |
-| Local counter wrong | Provider error corrects it; counters self-heal on reset |
+| Failure                                         | Handling                                                          |
+| ----------------------------------------------- | ----------------------------------------------------------------- |
+| Provider returns quota error with no reset time | Use the configured reset rule and mark `reset_estimated`          |
+| Provider changes a model name                   | Call fails as `NOT_FOUND`; model is disabled and an alert is sent |
+| All free accounts exhausted                     | `NoCapacity`; job waits, or uses a paid key if allowed            |
+| Local counter wrong                             | Provider error corrects it; counters self-heal on reset           |
 
 **Acceptance:** with a mock provider scripted to fail with 429, quota, 401 and 500 in turn, the router switches each time, the job still finishes, and every switch appears in `audit_log` with account, model and reason.

@@ -71,7 +71,10 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="login-email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+              >
                 Work Email
               </label>
               <div className="relative">
@@ -90,7 +93,10 @@ export default function AdminLoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="login-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <label
+                  htmlFor="login-password"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                >
                   Password
                 </label>
               </div>

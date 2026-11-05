@@ -7,22 +7,14 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "border-transparent bg-slate-900 text-white shadow hover:bg-slate-900/80",
-        secondary:
-          "border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200/80",
-        destructive:
-          "border-transparent bg-rose-50 text-rose-700 border border-rose-200/80",
-        outline:
-          "text-slate-800 border border-slate-200",
-        success:
-          "border-emerald-200/80 bg-emerald-50 text-emerald-700 border",
-        warning:
-          "border-amber-200/80 bg-amber-50 text-amber-700 border",
-        info:
-          "border-blue-200/80 bg-blue-50 text-blue-700 border",
-        purple:
-          "border-purple-200/80 bg-purple-50 text-purple-700 border",
+        default: "border-transparent bg-slate-900 text-white shadow hover:bg-slate-900/80",
+        secondary: "border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200/80",
+        destructive: "border-transparent bg-rose-50 text-rose-700 border border-rose-200/80",
+        outline: "text-slate-800 border border-slate-200",
+        success: "border-emerald-200/80 bg-emerald-50 text-emerald-700 border",
+        warning: "border-amber-200/80 bg-amber-50 text-amber-700 border",
+        info: "border-blue-200/80 bg-blue-50 text-blue-700 border",
+        purple: "border-purple-200/80 bg-purple-50 text-purple-700 border",
       },
     },
     defaultVariants: {
@@ -32,8 +24,7 @@ const badgeVariants = cva(
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {
   dot?: boolean;
 }
 

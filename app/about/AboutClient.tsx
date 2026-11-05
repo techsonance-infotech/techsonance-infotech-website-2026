@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import {
   motion,
   useScroll,
@@ -32,7 +33,6 @@ function CountUp({
 
   useEffect(() => {
     if (isInView) {
-      const start = 0;
       const duration = 2000;
       const startTime = performance.now();
 
@@ -179,7 +179,6 @@ function MagneticButton({ href, onClick, children, className = "" }: MagneticBut
 }
 
 export default function AboutClient() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
 
   // Section 4 horizontal scroll tracking
@@ -451,7 +450,7 @@ export default function AboutClient() {
                   : "w-max flex gap-8 px-12 md:px-24 relative z-10"
               }
             >
-              {projects.map((proj, idx) => (
+              {projects.map((proj) => (
                 <div
                   key={proj.title}
                   className={
@@ -466,10 +465,12 @@ export default function AboutClient() {
                       style={{ background: proj.screenshotPath ? undefined : proj.mockupGradient }}
                     >
                       {proj.screenshotPath ? (
-                        <img
+                        <Image
                           src={proj.screenshotPath}
                           alt={proj.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          fill
+                          sizes="(max-width: 768px) 85vw, 550px"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center font-bold text-2xl text-white">
@@ -885,7 +886,7 @@ export default function AboutClient() {
 
                   return (
                     <motion.line
-                      key={idx}
+                      key={`${link.from}-${link.to}`}
                       x1={`${fromPt.x}%`}
                       y1={`${fromPt.y}%`}
                       x2={`${toPt.x}%`}
@@ -952,10 +953,12 @@ export default function AboutClient() {
                 <div className="w-full bg-gradient-to-b from-[#F8FAFC] to-[#EFF6FF] border border-blue-100/60 rounded-[32px] p-6 pt-28 shadow-[0_12px_40px_rgba(17,85,204,0.03)] relative flex flex-col items-center text-center">
                   {/* Circular Image positioned on the upper side, offset upwards */}
                   <div className="absolute -top-22 left-1/2 -translate-x-1/2 w-44 h-44 rounded-full border-4 border-white shadow-[0_8px_25px_rgba(17,85,204,0.08)] overflow-hidden bg-slate-50 group">
-                    <img
+                    <Image
                       src="/images/about-headshot-v2.png"
                       alt="Someshwari Adeya Founder"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      fill
+                      sizes="176px"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
                   </div>
 

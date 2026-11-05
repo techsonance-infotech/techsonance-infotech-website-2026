@@ -2,14 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import {
-  Plus,
-  Search,
-  ExternalLink,
-  Edit,
-  Trash2,
-  RefreshCw,
-} from "lucide-react";
+import { Plus, Search, ExternalLink, Edit, Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -23,30 +16,33 @@ export default function AdminBlogListPage() {
   const [search, setSearch] = useState("");
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
-  const fetchPosts = useCallback(async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (activeTab !== "ALL") {
-        params.set("status", activeTab);
+  const fetchPosts = useCallback(
+    async (showLoader = false) => {
+      if (showLoader) setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (activeTab !== "ALL") {
+          params.set("status", activeTab);
+        }
+        if (search.trim()) {
+          params.set("search", search.trim());
+        }
+        const res = await fetch(`/api/admin/posts?${params.toString()}`);
+        const data = await res.json();
+        if (data.ok) {
+          setPosts(data.posts || []);
+        }
+      } catch (err) {
+        console.error("Failed to load posts", err);
+      } finally {
+        setLoading(false);
       }
-      if (search.trim()) {
-        params.set("search", search.trim());
-      }
-      const res = await fetch(`/api/admin/posts?${params.toString()}`);
-      const data = await res.json();
-      if (data.ok) {
-        setPosts(data.posts || []);
-      }
-    } catch (err) {
-      console.error("Failed to load posts", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [activeTab, search]);
+    },
+    [activeTab, search],
+  );
 
   useEffect(() => {
-    fetchPosts();
+    void fetchPosts(false);
   }, [fetchPosts]);
 
   const handlePublish = async (id: string) => {

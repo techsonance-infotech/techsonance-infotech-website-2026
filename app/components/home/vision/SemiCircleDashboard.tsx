@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AvatarGroup } from "./types";
+import type { AvatarGroup } from "./types";
 import Arc from "./Arc";
 
 interface SemiCircleDashboardProps {

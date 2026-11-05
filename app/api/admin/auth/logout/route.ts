@@ -7,9 +7,6 @@ export async function POST() {
     return NextResponse.json({ ok: true, message: "Signed out successfully" });
   } catch (error) {
     console.error("Admin logout error:", error);
-    return NextResponse.json(
-      { error: "Internal server error during logout" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error during logout" }, { status: 500 });
   }
 }

@@ -217,7 +217,7 @@ export default function PortfolioClient() {
               onClick={() => {
                 document.getElementById("projects-list")?.scrollIntoView({ behavior: "smooth" });
               }}
-              variant="primary"
+              variant="default"
               className="w-full sm:w-auto"
             >
               Explore Projects

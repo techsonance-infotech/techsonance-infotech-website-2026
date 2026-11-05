@@ -12,11 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const container = getContainer();
   const authService = container.get(AdminAuthService);
   const session = await authService.getCurrentSession();

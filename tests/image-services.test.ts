@@ -77,9 +77,7 @@ describe("Image Generation & Failover Services", () => {
       const service = new ImageStepService(mockMediaService);
 
       // Mock Cloudflare success
-      (service as any).cfAdapter.generateImage = vi
-        .fn()
-        .mockResolvedValue(Buffer.from("cf-img"));
+      (service as any).cfAdapter.generateImage = vi.fn().mockResolvedValue(Buffer.from("cf-img"));
 
       const res = await service.generateThumbnail("distributed systems", {
         title: "Microservices 101",
@@ -126,9 +124,7 @@ describe("Image Generation & Failover Services", () => {
 
       const service = new ImageStepService(mockMediaService);
 
-      (service as any).cfAdapter.generateImage = vi
-        .fn()
-        .mockRejectedValue(new Error("CF failed"));
+      (service as any).cfAdapter.generateImage = vi.fn().mockRejectedValue(new Error("CF failed"));
       (service as any).pollinationsAdapter.generateImage = vi
         .fn()
         .mockRejectedValue(new Error("Pollinations failed"));

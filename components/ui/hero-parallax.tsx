@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { motion, useScroll, useTransform, useSpring, MotionValue } from "motion/react";
+import type { MotionValue } from "motion/react";
+import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import SafeImage from "@/app/components/SafeImage";

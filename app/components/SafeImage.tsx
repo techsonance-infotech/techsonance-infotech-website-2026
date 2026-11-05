@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Image, { ImageProps } from "next/image";
+import type { ImageProps } from "next/image";
+import Image from "next/image";
 
 interface SafeImageProps extends Omit<ImageProps, "onLoad" | "onLoadingComplete"> {
   wrapperClassName?: string;

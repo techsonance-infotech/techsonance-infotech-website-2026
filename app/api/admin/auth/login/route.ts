@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { getContainer } from "@/lib/di/container";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database/index";
@@ -32,9 +33,12 @@ export async function POST(req: Request) {
 
     // 1. Try to find user in native database
     try {
-      const user = await db.query.usersTable.findFirst({
-        where: { email },
-      });
+      const normalizedEmail = email.trim().toLowerCase();
+      const [user] = await db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.email, normalizedEmail))
+        .limit(1);
 
       if (user) {
         if (!user.isActive) {
@@ -44,6 +48,16 @@ export async function POST(req: Request) {
         const isValid = await verifyPassword(password, user.passwordHash);
         if (!isValid) {
           return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+        }
+
+        // Record last login timestamp non-blockingly
+        try {
+          await db
+            .update(usersTable)
+            .set({ lastLoginAt: new Date(), updatedAt: new Date() })
+            .where(eq(usersTable.id, user.id));
+        } catch {
+          // Non-blocking
         }
 
         const token = createSessionToken({
@@ -60,8 +74,8 @@ export async function POST(req: Request) {
           user: { id: user.id, email: user.email, name: user.name, role: user.role },
         });
       }
-    } catch {
-      // Users table not yet migrated or DB offline
+    } catch (dbErr) {
+      console.warn("Native DB user lookup failed, checking fallback:", dbErr);
     }
 
     // 2. Dev mode fallback when ALLOW_PLACEHOLDERS is true

@@ -79,7 +79,7 @@ Target Audience: ${options.targetAudience || "Tech Leads, Staff Engineers, and C
 Generate 4-6 focused technical headings with actionable key points.`;
 
     const responseText = await this.completePrompt(systemPrompt, userPrompt);
-    
+
     // Parse JSON safely
     try {
       const cleanJson = responseText
@@ -228,7 +228,12 @@ Generate the publication metadata JSON.`;
     }
 
     // Check for banned / placeholder terms
-    const bannedPatterns = [/lorem ipsum/i, /placeholder text/i, /todo: /i, /as an ai language model/i];
+    const bannedPatterns = [
+      /lorem ipsum/i,
+      /placeholder text/i,
+      /todo: /i,
+      /as an ai language model/i,
+    ];
     for (const pattern of bannedPatterns) {
       if (pattern.test(article.content)) {
         errors.push(`Found disallowed boilerplate pattern: ${pattern.toString()}`);

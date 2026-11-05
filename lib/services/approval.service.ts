@@ -5,10 +5,11 @@ import { eq, and } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
+import type {
+  AiApprovalDecision} from "../database/schema/ai/approval-request.schema";
 import {
   approvalRequestsTable,
-  AiApprovalStatus,
-  AiApprovalDecision,
+  AiApprovalStatus
 } from "../database/schema/ai/approval-request.schema";
 import { postsTable } from "../database/schema/core/post.schema";
 import { auditLogsTable } from "../database/schema/core/audit.schema";
@@ -174,17 +175,21 @@ export class ApprovalService {
    */
   async getRequestByToken(token: string) {
     const tokenHash = this.hashToken(token);
-    const req = await this.db.query.approvalRequestsTable.findFirst({
-      where: { tokenHash },
-    });
+    const [req] = await this.db
+      .select()
+      .from(approvalRequestsTable)
+      .where(eq(approvalRequestsTable.tokenHash, tokenHash))
+      .limit(1);
 
     if (!req) return null;
 
-    const post = await this.db.query.postsTable.findFirst({
-      where: { id: req.postId },
-    });
+    const [post] = await this.db
+      .select()
+      .from(postsTable)
+      .where(eq(postsTable.id, req.postId))
+      .limit(1);
 
-    return { request: req, post };
+    return { request: req, post: post ?? null };
   }
 
   /**
@@ -198,9 +203,11 @@ export class ApprovalService {
   ) {
     const tokenHash = this.hashToken(token);
 
-    const req = await this.db.query.approvalRequestsTable.findFirst({
-      where: { tokenHash },
-    });
+    const [req] = await this.db
+      .select()
+      .from(approvalRequestsTable)
+      .where(eq(approvalRequestsTable.tokenHash, tokenHash))
+      .limit(1);
 
     if (!req) {
       throw new Error("Invalid or unknown approval token.");
@@ -214,9 +221,11 @@ export class ApprovalService {
       throw new Error("This approval link has expired.");
     }
 
-    const post = await this.db.query.postsTable.findFirst({
-      where: { id: req.postId },
-    });
+    const [post] = await this.db
+      .select()
+      .from(postsTable)
+      .where(eq(postsTable.id, req.postId))
+      .limit(1);
 
     if (!post) {
       throw new Error("Associated post not found.");

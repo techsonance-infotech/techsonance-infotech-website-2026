@@ -41,7 +41,6 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
         },
       },
       select: vi.fn().mockImplementation(() => {
-        const queryChain: any = {};
         const resolvedData = [
           {
             id: "t1",
@@ -54,14 +53,13 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
             userPromptTemplate: "Default template",
           },
         ];
+        const queryChain: any = Promise.resolve(resolvedData);
 
         queryChain.from = vi.fn().mockReturnValue(queryChain);
         queryChain.where = vi.fn().mockReturnValue(queryChain);
         queryChain.orderBy = vi.fn().mockReturnValue(queryChain);
         queryChain.limit = vi.fn().mockReturnValue(queryChain);
         queryChain.offset = vi.fn().mockResolvedValue(resolvedData);
-        queryChain.then = (resolve: any, reject: any) =>
-          Promise.resolve(resolvedData).then(resolve, reject);
 
         return queryChain;
       }),
@@ -106,7 +104,7 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
             targetAudience: "Tech Leads",
             difficulty: "advanced",
           },
-        ])
+        ]),
       ),
     };
 
@@ -115,11 +113,7 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
       executeJob: vi.fn().mockResolvedValue({ success: true, postId: "post-1" }),
     };
 
-    topicsService = new AdminTopicsService(
-      mockDb,
-      mockAiWriter as any,
-      mockJobOrchestrator as any
-    );
+    topicsService = new AdminTopicsService(mockDb, mockAiWriter as any, mockJobOrchestrator as any);
 
     promptsService = new AdminPromptsService(mockDb);
     telemetryService = new AdminTelemetryService(mockDb);
@@ -150,7 +144,7 @@ describe("Phase 4: Admin Topics, Prompts & Telemetry Services", () => {
       expect(mockJobOrchestrator.createJob).toHaveBeenCalledWith(
         expect.objectContaining({
           topicText: "Real-time AI Agents with Next.js 16",
-        })
+        }),
       );
     });
 

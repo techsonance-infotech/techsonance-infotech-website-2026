@@ -53,7 +53,10 @@ export function AdminShell({
       title: "Blog Articles",
       href: "/admin/blog",
       icon: FileText,
-      active: pathname === "/admin/blog" || pathname.startsWith("/admin/blog/new") || pathname.match(/\/admin\/blog\/[^\/]+$/) !== null,
+      active:
+        pathname === "/admin/blog" ||
+        pathname.startsWith("/admin/blog/new") ||
+        pathname.match(/\/admin\/blog\/[^/]+$/) !== null,
     },
     {
       title: "Topic Backlog",
@@ -171,7 +174,6 @@ export function AdminShell({
               </div>
             </div>
           </div>
-
 
           {/* Main Navigation Links */}
           <nav className="flex-1 px-3 py-2 space-y-1">

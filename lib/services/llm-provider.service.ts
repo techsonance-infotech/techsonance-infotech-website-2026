@@ -1,6 +1,6 @@
 import { inject } from "@needle-di/core";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../di/tokens";
-import { BOT_CONFIG } from "../config";
+import type { BOT_CONFIG } from "../config";
 import type { Env } from "../env";
 import type { LLMProvider } from "../llm/types";
 import { OpenAICompatibleProvider } from "../llm/providers/openai-compatible";

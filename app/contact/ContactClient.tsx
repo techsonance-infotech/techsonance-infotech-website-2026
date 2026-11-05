@@ -327,10 +327,11 @@ export default function ContactClient() {
                   {/* First Name & Last Name */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <label htmlFor="contact-first-name" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                         First Name <span className="text-red-500 font-bold">*</span>
                       </label>
                       <input
+                        id="contact-first-name"
                         type="text"
                         required
                         placeholder="John"
@@ -352,10 +353,11 @@ export default function ContactClient() {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <label htmlFor="contact-last-name" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                         Last Name <span className="text-red-500 font-bold">*</span>
                       </label>
                       <input
+                        id="contact-last-name"
                         type="text"
                         required
                         placeholder="Doe"
@@ -380,10 +382,11 @@ export default function ContactClient() {
 
                   {/* Email Address */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label htmlFor="contact-email" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       Email Address <span className="text-red-500 font-bold">*</span>
                     </label>
                     <input
+                      id="contact-email"
                       type="email"
                       required
                       placeholder="you@company.com"
@@ -404,11 +407,12 @@ export default function ContactClient() {
 
                   {/* Phone Number with Country Selector */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label htmlFor="contact-phone" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       Phone Number <span className="text-red-500 font-bold">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
                       <select
+                        aria-label="Country Code"
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                         className="w-[90px] sm:w-[110px] px-2 sm:px-3 py-3 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium shrink-0"
@@ -422,6 +426,7 @@ export default function ContactClient() {
                         <option value="+49">🇩🇪 +49</option>
                       </select>
                       <input
+                        id="contact-phone"
                         type="tel"
                         required
                         placeholder={
@@ -447,10 +452,11 @@ export default function ContactClient() {
 
                   {/* Interested in Select Dropdown */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label htmlFor="contact-interest" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       I&apos;m interested in
                     </label>
                     <select
+                      id="contact-interest"
                       value={formData.interest}
                       onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                       className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium"
@@ -466,10 +472,11 @@ export default function ContactClient() {
 
                   {/* Message Textarea */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label htmlFor="contact-message" className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                       Message <span className="text-red-500 font-bold">*</span>
                     </label>
                     <textarea
+                      id="contact-message"
                       required
                       rows={5}
                       placeholder="Tell us about your product roadmap, goals, or requirements..."
@@ -492,8 +499,7 @@ export default function ContactClient() {
                   <Button
                     type="submit"
                     disabled={formStatus === "submitting" || !isFormValid}
-                    variant="primary"
-                    showArrow={formStatus !== "submitting"}
+                    variant="default"
                     className="w-full"
                   >
                     {formStatus === "submitting" ? (

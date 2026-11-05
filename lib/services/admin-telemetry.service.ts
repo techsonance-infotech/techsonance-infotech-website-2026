@@ -1,6 +1,6 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { sql, desc, gte, eq } from "drizzle-orm";
+import { sql, desc, gte, eq, and, or } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database";
 import {
@@ -10,6 +10,7 @@ import {
   type UsageEvent,
   type InsertUsageEvent,
 } from "@/lib/database/schema/index.schema";
+import { AiJobStatus } from "@/lib/database/enum/ai.enum";
 import { getEnv } from "@/lib/env";
 
 export interface TelemetrySummary {
@@ -67,15 +68,11 @@ export class AdminTelemetryService {
       this.db
         .select({ count: sql<number>`count(*)::int` })
         .from(postsTable)
-        .where(
-          sql`${postsTable.aiGenerated} = true AND ${postsTable.createdAt} >= ${startOfToday.toISOString()}`
-        ),
+        .where(and(eq(postsTable.aiGenerated, true), gte(postsTable.createdAt, startOfToday))),
       this.db
         .select({ count: sql<number>`count(*)::int` })
         .from(postsTable)
-        .where(
-          sql`${postsTable.aiGenerated} = true AND ${postsTable.createdAt} >= ${startOfWeek.toISOString()}`
-        ),
+        .where(and(eq(postsTable.aiGenerated, true), gte(postsTable.createdAt, startOfWeek))),
     ]);
 
     // 3. Provider performance aggregation
@@ -95,7 +92,12 @@ export class AdminTelemetryService {
       this.db
         .select({ count: sql<number>`count(*)::int` })
         .from(generationJobsTable)
-        .where(sql`${generationJobsTable.status} IN ('pending', 'running')`),
+        .where(
+          or(
+            eq(generationJobsTable.status, AiJobStatus.QUEUED),
+            eq(generationJobsTable.status, AiJobStatus.RUNNING),
+          ),
+        ),
     ]);
 
     // 5. Recent events

@@ -41,10 +41,26 @@ export default function PromptsManagementPage() {
   const [temperature, setTemperature] = useState(70);
 
   const steps = [
-    { key: "outline", name: "1. Outline Generator", desc: "Generates headings & key technical points" },
-    { key: "section", name: "2. Section Writer", desc: "Generates code snippets & technical prose" },
-    { key: "meta", name: "3. SEO & Metadata", desc: "Generates title, slug, excerpt, and image prompt" },
-    { key: "image", name: "4. Thumbnail Prompt", desc: "FLUX.1 / Pollinations image generation prompt" },
+    {
+      key: "outline",
+      name: "1. Outline Generator",
+      desc: "Generates headings & key technical points",
+    },
+    {
+      key: "section",
+      name: "2. Section Writer",
+      desc: "Generates code snippets & technical prose",
+    },
+    {
+      key: "meta",
+      name: "3. SEO & Metadata",
+      desc: "Generates title, slug, excerpt, and image prompt",
+    },
+    {
+      key: "image",
+      name: "4. Thumbnail Prompt",
+      desc: "FLUX.1 / Pollinations image generation prompt",
+    },
     { key: "critic", name: "5. Quality Critic", desc: "Evaluates depth, voice, and quality score" },
   ];
 
@@ -94,9 +110,7 @@ export default function PromptsManagementPage() {
 
       if (res.ok) {
         const data = await res.json();
-        setTemplates((prev) =>
-          prev.map((t) => (t.stepName === selectedStep ? data.template : t))
-        );
+        setTemplates((prev) => prev.map((t) => (t.stepName === selectedStep ? data.template : t)));
         showToast("Prompt template updated successfully!");
       } else {
         showToast("Failed to save template");
@@ -181,7 +195,9 @@ export default function PromptsManagementPage() {
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className={`text-xs font-bold ${isSelected ? "text-blue-600" : "text-slate-800"}`}>
+                  <span
+                    className={`text-xs font-bold ${isSelected ? "text-blue-600" : "text-slate-800"}`}
+                  >
                     {s.name}
                   </span>
                   {t && (
@@ -211,7 +227,9 @@ export default function PromptsManagementPage() {
                   onChange={(e) => setModelPreference(e.target.value)}
                   className="w-full h-9 rounded-xl border border-slate-200 text-xs px-3 bg-white font-medium"
                 >
-                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended - Fast & Free)</option>
+                  <option value="gemini-2.5-flash">
+                    Gemini 2.5 Flash (Recommended - Fast & Free)
+                  </option>
                   <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning)</option>
                   <option value="flux-schnell">Cloudflare FLUX.1-schnell (Image)</option>
                   <option value="groq-llama3">Groq Llama 3 70B (Ultra Low Latency)</option>
@@ -225,7 +243,11 @@ export default function PromptsManagementPage() {
                     Temperature: {(temperature / 100).toFixed(2)}
                   </span>
                   <span className="text-[10px] text-slate-400 font-medium">
-                    {temperature < 40 ? "Deterministic" : temperature > 75 ? "Creative" : "Balanced"}
+                    {temperature < 40
+                      ? "Deterministic"
+                      : temperature > 75
+                        ? "Creative"
+                        : "Balanced"}
                   </span>
                 </label>
                 <input
@@ -246,7 +268,9 @@ export default function PromptsManagementPage() {
                   <FileCode className="w-4 h-4 text-purple-600" />
                   System Instructions (Persona & Guardrails)
                 </label>
-                <span className="text-[10px] text-slate-400">Enforces voice, style, and output format</span>
+                <span className="text-[10px] text-slate-400">
+                  Enforces voice, style, and output format
+                </span>
               </div>
               <textarea
                 rows={6}
@@ -264,7 +288,9 @@ export default function PromptsManagementPage() {
                   <Layers className="w-4 h-4 text-indigo-600" />
                   User Prompt Template
                 </label>
-                <span className="text-[10px] text-slate-400">Interpolates step parameters at runtime</span>
+                <span className="text-[10px] text-slate-400">
+                  Interpolates step parameters at runtime
+                </span>
               </div>
               <textarea
                 rows={5}

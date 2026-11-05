@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "motion/react";
 import SemiCircleDashboard from "./vision/SemiCircleDashboard";
 import Stats from "./vision/Stats";
-import { AvatarGroup, StatItem } from "./vision/types";
+import type { AvatarGroup, StatItem } from "./vision/types";
 
 // Unified grouped team avatar data with exactly 5 members per category
 const GROUPS: AvatarGroup[] = [

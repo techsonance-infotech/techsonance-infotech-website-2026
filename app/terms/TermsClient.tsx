@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 import { cn } from "@/lib/utils";
+
+const subscribeResize = (callback: () => void) => {
+  window.addEventListener("resize", callback);
+  return () => window.removeEventListener("resize", callback);
+};
 
 const termsSections = [
   { id: "domain-ownership", label: "Domain & Ownership", icon: "check" },
@@ -23,18 +28,11 @@ const termsSections = [
 ];
 
 export default function TermsClient() {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useSyncExternalStore(
+    subscribeResize,
+    () => window.innerWidth < 768,
+    () => false,
+  );
 
   const [activeSection, setActiveSection] = useState("domain-ownership");
 
@@ -56,13 +54,13 @@ export default function TermsClient() {
         <div
           className={cn(
             "absolute top-0 left-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-            mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+            isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
           )}
         />
         <div
           className={cn(
             "absolute top-[40%] right-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-            mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+            isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
           )}
         />
 
@@ -82,16 +80,16 @@ export default function TermsClient() {
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <ElegantShape
               delay={0.4}
-              width={mounted && isMobile ? 180 : 350}
-              height={mounted && isMobile ? 55 : 110}
+              width={isMobile ? 180 : 350}
+              height={isMobile ? 55 : 110}
               rotate={-12}
               gradient="from-[#22B6F6]/25 to-transparent"
               className="left-[-5%] top-[15%]"
             />
             <ElegantShape
               delay={0.6}
-              width={mounted && isMobile ? 220 : 420}
-              height={mounted && isMobile ? 70 : 130}
+              width={isMobile ? 220 : 420}
+              height={isMobile ? 70 : 130}
               rotate={18}
               gradient="from-[#1155CC]/20 to-transparent"
               className="right-[-10%] bottom-[15%]"

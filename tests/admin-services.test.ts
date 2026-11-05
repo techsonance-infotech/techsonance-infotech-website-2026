@@ -13,9 +13,17 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
     mockDb = {
       query: {
         postsTable: {
-          findMany: vi.fn().mockResolvedValue([
-            { id: "p1", title: "Test Post 1", slug: "test-post-1", status: "DRAFT", siteId: "s1" },
-          ]),
+          findMany: vi
+            .fn()
+            .mockResolvedValue([
+              {
+                id: "p1",
+                title: "Test Post 1",
+                slug: "test-post-1",
+                status: "DRAFT",
+                siteId: "s1",
+              },
+            ]),
           findFirst: vi.fn().mockResolvedValue({
             id: "p1",
             title: "Test Post 1",
@@ -26,9 +34,17 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
           }),
         },
         jobsTable: {
-          findMany: vi.fn().mockResolvedValue([
-            { id: "j1", title: "Fullstack Engineer", slug: "fullstack-engineer", status: "DRAFT", siteId: "s1" },
-          ]),
+          findMany: vi
+            .fn()
+            .mockResolvedValue([
+              {
+                id: "j1",
+                title: "Fullstack Engineer",
+                slug: "fullstack-engineer",
+                status: "DRAFT",
+                siteId: "s1",
+              },
+            ]),
           findFirst: vi.fn().mockResolvedValue({
             id: "j1",
             title: "Fullstack Engineer",
@@ -48,13 +64,21 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
       }),
       insert: vi.fn().mockReturnValue({
         values: vi.fn().mockReturnValue({
-          returning: vi.fn().mockResolvedValue([{ id: "created-id", title: "Created", versionId: 1, slug: "created" }]),
+          returning: vi
+            .fn()
+            .mockResolvedValue([
+              { id: "created-id", title: "Created", versionId: 1, slug: "created" },
+            ]),
         }),
       }),
       update: vi.fn().mockReturnValue({
         set: vi.fn().mockReturnValue({
           where: vi.fn().mockReturnValue({
-            returning: vi.fn().mockResolvedValue([{ id: "p1", title: "Updated", status: "PUBLISHED", versionId: 2, slug: "p1" }]),
+            returning: vi
+              .fn()
+              .mockResolvedValue([
+                { id: "p1", title: "Updated", status: "PUBLISHED", versionId: 2, slug: "p1" },
+              ]),
           }),
         }),
       }),

@@ -12,11 +12,7 @@ interface ApprovalActionFormProps {
   initialDecision: "approve" | "reject" | "improve";
 }
 
-export function ApprovalActionForm({
-  token,
-  postId,
-  initialDecision,
-}: ApprovalActionFormProps) {
+export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalActionFormProps) {
   const [decision, setDecision] = useState<"approve" | "reject" | "improve">(initialDecision);
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);

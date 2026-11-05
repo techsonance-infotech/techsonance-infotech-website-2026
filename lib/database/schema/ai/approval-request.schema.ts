@@ -25,9 +25,7 @@ export const approvalRequestsTable = pgTable(
     emailMessageId: text("email_message_id"),
     emailStatus: text("email_status"), // 'SENT' | 'DELIVERED' | 'FAILED'
   },
-  (table) => [
-    uniqueIndex("ts_ai_approval_requests_token_hash_idx").on(table.tokenHash),
-  ],
+  (table) => [uniqueIndex("ts_ai_approval_requests_token_hash_idx").on(table.tokenHash)],
 );
 
 export type ApprovalRequest = typeof approvalRequestsTable.$inferSelect;

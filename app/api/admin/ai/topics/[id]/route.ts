@@ -1,13 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest} from "next/server";
+import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminTopicsService } from "@/lib/services/admin-topics.service";
 import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const container = getContainer();
   const auth = container.get(AdminAuthService);
   const session = await auth.getCurrentSession();
@@ -33,15 +31,12 @@ export async function PATCH(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to update topic" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const container = getContainer();
   const auth = container.get(AdminAuthService);
   const session = await auth.getCurrentSession();
@@ -59,7 +54,7 @@ export async function DELETE(
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to delete topic" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

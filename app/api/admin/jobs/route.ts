@@ -6,7 +6,10 @@ import { AdminAuthService } from "@/lib/services/admin-auth.service";
 
 const createJobSchema = z.object({
   siteId: z.string().uuid().optional(),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/),
   title: z.string().min(3),
   department: z.string().min(2),
   location: z.string().min(2),

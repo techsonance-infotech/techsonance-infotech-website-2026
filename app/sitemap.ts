@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 import { services } from "@/data/services";
 import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";

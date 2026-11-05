@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { Icon, IconName } from "@/app/components/icons/Icon";
+import type { IconName } from "@/app/components/icons/Icon";
+import { Icon } from "@/app/components/icons/Icon";
 
 export type LayerInfo = {
   title: string;

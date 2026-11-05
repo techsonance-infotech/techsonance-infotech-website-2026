@@ -5,7 +5,11 @@ import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 
 const updatePostSchema = z.object({
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/).optional(),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
   title: z.string().min(3).optional(),
   excerpt: z.string().optional(),
   content: z.string().min(10).optional(),

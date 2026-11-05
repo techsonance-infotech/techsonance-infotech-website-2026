@@ -68,10 +68,7 @@ export const JobStatusEnum = pgEnum(
   JobStatusValues as unknown as [string, ...string[]],
 );
 
-export const JobTypeEnum = pgEnum(
-  "job_type",
-  JobTypeValues as unknown as [string, ...string[]],
-);
+export const JobTypeEnum = pgEnum("job_type", JobTypeValues as unknown as [string, ...string[]]);
 
 export const ApplicationStatusEnum = pgEnum(
   "application_status",

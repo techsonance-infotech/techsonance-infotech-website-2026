@@ -1,6 +1,6 @@
 import { InjectionToken } from "@needle-di/core";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { BOT_CONFIG } from "../config";
+import type { BOT_CONFIG } from "../config";
 import type { Env } from "../env";
 import type { Database } from "@/types/database.types";
 import type { Database as DrizzleDb } from "@/lib/database/index";

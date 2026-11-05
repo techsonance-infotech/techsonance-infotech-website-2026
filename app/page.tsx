@@ -3,7 +3,7 @@ import HeroSection from "./components/home/HeroSection";
 import VisionSection from "./components/home/VisionSection";
 import ServicesSection from "./components/home/ServicesSection";
 import FeaturedProjectsSection from "./components/FeaturedProjectsSection";
-import Testimonials from "@/components/ui/testimonials";
+import { Testimonials } from "@/components/ui/testimonials";
 import WhyChooseSection from "./components/home/WhyChooseSection";
 import TechnologiesSection from "./components/home/TechnologiesSection";
 import ScopingContactForm from "@/app/components/services/ScopingContactForm";

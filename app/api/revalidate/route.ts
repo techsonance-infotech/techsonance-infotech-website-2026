@@ -23,10 +23,7 @@ export async function POST(req: Request) {
     try {
       rawBody = await req.json();
     } catch {
-      return NextResponse.json(
-        { error: "Invalid JSON body" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
     const parseResult = revalidateSchema.safeParse(rawBody);

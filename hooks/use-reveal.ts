@@ -12,8 +12,7 @@
 import * as React from "react";
 import { flushSync } from "react-dom";
 
-const useIsoLayoutEffect =
-  typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
+const useIsoLayoutEffect = typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
 
 /** Reveal roots: each one watches every open-state change beneath it. */
 const ROOTS = '[data-slot="accordion"], [data-slot="collapsible"]';
@@ -70,9 +69,7 @@ function opacityOf(el: Element): number {
 /** The element's `filter: opacity()` level (1 when it has none). */
 function filterOpacityOf(el: Element): number {
   const value = el.ownerDocument.defaultView?.getComputedStyle(el).filter;
-  const n = Number.parseFloat(
-    /opacity\(([^)]*)\)/.exec(value ?? "")?.[1] ?? "",
-  );
+  const n = Number.parseFloat(/opacity\(([^)]*)\)/.exec(value ?? "")?.[1] ?? "");
   return Number.isFinite(n) ? n : 1;
 }
 
@@ -82,20 +79,13 @@ function filterOpacityOf(el: Element): number {
  * The spring is the root's `transition-timing-function` (its `ease-spring-*`
  * class), else ease-out-expo.
  */
-export function revealTiming(
-  root: HTMLElement,
-  opening: boolean,
-): RevealTiming {
+export function revealTiming(root: HTMLElement, opening: boolean): RevealTiming {
   const view = root.ownerDocument.defaultView;
   const style = view?.getComputedStyle(root);
   const fast = toMs(style?.getPropertyValue("--godui-duration-fast"), 150);
-  const ms = opening
-    ? toMs(style?.getPropertyValue("--godui-duration-base"), 260)
-    : fast;
+  const ms = opening ? toMs(style?.getPropertyValue("--godui-duration-base"), 260) : fast;
   const ease = style?.transitionTimingFunction;
-  const expo =
-    style?.getPropertyValue("--ease-out-expo").trim() ||
-    "cubic-bezier(0.16, 1, 0.3, 1)";
+  const expo = style?.getPropertyValue("--ease-out-expo").trim() || "cubic-bezier(0.16, 1, 0.3, 1)";
   return {
     ms,
     ease: ease && ease !== "ease" ? ease : expo,
@@ -130,10 +120,7 @@ export interface Sweep {
  * While the box moves it has `data-sweeping` (clip it, let the pointer through
  * it): mid-sweep it overlaps whatever sits above the panel.
  */
-export function sweepPanel(
-  { box, layers, blocks, open, distance }: Sweep,
-  t: RevealTiming,
-) {
+export function sweepPanel({ box, layers, blocks, open, distance }: Sweep, t: RevealTiming) {
   if (typeof box.animate !== "function") return;
   const previous = SWEEPS.get(box) ?? [];
   // Read what's drawn before cancelling, so a reversal carries on from there.
@@ -143,8 +130,7 @@ export function sweepPanel(
   // The box itself fades with `filter: opacity()`: its `opacity` belongs to
   // the hold keyframe, and Chrome won't composite two opacity animations on
   // one element.
-  const level = (block: Element) =>
-    block === box ? filterOpacityOf(block) : opacityOf(block);
+  const level = (block: Element) => (block === box ? filterOpacityOf(block) : opacityOf(block));
   const shown = blocks.map((block) => (running ? level(block) : null));
   for (const animation of previous) animation.cancel();
   const fill: FillMode = open ? "backwards" : "forwards";
@@ -156,8 +142,7 @@ export function sweepPanel(
     // one. Every fade still ends with the edge: one clock, one last frame.
     // Clamped to the clock: a 0ms token must not make a negative duration
     // (animate() would throw inside the observer).
-    const delay =
-      open && !running ? Math.min(Math.min(i, 3) * t.stagger, t.ms) : 0;
+    const delay = open && !running ? Math.min(Math.min(i, 3) * t.stagger, t.ms) : 0;
     const frames =
       block === box
         ? [{ filter: `opacity(${from})` }, { filter: `opacity(${to})` }]
@@ -181,15 +166,9 @@ export function sweepPanel(
       return base ? `${base[0]} ${plus(base[1], y)}` : `0 ${y}px`;
     };
     animations.push(
-      box.animate(
-        [{ translate: at(box, from) }, { translate: at(box, to) }],
-        timing,
-      ),
+      box.animate([{ translate: at(box, from) }, { translate: at(box, to) }], timing),
       ...layers.map((layer) =>
-        layer.animate(
-          [{ translate: at(layer, -from) }, { translate: at(layer, -to) }],
-          timing,
-        ),
+        layer.animate([{ translate: at(layer, -from) }, { translate: at(layer, -to) }], timing),
       ),
     );
   }
@@ -209,17 +188,12 @@ export function sweepPanel(
 }
 
 /** Closing Collapsible panels out of the flow: the room each one took. */
-const LEFT = new WeakMap<
-  HTMLElement,
-  { room: number; style: [string, string, string, string] }
->();
+const LEFT = new WeakMap<HTMLElement, { room: number; style: [string, string, string, string] }>();
 const PLACED = ["position", "top", "left", "width"] as const;
 
 /** A Collapsible's own content (not a nested Collapsible's). */
 export function contentOf(root: Element): HTMLElement | null {
-  for (const el of root.querySelectorAll<HTMLElement>(
-    '[data-slot="collapsible-content"]',
-  )) {
+  for (const el of root.querySelectorAll<HTMLElement>('[data-slot="collapsible-content"]')) {
     if (el.closest('[data-slot="collapsible"]') === root) return el;
   }
   return null;
@@ -236,12 +210,7 @@ export function leaveFlow(box: HTMLElement, root: HTMLElement): number {
   if (known) return known.room;
   if (box.hidden) return 0;
   const style = box.style;
-  const saved = PLACED.map((p) => style.getPropertyValue(p)) as [
-    string,
-    string,
-    string,
-    string,
-  ];
+  const saved = PLACED.map((p) => style.getPropertyValue(p)) as [string, string, string, string];
   const height = root.offsetHeight;
   const width = box.offsetWidth;
   // Offsets are taken against the containing block (the positioned root):
@@ -295,9 +264,7 @@ export function flowRoom(box: HTMLElement, root: HTMLElement): number {
  */
 function gliderOf(root: Element): HTMLElement | null {
   const el =
-    root.getAttribute("data-slot") === "collapsible"
-      ? root.parentElement
-      : (root as HTMLElement);
+    root.getAttribute("data-slot") === "collapsible" ? root.parentElement : (root as HTMLElement);
   const doc = root.ownerDocument;
   // Never the page itself: a moved <body> would carry fixed layers with it.
   if (!el || el === doc.body || el === doc.documentElement) return null;
@@ -346,10 +313,7 @@ function glide(root: HTMLElement, before: Drawn, t: RevealTiming) {
   if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
   const [x, y] = ownTranslate(el) ?? ["0px", "0px"];
   const animation = el.animate(
-    [
-      { translate: `${plus(x, dx)} ${plus(y, dy)}` },
-      { translate: `${x} ${y}` },
-    ],
+    [{ translate: `${plus(x, dx)} ${plus(y, dy)}` }, { translate: `${x} ${y}` }],
     { duration: t.ms, easing: t.ease },
   );
   GLIDES.set(el, animation);
@@ -375,10 +339,7 @@ export interface RevealOptions {
  * panels leave the flow, `flip` runs, the root's glider glides if a parent
  * moved it, and `sweep` sweeps the root's own panels — all on one clock.
  */
-export function useReveal(
-  rootRef: React.RefObject<HTMLElement | null>,
-  options: RevealOptions,
-) {
+export function useReveal(rootRef: React.RefObject<HTMLElement | null>, options: RevealOptions) {
   const latest = React.useRef(options);
   useIsoLayoutEffect(() => {
     latest.current = options;

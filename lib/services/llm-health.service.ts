@@ -1,8 +1,8 @@
 import { inject } from "@needle-di/core";
 import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../di/tokens";
-import { BOT_CONFIG } from "../config";
+import type { BOT_CONFIG } from "../config";
 import type { Env } from "../env";
-import { QuotaError } from "../llm/types";
+import type { QuotaError } from "../llm/types";
 
 export type HealthState = "HEALTHY" | "COOLDOWN" | "EXHAUSTED" | "DISABLED";
 

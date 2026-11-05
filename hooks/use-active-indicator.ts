@@ -17,8 +17,7 @@ export interface ActiveIndicatorOptions {
   enabled?: boolean;
 }
 
-const useIsoLayoutEffect =
-  typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
+const useIsoLayoutEffect = typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
 
 const offsetBox = (el: HTMLElement): IndicatorBox => ({
   x: el.offsetLeft,
@@ -57,7 +56,9 @@ export function useActiveIndicator(
   const attributes = (options.attributes ?? ["data-state"]).join(",");
   // `box` is usually an inline function; read the latest without re-subscribing.
   const boxRef = React.useRef(options.box);
-  boxRef.current = options.box;
+  useIsoLayoutEffect(() => {
+    boxRef.current = options.box;
+  }, [options.box]);
 
   useIsoLayoutEffect(() => {
     const container = containerRef.current;
@@ -87,16 +88,8 @@ export function useActiveIndicator(
         if (drawn.width > 0 && drawn.height > 0) {
           // offset* (the target) is scroll-independent; the drawn rect isn't.
           from = {
-            x:
-              drawn.left -
-              origin.left -
-              container.clientLeft +
-              container.scrollLeft,
-            y:
-              drawn.top -
-              origin.top -
-              container.clientTop +
-              container.scrollTop,
+            x: drawn.left - origin.left - container.clientLeft + container.scrollLeft,
+            y: drawn.top - origin.top - container.clientTop + container.scrollTop,
             w: drawn.width,
             h: drawn.height,
           };
@@ -111,15 +104,11 @@ export function useActiveIndicator(
       shown = box;
 
       const moved =
-        from != null &&
-        (from.x !== box.x ||
-          from.y !== box.y ||
-          from.w !== box.w ||
-          from.h !== box.h);
+        from !== null &&
+        (from.x !== box.x || from.y !== box.y || from.w !== box.w || from.h !== box.h);
       if (!animate || !from || !moved || box.w === 0 || box.h === 0) return;
       if (typeof indicator.animate !== "function") return;
-      if (view?.matchMedia?.("(prefers-reduced-motion: reduce)").matches)
-        return;
+      if (view?.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
       const style = view?.getComputedStyle(indicator);
       const duration = toMs(style?.getPropertyValue("--godui-duration-base"));
       const easing = style?.transitionTimingFunction || "ease-out";

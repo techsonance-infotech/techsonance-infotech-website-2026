@@ -10,7 +10,6 @@ import {
   AlertCircle,
   RefreshCw,
   Cpu,
-  Layers,
   ArrowUpRight,
   ShieldCheck,
   ImageIcon,
@@ -21,6 +20,31 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { GenerationJob } from "@/lib/database/schema/ai/generation-job.schema";
 
+const getStatusBadge = (status: string) => {
+  switch (status) {
+    case "COMPLETED":
+      return (
+        <Badge variant="success" dot={true}>
+          COMPLETED
+        </Badge>
+      );
+    case "RUNNING":
+      return (
+        <Badge variant="info" dot={true}>
+          RUNNING
+        </Badge>
+      );
+    case "QUEUED":
+      return <Badge variant="secondary">QUEUED</Badge>;
+    case "WAITING_QUOTA":
+      return <Badge variant="warning">WAITING QUOTA</Badge>;
+    case "FAILED":
+      return <Badge variant="destructive">FAILED</Badge>;
+    default:
+      return <Badge variant="outline">{status}</Badge>;
+  }
+};
+
 export default function AdminAIPage() {
   const [jobs, setJobs] = useState<GenerationJob[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,9 +54,9 @@ export default function AdminAIPage() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const fetchJobs = useCallback(async () => {
+  const fetchJobs = useCallback(async (showLoader = false) => {
+    if (showLoader) setLoading(true);
     try {
-      setLoading(true);
       const res = await fetch("/api/admin/ai/jobs");
       const data = await res.json();
       if (data.ok) {
@@ -46,9 +70,11 @@ export default function AdminAIPage() {
   }, []);
 
   useEffect(() => {
-    fetchJobs();
+    void fetchJobs(false);
     // Auto-refresh every 8 seconds if there are running or queued jobs
-    const interval = setInterval(fetchJobs, 8000);
+    const interval = setInterval(() => {
+      void fetchJobs(false);
+    }, 8000);
     return () => clearInterval(interval);
   }, [fetchJobs]);
 
@@ -82,23 +108,6 @@ export default function AdminAIPage() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "COMPLETED":
-        return <Badge variant="success" dot={true}>COMPLETED</Badge>;
-      case "RUNNING":
-        return <Badge variant="info" dot={true}>RUNNING</Badge>;
-      case "QUEUED":
-        return <Badge variant="secondary">QUEUED</Badge>;
-      case "WAITING_QUOTA":
-        return <Badge variant="warning">WAITING QUOTA</Badge>;
-      case "FAILED":
-        return <Badge variant="destructive">FAILED</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Page Header */}
@@ -114,12 +123,15 @@ export default function AdminAIPage() {
             AI Blog Automation Control Plane
           </h1>
           <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
-            Automated multi-step outline expansion, FLUX thumbnail rendering, and single-use 1-click email approvals.
+            Automated multi-step outline expansion, FLUX thumbnail rendering, and single-use 1-click
+            email approvals.
           </p>
         </div>
 
         <button
-          onClick={fetchJobs}
+          onClick={() => {
+            void fetchJobs(true);
+          }}
           className="self-start sm:self-auto p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-[#1155CC]" : ""}`} />
@@ -139,7 +151,8 @@ export default function AdminAIPage() {
                 Launch Autonomous Generation Job
               </CardTitle>
               <CardDescription className="text-xs mt-0.5">
-                The agent will draft an outline, write deep technical sections, generate a 1200x630 FLUX thumbnail, and email you an approval link.
+                The agent will draft an outline, write deep technical sections, generate a 1200x630
+                FLUX thumbnail, and email you an approval link.
               </CardDescription>
             </div>
           </div>
@@ -206,7 +219,9 @@ export default function AdminAIPage() {
               </div>
               <div>
                 <p className="text-xs font-bold text-slate-900">Text Model Router</p>
-                <p className="text-[11px] text-slate-400 font-medium">Groq &bull; Gemini &bull; Cerebras</p>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Groq &bull; Gemini &bull; Cerebras
+                </p>
               </div>
             </div>
             <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -223,7 +238,9 @@ export default function AdminAIPage() {
               </div>
               <div>
                 <p className="text-xs font-bold text-slate-900">Thumbnail Renderer</p>
-                <p className="text-[11px] text-slate-400 font-medium">Cloudflare FLUX &bull; Pollinations</p>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Cloudflare FLUX &bull; Pollinations
+                </p>
               </div>
             </div>
             <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -319,7 +336,10 @@ export default function AdminAIPage() {
                             <ArrowUpRight className="w-3.5 h-3.5" />
                           </Link>
                         ) : job.status === "FAILED" ? (
-                          <span className="text-[11px] text-rose-600 font-semibold" title={JSON.stringify(job.errorDetails)}>
+                          <span
+                            className="text-[11px] text-rose-600 font-semibold"
+                            title={JSON.stringify(job.errorDetails)}
+                          >
                             Check Error
                           </span>
                         ) : (

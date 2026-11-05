@@ -6,7 +6,10 @@ import { AdminAuthService } from "@/lib/services/admin-auth.service";
 
 const createPostSchema = z.object({
   siteId: z.string().uuid().optional(),
-  slug: z.string().min(2).regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
+  slug: z
+    .string()
+    .min(2)
+    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
   title: z.string().min(3),
   excerpt: z.string().optional(),
   content: z.string().min(10),
@@ -71,10 +74,7 @@ export async function POST(req: Request) {
 
     const siteId = parseResult.data.siteId || session.site?.id;
     if (!siteId) {
-      return NextResponse.json(
-        { error: "siteId is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "siteId is required" }, { status: 400 });
     }
 
     const postsService = container.get(AdminPostsService);

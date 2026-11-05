@@ -1,6 +1,6 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { eq, and, ilike, count } from "drizzle-orm";
+import { eq, and, ilike, count, desc } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
@@ -29,58 +29,34 @@ export class AdminJobsService {
       const limit = options.limit ?? 20;
       const offset = options.offset ?? 0;
 
-      const whereObj: { siteId?: string; status?: string } = {};
-      if (options.siteId) whereObj.siteId = options.siteId;
-      if (options.status) whereObj.status = options.status;
-
-      const hasFilters = Object.keys(whereObj).length > 0;
-
-      const findManyConfig: {
-        orderBy: { createdAt: "desc" };
-        limit: number;
-        offset: number;
-        where?: { siteId?: string; status?: string };
-      } = {
-        orderBy: { createdAt: "desc" },
-        limit,
-        offset,
-      };
-
-      if (hasFilters) {
-        findManyConfig.where = whereObj;
-      }
-
-      const countConditions = [];
+      const conditions = [];
       if (options.siteId) {
-        countConditions.push(eq(jobsTable.siteId, options.siteId));
+        conditions.push(eq(jobsTable.siteId, options.siteId));
       }
       if (options.status) {
-        countConditions.push(eq(jobsTable.status, options.status));
+        conditions.push(eq(jobsTable.status, options.status));
       }
-      if (options.search) {
-        countConditions.push(ilike(jobsTable.title, `%${options.search}%`));
+      if (options.search && options.search.trim()) {
+        conditions.push(ilike(jobsTable.title, `%${options.search.trim()}%`));
       }
 
-      const countWhereClause =
-        countConditions.length > 0 ? and(...countConditions) : undefined;
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
       const [jobs, totalResult] = await Promise.all([
-        this.db.query.jobsTable.findMany(findManyConfig),
-        countWhereClause
-          ? this.db.select({ cnt: count() }).from(jobsTable).where(countWhereClause)
+        this.db
+          .select()
+          .from(jobsTable)
+          .where(whereClause)
+          .orderBy(desc(jobsTable.createdAt))
+          .limit(limit)
+          .offset(offset),
+        whereClause
+          ? this.db.select({ cnt: count() }).from(jobsTable).where(whereClause)
           : this.db.select({ cnt: count() }).from(jobsTable),
       ]);
 
-      let filteredJobs = jobs as Job[];
-      if (options.search) {
-        const searchLower = options.search.toLowerCase();
-        filteredJobs = filteredJobs.filter((j) =>
-          j.title.toLowerCase().includes(searchLower),
-        );
-      }
-
       return {
-        jobs: filteredJobs,
+        jobs,
         total: totalResult[0]?.cnt ?? 0,
       };
     } catch (error) {
@@ -91,21 +67,15 @@ export class AdminJobsService {
 
   async getJobById(id: string): Promise<Job | null> {
     try {
-      const job = await this.db.query.jobsTable.findFirst({
-        where: { id },
-      });
-      return (job as Job) || null;
+      const [job] = await this.db.select().from(jobsTable).where(eq(jobsTable.id, id)).limit(1);
+      return job || null;
     } catch (error) {
       console.error("AdminJobsService.getJobById error:", error);
       return null;
     }
   }
 
-  async createJob(
-    data: InsertJob,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Job> {
+  async createJob(data: InsertJob, actorId?: string, ipAddress?: string): Promise<Job> {
     const [created] = await this.db.insert(jobsTable).values(data).returning();
 
     await this.db.insert(auditLogsTable).values({
@@ -171,11 +141,7 @@ export class AdminJobsService {
     return updated;
   }
 
-  async publishJob(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Job> {
+  async publishJob(id: string, actorId?: string, ipAddress?: string): Promise<Job> {
     return this.updateJob(
       id,
       {
@@ -186,11 +152,7 @@ export class AdminJobsService {
     );
   }
 
-  async closeJob(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Job> {
+  async closeJob(id: string, actorId?: string, ipAddress?: string): Promise<Job> {
     return this.updateJob(
       id,
       {
@@ -201,11 +163,7 @@ export class AdminJobsService {
     );
   }
 
-  async deleteJob(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<boolean> {
+  async deleteJob(id: string, actorId?: string, ipAddress?: string): Promise<boolean> {
     const existing = await this.getJobById(id);
     if (!existing) {
       return false;

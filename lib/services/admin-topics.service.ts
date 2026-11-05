@@ -3,7 +3,12 @@ import { inject } from "@needle-di/core";
 import { eq, desc, and, ilike, sql } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database";
-import { topicsTable, sitesTable, type Topic, type InsertTopic } from "@/lib/database/schema/index.schema";
+import {
+  topicsTable,
+  sitesTable,
+  type Topic,
+  type InsertTopic,
+} from "@/lib/database/schema/index.schema";
 import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 import { AIWriterService } from "./ai-writer.service";
 import { JobOrchestratorService } from "./job-orchestrator.service";
@@ -20,7 +25,7 @@ export class AdminTopicsService {
   constructor(
     private readonly db: Database = inject(DRIZZLE_DB_TOKEN),
     private readonly aiWriter: AIWriterService = inject(AIWriterService),
-    private readonly jobOrchestrator: JobOrchestratorService = inject(JobOrchestratorService)
+    private readonly jobOrchestrator: JobOrchestratorService = inject(JobOrchestratorService),
   ) {}
 
   private async getDefaultSiteId(): Promise<string> {
@@ -73,11 +78,7 @@ export class AdminTopicsService {
   }
 
   async getTopicById(id: string): Promise<Topic | null> {
-    const [topic] = await this.db
-      .select()
-      .from(topicsTable)
-      .where(eq(topicsTable.id, id))
-      .limit(1);
+    const [topic] = await this.db.select().from(topicsTable).where(eq(topicsTable.id, id)).limit(1);
     return topic ?? null;
   }
 
@@ -144,7 +145,7 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
       const userPrompt = `Focus area / Category: ${category}`;
 
       const responseText = await this.aiWriter.generateRaw(systemPrompt, userPrompt);
-      
+
       // Parse JSON from LLM response (handling potential markdown code block formatting)
       const cleanJson = responseText
         .replace(/```json/gi, "")

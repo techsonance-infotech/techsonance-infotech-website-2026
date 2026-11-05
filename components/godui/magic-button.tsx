@@ -74,9 +74,7 @@ const MagicButton = React.forwardRef<HTMLButtonElement, MagicButtonProps>(
       (node: HTMLButtonElement | null) => {
         rootRef.current = node;
         if (typeof ref === "function") ref(node);
-        else if (ref)
-          (ref as React.MutableRefObject<HTMLButtonElement | null>).current =
-            node;
+        else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
       },
       [ref],
     );
@@ -87,12 +85,8 @@ const MagicButton = React.forwardRef<HTMLButtonElement, MagicButtonProps>(
       if (typeof view.IntersectionObserver === "undefined") return;
       const io = new view.IntersectionObserver(
         ([entry]) => {
-          for (const layer of root.querySelectorAll<HTMLElement>(
-            ".animate-magic-rainbow",
-          ))
-            layer.style.animationPlayState = entry.isIntersecting
-              ? ""
-              : "paused";
+          for (const layer of root.querySelectorAll<HTMLElement>(".animate-magic-rainbow"))
+            layer.style.animationPlayState = entry.isIntersecting ? "" : "paused";
         },
         { rootMargin: "128px" },
       );

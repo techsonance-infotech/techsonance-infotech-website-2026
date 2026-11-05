@@ -65,8 +65,7 @@ export class AdminPostsService {
         countConditions.push(ilike(postsTable.title, `%${options.search}%`));
       }
 
-      const countWhereClause =
-        countConditions.length > 0 ? and(...countConditions) : undefined;
+      const countWhereClause = countConditions.length > 0 ? and(...countConditions) : undefined;
 
       const [posts, totalResult] = await Promise.all([
         this.db.query.postsTable.findMany(findManyConfig),
@@ -108,11 +107,7 @@ export class AdminPostsService {
     }
   }
 
-  async createPost(
-    data: InsertPost,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Post> {
+  async createPost(data: InsertPost, actorId?: string, ipAddress?: string): Promise<Post> {
     const [created] = await this.db.insert(postsTable).values(data).returning();
 
     // Audit log
@@ -187,11 +182,7 @@ export class AdminPostsService {
     return updated;
   }
 
-  async publishPost(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Post> {
+  async publishPost(id: string, actorId?: string, ipAddress?: string): Promise<Post> {
     const updated = await this.updatePost(
       id,
       {
@@ -206,11 +197,7 @@ export class AdminPostsService {
     return updated;
   }
 
-  async submitForReview(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<Post> {
+  async submitForReview(id: string, actorId?: string, ipAddress?: string): Promise<Post> {
     return this.updatePost(
       id,
       {
@@ -221,11 +208,7 @@ export class AdminPostsService {
     );
   }
 
-  async deletePost(
-    id: string,
-    actorId?: string,
-    ipAddress?: string,
-  ): Promise<boolean> {
+  async deletePost(id: string, actorId?: string, ipAddress?: string): Promise<boolean> {
     const existing = await this.getPostById(id);
     if (!existing) {
       return false;

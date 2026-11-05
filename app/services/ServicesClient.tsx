@@ -380,7 +380,7 @@ export default function ServicesClient() {
 
                     {/* Call-to-action link */}
                     <div className="flex items-center gap-4">
-                      <Button asChild variant="secondary" size="sm" showArrow={true}>
+                      <Button asChild variant="secondary" size="sm">
                         <Link href={`/services/${service.slug}`}>Deep Dive Into This Service</Link>
                       </Button>
                     </div>

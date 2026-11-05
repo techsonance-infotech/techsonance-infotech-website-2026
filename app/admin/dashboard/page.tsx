@@ -1,13 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  FileText,
-  Briefcase,
-  Clock,
-  Sparkles,
-  ArrowUpRight,
-} from "lucide-react";
+import { FileText, Briefcase, Clock, Sparkles, ArrowUpRight } from "lucide-react";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
@@ -125,7 +119,9 @@ export default async function AdminDashboardPage() {
                 <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                   {kpi.title}
                 </CardTitle>
-                <div className={`w-8 h-8 rounded-xl ${kpi.bgColor} flex items-center justify-center`}>
+                <div
+                  className={`w-8 h-8 rounded-xl ${kpi.bgColor} flex items-center justify-center`}
+                >
                   <IconComp className={`w-4 h-4 ${kpi.textColor}`} />
                 </div>
               </CardHeader>
@@ -163,7 +159,8 @@ export default async function AdminDashboardPage() {
                 </CardTitle>
               </div>
               <CardDescription className="text-xs mt-1">
-                Drafts submitted by editors or autonomous AI agents that require approval before publishing.
+                Drafts submitted by editors or autonomous AI agents that require approval before
+                publishing.
               </CardDescription>
             </div>
           </CardHeader>

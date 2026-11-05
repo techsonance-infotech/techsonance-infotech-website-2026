@@ -20,9 +20,7 @@ export default function BlogClient({ initialPosts }: BlogClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredPosts =
-    selectedCategory === "All"
-      ? posts
-      : posts.filter((post) => post.category === selectedCategory);
+    selectedCategory === "All" ? posts : posts.filter((post) => post.category === selectedCategory);
 
   // Use the first post as featured
   const featuredPost = posts[0];

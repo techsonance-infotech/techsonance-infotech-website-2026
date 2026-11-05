@@ -83,7 +83,7 @@ export async function POST(req: Request) {
   }
 
   const { messages } = parseResult.data;
-  const lastUserMsgObj = [...messages].reverse().find((m) => m.role === "user");
+  const lastUserMsgObj = messages.toReversed().find((m) => m.role === "user");
 
   if (!lastUserMsgObj) {
     return new Response(JSON.stringify({ error: "No user message found" }), {

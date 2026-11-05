@@ -142,7 +142,10 @@ export default function MediaLibraryPage() {
                     />
                   </div>
                   <div className="p-3 space-y-2">
-                    <p className="text-[11px] font-mono text-slate-500 truncate" title={item.publicId}>
+                    <p
+                      className="text-[11px] font-mono text-slate-500 truncate"
+                      title={item.publicId}
+                    >
                       {item.publicId}
                     </p>
                     <div className="flex items-center gap-1.5">

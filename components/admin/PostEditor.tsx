@@ -243,7 +243,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
           <Card>
             <CardContent className="p-6 space-y-5">
               <div>
-                <label htmlFor="post-title" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="post-title"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                >
                   Article Title
                 </label>
                 <Input
@@ -257,7 +260,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               </div>
 
               <div>
-                <label htmlFor="post-slug" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="post-slug"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                >
                   URL Slug
                 </label>
                 <div className="flex items-center gap-2">
@@ -276,7 +282,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               </div>
 
               <div>
-                <label htmlFor="post-excerpt" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="post-excerpt"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                >
                   Article Summary / Excerpt
                 </label>
                 <Textarea
@@ -290,12 +299,13 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label htmlFor="post-content" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  <label
+                    htmlFor="post-content"
+                    className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                  >
                     Article Body (Markdown)
                   </label>
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    {wordCount} words
-                  </span>
+                  <span className="text-[11px] text-slate-400 font-mono">{wordCount} words</span>
                 </div>
                 <Textarea
                   id="post-content"
@@ -340,7 +350,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   </div>
                 </div>
               ) : (
-                <label htmlFor="hero-upload-input" className="border-2 border-dashed border-slate-200 hover:border-[#1155CC]/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-blue-50/20">
+                <label
+                  htmlFor="hero-upload-input"
+                  className="border-2 border-dashed border-slate-200 hover:border-[#1155CC]/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-blue-50/20"
+                >
                   <UploadCloud className="w-8 h-8 text-slate-400 mb-2" />
                   <span className="text-xs font-bold text-slate-700">
                     {uploadingImage ? "Uploading to Cloudinary..." : "Upload Hero Image"}
@@ -360,7 +373,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               )}
 
               <div>
-                <label htmlFor="hero-image-url" className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                <label
+                  htmlFor="hero-image-url"
+                  className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5"
+                >
                   Or Image URL
                 </label>
                 <Input
@@ -383,7 +399,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label htmlFor="post-tags" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="post-tags"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                >
                   Comma-separated Tags
                 </label>
                 <div className="relative">
@@ -399,7 +418,10 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               </div>
 
               <div>
-                <label htmlFor="post-readtime" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="post-readtime"
+                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                >
                   Reading Time
                 </label>
                 <div className="relative">
@@ -432,7 +454,9 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                 {title || "Article Title | TechSonance Blog"}
               </h4>
               <p className="text-xs text-slate-600 line-clamp-2">
-                {excerpt || content.slice(0, 140) || "Article summary snippet as it will appear on Google."}
+                {excerpt ||
+                  content.slice(0, 140) ||
+                  "Article summary snippet as it will appear on Google."}
               </p>
             </CardContent>
           </Card>
