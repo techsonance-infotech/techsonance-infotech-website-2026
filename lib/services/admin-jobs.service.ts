@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
 import { DRIZZLE_DB_TOKEN } from "../di/tokens";
 import type { Database } from "../database/index";
 import { jobsTable, type Job, type InsertJob } from "../database/schema/core/job.schema";
-import { JobStatus } from "../database/enum";
+import { JobStatus, JobApprovalStatus } from "../database/enum";
 import { auditLogsTable } from "../database/schema/core/audit.schema";
 import { versionsTable } from "../database/schema/core/version.schema";
 
@@ -140,6 +140,129 @@ export class AdminJobsService {
 
     this.revalidateJobCache(updated.slug);
     return updated;
+  }
+
+  async transitionStatus(
+    jobId: string,
+    targetStatus: JobStatus,
+    actor: { userId: string; role: string },
+    comment?: string,
+    ipAddress?: string,
+  ): Promise<Job> {
+    const existing = await this.getJobById(jobId);
+    if (!existing) {
+      throw new Error(`Job with id "${jobId}" not found`);
+    }
+
+    if (existing.status === targetStatus) {
+      return existing;
+    }
+
+    const currentStatus = existing.status;
+    const role = (actor.role || "").toLowerCase();
+    const isAdminOrOwner = role === "admin" || role === "owner";
+    const isRecruiter = role === "recruiter" || role === "editor";
+
+    if (!isAdminOrOwner && !isRecruiter) {
+      throw new Error(`Forbidden: Role "${actor.role}" cannot transition job status`);
+    }
+
+    // Enforce 7-status state machine transitions
+    switch (currentStatus) {
+      case JobStatus.DRAFT:
+        if (targetStatus === JobStatus.IN_REVIEW) {
+          break;
+        }
+        if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
+          if (!isAdminOrOwner) {
+            throw new Error(
+              "Approval required: Recruiters must submit role to IN_REVIEW for approval before publishing",
+            );
+          }
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.IN_REVIEW:
+        if (!isAdminOrOwner) {
+          throw new Error("Forbidden: Only Admins can approve or return roles under review");
+        }
+        if (
+          targetStatus === JobStatus.PUBLISHED ||
+          targetStatus === JobStatus.OPEN ||
+          targetStatus === JobStatus.SCHEDULED ||
+          targetStatus === JobStatus.DRAFT
+        ) {
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.SCHEDULED:
+        if (
+          targetStatus === JobStatus.PUBLISHED ||
+          targetStatus === JobStatus.OPEN ||
+          targetStatus === JobStatus.DRAFT
+        ) {
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.PUBLISHED:
+      case JobStatus.OPEN:
+        if (targetStatus === JobStatus.PAUSED || targetStatus === JobStatus.CLOSED) {
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.PAUSED:
+        if (
+          targetStatus === JobStatus.PUBLISHED ||
+          targetStatus === JobStatus.OPEN ||
+          targetStatus === JobStatus.CLOSED
+        ) {
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.CLOSED:
+        if (!isAdminOrOwner) {
+          throw new Error("Forbidden: Only Admins can re-open or archive closed roles");
+        }
+        if (
+          targetStatus === JobStatus.ARCHIVED ||
+          targetStatus === JobStatus.DRAFT ||
+          targetStatus === JobStatus.PUBLISHED ||
+          targetStatus === JobStatus.OPEN
+        ) {
+          break;
+        }
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+
+      case JobStatus.ARCHIVED:
+      default:
+        throw new Error(`Illegal transition from ${currentStatus} to ${targetStatus}`);
+    }
+
+    // Build status-specific fields
+    const updates: Partial<InsertJob> = {
+      status: targetStatus,
+    };
+
+    if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
+      updates.publishedAt = new Date();
+      updates.approvalStatus = JobApprovalStatus.APPROVED;
+    } else if (targetStatus === JobStatus.CLOSED) {
+      updates.closedAt = new Date();
+    } else if (targetStatus === JobStatus.DRAFT && currentStatus === JobStatus.IN_REVIEW) {
+      updates.approvalStatus = JobApprovalStatus.RETURNED;
+      if (comment) {
+        updates.approvalComment = comment;
+      }
+    } else if (targetStatus === JobStatus.IN_REVIEW) {
+      updates.approvalStatus = JobApprovalStatus.PENDING;
+    }
+
+    return this.updateJob(jobId, updates, actor.userId, ipAddress);
   }
 
   async publishJob(id: string, actorId?: string, ipAddress?: string): Promise<Job> {
