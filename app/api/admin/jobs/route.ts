@@ -1,26 +1,8 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
-
-const createJobSchema = z.object({
-  siteId: z.string().uuid().optional(),
-  slug: z
-    .string()
-    .min(2)
-    .regex(/^[a-z0-9-]+$/),
-  title: z.string().min(3),
-  department: z.string().min(2),
-  location: z.string().min(2),
-  type: z.enum(["Full Time", "Internship", "Contract", "Partner"]).default("Full Time"),
-  experienceLevel: z.string().optional().default("Mid-Senior"),
-  description: z.string().min(10),
-  responsibilities: z.array(z.string()).default([]),
-  requirements: z.array(z.string()).default([]),
-  benefits: z.array(z.string()).default([]),
-  status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]).default("DRAFT"),
-});
+import { createJobSchema } from "@/lib/validations/careers";
 
 export async function GET(req: Request) {
   try {
@@ -36,7 +18,7 @@ export async function GET(req: Request) {
     const status = searchParams.get("status") || undefined;
     const search = searchParams.get("search") || undefined;
     const siteId = searchParams.get("siteId") || session.site?.id || undefined;
-    const limit = Number(searchParams.get("limit")) || 20;
+    const limit = Number(searchParams.get("limit")) || 50;
     const offset = Number(searchParams.get("offset")) || 0;
 
     const jobsService = container.get(AdminJobsService);
@@ -74,20 +56,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const siteId = parseResult.data.siteId || session.site?.id;
-    if (!siteId) {
-      return NextResponse.json({ error: "siteId is required" }, { status: 400 });
-    }
+    const siteId = parseResult.data.siteId || session.site?.id || "00000000-0000-0000-0000-000000000000";
 
     const jobsService = container.get(AdminJobsService);
     const job = await jobsService.createJob(
       {
         ...parseResult.data,
-        type: parseResult.data.type as any,
-        status: parseResult.data.status as any,
-        experienceLevel: parseResult.data.experienceLevel as any,
         siteId,
-      },
+      } as any,
       session.userId,
     );
 

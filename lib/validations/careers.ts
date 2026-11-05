@@ -83,8 +83,8 @@ export const jobPostingBaseFields = {
   screeningQuestions: z.array(screeningQuestionSchema).default([]),
 
   status: z.nativeEnum(JobStatus).default(JobStatus.DRAFT),
-  publishAt: z.union([z.date()]).optional(),
-  closesAt: z.union([z.date()]).optional(),
+  publishAt: z.coerce.date().optional().nullable(),
+  closesAt: z.coerce.date().optional().nullable(),
   visibility: z.nativeEnum(JobVisibility).default(JobVisibility.PUBLIC),
   featured: z.boolean().default(false),
 

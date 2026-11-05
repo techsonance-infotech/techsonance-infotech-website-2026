@@ -1,0 +1,365 @@
+"use client";
+
+import React, { useState, useEffect, useCallback, use } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Eye,
+  Save,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Sparkles,
+  ExternalLink,
+  ShieldCheck,
+  RefreshCw,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { JobEditorForm, type JobFormData, DEFAULT_JOB_FORM } from "@/components/admin/careers/JobEditorForm";
+import { JobLivePreview } from "@/components/admin/careers/JobLivePreview";
+import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
+
+interface JobEditorPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default function JobEditorPage({ params }: JobEditorPageProps) {
+  const { id } = use(params);
+  const router = useRouter();
+
+  const isNew = id === "new";
+  const [loading, setLoading] = useState(!isNew);
+  const [jobData, setJobData] = useState<JobFormData>(DEFAULT_JOB_FORM);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Fetch existing job if not "new"
+  const fetchJob = useCallback(async () => {
+    if (isNew) return;
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/admin/jobs/${id}`);
+      const data = await res.json();
+      if (data.ok && data.job) {
+        setJobData(data.job);
+      } else {
+        setAlertMessage({ type: "error", text: data.error || "Failed to load position." });
+      }
+    } catch (err: any) {
+      console.error("Fetch job error:", err);
+      setAlertMessage({ type: "error", text: "Network error loading position data." });
+    } finally {
+      setLoading(false);
+    }
+  }, [id, isNew]);
+
+  useEffect(() => {
+    fetchJob();
+  }, [fetchJob]);
+
+  // Save handler (Create new or update existing)
+  const handleSave = async (updatedData: JobFormData) => {
+    setSaving(true);
+    setSaveStatus("saving");
+    setAlertMessage(null);
+
+    try {
+      if (isNew) {
+        const res = await fetch("/api/admin/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        });
+        const data = await res.json();
+        if (data.ok && data.job) {
+          setSaveStatus("saved");
+          setLastSavedAt(new Date());
+          setJobData(data.job);
+          setAlertMessage({ type: "success", text: "Role draft created successfully!" });
+          // Redirect to the newly created job ID
+          router.replace(`/admin/careers/jobs/${data.job.id}`);
+        } else {
+          setSaveStatus("error");
+          setAlertMessage({ type: "error", text: data.error || "Failed to create position." });
+        }
+      } else {
+        const res = await fetch(`/api/admin/jobs/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedData),
+        });
+        const data = await res.json();
+        if (data.ok && data.job) {
+          setSaveStatus("saved");
+          setLastSavedAt(new Date());
+          setJobData(data.job);
+          setAlertMessage({ type: "success", text: "Draft changes saved." });
+        } else {
+          setSaveStatus("error");
+          setAlertMessage({ type: "error", text: data.error || "Failed to save changes." });
+        }
+      }
+    } catch (err: any) {
+      console.error("Save job error:", err);
+      setSaveStatus("error");
+      setAlertMessage({ type: "error", text: "Network error saving position." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Submit for Review action
+  const handleSubmitForReview = async (updatedData: JobFormData) => {
+    const evalResult = evaluateCompleteness(updatedData);
+    if (!evalResult.isComplete) {
+      setAlertMessage({
+        type: "error",
+        text: `Cannot submit for review: ${evalResult.missingFields.join(", ")}`,
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      // If still new, save first
+      let currentJobId = id;
+      if (isNew) {
+        const createRes = await fetch("/api/admin/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
+        });
+        const createData = await createRes.json();
+        if (!createData.ok || !createData.job) {
+          throw new Error(createData.error || "Failed to create initial draft");
+        }
+        currentJobId = createData.job.id;
+      }
+
+      // Transition to IN_REVIEW
+      const transitionRes = await fetch(`/api/admin/jobs/${currentJobId}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetStatus: "IN_REVIEW",
+          comment: "Submitted by recruiter for executive approval.",
+        }),
+      });
+      const transitionData = await transitionRes.json();
+      if (transitionData.ok && transitionData.job) {
+        setJobData(transitionData.job);
+        setAlertMessage({
+          type: "success",
+          text: "Role submitted for review! Hiring managers and admins have been notified.",
+        });
+        if (isNew) {
+          router.replace(`/admin/careers/jobs/${currentJobId}`);
+        }
+      } else {
+        throw new Error(transitionData.error || "Status transition failed");
+      }
+    } catch (err: any) {
+      console.error("Submit for review error:", err);
+      setAlertMessage({ type: "error", text: err?.message || "Failed to submit for review." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Direct Publish action (for admins or when direct publish is allowed)
+  const handlePublish = async (updatedData: JobFormData) => {
+    const evalResult = evaluateCompleteness(updatedData);
+    if (!evalResult.isComplete) {
+      setAlertMessage({
+        type: "error",
+        text: `Cannot publish: ${evalResult.missingFields.join(", ")}`,
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      let currentJobId = id;
+      if (isNew) {
+        const createRes = await fetch("/api/admin/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
+        });
+        const createData = await createRes.json();
+        if (!createData.ok || !createData.job) {
+          throw new Error(createData.error || "Failed to create draft");
+        }
+        currentJobId = createData.job.id;
+      }
+
+      const statusRes = await fetch(`/api/admin/jobs/${currentJobId}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetStatus: "PUBLISHED",
+          comment: "Published directly to public careers portal.",
+        }),
+      });
+      const statusData = await statusRes.json();
+      if (statusData.ok && statusData.job) {
+        setJobData(statusData.job);
+        setAlertMessage({
+          type: "success",
+          text: "Role is now LIVE on the public careers portal!",
+        });
+        if (isNew) {
+          router.replace(`/admin/careers/jobs/${currentJobId}`);
+        }
+      } else {
+        throw new Error(statusData.error || "Publishing failed");
+      }
+    } catch (err: any) {
+      console.error("Publish error:", err);
+      setAlertMessage({ type: "error", text: err?.message || "Failed to publish role." });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="py-24 text-center space-y-3">
+        <RefreshCw className="w-8 h-8 animate-spin mx-auto text-[#1155CC]" />
+        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+          Loading role authoring editor...
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-300 pb-16">
+      {/* Top Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/careers/jobs"
+            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight font-sora">
+                {isNew ? "Create New Role" : `Edit Role: ${jobData.title || "Untitled"}`}
+              </h1>
+              <Badge
+                variant={
+                  jobData.status === "PUBLISHED" || jobData.status === "OPEN"
+                    ? "default"
+                    : "secondary"
+                }
+                className="rounded-full text-[10px] font-mono uppercase tracking-wider font-bold"
+              >
+                {jobData.status || "DRAFT"}
+              </Badge>
+            </div>
+            <p className="text-xs font-medium text-slate-500 mt-0.5">
+              Multi-section job authoring with live completeness audit and viewport preview.
+            </p>
+          </div>
+        </div>
+
+        {/* Action Header Buttons */}
+        <div className="flex items-center gap-2.5">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setPreviewOpen(true)}
+            className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+          >
+            <Eye className="w-4 h-4 text-[#1155CC]" />
+            <span>Live Preview</span>
+          </Button>
+
+          {jobData.slug && (jobData.status === "PUBLISHED" || jobData.status === "OPEN") && (
+            <Link
+              href={`/careers/${jobData.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#1155CC] transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Public Page</span>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Alert Notifications */}
+      {alertMessage && (
+        <div
+          className={`p-4 rounded-2xl text-xs font-medium flex items-center justify-between transition-all ${
+            alertMessage.type === "success"
+              ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900"
+              : "bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-900"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            {alertMessage.type === "success" ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            )}
+            <span>{alertMessage.text}</span>
+          </div>
+          <button
+            onClick={() => setAlertMessage(null)}
+            className="text-slate-400 hover:text-slate-600 p-1"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Main 6-Section Form */}
+      <JobEditorForm
+        initialJob={jobData}
+        onSave={handleSave}
+        onSubmitForReview={handleSubmitForReview}
+        onPublish={handlePublish}
+        isSaving={saving}
+        saveStatus={saveStatus}
+        lastSavedAt={lastSavedAt}
+      />
+
+      {/* Full-Screen / Large Viewport Preview Modal */}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto rounded-3xl p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          <DialogHeader className="pb-3 border-b border-slate-200 dark:border-slate-800">
+            <DialogTitle className="text-lg font-black font-sora text-slate-900 dark:text-white flex items-center gap-2">
+              <Eye className="w-5 h-5 text-[#1155CC]" />
+              Role Live Preview
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-500">
+              Interactive preview rendering public applicant view with responsive device simulation.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <JobLivePreview job={jobData} showViewportControls={true} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

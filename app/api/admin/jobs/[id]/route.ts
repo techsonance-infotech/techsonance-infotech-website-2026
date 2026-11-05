@@ -1,26 +1,8 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
-
-const updateJobSchema = z.object({
-  slug: z
-    .string()
-    .min(2)
-    .regex(/^[a-z0-9-]+$/)
-    .optional(),
-  title: z.string().min(3).optional(),
-  department: z.string().min(2).optional(),
-  location: z.string().min(2).optional(),
-  type: z.enum(["Full Time", "Internship", "Contract", "Partner"]).optional(),
-  experienceLevel: z.string().optional(),
-  description: z.string().min(10).optional(),
-  responsibilities: z.array(z.string()).optional(),
-  requirements: z.array(z.string()).optional(),
-  benefits: z.array(z.string()).optional(),
-  status: z.enum(["DRAFT", "OPEN", "CLOSED", "ARCHIVED"]).optional(),
-});
+import { updateJobSchema } from "@/lib/validations/careers";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -74,12 +56,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     const jobsService = container.get(AdminJobsService);
     const updated = await jobsService.updateJob(
       id,
-      {
-        ...parseResult.data,
-        type: parseResult.data.type as any,
-        status: parseResult.data.status as any,
-        experienceLevel: parseResult.data.experienceLevel as any,
-      },
+      parseResult.data as any,
       session.userId,
     );
 
@@ -101,18 +78,10 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!authService.hasPermission(session.role, "editor")) {
-      return NextResponse.json({ error: "Forbidden: editor or higher required" }, { status: 403 });
-    }
-
     const jobsService = container.get(AdminJobsService);
-    const success = await jobsService.deleteJob(id, session.userId);
+    await jobsService.deleteJob(id, session.userId);
 
-    if (!success) {
-      return NextResponse.json({ error: "Job not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ ok: true, message: "Job deleted successfully" });
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Delete job error:", error);
     return NextResponse.json({ error: "Failed to delete job" }, { status: 500 });
