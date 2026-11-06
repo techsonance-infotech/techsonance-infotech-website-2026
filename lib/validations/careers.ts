@@ -245,8 +245,14 @@ export const talentPoolSubmissionSchema = z.object({
     (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
     z.string().uuid().optional(),
   ),
-  name: z.string().min(2, "Full name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
+  name: z
+    .string()
+    .min(1, CAREER_ERRORS.FULL_NAME_REQUIRED)
+    .min(2, "Full name must be at least 2 characters"),
+  email: z
+    .string()
+    .min(1, CAREER_ERRORS.EMAIL_REQUIRED)
+    .email(CAREER_ERRORS.TALENT_EMAIL_INVALID),
   phone: z.preprocess(
     (val) => (typeof val === "string" && val.trim() ? val.trim() : undefined),
     z.string().optional(),

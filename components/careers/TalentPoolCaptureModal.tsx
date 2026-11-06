@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { X, Sparkles, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface TalentPoolCaptureModalProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ export function TalentPoolCaptureModal({ isOpen, onClose }: TalentPoolCaptureMod
         .map((s) => s.trim())
         .filter(Boolean);
 
-      const res = await fetch("/api/careers/talent-pool", {
+      const res = await fetch(API_ENDPOINTS.CAREERS.TALENT_POOL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
