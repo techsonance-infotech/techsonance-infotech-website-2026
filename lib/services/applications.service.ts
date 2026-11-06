@@ -182,6 +182,19 @@ export class ApplicationsService {
   }
 
   async exportApplicationsCsv(jobId?: string): Promise<string> {
+    const { csvData } = await this.generateApplicationsCsv(jobId);
+    return csvData;
+  }
+
+  async generateApplicationsCsv(
+    jobId?: string,
+    actorId?: string,
+  ): Promise<{
+    csvData: string;
+    filename: string;
+    rowCount: number;
+    storagePath?: string;
+  }> {
     const rows = await this.repository.listAllForExport(jobId);
 
     const headers = [
@@ -220,7 +233,46 @@ export class ApplicationsService {
       lines.push(line.join(","));
     }
 
-    return lines.join("\n");
+    const csvData = lines.join("\n");
+    const timestamp = new Date().toISOString().split("T")[0];
+    const filename = jobId
+      ? `applications-${jobId}-${timestamp}.csv`
+      : `applications-all-${timestamp}.csv`;
+
+    let storagePath: string | undefined;
+
+    if (this.supabaseAdmin?.storage) {
+      try {
+        const path = `exports/${filename}`;
+        const buffer = Buffer.from(csvData, "utf-8");
+        const { error } = await this.supabaseAdmin.storage
+          .from(RESUME_BUCKET)
+          .upload(path, buffer, {
+            contentType: "text/csv; charset=utf-8",
+            upsert: true,
+          });
+
+        if (!error) {
+          storagePath = path;
+          logger.info("Applications CSV export archived to storage bucket", {
+            storagePath,
+            rowCount: rows.length,
+            actorId,
+          });
+        } else {
+          logger.warn("Failed to archive CSV export to storage bucket", { error: error.message });
+        }
+      } catch (uploadErr) {
+        logger.warn("Exception uploading CSV export to storage bucket", { error: String(uploadErr) });
+      }
+    }
+
+    return {
+      csvData,
+      filename,
+      rowCount: rows.length,
+      ...(storagePath ? { storagePath } : {}),
+    };
   }
 
   async exportCandidateData(email: string) {

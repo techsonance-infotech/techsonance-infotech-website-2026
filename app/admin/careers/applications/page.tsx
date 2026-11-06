@@ -156,7 +156,7 @@ export default function ApplicationsInboxPage() {
   const handleExportCsv = () => {
     const params = new URLSearchParams();
     if (selectedJobId) params.set("jobId", selectedJobId);
-    const exportUrl = `/api/admin/careers/applications/export${
+    const exportUrl = `${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}${
       params.toString() ? `?${params.toString()}` : ""
     }`;
     window.open(exportUrl, "_blank");

@@ -91,3 +91,28 @@ export const getApplicationResumeContract = defineContract({
   status: 200,
 });
 
+export const exportApplicationsQuerySchema = z.strictObject({
+  jobId: z.string().uuid({ message: "Invalid job ID format" }).optional(),
+});
+
+export type ExportApplicationsQuery = z.input<typeof exportApplicationsQuerySchema>;
+
+export const exportApplicationsResponseSchema = z.object({
+  filename: z.string(),
+  csvData: z.string(),
+  rowCount: z.number().int().min(0),
+  storagePath: z.string().optional(),
+});
+
+export const exportApplicationsContract = defineContract({
+  method: "GET",
+  path: API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT,
+  auth: "required",
+  params: noParams,
+  query: exportApplicationsQuerySchema,
+  body: noBody,
+  response: exportApplicationsResponseSchema,
+  status: 200,
+});
+
+
