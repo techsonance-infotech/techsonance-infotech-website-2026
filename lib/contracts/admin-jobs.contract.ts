@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { defineContract, noParams, noQuery, noBody } from "@/lib/contracts/define";
-import { createJobSchema } from "@/lib/validations/careers";
+import { createJobSchema, updateJobSchema } from "@/lib/validations/careers";
 import { JobStatus } from "@/lib/database/enum";
 import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
@@ -196,5 +196,44 @@ export const transitionJobStatusContract = defineContract({
   query: noQuery,
   body: transitionJobStatusBodySchema,
   response: transitionJobStatusResponseSchema,
+  status: 200,
+});
+
+export const jobByIdParamsSchema = z.strictObject({
+  id: z.string().uuid("Invalid job ID format"),
+});
+
+export type JobByIdParamsInput = z.input<typeof jobByIdParamsSchema>;
+
+export const getJobByIdContract = defineContract({
+  method: "GET",
+  path: "/api/admin/jobs/[id]",
+  auth: "required",
+  params: jobByIdParamsSchema,
+  query: noQuery,
+  body: noBody,
+  response: z.object({ job: z.any() }),
+  status: 200,
+});
+
+export const updateJobContract = defineContract({
+  method: "PATCH",
+  path: "/api/admin/jobs/[id]",
+  auth: "required",
+  params: jobByIdParamsSchema,
+  query: noQuery,
+  body: updateJobSchema,
+  response: z.object({ job: z.any() }),
+  status: 200,
+});
+
+export const deleteJobContract = defineContract({
+  method: "DELETE",
+  path: "/api/admin/jobs/[id]",
+  auth: "required",
+  params: jobByIdParamsSchema,
+  query: noQuery,
+  body: noBody,
+  response: z.object({ success: z.boolean() }),
   status: 200,
 });
