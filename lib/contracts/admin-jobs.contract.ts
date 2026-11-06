@@ -101,3 +101,51 @@ export const returnJobContract = defineContract({
   response: returnJobResponseSchema,
   status: 200,
 });
+
+export const listJobVersionsParamsSchema = z.strictObject({
+  id: z.string().uuid("Invalid job ID format"),
+});
+
+export type ListJobVersionsParamsInput = z.input<typeof listJobVersionsParamsSchema>;
+
+export const listJobVersionsResponseSchema = z.object({
+  versions: z.array(z.any()),
+});
+
+export const listJobVersionsContract = defineContract({
+  method: "GET",
+  path: "/api/admin/careers/jobs/[id]/versions",
+  auth: "required",
+  params: listJobVersionsParamsSchema,
+  query: noQuery,
+  body: noBody,
+  response: listJobVersionsResponseSchema,
+  status: 200,
+});
+
+export const restoreJobVersionParamsSchema = z.strictObject({
+  id: z.string().uuid("Invalid job ID format"),
+});
+
+export type RestoreJobVersionParamsInput = z.input<typeof restoreJobVersionParamsSchema>;
+
+export const restoreJobVersionBodySchema = z.strictObject({
+  versionId: z.string().trim().min(1, CAREER_ERRORS.VERSION_ID_REQUIRED).max(100),
+});
+
+export type RestoreJobVersionBodyInput = z.input<typeof restoreJobVersionBodySchema>;
+
+export const restoreJobVersionResponseSchema = z.object({
+  job: z.any(),
+});
+
+export const restoreJobVersionContract = defineContract({
+  method: "POST",
+  path: "/api/admin/careers/jobs/[id]/versions",
+  auth: "required",
+  params: restoreJobVersionParamsSchema,
+  query: noQuery,
+  body: restoreJobVersionBodySchema,
+  response: restoreJobVersionResponseSchema,
+  status: 200,
+});

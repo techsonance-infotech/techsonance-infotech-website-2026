@@ -46,9 +46,15 @@ export function VersionHistoryDialog({
       try {
         const res = await fetch(`/api/admin/careers/jobs/${jobId}/versions`);
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to load version history");
+        if (!res.ok) {
+          const msg =
+            (typeof data.error === "object" ? data.error?.message : data.error) ||
+            data.message ||
+            "Failed to load version history";
+          throw new Error(msg);
+        }
         if (isMounted) {
-          setVersions(data.versions || []);
+          setVersions(data.data?.versions || data.versions || []);
         }
       } catch (err: any) {
         if (isMounted) {
@@ -85,10 +91,16 @@ export function VersionHistoryDialog({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to restore version");
+      if (!res.ok) {
+        const msg =
+          (typeof data.error === "object" ? data.error?.message : data.error) ||
+          data.message ||
+          "Failed to restore version";
+        throw new Error(msg);
+      }
 
       setSuccessMessage("Version successfully restored!");
-      onRestoreSuccess(data.job);
+      onRestoreSuccess(data.data?.job || data.job);
       setTimeout(() => {
         onClose();
       }, 800);
