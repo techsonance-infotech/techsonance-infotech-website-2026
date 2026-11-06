@@ -68,8 +68,8 @@ export const jobPostingBaseFields = {
   openingsCount: z.number().int().min(1, "Openings count must be at least 1").default(1),
   ownerId: z.uuid().optional(),
   hiringManagerId: z.uuid().optional(),
-  summary: z.string().min(5, "Summary must be at least 5 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  summary: z.string().default(""),
+  description: z.string().default(""),
 
   workMode: caseInsensitiveEnum(JobWorkMode, JobWorkMode.HYBRID),
   location: z.string().min(2, "Location is required"),

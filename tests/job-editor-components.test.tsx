@@ -204,4 +204,14 @@ describe("JobEditorForm Component Rendering", () => {
     expect(html).toContain("6. Review &amp; Publish");
     expect(html).toContain("Role Identity &amp; Overview");
   });
+
+  it("renders Publish Role Now in top header bar and omits the checklist sidebar", () => {
+    const html = renderToString(<JobEditorForm initialJob={{ title: "Test Role" }} />);
+
+    expect(html).toContain("Save Draft");
+    expect(html).toContain("Publish Role Now");
+    // Verify noisy sidebar is completely removed from the form
+    expect(html).not.toContain("QUALITY RECOMMENDATIONS");
+    expect(html).not.toContain("Complete all required checklist items to unlock publishing");
+  });
 });

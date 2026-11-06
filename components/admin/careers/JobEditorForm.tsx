@@ -12,6 +12,7 @@ import {
   Plus,
   Trash2,
   CheckCircle2,
+  AlertCircle,
   Clock,
   Sparkles,
   ArrowRight,
@@ -24,13 +25,23 @@ import {
   Save,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CompletenessChecklist,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   evaluateCompleteness,
   type JobCompletenessState,
 } from "./CompletenessChecklist";
+import { StructuredListInput } from "./StructuredListInput";
+import { JobReviewSummary } from "./JobReviewSummary";
+import { FormSelect } from "./FormSelect";
 import type { ScreeningQuestion } from "@/lib/validations/careers";
 
 export interface JobFormData extends JobCompletenessState {
@@ -144,6 +155,9 @@ interface JobEditorFormProps {
   lastSavedAt?: Date | null;
   className?: string;
   isNew?: boolean;
+  hasBlockingError?: boolean;
+  onClearError?: () => void;
+  onRetrySave?: () => void;
 }
 
 export function JobEditorForm({
@@ -156,6 +170,9 @@ export function JobEditorForm({
   lastSavedAt,
   className = "",
   isNew = false,
+  hasBlockingError = false,
+  onClearError,
+  onRetrySave,
 }: JobEditorFormProps) {
   const {
     register,
@@ -198,6 +215,22 @@ export function JobEditorForm({
     }
   }, [initialJob, reset]);
 
+  // Unsaved changes browser navigation guard (Finding 24)
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
+
+  // Manual save model: Auto-save disabled to prevent disruptive background network validation errors while typing.
+  // Changes are persisted explicitly via "Save Draft" or upon publishing.
+  const [publishConfirmOpen, setPublishConfirmOpen] = useState(false);
+  const [requirementsModalOpen, setRequirementsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "basics" | "location" | "content" | "compensation" | "application" | "review"
   >("basics");
@@ -210,6 +243,9 @@ export function JobEditorForm({
   const [newBenefit, setNewBenefit] = useState("");
 
   const updateField = <K extends keyof JobFormData>(key: K, value: JobFormData[K]) => {
+    if (hasBlockingError) {
+      onClearError?.();
+    }
     setValue(key as any, value as any, { shouldDirty: true });
     if (key === "title" && typeof value === "string") {
       const currentSlug = getValues("slug");
@@ -377,6 +413,111 @@ export function JobEditorForm({
   };
 
   const completeness = evaluateCompleteness(job);
+  const canPublishDirectly = job.status === "DRAFT" || job.status === "IN_REVIEW" || !job.status;
+  const isPublishDisabled = isSaving || saveStatus === "saving" || hasBlockingError;
+
+  const getFieldTab = (
+    field: string,
+  ): "basics" | "location" | "content" | "compensation" | "application" | "review" => {
+    const f = field.toLowerCase();
+    if (f.includes("title") || f.includes("department") || f.includes("opening")) return "basics";
+    if (f.includes("location") || f.includes("work mode")) return "location";
+    if (f.includes("description") || f.includes("responsibilit") || f.includes("requirement")) return "content";
+    if (f.includes("salary")) return "compensation";
+    if (f.includes("external") || f.includes("apply url")) return "application";
+    if (f.includes("deadline")) return "review";
+    return "basics";
+  };
+
+  const handlePublishClick = () => {
+    if (!completeness.isComplete) {
+      setRequirementsModalOpen(true);
+    } else {
+      setPublishConfirmOpen(true);
+    }
+  };
+
+  const getTabStatus = (tabId: string): "complete" | "incomplete" | "error" => {
+    switch (tabId) {
+      case "basics": {
+        if (!job.title || job.title.trim().length < 3) return "incomplete";
+        if (!job.department || job.department.trim().length < 2) return "incomplete";
+        if (job.openingsCount !== undefined && job.openingsCount < 1) return "error";
+        return "complete";
+      }
+      case "location": {
+        if (!job.location || job.location.trim().length < 2) return "incomplete";
+        if (!job.workMode) return "incomplete";
+        return "complete";
+      }
+      case "content": {
+        if (!job.description || job.description.trim().length < 10) return "incomplete";
+        if (!job.responsibilities || job.responsibilities.length < 1) return "incomplete";
+        if (!job.requirements || job.requirements.length < 1) return "incomplete";
+        return "complete";
+      }
+      case "compensation": {
+        if (
+          job.salaryMin !== undefined &&
+          job.salaryMax !== undefined &&
+          job.salaryMin > 0 &&
+          job.salaryMax > 0 &&
+          job.salaryMin > job.salaryMax
+        ) {
+          return "error";
+        }
+        return "complete";
+      }
+      case "application": {
+        if (
+          job.applicationMethod === "external" &&
+          (!job.externalApplyUrl || job.externalApplyUrl.trim().length < 5)
+        ) {
+          return "incomplete";
+        }
+        return "complete";
+      }
+      case "review": {
+        if (completeness.isComplete) return "complete";
+        return "incomplete";
+      }
+      default:
+        return "incomplete";
+    }
+  };
+
+  const formatCompensationPreview = () => {
+    const currency = job.salaryCurrency || "INR";
+    const period = job.salaryPeriod || "year";
+    const min = job.salaryMin;
+    const max = job.salaryMax;
+
+    if (min === undefined && max === undefined) {
+      return "Compensation not disclosed";
+    }
+
+    const fmt = (val: number) => {
+      try {
+        return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
+          style: "currency",
+          currency,
+          maximumFractionDigits: 0,
+        }).format(val);
+      } catch {
+        return `${currency} ${val.toLocaleString()}`;
+      }
+    };
+
+    const periodStr = period === "year" ? "yr" : period === "month" ? "mo" : "hr";
+
+    if (min !== undefined && max !== undefined) {
+      return `${fmt(min)} – ${fmt(max)} / ${periodStr}`;
+    }
+    if (min !== undefined) {
+      return `From ${fmt(min)} / ${periodStr}`;
+    }
+    return `Up to ${fmt(max!)} / ${periodStr}`;
+  };
 
   const tabs = [
     { id: "basics", label: "1. Basics", icon: Briefcase },
@@ -387,16 +528,37 @@ export function JobEditorForm({
     { id: "review", label: "6. Review & Publish", icon: CheckSquare },
   ] as const;
 
+  const tabKeys = ["basics", "location", "content", "compensation", "application", "review"] as const;
+  const currentTabIndex = tabKeys.indexOf(activeTab);
+  const isFirstTab = currentTabIndex === 0;
+  const isLastTab = currentTabIndex === tabKeys.length - 1;
+  const handleNextTab = () => {
+    if (!isLastTab) {
+      const nextTab = tabKeys[currentTabIndex + 1];
+      if (nextTab) {
+        setActiveTab(nextTab);
+      }
+    }
+  };
+  const handlePrevTab = () => {
+    if (!isFirstTab) {
+      const prevTab = tabKeys[currentTabIndex - 1];
+      if (prevTab) {
+        setActiveTab(prevTab);
+      }
+    }
+  };
+
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-4 ${className}`}>
       {/* Top Header & Save Status Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#1155CC]/10 text-[#1155CC] flex items-center justify-center font-black font-sora">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-[#1155CC]/10 text-[#1155CC] flex items-center justify-center font-black font-sora text-sm">
             {job.title ? job.title.charAt(0).toUpperCase() : "+"}
           </div>
           <div>
-            <h2 className="text-base font-black text-slate-900 dark:text-white font-sora flex items-center gap-2">
+            <h2 className="text-sm font-black text-slate-900 dark:text-white font-sora flex items-center gap-2">
               <span>{job.title || "Untitled Draft Position"}</span>
               <Badge
                 variant="outline"
@@ -405,30 +567,63 @@ export function JobEditorForm({
                 {job.status || "DRAFT"}
               </Badge>
             </h2>
-            <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono mt-0.5">
+            <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono mt-0.5">
               <span>/{job.slug || "slug-pending"}</span>
               {job.referenceCode && <span>• REF: {job.referenceCode}</span>}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-          {/* Save status indicator */}
-          <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5 mr-2">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+          {/* Unified Save Status Indicator (Finding 3, Spec 4.1) */}
+          <div
+            className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mr-1"
+            aria-live="polite"
+          >
             {isSaving || saveStatus === "saving" ? (
               <>
                 <Clock className="w-3.5 h-3.5 animate-spin text-[#1155CC]" />
-                <span>Saving draft...</span>
+                <span className="text-[#1155CC] font-semibold">Saving…</span>
+              </>
+            ) : saveStatus === "error" ? (
+              <>
+                <AlertCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                <span className="text-rose-600 dark:text-rose-400">
+                  Couldn&apos;t save,{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClearError?.();
+                      if (onRetrySave) {
+                        onRetrySave();
+                      } else {
+                        onSave?.(getValues());
+                      }
+                    }}
+                    className="underline font-bold hover:text-rose-700 cursor-pointer"
+                  >
+                    retry
+                  </button>
+                </span>
+              </>
+            ) : isDirty ? (
+              <>
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <span className="text-amber-600 dark:text-amber-400 font-medium">Unsaved changes</span>
               </>
             ) : lastSavedAt ? (
               <>
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 <span>
-                  Saved {lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  Saved at{" "}
+                  {lastSavedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
                 </span>
               </>
             ) : (
-              <span>All changes local</span>
+              <>
+                <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span>Draft ready</span>
+              </>
             )}
           </div>
 
@@ -437,50 +632,92 @@ export function JobEditorForm({
             variant="outline"
             size="sm"
             onClick={() => onSave?.(getValues())}
-            disabled={isSaving}
-            className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+            disabled={isSaving || saveStatus === "saving"}
+            className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer h-8"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Save Draft</span>
           </Button>
+
+          {canPublishDirectly ? (
+            <Button
+              type="button"
+              size="sm"
+              onClick={handlePublishClick}
+              disabled={isPublishDisabled}
+              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs h-8"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Publish Role Now</span>
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => onSubmitForReview?.(getValues())}
+              disabled={isPublishDisabled}
+              className="rounded-xl text-xs font-bold gap-1.5 bg-[#1155CC] hover:bg-blue-700 text-white cursor-pointer h-8"
+            >
+              <ArrowRight className="w-3.5 h-3.5" />
+              <span>Submit for Review</span>
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex items-center gap-1.5 p-1.5 bg-slate-100/80 dark:bg-slate-800/60 rounded-2xl overflow-x-auto">
+      {/* Tabs Navigation (Finding 14, 21, Spec 4.2) */}
+      <div
+        role="tablist"
+        aria-label="Job editor wizard steps"
+        className="flex items-center gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/70 rounded-xl overflow-x-auto scrollbar-none"
+      >
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
+          const status = getTabStatus(tab.id);
           return (
             <button
               key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              aria-current={isActive ? "step" : undefined}
+              id={`tab-${tab.id}`}
+              aria-controls={`panel-${tab.id}`}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
+              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC] ${
                 isActive
                   ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-xs"
-                  : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
               <span>{tab.label}</span>
+              <span
+                aria-label={`Status: ${status}`}
+                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                  status === "complete"
+                    ? "bg-emerald-500"
+                    : status === "error"
+                      ? "bg-rose-500"
+                      : "bg-amber-400"
+                }`}
+              />
             </button>
           );
         })}
       </div>
 
-      {/* Main Grid: Form Section + Completeness Checklist Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Form Body (8 cols) */}
-        <div className="lg:col-span-8 space-y-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xs">
+      {/* Main Form Body */}
+      <div className="w-full space-y-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xs">
           {/* TAB 1: BASICS */}
           {activeTab === "basics" && (
-            <div className="space-y-5 animate-in fade-in duration-200">
+            <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
                   Role Identity & Overview
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   General role parameters, organizational unit, and card preview summary.
                 </p>
               </div>
@@ -509,10 +746,13 @@ export function JobEditorForm({
                     onChange={(e) => updateField("slug", slugify(e.target.value))}
                     className="rounded-xl text-xs font-mono"
                   />
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                    Public preview: /careers/{job.slug || "slug-pending"}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Reference Code
+                    Reference Code <span className="text-slate-400 font-normal lowercase">(optional)</span>
                   </label>
                   <Input
                     placeholder="e.g. ENG-2026-04"
@@ -524,31 +764,29 @@ export function JobEditorForm({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormSelect
+                  label="Department"
+                  required
+                  value={job.department || "Engineering"}
+                  onChange={(e) => updateField("department", e.target.value)}
+                >
+                  <option value="Engineering">Engineering</option>
+                  <option value="Design">Design &amp; Creative</option>
+                  <option value="Product">Product Management</option>
+                  <option value="Marketing">Growth &amp; Marketing</option>
+                  <option value="Sales">Business Development &amp; Sales</option>
+                  <option value="Operations">Operations &amp; Infrastructure</option>
+                  <option value="People & Talent">People &amp; Talent</option>
+                </FormSelect>
+
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Department <span className="text-rose-500">*</span>
-                  </label>
-                  <select
-                    value={job.department || "Engineering"}
-                    onChange={(e) => updateField("department", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="Engineering">Engineering</option>
-                    <option value="Design">Design & Creative</option>
-                    <option value="Product">Product Management</option>
-                    <option value="Marketing">Growth & Marketing</option>
-                    <option value="Sales">Business Development & Sales</option>
-                    <option value="Operations">Operations & Infrastructure</option>
-                    <option value="People & Talent">People & Talent</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Target Openings Count
+                    Target Openings Count <span className="text-slate-400 font-normal lowercase">(default 1)</span>
                   </label>
                   <Input
                     type="number"
                     min={1}
+                    max={999}
                     value={job.openingsCount ?? 1}
                     onChange={(e) => updateField("openingsCount", Number(e.target.value))}
                     className="rounded-xl text-xs font-medium"
@@ -557,39 +795,48 @@ export function JobEditorForm({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Role Summary / Snippet (Card & Meta Description)
-                </label>
-                <textarea
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    Role Summary (Job Card Snippet)
+                  </label>
+                  <span
+                    className={`text-[10px] font-mono ${
+                      (job.summary?.length || 0) > 300
+                        ? "text-amber-500 font-bold"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    {job.summary?.length || 0} / 300 characters
+                  </span>
+                </div>
+                <Textarea
                   rows={3}
-                  placeholder="Concise 1-2 sentence overview shown in job cards and Google search results."
+                  placeholder="Concise 1-2 sentence overview shown in job cards, search snippets, and mobile summaries."
                   value={job.summary || ""}
                   onChange={(e) => updateField("summary", e.target.value)}
-                  className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 text-xs font-medium text-slate-900 dark:text-white"
+                  className="rounded-xl text-xs font-medium"
                 />
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                  Displayed on careers index cards and role previews. Separate from the Google SERP meta description in Step 6.
+                </p>
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  onClick={() => setActiveTab("location")}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1.5"
-                >
-                  <span>Next: Location & Work Mode</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
+              {/* Step Requirement Notice (User request) */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <span className="text-rose-500 font-bold">*</span>
+                <span>Job Title and Department are mandatory fields in this step to publish.</span>
               </div>
             </div>
           )}
 
           {/* TAB 2: LOCATION & MODE */}
           {activeTab === "location" && (
-            <div className="space-y-5 animate-in fade-in duration-200">
+            <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
                   Workplace Location & Flexibility
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Configure office headquarters and remote eligibility boundaries.
                 </p>
               </div>
@@ -638,88 +885,75 @@ export function JobEditorForm({
                 </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Remote Eligibility Region (India)
-                </label>
-                <Input
-                  placeholder="e.g. Pan-India, Odisha or Hybrid"
-                  value={job.remoteEligibility || ""}
-                  onChange={(e) => updateField("remoteEligibility", e.target.value)}
-                  className="rounded-xl text-xs font-medium"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                    Remote Eligibility Region (India)
+                  </label>
+                  <Input
+                    placeholder="e.g. Pan-India, Odisha or Hybrid"
+                    value={job.remoteEligibility || ""}
+                    onChange={(e) => updateField("remoteEligibility", e.target.value)}
+                    className="rounded-xl text-xs font-medium"
+                  />
+                </div>
+
+                <FormSelect
+                  label="Visa &amp; Work Authorization"
+                  value={job.visaSupport || "no"}
+                  onChange={(e) => updateField("visaSupport", e.target.value)}
+                >
+                  <option value="no">No visa sponsorship (Domestic authorization required)</option>
+                  <option value="yes">Visa sponsorship / transfer available</option>
+                  <option value="case_by_case">Evaluated on a case-by-case basis</option>
+                </FormSelect>
               </div>
 
-              <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setActiveTab("basics")}
-                  className="rounded-xl text-xs font-bold gap-1.5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setActiveTab("content")}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1.5"
-                >
-                  <span>Next: Content & Responsibilities</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
+              {/* Step Requirement Notice (User request) */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <span className="text-rose-500 font-bold">*</span>
+                <span>Work Mode and Primary Location are mandatory fields to publish this position.</span>
               </div>
             </div>
           )}
 
           {/* TAB 3: CONTENT */}
           {activeTab === "content" && (
-            <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
                   Role Description, Requirements & Perks
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Detailed job overview, core deliverables, technical requirements, and agency
-                  perks.
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Detailed job overview, core deliverables, technical requirements, and agency perks.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Employment Type
-                  </label>
-                  <select
-                    value={job.type || "Full Time"}
-                    onChange={(e) => updateField("type", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="Full Time">Full Time</option>
-                    <option value="Part Time">Part Time</option>
-                    <option value="Contract">Contract</option>
-                    <option value="Internship">Internship</option>
-                    <option value="Freelance">Freelance</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Employment Type"
+                  value={job.type || "Full Time"}
+                  onChange={(e) => updateField("type", e.target.value)}
+                >
+                  <option value="Full Time">Full Time</option>
+                  <option value="Part Time">Part Time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Freelance">Freelance</option>
+                </FormSelect>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Experience Level
-                  </label>
-                  <select
-                    value={job.experienceLevel || "Mid-Senior"}
-                    onChange={(e) => updateField("experienceLevel", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="Entry">Entry Level (0-2 yrs)</option>
-                    <option value="Mid">Mid Level (2-5 yrs)</option>
-                    <option value="Mid-Senior">Mid-Senior (4-7 yrs)</option>
-                    <option value="Senior">Senior Level (6-10 yrs)</option>
-                    <option value="Lead">Lead / Staff Architect (8+ yrs)</option>
-                    <option value="Executive">Executive / Director</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Experience Level"
+                  value={job.experienceLevel || "Mid-Senior"}
+                  onChange={(e) => updateField("experienceLevel", e.target.value)}
+                >
+                  <option value="Entry">Entry Level (0-2 yrs)</option>
+                  <option value="Mid">Mid Level (2-5 yrs)</option>
+                  <option value="Mid-Senior">Mid-Senior (4-7 yrs)</option>
+                  <option value="Senior">Senior Level (6-10 yrs)</option>
+                  <option value="Lead">Lead / Staff Architect (8+ yrs)</option>
+                  <option value="Executive">Executive / Director</option>
+                </FormSelect>
               </div>
 
               {/* Description Markdown */}
@@ -727,113 +961,44 @@ export function JobEditorForm({
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Full Role Description <span className="text-rose-500">*</span>
                 </label>
-                <textarea
+                <Textarea
                   rows={6}
                   required
                   placeholder="In-depth narrative of the position, team mission, and impact on client systems."
                   value={job.description || ""}
                   onChange={(e) => updateField("description", e.target.value)}
-                  className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 text-xs font-medium text-slate-900 dark:text-white leading-relaxed"
+                  className="rounded-xl text-xs font-medium leading-relaxed"
                 />
               </div>
 
-              {/* Responsibilities list */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Key Responsibilities <span className="text-rose-500">*</span> (
-                    {(job.responsibilities || []).length})
-                  </label>
-                </div>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add a core responsibility or expected impact..."
-                    value={newResp}
-                    onChange={(e) => setNewResp(e.target.value)}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), handleAddResponsibility())
-                    }
-                    className="rounded-xl text-xs"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleAddResponsibility}
-                    className="rounded-xl bg-[#1155CC] text-white text-xs font-bold shrink-0 gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add</span>
-                  </Button>
-                </div>
+              {/* Responsibilities Structured Input */}
+              <StructuredListInput
+                label="Key Responsibilities"
+                items={job.responsibilities || []}
+                onChange={(items) => updateField("responsibilities", items)}
+                required
+                placeholder="e.g. Design and maintain high-throughput distributed microservices..."
+                helperText="Paste multi-line text or bulleted lists (•, -, *). Each row can be edited, reordered, or removed with undo."
+              />
 
-                <div className="space-y-1.5">
-                  {(job.responsibilities || []).map((resp, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
-                    >
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#1155CC] shrink-0" />
-                        <span className="text-slate-700 dark:text-slate-300">{resp}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveResponsibility(idx)}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Requirements Structured Input */}
+              <StructuredListInput
+                label="Requirements & Qualifications"
+                items={job.requirements || []}
+                onChange={(items) => updateField("requirements", items)}
+                required
+                placeholder="e.g. 5+ years building production applications in TypeScript or Go..."
+                helperText="Core technical prerequisites, experience bands, and domain expertise."
+              />
 
-              {/* Requirements list */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Requirements & Qualifications <span className="text-rose-500">*</span> (
-                  {(job.requirements || []).length})
-                </label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add a required skill, qualification, or experience..."
-                    value={newReq}
-                    onChange={(e) => setNewReq(e.target.value)}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && (e.preventDefault(), handleAddRequirement())
-                    }
-                    className="rounded-xl text-xs"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleAddRequirement}
-                    className="rounded-xl bg-[#1155CC] text-white text-xs font-bold shrink-0 gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add</span>
-                  </Button>
-                </div>
-
-                <div className="space-y-1.5">
-                  {(job.requirements || []).map((req, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0" />
-                        <span className="text-slate-700 dark:text-slate-300">{req}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveRequirement(idx)}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Preferred Qualifications Structured Input */}
+              <StructuredListInput
+                label="Preferred Qualifications (Nice-to-Have)"
+                items={job.preferredQualifications || []}
+                onChange={(items) => updateField("preferredQualifications", items)}
+                placeholder="e.g. Prior experience with Kubernetes operator development..."
+                helperText="Optional bonuses that make candidate profiles stand out."
+              />
 
               {/* Skills Tags */}
               <div className="space-y-3">
@@ -851,7 +1016,7 @@ export function JobEditorForm({
                   <Button
                     type="button"
                     onClick={handleAddSkill}
-                    className="rounded-xl bg-slate-800 text-white text-xs font-bold shrink-0 gap-1"
+                    className="rounded-xl bg-slate-800 text-white text-xs font-bold shrink-0 gap-1 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Tag</span>
@@ -868,7 +1033,7 @@ export function JobEditorForm({
                       <button
                         type="button"
                         onClick={() => handleRemoveSkill(skill)}
-                        className="text-slate-400 hover:text-rose-500 rounded-full"
+                        className="text-slate-400 hover:text-rose-500 rounded-full cursor-pointer"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -877,50 +1042,14 @@ export function JobEditorForm({
                 </div>
               </div>
 
-              {/* Benefits list */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Agency Perks & Benefits ({(job.benefits || []).length})
-                </label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add an agency benefit, health coverage, or allowance..."
-                    value={newBenefit}
-                    onChange={(e) => setNewBenefit(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddBenefit())}
-                    className="rounded-xl text-xs"
-                  />
-                  <Button
-                    type="button"
-                    onClick={handleAddBenefit}
-                    className="rounded-xl bg-emerald-600 text-white text-xs font-bold shrink-0 gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add</span>
-                  </Button>
-                </div>
-
-                <div className="space-y-1.5">
-                  {(job.benefits || []).map((benefit, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
-                    >
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        <span className="text-slate-700 dark:text-slate-300">{benefit}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveBenefit(idx)}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* Agency Perks & Benefits Structured Input */}
+              <StructuredListInput
+                label="Agency Perks & Benefits"
+                items={job.benefits || []}
+                onChange={(items) => updateField("benefits", items)}
+                placeholder="e.g. Comprehensive health coverage, MacBook Pro setup stipend..."
+                helperText="Wellness perks, equipment allowances, and team benefits."
+              />
 
               {/* Hiring steps builder */}
               <div className="space-y-3 pt-2">
@@ -974,39 +1103,44 @@ export function JobEditorForm({
                   ))}
                 </div>
               </div>
-
-              <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setActiveTab("location")}
-                  className="rounded-xl text-xs font-bold gap-1.5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setActiveTab("compensation")}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1.5"
-                >
-                  <span>Next: Compensation</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
+              {/* Step Requirement Notice (User request) */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <span className="text-rose-500 font-bold">*</span>
+                <span>Role Description (min 10 chars), at least 1 Responsibility, and at least 1 Requirement are mandatory to publish.</span>
               </div>
             </div>
           )}
 
           {/* TAB 4: COMPENSATION */}
           {activeTab === "compensation" && (
-            <div className="space-y-5 animate-in fade-in duration-200">
+            <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
-                  Compensation & Pay Transparency
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+                  Compensation &amp; Pay Transparency
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-[11px] text-slate-500 mt-0.5">
                   Set competitive salary bounds, currency, and public card display options.
                 </p>
+              </div>
+
+              {/* Live Compensation Preview Banner (Finding 14, Spec 4.5) */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 dark:from-slate-800/40 dark:to-slate-800/20 border border-blue-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">
+                    Public Candidate Display Preview
+                  </span>
+                  <div className="text-base font-extrabold text-[#1155CC] dark:text-blue-400 font-sora mt-0.5">
+                    {job.showSalaryPublicly
+                      ? formatCompensationPreview()
+                      : "Competitive / Not Disclosed Publicly"}
+                  </div>
+                </div>
+                <Badge
+                  variant={job.showSalaryPublicly ? "default" : "outline"}
+                  className="text-xs font-mono font-bold"
+                >
+                  {job.showSalaryPublicly ? "Public Band" : "Confidential"}
+                </Badge>
               </div>
 
               <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
@@ -1028,36 +1162,27 @@ export function JobEditorForm({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Currency
-                  </label>
-                  <select
-                    value={job.salaryCurrency || "INR"}
-                    onChange={(e) => updateField("salaryCurrency", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white font-mono"
-                  >
-                    <option value="INR">INR (₹ Indian Rupee)</option>
-                    <option value="USD">USD ($ US Dollar)</option>
-                    <option value="EUR">EUR (€ Euro)</option>
-                    <option value="GBP">GBP (£ British Pound)</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Currency"
+                  value={job.salaryCurrency || "INR"}
+                  onChange={(e) => updateField("salaryCurrency", e.target.value)}
+                  className="font-mono font-bold"
+                >
+                  <option value="INR">INR (₹ Indian Rupee)</option>
+                  <option value="USD">USD ($ US Dollar)</option>
+                  <option value="EUR">EUR (€ Euro)</option>
+                  <option value="GBP">GBP (£ British Pound)</option>
+                </FormSelect>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Pay Period
-                  </label>
-                  <select
-                    value={job.salaryPeriod || "year"}
-                    onChange={(e) => updateField("salaryPeriod", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="year">Per Year (Annual)</option>
-                    <option value="month">Per Month</option>
-                    <option value="hour">Per Hour</option>
-                  </select>
-                </div>
+                <FormSelect
+                  label="Pay Period"
+                  value={job.salaryPeriod || "year"}
+                  onChange={(e) => updateField("salaryPeriod", e.target.value)}
+                >
+                  <option value="year">Per Year (Annual)</option>
+                  <option value="month">Per Month</option>
+                  <option value="hour">Per Hour</option>
+                </FormSelect>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1073,7 +1198,13 @@ export function JobEditorForm({
                     onChange={(e) =>
                       updateField("salaryMin", e.target.value ? Number(e.target.value) : undefined)
                     }
-                    className="rounded-xl text-xs font-mono"
+                    className={`rounded-xl text-xs font-mono ${
+                      job.salaryMin !== undefined &&
+                      job.salaryMax !== undefined &&
+                      job.salaryMin > job.salaryMax
+                        ? "border-rose-500 ring-1 ring-rose-500"
+                        : ""
+                    }`}
                   />
                 </div>
 
@@ -1089,78 +1220,101 @@ export function JobEditorForm({
                     onChange={(e) =>
                       updateField("salaryMax", e.target.value ? Number(e.target.value) : undefined)
                     }
-                    className="rounded-xl text-xs font-mono"
+                    className={`rounded-xl text-xs font-mono ${
+                      job.salaryMin !== undefined &&
+                      job.salaryMax !== undefined &&
+                      job.salaryMin > job.salaryMax
+                        ? "border-rose-500 ring-1 ring-rose-500"
+                        : ""
+                    }`}
                   />
+                </div>
+              </div>
+
+              {/* Live Locale-Aware Compensation Display Preview (Finding 15, Spec 4.3 Step 4) */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Live Candidate Display Preview
+                  </span>
+                  <div className="text-sm font-black text-slate-900 dark:text-white font-mono flex items-center gap-2">
+                    <span>{formatCompensationPreview()}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {job.showSalaryPublicly ? (
+                    <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 font-bold">
+                      Publicly Disclosed (Card &amp; JSON-LD)
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                      Undisclosed on Card
+                    </Badge>
+                  )}
                 </div>
               </div>
 
               {job.salaryMin !== undefined &&
                 job.salaryMax !== undefined &&
                 job.salaryMin > job.salaryMax && (
-                  <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-400 font-bold">
-                    Salary minimum cannot exceed maximum. Please adjust bounds.
+                  <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-400 font-bold flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Salary minimum cannot exceed maximum. Please adjust bounds.</span>
                   </div>
                 )}
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Compensation Notes & Equity
+                  Compensation Notes &amp; Equity
                 </label>
-                <Input
-                  placeholder="e.g. Annual discretionary performance bonus, equity options for senior bands"
+                <Textarea
+                  rows={3}
+                  placeholder="e.g. Annual discretionary performance bonus, equity options for senior bands, health perks"
                   value={job.compensationNotes || ""}
                   onChange={(e) => updateField("compensationNotes", e.target.value)}
                   className="rounded-xl text-xs font-medium"
                 />
               </div>
 
-              <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setActiveTab("content")}
-                  className="rounded-xl text-xs font-bold gap-1.5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setActiveTab("application")}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1.5"
-                >
-                  <span>Next: Application Settings</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
+              {/* Step Requirement Notice (User request) */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <span className="text-rose-500 font-bold">*</span>
+                <span>Compensation details are optional for drafting. If configured, Minimum Salary cannot exceed Maximum Salary.</span>
               </div>
             </div>
           )}
 
           {/* TAB 5: APPLICATION SETTINGS */}
           {activeTab === "application" && (
-            <div className="space-y-5 animate-in fade-in duration-200">
+            <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
-                  Candidate Intake & Screening Setup
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+                  Candidate Intake &amp; Screening Setup
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Select application pipeline routing, resume requirements, and knockout screening
-                  criteria.
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Select application pipeline routing, resume requirements, and knockout screening criteria.
                 </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Application Method
-                </label>
-                <select
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormSelect
+                  label="Application Intake Method"
                   value={job.applicationMethod || "builtin"}
                   onChange={(e) => updateField("applicationMethod", e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
                 >
-                  <option value="builtin">Built-in Agency Portal (Native intake to ATS)</option>
+                  <option value="builtin">Built-in Careers Portal (Native intake to ATS)</option>
                   <option value="external">External ATS / Greenhouse / Lever URL</option>
-                </select>
+                </FormSelect>
+
+                <FormSelect
+                  label="Cover Letter Policy"
+                  value={job.coverLetterRequirement || "optional"}
+                  onChange={(e) => updateField("coverLetterRequirement", e.target.value)}
+                >
+                  <option value="optional">Optional (Recommended)</option>
+                  <option value="required">Mandatory</option>
+                  <option value="off">Off (Hide cover letter field)</option>
+                </FormSelect>
               </div>
 
               {job.applicationMethod === "external" && (
@@ -1178,38 +1332,21 @@ export function JobEditorForm({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                  <div>
-                    <div className="text-xs font-bold text-slate-900 dark:text-white">
-                      Resume Required
-                    </div>
-                    <div className="text-[10px] text-slate-400">
-                      PDF or DOCX upload strictly required
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={job.resumeRequired !== false}
-                    onChange={(e) => updateField("resumeRequired", e.target.checked)}
-                    className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
-                  />
-                </div>
-
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Cover Letter Policy
-                  </label>
-                  <select
-                    value={job.coverLetterRequirement || "optional"}
-                    onChange={(e) => updateField("coverLetterRequirement", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="optional">Optional (Recommended)</option>
-                    <option value="required">Mandatory</option>
-                    <option value="off">Off (Hide cover letter field)</option>
-                  </select>
+                  <div className="text-xs font-bold text-slate-900 dark:text-white">
+                    Resume Required
+                  </div>
+                  <div className="text-[10px] text-slate-400">
+                    PDF or DOCX upload strictly required from candidate
+                  </div>
                 </div>
+                <input
+                  type="checkbox"
+                  checked={job.resumeRequired !== false}
+                  onChange={(e) => updateField("resumeRequired", e.target.checked)}
+                  className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
+                />
               </div>
 
               {/* Custom Screening Questions Builder */}
@@ -1263,34 +1400,29 @@ export function JobEditorForm({
                       />
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Response Type
-                          </label>
-                          <select
-                            value={q.type}
-                            onChange={(e) =>
-                              handleUpdateScreeningQuestion(idx, {
-                                type: e.target.value as any,
-                              })
-                            }
-                            className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 text-xs font-medium"
-                          >
-                            <option value="short_text">Short Text</option>
-                            <option value="long_text">Long Narrative</option>
-                            <option value="boolean">Yes / No (Boolean)</option>
-                            <option value="choice">Multiple Choice</option>
-                          </select>
-                        </div>
+                        <FormSelect
+                          label="Response Type"
+                          value={q.type}
+                          onChange={(e) =>
+                            handleUpdateScreeningQuestion(idx, {
+                              type: e.target.value as any,
+                            })
+                          }
+                        >
+                          <option value="short_text">Short Text</option>
+                          <option value="long_text">Long Narrative</option>
+                          <option value="boolean">Yes / No (Boolean)</option>
+                          <option value="choice">Multiple Choice</option>
+                        </FormSelect>
 
-                        <div className="flex items-center gap-2 pt-4">
+                        <div className="flex items-center gap-2 pt-6">
                           <input
                             type="checkbox"
                             checked={Boolean(q.required)}
                             onChange={(e) =>
                               handleUpdateScreeningQuestion(idx, { required: e.target.checked })
                             }
-                            className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC]"
+                            className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
                           />
                           <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
                             Required Answer
@@ -1318,180 +1450,213 @@ export function JobEditorForm({
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setActiveTab("compensation")}
-                  className="rounded-xl text-xs font-bold gap-1.5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setActiveTab("review")}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1.5"
-                >
-                  <span>Next: Review & Publish</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
+              {/* Step Requirement Notice (User request) */}
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                <span className="text-rose-500 font-bold">*</span>
+                <span>External Application URL is mandatory when Application Method is set to External ATS.</span>
               </div>
             </div>
           )}
 
-          {/* TAB 6: REVIEW & PUBLISH */}
+          {/* TAB 6: REVIEW & PUBLISH (Finding 17, 18, 19, 20) */}
           {activeTab === "review" && (
-            <div className="space-y-6 animate-in fade-in duration-200">
-              <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white font-sora">
-                  Review, SEO & Publishing Schedule
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Verify role readiness, configure SEO metatags, and submit for executive review or
-                  publishing.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Role Status
-                  </label>
-                  <select
-                    value={job.status || "DRAFT"}
-                    onChange={(e) => updateField("status", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-bold text-slate-900 dark:text-white font-mono"
-                  >
-                    <option value="DRAFT">DRAFT (Internal drafting)</option>
-                    <option value="IN_REVIEW">IN_REVIEW (Pending approval)</option>
-                    <option value="SCHEDULED">SCHEDULED (Automatic release)</option>
-                    <option value="PUBLISHED">PUBLISHED (Live on portal)</option>
-                    <option value="PAUSED">PAUSED (Temporarily on hold)</option>
-                    <option value="CLOSED">CLOSED (Archived / Closed)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Portal Visibility
-                  </label>
-                  <select
-                    value={job.visibility || "public"}
-                    onChange={(e) => updateField("visibility", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="public">Public (Visible in search & sitemap)</option>
-                    <option value="unlisted">
-                      Unlisted (Direct link only, excluded from sitemap)
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Scheduled Publish Date
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    value={job.publishAt ? new Date(job.publishAt).toISOString().slice(0, 16) : ""}
-                    onChange={(e) =>
-                      updateField("publishAt", e.target.value ? new Date(e.target.value) : null)
-                    }
-                    className="rounded-xl text-xs font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Application Deadline (closesAt)
-                  </label>
-                  <Input
-                    type="datetime-local"
-                    value={job.closesAt ? new Date(job.closesAt).toISOString().slice(0, 16) : ""}
-                    onChange={(e) =>
-                      updateField("closesAt", e.target.value ? new Date(e.target.value) : null)
-                    }
-                    className="rounded-xl text-xs font-mono"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                <div>
-                  <div className="text-xs font-bold text-slate-900 dark:text-white">
-                    Featured Position
-                  </div>
-                  <div className="text-[10px] text-slate-400">
-                    Pivots to top of public careers listing with special agency badge.
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={Boolean(job.featured)}
-                  onChange={(e) => updateField("featured", e.target.checked)}
-                  className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
-                />
-              </div>
-
-              {/* SEO Meta Fields */}
-              <div className="space-y-3 pt-2">
-                <div className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                  SEO & Social Share Optimization
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                    Custom SEO Meta Title
-                  </label>
-                  <Input
-                    placeholder="e.g. Senior Fullstack Engineer Careers | TechSonance Infotech"
-                    value={job.seoTitle || ""}
-                    onChange={(e) => updateField("seoTitle", e.target.value)}
-                    className="rounded-xl text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                    SEO Meta Description
-                  </label>
-                  <textarea
-                    rows={2}
-                    placeholder="Custom snippet for Google SERP and OpenGraph preview cards."
-                    value={job.seoDescription || ""}
-                    onChange={(e) => updateField("seoDescription", e.target.value)}
-                    className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs text-slate-900 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setActiveTab("application")}
-                  className="rounded-xl text-xs font-bold gap-1.5"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  <span>Previous</span>
-                </Button>
-              </div>
+            <div className="space-y-3.5 animate-in fade-in duration-200">
+              <JobReviewSummary
+                job={job}
+                updateField={updateField}
+                onNavigateToTab={(targetTab) => setActiveTab(targetTab)}
+              />
             </div>
           )}
-        </div>
 
-        {/* Completeness Checklist Sidebar (4 cols) */}
-        <div className="lg:col-span-4 sticky top-6 space-y-6">
-          <CompletenessChecklist
-            job={job}
-            onSubmitForReview={() => onSubmitForReview?.(getValues())}
-            onPublish={() => onPublish?.(getValues())}
-            canPublishDirectly={job.status === "DRAFT" || job.status === "IN_REVIEW"}
-            isSaving={isSaving}
-          />
+        {/* Sticky Action Navigation Bar (Finding 13, Spec 4.5) */}
+        <div className="sticky bottom-0 z-20 mt-8 pt-4 pb-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handlePrevTab}
+              disabled={isFirstTab}
+              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer disabled:opacity-40"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Previous</span>
+            </Button>
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 hidden sm:inline-block font-mono">
+              Step {currentTabIndex + 1} of 6
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onSave?.(getValues())}
+              disabled={isSaving || saveStatus === "saving"}
+              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>Save Draft</span>
+            </Button>
+
+            {!isLastTab ? (
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleNextTab}
+                className="rounded-xl bg-[#1155CC] hover:bg-blue-700 text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs"
+              >
+                <span>Next: {tabs[currentTabIndex + 1]?.label.replace(/^\d+\.\s*/, "")}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            ) : canPublishDirectly ? (
+              <Button
+                type="button"
+                size="sm"
+                onClick={handlePublishClick}
+                disabled={isPublishDisabled}
+                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Publish Role Now</span>
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => onSubmitForReview?.(getValues())}
+                disabled={isPublishDisabled}
+                className="rounded-xl text-xs font-bold gap-1.5 bg-[#1155CC] hover:bg-blue-700 text-white cursor-pointer"
+              >
+                <span>Submit for Review</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Pre-Publish Confirmation Dialog (Finding 2, 25) */}
+      <Dialog open={publishConfirmOpen} onOpenChange={setPublishConfirmOpen}>
+        <DialogContent className="max-w-md rounded-2xl p-5">
+          <DialogHeader className="space-y-1.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <DialogTitle className="text-base font-black text-slate-900 dark:text-white font-sora">
+              Publish Role to Careers Portal?
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+              You are about to publish <strong className="text-slate-900 dark:text-white">{job.title || "this role"}</strong> directly to the public careers portal. It will become live immediately for applicants.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs space-y-1.5 my-2 font-mono">
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+              <span className="text-slate-400">Public URL:</span>
+              <span className="text-[#1155CC] font-bold">/careers/{job.slug || "slug-pending"}</span>
+            </div>
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+              <span className="text-slate-400">Department:</span>
+              <span>{job.department || "Engineering"}</span>
+            </div>
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+              <span className="text-slate-400">Work Mode:</span>
+              <span className="uppercase">{job.workMode || "Hybrid"}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setPublishConfirmOpen(false)}
+              className="rounded-xl text-xs font-bold cursor-pointer"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={async () => {
+                setPublishConfirmOpen(false);
+                if (isDirty) {
+                  await onSave?.(getValues());
+                }
+                await onPublish?.(getValues());
+              }}
+              disabled={isSaving}
+              className="rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+            >
+              Confirm &amp; Publish Now
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Missing Requirements Modal Dialog (User Request & Spec 4.6) */}
+      <Dialog open={requirementsModalOpen} onOpenChange={setRequirementsModalOpen}>
+        <DialogContent className="max-w-md rounded-2xl p-5">
+          <DialogHeader className="space-y-1.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
+              <AlertCircle className="w-4 h-4" />
+            </div>
+            <DialogTitle className="text-base font-black text-slate-900 dark:text-white font-sora">
+              Requirements Needed to Publish
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
+              Please complete the following mandatory fields before publishing{" "}
+              <strong className="text-slate-900 dark:text-white">
+                {job.title || "this role"}
+              </strong>{" "}
+              to the public careers portal:
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-2 my-2 max-h-60 overflow-y-auto pr-1">
+            {completeness.missingFields.map((field) => {
+              const targetTab = getFieldTab(field);
+              return (
+                <div
+                  key={field}
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{field}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setRequirementsModalOpen(false);
+                      setActiveTab(targetTab);
+                    }}
+                    className="h-7 text-[11px] font-bold text-[#1155CC] hover:bg-[#1155CC]/10 border-[#1155CC]/30 rounded-lg cursor-pointer"
+                  >
+                    Go to {tabs.find((t) => t.id === targetTab)?.label.replace(/^\d+\.\s*/, "")}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-end pt-3 border-t border-slate-100 dark:border-slate-800">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setRequirementsModalOpen(false)}
+              className="rounded-xl text-xs font-bold bg-[#1155CC] text-white cursor-pointer h-8"
+            >
+              Close &amp; Complete Fields
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

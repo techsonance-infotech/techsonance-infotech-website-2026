@@ -24,8 +24,11 @@ export class AdminJobsService {
   async listJobs(options: ListJobsOptions = {}): Promise<ListJobsResult> {
     try {
       return await this.jobsRepo.listJobs(options);
-    } catch (error) {
-      logger.error("AdminJobsService.listJobs error", { error: String(error) });
+    } catch (error: any) {
+      logger.error("AdminJobsService.listJobs error", {
+        error: String(error),
+        cause: error?.cause ? String(error.cause?.message || error.cause) : undefined,
+      });
       throw error;
     }
   }

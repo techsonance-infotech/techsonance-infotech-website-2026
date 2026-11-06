@@ -122,9 +122,29 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           setLastSavedAt(new Date());
           setJobData(data.job);
           setAlertMessage({ type: "success", text: "Draft changes saved." });
+          setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
         } else {
           setSaveStatus("error");
-          setAlertMessage({ type: "error", text: data.error || "Failed to save changes." });
+          const msg =
+            typeof data.error === "string"
+              ? data.error
+              : data.error?.message || "Failed to save changes.";
+          const details = data.details
+            ? Object.entries(data.details)
+                .filter(([k]) => k !== "_errors")
+                .map(([field, err]: [string, any]) => {
+                  const fieldErrors = Array.isArray(err)
+                    ? err
+                    : (err as { _errors?: string[] })?._errors || [];
+                  return `${field}: ${fieldErrors.join(", ")}`;
+                })
+                .filter(Boolean)
+                .join("; ")
+            : "";
+          setAlertMessage({
+            type: "error",
+            text: details ? `${msg} (${details})` : msg,
+          });
         }
       }
     } catch (err: any) {
@@ -384,6 +404,8 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       {/* Alert Notifications */}
       {alertMessage && (
         <div
+          role="alert"
+          aria-live="assertive"
           className={`p-4 rounded-2xl text-xs font-medium flex items-center justify-between transition-all ${
             alertMessage.type === "success"
               ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900"
@@ -398,12 +420,27 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
             )}
             <span>{alertMessage.text}</span>
           </div>
-          <button
-            onClick={() => setAlertMessage(null)}
-            className="text-slate-400 hover:text-slate-600 p-1"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            {alertMessage.type === "error" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setAlertMessage(null);
+                  handleSave(jobData);
+                }}
+                className="px-2 py-0.5 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 font-bold hover:bg-rose-200 text-[11px] cursor-pointer"
+              >
+                Retry
+              </button>
+            )}
+            <button
+              onClick={() => setAlertMessage(null)}
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer"
+              aria-label="Dismiss alert"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 
@@ -416,6 +453,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         isSaving={saving}
         saveStatus={saveStatus}
         lastSavedAt={lastSavedAt}
+        hasBlockingError={Boolean(alertMessage && alertMessage.type === "error")}
+        onClearError={() => setAlertMessage(null)}
+        onRetrySave={() => handleSave(jobData)}
       />
 
       {/* Approval / Return Action Modal */}

@@ -46,10 +46,22 @@ export function mapDbError(error: unknown, _context?: DbErrorContext): AppError 
     return new AppError(ErrorCode.INTERNAL, "Something went wrong", { cause: error });
   if (code === "23505")
     return new AppError(ErrorCode.CONFLICT, "That record already exists", { cause: error });
-  if (code === "23503")
-    return new AppError(ErrorCode.CONFLICT, "A related record is missing or still in use", {
+  if (code === "23503") {
+    const constraint = dbErrorInfo(error)?.constraint || "";
+    let message = "A related record is missing or still in use";
+    if (constraint.includes("owner_id")) {
+      message = "The assigned recruiter account was not found in the administrator directory.";
+    } else if (constraint.includes("hiring_manager_id")) {
+      message = "The assigned hiring manager was not found in the administrator directory.";
+    } else if (constraint.includes("site_id")) {
+      message = "The workspace site configuration could not be verified in the database.";
+    } else if (constraint.includes("job_id") || constraint.includes("application")) {
+      message = "Cannot delete or alter this role because candidate applications are currently attached.";
+    }
+    return new AppError(ErrorCode.CONFLICT, message, {
       cause: error,
     });
+  }
   if (code === "42501")
     return new AppError(ErrorCode.FORBIDDEN, "Not allowed", { cause: error });
   if (code === "23514" || code.startsWith("22"))

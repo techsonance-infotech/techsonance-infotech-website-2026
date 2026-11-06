@@ -267,12 +267,16 @@ export function computeCompleteness(job: Partial<JobCompletenessState>): Complet
   };
 }
 
-interface CompletenessChecklistProps {
+export interface CompletenessChecklistProps {
   job: Partial<JobCompletenessState>;
   onSubmitForReview?: () => void;
   onPublish?: () => void;
+  onJumpToField?: (tab: string, fieldId: string) => void;
   canPublishDirectly?: boolean;
   isSaving?: boolean;
+  isDirty?: boolean;
+  hasBlockingError?: boolean;
+  saveStatus?: "idle" | "saving" | "saved" | "error";
   className?: string;
 }
 
@@ -280,12 +284,28 @@ export function CompletenessChecklist({
   job,
   onSubmitForReview,
   onPublish,
+  onJumpToField,
   canPublishDirectly = false,
   isSaving = false,
+  isDirty = false,
+  hasBlockingError = false,
+  saveStatus = "idle",
   className = "",
 }: CompletenessChecklistProps) {
   const result = computeCompleteness(job);
   const evalResult = evaluateCompleteness(job);
+
+  const requiredItems = result.items.filter((i) => i.required);
+  const optionalItems = result.items.filter((i) => !i.required);
+  const passedRequiredCount = requiredItems.filter((i) => i.passed && !i.error).length;
+  const passedOptionalCount = optionalItems.filter((i) => i.passed && !i.error).length;
+
+  const isPublishDisabled =
+    !evalResult.isComplete ||
+    isSaving ||
+    saveStatus === "saving" ||
+    isDirty ||
+    hasBlockingError;
 
   return (
     <div
@@ -362,48 +382,115 @@ export function CompletenessChecklist({
         </div>
       )}
 
-      {/* Checklist items list */}
-      <div className="space-y-2.5">
-        {result.items.map((item) => (
-          <div
-            key={item.id}
-            className={`p-2.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-colors ${
-              item.error
-                ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300"
-                : item.passed
-                  ? "bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-100 dark:border-emerald-900/30 text-slate-700 dark:text-slate-300"
-                  : item.required
-                    ? "bg-amber-50/40 dark:bg-amber-950/10 border-amber-200/60 dark:border-amber-900/40 text-slate-700 dark:text-slate-300"
-                    : "bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 text-slate-500"
-            }`}
-          >
-            <div className="mt-0.5 shrink-0">
-              {item.error ? (
-                <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
-              ) : item.passed ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              ) : item.required ? (
-                <AlertCircle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              ) : (
-                <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600" />
-              )}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5 font-bold">
-                <span className="truncate">{item.label}</span>
-                {item.required && (
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 uppercase tracking-wider font-mono">
-                    Required
-                  </span>
+      {/* Mandatory Requirements Section (Finding 9, Spec 4.4) */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+          <span className="uppercase tracking-wider text-[10px] text-slate-400 font-mono">
+            Mandatory Requirements ({passedRequiredCount}/{requiredItems.length})
+          </span>
+          {evalResult.isComplete && (
+            <span className="text-[10px] text-emerald-600 font-mono font-bold">All Met</span>
+          )}
+        </div>
+        <div className="space-y-2">
+          {requiredItems.map((item) => (
+            <div
+              key={item.id}
+              className={`p-2.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-colors ${
+                item.error
+                  ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300"
+                  : item.passed
+                    ? "bg-emerald-50/40 dark:bg-emerald-950/10 border-emerald-100 dark:border-emerald-900/30 text-slate-700 dark:text-slate-300"
+                    : "bg-amber-50/40 dark:bg-amber-950/10 border-amber-200/60 dark:border-amber-900/40 text-slate-700 dark:text-slate-300"
+              }`}
+            >
+              <div className="mt-0.5 shrink-0">
+                {item.error ? (
+                  <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                ) : item.passed ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                 )}
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {item.error ? item.error : item.hint}
-              </p>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-1.5 font-bold">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className="truncate">{item.label}</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 uppercase tracking-wider font-mono">
+                      Required
+                    </span>
+                  </div>
+                  {(!item.passed || item.error) && onJumpToField && (
+                    <button
+                      type="button"
+                      onClick={() => onJumpToField(item.category, item.id)}
+                      className="text-[10px] font-bold text-[#1155CC] hover:underline flex items-center gap-0.5 shrink-0 cursor-pointer"
+                    >
+                      <span>Fix</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {item.error ? item.error : item.hint}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Optional Recommendations Section (Finding 9, Spec 4.4) */}
+      <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+          <span className="uppercase tracking-wider text-[10px] text-slate-400 font-mono">
+            Quality Recommendations ({passedOptionalCount}/{optionalItems.length})
+          </span>
+        </div>
+        <div className="space-y-2">
+          {optionalItems.map((item) => (
+            <div
+              key={item.id}
+              className={`p-2.5 rounded-2xl border text-xs flex items-start gap-2.5 transition-colors ${
+                item.error
+                  ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300"
+                  : item.passed
+                    ? "bg-slate-50/60 dark:bg-slate-800/30 border-slate-200/60 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    : "bg-slate-50/30 dark:bg-slate-800/20 border-dashed border-slate-200 dark:border-slate-800 text-slate-400"
+              }`}
+            >
+              <div className="mt-0.5 shrink-0">
+                {item.error ? (
+                  <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                ) : item.passed ? (
+                  <CheckCircle2 className="w-4 h-4 text-[#1155CC]" />
+                ) : (
+                  <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600" />
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-1.5 font-bold">
+                  <span className="truncate">{item.label}</span>
+                  {!item.passed && onJumpToField && (
+                    <button
+                      type="button"
+                      onClick={() => onJumpToField(item.category, item.id)}
+                      className="text-[10px] text-slate-400 hover:text-[#1155CC] hover:underline shrink-0 cursor-pointer"
+                    >
+                      Add
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {item.error ? item.error : item.hint}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Action Footer */}
@@ -412,7 +499,7 @@ export function CompletenessChecklist({
           <Button
             type="button"
             onClick={onPublish}
-            disabled={!evalResult.isComplete || isSaving}
+            disabled={isPublishDisabled}
             className="w-full rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-10 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -422,7 +509,7 @@ export function CompletenessChecklist({
           <Button
             type="button"
             onClick={onSubmitForReview}
-            disabled={!evalResult.isComplete || isSaving}
+            disabled={isPublishDisabled}
             className="w-full rounded-2xl bg-[#1155CC] hover:bg-[#0d44a5] text-white font-bold text-xs h-10 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
             Submit for Review
@@ -430,9 +517,17 @@ export function CompletenessChecklist({
           </Button>
         )}
 
-        {!evalResult.isComplete && (
+        {isPublishDisabled && (
           <p className="text-[10px] text-center text-slate-400">
-            Complete all required checklist items to unlock role submission.
+            {!evalResult.isComplete
+              ? "Complete all required checklist items to unlock publishing."
+              : hasBlockingError
+                ? "Resolve active system error before publishing."
+                : isDirty
+                  ? "Save draft before publishing role."
+                  : isSaving || saveStatus === "saving"
+                    ? "Saving changes in progress..."
+                    : "Action disabled until requirements pass."}
           </p>
         )}
       </div>

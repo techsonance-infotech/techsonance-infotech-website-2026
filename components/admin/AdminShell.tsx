@@ -105,9 +105,12 @@ export function AdminShell({
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col md:flex-row antialiased font-sans">
+    <div
+      data-lenis-prevent
+      className="h-screen h-[100dvh] bg-[#F8FAFC] text-slate-800 flex flex-col md:flex-row overflow-hidden antialiased font-sans"
+    >
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200 z-30">
+      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200 z-30 shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#1155CC] to-[#22B6F6] flex items-center justify-center text-white font-bold text-sm shadow-md shadow-[#1155CC]/20">
             TS
@@ -128,11 +131,11 @@ export function AdminShell({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out md:translate-x-0 md:static ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-full md:shrink-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-y-auto">
           {/* Logo & Workspace header */}
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -229,7 +232,10 @@ export function AdminShell({
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div
+        data-lenis-prevent
+        className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto"
+      >
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">{children}</main>
       </div>
     </div>

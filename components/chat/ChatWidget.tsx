@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { MessageSquare, X, Calendar, Sparkles } from "lucide-react";
 import { BOT_CONFIG } from "@/lib/config";
 import {
@@ -15,6 +16,7 @@ import { Composer } from "./Composer";
 import { PrivacyNote } from "./PrivacyNote";
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -248,6 +250,11 @@ export default function ChatWidget() {
     setIsOpen(true);
     setShowProactiveNudge(false);
   };
+
+  // Do not render sales chatbot inside admin studio to prevent button collisions (Finding 12)
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <>

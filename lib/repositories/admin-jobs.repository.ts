@@ -9,6 +9,7 @@ import {
   auditLogsTable,
   versionsTable,
   sitesTable,
+  usersTable,
   type Job,
   type InsertJob,
   type InsertContentVersion,
@@ -36,6 +37,9 @@ export class AdminJobsRepository {
    */
   async getSingleSiteId(): Promise<string> {
     try {
+      if (!this.db.query?.sitesTable?.findFirst) {
+        return "00000000-0000-0000-0000-000000000001";
+      }
       const existing = await this.db.query.sitesTable.findFirst({
         columns: { id: true },
       });
@@ -66,7 +70,7 @@ export class AdminJobsRepository {
           limit,
           offset,
           orderBy: { createdAt: "desc" },
-          where: options.status ? { status: options.status } : undefined,
+          ...(options.status ? { where: { status: options.status } } : {}),
         }),
         this.db
           .select({ cnt: count() })
@@ -104,23 +108,72 @@ export class AdminJobsRepository {
     }
   }
 
+  /**
+   * Validates and returns a user ID if it exists in ts_admin_users; otherwise null.
+   */
+  async resolveValidUserId(userId?: string | null): Promise<string | null> {
+    if (!userId || !userId.trim() || userId === "00000000-0000-0000-0000-000000000000") {
+      return null;
+    }
+    try {
+      if (!this.db.query?.usersTable?.findFirst) {
+        return userId.trim();
+      }
+      const user = await this.db.query.usersTable.findFirst({
+        where: { id: userId.trim() },
+        columns: { id: true },
+      });
+      return user ? user.id : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Validates and returns a site ID if it exists in ts_admin_sites; otherwise resolves the single site.
+   */
+  async resolveValidSiteId(siteId?: string | null): Promise<string> {
+    if (
+      siteId &&
+      siteId.trim() &&
+      siteId !== "00000000-0000-0000-0000-000000000000" &&
+      siteId !== "00000000-0000-0000-0000-000000000001"
+    ) {
+      try {
+        if (!this.db.query?.sitesTable?.findFirst) {
+          return siteId.trim();
+        }
+        const site = await this.db.query.sitesTable.findFirst({
+          where: { id: siteId.trim() },
+          columns: { id: true },
+        });
+        if (site) return site.id;
+      } catch {
+        // Fallback to single site
+      }
+    }
+    return this.getSingleSiteId();
+  }
+
   async createJobWithAudit(
     data: InsertJob,
     auditData?: Partial<InsertContentAuditLog>,
     versionData?: Partial<InsertContentVersion>,
   ): Promise<Job> {
     try {
-      const siteId =
-        data.siteId &&
-        data.siteId !== "00000000-0000-0000-0000-000000000000" &&
-        data.siteId !== "00000000-0000-0000-0000-000000000001"
-          ? data.siteId
-          : await this.getSingleSiteId();
+      const siteId = await this.resolveValidSiteId(data.siteId);
+      const ownerId = await this.resolveValidUserId(data.ownerId);
+      const hiringManagerId = await this.resolveValidUserId(data.hiringManagerId);
 
       const jobDataToInsert: InsertJob = {
         ...data,
         siteId,
+        ownerId: ownerId ?? undefined,
+        hiringManagerId: hiringManagerId ?? undefined,
       };
+
+      const resolvedActorId = (await this.resolveValidUserId(auditData?.actorId)) ?? undefined;
+      const resolvedChangedBy = (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
 
       return await withTransaction(
         async (tx) => {
@@ -131,6 +184,7 @@ export class AdminJobsRepository {
               action: auditData.action || "CREATE",
               entityType: auditData.entityType || "job",
               ...auditData,
+              actorId: resolvedActorId,
               entityId: created.id,
               afterState: created as unknown as Record<string, unknown>,
             });
@@ -140,6 +194,7 @@ export class AdminJobsRepository {
             await tx.insert(versionsTable).values({
               entityType: versionData.entityType || "job",
               ...versionData,
+              changedBy: resolvedChangedBy,
               entityId: created.id,
               snapshot: created as unknown as Record<string, unknown>,
             });
@@ -161,11 +216,26 @@ export class AdminJobsRepository {
     versionData?: Partial<InsertContentVersion>,
   ): Promise<Job | null> {
     try {
+      const sanitizedUpdates: Partial<InsertJob> = { ...updates };
+      if (updates.siteId !== undefined) {
+        sanitizedUpdates.siteId = await this.resolveValidSiteId(updates.siteId);
+      }
+      if (updates.ownerId !== undefined) {
+        sanitizedUpdates.ownerId = (await this.resolveValidUserId(updates.ownerId)) ?? undefined;
+      }
+      if (updates.hiringManagerId !== undefined) {
+        sanitizedUpdates.hiringManagerId =
+          (await this.resolveValidUserId(updates.hiringManagerId)) ?? undefined;
+      }
+
+      const resolvedActorId = (await this.resolveValidUserId(auditData?.actorId)) ?? undefined;
+      const resolvedChangedBy = (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
+
       return await withTransaction(
         async (tx) => {
           const [updated] = await tx
             .update(jobsTable)
-            .set({ ...updates, updatedAt: new Date() })
+            .set({ ...sanitizedUpdates, updatedAt: new Date() })
             .where(eq(jobsTable.id, id))
             .returning();
 
@@ -176,6 +246,7 @@ export class AdminJobsRepository {
               action: auditData.action || "UPDATE",
               entityType: auditData.entityType || "job",
               ...auditData,
+              actorId: resolvedActorId,
               entityId: id,
               afterState: updated as unknown as Record<string, unknown>,
             });
@@ -185,6 +256,7 @@ export class AdminJobsRepository {
             await tx.insert(versionsTable).values({
               entityType: versionData.entityType || "job",
               ...versionData,
+              changedBy: resolvedChangedBy,
               entityId: id,
               snapshot: updated as unknown as Record<string, unknown>,
             });
