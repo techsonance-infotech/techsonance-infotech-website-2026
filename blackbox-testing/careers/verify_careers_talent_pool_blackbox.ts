@@ -10,6 +10,7 @@
  * 5. Deterministic exit codes and zero residual test pollution.
  */
 
+import "../preload.cjs";
 import { POST } from "@/app/api/careers/talent-pool/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { CareerApplyService } from "@/lib/services/career-apply.service";
