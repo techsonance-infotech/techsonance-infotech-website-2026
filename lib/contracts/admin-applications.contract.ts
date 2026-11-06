@@ -68,3 +68,26 @@ export const updateApplicationContract = defineContract({
   response: singleApplicationResponseSchema,
   status: 200,
 });
+
+export const applicationResumeParamsSchema = z.strictObject({
+  id: z.string().uuid({ message: "Invalid application ID format" }),
+});
+
+export type ApplicationResumeParams = z.input<typeof applicationResumeParamsSchema>;
+
+export const applicationResumeResponseSchema = z.object({
+  signedUrl: z.string().url(),
+  fileName: z.string().optional(),
+});
+
+export const getApplicationResumeContract = defineContract({
+  method: "GET",
+  path: "/api/admin/careers/applications/:id/resume",
+  auth: "required",
+  params: applicationResumeParamsSchema,
+  query: noQuery,
+  body: noBody,
+  response: applicationResumeResponseSchema,
+  status: 200,
+});
+
