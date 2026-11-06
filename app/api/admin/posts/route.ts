@@ -1,83 +1,244 @@
+import "server-only";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
+import {
+  listAdminPostsQuerySchema,
+  createAdminPostSchema,
+} from "@/lib/contracts/admin-posts.contract";
 import { logger } from "@/lib/logger";
+import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
+import { POST_ERRORS, POST_AUTHOR_ROLES } from "@/lib/constants/posts.constants";
+import { getRequestId } from "@/lib/server/requestContext";
+import { isAllowedOrigin } from "@/lib/utils/text";
 
-const createPostSchema = z.object({
-  siteId: z.string().uuid().optional(),
-  slug: z
-    .string()
-    .min(2)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
-  title: z.string().min(3),
-  excerpt: z.string().optional(),
-  content: z.string().min(10),
-  categoryId: z.uuid().optional(),
-  heroImage: z.url().optional().or(z.literal("")),
-  tags: z.array(z.string()).default([]),
-  readTime: z.string().optional().default("5 min read"),
-  status: z.enum(["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
-});
+export const runtime = "nodejs";
 
 export async function GET(req: Request) {
+  const requestId = await getRequestId();
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+  headers.set("x-request-id", requestId);
+  headers.set("Cache-Control", "private, no-store");
+
   try {
+    // 1. Origin check
+    const origin = req.headers.get("origin");
+    if (origin && !isAllowedOrigin(origin)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.FORBIDDEN,
+            message: POST_ERRORS.FORBIDDEN_ORIGIN,
+            requestId,
+          },
+          code: ErrorCode.FORBIDDEN,
+        },
+        { status: 403, headers },
+      );
+    }
+
+    // 2. Auth check
     const container = getContainer();
     const authService = container.get(AdminAuthService);
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.UNAUTHENTICATED,
+            message: POST_ERRORS.UNAUTHORIZED,
+            requestId,
+          },
+          code: ErrorCode.UNAUTHENTICATED,
+        },
+        { status: 401, headers },
+      );
     }
 
+    // 3. Query parsing
     const { searchParams } = new URL(req.url);
-    const status = searchParams.get("status") || undefined;
-    const search = searchParams.get("search") || undefined;
-    const siteId = searchParams.get("siteId") || session.site?.id || undefined;
-    const limit = Number(searchParams.get("limit")) || 20;
-    const offset = Number(searchParams.get("offset")) || 0;
+    const rawQuery = Object.fromEntries(searchParams.entries());
+    const queryResult = listAdminPostsQuerySchema.safeParse(rawQuery);
 
+    if (!queryResult.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.VALIDATION,
+            message: POST_ERRORS.VALIDATION_FAILED,
+            fieldErrors: toFieldErrors(queryResult.error),
+            requestId,
+          },
+          code: ErrorCode.VALIDATION,
+        },
+        { status: 400, headers },
+      );
+    }
+
+    const { status, search, siteId, limit, offset } = queryResult.data;
+
+    // 4. Execution via Service layer
     const postsService = container.get(AdminPostsService);
     const result = await postsService.listPosts({
       status,
       search,
-      siteId,
+      siteId: siteId || session.site?.id || undefined,
       limit,
       offset,
     });
 
-    return NextResponse.json({ ok: true, ...result });
+    return NextResponse.json(
+      {
+        ok: true,
+        data: {
+          posts: result.posts,
+          total: result.total,
+        },
+        posts: result.posts,
+        total: result.total,
+      },
+      { status: 200, headers },
+    );
   } catch (error) {
-    logger.error("List posts error", { error: String(error) });
-    return NextResponse.json({ error: "Failed to list posts" }, { status: 500 });
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: error.code,
+            message: error.message,
+            fieldErrors: error.fieldErrors,
+            requestId,
+          },
+          code: error.code,
+        },
+        { status: STATUS_BY_CODE[error.code] || 400, headers },
+      );
+    }
+
+    logger.error("List admin posts error", { error: String(error), requestId });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: ErrorCode.INTERNAL,
+          message: POST_ERRORS.FAILED_LIST_POSTS,
+          requestId,
+        },
+        code: ErrorCode.INTERNAL,
+      },
+      { status: 500, headers },
+    );
   }
 }
 
 export async function POST(req: Request) {
+  const requestId = await getRequestId();
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+  headers.set("x-request-id", requestId);
+  headers.set("Cache-Control", "private, no-store");
+
   try {
+    // 1. Origin check
+    const origin = req.headers.get("origin");
+    if (origin && !isAllowedOrigin(origin)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.FORBIDDEN,
+            message: POST_ERRORS.FORBIDDEN_ORIGIN,
+            requestId,
+          },
+          code: ErrorCode.FORBIDDEN,
+        },
+        { status: 403, headers },
+      );
+    }
+
+    // 2. Auth check
     const container = getContainer();
     const authService = container.get(AdminAuthService);
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const parseResult = createPostSchema.safeParse(body);
-    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Validation failed", details: parseResult.error.format() },
-        { status: 400 },
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.UNAUTHENTICATED,
+            message: POST_ERRORS.UNAUTHORIZED,
+            requestId,
+          },
+          code: ErrorCode.UNAUTHENTICATED,
+        },
+        { status: 401, headers },
       );
     }
 
-    const siteId = parseResult.data.siteId || session.site?.id;
-    if (!siteId) {
-      return NextResponse.json({ error: "siteId is required" }, { status: 400 });
+    // 3. Role check (authoring permissions)
+    if (!POST_AUTHOR_ROLES.includes(session.role as (typeof POST_AUTHOR_ROLES)[number])) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.FORBIDDEN,
+            message: POST_ERRORS.FORBIDDEN_ROLE,
+            requestId,
+          },
+          code: ErrorCode.FORBIDDEN,
+        },
+        { status: 403, headers },
+      );
     }
 
+    // 4. Body parsing & validation
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.BAD_REQUEST,
+            message: "Malformed JSON payload in request body",
+            requestId,
+          },
+          code: ErrorCode.BAD_REQUEST,
+        },
+        { status: 400, headers },
+      );
+    }
+
+    const parseResult = createAdminPostSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.VALIDATION,
+            message: POST_ERRORS.VALIDATION_FAILED,
+            fieldErrors: toFieldErrors(parseResult.error),
+            requestId,
+          },
+          code: ErrorCode.VALIDATION,
+        },
+        { status: 400, headers },
+      );
+    }
+
+    const siteId = parseResult.data.siteId || session.site?.id || undefined;
+    const ipAddress = req.headers.get("x-forwarded-for") || undefined;
+
+    // 5. Execution via Service layer
     const postsService = container.get(AdminPostsService);
     const post = await postsService.createPost(
       {
@@ -86,11 +247,46 @@ export async function POST(req: Request) {
         createdBy: session.userId,
       },
       session.userId,
+      ipAddress,
     );
 
-    return NextResponse.json({ ok: true, post }, { status: 201 });
+    return NextResponse.json(
+      {
+        ok: true,
+        data: { post },
+        post,
+      },
+      { status: 201, headers },
+    );
   } catch (error) {
-    logger.error("Create post error", { error: String(error) });
-    return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
+    if (error instanceof AppError) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: error.code,
+            message: error.message,
+            fieldErrors: error.fieldErrors,
+            requestId,
+          },
+          code: error.code,
+        },
+        { status: STATUS_BY_CODE[error.code] || 400, headers },
+      );
+    }
+
+    logger.error("Create admin post error", { error: String(error), requestId });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: ErrorCode.INTERNAL,
+          message: POST_ERRORS.FAILED_CREATE_POST,
+          requestId,
+        },
+        code: ErrorCode.INTERNAL,
+      },
+      { status: 500, headers },
+    );
   }
 }

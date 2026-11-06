@@ -8,6 +8,7 @@ import {
   postsTable,
   auditLogsTable,
   versionsTable,
+  sitesTable,
   type Post,
   type InsertPost,
   type InsertAuditLog,
@@ -30,6 +31,31 @@ export interface ListAdminPostsResult {
 
 export class AdminPostsRepository {
   constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
+
+  /**
+   * Retrieves the default site ID or provisions a fallback agency site record.
+   */
+  async getDefaultSiteId(): Promise<string> {
+    try {
+      const existing = await this.db.query.sitesTable.findFirst();
+      if (existing) return existing.id;
+
+      const [created] = await this.db
+        .insert(sitesTable)
+        .values({
+          name: "TechSonance Infotech LLP",
+          slug: "techsonance-infotech-llp",
+          domain: "techsonance.co.in",
+        })
+        .returning();
+
+      return created.id;
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AdminPostsRepository.getDefaultSiteId",
+      });
+    }
+  }
 
   /**
    * Lists posts using Drizzle RQB v2 object syntax.

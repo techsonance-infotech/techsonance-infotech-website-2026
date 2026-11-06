@@ -6,7 +6,7 @@ import {
   type ListAdminPostsOptions,
 } from "@/lib/repositories/admin-posts.repository";
 import type { Post, InsertPost } from "@/lib/database/schema/index.schema";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 
 export interface ListPostsOptions extends ListAdminPostsOptions {}
@@ -15,6 +15,8 @@ export interface ListPostsResult {
   posts: Post[];
   total: number;
 }
+
+export type CreatePostInput = Omit<InsertPost, "siteId"> & { siteId?: string };
 
 export class AdminPostsService {
   constructor(private postsRepo: AdminPostsRepository = inject(AdminPostsRepository)) {}
@@ -40,7 +42,24 @@ export class AdminPostsService {
     }
   }
 
-  async createPost(data: InsertPost, actorId?: string, ipAddress?: string): Promise<Post> {
+  async createPost(data: CreatePostInput, actorId?: string, ipAddress?: string): Promise<Post> {
+    const slug = data.slug?.trim();
+    if (slug) {
+      const existing = await this.postsRepo.findPostBySlug(slug);
+      if (existing) {
+        throw new AppError(
+          ErrorCode.CONFLICT,
+          `A post with slug "${slug}" already exists`,
+          { fieldErrors: { slug: ["Slug is already taken"] } },
+        );
+      }
+    }
+
+    let siteId = data.siteId;
+    if (!siteId) {
+      siteId = await this.postsRepo.getDefaultSiteId();
+    }
+
     const auditData = {
       actorId,
       action: "post.create",
@@ -55,7 +74,17 @@ export class AdminPostsService {
       changedBy: actorId,
     };
 
-    return this.postsRepo.createPostWithAudit(data, auditData, versionData);
+    const post = await this.postsRepo.createPostWithAudit(
+      {
+        ...data,
+        siteId,
+      },
+      auditData,
+      versionData,
+    );
+
+    this.revalidatePostCache(post.slug);
+    return post;
   }
 
   async updatePost(
@@ -66,7 +95,7 @@ export class AdminPostsService {
   ): Promise<Post> {
     const existing = await this.getPostById(id);
     if (!existing) {
-      throw new AppError("NOT_FOUND", `Post with id "${id}" not found`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Post with id "${id}" not found`);
     }
 
     const nextVersionId = (existing.versionId || 1) + 1;
@@ -98,7 +127,7 @@ export class AdminPostsService {
       versionData,
     );
     if (!updated) {
-      throw new AppError("NOT_FOUND", `Post with id "${id}" not found`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Post with id "${id}" not found`);
     }
 
     if (updated.status === "PUBLISHED" || existing.status === "PUBLISHED") {

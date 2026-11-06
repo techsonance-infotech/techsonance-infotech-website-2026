@@ -24,13 +24,18 @@ describe("AdminPostsService & AdminJobsService Tests", () => {
               siteId: "s1",
             },
           ]),
-          findFirst: vi.fn().mockResolvedValue({
-            id: "p1",
-            title: "Test Post 1",
-            slug: "test-post-1",
-            status: "DRAFT",
-            versionId: 1,
-            siteId: "s1",
+          findFirst: vi.fn().mockImplementation(({ where }: any = {}) => {
+            if (where?.slug === "created") {
+              return Promise.resolve(null);
+            }
+            return Promise.resolve({
+              id: "p1",
+              title: "Test Post 1",
+              slug: "test-post-1",
+              status: "DRAFT",
+              versionId: 1,
+              siteId: "s1",
+            });
           }),
         },
         jobsTable: {
