@@ -4,8 +4,8 @@ import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { createJobSchema } from "@/lib/validations/careers";
 import { logger } from "@/lib/logger";
-import { AppError, STATUS_BY_CODE } from "@/lib/errors";
-import { CAREER_ERRORS, NIL_SITE_ID } from "@/lib/constants/careers.constants";
+import { AppError, ErrorCode, STATUS_BY_CODE } from "@/lib/errors";
+import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
 import type { JobStatus } from "@/lib/database/enum";
 import type { InsertJob } from "@/lib/database/schema/index.schema";
 
@@ -16,13 +16,15 @@ export async function GET(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
+      return NextResponse.json(
+        { ok: false, error: CAREER_ERRORS.UNAUTHORIZED, code: ErrorCode.UNAUTHENTICATED },
+        { status: 401 },
+      );
     }
 
     const { searchParams } = new URL(req.url);
     const status = (searchParams.get("status") || undefined) as JobStatus | undefined;
     const search = searchParams.get("search") || undefined;
-    const siteId = searchParams.get("siteId") || session.site?.id || undefined;
     const limit = Number(searchParams.get("limit")) || 50;
     const offset = Number(searchParams.get("offset")) || 0;
 
@@ -30,7 +32,6 @@ export async function GET(req: Request) {
     const result = await jobsService.listJobs({
       status,
       search,
-      siteId,
       limit,
       offset,
     });
@@ -39,12 +40,15 @@ export async function GET(req: Request) {
   } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
-        { error: error.message },
+        { ok: false, error: error.message, code: error.code },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
     logger.error("List jobs error", { error: String(error) });
-    return NextResponse.json({ error: CAREER_ERRORS.FAILED_LIST_JOBS }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: CAREER_ERRORS.FAILED_LIST_JOBS, code: ErrorCode.INTERNAL },
+      { status: 500 },
+    );
   }
 }
 
@@ -55,7 +59,10 @@ export async function POST(req: Request) {
     const session = await authService.getCurrentSession();
 
     if (!session) {
-      return NextResponse.json({ error: CAREER_ERRORS.UNAUTHORIZED }, { status: 401 });
+      return NextResponse.json(
+        { ok: false, error: CAREER_ERRORS.UNAUTHORIZED, code: ErrorCode.UNAUTHENTICATED },
+        { status: 401 },
+      );
     }
 
     const body = await req.json();
@@ -70,19 +77,19 @@ export async function POST(req: Request) {
         parseResult.error.format(),
       );
       return NextResponse.json(
-        { error: CAREER_ERRORS.VALIDATION_FAILED, details: parseResult.error.format() },
+        {
+          ok: false,
+          error: CAREER_ERRORS.VALIDATION_FAILED,
+          code: ErrorCode.VALIDATION,
+          details: parseResult.error.format(),
+        },
         { status: 400 },
       );
     }
 
-    const siteId = parseResult.data.siteId || session.site?.id || NIL_SITE_ID;
-
     const jobsService = container.get(AdminJobsService);
     const job = await jobsService.createJob(
-      {
-        ...parseResult.data,
-        siteId,
-      } as InsertJob,
+      parseResult.data as InsertJob,
       session.userId,
     );
 
@@ -91,11 +98,14 @@ export async function POST(req: Request) {
   } catch (error: unknown) {
     if (error instanceof AppError) {
       return NextResponse.json(
-        { error: error.message },
+        { ok: false, error: error.message, code: error.code },
         { status: STATUS_BY_CODE[error.code] || 400 },
       );
     }
     logger.error(`[API Admin Jobs] Create job error: ${String(error)}`);
-    return NextResponse.json({ error: CAREER_ERRORS.FAILED_CREATE_JOB }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: CAREER_ERRORS.FAILED_CREATE_JOB, code: ErrorCode.INTERNAL },
+      { status: 500 },
+    );
   }
 }

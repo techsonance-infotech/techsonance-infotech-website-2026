@@ -74,7 +74,9 @@ export const jobPostingBaseFields = {
   workMode: caseInsensitiveEnum(JobWorkMode, JobWorkMode.HYBRID),
   location: z.string().min(2, "Location is required"),
   remoteEligibility: z.string().optional(),
-  visaSupport: caseInsensitiveEnum(JobVisaSupport, JobVisaSupport.NO),
+  visaSupport: caseInsensitiveEnum(JobVisaSupport, JobVisaSupport.NO)
+    .optional()
+    .default(JobVisaSupport.NO),
 
   type: caseInsensitiveEnum(JobType, JobType.FULL_TIME),
   experienceLevel: caseInsensitiveEnum(JobExperienceLevel, JobExperienceLevel.MID),

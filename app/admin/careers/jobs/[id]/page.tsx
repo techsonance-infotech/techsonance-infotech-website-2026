@@ -95,7 +95,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           body: JSON.stringify(updatedData),
         });
         const data = await res.json();
-        if (data.ok && data.job) {
+        if (res.ok && data.ok && data.job) {
           setSaveStatus("saved");
           setLastSavedAt(new Date());
           setJobData(data.job);
@@ -104,7 +104,11 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           router.replace(`/admin/careers/jobs/${data.job.id}`);
         } else {
           setSaveStatus("error");
-          setAlertMessage({ type: "error", text: data.error || "Failed to create position." });
+          const msg =
+            typeof data.error === "string"
+              ? data.error
+              : data.error?.message || "Failed to create position.";
+          setAlertMessage({ type: "error", text: msg });
         }
       } else {
         const res = await fetch(`/api/admin/jobs/${id}`, {
@@ -154,8 +158,12 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
         });
         const createData = await createRes.json();
-        if (!createData.ok || !createData.job) {
-          throw new Error(createData.error || "Failed to create initial draft");
+        if (!createRes.ok || !createData.ok || !createData.job) {
+          const msg =
+            typeof createData.error === "string"
+              ? createData.error
+              : createData.error?.message || "Failed to create initial draft";
+          throw new Error(msg);
         }
         currentJobId = createData.job.id;
       }
@@ -170,7 +178,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         }),
       });
       const transitionData = await transitionRes.json();
-      if (transitionData.ok && transitionData.job) {
+      if (transitionRes.ok && transitionData.ok && transitionData.job) {
         setJobData(transitionData.job);
         setAlertMessage({
           type: "success",
@@ -180,7 +188,11 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           router.replace(`/admin/careers/jobs/${currentJobId}`);
         }
       } else {
-        throw new Error(transitionData.error || "Status transition failed");
+        const msg =
+          typeof transitionData.error === "string"
+            ? transitionData.error
+            : transitionData.error?.message || "Status transition failed";
+        throw new Error(msg);
       }
     } catch (err: any) {
       console.error("Submit for review error:", err);
@@ -211,8 +223,12 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
         });
         const createData = await createRes.json();
-        if (!createData.ok || !createData.job) {
-          throw new Error(createData.error || "Failed to create draft");
+        if (!createRes.ok || !createData.ok || !createData.job) {
+          const msg =
+            typeof createData.error === "string"
+              ? createData.error
+              : createData.error?.message || "Failed to create draft";
+          throw new Error(msg);
         }
         currentJobId = createData.job.id;
       }
@@ -226,7 +242,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         }),
       });
       const statusData = await statusRes.json();
-      if (statusData.ok && statusData.job) {
+      if (statusRes.ok && statusData.ok && statusData.job) {
         setJobData(statusData.job);
         setAlertMessage({
           type: "success",
@@ -236,7 +252,11 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           router.replace(`/admin/careers/jobs/${currentJobId}`);
         }
       } else {
-        throw new Error(statusData.error || "Publishing failed");
+        const msg =
+          typeof statusData.error === "string"
+            ? statusData.error
+            : statusData.error?.message || "Publishing failed";
+        throw new Error(msg);
       }
     } catch (err: any) {
       console.error("Publish error:", err);

@@ -1,6 +1,6 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { and, count, desc, eq, ilike } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { ContentVersion, Database, InsertContentAuditLog } from "@/lib/database/index";
 import { withTransaction } from "@/lib/database/transaction";
@@ -8,6 +8,7 @@ import {
   jobsTable,
   auditLogsTable,
   versionsTable,
+  sitesTable,
   type Job,
   type InsertJob,
   type InsertContentVersion,
@@ -16,7 +17,6 @@ import type { JobStatus } from "@/lib/database/enum";
 import { mapDbError } from "@/lib/dbErrors";
 
 export interface ListAdminJobsOptions {
-  siteId?: string;
   status?: JobStatus;
   search?: string;
   limit?: number;
@@ -32,38 +32,46 @@ export class AdminJobsRepository {
   constructor(private db: Database = inject(DRIZZLE_DB_TOKEN)) {}
 
   /**
-   * Lists jobs using Drizzle RQB v2 object syntax.
-   * Returns row types directly per rule 12 §2.7.
+   * Resolves the single site ID for the project in ts_admin_sites.
    */
+  async getSingleSiteId(): Promise<string> {
+    try {
+      const existing = await this.db.query.sitesTable.findFirst({
+        columns: { id: true },
+      });
+      if (existing) return existing.id;
+
+      const [created] = await this.db
+        .insert(sitesTable)
+        .values({
+          name: "TechSonance Infotech",
+          slug: "techsonance-main",
+          domain: "techsonance.co.in",
+        })
+        .returning();
+
+      return created.id;
+    } catch (err) {
+      throw mapDbError(err, { context: "AdminJobsRepository.getSingleSiteId" });
+    }
+  }
+
   async listJobs(options: ListAdminJobsOptions = {}): Promise<ListAdminJobsResult> {
     const limit = options.limit ?? 20;
     const offset = options.offset ?? 0;
 
     try {
-      const where: { siteId?: string; status?: JobStatus } = {};
-      if (options.siteId) where.siteId = options.siteId;
-      if (options.status) where.status = options.status;
-
-      const hasObjWhere = Object.keys(where).length > 0;
-
       const [jobs, totalResult] = await Promise.all([
         this.db.query.jobsTable.findMany({
           limit,
           offset,
           orderBy: { createdAt: "desc" },
-          where: hasObjWhere ? where : undefined,
+          where: options.status ? { status: options.status } : undefined,
         }),
         this.db
           .select({ cnt: count() })
           .from(jobsTable)
-          .where(
-            hasObjWhere
-              ? and(
-                  where.siteId ? eq(jobsTable.siteId, where.siteId) : undefined,
-                  where.status ? eq(jobsTable.status, where.status) : undefined,
-                )
-              : undefined,
-          ),
+          .where(options.status ? eq(jobsTable.status, options.status) : undefined),
       ]);
 
       const cnt = (totalResult as Array<{ cnt: number }>)[0]?.cnt;
@@ -72,64 +80,51 @@ export class AdminJobsRepository {
         total: cnt !== undefined ? Number(cnt) : jobs.length,
       };
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.listJobs",
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.listJobs" });
     }
   }
 
-  /**
-   * Finds a job by ID using Drizzle RQB v2 object syntax.
-   * Returns row type or null.
-   */
   async findJobById(id: string): Promise<Job | null> {
     if (!id || !id.trim()) return null;
-
     try {
-      const job = await this.db.query.jobsTable.findFirst({
-        where: { id },
-      });
-
+      const job = await this.db.query.jobsTable.findFirst({ where: { id } });
       return (job as Job) ?? null;
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.findJobById",
-        id,
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.findJobById", id });
     }
   }
 
-  /**
-   * Finds a job by unique slug using Drizzle RQB v2 object syntax.
-   */
   async findJobBySlug(slug: string): Promise<Job | null> {
     if (!slug || !slug.trim()) return null;
-
     try {
-      const job = await this.db.query.jobsTable.findFirst({
-        where: { slug: slug.trim() },
-      });
-
+      const job = await this.db.query.jobsTable.findFirst({ where: { slug: slug.trim() } });
       return (job as Job) ?? null;
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.findJobBySlug",
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.findJobBySlug" });
     }
   }
 
-  /**
-   * Inserts a new job and captures initial audit log + version snapshot atomically.
-   */
   async createJobWithAudit(
     data: InsertJob,
     auditData?: Partial<InsertContentAuditLog>,
     versionData?: Partial<InsertContentVersion>,
   ): Promise<Job> {
     try {
+      const siteId =
+        data.siteId &&
+        data.siteId !== "00000000-0000-0000-0000-000000000000" &&
+        data.siteId !== "00000000-0000-0000-0000-000000000001"
+          ? data.siteId
+          : await this.getSingleSiteId();
+
+      const jobDataToInsert: InsertJob = {
+        ...data,
+        siteId,
+      };
+
       return await withTransaction(
         async (tx) => {
-          const [created] = await tx.insert(jobsTable).values(data).returning();
+          const [created] = await tx.insert(jobsTable).values(jobDataToInsert).returning();
 
           if (auditData) {
             await tx.insert(auditLogsTable).values({
@@ -155,16 +150,10 @@ export class AdminJobsRepository {
         { database: this.db },
       );
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.createJobWithAudit",
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.createJobWithAudit" });
     }
   }
 
-  /**
-   * Updates a job and captures audit log + version snapshot atomically.
-   * Mandatory where clause (rule 12 §2.6).
-   */
   async updateJobWithAudit(
     id: string,
     updates: Partial<InsertJob>,
@@ -176,10 +165,7 @@ export class AdminJobsRepository {
         async (tx) => {
           const [updated] = await tx
             .update(jobsTable)
-            .set({
-              ...updates,
-              updatedAt: new Date(),
-            })
+            .set({ ...updates, updatedAt: new Date() })
             .where(eq(jobsTable.id, id))
             .returning();
 
@@ -209,19 +195,12 @@ export class AdminJobsRepository {
         { database: this.db },
       );
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.updateJobWithAudit",
-        id,
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.updateJobWithAudit", id });
     }
   }
 
-  /**
-   * Lists version snapshots for a given job ID.
-   */
   async listJobVersions(jobId: string): Promise<ContentVersion[]> {
     if (!jobId || !jobId.trim()) return [];
-
     try {
       return await this.db
         .select()
@@ -229,16 +208,10 @@ export class AdminJobsRepository {
         .where(and(eq(versionsTable.entityType, "job"), eq(versionsTable.entityId, jobId)))
         .orderBy(desc(versionsTable.createdAt));
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.listJobVersions",
-        id: jobId,
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.listJobVersions", id: jobId });
     }
   }
 
-  /**
-   * Deletes a job by ID with an audit trail entry.
-   */
   async deleteJobWithAudit(
     id: string,
     auditData?: Partial<InsertContentAuditLog>,
@@ -247,7 +220,6 @@ export class AdminJobsRepository {
       return await withTransaction(
         async (tx) => {
           const [deleted] = await tx.delete(jobsTable).where(eq(jobsTable.id, id)).returning();
-
           if (!deleted) return false;
 
           if (auditData) {
@@ -264,10 +236,7 @@ export class AdminJobsRepository {
         { database: this.db },
       );
     } catch (error) {
-      throw mapDbError(error, {
-        context: "AdminJobsRepository.deleteJobWithAudit",
-        id,
-      });
+      throw mapDbError(error, { context: "AdminJobsRepository.deleteJobWithAudit", id });
     }
   }
 }

@@ -7,7 +7,7 @@ import {
 } from "@/lib/repositories/admin-jobs.repository";
 import type { Job, InsertJob, ContentVersion } from "@/lib/database/schema/index.schema";
 import { JobStatus, JobApprovalStatus } from "../database/enum";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { CAREER_ERRORS, CAREER_AUDIT_ACTIONS } from "@/lib/constants/careers.constants";
 
@@ -37,11 +37,23 @@ export class AdminJobsService {
 
   async createJob(data: InsertJob, actorId?: string, ipAddress?: string): Promise<Job> {
     if (!data.title || !data.slug) {
-      throw new AppError("VALIDATION", CAREER_ERRORS.JOB_TITLE_AND_SLUG_REQUIRED);
+      throw new AppError(ErrorCode.VALIDATION, CAREER_ERRORS.JOB_TITLE_AND_SLUG_REQUIRED);
     }
 
+    const sanitizedData: InsertJob = {
+      ...data,
+      ownerId: data.ownerId && data.ownerId.trim() ? data.ownerId : undefined,
+      hiringManagerId:
+        data.hiringManagerId && data.hiringManagerId.trim() ? data.hiringManagerId : undefined,
+    };
+
+    const validActorId =
+      actorId && actorId.trim() && actorId !== "00000000-0000-0000-0000-000000000000"
+        ? actorId
+        : undefined;
+
     const auditData = {
-      actorId,
+      actorId: validActorId,
       action: CAREER_AUDIT_ACTIONS.JOB_CREATE,
       entityType: "job",
       entityId: "",
@@ -51,10 +63,10 @@ export class AdminJobsService {
     const versionData = {
       entityType: "job",
       entityId: "",
-      changedBy: actorId,
+      changedBy: validActorId,
     };
 
-    return this.jobsRepo.createJobWithAudit(data, auditData, versionData);
+    return this.jobsRepo.createJobWithAudit(sanitizedData, auditData, versionData);
   }
 
   async updateJob(
@@ -65,17 +77,34 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(id);
     if (!existing) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const nextVersionId = (existing.versionId || 1) + 1;
-    const finalUpdates = {
+    const finalUpdates: Partial<InsertJob> = {
       ...updates,
       versionId: nextVersionId,
+      ownerId:
+        updates.ownerId !== undefined
+          ? updates.ownerId && updates.ownerId.trim()
+            ? updates.ownerId
+            : undefined
+          : undefined,
+      hiringManagerId:
+        updates.hiringManagerId !== undefined
+          ? updates.hiringManagerId && updates.hiringManagerId.trim()
+            ? updates.hiringManagerId
+            : undefined
+          : undefined,
     };
 
+    const validActorId =
+      actorId && actorId.trim() && actorId !== "00000000-0000-0000-0000-000000000000"
+        ? actorId
+        : undefined;
+
     const auditData = {
-      actorId,
+      actorId: validActorId,
       action: CAREER_AUDIT_ACTIONS.JOB_UPDATE,
       entityType: "job",
       entityId: id,
@@ -86,7 +115,7 @@ export class AdminJobsService {
     const versionData = {
       entityType: "job",
       entityId: id,
-      changedBy: actorId,
+      changedBy: validActorId,
     };
 
     const updated = await this.jobsRepo.updateJobWithAudit(
@@ -96,7 +125,7 @@ export class AdminJobsService {
       versionData,
     );
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     this.revalidateJobCache(updated.slug);
@@ -112,7 +141,7 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     if (existing.status === targetStatus) {
@@ -125,7 +154,7 @@ export class AdminJobsService {
     const isRecruiter = role === "recruiter" || role === "editor";
 
     if (!isAdminOrOwner && !isRecruiter) {
-      throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_TRANSITION);
+      throw new AppError(ErrorCode.FORBIDDEN, CAREER_ERRORS.FORBIDDEN_ROLE_TRANSITION);
     }
 
     // Enforce 7-status state machine transitions
@@ -136,22 +165,22 @@ export class AdminJobsService {
         }
         if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
           if (!isAdminOrOwner) {
-            throw new AppError("BAD_REQUEST", CAREER_ERRORS.RECRUITER_APPROVAL_REQUIRED);
+            throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.RECRUITER_APPROVAL_REQUIRED);
           }
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
       case JobStatus.IN_REVIEW:
         if (!isAdminOrOwner) {
-          throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_APPROVE);
+          throw new AppError(ErrorCode.FORBIDDEN, CAREER_ERRORS.FORBIDDEN_ROLE_APPROVE);
         }
         if (targetStatus === JobStatus.SCHEDULED) {
           if (!existing.publishAt) {
-            throw new AppError("BAD_REQUEST", CAREER_ERRORS.CANNOT_SCHEDULE_WITHOUT_DATE);
+            throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.CANNOT_SCHEDULE_WITHOUT_DATE);
           }
           break;
         }
@@ -163,7 +192,7 @@ export class AdminJobsService {
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
@@ -176,7 +205,7 @@ export class AdminJobsService {
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
@@ -186,7 +215,7 @@ export class AdminJobsService {
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
@@ -199,13 +228,13 @@ export class AdminJobsService {
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
       case JobStatus.CLOSED:
         if (!isAdminOrOwner) {
-          throw new AppError("FORBIDDEN", CAREER_ERRORS.FORBIDDEN_ROLE_REOPEN);
+          throw new AppError(ErrorCode.FORBIDDEN, CAREER_ERRORS.FORBIDDEN_ROLE_REOPEN);
         }
         if (
           targetStatus === JobStatus.ARCHIVED ||
@@ -216,14 +245,14 @@ export class AdminJobsService {
           break;
         }
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
 
       case JobStatus.ARCHIVED:
       default:
         throw new AppError(
-          "BAD_REQUEST",
+          ErrorCode.BAD_REQUEST,
           `Illegal transition from ${currentStatus} to ${targetStatus}`,
         );
     }
@@ -308,7 +337,7 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const isFuturePublish =
@@ -342,7 +371,7 @@ export class AdminJobsService {
 
     const updated = await this.jobsRepo.updateJobWithAudit(jobId, updates, auditData, versionData);
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     this.revalidateJobCache(updated.slug);
@@ -356,12 +385,12 @@ export class AdminJobsService {
     ipAddress?: string,
   ): Promise<Job> {
     if (!comment || !comment.trim()) {
-      throw new AppError("BAD_REQUEST", CAREER_ERRORS.RETURN_FEEDBACK_REQUIRED);
+      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.RETURN_FEEDBACK_REQUIRED);
     }
 
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const nextVersionId = (existing.versionId || 1) + 1;
@@ -390,7 +419,7 @@ export class AdminJobsService {
 
     const updated = await this.jobsRepo.updateJobWithAudit(jobId, updates, auditData, versionData);
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     this.revalidateJobCache(updated.slug);
@@ -409,13 +438,13 @@ export class AdminJobsService {
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     const versions = await this.listVersions(jobId);
     const targetVersion = versions.find((v) => v.id === versionId);
     if (!targetVersion || !targetVersion.snapshot) {
-      throw new AppError("NOT_FOUND", `Version "${versionId}" not found for job "${jobId}"`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Version "${versionId}" not found for job "${jobId}"`);
     }
 
     const snapshot = targetVersion.snapshot as Record<string, unknown>;
@@ -445,7 +474,7 @@ export class AdminJobsService {
 
     const updated = await this.jobsRepo.updateJobWithAudit(jobId, updates, auditData, versionData);
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     this.revalidateJobCache(updated.slug);

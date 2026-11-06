@@ -87,6 +87,17 @@ export class AdminAuthService {
     try {
       const env = getEnv();
 
+      // Resolve real site from DB if accessible
+      const defaultSite = await this.usersRepo.getDefaultSite().catch(() => null);
+      const site: Site = defaultSite ?? {
+        id: "00000000-0000-0000-0000-000000000001",
+        name: "TechSonance Main Site",
+        slug: "techsonance-main",
+        domain: "techsonance.co.in",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
       // 1. Read session from secure cookie
       const cookieSession = await getSessionFromCookies();
 
@@ -99,14 +110,7 @@ export class AdminAuthService {
               userId: user.id,
               email: user.email,
               role: user.role as AdminSession["role"],
-              site: {
-                id: "00000000-0000-0000-0000-000000000001",
-                name: "TechSonance Main Site",
-                slug: "techsonance-main",
-                domain: "techsonance.co.in",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-              },
+              site,
             };
           }
         } catch {
@@ -115,6 +119,7 @@ export class AdminAuthService {
             userId: cookieSession.userId,
             email: cookieSession.email,
             role: cookieSession.role,
+            site,
           };
         }
       }
@@ -125,14 +130,7 @@ export class AdminAuthService {
           userId: "00000000-0000-0000-0000-000000000000",
           email: "admin@techsonance.co.in",
           role: AUTH_DEFAULT_ROLES.OWNER,
-          site: {
-            id: "00000000-0000-0000-0000-000000000001",
-            name: "TechSonance Main Site",
-            slug: "techsonance-main",
-            domain: "techsonance.co.in",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
+          site,
         };
       }
 

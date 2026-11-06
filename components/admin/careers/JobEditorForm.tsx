@@ -77,7 +77,7 @@ export const DEFAULT_JOB_FORM: JobFormData = {
   summary: "",
   workMode: "hybrid",
   location: "Bhubaneswar, India",
-  remoteEligibility: "India & APAC",
+  remoteEligibility: "Pan-India",
   visaSupport: "no",
   type: "Full Time",
   experienceLevel: "Mid-Senior",
@@ -590,7 +590,7 @@ export function JobEditorForm({
                   Workplace Location & Flexibility
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Configure office headquarters, remote eligibility boundaries, and visa policies.
+                  Configure office headquarters and remote eligibility boundaries.
                 </p>
               </div>
 
@@ -638,33 +638,16 @@ export function JobEditorForm({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Remote Eligibility Region
-                  </label>
-                  <Input
-                    placeholder="e.g. India & APAC or Worldwide"
-                    value={job.remoteEligibility || ""}
-                    onChange={(e) => updateField("remoteEligibility", e.target.value)}
-                    className="rounded-xl text-xs font-medium"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Visa Sponsorship
-                  </label>
-                  <select
-                    value={job.visaSupport || "no"}
-                    onChange={(e) => updateField("visaSupport", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-900 dark:text-white"
-                  >
-                    <option value="no">Not provided (Must have local work authorization)</option>
-                    <option value="yes">Direct sponsorship supported</option>
-                    <option value="case_by_case">Evaluated case-by-case for senior roles</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Remote Eligibility Region (India)
+                </label>
+                <Input
+                  placeholder="e.g. Pan-India, Odisha or Hybrid"
+                  value={job.remoteEligibility || ""}
+                  onChange={(e) => updateField("remoteEligibility", e.target.value)}
+                  className="rounded-xl text-xs font-medium"
+                />
               </div>
 
               <div className="flex justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
