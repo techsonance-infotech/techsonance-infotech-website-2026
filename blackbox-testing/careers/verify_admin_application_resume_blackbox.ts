@@ -63,12 +63,15 @@ function assertTest(condition: boolean, caseNum: number, message: string) {
 }
 
 async function runBlackboxSuite() {
-  logSection("STARTING HARDCORE BLACK-BOX VERIFICATION: GET /api/admin/careers/applications/[id]/resume");
+  logSection(
+    "STARTING HARDCORE BLACK-BOX VERIFICATION: GET /api/admin/careers/applications/[id]/resume",
+  );
 
   resetRootContainer();
 
   const validAppId = "a1111111-2222-4333-8444-555555555555";
-  const mockSignedUrl = "https://supabase.co/storage/v1/object/sign/resumes/candidate.pdf?token=abc123xyz";
+  const mockSignedUrl =
+    "https://supabase.co/storage/v1/object/sign/resumes/candidate.pdf?token=abc123xyz";
 
   let currentSession: { userId: string; email: string; role: string } | null = {
     userId: "admin-uuid-1111",
@@ -96,8 +99,14 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: AdminAuthService, useValue: mockAuthService as unknown as AdminAuthService });
-  container.bind({ provide: ApplicationsService, useValue: mockApplicationsService as unknown as ApplicationsService });
+  container.bind({
+    provide: AdminAuthService,
+    useValue: mockAuthService as unknown as AdminAuthService,
+  });
+  container.bind({
+    provide: ApplicationsService,
+    useValue: mockApplicationsService as unknown as ApplicationsService,
+  });
 
   // Case 1: Unauthenticated request
   {
@@ -111,15 +120,22 @@ async function runBlackboxSuite() {
       caller: { role: "anonymous" },
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 401 && json.ok === false && json.error?.code === ErrorCode.UNAUTHENTICATED, 1, "Returns 401 UNAUTHENTICATED");
+    assertTest(
+      res.status === 401 && json.ok === false && json.error?.code === ErrorCode.UNAUTHENTICATED,
+      1,
+      "Returns 401 UNAUTHENTICATED",
+    );
   }
 
   // Case 2: Reject foreign origin
@@ -134,16 +150,23 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-      headers: { origin: "https://untrusted-hacker.com" },
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+        headers: { origin: "https://untrusted-hacker.com" },
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN, 2, "Returns 403 FORBIDDEN for untrusted origin");
+    assertTest(
+      res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN,
+      2,
+      "Returns 403 FORBIDDEN for untrusted origin",
+    );
   }
 
   // Case 3: Invalid UUID parameter
@@ -158,20 +181,31 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME("bad-uuid-123")}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME("bad-uuid-123")}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: "bad-uuid-123" }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 400 && json.ok === false && json.error?.code === ErrorCode.VALIDATION, 3, "Returns 400 VALIDATION with fieldErrors");
+    assertTest(
+      res.status === 400 && json.ok === false && json.error?.code === ErrorCode.VALIDATION,
+      3,
+      "Returns 400 VALIDATION with fieldErrors",
+    );
   }
 
   // Case 4: Unauthorized role (viewer)
   {
-    currentSession = { userId: "viewer-uuid-4444", email: "viewer@techsonance.co.in", role: "viewer" };
+    currentSession = {
+      userId: "viewer-uuid-4444",
+      email: "viewer@techsonance.co.in",
+      role: "viewer",
+    };
     logRequest({
       caseNum: 4,
       description: "Reject unauthorized role with 403 FORBIDDEN",
@@ -181,15 +215,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN, 4, "Returns 403 FORBIDDEN for unauthorized role");
+    assertTest(
+      res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN,
+      4,
+      "Returns 403 FORBIDDEN for unauthorized role",
+    );
   }
 
   // Case 5: Application not found
@@ -205,15 +246,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(nonExistentId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(nonExistentId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: nonExistentId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 404 && json.ok === false && json.error?.code === ErrorCode.NOT_FOUND, 5, "Returns 404 NOT_FOUND for non-existent application");
+    assertTest(
+      res.status === 404 && json.ok === false && json.error?.code === ErrorCode.NOT_FOUND,
+      5,
+      "Returns 404 NOT_FOUND for non-existent application",
+    );
   }
 
   // Case 6: Resume not attached
@@ -229,15 +277,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(noResumeId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(noResumeId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: noResumeId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 404 && json.ok === false && json.error?.code === ErrorCode.NOT_FOUND, 6, "Returns 404 NOT_FOUND when resume is not attached");
+    assertTest(
+      res.status === 404 && json.ok === false && json.error?.code === ErrorCode.NOT_FOUND,
+      6,
+      "Returns 404 NOT_FOUND when resume is not attached",
+    );
   }
 
   // Case 7: Happy path for Admin
@@ -252,9 +307,12 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -274,7 +332,11 @@ async function runBlackboxSuite() {
 
   // Case 8: Happy path for Recruiter
   {
-    currentSession = { userId: "recruiter-uuid-2222", email: "recruiter@techsonance.co.in", role: "recruiter" };
+    currentSession = {
+      userId: "recruiter-uuid-2222",
+      email: "recruiter@techsonance.co.in",
+      role: "recruiter",
+    };
     logRequest({
       caseNum: 8,
       description: "Happy path: generate signed URL for recruiter role",
@@ -284,20 +346,31 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 200 && json.ok === true && json.data?.signedUrl === mockSignedUrl, 8, "Returns 200 OK for recruiter role");
+    assertTest(
+      res.status === 200 && json.ok === true && json.data?.signedUrl === mockSignedUrl,
+      8,
+      "Returns 200 OK for recruiter role",
+    );
   }
 
   // Case 9: Happy path for Hiring Manager
   {
-    currentSession = { userId: "hm-uuid-3333", email: "hm@techsonance.co.in", role: "hiring_manager" };
+    currentSession = {
+      userId: "hm-uuid-3333",
+      email: "hm@techsonance.co.in",
+      role: "hiring_manager",
+    };
     logRequest({
       caseNum: 9,
       description: "Happy path: generate signed URL for hiring manager role",
@@ -307,15 +380,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(validAppId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 200 && json.ok === true && json.data?.signedUrl === mockSignedUrl, 9, "Returns 200 OK for hiring manager role");
+    assertTest(
+      res.status === 200 && json.ok === true && json.data?.signedUrl === mockSignedUrl,
+      9,
+      "Returns 200 OK for hiring manager role",
+    );
   }
 
   // Case 10: Unexpected storage failure
@@ -331,15 +411,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(failId)}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATION_RESUME(failId)}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: failId }) });
     const json = await res.json();
     logResponse(res.status, json);
 
-    assertTest(res.status === 500 && json.ok === false && json.error?.code === ErrorCode.INTERNAL, 10, "Returns 500 INTERNAL on storage exception");
+    assertTest(
+      res.status === 500 && json.ok === false && json.error?.code === ErrorCode.INTERNAL,
+      10,
+      "Returns 500 INTERNAL on storage exception",
+    );
   }
 
   logSection("EXECUTION AUDIT SUMMARY");

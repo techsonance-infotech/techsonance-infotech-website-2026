@@ -3,10 +3,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
-import {
-  returnJobParamsSchema,
-  returnJobBodySchema,
-} from "@/lib/contracts/admin-jobs.contract";
+import { returnJobParamsSchema, returnJobBodySchema } from "@/lib/contracts/admin-jobs.contract";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { CAREER_ERRORS } from "@/lib/constants/careers.constants";

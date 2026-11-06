@@ -11,7 +11,8 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
   let mockApplicationsService: any;
 
   const validAppId = "a1111111-2222-4333-8444-555555555555";
-  const mockSignedUrl = "https://supabase.co/storage/v1/object/sign/resumes/candidate.pdf?token=abc123xyz";
+  const mockSignedUrl =
+    "https://supabase.co/storage/v1/object/sign/resumes/candidate.pdf?token=abc123xyz";
 
   const adminSession = {
     userId: "admin-uuid-1111",
@@ -38,9 +39,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
   it("1. Rejects unauthenticated request with 401 UNAUTHENTICATED", async () => {
     mockAuthService.getCurrentSession.mockResolvedValueOnce(null);
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -53,12 +57,15 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
   });
 
   it("2. Rejects foreign origin with 403 FORBIDDEN", async () => {
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-      headers: {
-        origin: "https://malicious-attacker.com",
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+        headers: {
+          origin: "https://malicious-attacker.com",
+        },
       },
-    });
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -70,9 +77,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
   });
 
   it("3. Rejects invalid non-UUID application ID with 400 VALIDATION", async () => {
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/invalid-uuid/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/invalid-uuid/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: "invalid-uuid" }) });
     const json = await res.json();
@@ -91,9 +101,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
       role: "viewer",
     });
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -110,9 +123,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
     );
 
     const nonExistentId = "00000000-0000-4000-a000-000000000000";
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${nonExistentId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${nonExistentId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: nonExistentId }) });
     const json = await res.json();
@@ -128,9 +144,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
       new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.RESUME_NOT_ATTACHED),
     );
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -142,9 +161,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
   });
 
   it("7. Happy path: returns 200 OK with signed URL and cache headers for admin", async () => {
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -165,9 +187,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
       role: "recruiter",
     });
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -175,7 +200,10 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
     expect(res.status).toBe(200);
     expect(json.ok).toBe(true);
     expect(json.data.signedUrl).toBe(mockSignedUrl);
-    expect(mockApplicationsService.getSignedResumeUrl).toHaveBeenCalledWith(validAppId, "recruiter");
+    expect(mockApplicationsService.getSignedResumeUrl).toHaveBeenCalledWith(
+      validAppId,
+      "recruiter",
+    );
   });
 
   it("9. Happy path: returns 200 OK for hiring_manager role", async () => {
@@ -185,9 +213,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
       role: "hiring_manager",
     });
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();
@@ -202,9 +233,12 @@ describe("GET /api/admin/careers/applications/[id]/resume — End-to-End Black B
       new Error("Storage bucket connection timed out"),
     );
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/${validAppId}/resume`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req, { params: Promise.resolve({ id: validAppId }) });
     const json = await res.json();

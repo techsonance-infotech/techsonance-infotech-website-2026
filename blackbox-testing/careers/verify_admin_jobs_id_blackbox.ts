@@ -47,7 +47,9 @@ function logRequest(info: {
   if (info.params) console.log(`  Params:  ${JSON.stringify(info.params)}`);
   if (info.caller) console.log(`  Caller:  ${JSON.stringify(info.caller)}`);
   if (info.body !== undefined) {
-    console.log(`  Payload:\n${typeof info.body === "string" ? info.body : JSON.stringify(info.body, null, 2)}`);
+    console.log(
+      `  Payload:\n${typeof info.body === "string" ? info.body : JSON.stringify(info.body, null, 2)}`,
+    );
   }
 }
 
@@ -132,8 +134,14 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: AdminAuthService, useValue: mockAuthService as unknown as AdminAuthService });
-  container.bind({ provide: AdminJobsService, useValue: mockJobsService as unknown as AdminJobsService });
+  container.bind({
+    provide: AdminAuthService,
+    useValue: mockAuthService as unknown as AdminAuthService,
+  });
+  container.bind({
+    provide: AdminJobsService,
+    useValue: mockJobsService as unknown as AdminJobsService,
+  });
 
   // ─── 1. GET TESTS ───────────────────────────────────────────────────────────
 
@@ -152,7 +160,11 @@ async function runBlackboxSuite() {
     const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(1, res.status === 401 && json.ok === false && json.error.code === ErrorCode.UNAUTHENTICATED, "Returns 401 UNAUTHENTICATED");
+    assertCondition(
+      1,
+      res.status === 401 && json.ok === false && json.error.code === ErrorCode.UNAUTHENTICATED,
+      "Returns 401 UNAUTHENTICATED",
+    );
   }
 
   // Case 2: Untrusted foreign origin
@@ -172,7 +184,11 @@ async function runBlackboxSuite() {
     const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(2, res.status === 403 && json.ok === false && json.error.code === ErrorCode.FORBIDDEN, "Returns 403 FORBIDDEN for untrusted origin");
+    assertCondition(
+      2,
+      res.status === 403 && json.ok === false && json.error.code === ErrorCode.FORBIDDEN,
+      "Returns 403 FORBIDDEN for untrusted origin",
+    );
   }
 
   // Case 3: Invalid UUID parameter
@@ -191,7 +207,11 @@ async function runBlackboxSuite() {
     const res = await GET(req, { params: Promise.resolve({ id: invalidId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(3, res.status === 400 && json.ok === false && json.error.code === ErrorCode.VALIDATION, "Returns 400 VALIDATION with field errors");
+    assertCondition(
+      3,
+      res.status === 400 && json.ok === false && json.error.code === ErrorCode.VALIDATION,
+      "Returns 400 VALIDATION with field errors",
+    );
   }
 
   // Case 4: Non-existent job
@@ -209,7 +229,11 @@ async function runBlackboxSuite() {
     const res = await GET(req, { params: Promise.resolve({ id: nonExistentJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(4, res.status === 404 && json.ok === false && json.error.code === ErrorCode.NOT_FOUND, "Returns 404 NOT_FOUND");
+    assertCondition(
+      4,
+      res.status === 404 && json.ok === false && json.error.code === ErrorCode.NOT_FOUND,
+      "Returns 404 NOT_FOUND",
+    );
   }
 
   // Case 5: Happy path GET
@@ -229,7 +253,10 @@ async function runBlackboxSuite() {
     logResponse(res.status, json);
     assertCondition(
       5,
-      res.status === 200 && json.ok === true && json.data.job.id === validJobId && Boolean(res.headers.get("x-request-id")),
+      res.status === 200 &&
+        json.ok === true &&
+        json.data.job.id === validJobId &&
+        Boolean(res.headers.get("x-request-id")),
       "Returns 200 OK with job data and x-request-id header",
     );
   }
@@ -256,7 +283,11 @@ async function runBlackboxSuite() {
     const res = await PATCH(req, { params: Promise.resolve({ id: validJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(6, res.status === 400 && json.ok === false && json.error.code === ErrorCode.BAD_REQUEST, "Returns 400 BAD_REQUEST for broken JSON");
+    assertCondition(
+      6,
+      res.status === 400 && json.ok === false && json.error.code === ErrorCode.BAD_REQUEST,
+      "Returns 400 BAD_REQUEST for broken JSON",
+    );
   }
 
   // Case 7: Validation failure (salaryMin > salaryMax)
@@ -280,7 +311,11 @@ async function runBlackboxSuite() {
     const res = await PATCH(req, { params: Promise.resolve({ id: validJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(7, res.status === 400 && json.ok === false && json.error.code === ErrorCode.VALIDATION, "Returns 400 VALIDATION for invalid salary range");
+    assertCondition(
+      7,
+      res.status === 400 && json.ok === false && json.error.code === ErrorCode.VALIDATION,
+      "Returns 400 VALIDATION for invalid salary range",
+    );
   }
 
   // Case 8: Happy path PATCH
@@ -309,7 +344,10 @@ async function runBlackboxSuite() {
     logResponse(res.status, json);
     assertCondition(
       8,
-      res.status === 200 && json.ok === true && json.data.job.title === "Principal DevOps Architect" && json.data.job.versionId === 2,
+      res.status === 200 &&
+        json.ok === true &&
+        json.data.job.title === "Principal DevOps Architect" &&
+        json.data.job.versionId === 2,
       "Returns 200 OK with updated title and bumped versionId",
     );
   }
@@ -333,7 +371,11 @@ async function runBlackboxSuite() {
     const res = await DELETE(req, { params: Promise.resolve({ id: validJobId }) });
     const json = await res.json();
     logResponse(res.status, json);
-    assertCondition(9, res.status === 403 && json.ok === false && json.error.code === ErrorCode.FORBIDDEN, "Returns 403 FORBIDDEN for non-admin deletion");
+    assertCondition(
+      9,
+      res.status === 403 && json.ok === false && json.error.code === ErrorCode.FORBIDDEN,
+      "Returns 403 FORBIDDEN for non-admin deletion",
+    );
   }
 
   // Case 10: Happy path DELETE by admin
@@ -356,7 +398,10 @@ async function runBlackboxSuite() {
     logResponse(res.status, json);
     assertCondition(
       10,
-      res.status === 200 && json.ok === true && json.data.success === true && mockDbState[validJobId] === undefined,
+      res.status === 200 &&
+        json.ok === true &&
+        json.data.success === true &&
+        mockDbState[validJobId] === undefined,
       "Returns 200 OK with success: true and removes job from DB",
     );
   }

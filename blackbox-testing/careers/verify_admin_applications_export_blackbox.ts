@@ -49,7 +49,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: Content-Type=${headers.get("content-type")}, Content-Disposition=${headers.get("content-disposition")}, x-request-id=${headers.get("x-request-id")}`);
+  console.log(
+    `Headers: Content-Type=${headers.get("content-type")}, Content-Disposition=${headers.get("content-disposition")}, x-request-id=${headers.get("x-request-id")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -64,13 +66,15 @@ function assertTest(condition: boolean, caseNum: number, message: string) {
 }
 
 async function runBlackboxSuite() {
-  logSection("STARTING HARDCORE BLACK-BOX VERIFICATION: GET /api/admin/careers/applications/export");
+  logSection(
+    "STARTING HARDCORE BLACK-BOX VERIFICATION: GET /api/admin/careers/applications/export",
+  );
 
   resetRootContainer();
 
   const validJobId = "550e8400-e29b-41d4-a716-446655440000";
   const mockCsvContent =
-    'ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At\n' +
+    "ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At\n" +
     '"app-1","Sarah Connor","sarah@techsonance.co.in","+919876543210","interview","Lead DevOps Engineer","No","5","2026-11-06T12:00:00.000Z"\n' +
     '"app-2","John Doe","john@example.com","","new","Lead DevOps Engineer","Yes","","2026-11-06T14:30:00.000Z"';
 
@@ -102,8 +106,14 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: AdminAuthService, useValue: mockAuthService as unknown as AdminAuthService });
-  container.bind({ provide: ApplicationsService, useValue: mockApplicationsService as unknown as ApplicationsService });
+  container.bind({
+    provide: AdminAuthService,
+    useValue: mockAuthService as unknown as AdminAuthService,
+  });
+  container.bind({
+    provide: ApplicationsService,
+    useValue: mockApplicationsService as unknown as ApplicationsService,
+  });
 
   // Case 1: Unauthenticated request
   {
@@ -125,7 +135,11 @@ async function runBlackboxSuite() {
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 401 && json.ok === false && json.error?.code === ErrorCode.UNAUTHENTICATED, 1, "Returns 401 UNAUTHENTICATED");
+    assertTest(
+      res.status === 401 && json.ok === false && json.error?.code === ErrorCode.UNAUTHENTICATED,
+      1,
+      "Returns 401 UNAUTHENTICATED",
+    );
   }
 
   // Case 2: Untrusted foreign origin
@@ -149,12 +163,20 @@ async function runBlackboxSuite() {
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN, 2, "Returns 403 FORBIDDEN for untrusted origin");
+    assertTest(
+      res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN,
+      2,
+      "Returns 403 FORBIDDEN for untrusted origin",
+    );
   }
 
   // Case 3: Reject non-admin/owner role (recruiter)
   {
-    currentSession = { userId: "recruiter-uuid-2222", email: "recruiter@techsonance.co.in", role: "recruiter" };
+    currentSession = {
+      userId: "recruiter-uuid-2222",
+      email: "recruiter@techsonance.co.in",
+      role: "recruiter",
+    };
     logRequest({
       caseNum: 3,
       description: "Reject recruiter role with 403 FORBIDDEN (Admin/Owner required)",
@@ -172,7 +194,11 @@ async function runBlackboxSuite() {
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN, 3, "Returns 403 FORBIDDEN for non-admin role");
+    assertTest(
+      res.status === 403 && json.ok === false && json.error?.code === ErrorCode.FORBIDDEN,
+      3,
+      "Returns 403 FORBIDDEN for non-admin role",
+    );
   }
 
   // Case 4: Invalid UUID query parameter
@@ -187,15 +213,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=invalid-format`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=invalid-format`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 400 && json.ok === false && json.error?.code === ErrorCode.VALIDATION, 4, "Returns 400 VALIDATION with fieldErrors");
+    assertTest(
+      res.status === 400 && json.ok === false && json.error?.code === ErrorCode.VALIDATION,
+      4,
+      "Returns 400 VALIDATION with fieldErrors",
+    );
   }
 
   // Case 5: Happy path (Browser CSV file download)
@@ -241,17 +274,19 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=${validJobId}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=${validJobId}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
     const text = await res.text();
     logResponse(res.status, res.headers, { previewLines: text.split("\n").slice(0, 3) });
 
     assertTest(
-      res.status === 200 &&
-        Boolean(res.headers.get("content-disposition")?.includes(validJobId)),
+      res.status === 200 && Boolean(res.headers.get("content-disposition")?.includes(validJobId)),
       6,
       "Returns 200 OK with job-scoped filename in content-disposition",
     );
@@ -291,7 +326,11 @@ async function runBlackboxSuite() {
 
   // Case 8: Owner role access
   {
-    currentSession = { userId: "owner-uuid-0000", email: "founder@techsonance.co.in", role: "owner" };
+    currentSession = {
+      userId: "owner-uuid-0000",
+      email: "founder@techsonance.co.in",
+      role: "owner",
+    };
     logRequest({
       caseNum: 8,
       description: "Happy path: owner role can export candidate CSV",
@@ -324,15 +363,22 @@ async function runBlackboxSuite() {
       caller: currentSession,
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=${failJobId}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}?jobId=${failJobId}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 500 && json.ok === false && json.error?.code === ErrorCode.INTERNAL, 9, "Returns 500 INTERNAL on unexpected generation error");
+    assertTest(
+      res.status === 500 && json.ok === false && json.error?.code === ErrorCode.INTERNAL,
+      9,
+      "Returns 500 INTERNAL on unexpected generation error",
+    );
   }
 
   logSection("EXECUTION AUDIT SUMMARY");

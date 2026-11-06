@@ -70,12 +70,15 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
 
   describe("GET /api/admin/careers/jobs/[id]/versions", () => {
     it("1. Rejects foreign origin with 403 FORBIDDEN", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "GET",
-        headers: {
-          origin: "https://untrusted-site.com",
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "GET",
+          headers: {
+            origin: "https://untrusted-site.com",
+          },
         },
-      });
+      );
 
       const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(403);
@@ -89,7 +92,9 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     it("2. Rejects unauthenticated caller with 401 UNAUTHENTICATED", async () => {
       mockAuthService.getCurrentSession.mockResolvedValueOnce(null);
 
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`);
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+      );
       const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(401);
 
@@ -104,7 +109,9 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
         role: "guest",
       });
 
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`);
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+      );
       const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(403);
 
@@ -126,7 +133,9 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     });
 
     it("5. Successfully lists version snapshots with standard envelope and headers", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`);
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+      );
       const res = await GET(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(200);
 
@@ -146,14 +155,17 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
 
   describe("POST /api/admin/careers/jobs/[id]/versions", () => {
     it("6. Rejects foreign origin with 403 FORBIDDEN", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          origin: "https://unauthorized-domain.com",
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            origin: "https://unauthorized-domain.com",
+          },
+          body: JSON.stringify({ versionId: validVersionId }),
         },
-        body: JSON.stringify({ versionId: validVersionId }),
-      });
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(403);
@@ -166,11 +178,14 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     it("7. Rejects unauthenticated request with 401 UNAUTHENTICATED", async () => {
       mockAuthService.getCurrentSession.mockResolvedValueOnce(null);
 
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ versionId: validVersionId }),
-      });
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ versionId: validVersionId }),
+        },
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(401);
@@ -181,11 +196,14 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     });
 
     it("8. Rejects malformed JSON body with 400 BAD_REQUEST", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{ broken json string",
-      });
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{ broken json string",
+        },
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(400);
@@ -196,11 +214,14 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     });
 
     it("9. Rejects missing versionId with 400 VALIDATION", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        },
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(400);
@@ -216,11 +237,14 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
         new AppError(ErrorCode.NOT_FOUND, `Version "${validVersionId}" not found`),
       );
 
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ versionId: validVersionId }),
-      });
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ versionId: validVersionId }),
+        },
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(404);
@@ -231,14 +255,17 @@ describe("GET & POST /api/admin/careers/jobs/[id]/versions — End-to-End Black 
     });
 
     it("11. Successfully restores snapshot and returns envelope with restored job", async () => {
-      const req = new Request(`http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-forwarded-for": "103.22.45.10",
+      const req = new Request(
+        `http://localhost:3000/api/admin/careers/jobs/${validJobId}/versions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-forwarded-for": "103.22.45.10",
+          },
+          body: JSON.stringify({ versionId: validVersionId }),
         },
-        body: JSON.stringify({ versionId: validVersionId }),
-      });
+      );
 
       const res = await POST(req, { params: Promise.resolve({ id: validJobId }) });
       expect(res.status).toBe(200);

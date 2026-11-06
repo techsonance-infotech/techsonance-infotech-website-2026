@@ -114,5 +114,3 @@ export const exportApplicationsContract = defineContract({
   response: exportApplicationsResponseSchema,
   status: 200,
 });
-
-

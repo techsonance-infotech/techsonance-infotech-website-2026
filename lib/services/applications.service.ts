@@ -263,7 +263,9 @@ export class ApplicationsService {
           logger.warn("Failed to archive CSV export to storage bucket", { error: error.message });
         }
       } catch (uploadErr) {
-        logger.warn("Exception uploading CSV export to storage bucket", { error: String(uploadErr) });
+        logger.warn("Exception uploading CSV export to storage bucket", {
+          error: String(uploadErr),
+        });
       }
     }
 

@@ -12,7 +12,7 @@ describe("GET /api/admin/careers/applications/export — End-to-End Black Box Te
 
   const validJobId = "550e8400-e29b-41d4-a716-446655440000";
   const mockCsvContent =
-    'ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At\n' +
+    "ID,Candidate Name,Email,Phone,Status,Job Title,Knockout Triggered,Rating,Created At\n" +
     '"app-1","Sarah Connor","sarah@techsonance.co.in","+919876543210","interview","Lead DevOps Engineer","No","5","2026-11-06T12:00:00.000Z"\n' +
     '"app-2","John Doe","john@example.com","","new","Lead DevOps Engineer","Yes","","2026-11-06T14:30:00.000Z"';
 
@@ -98,9 +98,12 @@ describe("GET /api/admin/careers/applications/export — End-to-End Black Box Te
   });
 
   it("4. Rejects invalid non-UUID jobId query parameter with 400 VALIDATION", async () => {
-    const req = new Request("http://localhost:3000/api/admin/careers/applications/export?jobId=not-a-uuid", {
-      method: "GET",
-    });
+    const req = new Request(
+      "http://localhost:3000/api/admin/careers/applications/export?jobId=not-a-uuid",
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
     const json = await res.json();
@@ -122,13 +125,20 @@ describe("GET /api/admin/careers/applications/export — End-to-End Black Box Te
 
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("text/csv; charset=utf-8");
-    expect(res.headers.get("Content-Disposition")).toContain('attachment; filename="applications-all-2026-11-06.csv"');
+    expect(res.headers.get("Content-Disposition")).toContain(
+      'attachment; filename="applications-all-2026-11-06.csv"',
+    );
     expect(res.headers.get("x-export-row-count")).toBe("2");
-    expect(res.headers.get("x-export-storage-path")).toBe("exports/applications-all-2026-11-06.csv");
+    expect(res.headers.get("x-export-storage-path")).toBe(
+      "exports/applications-all-2026-11-06.csv",
+    );
     expect(res.headers.get("Cache-Control")).toBe("no-store, private");
     expect(text).toContain("Sarah Connor");
     expect(text).toContain("john@example.com");
-    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(undefined, "admin-uuid-1111");
+    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(
+      undefined,
+      "admin-uuid-1111",
+    );
   });
 
   it("6. Happy path: filters by jobId and generates scoped filename", async () => {
@@ -139,15 +149,23 @@ describe("GET /api/admin/careers/applications/export — End-to-End Black Box Te
       storagePath: `exports/applications-${validJobId}-2026-11-06.csv`,
     });
 
-    const req = new Request(`http://localhost:3000/api/admin/careers/applications/export?jobId=${validJobId}`, {
-      method: "GET",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/careers/applications/export?jobId=${validJobId}`,
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
 
     expect(res.status).toBe(200);
-    expect(res.headers.get("Content-Disposition")).toContain(`attachment; filename="applications-${validJobId}-2026-11-06.csv"`);
-    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(validJobId, "admin-uuid-1111");
+    expect(res.headers.get("Content-Disposition")).toContain(
+      `attachment; filename="applications-${validJobId}-2026-11-06.csv"`,
+    );
+    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(
+      validJobId,
+      "admin-uuid-1111",
+    );
   });
 
   it("7. Happy path: returns JSON envelope when Accept: application/json requested", async () => {
@@ -182,7 +200,10 @@ describe("GET /api/admin/careers/applications/export — End-to-End Black Box Te
 
     const res = await GET(req);
     expect(res.status).toBe(200);
-    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(undefined, "owner-uuid-0000");
+    expect(mockApplicationsService.generateApplicationsCsv).toHaveBeenCalledWith(
+      undefined,
+      "owner-uuid-0000",
+    );
   });
 
   it("9. Returns 500 INTERNAL when unexpected service error occurs", async () => {
