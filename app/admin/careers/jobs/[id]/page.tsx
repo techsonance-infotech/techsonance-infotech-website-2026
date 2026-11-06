@@ -16,6 +16,7 @@ import {
   History,
   CheckCheck,
   Undo2,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +57,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
   const [approvalMode, setApprovalMode] = useState<"approve" | "return">("approve");
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [duplicating, setDuplicating] = useState(false);
 
   // Fetch existing job if not "new"
   const fetchJob = useCallback(async () => {
@@ -153,6 +155,50 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       setAlertMessage({ type: "error", text: "Network error saving position." });
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Duplicate role action
+  const handleDuplicate = async (sourceData?: JobFormData) => {
+    const dataToClone = sourceData || jobData;
+    try {
+      setDuplicating(true);
+      const randomSuffix = Math.random().toString(36).substring(2, 6);
+      const duplicateData: Partial<JobFormData> = {
+        ...dataToClone,
+        title: `${dataToClone.title || "Position"} (Copy)`,
+        slug: `${(dataToClone.slug || "job").replace(/-copy-[a-z0-9]+$/, "")}-copy-${randomSuffix}`,
+        status: "DRAFT",
+      };
+      delete duplicateData.id;
+      delete (duplicateData as any).versionId;
+      delete (duplicateData as any).createdAt;
+      delete (duplicateData as any).updatedAt;
+      delete (duplicateData as any).approvalComment;
+      delete (duplicateData as any).approvedAt;
+      delete (duplicateData as any).approvedBy;
+
+      const res = await fetch("/api/admin/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(duplicateData),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok && data.job) {
+        setAlertMessage({ type: "success", text: "Role duplicated as new draft!" });
+        router.push(`/admin/careers/jobs/${data.job.id}`);
+      } else {
+        const msg =
+          typeof data.error === "string"
+            ? data.error
+            : data.error?.message || "Failed to duplicate role";
+        setAlertMessage({ type: "error", text: msg });
+      }
+    } catch (err: unknown) {
+      console.error("Duplicate role error:", err);
+      setAlertMessage({ type: "error", text: "Network error duplicating role." });
+    } finally {
+      setDuplicating(false);
     }
   };
 
@@ -333,16 +379,29 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         {/* Action Header Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
           {!isNew && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setVersionHistoryOpen(true)}
-              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
-            >
-              <History className="w-4 h-4 text-slate-500" />
-              <span>History</span>
-            </Button>
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setVersionHistoryOpen(true)}
+                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+              >
+                <History className="w-4 h-4 text-slate-500" />
+                <span>History</span>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleDuplicate()}
+                disabled={duplicating || saving}
+                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+              >
+                <Copy className="w-4 h-4 text-slate-500" />
+                <span>{duplicating ? "Duplicating…" : "Duplicate"}</span>
+              </Button>
+            </>
           )}
 
           {!isNew && jobData.status === "IN_REVIEW" && (
@@ -450,7 +509,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         onSave={handleSave}
         onSubmitForReview={handleSubmitForReview}
         onPublish={handlePublish}
+        onDuplicate={handleDuplicate}
         isSaving={saving}
+        isDuplicating={duplicating}
         saveStatus={saveStatus}
         lastSavedAt={lastSavedAt}
         hasBlockingError={Boolean(alertMessage && alertMessage.type === "error")}

@@ -23,6 +23,7 @@ import {
   Shield,
   Layers,
   Save,
+  Copy,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +43,8 @@ import {
 import { StructuredListInput } from "./StructuredListInput";
 import { JobReviewSummary } from "./JobReviewSummary";
 import { FormSelect } from "./FormSelect";
+import { JobQualityWidget } from "./JobQualityWidget";
+import type { DetectedIssue } from "@/lib/utils/job-quality-assistant";
 import type { ScreeningQuestion } from "@/lib/validations/careers";
 
 export interface JobFormData extends JobCompletenessState {
@@ -150,7 +153,9 @@ interface JobEditorFormProps {
   onSave?: (jobData: JobFormData) => Promise<void> | void;
   onSubmitForReview?: (jobData: JobFormData) => Promise<void> | void;
   onPublish?: (jobData: JobFormData) => Promise<void> | void;
+  onDuplicate?: (jobData: JobFormData) => Promise<void> | void;
   isSaving?: boolean;
+  isDuplicating?: boolean;
   saveStatus?: "idle" | "saving" | "saved" | "error";
   lastSavedAt?: Date | null;
   className?: string;
@@ -165,7 +170,9 @@ export function JobEditorForm({
   onSave,
   onSubmitForReview,
   onPublish,
+  onDuplicate,
   isSaving = false,
+  isDuplicating = false,
   saveStatus = "idle",
   lastSavedAt,
   className = "",
@@ -234,6 +241,28 @@ export function JobEditorForm({
   const [activeTab, setActiveTab] = useState<
     "basics" | "location" | "content" | "compensation" | "application" | "review"
   >("basics");
+
+  const handleApplyQualityFix = (issue: DetectedIssue) => {
+    const regex = new RegExp(`\\b${issue.word}\\b`, "gi");
+    if (issue.field === "description") {
+      const current = getValues("description") || "";
+      setValue("description", current.replace(regex, issue.suggestion), { shouldDirty: true });
+    } else if (issue.field === "summary") {
+      const current = getValues("summary") || "";
+      setValue("summary", current.replace(regex, issue.suggestion), { shouldDirty: true });
+    } else if (issue.field === "title") {
+      const current = getValues("title") || "";
+      updateField("title", current.replace(regex, issue.suggestion));
+    } else if (issue.field === "responsibilities") {
+      const current = getValues("responsibilities") || [];
+      const updated = current.map((r) => r.replace(regex, issue.suggestion));
+      setValue("responsibilities", updated, { shouldDirty: true });
+    } else if (issue.field === "requirements") {
+      const current = getValues("requirements") || [];
+      const updated = current.map((r) => r.replace(regex, issue.suggestion));
+      setValue("requirements", updated, { shouldDirty: true });
+    }
+  };
 
   // Temporary input buffers for tag / list additions
   const [newResp, setNewResp] = useState("");
@@ -627,6 +656,21 @@ export function JobEditorForm({
             )}
           </div>
 
+          {!isNew && onDuplicate && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onDuplicate(getValues())}
+              disabled={isSaving || isDuplicating}
+              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer h-8"
+              title="Clone this role into a new draft"
+            >
+              <Copy className="w-3.5 h-3.5 text-slate-500" />
+              <span>{isDuplicating ? "Duplicating…" : "Duplicate"}</span>
+            </Button>
+          )}
+
           <Button
             type="button"
             variant="outline"
@@ -715,7 +759,7 @@ export function JobEditorForm({
             <div className="space-y-3.5 animate-in fade-in duration-200">
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
-                  Role Identity & Overview
+                  Role Identity &amp; Overview
                 </h3>
                 <p className="text-[11px] text-slate-500 mt-0.5">
                   General role parameters, organizational unit, and card preview summary.
@@ -879,9 +923,30 @@ export function JobEditorForm({
                   onChange={(e) => updateField("location", e.target.value)}
                   className="rounded-xl text-xs font-medium"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  Specify a single primary city hub or 'Remote'. Multiple locations must be posted
-                  as separate roles.
+                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Quick hubs:</span>
+                  {["Bhubaneswar, India", "Bengaluru, India", "Hyderabad, India", "Pune, India", "Remote"].map((hub) => (
+                    <button
+                      key={hub}
+                      type="button"
+                      onClick={() => {
+                        updateField("location", hub);
+                        if (hub === "Remote") {
+                          updateField("workMode", "remote");
+                        }
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer border ${
+                        job.location === hub
+                          ? "bg-[#1155CC] text-white border-[#1155CC]"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                      }`}
+                    >
+                      {hub}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1.5">
+                  Specify a primary city hub or choose 'Remote'.
                 </p>
               </div>
 
@@ -955,6 +1020,19 @@ export function JobEditorForm({
                   <option value="Executive">Executive / Director</option>
                 </FormSelect>
               </div>
+
+              {/* Role Quality & Inclusive Language Assistant */}
+              <JobQualityWidget
+                data={{
+                  title: job.title,
+                  summary: job.summary,
+                  description: job.description,
+                  responsibilities: job.responsibilities,
+                  requirements: job.requirements,
+                  showSalaryPublicly: job.showSalaryPublicly,
+                }}
+                onApplyFix={handleApplyQualityFix}
+              />
 
               {/* Description Markdown */}
               <div>
