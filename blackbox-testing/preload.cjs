@@ -14,18 +14,20 @@ Module._resolveFilename = function (request, parent, isMain, options) {
     const subPath = request.slice(2);
     const resolvedPath = path.resolve(projectRoot, subPath);
     const candidates = [
-      resolvedPath,
       resolvedPath + ".ts",
       resolvedPath + ".tsx",
       resolvedPath + ".js",
+      path.join(resolvedPath, "route.ts"),
       path.join(resolvedPath, "index.ts"),
       path.join(resolvedPath, "index.tsx"),
-      path.join(resolvedPath, "route.ts"),
+      resolvedPath,
     ];
     for (const cand of candidates) {
-      if (fs.existsSync(cand)) {
-        return cand;
-      }
+      try {
+        if (fs.existsSync(cand) && fs.statSync(cand).isFile()) {
+          return cand;
+        }
+      } catch {}
     }
     return resolvedPath;
   }

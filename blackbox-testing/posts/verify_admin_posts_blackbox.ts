@@ -11,6 +11,7 @@
  * 5. Deterministic exit codes and zero residual test pollution.
  */
 
+import "../preload.cjs";
 import { GET, POST } from "@/app/api/admin/posts/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";

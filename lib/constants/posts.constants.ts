@@ -8,12 +8,18 @@ export const POST_ERRORS = {
   UNAUTHORIZED: "Unauthorized access. Please log in as an administrator.",
   FORBIDDEN_ORIGIN: "Forbidden origin: request rejected.",
   FORBIDDEN_ROLE: "Forbidden: your account does not have permission to create or edit posts.",
+  FORBIDDEN_DELETE: "Forbidden: editor or higher required to delete posts.",
   NOT_FOUND: "The requested post could not be found.",
   SLUG_EXISTS: "A post with this slug already exists.",
   VALIDATION_FAILED: "Post validation failed. Please check your inputs.",
+  INVALID_ID: "Invalid post ID format. Expected a valid UUID.",
   FAILED_LIST_POSTS: "Failed to list posts due to an internal server error.",
+  FAILED_GET_POST: "Failed to fetch post due to an internal server error.",
   FAILED_CREATE_POST: "Failed to create post due to an internal server error.",
+  FAILED_UPDATE_POST: "Failed to update post due to an internal server error.",
+  FAILED_DELETE_POST: "Failed to delete post due to an internal server error.",
   SITE_REQUIRED: "Site ID is required to create a post.",
+  POST_DELETED_SUCCESS: "Post deleted successfully",
 } as const;
 
 export const POST_LIMITS = {

@@ -47,6 +47,48 @@ export const singleAdminPostResponseSchema = z.object({
   post: z.any(),
 });
 
+export const adminPostParamsSchema = z.strictObject({
+  id: z.string().uuid("Invalid post ID format. Expected a valid UUID."),
+});
+
+export type AdminPostParams = z.input<typeof adminPostParamsSchema>;
+
+export const updateAdminPostSchema = z.strictObject({
+  slug: z
+    .string()
+    .trim()
+    .min(POST_LIMITS.SLUG_MIN, `Slug must be at least ${POST_LIMITS.SLUG_MIN} characters`)
+    .max(POST_LIMITS.SLUG_MAX, `Slug cannot exceed ${POST_LIMITS.SLUG_MAX} characters`)
+    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens")
+    .optional(),
+  title: z
+    .string()
+    .trim()
+    .min(POST_LIMITS.TITLE_MIN, `Title must be at least ${POST_LIMITS.TITLE_MIN} characters`)
+    .max(POST_LIMITS.TITLE_MAX, `Title cannot exceed ${POST_LIMITS.TITLE_MAX} characters`)
+    .optional(),
+  excerpt: z.string().trim().max(POST_LIMITS.EXCERPT_MAX).optional(),
+  content: z
+    .string()
+    .min(POST_LIMITS.CONTENT_MIN, `Content must be at least ${POST_LIMITS.CONTENT_MIN} characters`)
+    .optional(),
+  categoryId: z.string().uuid().optional().nullable(),
+  heroImage: z.string().url().optional().or(z.literal("")),
+  tags: z
+    .array(z.string().trim().max(POST_LIMITS.TAG_MAX))
+    .max(POST_LIMITS.TAGS_MAX_COUNT)
+    .optional(),
+  readTime: z.string().trim().max(POST_LIMITS.READ_TIME_MAX).optional(),
+  status: z.nativeEnum(PostStatus).optional(),
+});
+
+export type UpdateAdminPostInput = z.input<typeof updateAdminPostSchema>;
+
+export const deleteAdminPostResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+});
+
 export const listAdminPostsContract = defineContract({
   method: "GET",
   path: API_ENDPOINTS.ADMIN.POSTS,
@@ -67,4 +109,37 @@ export const createAdminPostContract = defineContract({
   body: createAdminPostSchema,
   response: singleAdminPostResponseSchema,
   status: 201,
+});
+
+export const getAdminPostContract = defineContract({
+  method: "GET",
+  path: API_ENDPOINTS.ADMIN.POST(":id"),
+  auth: "required",
+  params: adminPostParamsSchema,
+  query: noQuery,
+  body: z.undefined(),
+  response: singleAdminPostResponseSchema,
+  status: 200,
+});
+
+export const updateAdminPostContract = defineContract({
+  method: "PATCH",
+  path: API_ENDPOINTS.ADMIN.POST(":id"),
+  auth: "required",
+  params: adminPostParamsSchema,
+  query: noQuery,
+  body: updateAdminPostSchema,
+  response: singleAdminPostResponseSchema,
+  status: 200,
+});
+
+export const deleteAdminPostContract = defineContract({
+  method: "DELETE",
+  path: API_ENDPOINTS.ADMIN.POST(":id"),
+  auth: "required",
+  params: adminPostParamsSchema,
+  query: noQuery,
+  body: z.undefined(),
+  response: deleteAdminPostResponseSchema,
+  status: 200,
 });

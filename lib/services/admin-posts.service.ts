@@ -98,6 +98,18 @@ export class AdminPostsService {
       throw new AppError(ErrorCode.NOT_FOUND, `Post with id "${id}" not found`);
     }
 
+    if (updates.slug && updates.slug.trim() !== existing.slug) {
+      const slugCandidate = updates.slug.trim();
+      const slugConflict = await this.postsRepo.findPostBySlug(slugCandidate);
+      if (slugConflict && slugConflict.id !== id) {
+        throw new AppError(
+          ErrorCode.CONFLICT,
+          `A post with slug "${slugCandidate}" already exists`,
+          { fieldErrors: { slug: ["Slug is already taken"] } },
+        );
+      }
+    }
+
     const nextVersionId = (existing.versionId || 1) + 1;
     const finalUpdates = {
       ...updates,
