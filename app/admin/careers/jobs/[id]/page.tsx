@@ -124,7 +124,10 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           setLastSavedAt(new Date());
           setJobData(data.job);
           setAlertMessage({ type: "success", text: "Draft changes saved." });
-          setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
+          setTimeout(
+            () => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)),
+            4000,
+          );
         } else {
           setSaveStatus("error");
           const msg =

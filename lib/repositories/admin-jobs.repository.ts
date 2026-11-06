@@ -173,7 +173,8 @@ export class AdminJobsRepository {
       };
 
       const resolvedActorId = (await this.resolveValidUserId(auditData?.actorId)) ?? undefined;
-      const resolvedChangedBy = (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
+      const resolvedChangedBy =
+        (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
 
       return await withTransaction(
         async (tx) => {
@@ -229,7 +230,8 @@ export class AdminJobsRepository {
       }
 
       const resolvedActorId = (await this.resolveValidUserId(auditData?.actorId)) ?? undefined;
-      const resolvedChangedBy = (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
+      const resolvedChangedBy =
+        (await this.resolveValidUserId(versionData?.changedBy)) ?? undefined;
 
       return await withTransaction(
         async (tx) => {

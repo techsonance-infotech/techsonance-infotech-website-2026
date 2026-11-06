@@ -301,11 +301,7 @@ export function CompletenessChecklist({
   const passedOptionalCount = optionalItems.filter((i) => i.passed && !i.error).length;
 
   const isPublishDisabled =
-    !evalResult.isComplete ||
-    isSaving ||
-    saveStatus === "saving" ||
-    isDirty ||
-    hasBlockingError;
+    !evalResult.isComplete || isSaving || saveStatus === "saving" || isDirty || hasBlockingError;
 
   return (
     <div

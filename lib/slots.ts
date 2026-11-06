@@ -27,7 +27,8 @@ export function generateAvailableSlots(fromTimestamp = Date.now(), daysAhead?: n
   const istOffsetMs = 5.5 * 60 * 60 * 1000;
   const minNoticeMs = cfg.minNoticeHours * 60 * 60 * 1000;
   const earliestAllowedTime = fromTimestamp + minNoticeMs;
-  const maxDays = daysAhead !== undefined && daysAhead > 0 ? Math.min(daysAhead, 30) : cfg.maxDaysAhead;
+  const maxDays =
+    daysAhead !== undefined && daysAhead > 0 ? Math.min(daysAhead, 30) : cfg.maxDaysAhead;
 
   for (let d = 0; d < maxDays; d++) {
     // Target date in IST

@@ -56,25 +56,21 @@ export function mapDbError(error: unknown, _context?: DbErrorContext): AppError 
     } else if (constraint.includes("site_id")) {
       message = "The workspace site configuration could not be verified in the database.";
     } else if (constraint.includes("job_id") || constraint.includes("application")) {
-      message = "Cannot delete or alter this role because candidate applications are currently attached.";
+      message =
+        "Cannot delete or alter this role because candidate applications are currently attached.";
     }
     return new AppError(ErrorCode.CONFLICT, message, {
       cause: error,
     });
   }
-  if (code === "42501")
-    return new AppError(ErrorCode.FORBIDDEN, "Not allowed", { cause: error });
+  if (code === "42501") return new AppError(ErrorCode.FORBIDDEN, "Not allowed", { cause: error });
   if (code === "23514" || code.startsWith("22"))
     return new AppError(ErrorCode.VALIDATION, "Invalid value", { cause: error });
   if (UNAVAILABLE.has(code) || code.startsWith("08") || code.startsWith("53")) {
-    return new AppError(
-      ErrorCode.UNAVAILABLE,
-      "Service temporarily unavailable. Please retry.",
-      {
-        retryAfterSec: 2,
-        cause: error,
-      },
-    );
+    return new AppError(ErrorCode.UNAVAILABLE, "Service temporarily unavailable. Please retry.", {
+      retryAfterSec: 2,
+      cause: error,
+    });
   }
   return new AppError(ErrorCode.INTERNAL, "Something went wrong", { cause: error });
 }

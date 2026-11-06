@@ -34,13 +34,15 @@ async function execute<I extends z.ZodType, O extends z.ZodType, U>(
     }
     const data = await def.handler({ input: input.data, user, requestId }); // 3. authorise + act + invalidate
     const out = def.output.safeParse(data); // 4. parse output (strips extra columns)
-    if (!out.success) throw new AppError(ErrorCode.INTERNAL, "Response drift", { cause: out.error });
+    if (!out.success)
+      throw new AppError(ErrorCode.INTERNAL, "Response drift", { cause: out.error });
     return ok(out.data);
   } catch (e) {
     unstable_rethrow(e); // never swallow redirect/notFound
     const err = mapDbError(e); // AppError passes through; driver errors are classified
     if (err.code === ErrorCode.INTERNAL) logger.error("action failed", { requestId, cause: e });
-    else if (err.code === ErrorCode.UNAVAILABLE) logger.warn("action unavailable", { requestId, cause: e });
+    else if (err.code === ErrorCode.UNAVAILABLE)
+      logger.warn("action unavailable", { requestId, cause: e });
     return fail({
       code: err.code,
       message: err.code === ErrorCode.INTERNAL ? "Something went wrong" : err.message,

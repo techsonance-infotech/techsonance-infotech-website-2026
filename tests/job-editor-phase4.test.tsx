@@ -60,7 +60,8 @@ describe("Phase 4: Job Quality & Language Assistant", () => {
       <JobQualityWidget
         data={{
           title: "Staff Systems Engineer",
-          description: "Full position overview description here that exceeds forty words and provides clear team context for all prospective candidates.",
+          description:
+            "Full position overview description here that exceeds forty words and provides clear team context for all prospective candidates.",
           responsibilities: ["Lead system architecture", "Mentor teammates", "Design APIs"],
           requirements: ["5+ years experience", "Next.js proficiency"],
           showSalaryPublicly: true,

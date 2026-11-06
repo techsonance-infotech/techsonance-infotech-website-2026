@@ -134,7 +134,9 @@ export function handleRoute<
       // 7. Parse Response
       const responseParsed = contract.response.safeParse(data);
       if (!responseParsed.success) {
-        throw new AppError(ErrorCode.INTERNAL, "Response schema drift", { cause: responseParsed.error });
+        throw new AppError(ErrorCode.INTERNAL, "Response schema drift", {
+          cause: responseParsed.error,
+        });
       }
 
       return NextResponse.json(

@@ -40,18 +40,14 @@ describe("Phase 3: FormSelect Design-System Component", () => {
 
     expect(html).toContain("border-rose-500");
     expect(html).toContain("Please choose a valid authorization type");
-    expect(html).toContain("aria-invalid=\"true\"");
+    expect(html).toContain('aria-invalid="true"');
   });
 });
 
 describe("Phase 3: JobEditorForm Quality, Accessibility & Step Badges", () => {
   it("renders compact admin layout with 6 wizard tabs and save draft buttons", () => {
     const html = renderToString(
-      <JobEditorForm
-        initialJob={DEFAULT_JOB_FORM}
-        onSave={() => {}}
-        isNew={false}
-      />,
+      <JobEditorForm initialJob={DEFAULT_JOB_FORM} onSave={() => {}} isNew={false} />,
     );
 
     // Header controls
@@ -59,7 +55,7 @@ describe("Phase 3: JobEditorForm Quality, Accessibility & Step Badges", () => {
     expect(html).toContain("Publish Role Now");
 
     // All 6 tabs with accessible roles
-    expect(html).toContain("role=\"tablist\"");
+    expect(html).toContain('role="tablist"');
     expect(html).toContain("1. Basics");
     expect(html).toContain("2. Location &amp; Mode");
     expect(html).toContain("3. Content");
@@ -68,7 +64,9 @@ describe("Phase 3: JobEditorForm Quality, Accessibility & Step Badges", () => {
     expect(html).toContain("6. Review &amp; Publish");
 
     // Step requirement notice
-    expect(html).toContain("Job Title and Department are mandatory fields in this step to publish.");
+    expect(html).toContain(
+      "Job Title and Department are mandatory fields in this step to publish.",
+    );
   });
 
   it("evaluates completeness and flags missing mandatory requirements accurately", () => {

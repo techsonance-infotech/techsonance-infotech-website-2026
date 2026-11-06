@@ -50,7 +50,9 @@ export class AdminJobsService {
           ? data.ownerId.trim()
           : undefined,
       hiringManagerId:
-        data.hiringManagerId && typeof data.hiringManagerId === "string" && data.hiringManagerId.trim()
+        data.hiringManagerId &&
+        typeof data.hiringManagerId === "string" &&
+        data.hiringManagerId.trim()
           ? data.hiringManagerId.trim()
           : undefined,
     };
@@ -100,7 +102,9 @@ export class AdminJobsService {
           : undefined,
       hiringManagerId:
         updates.hiringManagerId !== undefined
-          ? updates.hiringManagerId && typeof updates.hiringManagerId === "string" && updates.hiringManagerId.trim()
+          ? updates.hiringManagerId &&
+            typeof updates.hiringManagerId === "string" &&
+            updates.hiringManagerId.trim()
             ? updates.hiringManagerId.trim()
             : null
           : undefined,
@@ -452,7 +456,10 @@ export class AdminJobsService {
     const versions = await this.listVersions(jobId);
     const targetVersion = versions.find((v) => v.id === versionId);
     if (!targetVersion || !targetVersion.snapshot) {
-      throw new AppError(ErrorCode.NOT_FOUND, `Version "${versionId}" not found for job "${jobId}"`);
+      throw new AppError(
+        ErrorCode.NOT_FOUND,
+        `Version "${versionId}" not found for job "${jobId}"`,
+      );
     }
 
     const snapshot = targetVersion.snapshot as Record<string, unknown>;

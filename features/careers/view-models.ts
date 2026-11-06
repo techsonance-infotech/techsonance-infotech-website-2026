@@ -7,7 +7,9 @@ export type CareerApplicationViewModel = {
   trackingMessage: string;
 };
 
-export function toCareerApplicationViewModel(dto: CareerApplyResponseDto): CareerApplicationViewModel {
+export function toCareerApplicationViewModel(
+  dto: CareerApplyResponseDto,
+): CareerApplicationViewModel {
   return {
     applicationId: dto.applicationId,
     status: dto.status,

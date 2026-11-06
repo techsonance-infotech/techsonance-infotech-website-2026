@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET as listApplications } from "@/app/api/admin/careers/applications/route";
-import { GET as getApplication, PATCH as patchApplication } from "@/app/api/admin/careers/applications/[id]/route";
+import {
+  GET as getApplication,
+  PATCH as patchApplication,
+} from "@/app/api/admin/careers/applications/[id]/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { ApplicationsService } from "@/lib/services/applications.service";
@@ -46,20 +49,24 @@ describe("Admin Careers Applications — End-to-End Black Box Tests", () => {
         if (id === sampleApplication.id) return Promise.resolve(sampleApplication);
         return Promise.resolve(null);
       }),
-      updateStage: vi.fn().mockImplementation((id: string, stage: ApplicationStatus, reason?: string) => {
-        return Promise.resolve({
-          ...sampleApplication,
-          status: stage,
-          rejectionReason: reason,
-        });
-      }),
-      updateNotesAndRating: vi.fn().mockImplementation((id: string, notes?: string, rating?: number) => {
-        return Promise.resolve({
-          ...sampleApplication,
-          internalNotes: notes ?? sampleApplication.internalNotes,
-          rating: rating ?? sampleApplication.rating,
-        });
-      }),
+      updateStage: vi
+        .fn()
+        .mockImplementation((id: string, stage: ApplicationStatus, reason?: string) => {
+          return Promise.resolve({
+            ...sampleApplication,
+            status: stage,
+            rejectionReason: reason,
+          });
+        }),
+      updateNotesAndRating: vi
+        .fn()
+        .mockImplementation((id: string, notes?: string, rating?: number) => {
+          return Promise.resolve({
+            ...sampleApplication,
+            internalNotes: notes ?? sampleApplication.internalNotes,
+            rating: rating ?? sampleApplication.rating,
+          });
+        }),
     };
 
     const container = getContainer();
@@ -226,7 +233,9 @@ describe("Admin Careers Applications — End-to-End Black Box Tests", () => {
     const json = await res.json();
     expect(json.ok).toBe(true);
     expect(json.data.application.rating).toBe(5);
-    expect(json.data.application.internalNotes).toBe("Passed technical interview with flying colors.");
+    expect(json.data.application.internalNotes).toBe(
+      "Passed technical interview with flying colors.",
+    );
   });
 
   it("9. PATCH /api/admin/careers/applications/[id] rejects rating > 5 with 400 VALIDATION", async () => {

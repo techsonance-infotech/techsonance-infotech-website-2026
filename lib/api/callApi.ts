@@ -22,10 +22,7 @@ export async function callApi<
   Q extends z.ZodObject<z.ZodRawShape>,
   B extends z.ZodType,
   R extends z.ZodType,
->(
-  contract: Contract<P, Q, B, R>,
-  input?: CallApiInput<P, Q, B>,
-): Promise<Result<z.output<R>>> {
+>(contract: Contract<P, Q, B, R>, input?: CallApiInput<P, Q, B>): Promise<Result<z.output<R>>> {
   try {
     let resolvedPath: string = contract.path;
 

@@ -4,7 +4,9 @@ import { SLOTS_MAX_DAYS_AHEAD } from "@/lib/constants/booking.constants";
 export const slotSchema = z.strictObject({
   id: z.string().min(1).max(100),
   iso: z.string().min(1).max(100),
-  dateIST: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: "Invalid IST date format (YYYY-MM-DD)" }),
+  dateIST: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { error: "Invalid IST date format (YYYY-MM-DD)" }),
   startIST: z.string().min(1).max(20),
   endIST: z.string().min(1).max(20),
   dayOfWeek: z.string().min(1).max(20),

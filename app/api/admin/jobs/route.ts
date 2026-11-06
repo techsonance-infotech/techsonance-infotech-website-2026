@@ -249,7 +249,10 @@ export async function POST(req: Request) {
         { status: STATUS_BY_CODE[error.code] || 400, headers },
       );
     }
-    logger.error(`[API Admin Jobs] Create job error: ${String(error)}`, { requestId, cause: error });
+    logger.error(`[API Admin Jobs] Create job error: ${String(error)}`, {
+      requestId,
+      cause: error,
+    });
     return NextResponse.json(
       {
         ok: false,

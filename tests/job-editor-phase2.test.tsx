@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { splitPastedItems, StructuredListInput } from "@/components/admin/careers/StructuredListInput";
+import {
+  splitPastedItems,
+  StructuredListInput,
+} from "@/components/admin/careers/StructuredListInput";
 import { JobReviewSummary } from "@/components/admin/careers/JobReviewSummary";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { DEFAULT_JOB_FORM, type JobFormData } from "@/components/admin/careers/JobEditorForm";
@@ -38,12 +41,7 @@ describe("Phase 2 — Structured List Input & Paste Parsing", () => {
   it("renders StructuredListInput with items and item count badge", () => {
     const items = ["Item Alpha", "Item Beta", "Item Gamma"];
     const html = renderToString(
-      <StructuredListInput
-        label="Key Deliverables"
-        items={items}
-        onChange={() => {}}
-        required
-      />,
+      <StructuredListInput label="Key Deliverables" items={items} onChange={() => {}} required />,
     );
 
     expect(html).toContain("Key Deliverables");
@@ -61,9 +59,11 @@ describe("Phase 2 — Review & Publish Step Summaries & SERP Preview", () => {
     department: "Engineering",
     location: "Bhubaneswar, India",
     workMode: "hybrid",
-    summary: "Lead our enterprise cloud modernization practice across high-concurrency microservices.",
+    summary:
+      "Lead our enterprise cloud modernization practice across high-concurrency microservices.",
     seoTitle: "Lead Cloud Infrastructure Architect Careers | TechSonance",
-    seoDescription: "Join TechSonance Infotech as Lead Cloud Architect. Competitive salary and remote flexibility.",
+    seoDescription:
+      "Join TechSonance Infotech as Lead Cloud Architect. Competitive salary and remote flexibility.",
     salaryMin: 1500000,
     salaryMax: 2200000,
     salaryCurrency: "INR",
@@ -72,11 +72,7 @@ describe("Phase 2 — Review & Publish Step Summaries & SERP Preview", () => {
 
   it("renders 5 step verification cards and Google SERP preview", () => {
     const html = renderToString(
-      <JobReviewSummary
-        job={mockJob}
-        onNavigateToTab={() => {}}
-        updateField={() => {}}
-      />,
+      <JobReviewSummary job={mockJob} onNavigateToTab={() => {}} updateField={() => {}} />,
     );
 
     // Step verification cards

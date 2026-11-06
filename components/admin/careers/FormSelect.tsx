@@ -4,8 +4,7 @@ import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface FormSelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface FormSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   helperText?: string;
@@ -14,16 +13,7 @@ export interface FormSelectProps
 
 export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
   (
-    {
-      label,
-      error,
-      helperText,
-      required,
-      className,
-      children,
-      id,
-      ...props
-    },
+    { label, error, helperText, required, className, children, id, ...props },
     ref,
   ): React.JSX.Element => {
     const generatedId = React.useId();
@@ -46,9 +36,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
             id={selectId}
             ref={ref}
             aria-invalid={Boolean(error)}
-            aria-describedby={
-              error ? errorId : helperText ? helperId : undefined
-            }
+            aria-describedby={error ? errorId : helperText ? helperId : undefined}
             className={cn(
               "w-full appearance-none rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-3.5 pr-9 text-xs font-medium text-slate-900 dark:text-white shadow-2xs transition-colors",
               "focus:outline-hidden focus:ring-2 focus:ring-[#1155CC] focus:border-transparent",

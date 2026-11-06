@@ -37,7 +37,10 @@ export async function POST(req: Request) {
     }
 
     // 2. IP identification & rate limiting (5 reqs / minute)
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip")?.trim() || "127.0.0.1";
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip")?.trim() ||
+      "127.0.0.1";
     try {
       await enforceRateLimit({ key: "career-apply", limit: 5, windowSec: 60 }, ip);
     } catch (rlErr: unknown) {
@@ -65,7 +68,10 @@ export async function POST(req: Request) {
     // 4. Bot Honeypot Check (hidden fields "website_url", "_hp", or "botCheck")
     const honeypot = formData.get("website_url") || formData.get("_hp") || formData.get("botCheck");
     if (honeypot && String(honeypot).trim().length > 0) {
-      logger.info(`[API Careers Apply] Honeypot triggered for IP ${ip}. Defeating bot retry loop.`, { requestId });
+      logger.info(
+        `[API Careers Apply] Honeypot triggered for IP ${ip}. Defeating bot retry loop.`,
+        { requestId },
+      );
       // Silently succeed to defeat spam bot retry loops
       return NextResponse.json(
         {
@@ -243,7 +249,10 @@ export async function POST(req: Request) {
         { status: STATUS_BY_CODE[error.code] || 400, headers },
       );
     }
-    logger.error(`[API Careers Apply] Unhandled error: ${String(error)}`, { requestId, cause: error });
+    logger.error(`[API Careers Apply] Unhandled error: ${String(error)}`, {
+      requestId,
+      cause: error,
+    });
     return NextResponse.json(
       {
         ok: false,

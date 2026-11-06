@@ -85,12 +85,15 @@ export function JobReviewSummary({
       if (!isNaN(pubDate.getTime())) {
         if (pubDate.getTime() > Date.now()) {
           parts.push(
-            `This role is scheduled to automatically publish on ${pubDate.toLocaleDateString(undefined, {
-              weekday: "long",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })} at ${pubDate.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}.`,
+            `This role is scheduled to automatically publish on ${pubDate.toLocaleDateString(
+              undefined,
+              {
+                weekday: "long",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              },
+            )} at ${pubDate.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}.`,
           );
         } else {
           parts.push(
@@ -133,9 +136,7 @@ export function JobReviewSummary({
     return parts.join(" ");
   };
 
-  const serpTitle =
-    job.seoTitle ||
-    `${job.title || "Job Title"} | Careers at TechSonance Infotech`;
+  const serpTitle = job.seoTitle || `${job.title || "Job Title"} | Careers at TechSonance Infotech`;
   const serpSnippet =
     job.seoDescription ||
     job.summary ||
@@ -209,7 +210,9 @@ export function JobReviewSummary({
                         Step 1: Role Identity &amp; Overview
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        {job.title ? `"${job.title}"` : "Untitled"} &bull; {job.department || "No Department"} &bull; {job.openingsCount || 1} opening(s)
+                        {job.title ? `"${job.title}"` : "Untitled"} &bull;{" "}
+                        {job.department || "No Department"} &bull; {job.openingsCount || 1}{" "}
+                        opening(s)
                       </div>
                     </div>
                   </div>
@@ -247,7 +250,9 @@ export function JobReviewSummary({
                         Step 2: Workplace Location &amp; Mode
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        {job.workMode?.toUpperCase() || "HYBRID"} &bull; Primary Hub: {job.location || "Unspecified"} &bull; {job.remoteEligibility || "No remote region"}
+                        {job.workMode?.toUpperCase() || "HYBRID"} &bull; Primary Hub:{" "}
+                        {job.location || "Unspecified"} &bull;{" "}
+                        {job.remoteEligibility || "No remote region"}
                       </div>
                     </div>
                   </div>
@@ -276,7 +281,10 @@ export function JobReviewSummary({
                         Step 3: Role Content &amp; Requirements
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        {(job.responsibilities || []).length} responsibilities &bull; {(job.requirements || []).length} requirements &bull; {(job.skills || []).length} skill tags &bull; {(job.benefits || []).length} benefits
+                        {(job.responsibilities || []).length} responsibilities &bull;{" "}
+                        {(job.requirements || []).length} requirements &bull;{" "}
+                        {(job.skills || []).length} skill tags &bull; {(job.benefits || []).length}{" "}
+                        benefits
                       </div>
                     </div>
                   </div>
@@ -305,7 +313,8 @@ export function JobReviewSummary({
                         Step 4: Compensation &amp; Pay Transparency
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        {formatSalaryText()} &bull; {job.showSalaryPublicly ? "Public Band" : "Confidential"}
+                        {formatSalaryText()} &bull;{" "}
+                        {job.showSalaryPublicly ? "Public Band" : "Confidential"}
                       </div>
                     </div>
                   </div>
@@ -334,7 +343,11 @@ export function JobReviewSummary({
                         Step 5: Application Settings &amp; Screening
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        {job.applicationMethod === "external" ? "External ATS Link" : "Built-in Agency Portal"} &bull; Resume: {job.resumeRequired !== false ? "Required" : "Optional"} &bull; {(job.screeningQuestions || []).length} screening question(s)
+                        {job.applicationMethod === "external"
+                          ? "External ATS Link"
+                          : "Built-in Agency Portal"}{" "}
+                        &bull; Resume: {job.resumeRequired !== false ? "Required" : "Optional"}{" "}
+                        &bull; {(job.screeningQuestions || []).length} screening question(s)
                       </div>
                     </div>
                   </div>
@@ -371,7 +384,9 @@ export function JobReviewSummary({
                 <span className="w-4 h-4 rounded-full bg-[#1155CC] text-white flex items-center justify-center text-[9px] font-bold">
                   T
                 </span>
-                <span className="truncate">TechSonance Infotech &rsaquo; careers &rsaquo; {job.slug || "job-slug"}</span>
+                <span className="truncate">
+                  TechSonance Infotech &rsaquo; careers &rsaquo; {job.slug || "job-slug"}
+                </span>
               </div>
               <div className="text-sm font-semibold text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer">
                 {serpTitle}
@@ -405,7 +420,8 @@ export function JobReviewSummary({
                   className="rounded-xl text-xs"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Optimal Google title length is 50–60 characters. Defaults to role title + agency suffix if empty.
+                  Optimal Google title length is 50–60 characters. Defaults to role title + agency
+                  suffix if empty.
                 </p>
               </div>
 
@@ -432,7 +448,8 @@ export function JobReviewSummary({
                   className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs text-slate-900 dark:text-white"
                 />
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Optimal Google snippet length is 120–155 characters. Falls back to role summary if empty.
+                  Optimal Google snippet length is 120–155 characters. Falls back to role summary if
+                  empty.
                 </p>
               </div>
             </div>
@@ -465,9 +482,7 @@ export function JobReviewSummary({
                 onChange={(e) => updateField("visibility", e.target.value)}
               >
                 <option value="public">Public (Visible in search &amp; sitemap)</option>
-                <option value="unlisted">
-                  Unlisted (Direct link only, excluded from sitemap)
-                </option>
+                <option value="unlisted">Unlisted (Direct link only, excluded from sitemap)</option>
               </FormSelect>
             </div>
 
@@ -478,11 +493,7 @@ export function JobReviewSummary({
                 </label>
                 <Input
                   type="datetime-local"
-                  value={
-                    job.publishAt
-                      ? new Date(job.publishAt).toISOString().slice(0, 16)
-                      : ""
-                  }
+                  value={job.publishAt ? new Date(job.publishAt).toISOString().slice(0, 16) : ""}
                   onChange={(e) =>
                     updateField("publishAt", e.target.value ? new Date(e.target.value) : null)
                   }
@@ -497,11 +508,7 @@ export function JobReviewSummary({
                 <Input
                   type="datetime-local"
                   min={new Date().toISOString().slice(0, 16)}
-                  value={
-                    job.closesAt
-                      ? new Date(job.closesAt).toISOString().slice(0, 16)
-                      : ""
-                  }
+                  value={job.closesAt ? new Date(job.closesAt).toISOString().slice(0, 16) : ""}
                   onChange={(e) =>
                     updateField("closesAt", e.target.value ? new Date(e.target.value) : null)
                   }

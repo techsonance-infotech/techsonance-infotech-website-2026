@@ -23,7 +23,8 @@ const BIASED_TERMS: Array<{
     pattern: /\brockstars?\b/i,
     word: "rockstar",
     suggestion: "exceptional specialist",
-    reason: "Informal cliché that can discourage qualified candidates with non-traditional backgrounds.",
+    reason:
+      "Informal cliché that can discourage qualified candidates with non-traditional backgrounds.",
   },
   {
     pattern: /\bninjas?\b/i,
@@ -81,10 +82,7 @@ export function auditJobQuality(data: {
   const passedChecks: string[] = [];
   let score = 100;
 
-  const fullTextMap: Record<
-    "title" | "summary" | "description",
-    string
-  > = {
+  const fullTextMap: Record<"title" | "summary" | "description", string> = {
     title: data.title || "",
     summary: data.summary || "",
     description: data.description || "",
@@ -174,8 +172,10 @@ export function auditJobQuality(data: {
       type: "best_practice",
       word: `${reqCount} requirements`,
       field: "requirements",
-      suggestion: "Focus on 4-6 essential requirements and move nice-to-haves to Preferred Qualifications",
-      reason: "Extensive checklists discourage diverse and female applicants who apply only when 100% qualified.",
+      suggestion:
+        "Focus on 4-6 essential requirements and move nice-to-haves to Preferred Qualifications",
+      reason:
+        "Extensive checklists discourage diverse and female applicants who apply only when 100% qualified.",
     });
     score -= 5;
   }
@@ -189,8 +189,7 @@ export function auditJobQuality(data: {
   }
 
   const finalScore = Math.max(0, Math.min(100, score));
-  const grade =
-    finalScore >= 85 ? "Excellent" : finalScore >= 70 ? "Good" : "Needs Improvement";
+  const grade = finalScore >= 85 ? "Excellent" : finalScore >= 70 ? "Good" : "Needs Improvement";
 
   return {
     score: finalScore,

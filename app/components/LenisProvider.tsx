@@ -22,12 +22,7 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
           "lenis-stopped",
           "lenis-scrolling",
         );
-        document.body.classList.remove(
-          "lenis",
-          "lenis-smooth",
-          "lenis-stopped",
-          "lenis-scrolling",
-        );
+        document.body.classList.remove("lenis", "lenis-smooth", "lenis-stopped", "lenis-scrolling");
       }
       return;
     }
