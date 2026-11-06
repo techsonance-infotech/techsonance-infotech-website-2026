@@ -57,25 +57,26 @@ function caseInsensitiveEnum<T extends Record<string, string>>(
 }
 
 export const jobPostingBaseFields = {
-  siteId: z.string().uuid().optional(),
+  siteId: z.string().uuid().optional().nullable(),
   slug: z
     .string()
     .min(2)
     .regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase alphanumeric characters and hyphens"),
   title: z.string().min(3, "Title must be at least 3 characters"),
-  referenceCode: z.string().optional(),
+  referenceCode: z.string().optional().nullable(),
   department: z.string().min(2, "Department is required"),
   openingsCount: z.number().int().min(1, "Openings count must be at least 1").default(1),
-  ownerId: z.uuid().optional(),
-  hiringManagerId: z.uuid().optional(),
+  ownerId: z.uuid().optional().nullable(),
+  hiringManagerId: z.uuid().optional().nullable(),
   summary: z.string().default(""),
   description: z.string().default(""),
 
   workMode: caseInsensitiveEnum(JobWorkMode, JobWorkMode.HYBRID),
   location: z.string().min(2, "Location is required"),
-  remoteEligibility: z.string().optional(),
+  remoteEligibility: z.string().optional().nullable(),
   visaSupport: caseInsensitiveEnum(JobVisaSupport, JobVisaSupport.NO)
     .optional()
+    .nullable()
     .default(JobVisaSupport.NO),
 
   type: caseInsensitiveEnum(JobType, JobType.FULL_TIME),
@@ -85,27 +86,32 @@ export const jobPostingBaseFields = {
   preferredQualifications: z.array(z.string()).default([]),
   skills: z.array(z.string()).default([]),
   benefits: z.array(z.string()).default([]),
-  aboutTeam: z.string().optional(),
+  aboutTeam: z.string().optional().nullable(),
   hiringProcess: z
     .array(
       z.object({
         step: z.string(),
         title: z.string(),
-        desc: z.string().optional(),
+        desc: z.string().optional().nullable(),
       }),
     )
     .default([]),
-  equalOpportunityStatement: z.string().optional(),
+  equalOpportunityStatement: z.string().optional().nullable(),
 
-  salaryMin: z.number().int().min(0).optional(),
-  salaryMax: z.number().int().min(0).optional(),
+  salaryMin: z.number().int().min(0).optional().nullable(),
+  salaryMax: z.number().int().min(0).optional().nullable(),
   salaryCurrency: z.string().default("INR"),
   salaryPeriod: caseInsensitiveEnum(JobSalaryPeriod, JobSalaryPeriod.YEAR),
   showSalaryPublicly: z.boolean().default(false),
-  compensationNotes: z.string().optional(),
+  compensationNotes: z.string().optional().nullable(),
 
   applicationMethod: caseInsensitiveEnum(JobApplicationMethod, JobApplicationMethod.BUILTIN),
-  externalApplyUrl: z.url("Must be a valid URL").optional().or(z.literal("")),
+  externalApplyUrl: z
+    .url("Must be a valid URL")
+    .optional()
+    .nullable()
+    .or(z.literal(""))
+    .or(z.null()),
   resumeRequired: z.boolean().default(true),
   coverLetterRequirement: caseInsensitiveEnum(
     JobCoverLetterRequirement,
@@ -119,9 +125,9 @@ export const jobPostingBaseFields = {
   visibility: caseInsensitiveEnum(JobVisibility, JobVisibility.PUBLIC),
   featured: z.boolean().default(false),
 
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
-  ogImage: z.string().optional(),
+  seoTitle: z.string().optional().nullable(),
+  seoDescription: z.string().optional().nullable(),
+  ogImage: z.string().optional().nullable(),
 };
 
 export const jobPostingInputSchema = z.object(jobPostingBaseFields);
@@ -129,7 +135,7 @@ export const jobPostingInputSchema = z.object(jobPostingBaseFields);
 export const createJobSchema = jobPostingInputSchema
   .refine(
     (data) => {
-      if (data.salaryMin !== undefined && data.salaryMax !== undefined) {
+      if (data.salaryMin != null && data.salaryMax != null) {
         return data.salaryMin <= data.salaryMax;
       }
       return true;
@@ -170,7 +176,7 @@ export const updateJobSchema = jobPostingInputSchema
   .partial()
   .refine(
     (data) => {
-      if (data.salaryMin !== undefined && data.salaryMax !== undefined) {
+      if (data.salaryMin != null && data.salaryMax != null) {
         return data.salaryMin <= data.salaryMax;
       }
       return true;

@@ -4,6 +4,7 @@ import { applicationsTable } from "@/lib/database/schema/core/application.schema
 import { talentPoolTable } from "@/lib/database/schema/core/talent-pool.schema";
 import { careersSettingsTable } from "@/lib/database/schema/core/careers-settings.schema";
 import { eeocResponsesTable } from "@/lib/database/schema/core/eeoc.schema";
+import { updateJobSchema, createJobSchema } from "@/lib/validations/careers";
 import {
   JobStatus,
   JobType,
@@ -66,5 +67,50 @@ describe("Careers Production Database Schemas", () => {
     expect(JobApprovalStatus.PENDING).toBe("pending");
     expect(JobVisibility.PUBLIC).toBe("public");
     expect(ApplicationStatus.SHORTLISTED).toBe("SHORTLISTED");
+  });
+
+  it("safely accepts null for database-nullable fields in updateJobSchema and createJobSchema", () => {
+    const updatePayload = {
+      title: "Staff Distributed Systems Engineer",
+      ownerId: null,
+      hiringManagerId: null,
+      seoTitle: null,
+      seoDescription: null,
+      ogImage: null,
+      referenceCode: null,
+      salaryMin: null,
+      salaryMax: null,
+      compensationNotes: null,
+      externalApplyUrl: null,
+      remoteEligibility: null,
+      aboutTeam: null,
+      equalOpportunityStatement: null,
+    };
+
+    const updateResult = updateJobSchema.safeParse(updatePayload);
+    expect(updateResult.success).toBe(true);
+
+    const createPayload = {
+      slug: "staff-distributed-systems-engineer",
+      title: "Staff Distributed Systems Engineer",
+      department: "Engineering",
+      location: "Bhubaneswar, India",
+      ownerId: null,
+      hiringManagerId: null,
+      seoTitle: null,
+      seoDescription: null,
+      ogImage: null,
+      referenceCode: null,
+      salaryMin: null,
+      salaryMax: null,
+      compensationNotes: null,
+      externalApplyUrl: null,
+      remoteEligibility: null,
+      aboutTeam: null,
+      equalOpportunityStatement: null,
+    };
+
+    const createResult = createJobSchema.safeParse(createPayload);
+    expect(createResult.success).toBe(true);
   });
 });

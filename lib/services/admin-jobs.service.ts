@@ -45,9 +45,14 @@ export class AdminJobsService {
 
     const sanitizedData: InsertJob = {
       ...data,
-      ownerId: data.ownerId && data.ownerId.trim() ? data.ownerId : undefined,
+      ownerId:
+        data.ownerId && typeof data.ownerId === "string" && data.ownerId.trim()
+          ? data.ownerId.trim()
+          : undefined,
       hiringManagerId:
-        data.hiringManagerId && data.hiringManagerId.trim() ? data.hiringManagerId : undefined,
+        data.hiringManagerId && typeof data.hiringManagerId === "string" && data.hiringManagerId.trim()
+          ? data.hiringManagerId.trim()
+          : undefined,
     };
 
     const validActorId =
@@ -89,15 +94,15 @@ export class AdminJobsService {
       versionId: nextVersionId,
       ownerId:
         updates.ownerId !== undefined
-          ? updates.ownerId && updates.ownerId.trim()
-            ? updates.ownerId
-            : undefined
+          ? updates.ownerId && typeof updates.ownerId === "string" && updates.ownerId.trim()
+            ? updates.ownerId.trim()
+            : null
           : undefined,
       hiringManagerId:
         updates.hiringManagerId !== undefined
-          ? updates.hiringManagerId && updates.hiringManagerId.trim()
-            ? updates.hiringManagerId
-            : undefined
+          ? updates.hiringManagerId && typeof updates.hiringManagerId === "string" && updates.hiringManagerId.trim()
+            ? updates.hiringManagerId.trim()
+            : null
           : undefined,
     };
 
