@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationStatus } from "@/lib/constants/enums";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import { RejectionReasonDialog } from "./RejectionReasonDialog";
 
 interface CandidateDrawerProps {
@@ -115,7 +116,7 @@ export function CandidateDrawer({
     setLoading(true);
     setError(null);
 
-    fetch(`/api/admin/careers/applications/${applicationId}`)
+    fetch(API_ENDPOINTS.ADMIN.APPLICATION(applicationId))
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load candidate application");
         return res.json();
@@ -154,7 +155,7 @@ export function CandidateDrawer({
     if (!applicationId) return;
     setLoadingResume(true);
     try {
-      const res = await fetch(`/api/admin/careers/applications/${applicationId}/resume`);
+      const res = await fetch(API_ENDPOINTS.ADMIN.APPLICATION_RESUME(applicationId));
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate resume link");
       if (data.signedUrl) {
@@ -171,7 +172,7 @@ export function CandidateDrawer({
     if (!applicationId) return;
     setUpdatingStage(true);
     try {
-      const res = await fetch(`/api/admin/careers/applications/${applicationId}`, {
+      const res = await fetch(API_ENDPOINTS.ADMIN.APPLICATION(applicationId), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -201,7 +202,7 @@ export function CandidateDrawer({
     const activeRating = newRating !== undefined ? (newRating === 0 ? null : newRating) : rating;
 
     try {
-      const res = await fetch(`/api/admin/careers/applications/${applicationId}`, {
+      const res = await fetch(API_ENDPOINTS.ADMIN.APPLICATION(applicationId), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

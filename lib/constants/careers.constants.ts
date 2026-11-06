@@ -150,3 +150,24 @@ export const RESUME_CREATION_SIGNED_URL_TTL_SEC = 60 * 60 * 24 * 7;
 // ─── Pagination defaults ──────────────────────────────────────────────────────
 
 export const DEFAULT_APPLICATIONS_PAGE_SIZE = 50 as const;
+
+// ─── API Endpoints (Centralized in endpoints.constants.ts) ────────────────────
+
+export { API_ENDPOINTS } from "./endpoints.constants";
+
+export const CAREER_ENDPOINTS = {
+  APPLY: "/api/careers/apply",
+  TALENT_POOL: "/api/careers/talent-pool",
+  INQUIRY: "/api/careers",
+  ADMIN_JOBS: "/api/admin/jobs",
+  ADMIN_JOB: (id: string) => `/api/admin/jobs/${id}` as const,
+  ADMIN_JOB_STATUS: (id: string) => `/api/admin/jobs/${id}/status` as const,
+  ADMIN_JOB_APPROVE: (id: string) => `/api/admin/careers/jobs/${id}/approve` as const,
+  ADMIN_JOB_RETURN: (id: string) => `/api/admin/careers/jobs/${id}/return` as const,
+  ADMIN_JOB_VERSIONS: (id: string) => `/api/admin/careers/jobs/${id}/versions` as const,
+  ADMIN_APPLICATIONS: "/api/admin/careers/applications",
+  ADMIN_APPLICATION: (id: string) => `/api/admin/careers/applications/${id}` as const,
+  ADMIN_APPLICATION_RESUME: (id: string) => `/api/admin/careers/applications/${id}/resume` as const,
+  ADMIN_APPLICATIONS_EXPORT: "/api/admin/careers/applications/export",
+  ADMIN_COMPLIANCE: "/api/admin/careers/compliance",
+} as const;

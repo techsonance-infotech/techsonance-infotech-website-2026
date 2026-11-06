@@ -20,3 +20,10 @@ export const BOOKING_ERRORS = {
   SLOT_UNAVAILABLE_OR_INVALID: "Selected time slot is unavailable or invalid.",
   MISSING_REQUIRED_FIELDS: "Please provide your name, email, and select an available time slot.",
 } as const;
+
+export { API_ENDPOINTS } from "./endpoints.constants";
+
+export const BOOKING_ENDPOINTS = {
+  SLOTS: "/api/slots",
+  BOOK: "/api/book",
+} as const;

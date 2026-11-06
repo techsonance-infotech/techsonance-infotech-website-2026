@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { defineContract, noParams, noQuery } from "@/lib/contracts/define";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export const careerApplyResponseSchema = z.object({
   applicationId: z.string().min(1),
@@ -10,7 +11,7 @@ export type CareerApplyResponseDto = z.infer<typeof careerApplyResponseSchema>;
 
 export const careerApplyContract = defineContract({
   method: "POST",
-  path: "/api/careers/apply",
+  path: API_ENDPOINTS.CAREERS.APPLY,
   auth: "none",
   params: noParams,
   query: noQuery,

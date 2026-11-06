@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { defineContract, noParams, noQuery, noBody } from "@/lib/contracts/define";
 import { ApplicationStatus } from "@/lib/constants/enums/content.enum";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export const listApplicationsQuerySchema = z.strictObject({
   jobId: z.string().uuid().optional(),
@@ -37,7 +38,7 @@ export const singleApplicationResponseSchema = z.object({
 
 export const listApplicationsContract = defineContract({
   method: "GET",
-  path: "/api/admin/careers/applications",
+  path: API_ENDPOINTS.ADMIN.APPLICATIONS,
   auth: "required",
   params: noParams,
   query: listApplicationsQuerySchema,
@@ -48,7 +49,7 @@ export const listApplicationsContract = defineContract({
 
 export const getApplicationByIdContract = defineContract({
   method: "GET",
-  path: "/api/admin/careers/applications",
+  path: API_ENDPOINTS.ADMIN.APPLICATIONS,
   auth: "required",
   params: z.strictObject({ id: z.string().uuid() }),
   query: noQuery,
@@ -59,7 +60,7 @@ export const getApplicationByIdContract = defineContract({
 
 export const updateApplicationContract = defineContract({
   method: "PATCH",
-  path: "/api/admin/careers/applications",
+  path: API_ENDPOINTS.ADMIN.APPLICATIONS,
   auth: "required",
   params: z.strictObject({ id: z.string().uuid() }),
   query: noQuery,

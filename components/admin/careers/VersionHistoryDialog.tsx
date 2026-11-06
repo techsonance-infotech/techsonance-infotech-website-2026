@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { History, X, Loader2, RotateCcw, ChevronDown, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface VersionItem {
   id: string;
@@ -44,7 +45,7 @@ export function VersionHistoryDialog({
       setErrorMessage("");
       setSuccessMessage("");
       try {
-        const res = await fetch(`/api/admin/careers/jobs/${jobId}/versions`);
+        const res = await fetch(API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(jobId));
         const data = await res.json();
         if (!res.ok) {
           const msg =
@@ -84,7 +85,7 @@ export function VersionHistoryDialog({
     setSuccessMessage("");
 
     try {
-      const res = await fetch(`/api/admin/careers/jobs/${jobId}/versions`, {
+      const res = await fetch(API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(jobId), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ versionId: version.id }),

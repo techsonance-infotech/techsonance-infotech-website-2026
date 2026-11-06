@@ -3,6 +3,7 @@ import { defineContract, noParams, noQuery, noBody } from "@/lib/contracts/defin
 import { createJobSchema } from "@/lib/validations/careers";
 import { JobStatus } from "@/lib/database/enum";
 import { CAREER_ERRORS } from "@/lib/constants/careers.constants";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export const listJobsQuerySchema = z.strictObject({
   status: z.enum(JobStatus).optional(),
@@ -24,7 +25,7 @@ export const listJobsResponseSchema = z.object({
 
 export const createJobContract = defineContract({
   method: "POST",
-  path: "/api/admin/jobs",
+  path: API_ENDPOINTS.ADMIN.JOBS,
   auth: "required",
   params: noParams,
   query: noQuery,
@@ -35,7 +36,7 @@ export const createJobContract = defineContract({
 
 export const listJobsContract = defineContract({
   method: "GET",
-  path: "/api/admin/jobs",
+  path: API_ENDPOINTS.ADMIN.JOBS,
   auth: "required",
   params: noParams,
   query: listJobsQuerySchema,

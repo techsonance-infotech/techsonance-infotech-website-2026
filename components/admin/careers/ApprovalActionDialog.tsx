@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { CheckCircle2, AlertTriangle, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface ApprovalActionDialogProps {
   isOpen: boolean;
@@ -44,8 +45,8 @@ export function ApprovalActionDialog({
 
     try {
       const endpoint = isApprove
-        ? `/api/admin/careers/jobs/${job.id}/approve`
-        : `/api/admin/careers/jobs/${job.id}/return`;
+        ? API_ENDPOINTS.ADMIN.CAREER_JOB_APPROVE(job.id)
+        : API_ENDPOINTS.ADMIN.CAREER_JOB_RETURN(job.id);
 
       const res = await fetch(endpoint, {
         method: "POST",

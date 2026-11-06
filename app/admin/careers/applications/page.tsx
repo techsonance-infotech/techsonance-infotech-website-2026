@@ -25,6 +25,7 @@ import {
 } from "@/components/admin/careers/ApplicationsTable";
 import { ApplicationsKanban } from "@/components/admin/careers/ApplicationsKanban";
 import { CandidateDrawer } from "@/components/admin/careers/CandidateDrawer";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface JobOption {
   id: string;
@@ -65,7 +66,7 @@ export default function ApplicationsInboxPage() {
   useEffect(() => {
     let isMounted = true;
     setLoadingJobs(true);
-    fetch("/api/admin/jobs?limit=100")
+    fetch(`${API_ENDPOINTS.ADMIN.JOBS}?limit=100`)
       .then((res) => res.json())
       .then((data) => {
         if (isMounted && data.items) {
@@ -103,7 +104,7 @@ export default function ApplicationsInboxPage() {
       if (knockoutOnly) params.set("knockoutTriggered", "true");
       params.set("limit", "100");
 
-      const res = await fetch(`/api/admin/careers/applications?${params.toString()}`);
+      const res = await fetch(`${API_ENDPOINTS.ADMIN.APPLICATIONS}?${params.toString()}`);
       if (!res.ok) {
         throw new Error("Failed to load candidate applications");
       }
@@ -129,7 +130,7 @@ export default function ApplicationsInboxPage() {
     rejectionReason?: string,
   ) => {
     try {
-      const res = await fetch(`/api/admin/careers/applications/${id}`, {
+      const res = await fetch(API_ENDPOINTS.ADMIN.APPLICATION(id), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

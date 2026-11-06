@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { ClosedJobBanner } from "@/components/careers/ClosedJobBanner";
 import type { JobPosting } from "@/lib/content/types";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import {
   MapPin,
   Briefcase,
@@ -259,7 +260,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
         data.append("resumeFile", resumeFile);
       }
 
-      const response = await fetch("/api/careers/apply", {
+      const response = await fetch(API_ENDPOINTS.CAREERS.APPLY, {
         method: "POST",
         body: data,
       });

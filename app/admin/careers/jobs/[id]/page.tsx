@@ -35,6 +35,7 @@ import {
 import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
 import { ApprovalActionDialog } from "@/components/admin/careers/ApprovalActionDialog";
 import { VersionHistoryDialog } from "@/components/admin/careers/VersionHistoryDialog";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface JobEditorPageProps {
   params: Promise<{ id: string }>;
@@ -64,7 +65,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
     if (isNew) return;
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/jobs/${id}`);
+      const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id));
       const data = await res.json();
       if (data.ok && data.job) {
         setJobData(data.job);
@@ -91,7 +92,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
     try {
       if (isNew) {
-        const res = await fetch("/api/admin/jobs", {
+        const res = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedData),
@@ -113,7 +114,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           setAlertMessage({ type: "error", text: msg });
         }
       } else {
-        const res = await fetch(`/api/admin/jobs/${id}`, {
+        const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id), {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedData),
@@ -181,7 +182,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       delete (duplicateData as any).approvedAt;
       delete (duplicateData as any).approvedBy;
 
-      const res = await fetch("/api/admin/jobs", {
+      const res = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(duplicateData),
@@ -221,7 +222,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       // If still new, save first
       let currentJobId = id;
       if (isNew) {
-        const createRes = await fetch("/api/admin/jobs", {
+        const createRes = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
@@ -238,7 +239,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       }
 
       // Transition to IN_REVIEW
-      const transitionRes = await fetch(`/api/admin/jobs/${currentJobId}/status`, {
+      const transitionRes = await fetch(API_ENDPOINTS.ADMIN.JOB_STATUS(currentJobId), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -286,7 +287,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
     try {
       let currentJobId = id;
       if (isNew) {
-        const createRes = await fetch("/api/admin/jobs", {
+        const createRes = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
@@ -302,7 +303,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         currentJobId = createData.job.id;
       }
 
-      const statusRes = await fetch(`/api/admin/jobs/${currentJobId}/status`, {
+      const statusRes = await fetch(API_ENDPOINTS.ADMIN.JOB_STATUS(currentJobId), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

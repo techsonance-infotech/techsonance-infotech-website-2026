@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Job } from "@/lib/types/careers";
 import { JobStatus } from "@/lib/constants/enums";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -26,7 +27,7 @@ export default function AdminJobsPage() {
       if (search.trim()) {
         params.set("search", search.trim());
       }
-      const res = await fetch(`/api/admin/jobs?${params.toString()}`);
+      const res = await fetch(`${API_ENDPOINTS.ADMIN.JOBS}?${params.toString()}`);
       const data = await res.json();
       if (data.ok) {
         setJobs(data.jobs || []);
@@ -47,7 +48,7 @@ export default function AdminJobsPage() {
       return;
     }
     try {
-      const res = await fetch(`/api/admin/jobs/${id}`, { method: "DELETE" });
+      const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id), { method: "DELETE" });
       if (res.ok) {
         await fetchJobs();
       }

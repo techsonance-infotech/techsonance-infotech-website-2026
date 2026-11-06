@@ -21,6 +21,7 @@ import { trackBookingFormSubmit } from "@/lib/analytics";
 import { callApi } from "@/lib/api/callApi";
 import { getSlotsContract } from "@/lib/contracts/booking.contract";
 import { toSlotsViewModel } from "@/features/booking/view-models";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface BookingCardProps {
   onSuccess?: (ref: string) => void;
@@ -147,7 +148,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         recentMessages: recentMessages?.slice(-5),
       };
 
-      const res = await fetch("/api/book", {
+      const res = await fetch(API_ENDPOINTS.BOOKING.BOOK, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
