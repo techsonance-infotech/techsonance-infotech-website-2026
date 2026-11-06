@@ -266,7 +266,8 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
       const result = (await response.json()) as {
         ok?: boolean;
-        error?: string;
+        error?: string | { code?: string; message?: string };
+        data?: { applicationId: string; status: string };
       };
       if (!response.ok || !result.ok) {
         if (response.status === 409) {
@@ -274,9 +275,11 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
           );
         }
-        throw new Error(
-          result.error || "Failed to submit application. Please verify your details.",
-        );
+        const errMessage =
+          typeof result.error === "string"
+            ? result.error
+            : result.error?.message || "Failed to submit application. Please verify your details.";
+        throw new Error(errMessage);
       }
 
       setSubmittedCandidate({ name: values.fullName, email: values.email });

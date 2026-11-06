@@ -18,6 +18,9 @@ import {
 import { getVisitorProfile, saveVisitorProfile, saveBookingCopy } from "@/lib/chat/storage";
 import type { Slot } from "@/lib/slots";
 import { trackBookingFormSubmit } from "@/lib/analytics";
+import { callApi } from "@/lib/api/callApi";
+import { getSlotsContract } from "@/lib/contracts/booking.contract";
+import { toSlotsViewModel } from "@/features/booking/view-models";
 
 interface BookingCardProps {
   onSuccess?: (ref: string) => void;
@@ -91,14 +94,19 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
     });
 
     // 2. Fetch available consultation slots
-    fetch("/api/slots")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.slots && Array.isArray(data.slots)) {
-          setSlots(data.slots);
-          if (data.slots.length > 0) {
-            setSelectedSlotIso(data.slots[0].iso);
+    callApi(getSlotsContract)
+      .then((res) => {
+        if (res.ok) {
+          const vm = toSlotsViewModel(res.data);
+          setSlots(vm.slots);
+          if (vm.slots.length > 0) {
+            setSelectedSlotIso(vm.slots[0].iso);
           }
+        } else {
+          setErrorMsg(
+            res.error.message ||
+              "Failed to load time slots. You can still reach us directly at info@techsonance.co.in.",
+          );
         }
       })
       .catch(() => {

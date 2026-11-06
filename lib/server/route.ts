@@ -9,6 +9,7 @@ import { logger } from "@/lib/logger";
 import { getRequestId } from "@/lib/server/requestContext";
 import { requireUser, getOptionalUser, type SessionPayload } from "@/lib/server/auth";
 import { enforceRateLimit } from "@/lib/server/rateLimit";
+import { isAllowedOrigin } from "@/lib/utils/text";
 
 type RouteContext<
   P extends z.ZodObject<z.ZodRawShape>,
@@ -33,9 +34,15 @@ export function handleRoute<
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
     headers.set("x-request-id", requestId);
-    headers.set("Cache-Control", "private, no-store");
+    headers.set("Cache-Control", contract.cacheControl ?? "private, no-store");
 
     try {
+      // 0. Origin check
+      const originHeader = req.headers.get("origin");
+      if (originHeader && !isAllowedOrigin(originHeader)) {
+        throw new AppError(ErrorCode.FORBIDDEN, "Forbidden origin");
+      }
+
       // 1. Auth check
       let user: SessionPayload | null = null;
       if (contract.auth === "required") {
@@ -46,7 +53,11 @@ export function handleRoute<
 
       // 2. Rate limiting (if public or IP-based)
       if (contract.auth === "none" || !user) {
-        await enforceRateLimit({ key: contract.path, limit: 60, windowSec: 60 }, requestId);
+        const clientIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+          req.headers.get("x-real-ip")?.trim() ||
+          "127.0.0.1";
+        await enforceRateLimit({ key: contract.path, limit: 60, windowSec: 60 }, clientIp);
       }
 
       // 3. Parse Params

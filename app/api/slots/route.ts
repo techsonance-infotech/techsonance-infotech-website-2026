@@ -1,33 +1,19 @@
+import "server-only";
+import { handleRoute } from "@/lib/server/route";
+import { getSlotsContract } from "@/lib/contracts/booking.contract";
 import { getContainer } from "@/lib/di/container";
 import { BookingService } from "@/lib/services/booking.service";
-import { isAllowedOrigin } from "@/lib/text";
+import { BOOKING_TIMEZONE } from "@/lib/constants/booking.constants";
 
 export const runtime = "nodejs";
 
-export async function GET(req: Request) {
-  const origin = req.headers.get("origin");
-  if (!isAllowedOrigin(origin)) {
-    return new Response(JSON.stringify({ error: "Forbidden origin" }), {
-      status: 403,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
+export const GET = handleRoute(getSlotsContract, async ({ query }) => {
   const bookingService = getContainer().get(BookingService);
-  const slots = bookingService.getAvailableSlots();
+  const slots = bookingService.getAvailableSlots(query.fromTimestamp, query.daysAhead);
 
-  return new Response(
-    JSON.stringify({
-      slots,
-      timezone: "Asia/Kolkata",
-      count: slots.length,
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-      },
-    },
-  );
-}
+  return {
+    slots,
+    timezone: BOOKING_TIMEZONE,
+    count: slots.length,
+  };
+});

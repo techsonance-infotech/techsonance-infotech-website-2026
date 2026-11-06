@@ -55,7 +55,11 @@ export function ApprovalActionDialog({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Action failed");
+        const message =
+          (typeof data.error === "object" ? data.error?.message : data.error) ||
+          data.message ||
+          "Action failed";
+        throw new Error(message);
       }
 
       onSuccess(data.job);

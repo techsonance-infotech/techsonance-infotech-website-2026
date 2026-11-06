@@ -18,7 +18,7 @@ function formatTime(hour: number, minute: number): string {
   return `${displayHour}:${displayMinute} ${period}`;
 }
 
-export function generateAvailableSlots(fromTimestamp = Date.now()): Slot[] {
+export function generateAvailableSlots(fromTimestamp = Date.now(), daysAhead?: number): Slot[] {
   const slots: Slot[] = [];
   const cfg = BOT_CONFIG.slots;
   const holidaysSet = new Set<string>(cfg.holidays);
@@ -27,8 +27,9 @@ export function generateAvailableSlots(fromTimestamp = Date.now()): Slot[] {
   const istOffsetMs = 5.5 * 60 * 60 * 1000;
   const minNoticeMs = cfg.minNoticeHours * 60 * 60 * 1000;
   const earliestAllowedTime = fromTimestamp + minNoticeMs;
+  const maxDays = daysAhead !== undefined && daysAhead > 0 ? Math.min(daysAhead, 30) : cfg.maxDaysAhead;
 
-  for (let d = 0; d < cfg.maxDaysAhead; d++) {
+  for (let d = 0; d < maxDays; d++) {
     // Target date in IST
     const targetDateUTC = new Date(fromTimestamp + d * 24 * 60 * 60 * 1000);
     const targetDateIST = new Date(targetDateUTC.getTime() + istOffsetMs);

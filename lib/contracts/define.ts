@@ -18,6 +18,7 @@ export type Contract<
   readonly response: R;
   readonly status?: 200 | 201;
   readonly idempotent?: boolean;
+  readonly cacheControl?: string;
 };
 
 export const defineContract = <

@@ -2,38 +2,86 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { CareerApplyService, type ScreeningAnswerInput } from "@/lib/services/career-apply.service";
 import { careerApplyFormSchema } from "@/lib/validations/careers";
-import { AppError, STATUS_BY_CODE } from "@/lib/errors";
+import { AppError, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { enforceRateLimit } from "@/lib/server/rateLimit";
 import { logger } from "@/lib/logger";
+import { getRequestId } from "@/lib/server/requestContext";
+import { isAllowedOrigin } from "@/lib/utils/text";
 import { CAREER_ERRORS, DEFAULT_APPLICATION_SOURCE } from "@/lib/constants/careers.constants";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
+  const requestId = await getRequestId();
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+  headers.set("x-request-id", requestId);
+
   try {
-    // 1. IP identification & rate limiting
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    // 1. Origin check
+    const origin = req.headers.get("origin");
+    if (origin && !isAllowedOrigin(origin)) {
+      logger.warn(`[API Careers Apply] Origin rejected: ${origin}`, { requestId });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Forbidden origin",
+          errorPayload: {
+            code: "FORBIDDEN",
+            message: "Forbidden origin",
+            requestId,
+          },
+        },
+        { status: 403, headers },
+      );
+    }
+
+    // 2. IP identification & rate limiting (5 reqs / minute)
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip")?.trim() || "127.0.0.1";
     try {
       await enforceRateLimit({ key: "career-apply", limit: 5, windowSec: 60 }, ip);
     } catch (rlErr: unknown) {
       if (rlErr instanceof AppError) {
         return NextResponse.json(
-          { ok: false, error: rlErr.message },
-          { status: STATUS_BY_CODE[rlErr.code] || 429 },
+          {
+            ok: false,
+            error: rlErr.message,
+            errorPayload: {
+              code: rlErr.code,
+              message: rlErr.message,
+              requestId,
+              retryAfterSec: rlErr.retryAfterSec,
+            },
+          },
+          { status: STATUS_BY_CODE[rlErr.code] || 429, headers },
         );
       }
       throw rlErr;
     }
 
-    // 2. Parse FormData
+    // 3. Parse FormData
     const formData = await req.formData();
 
-    // 3. Bot Honeypot Check (hidden fields "website_url", "_hp", or "botCheck")
+    // 4. Bot Honeypot Check (hidden fields "website_url", "_hp", or "botCheck")
     const honeypot = formData.get("website_url") || formData.get("_hp") || formData.get("botCheck");
     if (honeypot && String(honeypot).trim().length > 0) {
+      logger.info(`[API Careers Apply] Honeypot triggered for IP ${ip}. Defeating bot retry loop.`, { requestId });
       // Silently succeed to defeat spam bot retry loops
-      return NextResponse.json({ ok: true, applicationId: "simulated-id" });
+      return NextResponse.json(
+        {
+          ok: true,
+          data: {
+            applicationId: "simulated-id",
+            status: "NEW",
+          },
+          applicationId: "simulated-id",
+          status: "NEW",
+        },
+        { status: 200, headers },
+      );
     }
 
-    // 4. Validate payload with Zod DTO schema
+    // 5. Validate payload with Zod DTO schema
     const rawPayload = {
       jobId: formData.get("jobId"),
       candidateName: formData.get("candidateName"),
@@ -58,24 +106,44 @@ export async function POST(req: Request) {
     if (!validationResult.success) {
       const firstIssue =
         validationResult.error.issues[0]?.message || CAREER_ERRORS.VALIDATION_FAILED;
-      return NextResponse.json({ ok: false, error: firstIssue }, { status: 400 });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: firstIssue,
+          errorPayload: {
+            code: "VALIDATION",
+            message: firstIssue,
+            fieldErrors: toFieldErrors(validationResult.error),
+            requestId,
+          },
+        },
+        { status: 400, headers },
+      );
     }
 
     const validated = validationResult.data;
 
-    // 5. Resume document check
+    // 6. Resume document check
     const resumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
     if (
       !resumeFile ||
       (typeof resumeFile === "object" && "size" in resumeFile && resumeFile.size === 0)
     ) {
       return NextResponse.json(
-        { ok: false, error: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED },
-        { status: 400 },
+        {
+          ok: false,
+          error: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED,
+          errorPayload: {
+            code: "BAD_REQUEST",
+            message: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED,
+            requestId,
+          },
+        },
+        { status: 400, headers },
       );
     }
 
-    // 6. Parse optional voluntary EEOC answers
+    // 7. Parse optional voluntary EEOC answers
     let eeoc:
       | {
           gender?: string;
@@ -112,9 +180,10 @@ export async function POST(req: Request) {
 
     logger.info(
       `[API Careers Apply] Incoming application for jobId="${validated.jobId}", candidate="${validated.candidateName}" <${validated.email}>`,
+      { requestId },
     );
 
-    // 7. Execute CareerApplyService
+    // 8. Execute CareerApplyService
     const container = getContainer();
     const applyService = container.get(CareerApplyService);
 
@@ -139,25 +208,53 @@ export async function POST(req: Request) {
 
     logger.info(
       `[API Careers Apply] Success! Created application ID="${application.id}" for jobId="${validated.jobId}"`,
+      { requestId, applicationId: application.id },
     );
 
-    return NextResponse.json({
-      ok: true,
-      applicationId: application.id,
-      status: application.status,
-    });
+    return NextResponse.json(
+      {
+        ok: true,
+        data: {
+          applicationId: application.id,
+          status: application.status,
+        },
+        applicationId: application.id,
+        status: application.status,
+      },
+      { status: 200, headers },
+    );
   } catch (error: unknown) {
     if (error instanceof AppError) {
-      logger.warn(`[API Careers Apply] Application rejected (${error.code}): ${error.message}`);
+      logger.warn(`[API Careers Apply] Application rejected (${error.code}): ${error.message}`, {
+        requestId,
+      });
       return NextResponse.json(
-        { ok: false, error: error.message },
-        { status: STATUS_BY_CODE[error.code] || 400 },
+        {
+          ok: false,
+          error: error.message,
+          errorPayload: {
+            code: error.code,
+            message: error.message,
+            requestId,
+            ...(error.fieldErrors ? { fieldErrors: error.fieldErrors } : {}),
+            ...(error.retryAfterSec !== undefined ? { retryAfterSec: error.retryAfterSec } : {}),
+          },
+        },
+        { status: STATUS_BY_CODE[error.code] || 400, headers },
       );
     }
-    logger.error(`[API Careers Apply] Unhandled error: ${String(error)}`);
+    logger.error(`[API Careers Apply] Unhandled error: ${String(error)}`, { requestId, cause: error });
     return NextResponse.json(
-      { ok: false, error: CAREER_ERRORS.UNEXPECTED_APPLICATION_ERROR },
-      { status: 500 },
+      {
+        ok: false,
+        error: CAREER_ERRORS.UNEXPECTED_APPLICATION_ERROR,
+        errorPayload: {
+          code: "INTERNAL",
+          message: CAREER_ERRORS.UNEXPECTED_APPLICATION_ERROR,
+          requestId,
+        },
+      },
+      { status: 500, headers },
     );
   }
 }
