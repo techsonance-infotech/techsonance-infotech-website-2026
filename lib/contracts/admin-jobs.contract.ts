@@ -149,3 +149,51 @@ export const restoreJobVersionContract = defineContract({
   response: restoreJobVersionResponseSchema,
   status: 200,
 });
+
+export const transitionJobStatusParamsSchema = z.strictObject({
+  id: z.string().uuid("Invalid job ID format"),
+});
+
+export type TransitionJobStatusParamsInput = z.input<typeof transitionJobStatusParamsSchema>;
+
+const normalizedJobStatus = z.preprocess((val) => {
+  if (typeof val === "string") {
+    const upper = val.trim().toUpperCase();
+    if (Object.values(JobStatus).includes(upper as JobStatus)) {
+      return upper;
+    }
+  }
+  return val;
+}, z.enum(JobStatus));
+
+export const transitionJobStatusBodySchema = z
+  .strictObject({
+    targetStatus: normalizedJobStatus.optional(),
+    status: normalizedJobStatus.optional(),
+    comment: z.string().trim().max(1000).optional(),
+  })
+  .refine((data) => Boolean(data.targetStatus || data.status), {
+    message: "Target status is required",
+    path: ["targetStatus"],
+  })
+  .transform((data) => ({
+    targetStatus: (data.targetStatus || data.status) as JobStatus,
+    comment: data.comment,
+  }));
+
+export type TransitionJobStatusBodyInput = z.input<typeof transitionJobStatusBodySchema>;
+
+export const transitionJobStatusResponseSchema = z.object({
+  job: z.any(),
+});
+
+export const transitionJobStatusContract = defineContract({
+  method: "POST",
+  path: "/api/admin/jobs/[id]/status",
+  auth: "required",
+  params: transitionJobStatusParamsSchema,
+  query: noQuery,
+  body: transitionJobStatusBodySchema,
+  response: transitionJobStatusResponseSchema,
+  status: 200,
+});
