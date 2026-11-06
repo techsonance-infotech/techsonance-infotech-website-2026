@@ -22,8 +22,11 @@ export class AdminPostsService {
   async listPosts(options: ListPostsOptions = {}): Promise<ListPostsResult> {
     try {
       return await this.postsRepo.listPosts(options);
-    } catch (error) {
-      logger.error("AdminPostsService.listPosts error", { error: String(error) });
+    } catch (error: any) {
+      logger.error("AdminPostsService.listPosts error", {
+        error: String(error),
+        cause: error?.cause ? String(error.cause?.message || error.cause) : undefined,
+      });
       return { posts: [], total: 0 };
     }
   }
