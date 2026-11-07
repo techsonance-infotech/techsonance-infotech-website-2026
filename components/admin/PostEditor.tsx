@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type { AdminPost } from "@/lib/types/admin.types";
 
 interface PostEditorProps {
@@ -113,13 +114,13 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
 
       let res: Response;
       if (isNew) {
-        res = await fetch("/api/admin/posts", {
+        res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POSTS, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
       } else {
-        res = await fetch(`/api/admin/posts/${initialPost?.id}`, {
+        res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST(initialPost!.id!), {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

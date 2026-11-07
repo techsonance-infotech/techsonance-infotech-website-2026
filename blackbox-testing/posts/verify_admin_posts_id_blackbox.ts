@@ -12,7 +12,7 @@
  */
 
 import "../preload.cjs";
-import { GET, PATCH, DELETE } from "@/app/api/admin/posts/[id]/route";
+import { GET, PATCH, DELETE } from "@/app/api/admin/blog/posts/[id]/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";

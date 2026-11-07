@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type { AdminPost } from "@/lib/types/admin.types";
 
 export default function AdminBlogListPage() {
@@ -27,7 +28,7 @@ export default function AdminBlogListPage() {
         if (search.trim()) {
           params.set("search", search.trim());
         }
-        const res = await fetch(`/api/admin/posts?${params.toString()}`);
+        const res = await fetch(`${API_ENDPOINTS.ADMIN.BLOG.POSTS}?${params.toString()}`);
         const data = await res.json();
         if (data.ok) {
           setPosts(data.posts || []);
@@ -48,7 +49,7 @@ export default function AdminBlogListPage() {
   const handlePublish = async (id: string) => {
     try {
       setActionLoadingId(id);
-      const res = await fetch(`/api/admin/posts/${id}/publish`, { method: "POST" });
+      const res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST_PUBLISH(id), { method: "POST" });
       if (res.ok) {
         await fetchPosts();
       }
@@ -63,7 +64,7 @@ export default function AdminBlogListPage() {
     if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
     try {
       setActionLoadingId(id);
-      const res = await fetch(`/api/admin/posts/${id}`, { method: "DELETE" });
+      const res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST(id), { method: "DELETE" });
       if (res.ok) {
         await fetchPosts();
       }

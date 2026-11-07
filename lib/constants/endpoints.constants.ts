@@ -43,11 +43,19 @@ export const API_ENDPOINTS = {
       LOGOUT: "/api/admin/auth/logout",
     },
 
-    // Blog / CMS Posts
-    POSTS: "/api/admin/posts",
-    POST: (id: string) => `/api/admin/posts/${id}` as const,
-    POST_PUBLISH: (id: string) => `/api/admin/posts/${id}/publish` as const,
-    POST_SUBMIT: (id: string) => `/api/admin/posts/${id}/submit` as const,
+    // Blog & CMS Content Management (Section: blog)
+    BLOG: {
+      POSTS: "/api/admin/blog/posts",
+      POST: (id: string) => `/api/admin/blog/posts/${id}` as const,
+      POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
+      POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
+    },
+
+    // Legacy Blog / CMS Posts aliases (for seamless backward compatibility)
+    POSTS: "/api/admin/blog/posts",
+    POST: (id: string) => `/api/admin/blog/posts/${id}` as const,
+    POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
+    POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
 
     // Media Upload
     MEDIA_UPLOAD: "/api/admin/media/upload",

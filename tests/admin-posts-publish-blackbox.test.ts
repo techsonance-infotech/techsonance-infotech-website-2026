@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { POST } from "@/app/api/admin/posts/[id]/publish/route";
+import { POST } from "@/app/api/admin/blog/posts/[id]/publish/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
@@ -7,7 +7,7 @@ import { PostStatus } from "@/lib/constants/enums/content.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
 import { POST_ERRORS } from "@/lib/constants/posts.constants";
 
-describe("POST /api/admin/posts/[id]/publish — Black Box Integration Tests", () => {
+describe("POST /api/admin/blog/posts/[id]/publish — Black Box Integration Tests", () => {
   let mockAuthService: any;
   let mockPostsService: any;
 

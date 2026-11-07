@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST } from "@/app/api/admin/posts/route";
+import { GET, POST } from "@/app/api/admin/blog/posts/route";
 import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { PostStatus } from "@/lib/constants/enums/content.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
 
-describe("GET & POST /api/admin/posts — Black Box Integration Tests", () => {
+describe("GET & POST /api/admin/blog/posts — Black Box Integration Tests", () => {
   let mockAuthService: any;
   let mockPostsService: any;
 

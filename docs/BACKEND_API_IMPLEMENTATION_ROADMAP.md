@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (16/16 Committed & 100% Verified)
+## 2. Completed Endpoints (17/17 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -41,9 +41,10 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 11 | `/api/admin/careers/applications/[id]/resume` | `GET` | Resume Signed URL | ✅ Done & Tested | `6ddd217` |
 | 12 | `/api/admin/careers/applications/export` | `GET` | CSV Export & Bucket | ✅ Done & Tested | `6de7c33` |
 | 13 | `/api/careers/talent-pool` | `POST` | Public Talent Pool | ✅ Done & Tested | `bbb9fd7` |
-| 14 | `/api/admin/posts` | `GET`, `POST` | Blog / CMS Posts | ✅ Done & Tested | `6b30587` |
-| 15 | `/api/admin/posts/[id]` | `GET`, `PATCH`, `DELETE` | Post CRUD by ID | ✅ Done & Tested | `8032f1e` |
-| 16 | `/api/admin/posts/[id]/publish` | `POST` | Blog / CMS Publishing | ✅ Done & Tested | `cf4bae2` |
+| 14 | `/api/admin/blog/posts` | `GET`, `POST` | Blog / Editorial CMS | ✅ Done & Tested | `6b30587` |
+| 15 | `/api/admin/blog/posts/[id]` | `GET`, `PATCH`, `DELETE` | Blog / Editorial CMS | ✅ Done & Tested | `8032f1e` |
+| 16 | `/api/admin/blog/posts/[id]/publish` | `POST` | Blog / Publishing | ✅ Done & Tested | `cf4bae2` |
+| 17 | `/api/admin/blog/posts/[id]/submit` | `POST` | Blog / Review Workflow | ✅ Done & Tested | Current |
 
 ---
 
@@ -51,16 +52,16 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ### Phase A: Blog / CMS Publishing & Media (Immediate Next Priority)
 
-- [x] **1. `POST /api/admin/posts/[id]/publish`**
+- [x] **1. `POST /api/admin/blog/posts/[id]/publish`**
   - **Purpose**: Transitions a draft or in-review blog post into `PUBLISHED` state, sets `publishedAt = new Date()`, updates `versionId`, writes audit log (`post.publish`), and triggers on-demand cache revalidation for `posts` and `post:<slug>`.
-  - **Controller**: `app/api/admin/posts/[id]/publish/route.ts`
+  - **Controller**: `app/api/admin/blog/posts/[id]/publish/route.ts`
   - **Service**: `AdminPostsService.publishPost(id, actorId, ipAddress)`
   - **Repository**: `AdminPostsRepository.updatePostWithAudit`
   - **Required Tests**: 401 unauthenticated, 403 origin mismatch, 403 author/viewer denied (Editor+ required to publish), 404 not found, 200 published success with envelope.
 
-- [ ] **2. `POST /api/admin/posts/[id]/submit`**
+- [x] **2. `POST /api/admin/blog/posts/[id]/submit`**
   - **Purpose**: Transitions a draft post to `IN_REVIEW` status so editors can review and schedule it for publication.
-  - **Controller**: `app/api/admin/posts/[id]/submit/route.ts`
+  - **Controller**: `app/api/admin/blog/posts/[id]/submit/route.ts`
   - **Service**: `AdminPostsService.submitForReview(id, actorId, ipAddress)`
   - **Repository**: `AdminPostsRepository.updatePostWithAudit`
   - **Required Tests**: 401, 403 origin, 404 not found, 200 state transition success.
@@ -117,7 +118,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/posts/[id]/submit`"*.
+1. State: *"Proceed with `POST /api/admin/media/upload`"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`

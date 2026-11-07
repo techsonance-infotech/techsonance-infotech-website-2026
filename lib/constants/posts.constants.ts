@@ -20,9 +20,11 @@ export const POST_ERRORS = {
   FAILED_UPDATE_POST: "Failed to update post due to an internal server error.",
   FAILED_DELETE_POST: "Failed to delete post due to an internal server error.",
   FAILED_PUBLISH_POST: "Failed to publish post due to an internal server error.",
+  FAILED_SUBMIT_POST: "Failed to submit post for review due to an internal server error.",
   SITE_REQUIRED: "Site ID is required to create a post.",
   POST_DELETED_SUCCESS: "Post deleted successfully",
   POST_PUBLISHED_SUCCESS: "Post published successfully",
+  POST_SUBMITTED_SUCCESS: "Post submitted for review successfully",
 } as const;
 
 export const POST_LIMITS = {
