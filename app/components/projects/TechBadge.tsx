@@ -21,7 +21,7 @@ export function TechBadge({ name, category, size = "sm" }: TechBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center ${padding} rounded-full ${textSize} font-semibold border`}
+      className={`inline-flex items-center ${padding} rounded-full ${textSize} border font-semibold`}
       style={{
         backgroundColor: colors.bg,
         color: colors.text,

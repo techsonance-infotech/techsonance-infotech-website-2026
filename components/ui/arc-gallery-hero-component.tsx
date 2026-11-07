@@ -74,22 +74,22 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
   const step = (endAngle - startAngle) / (count - 1);
 
   return (
-    <section className={`relative overflow-hidden min-h-screen flex flex-col ${className}`}>
+    <section className={`relative flex min-h-screen flex-col overflow-hidden ${className}`}>
       {/* Unique Background Animated Light Trails & Ambient Morphs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         {/* Ambient morphs */}
         <div
-          className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-tr from-[#1155CC]/5 to-[#22B6F6]/5 rounded-full blur-[100px] pointer-events-none animate-pulse"
+          className="pointer-events-none absolute top-[-10%] left-[-10%] h-[300px] w-[300px] animate-pulse rounded-full bg-gradient-to-tr from-[#1155CC]/5 to-[#22B6F6]/5 blur-[100px] sm:h-[600px] sm:w-[600px]"
           style={{ animationDuration: "8s" }}
         />
         <div
-          className="absolute bottom-[10%] right-[-10%] w-[250px] h-[250px] sm:w-[600px] sm:h-[600px] bg-gradient-to-br from-[#22B6F6]/5 to-[#1155CC]/5 rounded-full blur-[120px] pointer-events-none animate-pulse"
+          className="pointer-events-none absolute right-[-10%] bottom-[10%] h-[250px] w-[250px] animate-pulse rounded-full bg-gradient-to-br from-[#22B6F6]/5 to-[#1155CC]/5 blur-[120px] sm:h-[600px] sm:w-[600px]"
           style={{ animationDuration: "12s", animationDelay: "3s" }}
         />
 
         {/* Intersecting sleek curves & moving light trails */}
         <svg
-          className="absolute inset-0 w-full h-full opacity-[0.06] text-[#1155CC] pointer-events-none"
+          className="pointer-events-none absolute inset-0 h-full w-full text-[#1155CC] opacity-[0.06]"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +171,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
         }}
       >
         {/* Center pivot for transforms - positioned at bottom center */}
-        <div className="absolute left-1/2 bottom-0 -translate-x-1/2">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           {/* Each image is positioned on the circle and rotated to face outward */}
           {images.map((src, i) => {
             const angle = startAngle + step * i; // degrees
@@ -184,7 +184,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
             return (
               <div
                 key={i}
-                className="absolute opacity-0 animate-fade-in-up"
+                className="animate-fade-in-up absolute opacity-0"
                 style={{
                   width: `${dimensions.cardSize}px`,
                   height: `${dimensions.cardSize}px`,
@@ -197,7 +197,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                 }}
               >
                 <div
-                  className="rounded-2xl shadow-xl overflow-hidden ring-1 ring-gray-200 bg-white transition-transform hover:scale-105 w-full h-full"
+                  className="h-full w-full overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 transition-transform hover:scale-105"
                   style={{ transform: `rotate(${angle / 4}deg)` }}
                 >
                   <SafeImage
@@ -205,7 +205,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
                     alt={`Memory ${i + 1}`}
                     width={400}
                     height={400}
-                    className="block w-full h-full object-cover"
+                    className="block h-full w-full object-cover"
                     draggable={false}
                   />
                 </div>
@@ -216,23 +216,23 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
       </div>
 
       {/* Content positioned below the arc */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-6 -mt-16 sm:-mt-28 md:-mt-52 lg:-mt-64">
+      <div className="relative z-10 -mt-16 flex flex-1 items-center justify-center px-6 sm:-mt-28 md:-mt-52 lg:-mt-64">
         {children ? (
           children
         ) : (
           <div
-            className="text-center max-w-2xl px-6 opacity-0 animate-fade-in"
+            className="animate-fade-in max-w-2xl px-6 text-center opacity-0"
             style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
           >
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
               {title}
             </h1>
             <p className="mt-4 text-lg text-gray-600">{description}</p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto px-6 py-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <button className="w-full transform rounded-full bg-indigo-600 px-6 py-3 text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl sm:w-auto">
                 {primaryButtonText}
               </button>
-              <button className="w-full sm:w-auto px-6 py-3 rounded-full border border-gray-300 hover:bg-gray-100 transition-all duration-200">
+              <button className="w-full rounded-full border border-gray-300 px-6 py-3 transition-all duration-200 hover:bg-gray-100 sm:w-auto">
                 {secondaryButtonText}
               </button>
             </div>

@@ -39,12 +39,12 @@ function RevealSection({
 // ─── Section label ─────────────────────────────────────────────────────────────
 function SectionLabel({ text, color }: { text: string; color: string }) {
   return (
-    <div className="flex items-center gap-3 mb-6">
-      <div className="w-8 h-px" style={{ background: color }} />
-      <span className="text-xs font-black uppercase tracking-widest" style={{ color }}>
+    <div className="mb-6 flex items-center gap-3">
+      <div className="h-px w-8" style={{ background: color }} />
+      <span className="text-xs font-black tracking-widest uppercase" style={{ color }}>
         {text}
       </span>
-      <div className="flex-1 h-px bg-gray-100" />
+      <div className="h-px flex-1 bg-gray-100" />
     </div>
   );
 }
@@ -70,39 +70,39 @@ function ScreenshotGallery({
   const displayHost = liveUrl ? new URL(liveUrl).hostname : `${slug}.techsonance.co.in`;
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="overflow-hidden bg-white py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <RevealSection>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-px" style={{ background: accentColor }} />
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-px w-8" style={{ background: accentColor }} />
             <span
-              className="text-xs font-black uppercase tracking-widest"
+              className="text-xs font-black tracking-widest uppercase"
               style={{ color: accentColor }}
             >
               Product Screenshots
             </span>
-            <div className="flex-1 h-px bg-gray-100" />
+            <div className="h-px flex-1 bg-gray-100" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-10">
+          <h2 className="mb-10 text-2xl font-medium text-gray-900 sm:text-3xl">
             See it in <span className="brand-gradient-text">action</span>
           </h2>
         </RevealSection>
 
         {/* Main active image - no fixed height, let the image define its size */}
         <div
-          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-2xl cursor-zoom-in mb-5 bg-white"
+          className="relative mb-5 w-full cursor-zoom-in overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:rounded-3xl"
           onClick={() => setLightbox(true)}
         >
           {/* Browser chrome - only for web apps */}
           {!isMobile && (
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
-              <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-              <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-              <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-              <div className="flex-1 mx-3 bg-white rounded-md px-3 py-1 text-[10px] text-gray-400 font-mono border border-gray-200 truncate">
+            <div className="flex items-center gap-2 border-b border-gray-100 bg-gray-50 px-4 py-2.5">
+              <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+              <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+              <span className="h-3 w-3 rounded-full bg-[#28C840]" />
+              <div className="mx-3 flex-1 truncate rounded-md border border-gray-200 bg-white px-3 py-1 font-mono text-[10px] text-gray-400">
                 {displayHost}
               </div>
-              <span className="text-[10px] text-gray-400 hidden sm:inline">Click to enlarge</span>
+              <span className="hidden text-[10px] text-gray-400 sm:inline">Click to enlarge</span>
             </div>
           )}
 
@@ -135,7 +135,7 @@ function ScreenshotGallery({
                   e.stopPropagation();
                   setActive(active - 1);
                 }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
                 aria-label="Previous screenshot"
               >
                 <svg
@@ -155,7 +155,7 @@ function ScreenshotGallery({
                   e.stopPropagation();
                   setActive(active + 1);
                 }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
                 aria-label="Next screenshot"
               >
                 <svg
@@ -173,7 +173,7 @@ function ScreenshotGallery({
         </div>
 
         {/* Caption */}
-        <p className="text-sm text-gray-500 text-center mb-6 italic">
+        <p className="mb-6 text-center text-sm text-gray-500 italic">
           {screenshots[active].caption}
         </p>
 
@@ -183,13 +183,13 @@ function ScreenshotGallery({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`relative shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-200 bg-gray-100 ${
+              className={`relative shrink-0 overflow-hidden rounded-xl border-2 bg-gray-100 transition-all duration-200 ${
                 i === active ? "scale-105 shadow-lg" : "border-gray-200 opacity-60 hover:opacity-90"
               }`}
               style={i === active ? { borderColor: accentColor } : {}}
               aria-label={`View screenshot ${i + 1}`}
             >
-              <div className="w-40 h-24 sm:w-52 sm:h-32 flex items-center justify-center overflow-hidden">
+              <div className="flex h-24 w-40 items-center justify-center overflow-hidden sm:h-32 sm:w-52">
                 <SafeImage
                   src={s.src}
                   alt={s.caption}
@@ -201,7 +201,7 @@ function ScreenshotGallery({
               </div>
               {i === active && (
                 <div
-                  className="absolute bottom-0 left-0 right-0 h-0.5"
+                  className="absolute right-0 bottom-0 left-0 h-0.5"
                   style={{ background: accentColor }}
                 />
               )}
@@ -210,12 +210,12 @@ function ScreenshotGallery({
         </div>
 
         {/* Dot indicators */}
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="mt-4 flex justify-center gap-2">
           {screenshots.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
-              className="w-1.5 h-1.5 rounded-full transition-all duration-200"
+              className="h-1.5 w-1.5 rounded-full transition-all duration-200"
               style={{
                 background: i === active ? accentColor : "#D1D5DB",
                 transform: i === active ? "scale(1.5)" : "scale(1)",
@@ -234,11 +234,11 @@ function ScreenshotGallery({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4"
+            className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
             onClick={() => setLightbox(false)}
           >
             <button
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+              className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               onClick={() => setLightbox(false)}
               aria-label="Close lightbox"
             >
@@ -256,10 +256,10 @@ function ScreenshotGallery({
               initial={{ scale: 0.94 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.94 }}
-              className="relative w-full max-w-5xl rounded-2xl overflow-hidden"
+              className="relative w-full max-w-5xl overflow-hidden rounded-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full aspect-[16/9]">
+              <div className="relative aspect-[16/9] w-full">
                 <Image
                   src={screenshots[active].src}
                   alt={screenshots[active].caption}
@@ -270,12 +270,12 @@ function ScreenshotGallery({
               </div>
             </motion.div>
 
-            <p className="text-white/70 text-sm mt-4 text-center italic">
+            <p className="mt-4 text-center text-sm text-white/70 italic">
               {screenshots[active].caption}
             </p>
 
             {/* Lightbox nav */}
-            <div className="flex gap-3 mt-4">
+            <div className="mt-4 flex gap-3">
               {screenshots.map((_, i) => (
                 <button
                   key={i}
@@ -283,7 +283,7 @@ function ScreenshotGallery({
                     e.stopPropagation();
                     setActive(i);
                   }}
-                  className="w-2 h-2 rounded-full transition-all"
+                  className="h-2 w-2 rounded-full transition-all"
                   style={{ background: i === active ? "white" : "rgba(255,255,255,0.3)" }}
                 />
               ))}
@@ -298,15 +298,15 @@ function ScreenshotGallery({
 // ─── Hero section ──────────────────────────────────────────────────────────────
 function ProjectHero({ project }: { project: Project }) {
   return (
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden pt-16 pb-12">
+    <section className="relative flex min-h-[80vh] items-center overflow-hidden pt-16 pb-12">
       {/* Background glow */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="pointer-events-none absolute inset-0">
         <div
-          className="absolute -top-48 -right-48 w-[700px] h-[700px] rounded-full opacity-10 blur-3xl"
+          className="absolute -top-48 -right-48 h-[700px] w-[700px] rounded-full opacity-10 blur-3xl"
           style={{ background: project.accentColor }}
         />
         <div
-          className="absolute -bottom-48 -left-48 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl"
+          className="absolute -bottom-48 -left-48 h-[500px] w-[500px] rounded-full opacity-8 blur-3xl"
           style={{ background: project.accentColor }}
         />
         <div
@@ -319,26 +319,26 @@ function ProjectHero({ project }: { project: Project }) {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-2 text-sm text-gray-400 mb-8"
+          className="mb-8 flex items-center gap-2 text-sm text-gray-400"
         >
-          <Link href="/" className="hover:text-gray-700 transition-colors">
+          <Link href="/" className="transition-colors hover:text-gray-700">
             Home
           </Link>
           <span>/</span>
-          <Link href="/portfolio" className="hover:text-gray-700 transition-colors">
+          <Link href="/portfolio" className="transition-colors hover:text-gray-700">
             Portfolio
           </Link>
           <span>/</span>
-          <span className="text-gray-700 font-medium">{project.title}</span>
+          <span className="font-medium text-gray-700">{project.title}</span>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left: text */}
           <div className="flex flex-col gap-6">
             <motion.div
@@ -348,12 +348,12 @@ function ProjectHero({ project }: { project: Project }) {
               className="flex flex-wrap gap-2"
             >
               <span
-                className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white"
+                className="rounded-full px-3 py-1 text-[10px] font-black tracking-widest text-white uppercase"
                 style={{ background: project.accentColor }}
               >
                 {project.category}
               </span>
-              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-gray-100 text-gray-500">
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
                 {project.industry}
               </span>
             </motion.div>
@@ -362,7 +362,7 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-medium text-gray-900 leading-[1.06] tracking-tight"
+              className="text-4xl leading-[1.06] font-medium tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
             >
               {project.title}
             </motion.h1>
@@ -371,7 +371,7 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.16 }}
-              className="text-base sm:text-lg text-slate-700 font-medium leading-snug"
+              className="text-base leading-snug font-medium text-slate-700 sm:text-lg"
             >
               {project.tagline}
             </motion.p>
@@ -380,7 +380,7 @@ function ProjectHero({ project }: { project: Project }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-base text-gray-500 leading-relaxed"
+              className="text-base leading-relaxed text-gray-500"
             >
               {project.overview}
             </motion.p>
@@ -416,7 +416,7 @@ function ProjectHero({ project }: { project: Project }) {
                 >
                   <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                     <svg
-                      className="h-4 w-4 mr-2"
+                      className="mr-2 h-4 w-4"
                       viewBox="0 0 16 16"
                       fill="none"
                       stroke="currentColor"
@@ -485,13 +485,13 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
       {/* ── Challenges ────────────────────────────────────────────────────────── */}
       <section className="bg-[#FAFBFD] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <RevealSection>
             <SectionLabel text="Challenges" color={project.accentColor} />
-            <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-10">
+            <h2 className="mb-10 text-2xl font-medium text-gray-900 sm:text-3xl">
               Problems we <span style={{ color: project.accentColor }}>solved</span>
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {project.challenges.map((c, i) => (
                 <motion.div
                   key={c.title}
@@ -499,16 +499,16 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-8%" }}
                   transition={{ duration: 0.55, delay: i * 0.1, ease: "easeOut" }}
-                  className="flex flex-col gap-4 p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300"
+                  className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
                 >
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl"
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl text-xl"
                     style={{ background: `${project.accentColor}12`, color: project.accentColor }}
                   >
-                    <EmojiOrLucideIcon icon={c.icon} className="w-5 h-5" />
+                    <EmojiOrLucideIcon icon={c.icon} className="h-5 w-5" />
                   </div>
                   <h3 className="font-medium text-gray-900">{c.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{c.description}</p>
+                  <p className="text-sm leading-relaxed text-gray-500">{c.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -517,16 +517,16 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       </section>
 
       {/* ── Solutions ──────────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <RevealSection>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
               <div>
                 <SectionLabel text="Solutions" color={project.accentColor} />
-                <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
+                <h2 className="mb-6 text-2xl font-medium text-gray-900 sm:text-3xl">
                   How we <span style={{ color: project.accentColor }}>built it</span>
                 </h2>
-                <p className="text-sm text-gray-500 leading-relaxed mb-8">{project.solution}</p>
+                <p className="mb-8 text-sm leading-relaxed text-gray-500">{project.solution}</p>
                 <ul className="flex flex-col gap-4">
                   {project.solutions.map((s, i) => (
                     <motion.li
@@ -538,12 +538,12 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                       className="flex items-start gap-3"
                     >
                       <span
-                        className="mt-0.5 shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
+                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
                         style={{ background: project.accentColor }}
                       >
                         {i + 1}
                       </span>
-                      <p className="text-sm text-gray-600 leading-relaxed">{s}</p>
+                      <p className="text-sm leading-relaxed text-gray-600">{s}</p>
                     </motion.li>
                   ))}
                 </ul>
@@ -552,7 +552,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               {/* Tech stack full list */}
               <div>
                 <SectionLabel text="Tech Stack" color={project.accentColor} />
-                <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-6">
+                <h2 className="mb-6 text-2xl font-medium text-gray-900 sm:text-3xl">
                   Built with the <span style={{ color: project.accentColor }}>best tools</span>
                 </h2>
                 {(["frontend", "backend", "database", "infra", "ai", "mobile"] as const).map(
@@ -561,7 +561,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                     if (!items.length) return null;
                     return (
                       <div key={cat} className="mb-6">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 capitalize">
+                        <p className="mb-3 text-[10px] font-black tracking-widest text-gray-400 capitalize uppercase">
                           {cat === "ai" ? "AI / ML" : cat === "infra" ? "Infrastructure" : cat}
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -581,15 +581,15 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
       {/* ── Results ────────────────────────────────────────────────────────────── */}
       <section className="bg-[#FAFBFD] py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <RevealSection>
-            <div className="text-center mb-12">
+            <div className="mb-12 text-center">
               <SectionLabel text="Results" color={project.accentColor} />
-              <h2 className="text-2xl sm:text-3xl font-medium text-gray-900">
+              <h2 className="text-2xl font-medium text-gray-900 sm:text-3xl">
                 Measurable <span style={{ color: project.accentColor }}>impact</span>
               </h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {project.metrics.map((m, i) => (
                 <MetricCard
                   key={m.label}
@@ -603,13 +603,13 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
               ))}
             </div>
             <div
-              className="mt-10 p-6 rounded-2xl border"
+              className="mt-10 rounded-2xl border p-6"
               style={{
                 borderColor: `${project.accentColor}25`,
                 background: `${project.accentColor}08`,
               }}
             >
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm leading-relaxed text-gray-600">
                 <span className="font-bold" style={{ color: project.accentColor }}>
                   Overall Result:
                 </span>{" "}
@@ -618,23 +618,23 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             </div>
 
             {project.clientReview && (
-              <div className="mt-6 p-6 sm:p-8 rounded-2xl bg-white border border-slate-100 shadow-sm relative overflow-hidden">
+              <div className="relative mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
                 <div
-                  className="absolute top-0 left-0 bottom-0 w-1.5"
+                  className="absolute top-0 bottom-0 left-0 w-1.5"
                   style={{ background: project.accentColor }}
                 />
-                <div className="flex items-center gap-2 mb-3 text-amber-500">
+                <div className="mb-3 flex items-center gap-2 text-amber-500">
                   {"★".repeat(5)}
-                  <span className="text-xs font-bold text-slate-700 ml-2">
+                  <span className="ml-2 text-xs font-bold text-slate-700">
                     Verified Client Review
                   </span>
                 </div>
-                <blockquote className="text-sm sm:text-base text-slate-800 italic leading-relaxed mb-4">
+                <blockquote className="mb-4 text-sm leading-relaxed text-slate-800 italic sm:text-base">
                   &ldquo;{project.clientReview.quote}&rdquo;
                 </blockquote>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t border-slate-100 pt-4">
+                <div className="flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <span className="text-xs font-bold text-slate-900 block">
+                    <span className="block text-xs font-bold text-slate-900">
                       {project.clientReview.author}
                     </span>
                     <span className="text-[11px] text-slate-500">
@@ -643,7 +643,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   </div>
                   {project.roiSummary && (
                     <span
-                      className="text-xs font-bold px-3 py-1 rounded-full self-start sm:self-auto"
+                      className="self-start rounded-full px-3 py-1 text-xs font-bold sm:self-auto"
                       style={{ background: `${project.accentColor}15`, color: project.accentColor }}
                     >
                       ROI: {project.roiSummary}
@@ -657,8 +657,8 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────────────────────── */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 brand-gradient opacity-95" />
+      <section className="relative overflow-hidden py-24">
+        <div className="brand-gradient absolute inset-0 opacity-95" />
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -667,35 +667,35 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             backgroundSize: "52px 52px",
           }}
         />
-        <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
+        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65 }}
           >
-            <p className="text-white/70 text-sm font-bold uppercase tracking-widest mb-4">
+            <p className="mb-4 text-sm font-bold tracking-widest text-white/70 uppercase">
               Your product, next
             </p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-white mb-6 leading-tight">
+            <h2 className="mb-6 text-3xl leading-tight font-medium text-white sm:text-4xl lg:text-5xl">
               Build Your Product With Us.
             </h2>
-            <p className="text-white/75 text-base mb-10 leading-relaxed">
+            <p className="mb-10 text-base leading-relaxed text-white/75">
               We&apos;ve shipped {project.category.toLowerCase()} platforms before. We know the
               pitfalls, the shortcuts that matter, and the patterns that scale. Let&apos;s talk.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button
                 onClick={() => setIsBookModalOpen(true)}
                 variant="secondary"
-                className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
+                className="w-full border-transparent bg-white text-[#1155CC] shadow-md hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 Book Free Consultation
               </Button>
               <Button
                 asChild
                 variant="secondary"
-                className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
+                className="w-full border-white/40 text-white hover:border-white hover:bg-white/10 hover:text-white hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 <Link href="/portfolio">See More Portfolio</Link>
               </Button>

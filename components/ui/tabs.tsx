@@ -116,7 +116,7 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
         // shadcn's active chrome, kept only until the indicator is measured
         // (server render / first paint). Afterwards the indicator draws it;
         // a call site's own data-[state=active]:bg-* still applies on top.
-        "group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:bg-background data-[state=active]:text-foreground dark:group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:border-input dark:group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:bg-input/30 dark:data-[state=active]:text-foreground",
+        "data-[state=active]:text-foreground group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:bg-background dark:data-[state=active]:text-foreground dark:group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:border-input dark:group-data-[variant=default]/tabs-list:group-not-data-[indicator=ready]/tabs-list:data-[state=active]:bg-input/30",
         "group-data-[indicator=ready]/tabs-list:after:hidden",
         "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100",
         className,

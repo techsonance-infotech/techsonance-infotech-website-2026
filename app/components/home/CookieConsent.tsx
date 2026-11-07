@@ -38,18 +38,18 @@ export default function CookieConsent() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed bottom-0 left-0 right-0 w-full z-50 border-t border-slate-100 bg-white/95 backdrop-blur-md text-slate-800 shadow-[0_-10px_40px_rgba(17,85,204,0.06)]"
+          className="fixed right-0 bottom-0 left-0 z-50 w-full border-t border-slate-100 bg-white/95 text-slate-800 shadow-[0_-10px_40px_rgba(17,85,204,0.06)] backdrop-blur-md"
         >
           {/* Glowing brand gradient line on top */}
           <div className="h-[2px] w-full bg-gradient-to-r from-[#1155CC] via-[#22B6F6] to-[#00E5FF]" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start text-center sm:text-left">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 md:flex-row lg:px-8">
+            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
               {/* Shield Icon */}
-              <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0 border border-[#1155CC]/10 shadow-sm">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#1155CC]/10 bg-[#1155CC]/5 text-[#1155CC] shadow-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -63,17 +63,17 @@ export default function CookieConsent() {
                 </svg>
               </div>
               <div className="space-y-1">
-                <h3 className="text-xs sm:text-sm font-medium tracking-tight font-sora text-slate-900">
+                <h3 className="font-sora text-xs font-medium tracking-tight text-slate-900 sm:text-sm">
                   Privacy & Cookies Preferences
                 </h3>
-                <p className="text-xs font-semibold text-slate-600 leading-relaxed max-w-4xl">
+                <p className="max-w-4xl text-xs leading-relaxed font-semibold text-slate-600">
                   We use cookies to optimize site navigation, analyze traffic, and support marketing
                   efforts. By continuing or clicking "Accept All", you agree to our{" "}
-                  <Link href="/privacy-policy" className="text-[#1155CC] hover:underline font-bold">
+                  <Link href="/privacy-policy" className="font-bold text-[#1155CC] hover:underline">
                     Privacy Policy
                   </Link>{" "}
                   and{" "}
-                  <Link href="/terms" className="text-[#1155CC] hover:underline font-bold">
+                  <Link href="/terms" className="font-bold text-[#1155CC] hover:underline">
                     Terms of Use
                   </Link>
                   .
@@ -81,12 +81,12 @@ export default function CookieConsent() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0 w-full md:w-auto justify-center md:justify-end">
+            <div className="flex w-full shrink-0 items-center justify-center gap-3 md:w-auto md:justify-end">
               <Button
                 onClick={handleDecline}
                 variant="secondary"
                 size="sm"
-                className="w-1/2 sm:w-auto border-slate-200 hover:border-slate-350 text-slate-500 hover:text-slate-800 hover:bg-slate-50 shadow-sm"
+                className="hover:border-slate-350 w-1/2 border-slate-200 text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-800 sm:w-auto"
               >
                 Decline
               </Button>

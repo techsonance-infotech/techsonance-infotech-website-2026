@@ -1,12 +1,21 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["oxlint-tailwindcss"],
   "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "unicorn", "import", "oxc"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn",
     "perf": "warn"
   },
+  "settings": {
+    "tailwindcss": {
+      "entryPoint": "app/globals.css"
+    }
+  },
   "rules": {
+    "tailwindcss/no-unknown-classes": "error",
+    "tailwindcss/no-conflicting-classes": "error",
+    "tailwindcss/enforce-sort-order": "warn",
     "eqeqeq": ["error", "always"],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-debugger": "error",
@@ -26,7 +35,8 @@
     "typescript/no-explicit-any": "warn",
     "typescript/consistent-type-imports": "error",
     "import/no-cycle": "error",
-    "import/no-duplicates": "error"
+    "import/no-duplicates": "error",
+    "import/no-unassigned-import": "off"
   },
   "env": {
     "browser": true,
@@ -45,7 +55,14 @@
     "next-env.d.ts",
     "*.min.js",
     "graphify-out/**",
-    ".gitnexus/**"
+    ".gitnexus/**",
+    "blackbox-testing/**",
+    "tests/**",
+    "*.test.ts",
+    "*.test.tsx",
+    "*.spec.ts",
+    "*.spec.tsx",
+    "scripts/**"
   ],
   "overrides": [
     {

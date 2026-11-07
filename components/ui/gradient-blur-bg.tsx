@@ -6,7 +6,7 @@ export const Component = () => {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="min-h-screen w-full bg-white relative">
+    <div className="relative min-h-screen w-full bg-white">
       {/* Theme Gradient Grid Right Background (Removed purple, using corporate blue) */}
       <div
         className="absolute inset-0 z-0"

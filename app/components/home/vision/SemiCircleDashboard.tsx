@@ -70,7 +70,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
   return (
     <div
       ref={containerRef}
-      className="relative w-full select-none mx-auto max-w-[1000px] overflow-hidden"
+      className="relative mx-auto w-full max-w-[1000px] overflow-hidden select-none"
       style={{ aspectRatio: `${DESIGN_W} / ${DESIGN_H}` }}
     >
       <div
@@ -89,7 +89,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
           width={DESIGN_W}
           height={DESIGN_H}
           viewBox={`0 0 ${DESIGN_W} ${DESIGN_H}`}
-          className="absolute inset-0 pointer-events-none"
+          className="pointer-events-none absolute inset-0"
         >
           <defs>
             <filter id="hub-shadow" x="-30%" y="-30%" width="160%" height="160%">
@@ -280,7 +280,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
             >
               {/* Active Group Backlight Glow */}
               {isActive && (
-                <div className="absolute top-[50px] left-1/2 -translate-x-1/2 w-56 h-56 bg-blue-500/10 blur-3xl rounded-full pointer-events-none -z-10" />
+                <div className="pointer-events-none absolute top-[50px] left-1/2 -z-10 h-56 w-56 -translate-x-1/2 rounded-full bg-blue-500/10 blur-3xl" />
               )}
 
               {/* Render avatars along the curve */}
@@ -313,7 +313,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                         ? "none"
                         : "transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease",
                     }}
-                    className={`rounded-full border-2 bg-white overflow-hidden flex-shrink-0 transition-all ${
+                    className={`flex-shrink-0 overflow-hidden rounded-full border-2 bg-white transition-all ${
                       isCenterAvatar
                         ? "border-white ring-2 ring-[#2563EB] shadow-lg scale-105"
                         : "border-white shadow-sm"
@@ -323,10 +323,10 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                       <img
                         src={member.avatarUrl}
                         alt="Team"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-[10px] text-gray-400 font-semibold select-none">
+                      <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-400 select-none">
                         TS
                       </div>
                     )}
@@ -343,7 +343,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                     top: 210,
                     transform: "translateX(-50%)",
                   }}
-                  className="px-8 py-2.5 text-[22px] font-bold tracking-wide whitespace-nowrap z-10 bg-white border border-blue-200 rounded-full text-blue-600 shadow-[0_8px_20px_rgba(37,99,235,0.18)] opacity-100"
+                  className="z-10 rounded-full border border-blue-200 bg-white px-8 py-2.5 text-[22px] font-bold tracking-wide whitespace-nowrap text-blue-600 opacity-100 shadow-[0_8px_20px_rgba(37,99,235,0.18)]"
                 >
                   {group.title}
                 </div>

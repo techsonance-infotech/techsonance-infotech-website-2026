@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CheckCircle2, AlertTriangle, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { updateAdminJobStatus } from "@/lib/api/admin-jobs.api";
+import { approveAdminJob, returnAdminJob } from "@/lib/api/admin-jobs.api";
 import type { Job } from "@/lib/types/careers";
-import { JobStatus } from "@/lib/constants/enums";
 
 interface ApprovalFormData {
   comment: string;
@@ -65,16 +64,9 @@ export function ApprovalActionDialog({
     setIsSubmitting(true);
 
     try {
-      const targetStatus = isApprove
-        ? isScheduled
-          ? JobStatus.SCHEDULED
-          : JobStatus.PUBLISHED
-        : JobStatus.DRAFT;
-
-      const updatedJob = await updateAdminJobStatus(job.id, {
-        targetStatus,
-        comment: data.comment.trim() || undefined,
-      });
+      const updatedJob = isApprove
+        ? await approveAdminJob(job.id, data.comment.trim() || undefined)
+        : await returnAdminJob(job.id, data.comment.trim());
 
       onSuccess(updatedJob);
       onClose();
@@ -87,27 +79,27 @@ export function ApprovalActionDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
       <dialog
         open
         aria-modal="true"
         aria-labelledby="approval-dialog-title"
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl animate-in zoom-in-95 duration-150 m-0 block"
+        className="animate-in zoom-in-95 m-0 block w-full max-w-md space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
+              className={`flex h-10 w-10 items-center justify-center rounded-2xl ${
                 isApprove
                   ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400"
                   : "bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400"
               }`}
             >
               {isApprove ? (
-                <CheckCircle2 className="w-5 h-5" />
+                <CheckCircle2 className="h-5 w-5" />
               ) : (
-                <AlertTriangle className="w-5 h-5" />
+                <AlertTriangle className="h-5 w-5" />
               )}
             </div>
             <div>
@@ -121,16 +113,16 @@ export function ApprovalActionDialog({
                     : "Approve & Publish Role"
                   : "Return Role to Draft"}
               </h3>
-              <p className="text-xs text-slate-500 line-clamp-1">{job.title}</p>
+              <p className="line-clamp-1 text-xs text-slate-500">{job.title}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="rounded-xl p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
@@ -138,7 +130,7 @@ export function ApprovalActionDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-3">
             {isApprove ? (
-              <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
+              <div className="rounded-2xl border border-slate-200/60 bg-slate-50 p-3.5 text-sm leading-relaxed text-slate-600 dark:border-slate-700/60 dark:bg-slate-800/40 dark:text-slate-300">
                 {isScheduled ? (
                   <span>
                     This role will transition to <strong>SCHEDULED</strong> and will automatically
@@ -166,7 +158,7 @@ export function ApprovalActionDialog({
                   })}
                   placeholder="Explain what revisions or additional details are needed before this position can be approved..."
                   rows={4}
-                  className="w-full text-sm bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-amber-500/50 focus:outline-none dark:border-slate-700 dark:bg-slate-800/60 dark:text-white"
                 />
                 {errors.comment && (
                   <p className="text-xs text-rose-500">{errors.comment.message}</p>
@@ -179,14 +171,14 @@ export function ApprovalActionDialog({
             )}
 
             {errorMessage && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs text-rose-600 dark:text-rose-400 font-medium">
+              <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-medium text-rose-600 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-400">
                 {errorMessage}
               </div>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 pt-2 dark:border-slate-800">
             <Button
               type="button"
               variant="outline"
@@ -207,7 +199,7 @@ export function ApprovalActionDialog({
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Processing...
                 </span>
               ) : isApprove ? (

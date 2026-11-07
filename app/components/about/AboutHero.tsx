@@ -49,9 +49,9 @@ export default function AboutHero() {
 
   return (
     <>
-      <section className="relative pt-32 pb-20 md:py-28 bg-[#FAFBFD] border-b border-gray-100 overflow-hidden">
+      <section className="relative overflow-hidden border-b border-gray-100 bg-[#FAFBFD] pt-32 pb-20 md:py-28">
         {/* Animated Background */}
-        <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="pointer-events-none absolute inset-0 z-0">
           {/* Base Premium Gradient */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#EFF5FA] via-[#F6FAFD] to-[#FAFBFD]" />
 
@@ -68,7 +68,7 @@ export default function AboutHero() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute -top-20 -left-20 w-[400px] h-[400px] rounded-full bg-blue-400/10 blur-[100px]"
+                className="absolute -top-20 -left-20 h-[400px] w-[400px] rounded-full bg-blue-400/10 blur-[100px]"
               />
               <motion.div
                 animate={{
@@ -80,21 +80,21 @@ export default function AboutHero() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute top-1/3 right-[-100px] w-[500px] h-[500px] rounded-full bg-cyan-300/10 blur-[120px]"
+                className="absolute top-1/3 right-[-100px] h-[500px] w-[500px] rounded-full bg-cyan-300/10 blur-[120px]"
               />
             </>
           ) : (
             mounted && (
               <>
-                <div className="absolute -top-10 -left-10 w-[200px] h-[200px] rounded-full bg-blue-400/10 blur-[60px]" />
-                <div className="absolute top-1/3 right-[-50px] w-[250px] h-[250px] rounded-full bg-cyan-300/10 blur-[80px]" />
+                <div className="absolute -top-10 -left-10 h-[200px] w-[200px] rounded-full bg-blue-400/10 blur-[60px]" />
+                <div className="absolute top-1/3 right-[-50px] h-[250px] w-[250px] rounded-full bg-cyan-300/10 blur-[80px]" />
               </>
             )
           )}
 
           {/* Animated SVG Grid Lines & Light Beams */}
           <svg
-            className="absolute inset-0 w-full h-full opacity-60"
+            className="absolute inset-0 h-full w-full opacity-60"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
@@ -158,10 +158,10 @@ export default function AboutHero() {
           </svg>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
             {/* Left Column: Heading & Key Features */}
-            <div className="lg:col-span-4 flex flex-col justify-between lg:min-h-[520px] relative">
+            <div className="relative flex flex-col justify-between lg:col-span-4 lg:min-h-[520px]">
               <div>
                 {/* Micro badge */}
                 <motion.div
@@ -169,14 +169,14 @@ export default function AboutHero() {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6"
+                  className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4.5 py-1.5"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
                   }}
                 >
-                  <span className="w-2 h-2 rounded-full bg-[#1155CC] animate-pulse" />
-                  <span className="text-[10px] font-medium text-[#1155CC] tracking-widest uppercase">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#1155CC]" />
+                  <span className="text-[10px] font-medium tracking-widest text-[#1155CC] uppercase">
                     OUR MISSION
                   </span>
                 </motion.div>
@@ -186,7 +186,7 @@ export default function AboutHero() {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="text-3xl sm:text-4xl lg:text-[52px] font-black leading-[1.05] tracking-tight text-gray-900"
+                  className="text-3xl leading-[1.05] font-black tracking-tight text-gray-900 sm:text-4xl lg:text-[52px]"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
@@ -195,7 +195,7 @@ export default function AboutHero() {
                   }}
                 >
                   About TechSonance Infotech:{" "}
-                  <span className="text-[#1155CC] block lg:inline-block">
+                  <span className="block text-[#1155CC] lg:inline-block">
                     Software &amp; AI Engineering Partner in Surat
                   </span>
                 </motion.h1>
@@ -205,7 +205,7 @@ export default function AboutHero() {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="text-sm text-gray-500 mt-5 leading-relaxed font-medium max-w-sm"
+                  className="mt-5 max-w-sm text-sm leading-relaxed font-medium text-gray-500"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
@@ -217,23 +217,23 @@ export default function AboutHero() {
               </div>
 
               {/* Info Blocks */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 mt-10 lg:mt-0">
+              <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-0 lg:grid-cols-1">
                 <motion.div
                   custom={3}
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="p-5 rounded-2xl bg-white/70 backdrop-blur-sm border border-gray-100/60 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)] hover:border-blue-100 transition-all duration-300 group"
+                  className="group rounded-2xl border border-gray-100/60 bg-white/70 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.01)] backdrop-blur-sm transition-all duration-300 hover:border-blue-100 hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)]"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
                   }}
                 >
-                  <h3 className="text-[13px] font-bold text-gray-900 mb-1.5 flex items-center gap-2 group-hover:text-[#1155CC] transition-colors">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                  <h3 className="mb-1.5 flex items-center gap-2 text-[13px] font-bold text-gray-900 transition-colors group-hover:text-[#1155CC]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                     Engineering that ships
                   </h3>
-                  <p className="text-[12px] text-gray-500 leading-relaxed">
+                  <p className="text-[12px] leading-relaxed text-gray-500">
                     Production systems built for scale - custom software, SaaS platforms, and AI
                     automation for real businesses.
                   </p>
@@ -244,17 +244,17 @@ export default function AboutHero() {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="p-5 rounded-2xl bg-white/70 backdrop-blur-sm border border-gray-100/60 shadow-[0_4px_16px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)] hover:border-blue-100 transition-all duration-300 group"
+                  className="group rounded-2xl border border-gray-100/60 bg-white/70 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.01)] backdrop-blur-sm transition-all duration-300 hover:border-blue-100 hover:shadow-[0_8px_24px_rgba(17,85,204,0.03)]"
                   style={{
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
                   }}
                 >
-                  <h3 className="text-[13px] font-bold text-gray-900 mb-1.5 flex items-center gap-2 group-hover:text-[#1155CC] transition-colors">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                  <h3 className="mb-1.5 flex items-center gap-2 text-[13px] font-bold text-gray-900 transition-colors group-hover:text-[#1155CC]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                     Accountable delivery
                   </h3>
-                  <p className="text-[12px] text-gray-500 leading-relaxed">
+                  <p className="text-[12px] leading-relaxed text-gray-500">
                     One engineering team from architecture through deployment. You own the code, we
                     own the execution.
                   </p>
@@ -268,16 +268,16 @@ export default function AboutHero() {
               variants={imageReveal}
               initial="hidden"
               animate="visible"
-              className="lg:col-span-5 relative"
+              className="relative lg:col-span-5"
               style={{
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
               }}
             >
               {/* Outer decorative card shadow */}
-              <div className="absolute inset-0 bg-[#1155CC]/5 rounded-[2.2rem] translate-x-3 translate-y-3 blur-sm pointer-events-none" />
+              <div className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded-[2.2rem] bg-[#1155CC]/5 blur-sm" />
 
-              <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[520px] w-full overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white shadow-[0_20px_50px_rgba(17,85,204,0.06)] group">
+              <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-gray-200/80 bg-white shadow-[0_20px_50px_rgba(17,85,204,0.06)] lg:aspect-auto lg:h-[520px]">
                 <SafeImage
                   src="/images/about-techsonance-engineering-team.jpg"
                   alt="TechSonance Infotech engineering team collaborating on production software and AI solutions in Surat"
@@ -286,27 +286,27 @@ export default function AboutHero() {
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
             </motion.div>
 
             {/* Right Column: Mini card + Philosophy block */}
-            <div className="lg:col-span-3 flex flex-col gap-6 lg:min-h-[520px]">
+            <div className="flex flex-col gap-6 lg:col-span-3 lg:min-h-[520px]">
               <motion.div
                 custom={1}
                 variants={imageReveal}
                 initial="hidden"
                 animate="visible"
-                className="relative aspect-[4/3] lg:aspect-square w-full overflow-hidden rounded-[1.75rem] border border-gray-800 bg-gradient-to-tr from-[#0F172A] to-[#1E293B] shadow-[0_12px_30px_rgba(17,85,204,0.08)] flex items-center justify-center p-8 group"
+                className="group relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-[1.75rem] border border-gray-800 bg-gradient-to-tr from-[#0F172A] to-[#1E293B] p-8 shadow-[0_12px_30px_rgba(17,85,204,0.08)] lg:aspect-square"
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
               >
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px]" />
 
                 {/* Floating Glow effects */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 bg-[#1155CC]/15 rounded-full blur-2xl group-hover:bg-[#22B6F6]/25 transition-all duration-500" />
+                <div className="absolute top-1/2 left-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1155CC]/15 blur-2xl transition-all duration-500 group-hover:bg-[#22B6F6]/25" />
 
                 <div className="relative z-10 flex flex-col items-center gap-4 text-center">
                   <Image
@@ -318,10 +318,10 @@ export default function AboutHero() {
                     priority
                   />
                   <div>
-                    <h3 className="text-xs font-bold text-white tracking-widest uppercase">
+                    <h3 className="text-xs font-bold tracking-widest text-white uppercase">
                       TECHSONANCE
                     </h3>
-                    <p className="text-[9px] font-mono text-[#22B6F6] mt-0.5 tracking-wider">
+                    <p className="mt-0.5 font-mono text-[9px] tracking-wider text-[#22B6F6]">
                       INFOTECH LLP
                     </p>
                   </div>
@@ -333,19 +333,19 @@ export default function AboutHero() {
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
-                className="flex-grow flex flex-col justify-between"
+                className="flex flex-grow flex-col justify-between"
               >
                 <div>
-                  <h2 className="text-base font-bold text-gray-900 mb-2 leading-snug">
+                  <h2 className="mb-2 text-base leading-snug font-bold text-gray-900">
                     Our philosophy
                   </h2>
-                  <p className="text-[13px] text-gray-500 leading-relaxed mb-6 font-medium">
+                  <p className="mb-6 text-[13px] leading-relaxed font-medium text-gray-500">
                     At TechSonance, we build software that runs real businesses - not slide decks.
                     Every system is engineered for production from day one.
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+                <div className="mt-auto flex flex-col gap-3 sm:flex-row">
                   <Button onClick={() => setIsBookModalOpen(true)} variant="default" size="sm">
                     Book a call
                   </Button>

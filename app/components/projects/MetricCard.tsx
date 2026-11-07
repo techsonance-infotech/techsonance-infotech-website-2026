@@ -69,17 +69,17 @@ export function MetricCard({
   return (
     <div
       ref={ref}
-      className="flex flex-col items-center p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.06)] text-center"
+      className="flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-[0_2px_16px_rgba(0,0,0,0.06)]"
     >
       <div
-        className="text-3xl sm:text-4xl font-black leading-none mb-2"
+        className="mb-2 text-3xl leading-none font-black sm:text-4xl"
         style={{ color: accentColor }}
       >
         {prefix}
         {displayValue}
         {suffix}
       </div>
-      <div className="text-sm text-gray-500 font-medium leading-tight">{label}</div>
+      <div className="text-sm leading-tight font-medium text-gray-500">{label}</div>
     </div>
   );
 }

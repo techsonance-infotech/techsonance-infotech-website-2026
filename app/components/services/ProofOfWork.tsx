@@ -18,26 +18,26 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
         <div className="reveal-up mb-12 md:mb-16">
           <span className="section-label">Proof of Work</span>
           <h2
-            className="text-[var(--text-primary)] font-medium tracking-tight"
+            className="font-medium tracking-tight text-[var(--text-primary)]"
             style={{ fontSize: "var(--text-section-title)" }}
           >
             Projects We&apos;ve Shipped
           </h2>
-          <p className="text-[var(--text-secondary)] mt-3 text-base md:text-lg max-w-2xl">
+          <p className="mt-3 max-w-2xl text-base text-[var(--text-secondary)] md:text-lg">
             Real-world applications delivered for our clients. Built with the same engineering
             standards we bring to your project.
           </p>
         </div>
 
-        <div className="card-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="card-grid grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <Link
               key={project.slug}
               href={project.href}
-              className="group card service-card flex flex-col overflow-hidden !p-0 bg-[var(--bg-base)] border border-[var(--border)] hover:border-[var(--accent-blue)] transition-all duration-300 shadow-[var(--shadow-card)] rounded-[24px]"
+              className="group card service-card flex flex-col overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--bg-base)] !p-0 shadow-[var(--shadow-card)] transition-all duration-300 hover:border-[var(--accent-blue)]"
             >
               {/* Image Container (16:9 aspect-video) */}
-              <div className="relative aspect-video w-full overflow-hidden bg-[var(--bg-muted)] border-b border-[var(--border)]">
+              <div className="relative aspect-video w-full overflow-hidden border-b border-[var(--border)] bg-[var(--bg-muted)]">
                 <Image
                   src={project.image}
                   alt={project.name}
@@ -46,29 +46,29 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
                   className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                   priority={false}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
 
               {/* Card Body */}
-              <div className="p-6 flex flex-col flex-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--accent-blue)] mb-2">
+              <div className="flex flex-1 flex-col p-6">
+                <span className="mb-2 text-[11px] font-bold tracking-wider text-[var(--accent-blue)] uppercase">
                   {project.industry}
                 </span>
 
-                <h3 className="text-lg md:text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-blue)] transition-colors duration-200">
+                <h3 className="mb-2 text-lg font-bold text-[var(--text-primary)] transition-colors duration-200 group-hover:text-[var(--accent-blue)] md:text-xl">
                   {project.name}
                 </h3>
 
-                <p className="text-[var(--text-secondary)] text-[14px] leading-relaxed mb-5 flex-1">
+                <p className="mb-5 flex-1 text-[14px] leading-relaxed text-[var(--text-secondary)]">
                   {project.outcome}
                 </p>
 
                 {/* Tech Stack Badges */}
-                <div className="flex flex-wrap gap-1.5 mb-5">
+                <div className="mb-5 flex flex-wrap gap-1.5">
                   {project.techStack.map((tech) => (
                     <span
                       key={tech}
-                      className="text-[11px] font-medium px-2.5 py-0.5 bg-[var(--bg-muted)] border border-[var(--border)] rounded-full text-[var(--text-secondary)]"
+                      className="rounded-full border border-[var(--border)] bg-[var(--bg-muted)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--text-secondary)]"
                     >
                       {tech}
                     </span>
@@ -76,9 +76,9 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
                 </div>
 
                 {/* Link Indicator */}
-                <div className="text-[14px] font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-blue)] transition-colors inline-flex items-center gap-1.5 mt-auto">
+                <div className="mt-auto inline-flex items-center gap-1.5 text-[14px] font-bold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent-blue)]">
                   View Case Study
-                  <span className="transform translate-x-0 group-hover:translate-x-1 transition-transform duration-200">
+                  <span className="translate-x-0 transform transition-transform duration-200 group-hover:translate-x-1">
                     →
                   </span>
                 </div>

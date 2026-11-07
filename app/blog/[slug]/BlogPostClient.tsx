@@ -33,14 +33,14 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
 
       {/* Sticky Top Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#1155CC] to-[#22B6F6] z-[60] origin-left"
+        className="fixed top-0 right-0 left-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-[#1155CC] to-[#22B6F6]"
         style={{ scaleX }}
       />
 
-      <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
+      <main className="relative min-h-screen overflow-hidden bg-[#FAFBFD] pt-24 pb-20">
         {/* Custom Unique Background: Resonance Waves */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-tr from-[#FAFBFD] via-[#EEF5FF] to-[#F5F9FF] opacity-90" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 right-0 left-0 h-[600px] bg-gradient-to-tr from-[#FAFBFD] via-[#EEF5FF] to-[#F5F9FF] opacity-90" />
           <div
             className="absolute inset-0 opacity-[0.02]"
             style={{
@@ -51,30 +51,30 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
               backgroundSize: "60px 60px",
             }}
           />
-          <div className="absolute top-20 left-[10%] w-[350px] h-[350px] bg-[#1155CC]/3 rounded-full blur-[80px]" />
-          <div className="absolute top-40 right-[15%] w-[400px] h-[400px] bg-[#22B6F6]/3 rounded-full blur-[100px]" />
+          <div className="absolute top-20 left-[10%] h-[350px] w-[350px] rounded-full bg-[#1155CC]/3 blur-[80px]" />
+          <div className="absolute top-40 right-[15%] h-[400px] w-[400px] rounded-full bg-[#22B6F6]/3 blur-[100px]" />
         </div>
 
         {/* Hero Section */}
-        <section className="relative py-16 sm:py-24 border-b border-slate-100/80 z-10">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <section className="relative z-10 border-b border-slate-100/80 py-16 sm:py-24">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
             {/* Back Button */}
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-[#1155CC] transition-colors mb-6 group"
+              className="group mb-6 inline-flex items-center gap-2 text-xs font-bold text-slate-400 transition-colors hover:text-[#1155CC]"
             >
               <Icon
                 name="arrow"
-                className="w-4 h-4 rotate-180 group-hover:-translate-x-0.5 transition-transform"
+                className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-0.5"
               />
               Back to Blog
             </Link>
 
-            <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider block mb-3">
+            <span className="mb-3 block text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
               {post.category}
             </span>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-sora text-slate-900 leading-tight tracking-tight mb-6">
+            <h1 className="mb-6 font-sora text-3xl leading-tight font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
 
@@ -84,7 +84,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                   {post.authors.map((auth, index) => (
                     <div
                       key={auth.name}
-                      className="w-8 h-8 rounded-full bg-[#1155CC] text-white border border-white flex items-center justify-center font-bold text-xs shadow-inner relative"
+                      className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white bg-[#1155CC] text-xs font-bold text-white shadow-inner"
                       style={{ zIndex: 10 - index }}
                     >
                       {auth.avatar}
@@ -98,7 +98,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
               <span>&bull;</span>
               <span>{post.date}</span>
               <span>&bull;</span>
-              <span className="text-[#1155CC] bg-[#1155CC]/5 px-2.5 py-0.5 rounded-full">
+              <span className="rounded-full bg-[#1155CC]/5 px-2.5 py-0.5 text-[#1155CC]">
                 {post.readTime}
               </span>
             </div>
@@ -106,44 +106,44 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
         </section>
 
         {/* Main Content Layout */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <section className="relative z-10 mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
             {/* Sticky Share Sidebar (Desktop Only) */}
-            <div className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
-              <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4 pb-2 border-b border-slate-50">
+            <div className="sticky top-28 hidden space-y-6 lg:col-span-3 lg:block">
+              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
+                <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
                   AUTHOR
                 </span>
                 {post.authors.map((auth) => (
                   <div
                     key={auth.name}
-                    className="flex items-center gap-3 mb-4 last:mb-0 border-b border-slate-50 last:border-b-0 pb-3 last:pb-0"
+                    className="mb-4 flex items-center gap-3 border-b border-slate-50 pb-3 last:mb-0 last:border-b-0 last:pb-0"
                   >
-                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 text-[#1155CC] font-bold flex items-center justify-center shrink-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-100 font-bold text-[#1155CC]">
                       {auth.avatar}
                     </div>
                     <div>
-                      <h4 className="text-xs font-black text-slate-800 leading-tight mb-0.5">
+                      <h4 className="mb-0.5 text-xs leading-tight font-black text-slate-800">
                         {auth.name}
                       </h4>
                       <p className="text-[10px] font-semibold text-slate-400">{auth.role}</p>
                     </div>
                   </div>
                 ))}
-                <div className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                <div className="text-[11px] leading-relaxed font-medium text-slate-500">
                   Shares development tips and enterprise architectural principles at TechSonance.
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4 pb-2 border-b border-slate-50">
+              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
+                <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
                   TAGS
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[9px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg"
+                      className="rounded-lg border border-slate-100 bg-slate-50 px-2 py-1 text-[9px] font-bold text-slate-500"
                     >
                       {tag}
                     </span>
@@ -153,19 +153,19 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
             </div>
 
             {/* Post Content */}
-            <div className="col-span-1 lg:col-span-9 bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17,85,204,0.02)]">
+            <div className="col-span-1 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-9">
               {/* Main Content Render */}
               <div
-                className="prose prose-slate max-w-none prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline"
+                className="prose prose-slate prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline max-w-none"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
 
               {/* FAQ Section (AEO & FAQPage Schema Alignment) */}
               {post.faqs && post.faqs.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-slate-100">
-                  <div className="flex items-center gap-2 mb-6">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#1155CC]" />
-                    <h3 className="text-xl font-medium text-slate-900 font-sora">
+                <div className="mt-12 border-t border-slate-100 pt-8">
+                  <div className="mb-6 flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#1155CC]" />
+                    <h3 className="font-sora text-xl font-medium text-slate-900">
                       Frequently Asked Questions
                     </h3>
                   </div>
@@ -173,13 +173,13 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                     {post.faqs.map((faq, idx) => (
                       <div
                         key={faq.question}
-                        className="p-5 rounded-2xl bg-slate-50/80 border border-slate-100 hover:border-slate-200 transition-colors"
+                        className="rounded-2xl border border-slate-100 bg-slate-50/80 p-5 transition-colors hover:border-slate-200"
                       >
-                        <h4 className="text-sm sm:text-base font-bold text-slate-900 mb-2 font-sora flex items-start gap-2">
-                          <span className="text-[#1155CC] font-mono shrink-0">Q{idx + 1}.</span>
+                        <h4 className="mb-2 flex items-start gap-2 font-sora text-sm font-bold text-slate-900 sm:text-base">
+                          <span className="shrink-0 font-mono text-[#1155CC]">Q{idx + 1}.</span>
                           <span>{faq.question}</span>
                         </h4>
-                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6">
+                        <p className="pl-6 text-xs leading-relaxed text-slate-600 sm:text-sm">
                           {faq.answer}
                         </p>
                       </div>
@@ -189,11 +189,11 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
               )}
 
               {/* Tag section (Mobile Only) */}
-              <div className="flex flex-wrap gap-1.5 mt-8 pt-6 border-t border-slate-50 lg:hidden">
+              <div className="mt-8 flex flex-wrap gap-1.5 border-t border-slate-50 pt-6 lg:hidden">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[9px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-2.5 py-1 rounded-lg"
+                    className="rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-1 text-[9px] font-bold text-slate-500"
                   >
                     {tag}
                   </span>
@@ -205,39 +205,39 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
 
         {/* Related Posts Section */}
         {relatedPosts.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-16 border-t border-slate-100 relative z-10">
-            <h3 className="text-lg font-medium text-slate-900 font-sora mb-8 text-center sm:text-left">
+          <section className="relative z-10 mx-auto mt-20 max-w-7xl border-t border-slate-100 px-4 pt-16 sm:px-6 lg:px-8">
+            <h3 className="mb-8 text-center font-sora text-lg font-medium text-slate-900 sm:text-left">
               Keep Reading
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {relatedPosts.map((rPost) => (
                 <div
                   key={rPost.slug}
-                  className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-[0_10px_25px_rgba(17,85,204,0.01)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)] hover:-translate-y-0.5 transition-all group duration-300 flex flex-col justify-between"
+                  className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)]"
                 >
                   <div className="p-6">
-                    <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider block mb-2">
+                    <span className="mb-2 block text-[9px] font-black tracking-wider text-[#1155CC] uppercase">
                       {rPost.category}
                     </span>
                     <Link href={`/blog/${rPost.slug}`}>
-                      <h4 className="text-base sm:text-lg font-medium text-slate-900 font-sora hover:text-[#1155CC] transition-colors mb-2.5 line-clamp-2">
+                      <h4 className="mb-2.5 line-clamp-2 font-sora text-base font-medium text-slate-900 transition-colors hover:text-[#1155CC] sm:text-lg">
                         {rPost.title}
                       </h4>
                     </Link>
-                    <p className="text-xs font-semibold text-slate-500 leading-relaxed line-clamp-2">
+                    <p className="line-clamp-2 text-xs leading-relaxed font-semibold text-slate-500">
                       {rPost.excerpt}
                     </p>
                   </div>
-                  <div className="p-6 pt-0 flex items-center justify-between">
+                  <div className="flex items-center justify-between p-6 pt-0">
                     <span className="text-[10px] font-bold text-slate-400">{rPost.date}</span>
                     <Link
                       href={`/blog/${rPost.slug}`}
-                      className="text-xs font-bold text-[#1155CC] hover:underline flex items-center gap-1 group/link"
+                      className="group/link flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
                     >
                       Read Article
                       <Icon
                         name="arrow"
-                        className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform"
+                        className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5"
                       />
                     </Link>
                   </div>

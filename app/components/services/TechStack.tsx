@@ -185,10 +185,10 @@ function MarqueeTrack({
     return (
       <div
         key={i}
-        className="flex items-center gap-2.5 px-4 py-2.5 bg-white border border-gray-100 rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(17,85,204,0.10)] hover:border-blue-200/60 transition-all duration-300 cursor-default shrink-0 group"
+        className="group flex shrink-0 cursor-default items-center gap-2.5 rounded-full border border-gray-100 bg-white px-4 py-2.5 shadow-[0_1px_4px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-blue-200/60 hover:shadow-[0_4px_16px_rgba(17,85,204,0.10)]"
       >
         <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-transform duration-300 group-hover:scale-110"
           style={{ backgroundColor: (iconInfo?.color || item.color) + "14" }}
         >
           {iconInfo ? (
@@ -197,7 +197,7 @@ function MarqueeTrack({
               alt={item.name}
               width={16}
               height={16}
-              className="w-4 h-4 object-contain"
+              className="h-4 w-4 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
               }}
@@ -208,7 +208,7 @@ function MarqueeTrack({
             </span>
           )}
         </div>
-        <span className="text-[12px] font-semibold text-gray-600 group-hover:text-[#1155CC] transition-colors whitespace-nowrap">
+        <span className="text-[12px] font-semibold whitespace-nowrap text-gray-600 transition-colors group-hover:text-[#1155CC]">
           {item.name}
         </span>
       </div>
@@ -216,7 +216,7 @@ function MarqueeTrack({
   };
 
   return (
-    <div className="overflow-hidden flex-1 min-w-0 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+    <div className="min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
       <div
         ref={trackRef}
         className="flex gap-3 will-change-transform"
@@ -232,28 +232,28 @@ function MarqueeTrack({
 /* ── Main Component ──────────────────────────────────────────────────────── */
 export default function TechStack({ service }: TechStackProps) {
   return (
-    <section className="service-section bg-white py-20 md:py-24 overflow-hidden">
+    <section className="service-section overflow-hidden bg-white py-20 md:py-24">
       <div className="service-container">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 mb-5">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <div className="mb-5 inline-flex items-center gap-2">
             <div className="h-px w-8 bg-[#1155CC]/40" />
-            <span className="text-xs font-medium text-[#1155CC] tracking-[0.15em] uppercase">
+            <span className="text-xs font-medium tracking-[0.15em] text-[#1155CC] uppercase">
               Infrastructure &amp; Technologies
             </span>
             <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-medium text-gray-900 leading-tight mb-4 tracking-tight">
+          <h2 className="mb-4 text-3xl leading-tight font-medium tracking-tight text-gray-900 sm:text-4xl lg:text-[42px]">
             Technology Stack
           </h2>
-          <p className="text-[15px] text-gray-500 leading-relaxed max-w-xl mx-auto">
+          <p className="mx-auto max-w-xl text-[15px] leading-relaxed text-gray-500">
             Enterprise-grade tools and frameworks we use to build, deploy, and scale your{" "}
             {service.name.toLowerCase()} solutions.
           </p>
         </div>
 
         {/* Compact rows: label left | marquee right */}
-        <div className="rounded-2xl border border-gray-100 bg-[#FAFBFD] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-[#FAFBFD] shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
           {service.techStack.map((group, gi) => {
             const catIcon = getCategoryIcon(group.category);
             const marqueeItems = group.items.map((item) => ({
@@ -264,12 +264,12 @@ export default function TechStack({ service }: TechStackProps) {
             return (
               <div
                 key={gi}
-                className={`flex flex-col md:flex-row md:items-center gap-0 ${gi !== service.techStack.length - 1 ? "border-b border-gray-100" : ""}`}
+                className={`flex flex-col gap-0 md:flex-row md:items-center ${gi !== service.techStack.length - 1 ? "border-b border-gray-100" : ""}`}
               >
                 {/* Left: Category label */}
-                <div className="md:w-[200px] lg:w-[240px] shrink-0 flex items-center gap-3 px-4 md:px-5 py-3 md:py-6 md:border-r border-b md:border-b-0 border-gray-100 bg-white">
+                <div className="flex shrink-0 items-center gap-3 border-b border-gray-100 bg-white px-4 py-3 md:w-[200px] md:border-r md:border-b-0 md:px-5 md:py-6 lg:w-[240px]">
                   <div
-                    className="w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center shrink-0"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl md:h-9 md:w-9"
                     style={{ backgroundColor: catIcon.color + "14" }}
                   >
                     <svg
@@ -285,17 +285,17 @@ export default function TechStack({ service }: TechStackProps) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-[10px] md:text-[11px] font-medium text-gray-800 uppercase tracking-[0.08em] leading-tight truncate">
+                    <h3 className="truncate text-[10px] leading-tight font-medium tracking-[0.08em] text-gray-800 uppercase md:text-[11px]">
                       {group.category}
                     </h3>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
+                    <p className="mt-0.5 text-[10px] text-gray-400">
                       {group.items.length} {group.items.length === 1 ? "tech" : "technologies"}
                     </p>
                   </div>
                 </div>
 
                 {/* Right: Marquee */}
-                <div className="flex-1 min-w-0 py-3 md:py-4 px-2">
+                <div className="min-w-0 flex-1 px-2 py-3 md:py-4">
                   <MarqueeTrack
                     items={marqueeItems}
                     speed={gi % 2 === 0 ? 22 : 18}

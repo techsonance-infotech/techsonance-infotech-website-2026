@@ -20,6 +20,26 @@ export interface ListAdminJobsResponse {
   total: number;
 }
 
+export interface JobSnapshot {
+  id?: string;
+  versionId?: number;
+  title?: string;
+  department?: string;
+  status?: string;
+  approvalStatus?: string;
+  responsibilities?: string[];
+  [key: string]: unknown;
+}
+
+export interface JobVersionItem {
+  id: string;
+  entityType: string;
+  entityId: string;
+  snapshot: JobSnapshot;
+  changedBy?: string | null;
+  createdAt: string | Date;
+}
+
 /**
  * Creates a new job posting in draft status.
  * Endpoint: POST /api/admin/jobs
@@ -204,6 +224,125 @@ export async function updateAdminJobStatus(
       typeof resJson.error === "string"
         ? resJson.error
         : resJson.error?.message || resJson.message || "Failed to update job status.";
+    throw new Error(errorMsg);
+  }
+
+  return resJson.data?.job || resJson.job;
+}
+
+/**
+ * Approves a job requisition moving it to PUBLISHED or SCHEDULED.
+ * Endpoint: POST /api/admin/careers/jobs/[id]/approve
+ * Contract: approveJobContract
+ */
+export async function approveAdminJob(id: string, comment?: string): Promise<Job> {
+  const url = API_ENDPOINTS.ADMIN.CAREER_JOB_APPROVE(id);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(comment ? { comment } : {}),
+  });
+
+  const resJson = await response.json();
+
+  if (!response.ok || !resJson.ok) {
+    const errorMsg =
+      typeof resJson.error === "string"
+        ? resJson.error
+        : resJson.error?.message || resJson.message || "Failed to approve job requisition.";
+    throw new Error(errorMsg);
+  }
+
+  return resJson.data?.job || resJson.job;
+}
+
+/**
+ * Returns a job requisition to draft with reviewer feedback.
+ * Endpoint: POST /api/admin/careers/jobs/[id]/return
+ * Contract: returnJobContract
+ */
+export async function returnAdminJob(id: string, comment: string): Promise<Job> {
+  const url = API_ENDPOINTS.ADMIN.CAREER_JOB_RETURN(id);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ comment }),
+  });
+
+  const resJson = await response.json();
+
+  if (!response.ok || !resJson.ok) {
+    const errorMsg =
+      typeof resJson.error === "string"
+        ? resJson.error
+        : resJson.error?.message || resJson.message || "Failed to return job requisition.";
+    throw new Error(errorMsg);
+  }
+
+  return resJson.data?.job || resJson.job;
+}
+
+/**
+ * Retrieves the version snapshot history for a job requisition.
+ * Endpoint: GET /api/admin/careers/jobs/[id]/versions
+ * Contract: listJobVersionsContract
+ */
+export async function listAdminJobVersions(id: string): Promise<JobVersionItem[]> {
+  const url = API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(id);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const resJson = await response.json();
+
+  if (!response.ok || !resJson.ok) {
+    const errorMsg =
+      typeof resJson.error === "string"
+        ? resJson.error
+        : resJson.error?.message || resJson.message || "Failed to load version history.";
+    throw new Error(errorMsg);
+  }
+
+  return resJson.data?.versions || resJson.versions || [];
+}
+
+/**
+ * Restores a specific historical version snapshot for a job requisition.
+ * Endpoint: POST /api/admin/careers/jobs/[id]/versions
+ * Contract: restoreJobVersionContract
+ */
+export async function restoreAdminJobVersion(id: string, versionId: string): Promise<Job> {
+  const url = API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(id);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ versionId }),
+  });
+
+  const resJson = await response.json();
+
+  if (!response.ok || !resJson.ok) {
+    const errorMsg =
+      typeof resJson.error === "string"
+        ? resJson.error
+        : resJson.error?.message || resJson.message || "Failed to restore version snapshot.";
     throw new Error(errorMsg);
   }
 

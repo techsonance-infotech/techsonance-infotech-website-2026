@@ -13,14 +13,14 @@ const t = (delay = 0) => ({ duration: 0.6, ease: "easeOut" as const, delay });
 // ─── One-liner result row ──────────────────────────────────────────────────────
 function ChallengeRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start gap-1.5 sm:gap-3.5 px-3.5 sm:px-4 py-1.5 sm:py-2 border-b border-gray-100 last:border-0">
+    <div className="flex flex-col items-start gap-1.5 border-b border-gray-100 px-3.5 py-1.5 last:border-0 sm:flex-row sm:gap-3.5 sm:px-4 sm:py-2">
       <span
-        className="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider shrink-0"
+        className="shrink-0 rounded px-2 py-0.5 text-[9px] font-black tracking-wider uppercase"
         style={{ background: `${color}18`, color }}
       >
         {label}
       </span>
-      <p className="text-xs sm:text-[13px] text-gray-600 leading-snug">{value}</p>
+      <p className="text-xs leading-snug text-gray-600 sm:text-[13px]">{value}</p>
     </div>
   );
 }
@@ -66,7 +66,7 @@ function FeaturedProjectRow({
   return (
     <div
       ref={containerRef}
-      className="relative w-full lg:sticky transform-gpu origin-top py-2 sm:py-3 lg:py-4"
+      className="relative w-full origin-top transform-gpu py-2 sm:py-3 lg:sticky lg:py-4"
       style={{
         top: isDesktop ? `calc(72px + ${index * 14}px)` : "auto",
         zIndex: index + 10,
@@ -76,11 +76,11 @@ function FeaturedProjectRow({
     >
       <motion.div
         style={isDesktop ? { scale, opacity, transformOrigin: "top center" } : {}}
-        className="bg-white rounded-[22px] sm:rounded-[28px] border border-gray-200/80 shadow-[0_10px_35px_rgba(0,0,0,0.03)] p-4 sm:p-6 lg:p-6 xl:p-7 relative overflow-hidden transition-all duration-300 hover:shadow-[0_16px_50px_-10px_rgba(13,71,161,0.08)]"
+        className="relative overflow-hidden rounded-[22px] border border-gray-200/80 bg-white p-4 shadow-[0_10px_35px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_16px_50px_-10px_rgba(13,71,161,0.08)] sm:rounded-[28px] sm:p-6 lg:p-6 xl:p-7"
       >
         {/* Background accent glow */}
         <div
-          className="absolute pointer-events-none rounded-full blur-3xl opacity-[0.05]"
+          className="pointer-events-none absolute rounded-full opacity-[0.05] blur-3xl"
           style={{
             background: project.accentColor,
             width: 500,
@@ -91,10 +91,10 @@ function FeaturedProjectRow({
           }}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-7 items-center">
+        <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-2 lg:gap-7">
           {/* ── Text side ── */}
           <div
-            className={`flex flex-col gap-2 lg:gap-2.5 relative z-10 order-2 ${isEven ? "lg:order-1" : "lg:order-2"}`}
+            className={`relative z-10 order-2 flex flex-col gap-2 lg:gap-2.5 ${isEven ? "lg:order-1" : "lg:order-2"}`}
           >
             {/* Index + Category */}
             <motion.div
@@ -104,7 +104,7 @@ function FeaturedProjectRow({
               className="flex items-center gap-3"
             >
               <span
-                className="text-3xl lg:text-4xl font-black leading-none select-none"
+                className="text-3xl leading-none font-black select-none lg:text-4xl"
                 style={{ color: `${project.accentColor}18` }}
               >
                 0{index + 1}
@@ -116,7 +116,7 @@ function FeaturedProjectRow({
                 }}
               />
               <span
-                className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full"
+                className="rounded-full px-2.5 py-0.5 text-[9px] font-black tracking-widest uppercase"
                 style={{ background: `${project.accentColor}12`, color: project.accentColor }}
               >
                 {project.industry}
@@ -128,7 +128,7 @@ function FeaturedProjectRow({
               initial={{ opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={t(0.08)}
-              className="text-lg sm:text-xl lg:text-2xl font-medium leading-[1.15] tracking-tight text-gray-900"
+              className="text-lg leading-[1.15] font-medium tracking-tight text-gray-900 sm:text-xl lg:text-2xl"
             >
               {project.title}
             </motion.h3>
@@ -138,7 +138,7 @@ function FeaturedProjectRow({
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={t(0.14)}
-              className="text-xs sm:text-[13px] text-gray-550 leading-relaxed max-w-md line-clamp-2"
+              className="text-gray-550 line-clamp-2 max-w-md text-xs leading-relaxed sm:text-[13px]"
             >
               {project.shortDescription}
             </motion.p>
@@ -148,7 +148,7 @@ function FeaturedProjectRow({
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={t(0.2)}
-              className="rounded-xl border border-gray-100 bg-white/80 backdrop-blur-sm shadow-[0_2px_10px_rgba(0,0,0,0.02)] overflow-hidden"
+              className="overflow-hidden rounded-xl border border-gray-100 bg-white/80 shadow-[0_2px_10px_rgba(0,0,0,0.02)] backdrop-blur-sm"
             >
               <ChallengeRow
                 label="Challenge"
@@ -170,7 +170,7 @@ function FeaturedProjectRow({
                 <TechBadge key={tech.name} name={tech.name} category={tech.category} size="sm" />
               ))}
               {project.techStack.length > 5 && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold bg-gray-100 text-gray-500">
+                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-semibold text-gray-500">
                   +{project.techStack.length - 5} more
                 </span>
               )}
@@ -191,7 +191,7 @@ function FeaturedProjectRow({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-900 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 transition-colors hover:text-gray-900 sm:text-sm"
                 >
                   <svg
                     className="h-3.5 w-3.5"
@@ -217,7 +217,7 @@ function FeaturedProjectRow({
             initial={hiddenXR}
             animate={inView ? visibleX : hiddenXR}
             transition={t(0.1)}
-            className={`relative w-full z-0 order-1 ${isEven ? "lg:order-2" : "lg:order-1"}`}
+            className={`relative z-0 order-1 w-full ${isEven ? "lg:order-2" : "lg:order-1"}`}
             whileHover={{ y: -4 }}
           >
             <ProjectMockup
@@ -241,13 +241,13 @@ function SectionHeader() {
   const inView = useInView(ref, { once: true, margin: "-8%" });
 
   return (
-    <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
+    <div ref={ref} className="mx-auto max-w-7xl px-4 pt-20 pb-12 sm:px-6 lg:px-8">
       <div className="flex flex-col items-start gap-4">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={t(0)}
-          className="inline-flex items-center gap-2 bg-[#E6EDF5] border border-[#0D47A1]/15 rounded-full px-4 py-1.5"
+          className="inline-flex items-center gap-2 rounded-full border border-[#0D47A1]/15 bg-[#E6EDF5] px-4 py-1.5"
         >
           <svg
             className="h-3.5 w-3.5 text-[#0D47A1]"
@@ -261,20 +261,20 @@ function SectionHeader() {
             <rect x="2" y="9" width="5" height="5" rx="1" />
             <rect x="9" y="9" width="5" height="5" rx="1" />
           </svg>
-          <span className="text-xs font-bold text-[#0D47A1] tracking-wide uppercase">
+          <span className="text-xs font-bold tracking-wide text-[#0D47A1] uppercase">
             Featured Work
           </span>
         </motion.div>
 
-        <div className="flex items-end justify-between w-full flex-wrap gap-4">
+        <div className="flex w-full flex-wrap items-end justify-between gap-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={t(0.08)}
-            className="text-3xl sm:text-4xl lg:text-5xl font-medium leading-[1.15] tracking-tight text-gray-900"
+            className="text-3xl leading-[1.15] font-medium tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
           >
             Products <span className="italic">We&apos;ve </span>
-            <span className="italic text-[#1155CC]">Engineered.</span>
+            <span className="text-[#1155CC] italic">Engineered.</span>
           </motion.h2>
 
           <motion.div
@@ -284,7 +284,7 @@ function SectionHeader() {
           >
             <Link
               href="/portfolio"
-              className="group inline-flex items-center gap-2 text-sm font-bold text-[#0D47A1] hover:text-[#008BD9] transition-colors"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-[#0D47A1] transition-colors hover:text-[#008BD9]"
             >
               See All Projects
               <svg
@@ -304,7 +304,7 @@ function SectionHeader() {
           initial={{ opacity: 0, y: 14 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
           transition={t(0.2)}
-          className="text-base text-gray-500 max-w-2xl leading-relaxed"
+          className="max-w-2xl text-base leading-relaxed text-gray-500"
         >
           Real products. Real challenges. Real results. Here&apos;s a look at some of the systems
           we&apos;ve built from the ground up.
@@ -321,7 +321,7 @@ export default function FeaturedProjectsSection() {
   return (
     <section
       id="projects"
-      className="relative bg-[#F8FBFF] overflow-x-clip"
+      className="relative overflow-x-clip bg-[#F8FBFF]"
       aria-label="Featured Projects"
     >
       {/* Decorative background grid */}
@@ -337,7 +337,7 @@ export default function FeaturedProjectsSection() {
       <SectionHeader />
 
       {/* Cards stack container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex flex-col gap-6 lg:gap-0">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-16 sm:px-6 lg:gap-0 lg:px-8">
         {featured.map((project, index) => (
           <FeaturedProjectRow
             key={project.slug}
@@ -349,15 +349,15 @@ export default function FeaturedProjectsSection() {
       </div>
 
       {/* See All Projects CTA bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="relative rounded-3xl overflow-hidden p-px">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl p-px">
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#0D47A1] to-[#008BD9]" />
-          <div className="relative rounded-[calc(1.5rem-1px)] bg-white px-8 py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="relative flex flex-col items-center justify-between gap-6 rounded-[calc(1.5rem-1px)] bg-white px-8 py-8 sm:flex-row sm:py-10">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#0D47A1] mb-1">
+              <p className="mb-1 text-xs font-bold tracking-widest text-[#0D47A1] uppercase">
                 Explore All Work
               </p>
-              <h3 className="text-xl sm:text-2xl font-medium text-gray-900">
+              <h3 className="text-xl font-medium text-gray-900 sm:text-2xl">
                 See every product we&apos;ve shipped
               </h3>
             </div>

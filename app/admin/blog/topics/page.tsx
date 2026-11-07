@@ -23,7 +23,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AiTopicStatus } from "@/lib/constants/enums/ai.enum";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import {
+  listAdminAiTopics,
+  createAdminAiTopic,
+  updateAdminAiTopicStatus,
+  deleteAdminAiTopic,
+  suggestAdminAiTopics,
+  launchAdminAiTopic,
+  type AdminAiTopicItem,
+} from "@/lib/api/admin-ai.api";
 
 interface Topic {
   id: string;
@@ -40,7 +48,7 @@ interface Topic {
 }
 
 export default function TopicsBacklogPage() {
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const [topics, setTopics] = useState<AdminAiTopicItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -58,73 +66,56 @@ export default function TopicsBacklogPage() {
   const loadTopics = async () => {
     try {
       setLoading(true);
-      const url = new URL(API_ENDPOINTS.ADMIN.AI.TOPICS, window.location.origin);
-      if (activeTab !== "ALL") {
-        url.searchParams.set("status", activeTab);
-      }
-      if (search.trim()) {
-        url.searchParams.set("search", search.trim());
-      }
-      const res = await fetch(url.toString());
-      if (res.ok) {
-        const data = await res.json();
-        setTopics(data.data?.topics || data.topics || []);
-      }
+      const data = await listAdminAiTopics({
+        status: activeTab !== "ALL" ? (activeTab as AiTopicStatus) : undefined,
+        search: search.trim() || undefined,
+      });
+      setTopics(data.topics);
     } catch {
-      // Silent error
+      // Non-blocking fetch error handling
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadTopics();
+    void loadTopics();
   }, [activeTab, search]);
 
   const handleUpdateStatus = async (id: string, status: AiTopicStatus) => {
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC(id), {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-      if (res.ok) {
-        setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, status } : t)));
-        showMessage(`Topic updated to ${status}`);
-      }
-    } catch {
-      showMessage("Failed to update status");
+      await updateAdminAiTopicStatus(id, status);
+      setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, status } : t)));
+      showMessage(`Topic updated to ${status}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to update status";
+      showMessage(msg);
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this topic from backlog?")) return;
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC(id), { method: "DELETE" });
-      if (res.ok) {
-        setTopics((prev) => prev.filter((t) => t.id !== id));
-        showMessage("Topic removed");
-      }
-    } catch {
-      showMessage("Failed to delete topic");
+      await deleteAdminAiTopic(id);
+      setTopics((prev) => prev.filter((t) => t.id !== id));
+      showMessage("Topic removed");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete topic";
+      showMessage(msg);
     }
   };
 
   const handleLaunchGeneration = async (id: string) => {
     try {
       showMessage("Launching autonomous generation pipeline...");
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(id), { method: "POST" });
-      const data = await res.json();
-      if (res.ok) {
-        setTopics((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, status: AiTopicStatus.QUEUED } : t)),
-        );
-        showMessage(`Autonomous job created! Job ID: ${data.jobId.slice(0, 8)}...`);
-      } else {
-        showMessage(`Failed: ${data.error}`);
-      }
-    } catch {
-      showMessage("Network error launching job");
+      const res = await launchAdminAiTopic(id);
+      setTopics((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, status: AiTopicStatus.QUEUED } : t)),
+      );
+      showMessage(`Autonomous job created! Job ID: ${res.jobId.slice(0, 8)}...`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error launching job";
+      showMessage(msg);
     }
   };
 
@@ -132,20 +123,12 @@ export default function TopicsBacklogPage() {
     try {
       setIsSuggesting(true);
       showMessage("AI Strategist generating high-ranking topic ideas...");
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC_SUGGEST, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category: "Agentic AI & Next.js 16" }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        showMessage(`Generated ${data.count} new AI topic proposals!`);
-        loadTopics();
-      } else {
-        showMessage("AI suggestion failed");
-      }
-    } catch {
-      showMessage("Error connecting to AI service");
+      const data = await suggestAdminAiTopics("Agentic AI & Next.js 16");
+      showMessage(`Generated ${data.count} new AI topic proposals!`);
+      void loadTopics();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error connecting to AI service";
+      showMessage(msg);
     } finally {
       setIsSuggesting(false);
     }
@@ -161,26 +144,20 @@ export default function TopicsBacklogPage() {
         .map((k) => k.trim())
         .filter(Boolean);
 
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPICS, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: newTitle,
-          category: newCategory,
-          keywords,
-          targetAudience: newAudience,
-          difficulty: newDifficulty,
-          priority: 1,
-        }),
+      await createAdminAiTopic({
+        title: newTitle.trim(),
+        category: newCategory,
+        keywords,
+        targetAudience: newAudience,
+        difficulty: newDifficulty,
+        priority: 1,
       });
 
-      if (res.ok) {
-        setIsCreating(false);
-        setNewTitle("");
-        setNewKeywords("");
-        showMessage("Topic added to backlog!");
-        loadTopics();
-      }
+      setIsCreating(false);
+      setNewTitle("");
+      setNewKeywords("");
+      showMessage("Topic added to backlog!");
+      void loadTopics();
     } catch {
       showMessage("Failed to create topic");
     }
@@ -200,22 +177,22 @@ export default function TopicsBacklogPage() {
   ];
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl space-y-8">
       {/* Toast Notification */}
       {actionMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-in slide-in-from-bottom">
-          <Sparkles className="w-4 h-4 text-blue-400" />
+        <div className="animate-in slide-in-from-bottom fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl">
+          <Sparkles className="h-4 w-4 text-blue-400" />
           <span>{actionMessage}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             Topic Backlog & Planning
           </h1>
-          <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
             Curate high-intent content ideas, accept AI proposals, and trigger autonomous pipeline
             jobs.
           </p>
@@ -225,30 +202,30 @@ export default function TopicsBacklogPage() {
           <Button
             onClick={handleAISuggest}
             disabled={isSuggesting}
-            className="rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold text-xs shadow-lg shadow-blue-500/20 hover:opacity-95"
+            className="rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:opacity-95"
           >
-            <Sparkles className={`w-4 h-4 mr-2 ${isSuggesting ? "animate-spin" : ""}`} />
+            <Sparkles className={`mr-2 h-4 w-4 ${isSuggesting ? "animate-spin" : ""}`} />
             {isSuggesting ? "Proposing Topics..." : "AI Suggest Topics"}
           </Button>
 
           <Button
             onClick={() => setIsCreating(true)}
-            className="rounded-2xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800"
+            className="rounded-2xl bg-slate-900 text-xs font-semibold text-white hover:bg-slate-800"
           >
-            <Plus className="w-4 h-4 mr-1.5" />
+            <Plus className="mr-1.5 h-4 w-4" />
             Add Topic
           </Button>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm">
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+      <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm sm:flex-row">
+        <div className="flex w-full items-center gap-1.5 overflow-x-auto pb-1 sm:w-auto sm:pb-0">
           {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setActiveTab(tab.value)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all ${
                 activeTab === tab.value
                   ? "bg-blue-50 text-blue-700 border border-blue-200"
                   : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
@@ -260,55 +237,55 @@ export default function TopicsBacklogPage() {
         </div>
 
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search topic backlog..."
-            className="pl-9 h-9 text-xs rounded-xl bg-slate-50 border-slate-200"
+            className="h-9 rounded-xl border-slate-200 bg-slate-50 pl-9 text-xs"
           />
         </div>
       </div>
 
       {/* New Topic Modal */}
       {isCreating && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-200 animate-in zoom-in-95">
-            <h2 className="text-lg font-black text-slate-900 font-sora mb-1">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="animate-in zoom-in-95 w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+            <h2 className="mb-1 font-sora text-lg font-black text-slate-900">
               Add New Topic to Backlog
             </h2>
-            <p className="text-xs text-slate-500 font-medium mb-6">
+            <p className="mb-6 text-xs font-medium text-slate-500">
               Create an editorial topic ready for autonomous or manual writing.
             </p>
 
             <form onSubmit={handleCreateTopic} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Topic Title</label>
+                <label className="mb-1 block text-xs font-bold text-slate-700">Topic Title</label>
                 <Input
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="e.g. Architecting Real-Time Microservices with Next.js 16"
-                  className="text-xs rounded-xl"
+                  className="rounded-xl text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
+                  <label className="mb-1 block text-xs font-bold text-slate-700">Category</label>
                   <Input
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     placeholder="Engineering"
-                    className="text-xs rounded-xl"
+                    className="rounded-xl text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Difficulty</label>
+                  <label className="mb-1 block text-xs font-bold text-slate-700">Difficulty</label>
                   <select
                     value={newDifficulty}
                     onChange={(e) => setNewDifficulty(e.target.value)}
-                    className="w-full h-9 rounded-xl border border-slate-200 text-xs px-3 bg-white font-medium"
+                    className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
                   >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
@@ -318,26 +295,26 @@ export default function TopicsBacklogPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="mb-1 block text-xs font-bold text-slate-700">
                   Target Keywords (comma-separated)
                 </label>
                 <Input
                   value={newKeywords}
                   onChange={(e) => setNewKeywords(e.target.value)}
                   placeholder="Next.js 16, Turbopack, High Performance"
-                  className="text-xs rounded-xl"
+                  className="rounded-xl text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="mb-1 block text-xs font-bold text-slate-700">
                   Target Audience
                 </label>
                 <Input
                   value={newAudience}
                   onChange={(e) => setNewAudience(e.target.value)}
                   placeholder="Tech Leads & Senior Engineers"
-                  className="text-xs rounded-xl"
+                  className="rounded-xl text-xs"
                 />
               </div>
 
@@ -346,13 +323,13 @@ export default function TopicsBacklogPage() {
                   type="button"
                   variant="ghost"
                   onClick={() => setIsCreating(false)}
-                  className="text-xs rounded-xl"
+                  className="rounded-xl text-xs"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="text-xs rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                  className="rounded-xl bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700"
                 >
                   Save Topic
                 </Button>
@@ -368,23 +345,23 @@ export default function TopicsBacklogPage() {
           Loading topic backlog...
         </div>
       ) : topics.length === 0 ? (
-        <Card className="border-dashed border-2 border-slate-200 rounded-3xl p-12 text-center">
+        <Card className="rounded-3xl border-2 border-dashed border-slate-200 p-12 text-center">
           <CardContent className="space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
-              <Sparkles className="w-6 h-6" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+              <Sparkles className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm">No topics found</h3>
-              <p className="text-xs text-slate-500 font-medium mt-1">
+              <h3 className="text-sm font-bold text-slate-900">No topics found</h3>
+              <p className="mt-1 text-xs font-medium text-slate-500">
                 Use AI suggestions or add a topic manually to fill your editorial queue.
               </p>
             </div>
             <Button
               onClick={handleAISuggest}
               disabled={isSuggesting}
-              className="rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold"
+              className="rounded-2xl bg-blue-600 text-xs font-semibold text-white hover:bg-blue-700"
             >
-              <Sparkles className="w-4 h-4 mr-2" />
+              <Sparkles className="mr-2 h-4 w-4" />
               Suggest Topics with AI
             </Button>
           </CardContent>
@@ -394,13 +371,13 @@ export default function TopicsBacklogPage() {
           {topics.map((topic) => (
             <div
               key={topic.id}
-              className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
+              className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:shadow-md md:flex-row md:items-center"
             >
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge
                     variant="outline"
-                    className={`text-[10px] font-bold uppercase tracking-wider rounded-lg px-2 py-0.5 ${
+                    className={`rounded-lg px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
                       topic.status === AiTopicStatus.ACCEPTED
                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                         : topic.status === AiTopicStatus.QUEUED
@@ -415,25 +392,25 @@ export default function TopicsBacklogPage() {
                     {topic.status}
                   </Badge>
 
-                  <Badge variant="secondary" className="text-[10px] rounded-lg">
+                  <Badge variant="secondary" className="rounded-lg text-[10px]">
                     {topic.category}
                   </Badge>
 
-                  <span className="text-[10px] text-slate-400 font-medium">
+                  <span className="text-[10px] font-medium text-slate-400">
                     By {topic.suggestedBy === "ai" ? "AI Strategist" : "Editorial Team"}
                   </span>
                 </div>
 
-                <h3 className="text-sm sm:text-base font-bold text-slate-900 font-sora">
+                <h3 className="font-sora text-sm font-bold text-slate-900 sm:text-base">
                   {topic.title}
                 </h3>
 
                 {topic.keywords && topic.keywords.length > 0 && (
-                  <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     {topic.keywords.map((kw, i) => (
                       <span
                         key={i}
-                        className="text-[10px] font-semibold text-slate-500 bg-slate-100 rounded-md px-2 py-0.5"
+                        className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
                       >
                         #{kw}
                       </span>
@@ -443,24 +420,24 @@ export default function TopicsBacklogPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+              <div className="flex items-center gap-2 border-t border-slate-100 pt-2 md:border-t-0 md:pt-0">
                 {topic.status === AiTopicStatus.SUGGESTED && (
                   <>
                     <Button
                       size="sm"
                       onClick={() => handleUpdateStatus(topic.id, AiTopicStatus.ACCEPTED)}
-                      className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold h-8 px-3"
+                      className="h-8 rounded-xl bg-emerald-600 px-3 text-xs font-semibold text-white hover:bg-emerald-700"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
+                      <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
                       Accept
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleUpdateStatus(topic.id, AiTopicStatus.REJECTED)}
-                      className="rounded-xl border-slate-200 text-slate-600 hover:text-rose-600 hover:border-rose-200 text-xs font-semibold h-8 px-3"
+                      className="h-8 rounded-xl border-slate-200 px-3 text-xs font-semibold text-slate-600 hover:border-rose-200 hover:text-rose-600"
                     >
-                      <XCircle className="w-3.5 h-3.5 mr-1.5" />
+                      <XCircle className="mr-1.5 h-3.5 w-3.5" />
                       Reject
                     </Button>
                   </>
@@ -470,9 +447,9 @@ export default function TopicsBacklogPage() {
                   <Button
                     size="sm"
                     onClick={() => handleLaunchGeneration(topic.id)}
-                    className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-semibold h-8 px-3 shadow-md shadow-blue-500/20 hover:opacity-95"
+                    className="h-8 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-3 text-xs font-semibold text-white shadow-md shadow-blue-500/20 hover:opacity-95"
                   >
-                    <Play className="w-3.5 h-3.5 mr-1.5 fill-current" />
+                    <Play className="mr-1.5 h-3.5 w-3.5 fill-current" />
                     Launch 1-Click
                   </Button>
                 )}
@@ -482,9 +459,9 @@ export default function TopicsBacklogPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="rounded-xl border-amber-300 bg-amber-50 text-amber-800 text-xs font-semibold h-8 px-3"
+                      className="h-8 rounded-xl border-amber-300 bg-amber-50 px-3 text-xs font-semibold text-amber-800"
                     >
-                      <Clock className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                      <Clock className="mr-1.5 h-3.5 w-3.5 animate-spin" />
                       View Live Job
                     </Button>
                   </Link>
@@ -494,9 +471,9 @@ export default function TopicsBacklogPage() {
                   size="sm"
                   variant="ghost"
                   onClick={() => handleDelete(topic.id)}
-                  className="rounded-xl text-slate-400 hover:text-rose-600 h-8 w-8 p-0"
+                  className="h-8 w-8 rounded-xl p-0 text-slate-400 hover:text-rose-600"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>

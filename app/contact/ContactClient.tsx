@@ -170,19 +170,19 @@ export default function ContactClient() {
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
+      <main className="relative min-h-screen overflow-x-clip bg-[#FAFBFD] font-sans text-slate-900">
         {/* Ambient background decoration */}
-        <div className="absolute top-20 right-0 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
-        <div className="absolute top-[40%] left-0 w-[250px] h-[250px] sm:w-[500px] sm:h-[500px] bg-gradient-to-tr from-blue-100/20 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
+        <div className="pointer-events-none absolute top-20 right-0 h-[300px] w-[300px] rounded-full bg-gradient-to-bl from-blue-100/30 to-transparent opacity-60 blur-3xl sm:h-[600px] sm:w-[600px]" />
+        <div className="pointer-events-none absolute top-[40%] left-0 h-[250px] w-[250px] rounded-full bg-gradient-to-tr from-blue-100/20 to-transparent opacity-60 blur-3xl sm:h-[500px] sm:w-[500px]" />
 
         {/* Hero Header Strip (Geometric Shape Landing - Light Theme) */}
-        <section className="relative pt-36 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-100 bg-white overflow-hidden min-h-[50vh] flex flex-col justify-center">
+        <section className="relative flex min-h-[50vh] flex-col justify-center overflow-hidden border-b border-slate-100 bg-white px-4 pt-36 pb-20 sm:px-6 lg:px-8">
           {/* Subtle Ambient Light Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl pointer-events-none z-0" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl" />
 
           {/* Dot Grid Background */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
+            className="pointer-events-none absolute inset-0 z-0 opacity-[0.22]"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, #1155CC 1.5px, transparent 0)`,
               backgroundSize: "28px 28px",
@@ -190,7 +190,7 @@ export default function ContactClient() {
           />
 
           {/* Floating Glassmorphic Shapes (Light Theme) */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
             {isMobile ? (
               <>
                 <ElegantShape
@@ -200,7 +200,7 @@ export default function ContactClient() {
                   rotate={12}
                   gradient="from-blue-500/[0.08]"
                   light={true}
-                  className="left-[-15%] top-[10%]"
+                  className="top-[10%] left-[-15%]"
                 />
                 <ElegantShape
                   delay={0.5}
@@ -221,7 +221,7 @@ export default function ContactClient() {
                   rotate={12}
                   gradient="from-blue-500/[0.08]"
                   light={true}
-                  className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+                  className="top-[15%] left-[-10%] md:top-[20%] md:left-[-5%]"
                 />
 
                 <ElegantShape
@@ -231,7 +231,7 @@ export default function ContactClient() {
                   rotate={-15}
                   gradient="from-cyan-500/[0.08]"
                   light={true}
-                  className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
+                  className="top-[60%] right-[-5%] md:top-[65%] md:right-[0%]"
                 />
 
                 <ElegantShape
@@ -241,7 +241,7 @@ export default function ContactClient() {
                   rotate={-8}
                   gradient="from-indigo-500/[0.08]"
                   light={true}
-                  className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+                  className="bottom-[5%] left-[5%] md:bottom-[10%] md:left-[10%]"
                 />
 
                 <ElegantShape
@@ -251,7 +251,7 @@ export default function ContactClient() {
                   rotate={20}
                   gradient="from-blue-600/[0.08]"
                   light={true}
-                  className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+                  className="top-[10%] right-[15%] md:top-[15%] md:right-[20%]"
                 />
 
                 <ElegantShape
@@ -261,48 +261,48 @@ export default function ContactClient() {
                   rotate={-25}
                   gradient="from-cyan-400/[0.08]"
                   light={true}
-                  className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+                  className="top-[5%] left-[20%] md:top-[10%] md:left-[25%]"
                 />
               </>
             )}
           </div>
 
-          <div className="max-w-7xl mx-auto text-center relative z-10">
-            <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
-              <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+          <div className="relative z-10 mx-auto max-w-7xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4.5 py-1.5">
+              <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#22B6F6]" />
+              <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
                 Get in Touch
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6.5xl font-black text-slate-900 leading-tight mb-4 tracking-tight">
+            <h1 className="lg:text-6.5xl mb-4 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
               Let&apos;s Build <span className="text-[#1155CC]">Something Together</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-505 font-medium max-w-xl mx-auto leading-relaxed">
+            <p className="text-slate-505 mx-auto max-w-xl text-sm leading-relaxed font-medium sm:text-base">
               Tell us about your project - we&apos;ll get back within 24 hours.
             </p>
           </div>
         </section>
 
         {/* Two Column Layout (60/40 Split) */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <section className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
             {/* Left Column (60%): Contact Form */}
-            <div className="lg:col-span-7 bg-white border-2 border-[#22B6F6] rounded-3xl p-6 sm:p-10 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)]">
-              <h2 className="text-xl sm:text-2xl font-medium text-black mb-6">Send Us a Message</h2>
+            <div className="rounded-3xl border-2 border-[#22B6F6] bg-white p-6 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)] sm:p-10 lg:col-span-7">
+              <h2 className="mb-6 text-xl font-medium text-black sm:text-2xl">Send Us a Message</h2>
 
               {formStatus === "success" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-10 flex flex-col items-center justify-center min-h-[350px]"
+                  className="flex min-h-[350px] flex-col items-center justify-center py-10 text-center"
                 >
-                  <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-6 shadow-sm border border-emerald-100">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-100 bg-emerald-50 text-2xl text-emerald-600 shadow-sm">
                     ✓
                   </div>
-                  <h3 className="text-xl font-bold text-black mb-3">Message Sent Successfully</h3>
-                  <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-8">
+                  <h3 className="mb-3 text-xl font-bold text-black">Message Sent Successfully</h3>
+                  <p className="mb-8 max-w-sm text-sm leading-relaxed text-slate-500">
                     Thank you for reaching out. A senior engineer will review your project details
                     and get back to you within 24 hours.
                   </p>
@@ -325,13 +325,13 @@ export default function ContactClient() {
                   </div>
 
                   {/* First Name & Last Name */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
                       <label
                         htmlFor="contact-first-name"
-                        className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                        className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                       >
-                        First Name <span className="text-red-500 font-bold">*</span>
+                        First Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
                         id="contact-first-name"
@@ -347,10 +347,10 @@ export default function ContactClient() {
                           setTouched((prev) => ({ ...prev, firstName: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, firstName: true }))}
-                        className={`w-full px-4 py-3 bg-white border ${getValidationError("firstName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
+                        className={`w-full border bg-white px-4 py-3 ${getValidationError("firstName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 transition-all focus:ring-2 focus:outline-none`}
                       />
                       {getValidationError("firstName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        <p className="mt-1 text-[10px] font-semibold text-red-500">
                           {getValidationError("firstName")}
                         </p>
                       )}
@@ -358,9 +358,9 @@ export default function ContactClient() {
                     <div className="space-y-1.5">
                       <label
                         htmlFor="contact-last-name"
-                        className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                        className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                       >
-                        Last Name <span className="text-red-500 font-bold">*</span>
+                        Last Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
                         id="contact-last-name"
@@ -376,10 +376,10 @@ export default function ContactClient() {
                           setTouched((prev) => ({ ...prev, lastName: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, lastName: true }))}
-                        className={`w-full px-4 py-3 bg-white border ${getValidationError("lastName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
+                        className={`w-full border bg-white px-4 py-3 ${getValidationError("lastName") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 transition-all focus:ring-2 focus:outline-none`}
                       />
                       {getValidationError("lastName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        <p className="mt-1 text-[10px] font-semibold text-red-500">
                           {getValidationError("lastName")}
                         </p>
                       )}
@@ -390,9 +390,9 @@ export default function ContactClient() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="contact-email"
-                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                     >
-                      Email Address <span className="text-red-500 font-bold">*</span>
+                      Email Address <span className="font-bold text-red-500">*</span>
                     </label>
                     <input
                       id="contact-email"
@@ -405,10 +405,10 @@ export default function ContactClient() {
                         setTouched((prev) => ({ ...prev, email: true }));
                       }}
                       onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
-                      className={`w-full px-4 py-3 bg-white border ${getValidationError("email") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
+                      className={`w-full border bg-white px-4 py-3 ${getValidationError("email") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 transition-all focus:ring-2 focus:outline-none`}
                     />
                     {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("email")}
                       </p>
                     )}
@@ -418,16 +418,16 @@ export default function ContactClient() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="contact-phone"
-                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                     >
-                      Phone Number <span className="text-red-500 font-bold">*</span>
+                      Phone Number <span className="font-bold text-red-500">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
                       <select
                         aria-label="Country Code"
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="w-[90px] sm:w-[110px] px-2 sm:px-3 py-3 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium shrink-0"
+                        className="w-[90px] shrink-0 cursor-pointer rounded-xl border border-slate-200 bg-white px-2 py-3 text-xs font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none sm:w-[110px] sm:px-3 sm:text-sm"
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -452,11 +452,11 @@ export default function ContactClient() {
                           setTouched((prev) => ({ ...prev, phone: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, phone: true }))}
-                        className={`flex-1 min-w-0 px-4 py-3 bg-white border ${getValidationError("phone") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all`}
+                        className={`min-w-0 flex-1 border bg-white px-4 py-3 ${getValidationError("phone") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 transition-all focus:ring-2 focus:outline-none`}
                       />
                     </div>
                     {getValidationError("phone") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("phone")}
                       </p>
                     )}
@@ -466,7 +466,7 @@ export default function ContactClient() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="contact-interest"
-                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                     >
                       I&apos;m interested in
                     </label>
@@ -474,7 +474,7 @@ export default function ContactClient() {
                       id="contact-interest"
                       value={formData.interest}
                       onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium"
+                      className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
                     >
                       <option value="Web Development">Web Development</option>
                       <option value="Mobile App">Mobile App</option>
@@ -489,9 +489,9 @@ export default function ContactClient() {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="contact-message"
-                      className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
                     >
-                      Message <span className="text-red-500 font-bold">*</span>
+                      Message <span className="font-bold text-red-500">*</span>
                     </label>
                     <textarea
                       id="contact-message"
@@ -504,10 +504,10 @@ export default function ContactClient() {
                         setTouched((prev) => ({ ...prev, message: true }));
                       }}
                       onBlur={() => setTouched((prev) => ({ ...prev, message: true }))}
-                      className={`w-full px-4 py-3 bg-white border ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all resize-none`}
+                      className={`w-full border bg-white px-4 py-3 ${getValidationError("message") ? "border-red-500 focus:border-red-500 focus:ring-red-500/10" : "border-slate-200 focus:border-[#1155CC] focus:ring-[#1155CC]/10"} resize-none rounded-xl text-sm text-slate-900 transition-all focus:ring-2 focus:outline-none`}
                     />
                     {getValidationError("message") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("message")}
                       </p>
                     )}
@@ -522,7 +522,7 @@ export default function ContactClient() {
                   >
                     {formStatus === "submitting" ? (
                       <>
-                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
+                        <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                         Sending Message...
                       </>
                     ) : (
@@ -534,21 +534,21 @@ export default function ContactClient() {
             </div>
 
             {/* Right Column (40%): Trust/Info Panel */}
-            <div className="lg:col-span-5 space-y-8">
+            <div className="space-y-8 lg:col-span-5">
               {/* Book Call Card */}
-              <div className="bg-gradient-to-br from-[#0F172A] to-[#1155CC] border border-white/5 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-to-br from-[#0F172A] to-[#1155CC] p-6 text-white shadow-xl sm:p-8">
                 {/* Decorative radial glows */}
-                <div className="absolute -top-1/4 -right-1/4 w-[200px] h-[200px] bg-[#22B6F6]/20 rounded-full blur-[60px] pointer-events-none" />
-                <div className="absolute -bottom-1/4 -left-1/4 w-[200px] h-[200px] bg-[#EC4899]/10 rounded-full blur-[60px] pointer-events-none" />
+                <div className="pointer-events-none absolute -top-1/4 -right-1/4 h-[200px] w-[200px] rounded-full bg-[#22B6F6]/20 blur-[60px]" />
+                <div className="pointer-events-none absolute -bottom-1/4 -left-1/4 h-[200px] w-[200px] rounded-full bg-[#EC4899]/10 blur-[60px]" />
 
-                <div className="relative z-10 flex flex-col justify-start h-full">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center mb-6">
-                    <Icon name="bolt" className="w-5 h-5 text-white" />
+                <div className="relative z-10 flex h-full flex-col justify-start">
+                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white">
+                    <Icon name="bolt" className="h-5 w-5 text-white" />
                   </div>
 
-                  <h3 className="text-xl font-medium mb-2 text-white">Or book a call directly</h3>
+                  <h3 className="mb-2 text-xl font-medium text-white">Or book a call directly</h3>
 
-                  <p className="text-slate-300 text-xs font-medium leading-relaxed mb-8">
+                  <p className="mb-8 text-xs leading-relaxed font-medium text-slate-300">
                     Prefer a live conversation? Choose a time slot that works best for you and sync
                     directly with our technical lead.
                   </p>
@@ -556,7 +556,7 @@ export default function ContactClient() {
                   <Button
                     onClick={() => setIsBookModalOpen(true)}
                     variant="secondary"
-                    className="w-full sm:w-auto bg-white text-slate-900 border-transparent hover:bg-slate-100 hover:text-slate-900 hover:border-transparent shadow-md hover:shadow-lg"
+                    className="w-full border-transparent bg-white text-slate-900 shadow-md hover:border-transparent hover:bg-slate-100 hover:text-slate-900 hover:shadow-lg sm:w-auto"
                   >
                     Book Free 15-min Call ↗
                   </Button>
@@ -564,21 +564,21 @@ export default function ContactClient() {
               </div>
 
               {/* Corporate Address & Contact info card */}
-              <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)] space-y-6">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest pb-3 border-b border-slate-100">
+              <div className="space-y-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17, 85, 204,0.02)] sm:p-8">
+                <h4 className="border-b border-slate-100 pb-3 text-xs font-black tracking-widest text-slate-400 uppercase">
                   Corporate Contact Info
                 </h4>
 
                 <div className="space-y-4">
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-lg bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                      <Icon name="schema" className="w-4 h-4" />
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1155CC]/5 text-[#1155CC]">
+                      <Icon name="schema" className="h-4 w-4" />
                     </div>
                     <div>
-                      <h5 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1">
+                      <h5 className="mb-1 text-xs font-black tracking-wider text-slate-500 uppercase">
                         Our Location
                       </h5>
-                      <p className="text-xs font-semibold text-[#22B6F6] leading-relaxed">
+                      <p className="text-xs leading-relaxed font-semibold text-[#22B6F6]">
                         UG-15, Palladium Plaza, Vip Road,
                         <br />
                         Vesu, Surat, Gujarat - 395007, India
@@ -586,10 +586,10 @@ export default function ContactClient() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-lg bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1155CC]/5 text-[#1155CC]">
                       <svg
-                        className="w-4 h-4"
+                        className="h-4 w-4"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2.5"
@@ -603,11 +603,11 @@ export default function ContactClient() {
                       </svg>
                     </div>
                     <div>
-                      <h5 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1">
+                      <h5 className="mb-1 text-xs font-black tracking-wider text-slate-500 uppercase">
                         Phone Number
                       </h5>
                       <div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                        <span className="block text-[10px] font-bold tracking-wide text-slate-400 uppercase">
                           Business Call:
                         </span>
                         <a
@@ -620,17 +620,17 @@ export default function ContactClient() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-lg bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                      <span className="text-xs font-bold font-mono">@</span>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1155CC]/5 text-[#1155CC]">
+                      <span className="font-mono text-xs font-bold">@</span>
                     </div>
                     <div>
-                      <h5 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1">
+                      <h5 className="mb-1 text-xs font-black tracking-wider text-slate-500 uppercase">
                         Email Addresses
                       </h5>
                       <div className="flex flex-col gap-2">
                         <div>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                          <span className="block text-[10px] font-bold tracking-wide text-slate-400 uppercase">
                             General Inquiry:
                           </span>
                           <a
@@ -641,7 +641,7 @@ export default function ContactClient() {
                           </a>
                         </div>
                         <div>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                          <span className="block text-[10px] font-bold tracking-wide text-slate-400 uppercase">
                             Careers & HR:
                           </span>
                           <a
@@ -655,12 +655,12 @@ export default function ContactClient() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-lg bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                      <Icon name="check" className="w-4 h-4" />
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#1155CC]/5 text-[#1155CC]">
+                      <Icon name="check" className="h-4 w-4" />
                     </div>
                     <div>
-                      <h5 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-1">
+                      <h5 className="mb-1 text-xs font-black tracking-wider text-slate-500 uppercase">
                         Standard Response
                       </h5>
                       <p className="text-xs font-semibold text-[#22B6F6]">Within 24 Hours</p>
@@ -679,9 +679,9 @@ export default function ContactClient() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-6 right-6 z-50 bg-[#0F172A] text-white px-5 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-3 text-xs font-bold"
+              className="fixed right-6 bottom-6 z-50 flex items-center gap-3 rounded-xl border border-white/10 bg-[#0F172A] px-5 py-3 text-xs font-bold text-white shadow-2xl"
             >
-              <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#22B6F6]" />
               {toastMessage}
             </motion.div>
           )}

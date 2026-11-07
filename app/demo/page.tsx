@@ -5,7 +5,7 @@ import DemoOne from "@/components/ui/demo";
 
 export default function DemoPage() {
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center bg-gray-50">
       <DemoOne />
     </main>
   );

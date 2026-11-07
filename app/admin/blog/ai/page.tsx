@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { AdminGenerationJob } from "@/lib/types/admin.types";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { listAdminAiJobs, createAdminAiJob } from "@/lib/api/admin-ai.api";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -58,13 +58,10 @@ export default function AdminAIPage() {
   const fetchJobs = useCallback(async (showLoader = false) => {
     if (showLoader) setLoading(true);
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.JOBS);
-      const data = await res.json();
-      if (data.ok) {
-        setJobs(data.data?.jobs || data.jobs || []);
-      }
-    } catch (err) {
-      console.error("Failed to load AI jobs", err);
+      const data = await listAdminAiJobs(50);
+      setJobs(data);
+    } catch {
+      // Non-blocking fetch error handling
     } finally {
       setLoading(false);
     }
@@ -88,25 +85,11 @@ export default function AdminAIPage() {
     setSuccessMsg(null);
 
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.AI.JOBS, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topicText: topicText.trim(), category }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        const errorMsg =
-          typeof data.error === "object" && data.error?.message
-            ? data.error.message
-            : data.error || "Failed to trigger generation";
-        throw new Error(errorMsg);
-      }
-
+      await createAdminAiJob({ topicText: topicText.trim(), category });
       setSuccessMsg("Autonomous generation job enqueued! Pipeline running in background.");
       setTopicText("");
       await fetchJobs();
-    } catch (err) {
+    } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Failed to start job");
     } finally {
       setTriggering(false);
@@ -114,20 +97,20 @@ export default function AdminAIPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="animate-in fade-in space-y-8 duration-300">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-blue-600" />
+          <div className="mb-1 flex items-center gap-2">
+            <span className="flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-blue-700 uppercase">
+              <Sparkles className="h-3 w-3 text-blue-600" />
               Autonomous Engine (FD-1 to FD-7)
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             AI Blog Automation Control Plane
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
             Automated multi-step outline expansion, FLUX thumbnail rendering, and single-use 1-click
             email approvals.
           </p>
@@ -137,9 +120,9 @@ export default function AdminAIPage() {
           onClick={() => {
             void fetchJobs(true);
           }}
-          className="self-start sm:self-auto p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs"
+          className="flex items-center gap-1.5 self-start rounded-xl border border-slate-200 bg-white p-2 text-xs font-semibold text-slate-600 shadow-2xs transition-colors hover:bg-slate-50 hover:text-slate-900 sm:self-auto"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-[#1155CC]" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-[#1155CC]" : ""}`} />
           <span>Refresh</span>
         </button>
       </div>
@@ -148,14 +131,14 @@ export default function AdminAIPage() {
       <Card className="border-blue-100 bg-gradient-to-r from-blue-50/40 via-white to-sky-50/20 shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#1155CC] text-white flex items-center justify-center shadow-md shadow-[#1155CC]/20">
-              <Sparkles className="w-4 h-4" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/20">
+              <Sparkles className="h-4 w-4" />
             </div>
             <div>
-              <CardTitle className="text-base font-bold text-slate-900 font-sora">
+              <CardTitle className="font-sora text-base font-bold text-slate-900">
                 Launch Autonomous Generation Job
               </CardTitle>
-              <CardDescription className="text-xs mt-0.5">
+              <CardDescription className="mt-0.5 text-xs">
                 The agent will draft an outline, write deep technical sections, generate a 1200x630
                 FLUX thumbnail, and email you an approval link.
               </CardDescription>
@@ -164,35 +147,35 @@ export default function AdminAIPage() {
         </CardHeader>
         <CardContent>
           {successMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
               <span>{successMsg}</span>
             </div>
           )}
 
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="mb-4 flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800">
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           <form onSubmit={handleTriggerJob} className="space-y-4">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <div className="flex-1">
                 <Input
                   required
                   placeholder="e.g., Designing Scalable Event-Driven Architectures with Kafka and Next.js"
                   value={topicText}
                   onChange={(e) => setTopicText(e.target.value)}
-                  className="h-11 rounded-xl bg-white border-slate-200 text-xs sm:text-sm font-medium"
+                  className="h-11 rounded-xl border-slate-200 bg-white text-xs font-medium sm:text-sm"
                 />
               </div>
 
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="h-11 px-3 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#1155CC]"
+                className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-[#1155CC] focus:outline-none"
               >
                 <option value="Engineering">Engineering</option>
                 <option value="Architecture">Architecture</option>
@@ -204,9 +187,9 @@ export default function AdminAIPage() {
               <Button
                 type="submit"
                 disabled={triggering || !topicText.trim()}
-                className="h-11 px-5 rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white font-bold text-xs shadow-md shadow-[#1155CC]/25 flex items-center justify-center gap-2 shrink-0"
+                className="flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#1155CC] px-5 text-xs font-bold text-white shadow-md shadow-[#1155CC]/25 hover:bg-[#0d44a4]"
               >
-                <Play className={`w-3.5 h-3.5 fill-current ${triggering ? "animate-pulse" : ""}`} />
+                <Play className={`h-3.5 w-3.5 fill-current ${triggering ? "animate-pulse" : ""}`} />
                 <span>{triggering ? "Enqueueing Job..." : "Generate Post"}</span>
               </Button>
             </div>
@@ -215,57 +198,57 @@ export default function AdminAIPage() {
       </Card>
 
       {/* Model & Failover Status Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card className="border-slate-200/80">
-          <CardContent className="p-4 flex items-center justify-between">
+          <CardContent className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                <Cpu className="w-4 h-4" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                <Cpu className="h-4 w-4" />
               </div>
               <div>
                 <p className="text-xs font-bold text-slate-900">Text Model Router</p>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[11px] font-medium text-slate-400">
                   Groq &bull; Gemini &bull; Cerebras
                 </p>
               </div>
             </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
               Failover Active
             </span>
           </CardContent>
         </Card>
 
         <Card className="border-slate-200/80">
-          <CardContent className="p-4 flex items-center justify-between">
+          <CardContent className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <ImageIcon className="w-4 h-4" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <ImageIcon className="h-4 w-4" />
               </div>
               <div>
                 <p className="text-xs font-bold text-slate-900">Thumbnail Renderer</p>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[11px] font-medium text-slate-400">
                   Cloudflare FLUX &bull; Pollinations
                 </p>
               </div>
             </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">
               Ready
             </span>
           </CardContent>
         </Card>
 
         <Card className="border-slate-200/80">
-          <CardContent className="p-4 flex items-center justify-between">
+          <CardContent className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <ShieldCheck className="h-4 w-4" />
               </div>
               <div>
                 <p className="text-xs font-bold text-slate-900">Email Approvals</p>
-                <p className="text-[11px] text-slate-400 font-medium">Single-Use Signed Tokens</p>
+                <p className="text-[11px] font-medium text-slate-400">Single-Use Signed Tokens</p>
               </div>
             </div>
-            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
               72h Expiry
             </span>
           </CardContent>
@@ -276,10 +259,10 @@ export default function AdminAIPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <div>
-            <CardTitle className="text-base font-bold text-slate-900 font-sora">
+            <CardTitle className="font-sora text-base font-bold text-slate-900">
               Pipeline Jobs & History
             </CardTitle>
-            <CardDescription className="text-xs mt-0.5">
+            <CardDescription className="mt-0.5 text-xs">
               Real-time progress of autonomous multi-step jobs and checkpoint states
             </CardDescription>
           </div>
@@ -287,69 +270,69 @@ export default function AdminAIPage() {
         </CardHeader>
         <CardContent>
           {loading && jobs.length === 0 ? (
-            <div className="py-12 text-center text-xs text-slate-400 font-medium">
+            <div className="py-12 text-center text-xs font-medium text-slate-400">
               Loading generation jobs...
             </div>
           ) : jobs.length === 0 ? (
-            <div className="py-12 text-center text-xs text-slate-400 font-medium">
+            <div className="py-12 text-center text-xs font-medium text-slate-400">
               No generation jobs executed yet. Enter a topic above to test the autonomous pipeline.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50/75 border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                <thead className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   <tr>
-                    <th className="py-3 px-4">Topic & Category</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Current Step</th>
-                    <th className="py-3 px-4">Attempts</th>
-                    <th className="py-3 px-4">Started</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="px-4 py-3">Topic & Category</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Current Step</th>
+                    <th className="px-4 py-3">Attempts</th>
+                    <th className="px-4 py-3">Started</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {jobs.map((job) => (
-                    <tr key={job.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3 px-4 max-w-xs">
-                        <p className="font-bold text-slate-900 truncate">{job.topicText}</p>
-                        <span className="text-[10px] text-slate-400 font-medium">
+                    <tr key={job.id} className="transition-colors hover:bg-slate-50/80">
+                      <td className="max-w-xs px-4 py-3">
+                        <p className="truncate font-bold text-slate-900">{job.topicText}</p>
+                        <span className="text-[10px] font-medium text-slate-400">
                           {job.category || "Engineering"} &bull; v{job.version}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{getStatusBadge(job.status)}</td>
-                      <td className="py-3 px-4">
-                        <span className="font-mono text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                      <td className="px-4 py-3">{getStatusBadge(job.status)}</td>
+                      <td className="px-4 py-3">
+                        <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-600">
                           {job.currentStep || "queued"}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-slate-500 font-medium">
+                      <td className="px-4 py-3 font-medium text-slate-500">
                         {job.attempt} / {job.maxAttempts}
                       </td>
-                      <td className="py-3 px-4 text-slate-500 font-medium">
+                      <td className="px-4 py-3 font-medium text-slate-500">
                         {new Date(job.createdAt).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </td>
-                      <td className="py-3 px-4 text-right">
+                      <td className="px-4 py-3 text-right">
                         {job.resultPostId ? (
                           <Link
                             href={`/admin/blog/${job.resultPostId}`}
-                            className="text-xs font-bold text-[#1155CC] hover:underline inline-flex items-center gap-1"
+                            className="inline-flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
                           >
                             <span>Inspect Post</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
+                            <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
                         ) : job.status === "FAILED" ? (
                           <span
-                            className="text-[11px] text-rose-600 font-semibold"
+                            className="text-[11px] font-semibold text-rose-600"
                             title={JSON.stringify(job.errorDetails)}
                           >
                             Check Error
                           </span>
                         ) : (
-                          <span className="text-[11px] text-slate-400 font-medium flex items-center justify-end gap-1">
-                            <Clock className="w-3 h-3 animate-spin" />
+                          <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-slate-400">
+                            <Clock className="h-3 w-3 animate-spin" />
                             <span>Processing</span>
                           </span>
                         )}

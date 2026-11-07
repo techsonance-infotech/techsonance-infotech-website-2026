@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Clock,
   Loader2,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,12 @@ import {
 } from "@/components/admin/careers/ApplicationsTable";
 import { ApplicationsKanban } from "@/components/admin/careers/ApplicationsKanban";
 import { CandidateDrawer } from "@/components/admin/careers/CandidateDrawer";
+import { ComplianceAuditModal } from "@/components/admin/careers/ComplianceAuditModal";
+import {
+  listAdminApplications,
+  updateAdminApplication,
+  getAdminApplicationsExportUrl,
+} from "@/lib/api/admin-applications.api";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface JobOption {
@@ -53,6 +60,7 @@ export default function ApplicationsInboxPage() {
 
   // Selected candidate drawer
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
+  const [complianceModalOpen, setComplianceModalOpen] = useState(false);
 
   // Debounce search
   useEffect(() => {
@@ -97,20 +105,15 @@ export default function ApplicationsInboxPage() {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (selectedJobId) params.set("jobId", selectedJobId);
-      if (selectedStatus) params.set("status", selectedStatus);
-      if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
-      if (knockoutOnly) params.set("knockoutTriggered", "true");
-      params.set("limit", "100");
-
-      const res = await fetch(`${API_ENDPOINTS.ADMIN.APPLICATIONS}?${params.toString()}`);
-      if (!res.ok) {
-        throw new Error("Failed to load candidate applications");
-      }
-      const data = await res.json();
-      setApplications(data.applications || []);
-      setTotalCount(data.total ?? (data.applications?.length || 0));
+      const data = await listAdminApplications({
+        jobId: selectedJobId || undefined,
+        status: selectedStatus ? (selectedStatus as ApplicationStatus) : undefined,
+        search: debouncedSearch.trim() || undefined,
+        knockoutTriggered: knockoutOnly ? true : undefined,
+        limit: 100,
+      });
+      setApplications(data.applications);
+      setTotalCount(data.total);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to load candidate applications";
       setError(msg);
@@ -130,19 +133,10 @@ export default function ApplicationsInboxPage() {
     rejectionReason?: string,
   ) => {
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.APPLICATION(id), {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: newStage,
-          rejectionReason: rejectionReason || undefined,
-        }),
+      await updateAdminApplication(id, {
+        status: newStage,
+        rejectionReason: rejectionReason || undefined,
       });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to update candidate stage");
-      }
 
       // Optimistically or refetch
       await fetchApplications();
@@ -154,11 +148,7 @@ export default function ApplicationsInboxPage() {
 
   // Handle CSV export
   const handleExportCsv = () => {
-    const params = new URLSearchParams();
-    if (selectedJobId) params.set("jobId", selectedJobId);
-    const exportUrl = `${API_ENDPOINTS.ADMIN.APPLICATIONS_EXPORT}${
-      params.toString() ? `?${params.toString()}` : ""
-    }`;
+    const exportUrl = getAdminApplicationsExportUrl(selectedJobId || undefined);
     window.open(exportUrl, "_blank");
   };
 
@@ -170,14 +160,14 @@ export default function ApplicationsInboxPage() {
   const knockoutCount = applications.filter((a) => a.knockoutTriggered).length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="animate-in fade-in space-y-6 duration-300">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
             Job Applications Inbox
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">
+          <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm dark:text-slate-400">
             Review candidate resumes, candidate portfolios, and hiring submissions.
           </p>
         </div>
@@ -186,10 +176,20 @@ export default function ApplicationsInboxPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={handleExportCsv}
-            className="rounded-2xl flex items-center gap-1.5 text-xs h-9 border-slate-200 dark:border-slate-800"
+            onClick={() => setComplianceModalOpen(true)}
+            className="flex h-9 items-center gap-1.5 rounded-2xl border-slate-200 text-xs text-slate-700 dark:border-slate-800 dark:text-slate-300"
           >
-            <Download className="w-3.5 h-3.5" />
+            <ShieldCheck className="h-3.5 w-3.5 text-[#1155CC]" />
+            Privacy & GDPR
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportCsv}
+            className="flex h-9 items-center gap-1.5 rounded-2xl border-slate-200 text-xs dark:border-slate-800"
+          >
+            <Download className="h-3.5 w-3.5" />
             Export CSV
           </Button>
 
@@ -197,74 +197,74 @@ export default function ApplicationsInboxPage() {
             variant="outline"
             size="sm"
             onClick={() => fetchApplications()}
-            className="rounded-2xl p-2 h-9 w-9 border-slate-200 dark:border-slate-800"
+            className="h-9 w-9 rounded-2xl border-slate-200 p-2 dark:border-slate-800"
             title="Refresh applications"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
       </div>
 
       {/* Metrics Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="mb-1 flex items-center justify-between text-slate-500">
+            <span className="text-[11px] font-bold tracking-wider uppercase">
               Total In Pipeline
             </span>
-            <Users className="w-4 h-4 text-blue-500" />
+            <Users className="h-4 w-4 text-blue-500" />
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white font-sora">
+          <p className="font-sora text-2xl font-black text-slate-900 dark:text-white">
             {totalCount}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">New Unreviewed</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="mb-1 flex items-center justify-between text-slate-500">
+            <span className="text-[11px] font-bold tracking-wider uppercase">New Unreviewed</span>
+            <Clock className="h-4 w-4 text-amber-500" />
           </div>
-          <p className="text-2xl font-black text-amber-600 dark:text-amber-400 font-sora">
+          <p className="font-sora text-2xl font-black text-amber-600 dark:text-amber-400">
             {newCount}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Interview Stage</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="mb-1 flex items-center justify-between text-slate-500">
+            <span className="text-[11px] font-bold tracking-wider uppercase">Interview Stage</span>
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           </div>
-          <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-sora">
+          <p className="font-sora text-2xl font-black text-emerald-600 dark:text-emerald-400">
             {interviewCount}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider">
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+          <div className="mb-1 flex items-center justify-between text-slate-500">
+            <span className="text-[11px] font-bold tracking-wider uppercase">
               Knockouts Flagged
             </span>
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
+            <AlertTriangle className="h-4 w-4 text-rose-500" />
           </div>
-          <p className="text-2xl font-black text-rose-600 dark:text-rose-400 font-sora">
+          <p className="font-sora text-2xl font-black text-rose-600 dark:text-rose-400">
             {knockoutCount}
           </p>
         </div>
       </div>
 
       {/* Control Bar: Filters & View Toggle */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="flex flex-col justify-between gap-3 rounded-3xl border border-slate-200/80 bg-white p-4 shadow-xs md:flex-row md:items-center dark:border-slate-800 dark:bg-slate-900">
         {/* Left Side: Search & Filter Inputs */}
-        <div className="flex flex-wrap items-center gap-3 flex-1">
+        <div className="flex flex-1 flex-wrap items-center gap-3">
           {/* Search */}
-          <div className="relative min-w-[220px] flex-1 max-w-sm">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <div className="relative max-w-sm min-w-[220px] flex-1">
+            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search candidate or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-xs pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1155CC]/20 focus:border-[#1155CC] text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pr-3 pl-9 text-xs text-slate-800 placeholder:text-slate-400 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200"
             />
           </div>
 
@@ -273,7 +273,7 @@ export default function ApplicationsInboxPage() {
             <select
               value={selectedJobId}
               onChange={(e) => setSelectedJobId(e.target.value)}
-              className="text-xs py-2 px-3 pr-8 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#1155CC]/20 focus:border-[#1155CC] cursor-pointer"
+              className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 pr-8 text-xs text-slate-700 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-300"
             >
               <option value="">All Open Roles</option>
               {jobs.map((job) => (
@@ -290,7 +290,7 @@ export default function ApplicationsInboxPage() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="text-xs py-2 px-3 pr-8 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-[#1155CC]/20 focus:border-[#1155CC] cursor-pointer"
+                className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 pr-8 text-xs text-slate-700 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-300"
               >
                 <option value="">All Stages</option>
                 {Object.values(ApplicationStatus).map((status) => (
@@ -303,7 +303,7 @@ export default function ApplicationsInboxPage() {
           )}
 
           {/* Knockout Filter Checkbox */}
-          <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer px-2.5 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+          <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800/60">
             <input
               type="checkbox"
               checked={knockoutOnly}
@@ -311,36 +311,36 @@ export default function ApplicationsInboxPage() {
               className="rounded border-slate-300 text-rose-600 focus:ring-rose-500"
             />
             <span className="flex items-center gap-1 text-rose-600 dark:text-rose-400">
-              <AlertTriangle className="w-3.5 h-3.5" />
+              <AlertTriangle className="h-3.5 w-3.5" />
               Knockouts Only
             </span>
           </label>
         </div>
 
         {/* Right Side: View Toggle Buttons */}
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl self-start md:self-auto border border-slate-200/60 dark:border-slate-700/60">
+        <div className="flex items-center gap-1 self-start rounded-2xl border border-slate-200/60 bg-slate-100 p-1 md:self-auto dark:border-slate-700/60 dark:bg-slate-800/80">
           <button
             type="button"
             onClick={() => setViewMode("table")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
               viewMode === "table"
                 ? "bg-white dark:bg-slate-700 text-[#1155CC] dark:text-white shadow-xs"
                 : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
             }`}
           >
-            <List className="w-3.5 h-3.5" />
+            <List className="h-3.5 w-3.5" />
             Table
           </button>
           <button
             type="button"
             onClick={() => setViewMode("kanban")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
               viewMode === "kanban"
                 ? "bg-white dark:bg-slate-700 text-[#1155CC] dark:text-white shadow-xs"
                 : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
             }`}
           >
-            <LayoutGrid className="w-3.5 h-3.5" />
+            <LayoutGrid className="h-3.5 w-3.5" />
             Kanban
           </button>
         </div>
@@ -348,14 +348,14 @@ export default function ApplicationsInboxPage() {
 
       {/* Main View Area */}
       {loading && applications.length === 0 ? (
-        <div className="py-24 text-center space-y-3 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#1155CC]" />
-          <p className="text-xs text-slate-500 font-medium">Loading candidate applications...</p>
+        <div className="space-y-3 rounded-3xl border border-slate-200/80 bg-white py-24 text-center dark:border-slate-800 dark:bg-slate-900">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#1155CC]" />
+          <p className="text-xs font-medium text-slate-500">Loading candidate applications...</p>
         </div>
       ) : error ? (
-        <div className="p-6 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 rounded-3xl text-xs space-y-2">
+        <div className="space-y-2 rounded-3xl border border-rose-200 bg-rose-50 p-6 text-xs text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-300">
           <div className="flex items-center gap-2 font-bold">
-            <AlertTriangle className="w-4 h-4" />
+            <AlertTriangle className="h-4 w-4" />
             <span>Failed to load applications</span>
           </div>
           <p>{error}</p>
@@ -363,7 +363,7 @@ export default function ApplicationsInboxPage() {
             variant="outline"
             size="sm"
             onClick={() => fetchApplications()}
-            className="rounded-xl mt-2 text-xs"
+            className="mt-2 rounded-xl text-xs"
           >
             Try Again
           </Button>
@@ -387,6 +387,13 @@ export default function ApplicationsInboxPage() {
         isOpen={!!selectedAppId}
         onClose={() => setSelectedAppId(null)}
         onApplicationUpdated={() => fetchApplications()}
+      />
+
+      {/* GDPR / Privacy Compliance Modal */}
+      <ComplianceAuditModal
+        isOpen={complianceModalOpen}
+        onClose={() => setComplianceModalOpen(false)}
+        onPurgeSuccess={() => fetchApplications()}
       />
     </div>
   );

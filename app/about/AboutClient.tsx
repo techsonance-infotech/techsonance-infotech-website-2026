@@ -103,13 +103,13 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`transition-all duration-200 ease-out select-none cursor-pointer relative overflow-hidden ${className}`}
+      className={`relative cursor-pointer overflow-hidden transition-all duration-200 ease-out select-none ${className}`}
       style={{
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transformStyle: "preserve-3d",
       }}
     >
-      <div className="absolute inset-0 pointer-events-none" style={glowStyle} />
+      <div className="pointer-events-none absolute inset-0" style={glowStyle} />
       <div style={{ transform: "translateZ(30px)" }}>{children}</div>
     </div>
   );
@@ -255,7 +255,7 @@ export default function AboutClient() {
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen relative overflow-x-clip font-sans text-slate-900">
+      <main className="relative min-h-screen overflow-x-clip bg-[#FAFBFD] font-sans text-slate-900">
         {/* =========================================================================
           SECTION 1 — HERO
           ========================================================================= */}
@@ -264,15 +264,15 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 2 — COMPANY IMPACT METRICS (DARK)
           ========================================================================= */}
-        <section className="relative py-24 bg-[#050B14] text-white overflow-hidden border-t border-slate-900">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
+        <section className="relative overflow-hidden border-t border-slate-900 bg-[#050B14] py-24 text-white">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:50px_50px]" />
 
           {/* Expanding glows */}
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#1155CC]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#22B6F6]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="pointer-events-none absolute top-1/2 left-1/4 h-96 w-96 -translate-y-1/2 rounded-full bg-[#1155CC]/10 blur-3xl" />
+          <div className="pointer-events-none absolute top-1/2 right-1/4 h-96 w-96 -translate-y-1/2 rounded-full bg-[#22B6F6]/10 blur-3xl" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-4 text-center">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-5 md:gap-4">
               {[
                 { val: 4, suffix: "+", label: "Years Experience" },
                 { val: 15, suffix: "+", label: "Products Delivered" },
@@ -282,12 +282,12 @@ export default function AboutClient() {
               ].map((stat, i) => (
                 <div
                   key={stat.label}
-                  className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.04] backdrop-blur-sm"
+                  className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-4 backdrop-blur-sm"
                 >
-                  <div className="text-4xl sm:text-5xl font-black text-white mb-2 font-mono">
+                  <div className="mb-2 font-mono text-4xl font-black text-white sm:text-5xl">
                     <CountUp value={stat.val} suffix={stat.suffix} delay={i * 0.15} />
                   </div>
-                  <div className="text-[11px] sm:text-xs font-semibold text-slate-400 tracking-wider uppercase">
+                  <div className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase sm:text-xs">
                     {stat.label}
                   </div>
                 </div>
@@ -299,22 +299,22 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 3 — ENGINEERING DNA (LIGHT)
           ========================================================================= */}
-        <section className="py-24 bg-white border-b border-slate-100 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-3">
+        <section className="relative border-b border-slate-100 bg-white py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <h2 className="mb-3 text-xs font-bold tracking-widest text-[#1155CC] uppercase">
                 Our Principles
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-medium text-gray-900 tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">
                 Our Engineering DNA
               </h3>
-              <p className="text-slate-500 text-sm mt-3 font-medium">
+              <p className="mt-3 text-sm font-medium text-slate-500">
                 We replace standard vision cards with execution directives that actually shape the
                 code we ship.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   title: "Architecture First",
@@ -339,12 +339,12 @@ export default function AboutClient() {
               ].map((dna) => (
                 <TiltCard
                   key={dna.title}
-                  className="bg-[#FAFBFD] border border-slate-100 rounded-3xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.015)] hover:border-blue-100 transition-colors"
+                  className="rounded-3xl border border-slate-100 bg-[#FAFBFD] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.015)] transition-colors hover:border-blue-100"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 text-[#1155CC] flex items-center justify-center mb-6 shadow-sm">
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-100 bg-white text-[#1155CC] shadow-sm">
                     {dna.icon === "schema" && (
                       <svg
-                        className="w-6 h-6"
+                        className="h-6 w-6"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -359,7 +359,7 @@ export default function AboutClient() {
                     )}
                     {dna.icon === "auto" && (
                       <svg
-                        className="w-6 h-6"
+                        className="h-6 w-6"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -374,7 +374,7 @@ export default function AboutClient() {
                     )}
                     {dna.icon === "speed" && (
                       <svg
-                        className="w-6 h-6"
+                        className="h-6 w-6"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -389,7 +389,7 @@ export default function AboutClient() {
                     )}
                     {dna.icon === "shield" && (
                       <svg
-                        className="w-6 h-6"
+                        className="h-6 w-6"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -403,8 +403,8 @@ export default function AboutClient() {
                       </svg>
                     )}
                   </div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-3">{dna.title}</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed">{dna.desc}</p>
+                  <h4 className="mb-3 text-lg font-bold text-gray-900">{dna.title}</h4>
+                  <p className="text-xs leading-relaxed font-medium text-slate-500">{dna.desc}</p>
                 </TiltCard>
               ))}
             </div>
@@ -418,25 +418,25 @@ export default function AboutClient() {
           ref={horizontalSectionRef}
           className={
             isMobile
-              ? "relative py-16 bg-[#020617] text-white"
+              ? "relative bg-[#020617] py-16 text-white"
               : "relative h-[250vh] bg-[#020617] text-white"
           }
         >
           <div
             className={
               isMobile
-                ? "w-full flex flex-col justify-center"
-                : "sticky top-0 h-screen flex flex-col justify-center overflow-hidden"
+                ? "flex w-full flex-col justify-center"
+                : "sticky top-0 flex h-screen flex-col justify-center overflow-hidden"
             }
           >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-8 relative z-20">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#22B6F6] mb-2">
+            <div className="relative z-20 mx-auto mb-8 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+              <h2 className="mb-2 text-xs font-bold tracking-widest text-[#22B6F6] uppercase">
                 Portfolio Showcase
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-medium text-white tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-white sm:text-4xl">
                 What We&apos;ve Built
               </h3>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">
+              <p className="mt-1 text-xs font-medium text-slate-400 sm:text-sm">
                 Production-grade systems running live for scaling organizations.
               </p>
             </div>
@@ -446,8 +446,8 @@ export default function AboutClient() {
               style={isMobile ? undefined : { x: horizontalX }}
               className={
                 isMobile
-                  ? "w-full flex flex-row overflow-x-auto gap-6 px-6 pb-4 scrollbar-none snap-x snap-mandatory relative z-10"
-                  : "w-max flex gap-8 px-12 md:px-24 relative z-10"
+                  ? "relative z-10 flex w-full snap-x snap-mandatory scrollbar-none flex-row gap-6 overflow-x-auto px-6 pb-4"
+                  : "relative z-10 flex w-max gap-8 px-12 md:px-24"
               }
             >
               {projects.map((proj) => (
@@ -455,13 +455,13 @@ export default function AboutClient() {
                   key={proj.title}
                   className={
                     isMobile
-                      ? "w-[85vw] max-w-[340px] snap-center shrink-0 bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between"
-                      : "w-[80vw] max-w-[550px] shrink-0 bg-slate-900/50 border border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col justify-between"
+                      ? "flex w-[85vw] max-w-[340px] shrink-0 snap-center flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/50 p-6"
+                      : "flex w-[80vw] max-w-[550px] shrink-0 flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/50 p-6 sm:p-8"
                   }
                 >
                   <div>
                     <div
-                      className="relative overflow-hidden rounded-2xl border border-slate-800 aspect-[16/10] w-full mb-6 group"
+                      className="group relative mb-6 aspect-[16/10] w-full overflow-hidden rounded-2xl border border-slate-800"
                       style={{ background: proj.screenshotPath ? undefined : proj.mockupGradient }}
                     >
                       {proj.screenshotPath ? (
@@ -473,35 +473,35 @@ export default function AboutClient() {
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center font-bold text-2xl text-white">
+                        <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-white">
                           {proj.title.charAt(0)}
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-between items-start gap-4 mb-3">
+                    <div className="mb-3 flex items-start justify-between gap-4">
                       <h4 className="text-xl font-bold text-white">{proj.title}</h4>
-                      <span className="text-[10px] font-bold text-[#22B6F6] uppercase tracking-wider bg-[#22B6F6]/10 px-2.5 py-1 rounded-full">
+                      <span className="rounded-full bg-[#22B6F6]/10 px-2.5 py-1 text-[10px] font-bold tracking-wider text-[#22B6F6] uppercase">
                         {proj.industry}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-400 font-medium leading-relaxed mb-4">
+                    <p className="mb-4 text-xs leading-relaxed font-medium text-slate-400">
                       {proj.shortDescription}
                     </p>
                   </div>
 
-                  <div className="border-t border-slate-800/80 pt-4 mt-auto">
-                    <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="mt-auto border-t border-slate-800/80 pt-4">
+                    <div className="mb-3 flex flex-wrap gap-2">
                       {proj.techStack.slice(0, 3).map((t) => (
                         <span
                           key={t.name}
-                          className="text-[10px] font-mono text-slate-500 bg-slate-950 px-2 py-1 rounded"
+                          className="rounded bg-slate-950 px-2 py-1 font-mono text-[10px] text-slate-500"
                         >
                           {t.name}
                         </span>
                       ))}
                     </div>
-                    <p className="text-[11px] text-[#10B981] font-semibold flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] shrink-0" />
+                    <p className="flex items-center gap-1.5 text-[11px] font-semibold text-[#10B981]">
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#10B981]" />
                       Outcome: {proj.result}
                     </p>
                   </div>
@@ -511,14 +511,14 @@ export default function AboutClient() {
 
             {/* Mobile Navigation Arrows */}
             {isMobile && (
-              <div className="flex justify-center gap-4 mt-6 relative z-20">
+              <div className="relative z-20 mt-6 flex justify-center gap-4">
                 <button
                   onClick={() => scrollPortfolio("left")}
-                  className="w-10 h-10 rounded-full border border-white/20 bg-white/5 text-white flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all hover:bg-white/10 active:scale-95"
                   aria-label="Previous Project"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -529,11 +529,11 @@ export default function AboutClient() {
                 </button>
                 <button
                   onClick={() => scrollPortfolio("right")}
-                  className="w-10 h-10 rounded-full border border-white/20 bg-white/5 text-white flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all hover:bg-white/10 active:scale-95"
                   aria-label="Next Project"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -550,28 +550,28 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 5 — ENGINEERING PROCESS TIMELINE (LIGHT STICKY)
           ========================================================================= */}
-        <section ref={timelineSectionRef} className="py-24 bg-white relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-2">
+        <section ref={timelineSectionRef} className="relative bg-white py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <h2 className="mb-2 text-xs font-bold tracking-widest text-[#1155CC] uppercase">
                 Our Pipeline
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-medium text-gray-900 tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">
                 How We Build
               </h3>
-              <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
+              <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
                 A reliable software lifecycle backed by engineering protocols.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative">
+            <div className="relative grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
               {/* Left Side: Steps (Scrolling) */}
-              <div className="lg:col-span-7 space-y-16 relative">
+              <div className="relative space-y-16 lg:col-span-7">
                 {/* Progress Tracker line */}
-                <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-slate-100 pointer-events-none">
+                <div className="pointer-events-none absolute top-4 bottom-4 left-6 w-0.5 bg-slate-100">
                   <motion.div
                     style={{ height: timelineProgressHeight }}
-                    className="w-full bg-[#1155CC] origin-top"
+                    className="w-full origin-top bg-[#1155CC]"
                   />
                 </div>
 
@@ -618,11 +618,11 @@ export default function AboutClient() {
                     ref={stepRefs[idx]}
                     onViewportEnter={() => setActiveStep(idx)}
                     viewport={{ margin: "-20% 0px -60% 0px" }}
-                    className="flex items-start gap-8 pl-12 relative"
+                    className="relative flex items-start gap-8 pl-12"
                   >
                     {/* Step Bubble */}
                     <div
-                      className={`absolute left-2.5 top-0 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center border font-mono text-[10px] font-bold transition-all duration-300 z-10 ${
+                      className={`absolute top-0 left-2.5 z-10 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full border font-mono text-[10px] font-bold transition-all duration-300 ${
                         activeStep === idx
                           ? "bg-[#1155CC] text-white border-[#1155CC]"
                           : activeStep > idx
@@ -634,11 +634,11 @@ export default function AboutClient() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-bold text-[#1155CC] uppercase tracking-wider">
+                      <span className="text-[10px] font-bold tracking-wider text-[#1155CC] uppercase">
                         {step.tag}
                       </span>
-                      <h4 className="text-xl font-bold text-gray-900 mt-1 mb-3">{step.title}</h4>
-                      <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed max-w-xl">
+                      <h4 className="mt-1 mb-3 text-xl font-bold text-gray-900">{step.title}</h4>
+                      <p className="max-w-xl text-xs leading-relaxed font-medium text-slate-500 sm:text-sm">
                         {step.desc}
                       </p>
                     </div>
@@ -647,19 +647,19 @@ export default function AboutClient() {
               </div>
 
               {/* Right Side: Sticky Visuals */}
-              <div className="hidden lg:block lg:col-span-5 sticky top-32 h-[400px] bg-[#0A1120] border border-slate-800 rounded-3xl p-6 overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:30px_30px] pointer-events-none" />
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#1155CC]/15 rounded-full blur-2xl pointer-events-none" />
+              <div className="sticky top-32 hidden h-[400px] overflow-hidden rounded-3xl border border-slate-800 bg-[#0A1120] p-6 lg:col-span-5 lg:block">
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:30px_30px]" />
+                <div className="pointer-events-none absolute top-0 right-0 h-32 w-32 rounded-full bg-[#1155CC]/15 blur-2xl" />
 
-                <div className="h-full flex flex-col justify-between relative z-10 text-white">
-                  <div className="border-b border-slate-800 pb-3 flex justify-between items-center">
-                    <span className="text-[10px] text-slate-500 font-mono">
+                <div className="relative z-10 flex h-full flex-col justify-between text-white">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <span className="font-mono text-[10px] text-slate-500">
                       STEP_INDEX: 0{activeStep + 1}
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-mono">STATUS: ACTIVE</span>
+                    <span className="font-mono text-[10px] text-emerald-400">STATUS: ACTIVE</span>
                   </div>
 
-                  <div className="flex-1 flex items-center justify-center">
+                  <div className="flex flex-1 items-center justify-center">
                     <AnimatePresence mode="wait">
                       {activeStep === 0 && (
                         <motion.div
@@ -671,7 +671,7 @@ export default function AboutClient() {
                           className="text-center"
                         >
                           <svg
-                            className="w-16 h-16 mx-auto text-[#22B6F6] mb-4"
+                            className="mx-auto mb-4 h-16 w-16 text-[#22B6F6]"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -683,8 +683,8 @@ export default function AboutClient() {
                               d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                             />
                           </svg>
-                          <h5 className="font-bold text-sm">Auditing Operational Pipelines</h5>
-                          <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">
+                          <h5 className="text-sm font-bold">Auditing Operational Pipelines</h5>
+                          <p className="mx-auto mt-1 max-w-[200px] text-[10px] text-slate-400">
                             Mapping legacy databases and structural dependencies.
                           </p>
                         </motion.div>
@@ -699,7 +699,7 @@ export default function AboutClient() {
                           className="text-center"
                         >
                           <svg
-                            className="w-16 h-16 mx-auto text-[#1155CC] mb-4"
+                            className="mx-auto mb-4 h-16 w-16 text-[#1155CC]"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -711,8 +711,8 @@ export default function AboutClient() {
                               d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9s2.015-9 4.5-9y"
                             />
                           </svg>
-                          <h5 className="font-bold text-sm">System Database Modeling</h5>
-                          <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">
+                          <h5 className="text-sm font-bold">System Database Modeling</h5>
+                          <p className="mx-auto mt-1 max-w-[200px] text-[10px] text-slate-400">
                             Drafting API schemas and entity relationships.
                           </p>
                         </motion.div>
@@ -724,7 +724,7 @@ export default function AboutClient() {
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.3 }}
-                          className="w-full text-left font-mono text-[9px] text-slate-400 bg-slate-950 p-4 rounded-xl border border-slate-800"
+                          className="w-full rounded-xl border border-slate-800 bg-slate-950 p-4 text-left font-mono text-[9px] text-slate-400"
                         >
                           <div className="text-emerald-400"># Git Commit Sprints</div>
                           <div>const buildRoute = async () =&gt; &#123;</div>
@@ -746,7 +746,7 @@ export default function AboutClient() {
                           className="text-center"
                         >
                           <svg
-                            className="w-16 h-16 mx-auto text-[#10B981] mb-4"
+                            className="mx-auto mb-4 h-16 w-16 text-[#10B981]"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -758,8 +758,8 @@ export default function AboutClient() {
                               d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                             />
                           </svg>
-                          <h5 className="font-bold text-sm">Testing Complete: 100% Passed</h5>
-                          <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">
+                          <h5 className="text-sm font-bold">Testing Complete: 100% Passed</h5>
+                          <p className="mx-auto mt-1 max-w-[200px] text-[10px] text-slate-400">
                             Row-level security check complete. Zero memory leaks.
                           </p>
                         </motion.div>
@@ -774,7 +774,7 @@ export default function AboutClient() {
                           className="text-center"
                         >
                           <svg
-                            className="w-16 h-16 mx-auto text-[#EC4899] mb-4"
+                            className="mx-auto mb-4 h-16 w-16 text-[#EC4899]"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -786,8 +786,8 @@ export default function AboutClient() {
                               d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9s2.015-9 4.5-9y"
                             />
                           </svg>
-                          <h5 className="font-bold text-sm">Safe Container Deployment</h5>
-                          <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">
+                          <h5 className="text-sm font-bold">Safe Container Deployment</h5>
+                          <p className="mx-auto mt-1 max-w-[200px] text-[10px] text-slate-400">
                             Automated build successful. CDN edge synchronized.
                           </p>
                         </motion.div>
@@ -802,7 +802,7 @@ export default function AboutClient() {
                           className="text-center"
                         >
                           <svg
-                            className="w-16 h-16 mx-auto text-[#22B6F6] mb-4"
+                            className="mx-auto mb-4 h-16 w-16 text-[#22B6F6]"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.5"
@@ -814,8 +814,8 @@ export default function AboutClient() {
                               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"
                             />
                           </svg>
-                          <h5 className="font-bold text-sm">Telemetry Monitoring Live</h5>
-                          <p className="text-[10px] text-slate-400 mt-1 max-w-[200px] mx-auto">
+                          <h5 className="text-sm font-bold">Telemetry Monitoring Live</h5>
+                          <p className="mx-auto mt-1 max-w-[200px] text-[10px] text-slate-400">
                             Tracking live response graphs, DB locks & RAM usage.
                           </p>
                         </motion.div>
@@ -823,7 +823,7 @@ export default function AboutClient() {
                     </AnimatePresence>
                   </div>
 
-                  <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono">
+                  <div className="flex items-center justify-between font-mono text-[10px] text-slate-500">
                     <span>Engine: Turborepo</span>
                     <span>Runner: Vercel / AWS</span>
                   </div>
@@ -836,25 +836,25 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 6 — TECHNOLOGY ECOSYSTEM (DARK INTERACTIVE NETWORK)
           ========================================================================= */}
-        <section className="relative py-24 bg-[#050B14] text-white overflow-hidden border-t border-slate-900">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+        <section className="relative overflow-hidden border-t border-slate-900 bg-[#050B14] py-24 text-white">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px]" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#22B6F6] mb-2">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <h2 className="mb-2 text-xs font-bold tracking-widest text-[#22B6F6] uppercase">
                 Ecosystem Web
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-medium text-white tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-white sm:text-4xl">
                 Technology Ecosystem
               </h3>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1 font-medium">
+              <p className="mt-1 text-xs font-medium text-slate-400 sm:text-sm">
                 Hover over nodes to trace structural connections and data routing pipelines.
               </p>
             </div>
 
-            <div className="relative flex justify-center items-center h-[420px] bg-slate-950/40 rounded-3xl border border-slate-900 p-4">
+            <div className="relative flex h-[420px] items-center justify-center rounded-3xl border border-slate-900 bg-slate-950/40 p-4">
               {/* SVG Connecting Paths */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              <svg className="pointer-events-none absolute inset-0 h-full w-full">
                 {[
                   { from: "next", to: "react" },
                   { from: "react", to: "node" },
@@ -865,7 +865,7 @@ export default function AboutClient() {
                   { from: "openai", to: "langchain" },
                   { from: "node", to: "n8n" },
                   { from: "n8n", to: "openai" },
-                ].map((link, idx) => {
+                ].map((link) => {
                   // Positions mapping
                   const pos: Record<string, { x: number; y: number }> = {
                     next: { x: 20, y: 30 },
@@ -922,7 +922,7 @@ export default function AboutClient() {
                   key={node.id}
                   onMouseEnter={() => setHoveredTech(node.id)}
                   onMouseLeave={() => setHoveredTech(null)}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer p-3 rounded-xl border transition-all duration-200 select-none ${
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-xl border p-3 transition-all duration-200 select-none ${
                     node.primary
                       ? "bg-[#1155CC] border-[#2563EB] shadow-lg shadow-[#1155CC]/20 z-10"
                       : hoveredTech === node.id
@@ -932,7 +932,7 @@ export default function AboutClient() {
                   style={{ left: node.x, top: node.y }}
                 >
                   <h5 className="text-[10px] font-bold tracking-wide text-white">{node.name}</h5>
-                  <p className="text-[8px] text-slate-400 font-mono mt-0.5 whitespace-nowrap">
+                  <p className="mt-0.5 font-mono text-[8px] whitespace-nowrap text-slate-400">
                     {node.desc}
                   </p>
                 </div>
@@ -944,15 +944,15 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 7 — FOUNDER STORY (LIGHT SPLIT)
           ========================================================================= */}
-        <section className="py-24 bg-white border-b border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <section className="border-b border-slate-100 bg-white py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
               {/* Left Column: Image in Circle + Statistics Card */}
-              <div className="lg:col-span-4 relative flex flex-col items-center pt-20">
+              <div className="relative flex flex-col items-center pt-20 lg:col-span-4">
                 {/* Outer Card Container */}
-                <div className="w-full bg-gradient-to-b from-[#F8FAFC] to-[#EFF6FF] border border-blue-100/60 rounded-[32px] p-6 pt-28 shadow-[0_12px_40px_rgba(17,85,204,0.03)] relative flex flex-col items-center text-center">
+                <div className="relative flex w-full flex-col items-center rounded-[32px] border border-blue-100/60 bg-gradient-to-b from-[#F8FAFC] to-[#EFF6FF] p-6 pt-28 text-center shadow-[0_12px_40px_rgba(17,85,204,0.03)]">
                   {/* Circular Image positioned on the upper side, offset upwards */}
-                  <div className="absolute -top-22 left-1/2 -translate-x-1/2 w-44 h-44 rounded-full border-4 border-white shadow-[0_8px_25px_rgba(17,85,204,0.08)] overflow-hidden bg-slate-50 group">
+                  <div className="group absolute -top-22 left-1/2 h-44 w-44 -translate-x-1/2 overflow-hidden rounded-full border-4 border-white bg-slate-50 shadow-[0_8px_25px_rgba(17,85,204,0.08)]">
                     <Image
                       src="/images/about-headshot-v2.png"
                       alt="Someshwari Adeya Founder"
@@ -963,28 +963,28 @@ export default function AboutClient() {
                   </div>
 
                   {/* Statistics Grid */}
-                  <div className="w-full border-t border-blue-100/50 pt-5 grid grid-cols-2 gap-4 text-left">
+                  <div className="grid w-full grid-cols-2 gap-4 border-t border-blue-100/50 pt-5 text-left">
                     <div className="border-r border-blue-100/80 pr-2">
                       <h5 className="text-lg font-medium text-[#1155CC]">10+</h5>
-                      <p className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mt-1 leading-snug">
+                      <p className="mt-1 text-[9.5px] leading-snug font-bold tracking-wider text-slate-400 uppercase">
                         Engineers & Designers
                       </p>
                     </div>
                     <div className="pl-2">
                       <h5 className="text-lg font-medium text-slate-800">90%+</h5>
-                      <p className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mt-1 leading-snug">
+                      <p className="mt-1 text-[9.5px] leading-snug font-bold tracking-wider text-slate-400 uppercase">
                         Client Retention Rate
                       </p>
                     </div>
                     <div className="border-t border-r border-blue-100/80 pt-3 pr-2">
                       <h5 className="text-lg font-medium text-slate-800">98%</h5>
-                      <p className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mt-1 leading-snug">
+                      <p className="mt-1 text-[9.5px] leading-snug font-bold tracking-wider text-slate-400 uppercase">
                         On-Time Delivery
                       </p>
                     </div>
                     <div className="border-t border-blue-100/80 pt-3 pl-2">
                       <h5 className="text-lg font-medium text-slate-800">&lt; 2h</h5>
-                      <p className="text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mt-1 leading-snug">
+                      <p className="mt-1 text-[9.5px] leading-snug font-bold tracking-wider text-slate-400 uppercase">
                         Support Response Time
                       </p>
                     </div>
@@ -993,16 +993,16 @@ export default function AboutClient() {
               </div>
 
               {/* Right Column: Founder Narrative */}
-              <div className="lg:col-span-8 text-left">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#1155CC]">
+              <div className="text-left lg:col-span-8">
+                <span className="text-[10px] font-bold tracking-widest text-[#1155CC] uppercase">
                   Our Story
                 </span>
-                <h3 className="text-3xl sm:text-4xl font-medium text-gray-900 tracking-tight mt-1 mb-6">
+                <h3 className="mt-1 mb-6 text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">
                   Built by Engineers. <br />
                   Focused on Business Impact.
                 </h3>
 
-                <div className="space-y-4 text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+                <div className="space-y-4 text-xs leading-relaxed font-medium text-slate-500 sm:text-sm">
                   <p>
                     At TechSonance, we started as software engineers who wanted to build code that
                     directly improved business outcomes. We saw that legacy platforms were often
@@ -1020,10 +1020,10 @@ export default function AboutClient() {
                   </p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100 flex items-center gap-4">
+                <div className="mt-8 flex items-center gap-4 border-t border-slate-100 pt-6">
                   <div>
                     <h4 className="text-sm font-bold text-slate-800">Someshwari Adeya</h4>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                    <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase">
                       Founder & CEO, TechSonance
                     </p>
                   </div>
@@ -1036,26 +1036,26 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 8 — TRUST & CREDIBILITY (MODERN BENTO GRID)
           ========================================================================= */}
-        <section className="py-24 bg-[#FAFBFD]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1155CC] mb-2">
+        <section className="bg-[#FAFBFD] py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <h2 className="mb-2 text-xs font-bold tracking-widest text-[#1155CC] uppercase">
                 Systems Trust
               </h2>
-              <h3 className="text-3xl sm:text-4xl font-medium text-gray-900 tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-gray-900 sm:text-4xl">
                 Trust & Credibility
               </h3>
-              <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
+              <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
                 Measurable reliability indicators supporting our operations.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {/* Box 1 */}
-              <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
+              <div className="flex flex-col justify-between rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#1155CC]">
                   <svg
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -1069,18 +1069,18 @@ export default function AboutClient() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-gray-900 mb-1">5+ Industries Served</h4>
-                  <p className="text-[11px] text-slate-400 font-medium">
+                  <h4 className="mb-1 text-sm font-bold text-gray-900">5+ Industries Served</h4>
+                  <p className="text-[11px] font-medium text-slate-400">
                     Logistics, Retail, FinTech, E-Commerce, and SaaS.
                   </p>
                 </div>
               </div>
 
               {/* Box 2 */}
-              <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
+              <div className="flex flex-col justify-between rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#1155CC]">
                   <svg
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -1094,18 +1094,18 @@ export default function AboutClient() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-gray-900 mb-1">98% On-Time Sprints</h4>
-                  <p className="text-[11px] text-slate-400 font-medium">
+                  <h4 className="mb-1 text-sm font-bold text-gray-900">98% On-Time Sprints</h4>
+                  <p className="text-[11px] font-medium text-slate-400">
                     Rigorous sprint planning ensures features are delivered on schedule.
                   </p>
                 </div>
               </div>
 
               {/* Box 3 */}
-              <div className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1155CC] flex items-center justify-center mb-4">
+              <div className="flex flex-col justify-between rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-[#1155CC]">
                   <svg
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -1119,8 +1119,8 @@ export default function AboutClient() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-gray-900 mb-1">&lt; 2-Hour SLA Response</h4>
-                  <p className="text-[11px] text-slate-400 font-medium">
+                  <h4 className="mb-1 text-sm font-bold text-gray-900">&lt; 2-Hour SLA Response</h4>
+                  <p className="text-[11px] font-medium text-slate-400">
                     Active telemetry reports trigger instant response protocols from senior
                     engineers.
                   </p>
@@ -1133,23 +1133,23 @@ export default function AboutClient() {
         {/* =========================================================================
           SECTION 9 — PREMIUM CTA (DARK)
           ========================================================================= */}
-        <section className="relative py-28 bg-[#050B14] text-white overflow-hidden border-t border-slate-900">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+        <section className="relative overflow-hidden border-t border-slate-900 bg-[#050B14] py-28 text-white">
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px]" />
 
           {/* Glowing background gradient mesh */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-[#1155CC]/20 to-[#22B6F6]/15 rounded-full blur-[120px] pointer-events-none" />
+          <div className="pointer-events-none absolute top-1/2 left-1/2 h-[300px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-[#1155CC]/20 to-[#22B6F6]/15 blur-[120px]" />
 
-          <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
+          <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-white mb-6 leading-tight max-w-2xl mx-auto tracking-tight">
+              <h2 className="mx-auto mb-6 max-w-2xl text-3xl leading-tight font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Ready to Build Something That Moves Your Business Forward?
               </h2>
-              <p className="text-slate-400 text-xs sm:text-sm mb-10 leading-relaxed max-w-xl mx-auto">
+              <p className="mx-auto mb-10 max-w-xl text-xs leading-relaxed text-slate-400 sm:text-sm">
                 From custom database engineering to intelligent workflow automation, we take
                 ownership of backend complexity so you can focus on business growth.
               </p>
@@ -1157,7 +1157,7 @@ export default function AboutClient() {
               <MagneticButton onClick={() => setIsBookModalOpen(true)}>
                 <Button
                   variant="secondary"
-                  className="bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-lg hover:shadow-xl focus:ring-white/20"
+                  className="border-transparent bg-white text-[#1155CC] shadow-lg hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-xl focus:ring-white/20"
                 >
                   Book a Strategy Call
                 </Button>

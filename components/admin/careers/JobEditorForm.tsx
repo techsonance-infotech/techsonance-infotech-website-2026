@@ -586,42 +586,42 @@ export function JobEditorForm({
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Top Header & Save Status Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs">
+      <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-2xs sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#1155CC]/10 text-[#1155CC] flex items-center justify-center font-black font-sora text-sm">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#1155CC]/10 font-sora text-sm font-black text-[#1155CC]">
             {job.title ? job.title.charAt(0).toUpperCase() : "+"}
           </div>
           <div>
-            <h2 className="text-sm font-black text-slate-900 dark:text-white font-sora flex items-center gap-2">
+            <h2 className="flex items-center gap-2 font-sora text-sm font-black text-slate-900 dark:text-white">
               <span>{job.title || "Untitled Draft Position"}</span>
               <Badge
                 variant="outline"
-                className="text-[10px] uppercase font-mono tracking-wider font-bold"
+                className="font-mono text-[10px] font-bold tracking-wider uppercase"
               >
                 {job.status || "DRAFT"}
               </Badge>
             </h2>
-            <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono mt-0.5">
+            <div className="mt-0.5 flex items-center gap-2 font-mono text-[10px] text-slate-400">
               <span>/{job.slug || "slug-pending"}</span>
               {job.referenceCode && <span>• REF: {job.referenceCode}</span>}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+        <div className="flex w-full items-center justify-end gap-2.5 sm:w-auto">
           {/* Unified Save Status Indicator (Finding 3, Spec 4.1) */}
           <div
-            className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mr-1"
+            className="mr-1 flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400"
             aria-live="polite"
           >
             {isSaving || saveStatus === "saving" ? (
               <>
-                <Clock className="w-3.5 h-3.5 animate-spin text-[#1155CC]" />
-                <span className="text-[#1155CC] font-semibold">Saving…</span>
+                <Clock className="h-3.5 w-3.5 animate-spin text-[#1155CC]" />
+                <span className="font-semibold text-[#1155CC]">Saving…</span>
               </>
             ) : saveStatus === "error" ? (
               <>
-                <AlertCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                <AlertCircle className="h-3.5 w-3.5 shrink-0 text-rose-500" />
                 <span className="text-rose-600 dark:text-rose-400">
                   Couldn&apos;t save,{" "}
                   <button
@@ -634,7 +634,7 @@ export function JobEditorForm({
                         onSave?.(getValues());
                       }
                     }}
-                    className="underline font-bold hover:text-rose-700 cursor-pointer"
+                    className="cursor-pointer font-bold underline hover:text-rose-700"
                   >
                     retry
                   </button>
@@ -642,14 +642,14 @@ export function JobEditorForm({
               </>
             ) : isDirty ? (
               <>
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <span className="text-amber-600 dark:text-amber-400 font-medium">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-amber-500" />
+                <span className="font-medium text-amber-600 dark:text-amber-400">
                   Unsaved changes
                 </span>
               </>
             ) : lastSavedAt ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                 <span>
                   Saved at{" "}
                   {lastSavedAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
@@ -657,7 +657,7 @@ export function JobEditorForm({
               </>
             ) : (
               <>
-                <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+                <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
                 <span>Draft ready</span>
               </>
             )}
@@ -670,10 +670,10 @@ export function JobEditorForm({
               size="sm"
               onClick={() => onDuplicate(getValues())}
               disabled={isSaving || isDuplicating}
-              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer h-8"
+              className="h-8 cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
               title="Clone this role into a new draft"
             >
-              <Copy className="w-3.5 h-3.5 text-slate-500" />
+              <Copy className="h-3.5 w-3.5 text-slate-500" />
               <span>{isDuplicating ? "Duplicating…" : "Duplicate"}</span>
             </Button>
           )}
@@ -684,9 +684,9 @@ export function JobEditorForm({
             size="sm"
             onClick={() => onSave?.(getValues())}
             disabled={isSaving || saveStatus === "saving"}
-            className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer h-8"
+            className="h-8 cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
           >
-            <Save className="w-3.5 h-3.5" />
+            <Save className="h-3.5 w-3.5" />
             <span>Save Draft</span>
           </Button>
 
@@ -696,9 +696,9 @@ export function JobEditorForm({
               size="sm"
               onClick={handlePublishClick}
               disabled={isPublishDisabled}
-              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs h-8"
+              className="h-8 cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="h-3.5 w-3.5" />
               <span>Publish Role Now</span>
             </Button>
           ) : (
@@ -707,9 +707,9 @@ export function JobEditorForm({
               size="sm"
               onClick={() => onSubmitForReview?.(getValues())}
               disabled={isPublishDisabled}
-              className="rounded-xl text-xs font-bold gap-1.5 bg-[#1155CC] hover:bg-blue-700 text-white cursor-pointer h-8"
+              className="h-8 cursor-pointer gap-1.5 rounded-xl bg-[#1155CC] text-xs font-bold text-white hover:bg-blue-700"
             >
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="h-3.5 w-3.5" />
               <span>Submit for Review</span>
             </Button>
           )}
@@ -720,7 +720,7 @@ export function JobEditorForm({
       <div
         role="tablist"
         aria-label="Job editor wizard steps"
-        className="flex items-center gap-1.5 p-1 bg-slate-100/90 dark:bg-slate-800/70 rounded-xl overflow-x-auto scrollbar-none"
+        className="flex scrollbar-none items-center gap-1.5 overflow-x-auto rounded-xl bg-slate-100/90 p-1 dark:bg-slate-800/70"
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -736,17 +736,17 @@ export function JobEditorForm({
               aria-controls={`panel-${tab.id}`}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC] ${
+              className={`flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:outline-hidden ${
                 isActive
                   ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="h-3.5 w-3.5" />
               <span>{tab.label}</span>
               <span
                 aria-label={`Status: ${status}`}
-                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
                   status === "complete"
                     ? "bg-emerald-500"
                     : status === "error"
@@ -760,21 +760,21 @@ export function JobEditorForm({
       </div>
 
       {/* Main Form Body */}
-      <div className="w-full space-y-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xs">
+      <div className="w-full space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs sm:p-5 dark:border-slate-800 dark:bg-slate-900">
         {/* TAB 1: BASICS */}
         {activeTab === "basics" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+              <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Role Identity &amp; Overview
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-slate-500">
                 General role parameters, organizational unit, and card preview summary.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Job Title <span className="text-rose-500">*</span>
               </label>
               <Input
@@ -786,36 +786,36 @@ export function JobEditorForm({
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   URL Slug
                 </label>
                 <Input
                   placeholder="e.g. lead-distributed-systems-engineer"
                   value={job.slug || ""}
                   onChange={(e) => updateField("slug", slugify(e.target.value))}
-                  className="rounded-xl text-xs font-mono"
+                  className="rounded-xl font-mono text-xs"
                 />
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-1">
+                <p className="mt-1 font-mono text-[10px] text-slate-500 dark:text-slate-400">
                   Public preview: /careers/{job.slug || "slug-pending"}
                 </p>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Reference Code{" "}
-                  <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  <span className="font-normal text-slate-400 lowercase">(optional)</span>
                 </label>
                 <Input
                   placeholder="e.g. ENG-2026-04"
                   value={job.referenceCode || ""}
                   onChange={(e) => updateField("referenceCode", e.target.value)}
-                  className="rounded-xl text-xs font-mono"
+                  className="rounded-xl font-mono text-xs"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormSelect
                 label="Department"
                 required
@@ -832,9 +832,9 @@ export function JobEditorForm({
               </FormSelect>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Target Openings Count{" "}
-                  <span className="text-slate-400 font-normal lowercase">(default 1)</span>
+                  <span className="font-normal text-slate-400 lowercase">(default 1)</span>
                 </label>
                 <Input
                   type="number"
@@ -848,12 +848,12 @@ export function JobEditorForm({
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Role Summary (Job Card Snippet)
                 </label>
                 <span
-                  className={`text-[10px] font-mono ${
+                  className={`font-mono text-[10px] ${
                     (job.summary?.length || 0) > 300
                       ? "text-amber-500 font-bold"
                       : "text-slate-500 dark:text-slate-400"
@@ -869,15 +869,15 @@ export function JobEditorForm({
                 onChange={(e) => updateField("summary", e.target.value)}
                 className="rounded-xl text-xs font-medium"
               />
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+              <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-400">
                 Displayed on careers index cards and role previews. Separate from the Google SERP
                 meta description in Step 6.
               </p>
             </div>
 
             {/* Step Requirement Notice (User request) */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="text-rose-500 font-bold">*</span>
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[11px] text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <span className="font-bold text-rose-500">*</span>
               <span>Job Title and Department are mandatory fields in this step to publish.</span>
             </div>
           </div>
@@ -885,18 +885,18 @@ export function JobEditorForm({
 
         {/* TAB 2: LOCATION & MODE */}
         {activeTab === "location" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+              <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Workplace Location & Flexibility
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-slate-500">
                 Configure office headquarters and remote eligibility boundaries.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+              <label className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Work Mode <span className="text-rose-500">*</span>
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -909,21 +909,21 @@ export function JobEditorForm({
                     key={mode.value}
                     type="button"
                     onClick={() => updateField("workMode", mode.value)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                    className={`cursor-pointer rounded-2xl border p-3.5 text-left transition-all ${
                       job.workMode === mode.value
                         ? "border-[#1155CC] bg-[#1155CC]/5 text-[#1155CC] ring-1 ring-[#1155CC]"
                         : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
                     }`}
                   >
-                    <div className="font-bold text-xs">{mode.label}</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">{mode.desc}</div>
+                    <div className="text-xs font-bold">{mode.label}</div>
+                    <div className="mt-0.5 text-[10px] text-slate-400">{mode.desc}</div>
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Primary Location / City <span className="text-rose-500">*</span>
               </label>
               <Input
@@ -933,8 +933,8 @@ export function JobEditorForm({
                 onChange={(e) => updateField("location", e.target.value)}
                 className="rounded-xl text-xs font-medium"
               />
-              <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   Quick hubs:
                 </span>
                 {[
@@ -953,7 +953,7 @@ export function JobEditorForm({
                         updateField("workMode", "remote");
                       }
                     }}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer border ${
+                    className={`cursor-pointer rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-all ${
                       job.location === hub
                         ? "bg-[#1155CC] text-white border-[#1155CC]"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
@@ -963,14 +963,14 @@ export function JobEditorForm({
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-slate-400 mt-1.5">
+              <p className="mt-1.5 text-[10px] text-slate-400">
                 Specify a primary city hub or choose 'Remote'.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Remote Eligibility Region (India)
                 </label>
                 <Input
@@ -993,8 +993,8 @@ export function JobEditorForm({
             </div>
 
             {/* Step Requirement Notice (User request) */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="text-rose-500 font-bold">*</span>
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[11px] text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <span className="font-bold text-rose-500">*</span>
               <span>
                 Work Mode and Primary Location are mandatory fields to publish this position.
               </span>
@@ -1004,17 +1004,17 @@ export function JobEditorForm({
 
         {/* TAB 3: CONTENT */}
         {activeTab === "content" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+              <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Role Description, Requirements & Perks
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-slate-500">
                 Detailed job overview, core deliverables, technical requirements, and agency perks.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormSelect
                 label="Employment Type"
                 value={job.type || "Full Time"}
@@ -1056,7 +1056,7 @@ export function JobEditorForm({
 
             {/* Description Markdown */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Full Role Description <span className="text-rose-500">*</span>
               </label>
               <Textarea
@@ -1065,7 +1065,7 @@ export function JobEditorForm({
                 placeholder="In-depth narrative of the position, team mission, and impact on client systems."
                 value={job.description || ""}
                 onChange={(e) => updateField("description", e.target.value)}
-                className="rounded-xl text-xs font-medium leading-relaxed"
+                className="rounded-xl text-xs leading-relaxed font-medium"
               />
             </div>
 
@@ -1100,7 +1100,7 @@ export function JobEditorForm({
 
             {/* Skills Tags */}
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Tech Stack & Skills Tags ({(job.skills || []).length})
               </label>
               <div className="flex gap-2">
@@ -1114,9 +1114,9 @@ export function JobEditorForm({
                 <Button
                   type="button"
                   onClick={handleAddSkill}
-                  className="rounded-xl bg-slate-800 text-white text-xs font-bold shrink-0 gap-1 cursor-pointer"
+                  className="shrink-0 cursor-pointer gap-1 rounded-xl bg-slate-800 text-xs font-bold text-white"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="h-3.5 w-3.5" />
                   <span>Add Tag</span>
                 </Button>
               </div>
@@ -1125,15 +1125,15 @@ export function JobEditorForm({
                 {(job.skills || []).map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
                   >
                     <span>{skill}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveSkill(skill)}
-                      className="text-slate-400 hover:text-rose-500 rounded-full cursor-pointer"
+                      className="cursor-pointer rounded-full text-slate-400 hover:text-rose-500"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="h-3 w-3" />
                     </button>
                   </span>
                 ))}
@@ -1152,7 +1152,7 @@ export function JobEditorForm({
             {/* Hiring steps builder */}
             <div className="space-y-3 pt-2">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Hiring Steps Journey ({(job.hiringProcess || []).length})
                 </label>
                 <Button
@@ -1160,9 +1160,9 @@ export function JobEditorForm({
                   variant="outline"
                   size="sm"
                   onClick={handleAddHiringStep}
-                  className="rounded-xl text-[11px] font-bold h-7 gap-1"
+                  className="h-7 gap-1 rounded-xl text-[11px] font-bold"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="h-3 w-3" />
                   <span>Add Step</span>
                 </Button>
               </div>
@@ -1171,18 +1171,18 @@ export function JobEditorForm({
                 {(job.hiringProcess || []).map((step, idx) => (
                   <div
                     key={idx}
-                    className="p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-2"
+                    className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-800/30"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-[#1155CC]">
+                      <span className="font-mono text-[10px] font-bold text-[#1155CC]">
                         Step {step.step || String(idx + 1).padStart(2, "0")}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveHiringStep(idx)}
-                        className="text-slate-400 hover:text-rose-600 p-1"
+                        className="p-1 text-slate-400 hover:text-rose-600"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
                     <Input
@@ -1202,8 +1202,8 @@ export function JobEditorForm({
               </div>
             </div>
             {/* Step Requirement Notice (User request) */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="text-rose-500 font-bold">*</span>
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[11px] text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <span className="font-bold text-rose-500">*</span>
               <span>
                 Role Description (min 10 chars), at least 1 Responsibility, and at least 1
                 Requirement are mandatory to publish.
@@ -1214,23 +1214,23 @@ export function JobEditorForm({
 
         {/* TAB 4: COMPENSATION */}
         {activeTab === "compensation" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+              <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Compensation &amp; Pay Transparency
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-slate-500">
                 Set competitive salary bounds, currency, and public card display options.
               </p>
             </div>
 
             {/* Live Compensation Preview Banner (Finding 14, Spec 4.5) */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 dark:from-slate-800/40 dark:to-slate-800/20 border border-blue-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="flex items-center justify-between rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 p-4 dark:border-slate-800 dark:from-slate-800/40 dark:to-slate-800/20">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold block">
+                <span className="block font-mono text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   Public Candidate Display Preview
                 </span>
-                <div className="text-base font-extrabold text-[#1155CC] dark:text-blue-400 font-sora mt-0.5">
+                <div className="mt-0.5 font-sora text-base font-extrabold text-[#1155CC] dark:text-blue-400">
                   {job.showSalaryPublicly
                     ? formatCompensationPreview()
                     : "Competitive / Not Disclosed Publicly"}
@@ -1238,18 +1238,18 @@ export function JobEditorForm({
               </div>
               <Badge
                 variant={job.showSalaryPublicly ? "default" : "outline"}
-                className="text-xs font-mono font-bold"
+                className="font-mono text-xs font-bold"
               >
                 {job.showSalaryPublicly ? "Public Band" : "Confidential"}
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Show Compensation Publicly
                 </div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="mt-0.5 text-[11px] text-slate-400">
                   Displays salary band on the public careers portal and Schema.org JobPosting
                   JSON-LD.
                 </div>
@@ -1258,11 +1258,11 @@ export function JobEditorForm({
                 type="checkbox"
                 checked={Boolean(job.showSalaryPublicly)}
                 onChange={(e) => updateField("showSalaryPublicly", e.target.checked)}
-                className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
+                className="h-4 w-4 cursor-pointer rounded text-[#1155CC] focus:ring-[#1155CC]"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormSelect
                 label="Currency"
                 value={job.salaryCurrency || "INR"}
@@ -1286,9 +1286,9 @@ export function JobEditorForm({
               </FormSelect>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Minimum Salary
                 </label>
                 <Input
@@ -1299,7 +1299,7 @@ export function JobEditorForm({
                   onChange={(e) =>
                     updateField("salaryMin", e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className={`rounded-xl text-xs font-mono ${
+                  className={`rounded-xl font-mono text-xs ${
                     job.salaryMin !== undefined &&
                     job.salaryMax !== undefined &&
                     job.salaryMin > job.salaryMax
@@ -1310,7 +1310,7 @@ export function JobEditorForm({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   Maximum Salary
                 </label>
                 <Input
@@ -1321,7 +1321,7 @@ export function JobEditorForm({
                   onChange={(e) =>
                     updateField("salaryMax", e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className={`rounded-xl text-xs font-mono ${
+                  className={`rounded-xl font-mono text-xs ${
                     job.salaryMin !== undefined &&
                     job.salaryMax !== undefined &&
                     job.salaryMin > job.salaryMax
@@ -1333,12 +1333,12 @@ export function JobEditorForm({
             </div>
 
             {/* Live Locale-Aware Compensation Display Preview (Finding 15, Spec 4.3 Step 4) */}
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-800/40">
               <div className="space-y-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <span className="text-[10px] font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400">
                   Live Candidate Display Preview
                 </span>
-                <div className="text-sm font-black text-slate-900 dark:text-white font-mono flex items-center gap-2">
+                <div className="flex items-center gap-2 font-mono text-sm font-black text-slate-900 dark:text-white">
                   <span>{formatCompensationPreview()}</span>
                 </div>
               </div>
@@ -1346,14 +1346,14 @@ export function JobEditorForm({
                 {job.showSalaryPublicly ? (
                   <Badge
                     variant="outline"
-                    className="text-[10px] bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 font-bold"
+                    className="border-emerald-200 bg-emerald-50 text-[10px] font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                   >
                     Publicly Disclosed (Card &amp; JSON-LD)
                   </Badge>
                 ) : (
                   <Badge
                     variant="outline"
-                    className="text-[10px] text-slate-500 dark:text-slate-400 font-medium"
+                    className="text-[10px] font-medium text-slate-500 dark:text-slate-400"
                   >
                     Undisclosed on Card
                   </Badge>
@@ -1364,14 +1364,14 @@ export function JobEditorForm({
             {job.salaryMin !== undefined &&
               job.salaryMax !== undefined &&
               job.salaryMin > job.salaryMax && (
-                <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-400 font-bold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-xs font-bold text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-400">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>Salary minimum cannot exceed maximum. Please adjust bounds.</span>
                 </div>
               )}
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Compensation Notes &amp; Equity
               </label>
               <Textarea
@@ -1384,8 +1384,8 @@ export function JobEditorForm({
             </div>
 
             {/* Step Requirement Notice (User request) */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="text-rose-500 font-bold">*</span>
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[11px] text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <span className="font-bold text-rose-500">*</span>
               <span>
                 Compensation details are optional for drafting. If configured, Minimum Salary cannot
                 exceed Maximum Salary.
@@ -1396,18 +1396,18 @@ export function JobEditorForm({
 
         {/* TAB 5: APPLICATION SETTINGS */}
         {activeTab === "application" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sora">
+              <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Candidate Intake &amp; Screening Setup
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="mt-0.5 text-[11px] text-slate-500">
                 Select application pipeline routing, resume requirements, and knockout screening
                 criteria.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormSelect
                 label="Application Intake Method"
                 value={job.applicationMethod || "builtin"}
@@ -1430,7 +1430,7 @@ export function JobEditorForm({
 
             {job.applicationMethod === "external" && (
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                   External Application URL <span className="text-rose-500">*</span>
                 </label>
                 <Input
@@ -1438,12 +1438,12 @@ export function JobEditorForm({
                   placeholder="https://jobs.lever.co/techsonance/..."
                   value={job.externalApplyUrl || ""}
                   onChange={(e) => updateField("externalApplyUrl", e.target.value)}
-                  className="rounded-xl text-xs font-mono"
+                  className="rounded-xl font-mono text-xs"
                 />
               </div>
             )}
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-3.5 dark:border-slate-800 dark:bg-slate-800/40">
               <div>
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
                   Resume Required
@@ -1456,7 +1456,7 @@ export function JobEditorForm({
                 type="checkbox"
                 checked={job.resumeRequired !== false}
                 onChange={(e) => updateField("resumeRequired", e.target.checked)}
-                className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
+                className="h-4 w-4 cursor-pointer rounded text-[#1155CC] focus:ring-[#1155CC]"
               />
             </div>
 
@@ -1464,7 +1464,7 @@ export function JobEditorForm({
             <div className="space-y-3 pt-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  <div className="text-xs font-bold tracking-wider text-slate-900 uppercase dark:text-white">
                     Custom Screening Questions ({(job.screeningQuestions || []).length})
                   </div>
                   <p className="text-[11px] text-slate-400">
@@ -1474,9 +1474,9 @@ export function JobEditorForm({
                 <Button
                   type="button"
                   onClick={handleAddScreeningQuestion}
-                  className="rounded-xl bg-[#1155CC] text-white text-xs font-bold gap-1"
+                  className="gap-1 rounded-xl bg-[#1155CC] text-xs font-bold text-white"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="h-3.5 w-3.5" />
                   <span>Add Question</span>
                 </Button>
               </div>
@@ -1485,18 +1485,18 @@ export function JobEditorForm({
                 {(job.screeningQuestions || []).map((q, idx) => (
                   <div
                     key={q.id || idx}
-                    className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30 space-y-3"
+                    className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-800/30"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-slate-400">
+                      <span className="font-mono text-[10px] font-bold text-slate-400">
                         QUESTION {idx + 1}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleRemoveScreeningQuestion(idx)}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1"
+                        className="p-1 text-slate-400 transition-colors hover:text-rose-600"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
 
@@ -1509,7 +1509,7 @@ export function JobEditorForm({
                       className="rounded-xl text-xs font-medium"
                     />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                       <FormSelect
                         label="Response Type"
                         value={q.type}
@@ -1532,7 +1532,7 @@ export function JobEditorForm({
                           onChange={(e) =>
                             handleUpdateScreeningQuestion(idx, { required: e.target.checked })
                           }
-                          className="w-4 h-4 rounded text-[#1155CC] focus:ring-[#1155CC] cursor-pointer"
+                          className="h-4 w-4 cursor-pointer rounded text-[#1155CC] focus:ring-[#1155CC]"
                         />
                         <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
                           Required Answer
@@ -1540,7 +1540,7 @@ export function JobEditorForm({
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold text-amber-600 uppercase mb-1">
+                        <label className="mb-1 block text-[10px] font-bold text-amber-600 uppercase">
                           Knockout Answer (Alerts ATS)
                         </label>
                         <Input
@@ -1561,8 +1561,8 @@ export function JobEditorForm({
             </div>
 
             {/* Step Requirement Notice (User request) */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-              <span className="text-rose-500 font-bold">*</span>
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-[11px] text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <span className="font-bold text-rose-500">*</span>
               <span>
                 External Application URL is mandatory when Application Method is set to External
                 ATS.
@@ -1573,7 +1573,7 @@ export function JobEditorForm({
 
         {/* TAB 6: REVIEW & PUBLISH (Finding 17, 18, 19, 20) */}
         {activeTab === "review" && (
-          <div className="space-y-3.5 animate-in fade-in duration-200">
+          <div className="animate-in fade-in space-y-3.5 duration-200">
             <JobReviewSummary
               job={job}
               updateField={updateField}
@@ -1583,7 +1583,7 @@ export function JobEditorForm({
         )}
 
         {/* Sticky Action Navigation Bar (Finding 13, Spec 4.5) */}
-        <div className="sticky bottom-0 z-20 mt-8 pt-4 pb-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div className="sticky bottom-0 z-20 mt-8 flex items-center justify-between gap-3 border-t border-slate-200 bg-white/95 pt-4 pb-1 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95">
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -1591,12 +1591,12 @@ export function JobEditorForm({
               size="sm"
               onClick={handlePrevTab}
               disabled={isFirstTab}
-              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer disabled:opacity-40"
+              className="cursor-pointer gap-1.5 rounded-xl text-xs font-bold disabled:opacity-40"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="h-3.5 w-3.5" />
               <span>Previous</span>
             </Button>
-            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 hidden sm:inline-block font-mono">
+            <span className="hidden font-mono text-[11px] font-bold text-slate-500 sm:inline-block dark:text-slate-400">
               Step {currentTabIndex + 1} of 6
             </span>
           </div>
@@ -1608,9 +1608,9 @@ export function JobEditorForm({
               size="sm"
               onClick={() => onSave?.(getValues())}
               disabled={isSaving || saveStatus === "saving"}
-              className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+              className="cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
             >
-              <Save className="w-3.5 h-3.5" />
+              <Save className="h-3.5 w-3.5" />
               <span>Save Draft</span>
             </Button>
 
@@ -1619,10 +1619,10 @@ export function JobEditorForm({
                 type="button"
                 size="sm"
                 onClick={handleNextTab}
-                className="rounded-xl bg-[#1155CC] hover:bg-blue-700 text-white text-xs font-bold gap-1.5 cursor-pointer shadow-xs"
+                className="cursor-pointer gap-1.5 rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-xs hover:bg-blue-700"
               >
                 <span>Next: {tabs[currentTabIndex + 1]?.label.replace(/^\d+\.\s*/, "")}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             ) : canPublishDirectly ? (
               <Button
@@ -1630,9 +1630,9 @@ export function JobEditorForm({
                 size="sm"
                 onClick={handlePublishClick}
                 disabled={isPublishDisabled}
-                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                className="cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="h-3.5 w-3.5" />
                 <span>Publish Role Now</span>
               </Button>
             ) : (
@@ -1641,10 +1641,10 @@ export function JobEditorForm({
                 size="sm"
                 onClick={() => onSubmitForReview?.(getValues())}
                 disabled={isPublishDisabled}
-                className="rounded-xl text-xs font-bold gap-1.5 bg-[#1155CC] hover:bg-blue-700 text-white cursor-pointer"
+                className="cursor-pointer gap-1.5 rounded-xl bg-[#1155CC] text-xs font-bold text-white hover:bg-blue-700"
               >
                 <span>Submit for Review</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>
@@ -1655,10 +1655,10 @@ export function JobEditorForm({
       <Dialog open={publishConfirmOpen} onOpenChange={setPublishConfirmOpen}>
         <DialogContent className="max-w-md rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
-              <Sparkles className="w-4 h-4" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 font-bold text-emerald-600">
+              <Sparkles className="h-4 w-4" />
             </div>
-            <DialogTitle className="text-base font-black text-slate-900 dark:text-white font-sora">
+            <DialogTitle className="font-sora text-base font-black text-slate-900 dark:text-white">
               Publish Role to Careers Portal?
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
@@ -1668,10 +1668,10 @@ export function JobEditorForm({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs space-y-1.5 my-2 font-mono">
+          <div className="my-2 space-y-1.5 rounded-xl border border-slate-200 bg-slate-50 p-3 font-mono text-xs dark:border-slate-800 dark:bg-slate-800/60">
             <div className="flex justify-between text-slate-600 dark:text-slate-300">
               <span className="text-slate-400">Public URL:</span>
-              <span className="text-[#1155CC] font-bold">
+              <span className="font-bold text-[#1155CC]">
                 /careers/{job.slug || "slug-pending"}
               </span>
             </div>
@@ -1685,13 +1685,13 @@ export function JobEditorForm({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-2 dark:border-slate-800">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => setPublishConfirmOpen(false)}
-              className="rounded-xl text-xs font-bold cursor-pointer"
+              className="cursor-pointer rounded-xl text-xs font-bold"
             >
               Cancel
             </Button>
@@ -1706,7 +1706,7 @@ export function JobEditorForm({
                 await onPublish?.(getValues());
               }}
               disabled={isSaving}
-              className="rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+              className="cursor-pointer rounded-xl bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-700"
             >
               Confirm &amp; Publish Now
             </Button>
@@ -1718,10 +1718,10 @@ export function JobEditorForm({
       <Dialog open={requirementsModalOpen} onOpenChange={setRequirementsModalOpen}>
         <DialogContent className="max-w-md rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
-              <AlertCircle className="w-4 h-4" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 font-bold text-amber-600">
+              <AlertCircle className="h-4 w-4" />
             </div>
-            <DialogTitle className="text-base font-black text-slate-900 dark:text-white font-sora">
+            <DialogTitle className="font-sora text-base font-black text-slate-900 dark:text-white">
               Requirements Needed to Publish
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
@@ -1731,16 +1731,16 @@ export function JobEditorForm({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-2 my-2 max-h-60 overflow-y-auto pr-1">
+          <div className="my-2 max-h-60 space-y-2 overflow-y-auto pr-1">
             {completeness.missingFields.map((field) => {
               const targetTab = getFieldTab(field);
               return (
                 <div
                   key={field}
-                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs"
+                  className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs dark:border-slate-800 dark:bg-slate-800/60"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-500" />
                     <span className="font-semibold text-slate-800 dark:text-slate-200">
                       {field}
                     </span>
@@ -1753,7 +1753,7 @@ export function JobEditorForm({
                       setRequirementsModalOpen(false);
                       setActiveTab(targetTab);
                     }}
-                    className="h-7 text-[11px] font-bold text-[#1155CC] hover:bg-[#1155CC]/10 border-[#1155CC]/30 rounded-lg cursor-pointer"
+                    className="h-7 cursor-pointer rounded-lg border-[#1155CC]/30 text-[11px] font-bold text-[#1155CC] hover:bg-[#1155CC]/10"
                   >
                     Go to {tabs.find((t) => t.id === targetTab)?.label.replace(/^\d+\.\s*/, "")}
                   </Button>
@@ -1762,12 +1762,12 @@ export function JobEditorForm({
             })}
           </div>
 
-          <div className="flex items-center justify-end pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end border-t border-slate-100 pt-3 dark:border-slate-800">
             <Button
               type="button"
               size="sm"
               onClick={() => setRequirementsModalOpen(false)}
-              className="rounded-xl text-xs font-bold bg-[#1155CC] text-white cursor-pointer h-8"
+              className="h-8 cursor-pointer rounded-xl bg-[#1155CC] text-xs font-bold text-white"
             >
               Close &amp; Complete Fields
             </Button>

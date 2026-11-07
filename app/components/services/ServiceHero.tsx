@@ -111,11 +111,11 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
   return (
     <section
       ref={sectionRef}
-      className="min-h-screen flex items-center bg-[var(--bg-base)] border-b border-[var(--border)] relative overflow-hidden"
+      className="relative flex min-h-screen items-center overflow-hidden border-b border-[var(--border)] bg-[var(--bg-base)]"
     >
       {/* Premium Theme Gradient Grid Mesh Background (Only for the Hero section) */}
       <div
-        className="absolute inset-0 z-0 pointer-events-none"
+        className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgba(17, 85, 204, 0.04) 1px, transparent 1px),
@@ -127,44 +127,44 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
         }}
       />
 
-      <div className="service-container w-full py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="service-container relative z-10 w-full py-20">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             {/* Category Label */}
             <div
               data-hero-item
-              className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-6"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5"
             >
-              <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
-              <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#22B6F6]" />
+              <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
                 {heroContent.label}
               </span>
             </div>
 
             <h1
               data-hero-item
-              className="font-bold tracking-tight text-[var(--text-primary)] leading-[1.2] mb-6"
+              className="mb-6 leading-[1.2] font-bold tracking-tight text-[var(--text-primary)]"
               style={{ fontSize: "clamp(32px, 3.8vw, 42px)" }}
             >
               {heroContent.titleStart}
-              <span className="text-[#1155CC] block sm:inline">{heroContent.titleGradient}</span>
+              <span className="block text-[#1155CC] sm:inline">{heroContent.titleGradient}</span>
             </h1>
             <p
               data-hero-item
-              className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed mb-10 max-w-xl"
+              className="mb-10 max-w-xl text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg"
             >
               {heroContent.description}
             </p>
             <div data-hero-item className="flex flex-wrap items-center gap-4">
               <a
                 href="#project-request"
-                className="btn-primary px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm shadow-[0_4px_20px_rgba(17, 85, 204,0.15)]"
+                className="btn-primary flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold shadow-[0_4px_20px_rgba(17, 85, 204,0.15)]"
               >
                 Talk to Expert &rarr;
               </a>
               <a
                 href="#proof-of-work"
-                className="btn-outline px-6 py-3 rounded-xl font-semibold flex justify-center items-center gap-2 text-sm bg-white"
+                className="btn-outline flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold"
               >
                 See Case Studies &darr;
               </a>

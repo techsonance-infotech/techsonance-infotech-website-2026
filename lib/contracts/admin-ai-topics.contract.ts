@@ -5,7 +5,7 @@ import { AI_TOPICS_LIMITS, AI_TOPICS_ERRORS } from "@/lib/constants/ai.constants
 import { AiTopicStatus } from "@/lib/constants/enums/ai.enum";
 
 export const listAiTopicsQuerySchema = z.strictObject({
-  status: z.nativeEnum(AiTopicStatus).optional(),
+  status: z.enum(AiTopicStatus).optional(),
   search: z.string().trim().max(AI_TOPICS_LIMITS.TITLE_MAX).optional(),
   limit: z.coerce
     .number()
@@ -53,7 +53,7 @@ export const aiTopicParamsSchema = z.strictObject({
 export type AiTopicParams = z.input<typeof aiTopicParamsSchema>;
 
 export const updateAiTopicStatusSchema = z.strictObject({
-  status: z.nativeEnum(AiTopicStatus, {
+  status: z.enum(AiTopicStatus, {
     error: AI_TOPICS_ERRORS.INVALID_STATUS,
   }),
 });

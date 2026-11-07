@@ -241,17 +241,17 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen font-sans text-slate-900 overflow-x-hidden font-medium">
+      <main className="min-h-screen overflow-x-hidden bg-[#FAFBFD] font-sans font-medium text-slate-900">
         {/* ==========================================
             HERO SECTION (Geometric Shape Landing - Light Theme)
             ========================================== */}
-        <section className="relative pt-36 pb-24 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100 overflow-hidden flex flex-col justify-center min-h-[70vh]">
+        <section className="relative flex min-h-[70vh] flex-col justify-center overflow-hidden border-b border-slate-100 bg-white px-4 pt-36 pb-24 sm:px-6 lg:px-8">
           {/* Subtle Ambient Light Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl pointer-events-none z-0" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-[#22B6F6]/[0.03] blur-3xl" />
 
           {/* Dot Grid Background */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-[0.22] z-0"
+            className="pointer-events-none absolute inset-0 z-0 opacity-[0.22]"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, #1155CC 1.5px, transparent 0)`,
               backgroundSize: "28px 28px",
@@ -259,7 +259,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           />
 
           {/* Floating Glassmorphic Shapes (Light Theme) */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
             {isMobile ? (
               <>
                 <ElegantShape
@@ -269,7 +269,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={12}
                   gradient="from-blue-500/[0.08]"
                   light={true}
-                  className="left-[-15%] top-[10%]"
+                  className="top-[10%] left-[-15%]"
                 />
                 <ElegantShape
                   delay={0.5}
@@ -290,7 +290,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={12}
                   gradient="from-blue-500/[0.08]"
                   light={true}
-                  className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+                  className="top-[15%] left-[-10%] md:top-[20%] md:left-[-5%]"
                 />
 
                 <ElegantShape
@@ -300,7 +300,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={-15}
                   gradient="from-cyan-500/[0.08]"
                   light={true}
-                  className="right-[-5%] md:right-[0%] top-[60%] md:top-[65%]"
+                  className="top-[60%] right-[-5%] md:top-[65%] md:right-[0%]"
                 />
 
                 <ElegantShape
@@ -310,7 +310,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={-8}
                   gradient="from-indigo-500/[0.08]"
                   light={true}
-                  className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+                  className="bottom-[5%] left-[5%] md:bottom-[10%] md:left-[10%]"
                 />
 
                 <ElegantShape
@@ -320,7 +320,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={20}
                   gradient="from-blue-600/[0.08]"
                   light={true}
-                  className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+                  className="top-[10%] right-[15%] md:top-[15%] md:right-[20%]"
                 />
 
                 <ElegantShape
@@ -330,26 +330,26 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   rotate={-25}
                   gradient="from-cyan-400/[0.08]"
                   light={true}
-                  className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+                  className="top-[5%] left-[20%] md:top-[10%] md:left-[25%]"
                 />
               </>
             )}
           </div>
 
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5 mb-6">
-              <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
-              <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+          <div className="relative z-10 mx-auto max-w-4xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/15 bg-[#F1F5F9] px-4 py-1.5">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#22B6F6]" />
+              <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
                 Join Our Tech Mission
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6.5xl font-black text-slate-900 tracking-tight leading-tight mb-6">
+            <h1 className="lg:text-6.5xl mb-6 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
               Build Your Engineering Career With <br />
               <span className="text-[#1155CC]">TechSonance InfoTech LLP</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed mb-8">
+            <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed font-medium text-slate-500 sm:text-lg">
               We design and construct production-grade SaaS, AI systems, and cloud architectures.
               Learn, create, and launch products that make an immediate business impact.
             </p>
@@ -360,36 +360,36 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           </div>
 
           {/* Fade transition to the light section below */}
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FAFBFD] to-transparent pointer-events-none z-0" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-24 bg-gradient-to-t from-[#FAFBFD] to-transparent" />
         </section>
 
         {/* ==========================================
             WHY JOIN OUR TEAM
             ========================================== */}
-        <section className="w-full py-20 bg-[#f9f9ff] relative overflow-hidden border-b border-slate-100">
+        <section className="relative w-full overflow-hidden border-b border-slate-100 bg-[#f9f9ff] py-20">
           {/* Background Animated Orbits */}
-          <div className="absolute right-[-150px] top-[-150px] w-[500px] h-[500px] pointer-events-none hidden md:block opacity-90 z-0">
-            <div className="absolute inset-0 border-2 border-dashed border-[#0066ff]/40 rounded-full animate-[spin_80s_linear_infinite]">
-              <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
+          <div className="pointer-events-none absolute top-[-150px] right-[-150px] z-0 hidden h-[500px] w-[500px] opacity-90 md:block">
+            <div className="absolute inset-0 animate-[spin_80s_linear_infinite] rounded-full border-2 border-dashed border-[#0066ff]/40">
+              <div className="absolute top-1/2 left-0 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e7eeff] bg-white shadow-md">
                 <Icon
                   name="code"
-                  className="w-5 h-5 text-[#1155CC] animate-[spin_10s_linear_infinite]"
+                  className="h-5 w-5 animate-[spin_10s_linear_infinite] text-[#1155CC]"
                 />
               </div>
-              <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
-                <Icon name="bolt" className="w-5 h-5 text-cyan-600" />
+              <div className="absolute top-1/2 right-0 flex h-9 w-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e7eeff] bg-white shadow-md">
+                <Icon name="bolt" className="h-5 w-5 text-cyan-600" />
               </div>
             </div>
 
-            <div className="absolute inset-16 border-2 border-[#5d60eb]/30 rounded-full animate-[spin_50s_linear_infinite_reverse]">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
-                <Icon name="database" className="w-5 h-5 text-violet-600" />
+            <div className="absolute inset-16 animate-[spin_50s_linear_infinite_reverse] rounded-full border-2 border-[#5d60eb]/30">
+              <div className="absolute top-0 left-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e7eeff] bg-white shadow-md">
+                <Icon name="database" className="h-5 w-5 text-violet-600" />
               </div>
             </div>
 
-            <div className="absolute inset-32 border border-[#0066ff]/20 rounded-full flex items-center justify-center">
+            <div className="absolute inset-32 flex items-center justify-center rounded-full border border-[#0066ff]/20">
               <svg
-                className="w-full h-full text-[#0066ff]/20"
+                className="h-full w-full text-[#0066ff]/20"
                 viewBox="0 0 100 100"
                 fill="none"
                 stroke="currentColor"
@@ -404,37 +404,37 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
             <div className="absolute inset-[180px] rounded-full bg-gradient-to-tr from-[#0066ff] to-[#1155CC] opacity-20 blur-xl" />
           </div>
 
-          <div className="absolute left-[-120px] bottom-[-120px] w-[400px] h-[400px] pointer-events-none hidden md:block opacity-90 z-0">
-            <div className="absolute inset-0 border-2 border-dashed border-[#1155CC]/30 rounded-full animate-[spin_60s_linear_infinite_reverse]">
-              <div className="absolute bottom-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center border border-[#e7eeff]">
-                <Icon name="arrow" className="w-5 h-5 text-emerald-600" />
+          <div className="pointer-events-none absolute bottom-[-120px] left-[-120px] z-0 hidden h-[400px] w-[400px] opacity-90 md:block">
+            <div className="absolute inset-0 animate-[spin_60s_linear_infinite_reverse] rounded-full border-2 border-dashed border-[#1155CC]/30">
+              <div className="absolute bottom-1/2 left-0 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e7eeff] bg-white shadow-md">
+                <Icon name="arrow" className="h-5 w-5 text-emerald-600" />
               </div>
             </div>
 
-            <div className="absolute inset-16 border-2 border-[#0066ff]/20 rounded-full" />
+            <div className="absolute inset-16 rounded-full border-2 border-[#0066ff]/20" />
 
             <div className="absolute inset-[130px] rounded-full bg-gradient-to-br from-[#1155CC] to-[#00ccf9] opacity-20 blur-xl" />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-2 bg-blue-50/50 border border-[#1155CC]/10 rounded-full px-4.5 py-1 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-ping" />
-                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-16 max-w-3xl text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-blue-50/50 px-4.5 py-1">
+                <span className="h-1.5 w-1.5 animate-ping rounded-full bg-[#1155CC]" />
+                <span className="text-[9px] font-black tracking-wider text-[#1155CC] uppercase">
                   Core Values
                 </span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl">
                 Why Join Our Team?
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto mt-3 leading-relaxed">
+              <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed font-semibold text-slate-500 sm:text-sm">
                 We look for engineers who are passionate about writing clean, robust code,
                 architecting smart systems, and building solutions that deliver real-world business
                 impact.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
               {cultureValues.map((val, idx) => {
                 const theme = cultureColors[idx % cultureColors.length];
                 return (
@@ -442,13 +442,13 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                     key={val.title}
                     whileHover={{ y: -8, scale: 1.02 }}
                     className={cn(
-                      "relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm",
-                      "hover:shadow-md transition-all duration-300 group overflow-hidden flex flex-col justify-between",
+                      "relative rounded-3xl border border-slate-100 bg-white p-6 shadow-sm",
+                      "group flex flex-col justify-between overflow-hidden transition-all duration-300 hover:shadow-md",
                     )}
                   >
                     <div
                       className={cn(
-                        "absolute -top-10 -right-10 w-24 h-24 rounded-full blur-2xl pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+                        "pointer-events-none absolute -top-10 -right-10 h-24 w-24 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100",
                         theme.glow,
                       )}
                     />
@@ -456,23 +456,23 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                     <div className="relative z-10">
                       <div
                         className={cn(
-                          "w-10 h-10 rounded-full flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 shadow-sm",
+                          "mb-6 flex h-10 w-10 items-center justify-center rounded-full shadow-sm transition-all duration-300 group-hover:scale-110",
                           theme.iconBg,
                         )}
                       >
                         <Icon
                           name={val.icon as IconName}
                           className={cn(
-                            "w-5 h-5 transition-transform duration-500 group-hover:rotate-12",
+                            "h-5 w-5 transition-transform duration-500 group-hover:rotate-12",
                             theme.text,
                           )}
                         />
                       </div>
 
-                      <h4 className="text-base font-bold text-slate-900 mb-3 group-hover:text-[#1155CC] transition-colors duration-200">
+                      <h4 className="mb-3 text-base font-bold text-slate-900 transition-colors duration-200 group-hover:text-[#1155CC]">
                         {val.title}
                       </h4>
-                      <p className="text-xs text-slate-450 leading-relaxed font-medium">
+                      <p className="text-slate-450 text-xs leading-relaxed font-medium">
                         {val.desc}
                       </p>
                     </div>
@@ -486,32 +486,32 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         {/* ==========================================
             LIFE AT TECHSONANCE
             ========================================== */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <section className="border-b border-slate-100 bg-white px-4 py-20 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
-                <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
+                <h2 className="mb-3 text-xs font-black tracking-widest text-[#1155CC] uppercase">
                   Life at TechSonance
                 </h2>
-                <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight mb-5">
+                <h3 className="mb-5 text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl">
                   Engineers Working Together, Scaling Limits.
                 </h3>
-                <p className="text-sm sm:text-base text-slate-500 font-medium leading-relaxed mb-6">
+                <p className="mb-6 text-sm leading-relaxed font-medium text-slate-500 sm:text-base">
                   At TechSonance, we are team-focused and engineering-obsessed. From intense
                   architecture design sprints to lighthearted brainstorming calls, our work is
                   defined by collaboration, respect, and constant technical improvement.
                 </p>
 
-                <div className="grid grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+                <div className="grid grid-cols-2 gap-6 border-t border-slate-100 pt-4">
                   <div>
                     <span className="block text-2xl font-medium text-[#1155CC]">100%</span>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                       Engineering Culture
                     </span>
                   </div>
                   <div>
                     <span className="block text-2xl font-medium text-[#1155CC]">Direct</span>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                       Mentor Relationship
                     </span>
                   </div>
@@ -519,7 +519,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               </div>
 
               {/* Single Team Collaboration Image */}
-              <div className="overflow-hidden rounded-2xl border border-slate-100 shadow-md aspect-[16/10] relative w-full">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-slate-100 shadow-md">
                 <SafeImage
                   src="/images/careers-life-at-techsonance.jpg"
                   alt="TechSonance engineers collaborating on ideas, product strategy, and scalable architectures"
@@ -536,9 +536,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
             ========================================== */}
         <section
           id="positions"
-          className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative overflow-hidden border-b border-slate-100"
+          className="relative mx-auto max-w-7xl overflow-hidden border-b border-slate-100 px-4 py-20 sm:px-6 lg:px-8"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-50 pointer-events-none" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-50" />
           <motion.div
             animate={{
               y: [0, -15, 0],
@@ -549,7 +549,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute top-10 left-10 w-72 h-72 rounded-full bg-[#1155CC]/5 blur-3xl pointer-events-none"
+            className="pointer-events-none absolute top-10 left-10 h-72 w-72 rounded-full bg-[#1155CC]/5 blur-3xl"
           />
           <motion.div
             animate={{
@@ -561,32 +561,32 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute bottom-10 right-10 w-96 h-96 rounded-full bg-indigo-50/20 blur-3xl pointer-events-none"
+            className="pointer-events-none absolute right-10 bottom-10 h-96 w-96 rounded-full bg-indigo-50/20 blur-3xl"
           />
 
-          <div className="text-center max-w-3xl mx-auto mb-10 relative z-10">
-            <h2 className="text-xs font-black uppercase tracking-widest text-[#1155CC] mb-3">
+          <div className="relative z-10 mx-auto mb-10 max-w-3xl text-center">
+            <h2 className="mb-3 text-xs font-black tracking-widest text-[#1155CC] uppercase">
               Join Us
             </h2>
-            <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+            <h3 className="text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl">
               Open Opportunities
             </h3>
-            <p className="text-sm sm:text-base text-slate-500 font-medium mt-2">
+            <p className="mt-2 text-sm font-medium text-slate-500 sm:text-base">
               Browse our currently open positions, filter by discipline, and find where you fit.
             </p>
           </div>
 
           {/* Search & Filter Bar */}
-          <div className="max-w-4xl mx-auto mb-10 space-y-4 relative z-10">
+          <div className="relative z-10 mx-auto mb-10 max-w-4xl space-y-4">
             {/* Search Input Box */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+              <Search className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title, technology (React, Node, Next.js), department, or location..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-12 py-3.5 bg-white border border-slate-200 rounded-2xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1155CC]/20 focus:border-[#1155CC] shadow-xs transition-all"
+                className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pr-12 pl-12 text-sm font-medium text-slate-800 shadow-xs transition-all placeholder:text-slate-400 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none"
               />
               {searchTerm && (
                 <button
@@ -595,16 +595,16 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                     setSearchTerm("");
                     updateUrl({ search: "" });
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="h-4 w-4" />
                 </button>
               )}
             </div>
 
             {/* Department Filter Chips */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+            <div className="flex scrollbar-none items-center gap-2 overflow-x-auto pb-1">
+              <span className="mr-1 shrink-0 text-xs font-bold tracking-wider text-slate-400 uppercase">
                 Department:
               </span>
               {departments.map((dept) => {
@@ -621,10 +621,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                       updateUrl({ dept: next });
                     }}
                     className={cn(
-                      "text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all shrink-0 cursor-pointer",
+                      "shrink-0 cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all",
                       isActive
                         ? "bg-[#1155CC] text-white shadow-xs"
-                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                        : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
                     )}
                   >
                     {dept}
@@ -635,7 +635,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
 
             {/* Additional Filter Selects / Chips */}
             <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+              <span className="mr-1 shrink-0 text-xs font-bold tracking-wider text-slate-400 uppercase">
                 Work Mode:
               </span>
               {workModes.map((wm) => {
@@ -649,10 +649,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                       updateUrl({ mode: wm.value });
                     }}
                     className={cn(
-                      "text-xs font-semibold px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer",
+                      "shrink-0 cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all",
                       isActive
                         ? "bg-slate-800 text-white shadow-xs"
-                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                        : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
                     )}
                   >
                     {wm.label}
@@ -660,9 +660,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 );
               })}
 
-              <span className="text-slate-200 mx-2 hidden sm:inline">|</span>
+              <span className="mx-2 hidden text-slate-200 sm:inline">|</span>
 
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+              <span className="mr-1 shrink-0 text-xs font-bold tracking-wider text-slate-400 uppercase">
                 Type:
               </span>
               {jobTypes.map((jt) => {
@@ -676,10 +676,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                       updateUrl({ type: jt.value });
                     }}
                     className={cn(
-                      "text-xs font-semibold px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer",
+                      "shrink-0 cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-all",
                       isActive
                         ? "bg-slate-800 text-white shadow-xs"
-                        : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                        : "border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
                     )}
                   >
                     {jt.label}
@@ -687,9 +687,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 );
               })}
 
-              <span className="text-slate-200 mx-2 hidden sm:inline">|</span>
+              <span className="mx-2 hidden text-slate-200 sm:inline">|</span>
 
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+              <span className="mr-1 shrink-0 text-xs font-bold tracking-wider text-slate-400 uppercase">
                 Sort:
               </span>
               <select
@@ -698,7 +698,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   setSelectedSort(e.target.value);
                   updateUrl({ sort: e.target.value });
                 }}
-                className="text-xs font-semibold px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                className="cursor-pointer rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="newest">Newest First</option>
                 <option value="closing_soon">Closing Soon</option>
@@ -715,9 +715,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="inline-flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-semibold ml-auto px-2 py-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                  className="ml-auto inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50 hover:text-rose-700"
                 >
-                  <RotateCcw className="w-3.5 h-3.5" />
+                  <RotateCcw className="h-3.5 w-3.5" />
                   Reset filters
                 </button>
               )}
@@ -725,7 +725,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           </div>
 
           {/* Job Listings / Empty State */}
-          <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+          <div className="relative z-10 mx-auto max-w-4xl space-y-6">
             {displayedJobs.length > 0 ? (
               <>
                 {displayedJobs.map((job) => {
@@ -742,44 +742,44 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   return (
                     <div
                       key={job.id}
-                      className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+                      className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-xs transition-all duration-300 hover:shadow-md sm:p-8"
                     >
-                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-100">
+                      <div className="flex flex-col items-start justify-between gap-4 border-b border-slate-100 pb-6 sm:flex-row">
                         <div>
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <span className="text-[10px] font-black text-[#1155CC] uppercase tracking-wider bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
+                          <div className="mb-2 flex flex-wrap items-center gap-2">
+                            <span className="inline-block rounded-full border border-blue-100/50 bg-blue-50 px-3 py-1 text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
                               {job.department} • Active Opening
                             </span>
                             {isNew && (
-                              <span className="text-[10px] font-black text-emerald-700 uppercase tracking-wider bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-black tracking-wider text-emerald-700 uppercase">
                                 ✨ New
                               </span>
                             )}
                             {isClosingSoon && (
-                              <span className="text-[10px] font-black text-amber-700 uppercase tracking-wider bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                              <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black tracking-wider text-amber-700 uppercase">
                                 ⏰ Closing Soon
                               </span>
                             )}
                             {job.workMode && (
-                              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider bg-slate-100 px-2.5 py-1 rounded-full inline-block">
+                              <span className="inline-block rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold tracking-wider text-slate-600 uppercase">
                                 {job.workMode}
                               </span>
                             )}
                           </div>
                           <Link
                             href={`/careers/${job.slug}`}
-                            className="block text-2xl sm:text-3xl font-medium text-slate-900 tracking-tight hover:text-[#1155CC] transition-colors"
+                            className="block text-2xl font-medium tracking-tight text-slate-900 transition-colors hover:text-[#1155CC] sm:text-3xl"
                           >
                             {job.title}
                           </Link>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs font-semibold text-slate-500">
+                          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
                             <span className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+                              <MapPin className="h-3.5 w-3.5 text-emerald-500" />
                               {job.location}
                             </span>
                             <span className="text-slate-200">•</span>
                             <span className="flex items-center gap-1.5">
-                              <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                              <Briefcase className="h-3.5 w-3.5 text-slate-400" />
                               {job.type}
                             </span>
                             {job.experienceLevel && (
@@ -791,7 +791,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             {job.showSalaryPublicly && job.salaryMin && (
                               <>
                                 <span className="text-slate-200">•</span>
-                                <span className="text-emerald-600 font-bold">
+                                <span className="font-bold text-emerald-600">
                                   {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString()}
                                   {job.salaryMax
                                     ? ` - ${job.salaryMax.toLocaleString()}`
@@ -802,7 +802,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-auto">
+                        <div className="flex shrink-0 items-center gap-2 self-stretch sm:self-auto">
                           <Button asChild variant="outline" size="sm" className="rounded-xl">
                             <Link href={`/careers/${job.slug}`}>View Details</Link>
                           </Button>
@@ -812,8 +812,8 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                         </div>
                       </div>
 
-                      <div className="pt-6 space-y-4">
-                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium line-clamp-3">
+                      <div className="space-y-4 pt-6">
+                        <p className="line-clamp-3 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                           {job.summary || job.description}
                         </p>
 
@@ -822,7 +822,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             {job.skills.slice(0, 7).map((skill) => (
                               <span
                                 key={skill}
-                                className="text-[11px] font-medium bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-md"
+                                className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
                               >
                                 {skill}
                               </span>
@@ -841,7 +841,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                       variant="outline"
                       size="lg"
                       onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                      className="rounded-2xl border-slate-300 hover:border-[#1155CC] hover:text-[#1155CC] font-bold px-8 shadow-xs"
+                      className="rounded-2xl border-slate-300 px-8 font-bold shadow-xs hover:border-[#1155CC] hover:text-[#1155CC]"
                     >
                       Load More Positions ({filteredJobs.length - visibleCount} remaining)
                     </Button>
@@ -849,15 +849,15 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                 )}
               </>
             ) : (
-              <div className="bg-white border border-dashed border-slate-200 rounded-3xl p-10 sm:p-14 text-center max-w-2xl mx-auto space-y-5">
-                <div className="w-16 h-16 mx-auto rounded-full bg-blue-50 text-[#1155CC] flex items-center justify-center">
-                  <Search className="w-8 h-8" />
+              <div className="mx-auto max-w-2xl space-y-5 rounded-3xl border border-dashed border-slate-200 bg-white p-10 text-center sm:p-14">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-[#1155CC]">
+                  <Search className="h-8 w-8" />
                 </div>
                 <div className="space-y-2">
-                  <h4 className="text-xl sm:text-2xl font-bold text-slate-900">
+                  <h4 className="text-xl font-bold text-slate-900 sm:text-2xl">
                     No roles found matching your criteria
                   </h4>
-                  <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                  <p className="mx-auto max-w-md text-sm leading-relaxed text-slate-500">
                     We couldn't find any positions matching your selected filters. Try clearing
                     filters or joining our talent pool for future opportunities.
                   </p>
@@ -873,9 +873,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   <Button
                     variant="default"
                     onClick={() => setIsTalentPoolOpen(true)}
-                    className="rounded-xl px-5 bg-[#1155CC] hover:bg-[#0d44a4] text-white flex items-center gap-2"
+                    className="flex items-center gap-2 rounded-xl bg-[#1155CC] px-5 text-white hover:bg-[#0d44a4]"
                   >
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="h-4 w-4" />
                     Join our Talent Pool
                   </Button>
                 </div>
@@ -884,20 +884,20 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           </div>
 
           {/* Bottom Talent Pool CTA card */}
-          <div className="max-w-4xl mx-auto mt-12 p-6 sm:p-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+          <div className="relative z-10 mx-auto mt-12 flex max-w-4xl flex-col items-center justify-between gap-6 rounded-3xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:flex-row sm:p-8">
             <div className="space-y-1 text-center sm:text-left">
-              <h4 className="text-lg font-bold text-slate-900 flex items-center justify-center sm:justify-start gap-2">
-                <Sparkles className="w-5 h-5 text-[#1155CC]" />
+              <h4 className="flex items-center justify-center gap-2 text-lg font-bold text-slate-900 sm:justify-start">
+                <Sparkles className="h-5 w-5 text-[#1155CC]" />
                 Don't see your specific role?
               </h4>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-lg">
+              <p className="max-w-lg text-xs text-slate-600 sm:text-sm">
                 We're constantly expanding. Join our Talent Pool and our engineering recruitment
                 team will reach out directly when matching roles open up.
               </p>
             </div>
             <Button
               onClick={() => setIsTalentPoolOpen(true)}
-              className="bg-[#1155CC] hover:bg-[#0d44a4] text-white shrink-0 rounded-xl px-6"
+              className="shrink-0 rounded-xl bg-[#1155CC] px-6 text-white hover:bg-[#0d44a4]"
             >
               Join Talent Pool
             </Button>
@@ -907,45 +907,45 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         {/* ==========================================
             HIRING PROCESS
             ========================================== */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#f9f9ff] border-b border-slate-100 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(#e1e8f5_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
+        <section className="relative overflow-hidden border-b border-slate-100 bg-[#f9f9ff] px-4 py-20 sm:px-6 lg:px-8">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#e1e8f5_1px,transparent_1px)] [background-size:20px_20px] opacity-40" />
 
-          <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-2 bg-[#1155CC]/5 border border-[#1155CC]/10 rounded-full px-4 py-1 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
-                <span className="text-[9px] font-black text-[#1155CC] uppercase tracking-wider">
+          <div className="relative z-10 mx-auto max-w-7xl">
+            <div className="mx-auto mb-16 max-w-3xl text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#1155CC]/5 px-4 py-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
+                <span className="text-[9px] font-black tracking-wider text-[#1155CC] uppercase">
                   Hiring Path
                 </span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight">
+              <h3 className="text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl">
                 Our Hiring Process
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-xl mx-auto mt-2 leading-relaxed">
+              <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed font-semibold text-slate-500 sm:text-sm">
                 We believe in a transparent, fast-paced assessment cycle designed to value your
                 engineering and problem-solving abilities.
               </p>
             </div>
 
             <div className="relative">
-              <div className="absolute top-12 left-10 right-10 h-0.5 border-t-2 border-dashed border-slate-200/80 pointer-events-none hidden md:block z-0" />
+              <div className="pointer-events-none absolute top-12 right-10 left-10 z-0 hidden h-0.5 border-t-2 border-dashed border-slate-200/80 md:block" />
 
-              <div className="flex overflow-x-auto md:grid md:grid-cols-4 gap-8 pb-8 md:pb-0 scrollbar-none snap-x snap-mandatory z-10 relative">
+              <div className="relative z-10 flex snap-x snap-mandatory scrollbar-none gap-8 overflow-x-auto pb-8 md:grid md:grid-cols-4 md:pb-0">
                 {hiringProcessSteps.map((step) => (
                   <motion.div
                     key={step.step}
                     whileHover={{ y: -6 }}
-                    className="flex-shrink-0 w-[280px] md:w-auto snap-center bg-white border border-slate-100/80 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 group flex flex-col justify-between"
+                    className="group flex w-[280px] flex-shrink-0 snap-center flex-col justify-between rounded-3xl border border-slate-100/80 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md md:w-auto"
                   >
                     <div>
-                      <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center font-mono font-bold text-slate-800 shadow-sm relative z-10 group-hover:border-[#1155CC]/30 group-hover:bg-[#1155CC] group-hover:text-white transition-all duration-300 mb-6">
+                      <div className="relative z-10 mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-slate-100 bg-slate-50 font-mono font-bold text-slate-800 shadow-sm transition-all duration-300 group-hover:border-[#1155CC]/30 group-hover:bg-[#1155CC] group-hover:text-white">
                         {step.step}
                       </div>
 
-                      <h4 className="text-base font-bold text-slate-900 mb-2 group-hover:text-[#1155CC] transition-colors duration-200">
+                      <h4 className="mb-2 text-base font-bold text-slate-900 transition-colors duration-200 group-hover:text-[#1155CC]">
                         {step.title}
                       </h4>
-                      <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                      <p className="text-xs leading-relaxed font-medium text-slate-500">
                         {step.desc}
                       </p>
                     </div>
@@ -961,32 +961,32 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
             ========================================== */}
         <section
           id="talent-pool"
-          className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10"
+          className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"
         >
-          <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white rounded-3xl p-8 sm:p-14 shadow-xl border border-slate-800 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="via-slate-850 relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 to-blue-950 p-8 text-white shadow-xl sm:p-14">
+            <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
-            <div className="max-w-2xl space-y-5 relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#22B6F6] bg-blue-500/20 px-3.5 py-1.5 rounded-full inline-block border border-blue-400/20">
+            <div className="relative z-10 max-w-2xl space-y-5">
+              <span className="inline-block rounded-full border border-blue-400/20 bg-blue-500/20 px-3.5 py-1.5 text-[10px] font-black tracking-widest text-[#22B6F6] uppercase">
                 General Engineering Network
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+              <h2 className="text-3xl leading-tight font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
                 Don't See Your Specific Role Open?
               </h2>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm leading-relaxed font-normal text-slate-300 sm:text-base">
                 Join the TechSonance Talent Pool. We evaluate every submission directly through our
                 engineering leadership and actively reach out when initiatives matching your
                 technical skills and systems experience launch.
               </p>
 
-              <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center">
                 <Button
                   onClick={() => setIsTalentPoolOpen(true)}
-                  className="bg-[#1155CC] hover:bg-[#0d44a4] text-white font-bold px-8 py-6 rounded-2xl shadow-lg shadow-blue-500/20 text-sm w-full sm:w-auto"
+                  className="w-full rounded-2xl bg-[#1155CC] px-8 py-6 text-sm font-bold text-white shadow-lg shadow-blue-500/20 hover:bg-[#0d44a4] sm:w-auto"
                 >
                   Join Talent Pool &rarr;
                 </Button>
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs font-medium text-slate-400">
                   Takes under 60 seconds • Direct review by technical leads
                 </span>
               </div>
@@ -997,36 +997,36 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
         {/* ==========================================
             CTA SECTION
             ========================================== */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1155CC] to-[#22B6F6] text-white relative overflow-hidden">
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#1155CC] to-[#22B6F6] px-4 py-20 text-white sm:px-6 lg:px-8">
           <div
-            className="absolute inset-0 pointer-events-none opacity-[0.08]"
+            className="pointer-events-none absolute inset-0 opacity-[0.08]"
             style={{
               backgroundImage: `radial-gradient(circle at 1px 1px, white 1.5px, transparent 0)`,
               backgroundSize: "28px 28px",
             }}
           />
 
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h3 className="text-3xl sm:text-4xl font-medium text-white tracking-tight mb-4">
+          <div className="relative z-10 mx-auto max-w-4xl text-center">
+            <h3 className="mb-4 text-3xl font-medium tracking-tight text-white sm:text-4xl">
               Not Ready to Apply Yet?
             </h3>
-            <p className="text-sm sm:text-base text-blue-50/90 max-w-xl mx-auto font-medium leading-relaxed mb-8">
+            <p className="mx-auto mb-8 max-w-xl text-sm leading-relaxed font-medium text-blue-50/90 sm:text-base">
               Reach out to learn more about our company services, clients, or schedule a general
               introduction call.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
                 asChild
                 variant="secondary"
-                className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
+                className="w-full border-transparent bg-white text-[#1155CC] shadow-md hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 <Link href="/about">About Company</Link>
               </Button>
               <Button
                 asChild
                 variant="secondary"
-                className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
+                className="w-full border-white/40 text-white hover:border-white hover:bg-white/10 hover:text-white hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 <Link href="/contact">Contact Us</Link>
               </Button>

@@ -26,7 +26,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
         {label ? (
           <label
             htmlFor={selectId}
-            className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider"
+            className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
           >
             {label} {required ? <span className="text-rose-500">*</span> : null}
           </label>
@@ -38,8 +38,8 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
             aria-invalid={Boolean(error)}
             aria-describedby={error ? errorId : helperText ? helperId : undefined}
             className={cn(
-              "w-full appearance-none rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-3.5 pr-9 text-xs font-medium text-slate-900 dark:text-white shadow-2xs transition-colors",
-              "focus:outline-hidden focus:ring-2 focus:ring-[#1155CC] focus:border-transparent",
+              "w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pr-9 pl-3.5 text-xs font-medium text-slate-900 shadow-2xs transition-colors dark:border-slate-800 dark:bg-slate-900 dark:text-white",
+              "focus:border-transparent focus:ring-2 focus:ring-[#1155CC] focus:outline-hidden",
               "disabled:cursor-not-allowed disabled:opacity-50",
               error ? "border-rose-500 ring-1 ring-rose-500 focus:ring-rose-500" : "",
               className,
@@ -49,7 +49,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
             {children}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown className="h-4 w-4" />
           </div>
         </div>
         {helperText && !error ? (

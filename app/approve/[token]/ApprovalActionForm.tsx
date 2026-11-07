@@ -49,18 +49,18 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
   if (completed) {
     return (
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-sm text-center space-y-4 animate-in fade-in duration-300">
-        <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
-          <CheckCircle2 className="w-8 h-8" />
+      <div className="animate-in fade-in space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-sm duration-300">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+          <CheckCircle2 className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-black text-slate-900 font-sora">
+        <h2 className="font-sora text-xl font-black text-slate-900">
           {completed.decision === "approve"
             ? "Article Successfully Published Live!"
             : completed.decision === "improve"
               ? "Improvement Feedback Dispatched to AI Agent!"
               : "Article Rejected & Archived"}
         </h2>
-        <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+        <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-500">
           {completed.decision === "approve"
             ? "The article is now live on techsonance.co.in and the edge cache has been revalidated."
             : completed.decision === "improve"
@@ -68,16 +68,16 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
               : "This draft has been archived and will not appear on the public site."}
         </p>
 
-        <div className="pt-4 flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-3 pt-4">
           {completed.decision === "approve" && (
             <Link href="/blog" target="_blank">
               <Button
                 variant="default"
                 size="sm"
-                className="rounded-xl bg-[#1155CC] text-white font-bold text-xs"
+                className="rounded-xl bg-[#1155CC] text-xs font-bold text-white"
               >
                 <span>View Live Blog</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </Link>
           )}
@@ -85,7 +85,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-700 font-bold text-xs"
+              className="rounded-xl border-slate-200 text-xs font-bold text-slate-700"
             >
               <span>Return to Studio CMS</span>
             </Button>
@@ -96,31 +96,31 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+    <div className="space-y-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-slate-900 font-sora">
+          <h2 className="font-sora text-base font-bold text-slate-900">
             Confirm Editorial Decision
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="mt-0.5 text-xs text-slate-400">
             Select your decision below and click confirm to execute.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="flex items-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs font-semibold text-rose-700">
+          <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Decision Pill Switcher */}
-      <div className="grid grid-cols-3 gap-2 p-1.5 bg-slate-100/80 rounded-2xl">
+      <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-100/80 p-1.5">
         <button
           type="button"
           onClick={() => setDecision("approve")}
-          className={`py-2 px-3 text-xs font-bold rounded-xl transition-all ${
+          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
             decision === "approve"
               ? "bg-emerald-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
@@ -131,7 +131,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
         <button
           type="button"
           onClick={() => setDecision("improve")}
-          className={`py-2 px-3 text-xs font-bold rounded-xl transition-all ${
+          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
             decision === "improve"
               ? "bg-amber-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
@@ -142,7 +142,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
         <button
           type="button"
           onClick={() => setDecision("reject")}
-          className={`py-2 px-3 text-xs font-bold rounded-xl transition-all ${
+          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
             decision === "reject"
               ? "bg-rose-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
@@ -155,7 +155,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
       <form onSubmit={handleSubmit} className="space-y-4">
         {decision === "improve" && (
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
               Feedback for Revision (Required)
             </label>
             <Textarea
@@ -171,7 +171,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
         {decision === "reject" && (
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
               Rejection Reason (Optional)
             </label>
             <Textarea
@@ -189,11 +189,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20"
+              className="h-11 w-full rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700 sm:text-sm"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Publishing Live to techsonance.co.in...
                 </span>
               ) : (
@@ -206,11 +206,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
             <Button
               type="submit"
               disabled={submitting || !feedback.trim()}
-              className="w-full h-11 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-amber-600/20"
+              className="h-11 w-full rounded-xl bg-amber-600 text-xs font-bold text-white shadow-md shadow-amber-600/20 hover:bg-amber-700 sm:text-sm"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Dispatching to Autonomous Agent...
                 </span>
               ) : (
@@ -223,11 +223,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full h-11 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-600/20"
+              className="h-11 w-full rounded-xl bg-rose-600 text-xs font-bold text-white shadow-md shadow-rose-600/20 hover:bg-rose-700 sm:text-sm"
             >
               {submitting ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Rejecting Draft...
                 </span>
               ) : (

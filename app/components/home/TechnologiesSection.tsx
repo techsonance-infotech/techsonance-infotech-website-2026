@@ -206,25 +206,25 @@ export default function TechnologiesSection() {
   return (
     <section className="relative z-20 bg-white py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 mb-5">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <div className="mb-5 inline-flex items-center gap-2">
             <div className="h-px w-8 bg-[#1155CC]/40" />
-            <span className="text-xs font-medium text-[#1155CC] tracking-[0.15em] uppercase">
+            <span className="text-xs font-medium tracking-[0.15em] text-[#1155CC] uppercase">
               Infrastructure & Technologies
             </span>
             <div className="h-px w-8 bg-[#1155CC]/40" />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-900 leading-tight mb-4">
+          <h2 className="mb-4 text-3xl leading-tight font-medium text-gray-900 sm:text-4xl lg:text-5xl">
             Infrastructure &amp; Tech
             <br className="hidden sm:block" /> <span className="text-[#1155CC]">We Work With</span>
           </h2>
-          <p className="text-[16px] text-gray-500 leading-relaxed max-w-xl mx-auto">
+          <p className="mx-auto max-w-xl text-[16px] leading-relaxed text-gray-500">
             Enterprise-grade platforms and technologies to build, scale and secure your
             applications.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {techCards.map((card) => (
             <motion.article
               key={card.title}
@@ -235,11 +235,11 @@ export default function TechnologiesSection() {
               }}
               whileTap={{ scale: 0.99 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-4 hover:border-blue-100/70 transition-colors cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.07)]"
+              className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_4px_16px_rgba(0,0,0,0.07)] transition-colors hover:border-blue-100/70"
             >
               <div className="flex items-start gap-3">
                 <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                   style={{ backgroundColor: card.iconColor + "18" }}
                 >
                   <svg
@@ -255,23 +255,23 @@ export default function TechnologiesSection() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-medium text-gray-800 uppercase tracking-[0.1em] leading-tight mb-1">
+                  <h3 className="mb-1 text-[11px] leading-tight font-medium tracking-[0.1em] text-gray-800 uppercase">
                     {card.title}
                   </h3>
-                  <p className="text-[12px] text-gray-500 leading-snug">{card.description}</p>
+                  <p className="text-[12px] leading-snug text-gray-500">{card.description}</p>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 border-t border-gray-100 pt-3">
                 {card.items.map((item) => (
-                  <div key={item.label} className="flex items-center gap-1.5 group">
-                    <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-100 p-1 flex items-center justify-center transition-all group-hover:border-blue-100 group-hover:bg-white group-hover:shadow-sm">
+                  <div key={item.label} className="group flex items-center gap-1.5">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 p-1 transition-all group-hover:border-blue-100 group-hover:bg-white group-hover:shadow-sm">
                       <img
                         src={item.src}
                         alt={item.label}
                         width={28}
                         height={28}
-                        className="w-full h-full object-contain"
+                        className="h-full w-full object-contain"
                         style={{ filter: item.color === "#000000" ? "none" : undefined }}
                         onError={(e) => {
                           const target = e.currentTarget;

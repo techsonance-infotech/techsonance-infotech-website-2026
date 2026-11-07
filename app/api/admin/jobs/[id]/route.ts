@@ -19,7 +19,7 @@ interface RouteParams {
 }
 
 const ALLOWED_ADMIN_ROLES = new Set(["owner", "admin", "recruiter", "editor"]);
-const DESTRUCTIVE_ADMIN_ROLES = ["owner", "admin"];
+const DESTRUCTIVE_ADMIN_ROLES = new Set(["owner", "admin"]);
 
 export async function GET(req: Request, { params }: RouteParams) {
   const requestId = await getRequestId();
@@ -401,7 +401,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
 
     // 3. Strict role check for destructive deletion (owner or admin only)
     const role = (session.role || "").toLowerCase();
-    if (!DESTRUCTIVE_ADMIN_ROLES.includes(role)) {
+    if (!DESTRUCTIVE_ADMIN_ROLES.has(role)) {
       return NextResponse.json(
         {
           ok: false,

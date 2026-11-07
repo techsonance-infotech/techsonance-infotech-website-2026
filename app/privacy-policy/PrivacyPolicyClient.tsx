@@ -53,24 +53,24 @@ export default function PrivacyPolicyClient() {
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
+      <main className="relative min-h-screen overflow-hidden bg-[#FAFBFD] pt-24 pb-20">
         {/* Ambient background glows */}
         <div
           className={cn(
-            "absolute top-0 right-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-            mounted && isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+            "pointer-events-none absolute top-0 right-0 rounded-full bg-[#1155CC]/5 blur-[100px]",
+            mounted && isMobile ? "h-[250px] w-[250px]" : "h-[500px] w-[500px]",
           )}
         />
         <div
           className={cn(
-            "absolute top-[30%] left-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-            mounted && isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+            "pointer-events-none absolute top-[30%] left-0 rounded-full bg-[#22B6F6]/5 blur-[120px]",
+            mounted && isMobile ? "h-[300px] w-[300px]" : "h-[600px] w-[600px]",
           )}
         />
 
         {/* Hero Banner Header */}
-        <section className="relative py-16 sm:py-24 overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] text-white">
-          <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+        <section className="relative overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] py-16 text-white sm:py-24">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.05]">
             <div
               className="absolute inset-0"
               style={{
@@ -81,14 +81,14 @@ export default function PrivacyPolicyClient() {
           </div>
 
           {/* Floating Elegant Shapes */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <ElegantShape
               delay={0.3}
               width={mounted && isMobile ? 200 : 400}
               height={mounted && isMobile ? 60 : 120}
               rotate={12}
               gradient="from-[#1155CC]/20 to-transparent"
-              className="left-[-10%] top-[10%]"
+              className="top-[10%] left-[-10%]"
             />
             <ElegantShape
               delay={0.5}
@@ -100,12 +100,12 @@ export default function PrivacyPolicyClient() {
             />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <motion.span
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-[10px] font-black tracking-[0.25em] text-[#22B6F6] uppercase bg-[#22B6F6]/10 px-3 py-1.5 rounded-full mb-4 inline-block"
+              className="mb-4 inline-block rounded-full bg-[#22B6F6]/10 px-3 py-1.5 text-[10px] font-black tracking-[0.25em] text-[#22B6F6] uppercase"
             >
               Legal & Compliance
             </motion.span>
@@ -113,7 +113,7 @@ export default function PrivacyPolicyClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-black font-sora text-white tracking-tight"
+              className="font-sora text-3xl font-black tracking-tight text-white sm:text-4xl md:text-5xl"
             >
               Privacy{" "}
               <span className="bg-gradient-to-r from-[#22B6F6] to-[#00E5FF] bg-clip-text text-transparent">
@@ -124,7 +124,7 @@ export default function PrivacyPolicyClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-4 text-xs sm:text-sm font-semibold text-slate-350 max-w-xl mx-auto"
+              className="text-slate-350 mx-auto mt-4 max-w-xl text-xs font-semibold sm:text-sm"
             >
               Effective Date: January 1, 2026 &bull; Last Updated: June 18, 2026
             </motion.p>
@@ -132,11 +132,11 @@ export default function PrivacyPolicyClient() {
         </section>
 
         {/* Main Content Layout */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <section className="mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
             {/* Sticky Navigation Sidebar (Desktop) */}
-            <div className="hidden lg:block lg:col-span-4 sticky top-28 bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pb-3 mb-4 border-b border-slate-100">
+            <div className="sticky top-28 hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)] lg:col-span-4 lg:block">
+              <h3 className="mb-4 border-b border-slate-100 pb-3 text-xs font-black tracking-widest text-slate-400 uppercase">
                 Table of Contents
               </h3>
               <nav className="flex flex-col gap-1">
@@ -144,14 +144,14 @@ export default function PrivacyPolicyClient() {
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all group ${
+                    className={`group flex items-center gap-3 rounded-xl px-4 py-2.5 text-left text-xs font-bold transition-all ${
                       activeSection === section.id
                         ? "bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/10"
                         : "text-slate-600 hover:text-[#1155CC] hover:bg-slate-50"
                     }`}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full transition-all ${
+                      className={`h-1.5 w-1.5 rounded-full transition-all ${
                         activeSection === section.id
                           ? "bg-white scale-125"
                           : "bg-slate-300 group-hover:bg-[#1155CC]"
@@ -164,18 +164,18 @@ export default function PrivacyPolicyClient() {
             </div>
 
             {/* Privacy Policy Main Body */}
-            <div className="col-span-1 lg:col-span-8 space-y-8">
+            <div className="col-span-1 space-y-8 lg:col-span-8">
               {/* Introduction */}
               <div
                 id="introduction"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="check" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="check" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       Introduction
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -183,7 +183,7 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   At TechSonance Infotech LLP, we are committed to protecting your privacy and
                   ensuring the security of your personal information. This Privacy Policy explains
                   how we collect, use, disclose, and safeguard your information when you visit our
@@ -194,14 +194,14 @@ export default function PrivacyPolicyClient() {
               {/* 1. Information We Collect */}
               <div
                 id="information-collection"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="database" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="database" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       1. Information We Collect
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -212,28 +212,28 @@ export default function PrivacyPolicyClient() {
 
                 <div className="space-y-6">
                   <div>
-                    <h4 className="text-xs font-black text-[#1155CC] uppercase tracking-wider mb-3">
+                    <h4 className="mb-3 text-xs font-black tracking-wider text-[#1155CC] uppercase">
                       Personal Information
                     </h4>
-                    <p className="text-xs font-medium text-slate-600 mb-3 leading-relaxed">
+                    <p className="mb-3 text-xs leading-relaxed font-medium text-slate-600">
                       We collect personal details that you voluntarily submit to us during project
                       consultations, applications, or contact requests:
                     </p>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700 font-bold">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Full name and job title
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Email address and phone number
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Company name and business info
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Project requirements & stack
                       </li>
                     </ul>
@@ -242,28 +242,28 @@ export default function PrivacyPolicyClient() {
                   <hr className="border-slate-100" />
 
                   <div>
-                    <h4 className="text-xs font-black text-[#1155CC] uppercase tracking-wider mb-3">
+                    <h4 className="mb-3 text-xs font-black tracking-wider text-[#1155CC] uppercase">
                       Technical & Usage Information
                     </h4>
-                    <p className="text-xs font-medium text-slate-600 mb-3 leading-relaxed">
+                    <p className="mb-3 text-xs leading-relaxed font-medium text-slate-600">
                       We automatically collect browser, network, and device logs when you navigate
                       our platform:
                     </p>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700 font-bold">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                         IP address and browser agent
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                         OS & device model details
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                         Page views and duration
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                         Referral URLs and search terms
                       </li>
                     </ul>
@@ -272,20 +272,20 @@ export default function PrivacyPolicyClient() {
                   <hr className="border-slate-100" />
 
                   <div>
-                    <h4 className="text-xs font-black text-[#1155CC] uppercase tracking-wider mb-3">
+                    <h4 className="mb-3 text-xs font-black tracking-wider text-[#1155CC] uppercase">
                       Project-Related Data
                     </h4>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700 font-bold">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         System specifications & flows
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Timeline & budget parameters
                       </li>
                       <li className="flex items-center gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Feedback & workshop responses
                       </li>
                     </ul>
@@ -296,41 +296,41 @@ export default function PrivacyPolicyClient() {
               {/* 2. How We Use Your Information */}
               <div
                 id="how-we-use"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="bolt" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="bolt" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       2. How We Use Your Information
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">Processing objectives</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
-                    <span className="text-[#1155CC] font-bold block mb-1">Service Delivery</span>
-                    <p className="text-slate-500 font-medium text-xs">
+                <div className="grid grid-cols-1 gap-4 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2 sm:text-sm">
+                  <div className="rounded-2xl border border-slate-100/50 bg-slate-50 p-4">
+                    <span className="mb-1 block font-bold text-[#1155CC]">Service Delivery</span>
+                    <p className="text-xs font-medium text-slate-500">
                       To construct, test, and host custom web, mobile, and agentic AI platforms.
                     </p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
-                    <span className="text-[#1155CC] font-bold block mb-1">Communication</span>
-                    <p className="text-slate-500 font-medium text-xs">
+                  <div className="rounded-2xl border border-slate-100/50 bg-slate-50 p-4">
+                    <span className="mb-1 block font-bold text-[#1155CC]">Communication</span>
+                    <p className="text-xs font-medium text-slate-500">
                       Providing direct technical updates, proposal drafts, and code review logs.
                     </p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
-                    <span className="text-[#1155CC] font-bold block mb-1">UX Optimization</span>
-                    <p className="text-slate-500 font-medium text-xs">
+                  <div className="rounded-2xl border border-slate-100/50 bg-slate-50 p-4">
+                    <span className="mb-1 block font-bold text-[#1155CC]">UX Optimization</span>
+                    <p className="text-xs font-medium text-slate-500">
                       Analysing metrics and clickmaps to continuously upgrade site rendering speed.
                     </p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
-                    <span className="text-[#1155CC] font-bold block mb-1">Compliance</span>
-                    <p className="text-slate-500 font-medium text-xs">
+                  <div className="rounded-2xl border border-slate-100/50 bg-slate-50 p-4">
+                    <span className="mb-1 block font-bold text-[#1155CC]">Compliance</span>
+                    <p className="text-xs font-medium text-slate-500">
                       Enforcing terms of service, security protocols, and Indian legal mandates.
                     </p>
                   </div>
@@ -340,14 +340,14 @@ export default function PrivacyPolicyClient() {
               {/* 3. Information Sharing and Disclosure */}
               <div
                 id="sharing-disclosure"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="schema" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="schema" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       3. Information Sharing and Disclosure
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -355,20 +355,20 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4 font-bold">
+                <p className="mb-4 text-xs leading-relaxed font-bold font-medium text-slate-600 sm:text-sm">
                   We value your trust and do not sell, rent, or lease your personal information.
                   Sharing occurs exclusively under the following terms:
                 </p>
-                <ul className="space-y-3 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
+                <ul className="space-y-3 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1155CC]" />
                     <span>
                       <strong className="text-slate-800">Consent:</strong> With your explicit
                       approval and permission.
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1155CC]" />
                     <span>
                       <strong className="text-slate-800">Trusted Partners:</strong> Providers
                       supporting server infrastructure, transactional mail APIs, or database
@@ -376,7 +376,7 @@ export default function PrivacyPolicyClient() {
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1155CC]" />
                     <span>
                       <strong className="text-slate-800">Legal Demands:</strong> When required by
                       statutory authorities, court subpoenas, or to prevent fraudulent attacks.
@@ -388,14 +388,14 @@ export default function PrivacyPolicyClient() {
               {/* 4. Data Security */}
               <div
                 id="data-security"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="check" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="check" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       4. Data Security
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -403,22 +403,22 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   TechSonance InfoTech LLP implements advanced protection layers to secure data
                   transit and database nodes:
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold text-center">
-                  <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-2xl">
-                    <span className="text-[#1155CC] block mb-1">AES-256</span>
-                    <span className="text-slate-500 font-medium">Encryption at rest & transit</span>
+                <div className="grid grid-cols-1 gap-3 text-center text-xs font-bold sm:grid-cols-3">
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                    <span className="mb-1 block text-[#1155CC]">AES-256</span>
+                    <span className="font-medium text-slate-500">Encryption at rest & transit</span>
                   </div>
-                  <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-2xl">
-                    <span className="text-[#1155CC] block mb-1">Access Limits</span>
-                    <span className="text-slate-500 font-medium">Role-based project logins</span>
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                    <span className="mb-1 block text-[#1155CC]">Access Limits</span>
+                    <span className="font-medium text-slate-500">Role-based project logins</span>
                   </div>
-                  <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-2xl">
-                    <span className="text-[#1155CC] block mb-1">Security Audits</span>
-                    <span className="text-slate-500 font-medium">Routine system assessments</span>
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                    <span className="mb-1 block text-[#1155CC]">Security Audits</span>
+                    <span className="font-medium text-slate-500">Routine system assessments</span>
                   </div>
                 </div>
               </div>
@@ -426,14 +426,14 @@ export default function PrivacyPolicyClient() {
               {/* 5. Cookies & Tracking */}
               <div
                 id="cookies-tracking"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="arrow" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="arrow" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       5. Cookies & Tracking Technologies
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -441,26 +441,26 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   We use cookies and Web beacons to identify traffic routing and user preferences:
                 </p>
-                <ul className="space-y-3 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
+                <ul className="space-y-3 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-start gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B6F6]" />
                     <span>
                       <strong className="text-[#1155CC]">Essential:</strong> Core files required to
                       render forms and dynamic page routes.
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B6F6]" />
                     <span>
                       <strong className="text-[#1155CC]">Analytics:</strong> Help compile session
                       time metrics (e.g. Google Analytics).
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] mt-2 shrink-0" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B6F6]" />
                     <span>
                       <strong className="text-[#1155CC]">Management:</strong> Users can disable or
                       reject cookies in browser configurations, though some layout aspects may cease
@@ -473,20 +473,20 @@ export default function PrivacyPolicyClient() {
               {/* 6. Your Rights & Choices */}
               <div
                 id="your-rights"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="check" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="check" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       6. Your Rights & Choices
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">Data ownership rights</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
+                <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-3">
                   {[
                     "Access Records",
                     "Correct Inaccuracies",
@@ -497,7 +497,7 @@ export default function PrivacyPolicyClient() {
                   ].map((right, idx) => (
                     <div
                       key={idx}
-                      className="p-3 border border-slate-100 rounded-xl bg-slate-50/50 text-slate-700 font-bold text-xs"
+                      className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 text-xs font-bold text-slate-700"
                     >
                       {right}
                     </div>
@@ -508,14 +508,14 @@ export default function PrivacyPolicyClient() {
               {/* 7. Client Project Data */}
               <div
                 id="client-project-data"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="code" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="code" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       7. Client Project Data
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -523,21 +523,21 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   For custom product development, we handle project architecture metadata under key
                   confidentiality rules:
                 </p>
-                <ul className="space-y-2.5 text-xs sm:text-sm font-semibold text-slate-700 font-bold">
+                <ul className="space-y-2.5 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                     Mutual Non-Disclosure Agreements (NDAs) signed prior to project kick-offs.
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                     Intellectual Property and source code ownership fully documented in contracts.
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                     Codebase access restricted exclusively to authorized development staff.
                   </li>
                 </ul>
@@ -546,20 +546,20 @@ export default function PrivacyPolicyClient() {
               {/* 8. Third-Party Services */}
               <div
                 id="third-party"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="schema" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="schema" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       8. Third-Party Services
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">External dependencies</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   We integrate Cloud hostings (AWS, Google Cloud), web analysis tools (Google
                   Analytics), payment gateways, and mailing relays. These entities operate under
                   their respective privacy protocols, which we advise you to review.
@@ -569,20 +569,20 @@ export default function PrivacyPolicyClient() {
               {/* 9. International Transfers */}
               <div
                 id="international-transfers"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="arrow" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="arrow" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       9. International Data Transfers
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">Global routing protocols</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   As an international custom developer team, your client specifications may be
                   routed across regional boundaries. We safeguard these transfers with standard data
                   protection clauses matching jurisdiction codes.
@@ -592,20 +592,20 @@ export default function PrivacyPolicyClient() {
               {/* 10. Children's Privacy */}
               <div
                 id="children-privacy"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="check" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="check" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       10. Children's Privacy
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">Minors security policy</p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   Our development offerings are targeted strictly at entities and individuals aged
                   18 and older. We do not gather details from minors. If you suspect any child
                   information has been collected, notify us to delete it instantly.
@@ -615,14 +615,14 @@ export default function PrivacyPolicyClient() {
               {/* 11. Changes to Policy */}
               <div
                 id="policy-changes"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="bolt" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="bolt" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       11. Changes to This Privacy Policy
                     </h2>
                     <p className="text-xs font-semibold text-[#1155CC]">
@@ -630,7 +630,7 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   We modify this policy to align with regulatory adjustments. Updates will be
                   visible directly on this URL with an updated "Last Updated" status. Significant
                   revisions will prompt notification alerts on our main domains.
@@ -640,14 +640,14 @@ export default function PrivacyPolicyClient() {
               {/* 12. Contact Us */}
               <div
                 id="contact-us"
-                className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)]"
+                className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-8"
               >
-                <div className="flex gap-4 items-start mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                    <Icon name="arrow" className="w-5 h-5" />
+                <div className="mb-6 flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                    <Icon name="arrow" className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                    <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                       12. Contact Us
                     </h2>
                     <p className="text-xs font-semibold text-slate-400">
@@ -655,24 +655,24 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   For policy questions, details request, or correction tickets, contact our legal
                   representative:
                 </p>
-                <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center">
                   <div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">
+                    <span className="mb-0.5 block text-[10px] font-black tracking-widest text-slate-400 uppercase">
                       Legal & DPO Email
                     </span>
                     <a
                       href="mailto:info@techsonance.co.in"
-                      className="text-xs sm:text-sm font-black text-[#1155CC] hover:underline"
+                      className="text-xs font-black text-[#1155CC] hover:underline sm:text-sm"
                     >
                       info@techsonance.co.in
                     </a>
                   </div>
                   <div className="text-right sm:text-left">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">
+                    <span className="mb-0.5 block text-[10px] font-black tracking-widest text-slate-400 uppercase">
                       Corporate HQ Address
                     </span>
                     <span className="text-[11px] font-bold text-slate-700">

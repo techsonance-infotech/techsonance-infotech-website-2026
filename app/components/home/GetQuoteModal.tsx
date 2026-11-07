@@ -190,7 +190,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
           data-lenis-prevent-touch
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto p-3 sm:p-6"
         >
           {/* Backdrop */}
           <motion.div
@@ -211,7 +211,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
             data-lenis-prevent
             data-lenis-prevent-wheel
             data-lenis-prevent-touch
-            className="relative z-10 w-full max-w-2xl bg-white rounded-3xl shadow-[0_25px_60px_rgba(17,85,204,0.18)] border border-[#1155CC]/10 overflow-hidden flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-3.5rem)] my-auto"
+            className="relative z-10 my-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-[#1155CC]/10 bg-white shadow-[0_25px_60px_rgba(17,85,204,0.18)] sm:max-h-[calc(100dvh-3.5rem)]"
           >
             {/* Modal Header */}
             <div
@@ -220,11 +220,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   bodyRef.current.scrollTop += e.deltaY;
                 }
               }}
-              className="relative px-6 sm:px-10 pt-7 pb-5 sm:pt-8 sm:pb-6 border-b border-[#1155CC]/10 bg-gradient-to-br from-white to-slate-50/80 shrink-0"
+              className="relative shrink-0 border-b border-[#1155CC]/10 bg-gradient-to-br from-white to-slate-50/80 px-6 pt-7 pb-5 sm:px-10 sm:pt-8 sm:pb-6"
             >
               <button
                 onClick={resetAndClose}
-                className="absolute top-4 sm:top-5 right-4 sm:right-5 w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-all cursor-pointer"
+                className="absolute top-4 right-4 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-all hover:bg-slate-200 hover:text-slate-800 sm:top-5 sm:right-5"
                 aria-label="Close modal"
               >
                 <svg
@@ -238,17 +238,17 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 </svg>
               </button>
 
-              <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-3 sm:mb-4">
-                <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
-                <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5 sm:mb-4">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#22B6F6]" />
+                <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
                   Get a Quote
                 </span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-medium text-[#0F172A] leading-tight mb-1.5">
+              <h2 className="mb-1.5 text-2xl leading-tight font-medium text-[#0F172A] sm:text-3xl">
                 Let&apos;s Build <span className="text-[#1155CC]">Something Together</span>
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              <p className="text-xs font-medium text-slate-500 sm:text-sm">
                 Tell us about your project - we&apos;ll respond within 24 hours.
               </p>
             </div>
@@ -259,19 +259,19 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
               data-lenis-prevent
               data-lenis-prevent-wheel
               data-lenis-prevent-touch
-              className="px-6 sm:px-10 py-6 sm:py-8 overflow-y-auto flex-1 overscroll-contain modal-scrollbar"
+              className="modal-scrollbar flex-1 overflow-y-auto overscroll-contain px-6 py-6 sm:px-10 sm:py-8"
             >
               {formStatus === "success" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-10 flex flex-col items-center justify-center min-h-[300px]"
+                  className="flex min-h-[300px] flex-col items-center justify-center py-10 text-center"
                 >
-                  <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-6 shadow-sm border border-emerald-100">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-100 bg-emerald-50 text-2xl text-emerald-600 shadow-sm">
                     ✓
                   </div>
-                  <h3 className="text-xl font-bold text-black mb-3">Message Sent Successfully</h3>
-                  <p className="text-sm text-slate-500 max-w-sm leading-relaxed mb-8">
+                  <h3 className="mb-3 text-xl font-bold text-black">Message Sent Successfully</h3>
+                  <p className="mb-8 max-w-sm text-sm leading-relaxed text-slate-500">
                     Thank you for reaching out. A senior engineer will review your project details
                     and get back to you within 24 hours.
                   </p>
@@ -299,10 +299,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   </div>
 
                   {/* First Name & Last Name */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                        First Name <span className="text-red-500 font-bold">*</span>
+                      <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                        First Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -320,14 +320,14 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                         className={inputBaseClass("firstName")}
                       />
                       {getValidationError("firstName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        <p className="mt-1 text-[10px] font-semibold text-red-500">
                           {getValidationError("firstName")}
                         </p>
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                        Last Name <span className="text-red-500 font-bold">*</span>
+                      <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                        Last Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -345,7 +345,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                         className={inputBaseClass("lastName")}
                       />
                       {getValidationError("lastName") && (
-                        <p className="text-[10px] font-semibold text-red-500 mt-1">
+                        <p className="mt-1 text-[10px] font-semibold text-red-500">
                           {getValidationError("lastName")}
                         </p>
                       )}
@@ -354,8 +354,8 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                      Email Address <span className="text-red-500 font-bold">*</span>
+                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      Email Address <span className="font-bold text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -370,7 +370,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       className={inputBaseClass("email")}
                     />
                     {getValidationError("email") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("email")}
                       </p>
                     )}
@@ -378,14 +378,14 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Phone */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                      Phone Number <span className="text-red-500 font-bold">*</span>
+                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      Phone Number <span className="font-bold text-red-500">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
                       <select
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="w-[90px] sm:w-[110px] px-2 sm:px-3 py-3 bg-white border border-[#1155CC]/15 rounded-xl text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium shrink-0"
+                        className="w-[90px] shrink-0 cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-2 py-3 text-xs font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none sm:w-[110px] sm:px-3 sm:text-sm"
                       >
                         <option value="+91">🇮🇳 +91</option>
                         <option value="+1">🇺🇸 +1</option>
@@ -408,11 +408,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                           setTouched((prev) => ({ ...prev, phone: true }));
                         }}
                         onBlur={() => setTouched((prev) => ({ ...prev, phone: true }))}
-                        className={`flex-1 min-w-0 ${inputBaseClass("phone")}`}
+                        className={`min-w-0 flex-1 ${inputBaseClass("phone")}`}
                       />
                     </div>
                     {getValidationError("phone") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("phone")}
                       </p>
                     )}
@@ -420,13 +420,13 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Interest */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                       I&apos;m interested in
                     </label>
                     <select
                       value={formData.interest}
                       onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-[#1155CC]/15 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 transition-all cursor-pointer font-medium"
+                      className="w-full cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
                     >
                       <option value="Web Development">Web Development</option>
                       <option value="Mobile App">Mobile App</option>
@@ -439,8 +439,8 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Message */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
-                      Message <span className="text-red-500 font-bold">*</span>
+                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      Message <span className="font-bold text-red-500">*</span>
                     </label>
                     <textarea
                       required
@@ -455,7 +455,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       className={`${inputBaseClass("message")} resize-none`}
                     />
                     {getValidationError("message") && (
-                      <p className="text-[10px] font-semibold text-red-500 mt-1">
+                      <p className="mt-1 text-[10px] font-semibold text-red-500">
                         {getValidationError("message")}
                       </p>
                     )}
@@ -471,7 +471,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   >
                     {formStatus === "submitting" ? (
                       <>
-                        <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
+                        <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                         Sending Message...
                       </>
                     ) : (
@@ -490,9 +490,9 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="fixed bottom-6 right-6 z-[110] bg-[#0F172A] text-white px-5 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-3 text-xs font-bold"
+                className="fixed right-6 bottom-6 z-[110] flex items-center gap-3 rounded-xl border border-white/10 bg-[#0F172A] px-5 py-3 text-xs font-bold text-white shadow-2xl"
               >
-                <span className="w-2 h-2 rounded-full bg-[#22B6F6] animate-pulse" />
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#22B6F6]" />
                 {toastMessage}
               </motion.div>
             )}

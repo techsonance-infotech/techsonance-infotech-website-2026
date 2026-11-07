@@ -226,9 +226,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
   if (loading) {
     return (
-      <div className="py-24 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 animate-spin mx-auto text-[#1155CC]" />
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
+      <div className="space-y-3 py-24 text-center">
+        <RefreshCw className="mx-auto h-8 w-8 animate-spin text-[#1155CC]" />
+        <p className="font-mono text-xs font-bold tracking-wider text-slate-500 uppercase">
           Loading role authoring editor...
         </p>
       </div>
@@ -236,19 +236,19 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-16">
+    <div className="animate-in fade-in space-y-6 pb-16 duration-300">
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center dark:border-slate-800">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/careers/jobs"
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            className="rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight font-sora">
+              <h1 className="font-sora text-xl font-black tracking-tight text-slate-900 sm:text-2xl dark:text-white">
                 {isNew ? "Create New Role" : `Edit Role: ${jobData.title || "Untitled"}`}
               </h1>
               <Badge
@@ -257,12 +257,12 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                     ? "default"
                     : "secondary"
                 }
-                className="rounded-full text-[10px] font-mono uppercase tracking-wider font-bold"
+                className="rounded-full font-mono text-[10px] font-bold tracking-wider uppercase"
               >
                 {jobData.status || "DRAFT"}
               </Badge>
             </div>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">
+            <p className="mt-0.5 text-xs font-medium text-slate-500">
               Multi-section job authoring with live completeness audit.
             </p>
           </div>
@@ -277,9 +277,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setVersionHistoryOpen(true)}
-                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
               >
-                <History className="w-4 h-4 text-slate-500" />
+                <History className="h-4 w-4 text-slate-500" />
                 <span>History</span>
               </Button>
               <Button
@@ -288,9 +288,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                 size="sm"
                 onClick={() => handleDuplicate()}
                 disabled={duplicating || saving}
-                className="rounded-xl text-xs font-bold gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
               >
-                <Copy className="w-4 h-4 text-slate-500" />
+                <Copy className="h-4 w-4 text-slate-500" />
                 <span>{duplicating ? "Duplicating…" : "Duplicate"}</span>
               </Button>
             </>
@@ -305,9 +305,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                   setApprovalMode("return");
                   setApprovalDialogOpen(true);
                 }}
-                className="rounded-xl text-xs font-bold gap-1.5 bg-amber-600 hover:bg-amber-700 text-white cursor-pointer"
+                className="cursor-pointer gap-1.5 rounded-xl bg-amber-600 text-xs font-bold text-white hover:bg-amber-700"
               >
-                <Undo2 className="w-4 h-4" />
+                <Undo2 className="h-4 w-4" />
                 <span>Return to Draft</span>
               </Button>
               <Button
@@ -317,9 +317,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                   setApprovalMode("approve");
                   setApprovalDialogOpen(true);
                 }}
-                className="rounded-xl text-xs font-bold gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+                className="cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-700"
               >
-                <CheckCheck className="w-4 h-4" />
+                <CheckCheck className="h-4 w-4" />
                 <span>Approve Role</span>
               </Button>
             </>
@@ -330,9 +330,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
               href={`/careers/${jobData.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#1155CC] transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#1155CC] dark:border-slate-800 dark:text-slate-300"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" />
               <span>Public Page</span>
             </Link>
           )}
@@ -341,12 +341,12 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
       {/* Reviewer Feedback Warning if Returned */}
       {jobData.approvalStatus === "RETURNED" && jobData.approvalComment && (
-        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs animate-in fade-in duration-200">
-          <div className="flex items-center gap-2 font-bold mb-1">
-            <Undo2 className="w-4 h-4 text-amber-600" />
+        <div className="animate-in fade-in rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+          <div className="mb-1 flex items-center gap-2 font-bold">
+            <Undo2 className="h-4 w-4 text-amber-600" />
             <span>Reviewer Feedback (Changes Requested):</span>
           </div>
-          <p className="pl-6 text-amber-800 dark:text-amber-300 font-normal">
+          <p className="pl-6 font-normal text-amber-800 dark:text-amber-300">
             {jobData.approvalComment}
           </p>
         </div>
@@ -357,7 +357,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         <div
           role="alert"
           aria-live="assertive"
-          className={`p-4 rounded-2xl text-xs font-medium flex items-center justify-between transition-all ${
+          className={`flex items-center justify-between rounded-2xl p-4 text-xs font-medium transition-all ${
             alertMessage.type === "success"
               ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900"
               : "bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-900"
@@ -365,9 +365,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         >
           <div className="flex items-center gap-2">
             {alertMessage.type === "success" ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             )}
             <span>{alertMessage.text}</span>
           </div>
@@ -379,14 +379,14 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
                   setAlertMessage(null);
                   handleSave(jobData);
                 }}
-                className="px-2 py-0.5 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 font-bold hover:bg-rose-200 text-[11px] cursor-pointer"
+                className="cursor-pointer rounded-lg bg-rose-100 px-2 py-0.5 text-[11px] font-bold text-rose-700 hover:bg-rose-200 dark:bg-rose-900/40 dark:text-rose-300"
               >
                 Retry
               </button>
             )}
             <button
               onClick={() => setAlertMessage(null)}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 cursor-pointer"
+              className="cursor-pointer p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               aria-label="Dismiss alert"
             >
               ✕
@@ -444,7 +444,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           jobId={id}
           currentVersionId={jobData.versionId}
           onRestoreSuccess={(restoredJob) => {
-            setJobData(restoredJob);
+            setJobData(toJobFormData(restoredJob));
             setAlertMessage({
               type: "success",
               text: `Restored to version ${restoredJob.versionId}. Form updated.`,

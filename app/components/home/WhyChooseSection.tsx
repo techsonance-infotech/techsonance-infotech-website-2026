@@ -171,9 +171,9 @@ export const whyItems: WhyItem[] = [
 
 function AIBrainFlowVisual() {
   return (
-    <div className="relative w-full h-[260px] flex items-center justify-center">
+    <div className="relative flex h-[260px] w-full items-center justify-center">
       <svg
-        className="absolute inset-0 h-full w-full pointer-events-none"
+        className="pointer-events-none absolute inset-0 h-full w-full"
         viewBox="0 0 200 200"
         fill="none"
       >
@@ -210,7 +210,7 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-14 h-14 rounded-full bg-gradient-to-br from-[#1155CC] to-[#8B5CF6] text-white flex items-center justify-center shadow-lg shadow-blue-800/20 z-20"
+        className="absolute z-20 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[#1155CC] to-[#8B5CF6] text-white shadow-lg shadow-blue-800/20"
       >
         <Icon name="brain" className="h-7 w-7 text-white" />
       </motion.div>
@@ -218,10 +218,10 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ y: [0, -4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[12%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
+        className="absolute top-[12%] z-10 flex w-24 items-center justify-center gap-1.5 rounded-xl border border-blue-100 bg-[#FAFBFD] px-2.5 py-1 text-center shadow-sm"
       >
-        <Icon name="beaker" className="h-3.5 w-3.5 text-[#8B5CF6] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <Icon name="beaker" className="h-3.5 w-3.5 shrink-0 text-[#8B5CF6]" />
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           Agentic
         </span>
       </motion.div>
@@ -229,10 +229,10 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[12%] left-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-2 shadow-sm z-10 text-center justify-center"
+        className="absolute bottom-[12%] left-[8%] z-10 flex w-24 items-center justify-center gap-2 rounded-xl border border-blue-100 bg-[#FAFBFD] px-2.5 py-1 text-center shadow-sm"
       >
-        <Icon name="database" className="h-3.5 w-3.5 text-[#1155CC] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <Icon name="database" className="h-3.5 w-3.5 shrink-0 text-[#1155CC]" />
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           RAG Ops
         </span>
       </motion.div>
@@ -240,10 +240,10 @@ function AIBrainFlowVisual() {
       <motion.div
         animate={{ y: [0, 4, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[12%] right-[8%] w-24 bg-[#FAFBFD] border border-blue-100 rounded-xl py-1 px-2.5 flex items-center gap-1.5 shadow-sm z-10 text-center justify-center"
+        className="absolute right-[8%] bottom-[12%] z-10 flex w-24 items-center justify-center gap-1.5 rounded-xl border border-blue-100 bg-[#FAFBFD] px-2.5 py-1 text-center shadow-sm"
       >
-        <Icon name="shield" className="h-3.5 w-3.5 text-[#06B6D4] shrink-0" />
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <Icon name="shield" className="h-3.5 w-3.5 shrink-0 text-[#06B6D4]" />
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           Guardrail
         </span>
       </motion.div>
@@ -286,9 +286,9 @@ function Isometric3DStackVisual() {
   const zIndices = ["z-40", "z-30", "z-20", "z-10"];
 
   return (
-    <div className="relative w-full h-[260px] flex items-center justify-center [perspective:1000px]">
+    <div className="relative flex h-[260px] w-full items-center justify-center [perspective:1000px]">
       <svg
-        className="absolute inset-0 h-full w-full pointer-events-none opacity-20"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
         viewBox="0 0 200 320"
         fill="none"
       >
@@ -350,11 +350,11 @@ function Isometric3DStackVisual() {
 
 function PipelineFlowVisual() {
   return (
-    <div className="relative w-full h-[260px] flex items-center justify-center">
-      <div className="absolute top-[15%] bottom-[15%] w-[2px] bg-gradient-to-b from-blue-100 via-purple-100 to-cyan-100 left-1/2 -translate-x-1/2" />
+    <div className="relative flex h-[260px] w-full items-center justify-center">
+      <div className="absolute top-[15%] bottom-[15%] left-1/2 w-[2px] -translate-x-1/2 bg-gradient-to-b from-blue-100 via-purple-100 to-cyan-100" />
 
       <svg
-        className="absolute inset-0 h-full w-full pointer-events-none"
+        className="pointer-events-none absolute inset-0 h-full w-full"
         viewBox="0 0 200 260"
         fill="none"
       >
@@ -371,12 +371,12 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[8%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-blue-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute top-[8%] left-1/2 flex w-32 -translate-x-1/2 items-center justify-center gap-2 rounded-xl border border-blue-100 bg-[#FAFBFD] px-3 py-1.5 text-xs font-bold text-gray-800 shadow-sm"
       >
-        <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#1155CC] flex items-center justify-center shrink-0">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#1155CC]">
           <Icon name="speed" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           Rapid Dev
         </span>
       </motion.div>
@@ -384,12 +384,12 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, 3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute top-[43%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-purple-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute top-[43%] left-1/2 flex w-32 -translate-x-1/2 items-center justify-center gap-2 rounded-xl border border-purple-100 bg-[#FAFBFD] px-3 py-1.5 text-xs font-bold text-gray-800 shadow-sm"
       >
-        <span className="w-5 h-5 rounded-lg bg-purple-50 text-[#8B5CF6] flex items-center justify-center shrink-0">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-[#8B5CF6]">
           <Icon name="shield" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           QA Build
         </span>
       </motion.div>
@@ -397,12 +397,12 @@ function PipelineFlowVisual() {
       <motion.div
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute bottom-[8%] left-1/2 -translate-x-1/2 bg-[#FAFBFD] border border-cyan-100 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-sm text-xs font-bold text-gray-800 w-32 justify-center"
+        className="absolute bottom-[8%] left-1/2 flex w-32 -translate-x-1/2 items-center justify-center gap-2 rounded-xl border border-cyan-100 bg-[#FAFBFD] px-3 py-1.5 text-xs font-bold text-gray-800 shadow-sm"
       >
-        <span className="w-5 h-5 rounded-lg bg-cyan-50 text-[#06B6D4] flex items-center justify-center shrink-0">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-cyan-50 text-[#06B6D4]">
           <Icon name="cloud" className="h-3 w-3" />
         </span>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-700">
+        <span className="text-[9px] font-medium tracking-wide text-gray-700 uppercase">
           Scale Out
         </span>
       </motion.div>
@@ -412,9 +412,9 @@ function PipelineFlowVisual() {
 
 function InfiniteLifecycleVisual() {
   return (
-    <div className="relative w-full h-[260px] flex items-center justify-center">
+    <div className="relative flex h-[260px] w-full items-center justify-center">
       <svg
-        className="absolute inset-0 h-full w-full pointer-events-none"
+        className="pointer-events-none absolute inset-0 h-full w-full"
         viewBox="0 0 200 260"
         fill="none"
       >
@@ -435,41 +435,41 @@ function InfiniteLifecycleVisual() {
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-12 h-12 rounded-full bg-[#F1F5F9] border border-[#1155CC]/10 flex flex-col items-center justify-center shadow-sm z-20"
+        className="absolute z-20 flex h-12 w-12 flex-col items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] shadow-sm"
       >
         <Icon name="shield" className="h-5 w-5 text-[#1155CC]" />
       </motion.div>
 
       <div className="absolute top-[12%] left-1/2 -translate-x-1/2 text-center">
-        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
+        <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
           <Icon name="beaker" className="h-4 w-4 text-[#8B5CF6]" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Plan</span>
+        <span className="text-[9px] font-medium tracking-wide text-gray-500 uppercase">Plan</span>
       </div>
 
-      <div className="absolute right-[8%] top-[50%] -translate-y-1/2 text-center">
-        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
+      <div className="absolute top-[50%] right-[8%] -translate-y-1/2 text-center">
+        <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
           <Icon name="cloud" className="h-4 w-4 text-[#1155CC]" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">
+        <span className="text-[9px] font-medium tracking-wide text-gray-500 uppercase">
           Release
         </span>
       </div>
 
       <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 text-center">
-        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
+        <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
           <Icon name="monitor" className="h-4 w-4 text-emerald-500" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">
+        <span className="text-[9px] font-medium tracking-wide text-gray-500 uppercase">
           Optimize
         </span>
       </div>
 
-      <div className="absolute left-[8%] top-[50%] -translate-y-1/2 text-center">
-        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shadow-sm mx-auto mb-1">
+      <div className="absolute top-[50%] left-[8%] -translate-y-1/2 text-center">
+        <div className="mx-auto mb-1 flex h-8 w-8 items-center justify-center rounded-lg border border-gray-100 bg-white shadow-sm">
           <Icon name="code" className="h-4 w-4 text-[#06B6D4]" />
         </div>
-        <span className="text-[9px] font-medium uppercase tracking-wide text-gray-500">Build</span>
+        <span className="text-[9px] font-medium tracking-wide text-gray-500 uppercase">Build</span>
       </div>
     </div>
   );
@@ -504,8 +504,8 @@ function ScalableGridVisual() {
   const zIndices = ["z-30", "z-20", "z-10"];
 
   return (
-    <div className="relative w-full h-[260px] flex items-center justify-center [perspective:1000px]">
-      <div className="absolute top-[20%] bottom-[20%] w-[1.5px] bg-dashed bg-blue-100 left-1/2 -translate-x-1/2 z-0" />
+    <div className="relative flex h-[260px] w-full items-center justify-center [perspective:1000px]">
+      <div className="bg-dashed absolute top-[20%] bottom-[20%] left-1/2 z-0 w-[1.5px] -translate-x-1/2 bg-blue-100" />
 
       {nodes.map((node, idx) => {
         const isBottom = idx === nodes.length - 1;
@@ -551,9 +551,9 @@ function ScalableGridVisual() {
 
 function CollaborationRingsVisual() {
   return (
-    <div className="relative w-full max-w-[360px] h-[280px] mx-auto flex items-center justify-center font-sans">
+    <div className="relative mx-auto flex h-[280px] w-full max-w-[360px] items-center justify-center font-sans">
       <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
@@ -591,36 +591,36 @@ function CollaborationRingsVisual() {
         />
       </svg>
 
-      <div className="absolute left-[25%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
-      <div className="absolute left-[75%] top-[18%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
+      <div className="absolute top-[18%] left-[25%] z-0 -mt-[3px] -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
+      <div className="absolute top-[18%] left-[75%] z-0 -mt-[3px] -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#8B5CF6]" />
 
-      <div className="absolute left-[25%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#1155CC] z-0" />
-      <div className="absolute left-[75%] top-[45%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#8B5CF6] z-0" />
+      <div className="absolute top-[45%] left-[25%] z-0 -mt-[3px] -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
+      <div className="absolute top-[45%] left-[75%] z-0 -mt-[3px] -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#8B5CF6]" />
 
-      <div className="absolute left-[50%] top-[62%] w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-[#3B82F6] z-0" />
+      <div className="absolute top-[62%] left-[50%] z-0 -mt-[3px] -ml-[3px] h-1.5 w-1.5 rounded-full bg-[#3B82F6]" />
 
-      <div className="absolute left-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-blue-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F1F5F9] border border-blue-100 flex items-center justify-center mb-2.5 shadow-inner">
-          <Icon name="users" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
+      <div className="absolute top-[5%] left-[2%] z-10 flex w-[44%] max-w-[130px] flex-col items-center rounded-2xl border border-blue-50 bg-white/95 p-3 text-center shadow-[0_8px_20px_rgba(0,0,0,0.04)] backdrop-blur-sm transition-transform hover:-translate-y-1 sm:p-4">
+        <div className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-full border border-blue-100 bg-[#F1F5F9] shadow-inner sm:h-12 sm:w-12">
+          <Icon name="users" className="h-5 w-5 text-[#1155CC] sm:h-6 sm:w-6" />
         </div>
-        <h4 className="text-[12px] sm:text-[13px] font-bold text-[#1155CC] mb-1">Your Team</h4>
-        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">
+        <h4 className="mb-1 text-[12px] font-bold text-[#1155CC] sm:text-[13px]">Your Team</h4>
+        <p className="text-[9px] leading-snug text-gray-500 sm:text-[10px]">
           Your goals, your vision, your users
         </p>
       </div>
 
-      <div className="absolute right-[2%] top-[5%] w-[44%] max-w-[130px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-purple-50 p-3 sm:p-4 flex flex-col items-center text-center z-10 transition-transform hover:-translate-y-1">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F5F3FF] border border-purple-100 flex items-center justify-center mb-2.5 shadow-inner">
-          <Icon name="code" className="h-5 w-5 sm:h-6 sm:w-6 text-[#8B5CF6]" />
+      <div className="absolute top-[5%] right-[2%] z-10 flex w-[44%] max-w-[130px] flex-col items-center rounded-2xl border border-purple-50 bg-white/95 p-3 text-center shadow-[0_8px_20px_rgba(0,0,0,0.04)] backdrop-blur-sm transition-transform hover:-translate-y-1 sm:p-4">
+        <div className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-full border border-purple-100 bg-[#F5F3FF] shadow-inner sm:h-12 sm:w-12">
+          <Icon name="code" className="h-5 w-5 text-[#8B5CF6] sm:h-6 sm:w-6" />
         </div>
-        <h4 className="text-[12px] sm:text-[13px] font-bold text-[#8B5CF6] mb-1">Our Team</h4>
-        <p className="text-[9px] sm:text-[10px] text-gray-500 leading-snug">
+        <h4 className="mb-1 text-[12px] font-bold text-[#8B5CF6] sm:text-[13px]">Our Team</h4>
+        <p className="text-[9px] leading-snug text-gray-500 sm:text-[10px]">
           Our expertise, our commitment
         </p>
       </div>
 
-      <div className="absolute left-1/2 bottom-[5%] -translate-x-1/2 flex flex-col items-center z-10 w-[80%] max-w-[200px]">
-        <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+      <div className="absolute bottom-[5%] left-1/2 z-10 flex w-[80%] max-w-[200px] -translate-x-1/2 flex-col items-center">
+        <div className="relative flex h-[64px] w-[64px] items-center justify-center">
           <motion.div
             animate={{ scale: [1, 1.4], opacity: [0.15, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
@@ -631,18 +631,18 @@ function CollaborationRingsVisual() {
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
             className="absolute inset-[-2px] rounded-full bg-[#8B5CF6]"
           />
-          <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(17, 85, 204,0.1)] border border-blue-100 flex items-center justify-center z-10">
-            <Icon name="handshake" className="h-5 w-5 sm:h-6 sm:w-6 text-[#1155CC]" />
+          <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-white shadow-[0_4px_12px_rgba(17, 85, 204,0.1)] sm:h-14 sm:w-14">
+            <Icon name="handshake" className="h-5 w-5 text-[#1155CC] sm:h-6 sm:w-6" />
           </div>
         </div>
 
-        <div className="mt-4 sm:mt-5 flex flex-col items-center">
-          <div className="bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-blue-50 px-3 py-1.5 sm:px-4 sm:py-1.5 mb-1.5 relative z-20">
-            <span className="text-[10px] sm:text-[11px] font-bold text-[#1155CC] whitespace-nowrap">
+        <div className="mt-4 flex flex-col items-center sm:mt-5">
+          <div className="relative z-20 mb-1.5 rounded-full border border-blue-50 bg-white px-3 py-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:px-4 sm:py-1.5">
+            <span className="text-[10px] font-bold whitespace-nowrap text-[#1155CC] sm:text-[11px]">
               Shared Success
             </span>
           </div>
-          <span className="text-[9px] sm:text-[10px] text-gray-500 text-center leading-tight">
+          <span className="text-center text-[9px] leading-tight text-gray-500 sm:text-[10px]">
             Long-term impact
             <br />
             together
@@ -678,32 +678,32 @@ export default function WhyChooseSection() {
 
   return (
     <section className="relative overflow-hidden bg-[#FAFBFD] py-20">
-      <div className="pointer-events-none absolute -right-96 top-0 h-[760px] w-[760px] rounded-full bg-[#F1F5F9] blur-3xl opacity-75" />
-      <div className="pointer-events-none absolute -bottom-80 -left-80 h-[680px] w-[680px] rounded-full bg-[#EEF3FF] blur-3xl opacity-75" />
+      <div className="pointer-events-none absolute top-0 -right-96 h-[760px] w-[760px] rounded-full bg-[#F1F5F9] opacity-75 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-80 -left-80 h-[680px] w-[680px] rounded-full bg-[#EEF3FF] opacity-75 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5 text-xs font-bold text-[#1155CC] tracking-wide uppercase">
+        <div className="mx-auto mb-16 max-w-3xl space-y-4 text-center">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#1155CC]/15 bg-[#F1F5F9] px-4 py-1.5 text-xs font-bold tracking-wide text-[#1155CC] uppercase">
             <Icon name="trend" className="h-3.5 w-3.5" />
             Why Choose Us
           </div>
-          <h2 className="text-3xl lg:text-5xl font-medium text-gray-900 leading-tight">
+          <h2 className="text-3xl leading-tight font-medium text-gray-900 lg:text-5xl">
             Built Different. <span className="text-[#1155CC]">Built for Impact.</span>
           </h2>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-lg leading-relaxed text-gray-600">
             We don&apos;t just write code - we engineer intelligent systems that solve real problems
             and drive measurable growth.
           </p>
         </div>
 
         {/* Desktop Layout: Side-by-side tabs */}
-        <div className="hidden lg:grid grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="hidden grid-cols-12 items-start gap-8 lg:grid lg:gap-12">
           <WhyChooseNav activeIndex={activeIndex} onActivate={setActiveIndex} />
           {active && <WhyChoosePanel item={active} index={activeIndex >= 0 ? activeIndex : 0} />}
         </div>
 
         {/* Mobile/Tablet Layout: Clean Expandable Accordion */}
-        <div className="block lg:hidden space-y-4">
+        <div className="block space-y-4 lg:hidden">
           {whyItems.map((item, index) => {
             const isOpen = index === activeIndex;
             return (
@@ -730,10 +730,10 @@ export default function WhyChooseSection() {
                       }, 120);
                     }
                   }}
-                  className="w-full flex items-center justify-between p-5 text-left"
+                  className="flex w-full items-center justify-between p-5 text-left"
                 >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <span className="text-xs font-mono font-bold text-[#1155CC] shrink-0">
+                  <div className="flex min-w-0 items-center gap-4">
+                    <span className="shrink-0 font-mono text-xs font-bold text-[#1155CC]">
                       {item.number}
                     </span>
                     <span
@@ -744,7 +744,7 @@ export default function WhyChooseSection() {
                     >
                       <Icon name={item.icon} className="h-4.5 w-4.5" />
                     </span>
-                    <span className="font-bold text-gray-900 text-base min-w-0 truncate">
+                    <span className="min-w-0 truncate text-base font-bold text-gray-900">
                       {item.title}
                     </span>
                   </div>
@@ -766,16 +766,16 @@ export default function WhyChooseSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                     >
-                      <div className="px-5 pb-5 pt-1 border-t border-gray-50 space-y-4">
-                        <p className="text-sm text-gray-600 leading-relaxed">{item.body}</p>
+                      <div className="space-y-4 border-t border-gray-50 px-5 pt-1 pb-5">
+                        <p className="text-sm leading-relaxed text-gray-600">{item.body}</p>
 
-                        <ul className="divide-y divide-gray-100 space-y-0">
+                        <ul className="space-y-0 divide-y divide-gray-100">
                           {item.bullets.map((bullet) => (
                             <li
                               key={bullet}
-                              className="flex items-start gap-2.5 text-xs text-gray-700 font-medium py-2.5 first:pt-0 last:pb-0"
+                              className="flex items-start gap-2.5 py-2.5 text-xs font-medium text-gray-700 first:pt-0 last:pb-0"
                             >
-                              <span className="w-4.5 h-4.5 rounded-full border border-blue-100 bg-blue-50/50 text-[#1155CC] flex items-center justify-center shrink-0 p-0.5 mt-0.5">
+                              <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full border border-blue-100 bg-blue-50/50 p-0.5 text-[#1155CC]">
                                 <Icon name="check" className="h-2.5 w-2.5" />
                               </span>
                               <span className="leading-relaxed">{bullet}</span>
@@ -783,20 +783,20 @@ export default function WhyChooseSection() {
                           ))}
                         </ul>
 
-                        <div className="flex w-full items-center gap-3 rounded-xl bg-[#F4F9FF] border border-blue-100/50 p-3.5 text-left mt-4 shadow-[0_4px_12px_rgba(17, 85, 204,0.01)]">
-                          <span className="text-2xl font-serif text-[#1155CC] font-black leading-none select-none mt-1">
+                        <div className="mt-4 flex w-full items-center gap-3 rounded-xl border border-blue-100/50 bg-[#F4F9FF] p-3.5 text-left shadow-[0_4px_12px_rgba(17, 85, 204,0.01)]">
+                          <span className="mt-1 font-serif text-2xl leading-none font-black text-[#1155CC] select-none">
                             &ldquo;
                           </span>
-                          <div className="w-[1.2px] h-6 bg-blue-200/50 shrink-0" />
-                          <p className="text-xs italic font-semibold text-gray-600 leading-normal">
+                          <div className="h-6 w-[1.2px] shrink-0 bg-blue-200/50" />
+                          <p className="text-xs leading-normal font-semibold text-gray-600 italic">
                             {item.callout}
                           </p>
                         </div>
 
-                        <div className="relative mt-4 w-full h-[280px] flex items-center justify-center bg-gradient-to-br from-blue-50/10 via-indigo-50/5 to-transparent rounded-2xl p-3">
-                          <div className="absolute inset-0 opacity-[0.1] bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none rounded-2xl" />
+                        <div className="relative mt-4 flex h-[280px] w-full items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50/10 via-indigo-50/5 to-transparent p-3">
+                          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.1]" />
 
-                          <div className="relative w-full h-full bg-white rounded-xl border border-gray-100 shadow-md p-3 flex items-center justify-center overflow-hidden z-10">
+                          <div className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-white p-3 shadow-md">
                             <WhyChooseVisualizer index={index} />
                           </div>
                         </div>
@@ -821,8 +821,8 @@ function WhyChooseNav({
   onActivate: (index: number) => void;
 }) {
   return (
-    <nav className="relative lg:col-span-5 flex flex-col gap-4 pl-10">
-      <div className="absolute left-[16px] top-6 hidden h-[calc(100%-48px)] w-[1.5px] bg-gray-200 lg:block" />
+    <nav className="relative flex flex-col gap-4 pl-10 lg:col-span-5">
+      <div className="absolute top-6 left-[16px] hidden h-[calc(100%-48px)] w-[1.5px] bg-gray-200 lg:block" />
       <div className="flex snap-x gap-3 overflow-x-auto pb-3 lg:flex-col lg:gap-4 lg:overflow-visible lg:pb-0">
         {whyItems.map((item, index) => {
           const active = index === activeIndex;
@@ -842,10 +842,10 @@ function WhyChooseNav({
                   : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md",
               ].join(" ")}
             >
-              <div className="absolute left-[-24px] -translate-x-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none lg:flex hidden z-10">
+              <div className="pointer-events-none absolute top-1/2 left-[-24px] z-10 flex hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center lg:flex">
                 {active ? (
                   <div className="relative flex items-center justify-center">
-                    <div className="h-2.5 w-2.5 rounded-full bg-[#1155CC] border-2 border-white shadow-sm" />
+                    <div className="h-2.5 w-2.5 rounded-full border-2 border-white bg-[#1155CC] shadow-sm" />
                     <div className="absolute left-[6px] h-[1.5px] w-5 bg-[#1155CC]" />
                   </div>
                 ) : (
@@ -872,7 +872,7 @@ function WhyChooseNav({
                 >
                   {item.title}
                 </span>
-                <span className="mt-1 block text-[11px] text-gray-500 font-medium leading-normal">
+                <span className="mt-1 block text-[11px] leading-normal font-medium text-gray-500">
                   {item.description}
                 </span>
               </span>
@@ -894,9 +894,9 @@ function WhyChooseNav({
 
 function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
   return (
-    <div className="lg:col-span-7 bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 sm:p-8 lg:p-10 relative overflow-hidden flex flex-col w-full">
-      <div className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-blue-50/40 pointer-events-none" />
-      <div className="absolute -bottom-12 -left-16 h-40 w-40 rounded-full bg-blue-50/40 pointer-events-none" />
+    <div className="relative flex w-full flex-col overflow-hidden rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm sm:p-8 lg:col-span-7 lg:p-10">
+      <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-blue-50/40" />
+      <div className="pointer-events-none absolute -bottom-12 -left-16 h-40 w-40 rounded-full bg-blue-50/40" />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -905,35 +905,35 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="relative z-10 flex flex-col w-full gap-6"
+          className="relative z-10 flex w-full flex-col gap-6"
         >
-          <div className="w-full flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pb-5 border-b border-gray-100">
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#1155CC] to-[#22B6F6] flex items-center justify-center text-white shadow-md shadow-blue-800/20">
+          <div className="flex w-full flex-col gap-3 border-b border-gray-100 pb-5 sm:flex-row sm:items-center sm:gap-4">
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#1155CC] to-[#22B6F6] text-white shadow-md shadow-blue-800/20">
                 <Icon name={item.icon} className="h-5 w-5" />
               </div>
-              <span className="text-xs font-black text-[#1155CC] bg-[#F1F5F9] border border-[#1155CC]/10 rounded-lg px-3 py-1 font-mono tracking-wider">
+              <span className="rounded-lg border border-[#1155CC]/10 bg-[#F1F5F9] px-3 py-1 font-mono text-xs font-black tracking-wider text-[#1155CC]">
                 {item.number}
               </span>
             </div>
-            <h3 className="text-[22px] sm:text-[26px] lg:text-[30px] font-medium text-[#0B1221] leading-tight tracking-tight">
+            <h3 className="text-[22px] leading-tight font-medium tracking-tight text-[#0B1221] sm:text-[26px] lg:text-[30px]">
               {item.title}
             </h3>
           </div>
 
-          <p className="text-[15px] sm:text-[16px] text-[#4B5563] leading-relaxed border-l-2 border-[#1155CC]/25 pl-4">
+          <p className="border-l-2 border-[#1155CC]/25 pl-4 text-[15px] leading-relaxed text-[#4B5563] sm:text-[16px]">
             {item.body}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-5">
               <ul className="flex flex-col gap-2.5">
                 {item.bullets.map((bullet) => (
                   <li
                     key={bullet}
-                    className="flex items-start gap-3 text-[13.5px] text-[#374151] font-medium bg-gray-50/60 rounded-xl px-3.5 py-2.5 border border-gray-100/80 hover:bg-white hover:border-blue-100 hover:shadow-sm transition-all"
+                    className="flex items-start gap-3 rounded-xl border border-gray-100/80 bg-gray-50/60 px-3.5 py-2.5 text-[13.5px] font-medium text-[#374151] transition-all hover:border-blue-100 hover:bg-white hover:shadow-sm"
                   >
-                    <span className="w-5 h-5 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F1F5F9] text-[#1155CC]">
                       <Icon name="check" className="h-3 w-3" />
                     </span>
                     <span className="leading-relaxed">{bullet}</span>
@@ -941,19 +941,19 @@ function WhyChoosePanel({ item, index }: { item: WhyItem; index: number }) {
                 ))}
               </ul>
 
-              <div className="flex items-start gap-3 rounded-xl bg-gradient-to-r from-blue-50/70 to-transparent border border-blue-100/30 px-4 py-3">
-                <span className="text-xl font-serif text-[#1155CC] font-black leading-none select-none opacity-60 mt-0.5">
+              <div className="flex items-start gap-3 rounded-xl border border-blue-100/30 bg-gradient-to-r from-blue-50/70 to-transparent px-4 py-3">
+                <span className="mt-0.5 font-serif text-xl leading-none font-black text-[#1155CC] opacity-60 select-none">
                   &ldquo;
                 </span>
-                <p className="text-[12.5px] italic font-medium text-gray-600 leading-relaxed">
+                <p className="text-[12.5px] leading-relaxed font-medium text-gray-600 italic">
                   {item.callout}
                 </p>
               </div>
             </div>
 
-            <div className="relative w-full h-[280px] sm:h-[320px] flex items-center justify-center select-none bg-[#F8FAFE] rounded-2xl p-3 border border-gray-100/80">
-              <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none rounded-2xl" />
-              <div className="relative w-full h-full bg-white rounded-xl border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.04)] flex items-center justify-center overflow-hidden z-10">
+            <div className="relative flex h-[280px] w-full items-center justify-center rounded-2xl border border-gray-100/80 bg-[#F8FAFE] p-3 select-none sm:h-[320px]">
+              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(#1155CC_1px,transparent_1px)] [background-size:18px_18px] opacity-[0.18]" />
+              <div className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-xl border border-gray-100/50 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
                 <WhyChooseVisualizer index={index} />
               </div>
             </div>

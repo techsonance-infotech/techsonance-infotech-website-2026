@@ -259,28 +259,28 @@ export default function ChatWidget() {
   return (
     <>
       {/* ── Floating Launcher Button ────────────────────────────────────────── */}
-      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2.5">
+      <div className="fixed right-5 bottom-5 z-50 flex flex-col items-end gap-2.5">
         {/* Proactive Idle Nudge Bubble */}
         {showProactiveNudge && !isOpen && (
-          <div className="bg-white border border-slate-200 text-slate-800 text-xs p-3.5 rounded-2xl shadow-xl max-w-[280px] animate-fade-in relative">
+          <div className="animate-fade-in relative max-w-[280px] rounded-2xl border border-slate-200 bg-white p-3.5 text-xs text-slate-800 shadow-xl">
             <button
               onClick={() => setShowProactiveNudge(false)}
-              className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer"
+              className="absolute top-2 right-2 cursor-pointer p-0.5 text-slate-400 hover:text-slate-600"
               aria-label="Close notification"
             >
-              <X className="w-3 h-3" />
+              <X className="h-3 w-3" />
             </button>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
               <span className="font-semibold text-slate-900">Sonance AI from TechSonance</span>
             </div>
-            <p className="text-slate-600 leading-relaxed mb-2.5">
+            <p className="mb-2.5 leading-relaxed text-slate-600">
               Have a software project in mind? I can give you a quick estimate or schedule a free
               call with our team!
             </p>
             <button
               onClick={handleOpenWidget}
-              className="w-full py-1.5 px-3 bg-[#1155CC] text-white rounded-lg font-medium text-[11px] hover:bg-[#0D47A1] transition-colors cursor-pointer"
+              className="w-full cursor-pointer rounded-lg bg-[#1155CC] px-3 py-1.5 text-[11px] font-medium text-white transition-colors hover:bg-[#0D47A1]"
             >
               Chat with Sonance AI
             </button>
@@ -292,48 +292,47 @@ export default function ChatWidget() {
             ref={triggerButtonRef}
             onClick={handleOpenWidget}
             aria-label="Open TechSonance Assistant"
-            className="group relative flex items-center gap-2.5 px-4 py-3.5 bg-gradient-to-r from-[#0F52BA] via-[#1155CC] to-[#008BD9] text-white rounded-full shadow-[0_8px_30px_rgba(17,85,204,0.35)] hover:shadow-[0_10px_40px_rgba(17,85,204,0.5)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1155CC] focus:ring-offset-2"
+            className="group relative flex cursor-pointer items-center gap-2.5 rounded-full bg-gradient-to-r from-[#0F52BA] via-[#1155CC] to-[#008BD9] px-4 py-3.5 text-white shadow-[0_8px_30px_rgba(17,85,204,0.35)] transition-all duration-300 hover:scale-105 hover:shadow-[0_10px_40px_rgba(17,85,204,0.5)] focus:ring-2 focus:ring-[#1155CC] focus:ring-offset-2 focus:outline-none active:scale-95"
           >
             <div className="relative">
-              <MessageSquare className="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#1155CC] rounded-full animate-pulse" />
+              <MessageSquare className="h-5 w-5 transition-transform duration-300 group-hover:rotate-6" />
+              <span className="absolute -top-1 -right-1 h-2.5 w-2.5 animate-pulse rounded-full border-2 border-[#1155CC] bg-emerald-400" />
             </div>
-            <span className="text-xs font-semibold tracking-wide pr-0.5">Chat with Sonance AI</span>
+            <span className="pr-0.5 text-xs font-semibold tracking-wide">Chat with Sonance AI</span>
           </button>
         )}
       </div>
 
       {/* ── Chat Modal Panel ────────────────────────────────────────────────── */}
       {isOpen && (
-        <div
+        <section
           ref={panelRef}
-          role="region"
           aria-label="TechSonance AI Assistant"
           data-lenis-prevent
           data-lenis-prevent-wheel
           data-lenis-prevent-touch
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
-          className="fixed bottom-0 right-0 sm:bottom-5 sm:right-5 z-50 w-full h-[100dvh] sm:h-[620px] sm:w-[390px] sm:max-w-[calc(100vw-32px)] bg-[#FAFBFD] sm:rounded-3xl border border-slate-200/80 shadow-[0_20px_60px_rgba(0,0,0,0.18)] flex flex-col overflow-hidden overscroll-contain animate-fade-in"
+          className="animate-fade-in fixed right-0 bottom-0 z-50 flex h-[100dvh] w-full flex-col overflow-hidden overscroll-contain border border-slate-200/80 bg-[#FAFBFD] shadow-[0_20px_60px_rgba(0,0,0,0.18)] sm:right-5 sm:bottom-5 sm:h-[620px] sm:w-[390px] sm:max-w-[calc(100vw-32px)] sm:rounded-3xl"
         >
           {/* Header */}
-          <div className="px-4 py-3.5 bg-gradient-to-r from-[#0F52BA] via-[#1155CC] to-[#008BD9] text-white flex items-center justify-between shrink-0 shadow-xs">
+          <div className="flex shrink-0 items-center justify-between bg-linear-to-r from-[#0F52BA] via-[#1155CC] to-[#008BD9] px-4 py-3.5 text-white shadow-xs">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-xs border border-white/25 flex items-center justify-center font-bold text-sm">
-                  <Sparkles className="w-4 h-4 text-amber-300" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/15 text-sm font-bold backdrop-blur-xs">
+                  <Sparkles className="h-4 w-4 text-amber-300" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#1155CC] rounded-full" />
+                <span className="absolute right-0 bottom-0 h-2.5 w-2.5 rounded-full border-2 border-[#1155CC] bg-emerald-400" />
               </div>
 
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-semibold text-sm leading-tight tracking-tight">Sonance AI</h3>
-                  <span className="text-[10px] px-1.5 py-0.5 bg-white/20 rounded-full font-medium">
+                  <h3 className="text-sm leading-tight font-semibold tracking-tight">Sonance AI</h3>
+                  <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-medium">
                     AI Assistant
                   </span>
                 </div>
-                <p className="text-[11px] text-white/80 leading-tight">TechSonance Infotech LLP</p>
+                <p className="text-[11px] leading-tight text-white/80">TechSonance Infotech LLP</p>
               </div>
             </div>
 
@@ -341,18 +340,18 @@ export default function ChatWidget() {
               <button
                 onClick={() => handleSendMessage("I'd like to book a consultation call")}
                 aria-label="Book Consultation"
-                className="px-2.5 py-1 bg-white/15 hover:bg-white/25 text-white rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 cursor-pointer"
+                className="flex cursor-pointer items-center gap-1 rounded-lg bg-white/15 px-2.5 py-1 text-[11px] font-medium text-white transition-colors hover:bg-white/25"
               >
-                <Calendar className="w-3 h-3 text-amber-300" />
+                <Calendar className="h-3 w-3 text-amber-300" />
                 <span>Book Call</span>
               </button>
 
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Close Chat"
-                className="p-1.5 rounded-full hover:bg-white/20 text-white/90 hover:text-white transition-colors cursor-pointer"
+                className="cursor-pointer rounded-full p-1.5 text-white/90 transition-colors hover:bg-white/20 hover:text-white"
               >
-                <X className="w-4 h-4" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -379,7 +378,7 @@ export default function ChatWidget() {
 
           {/* Privacy Note & Clear Chat */}
           <PrivacyNote onClear={handleClearChat} />
-        </div>
+        </section>
       )}
     </>
   );

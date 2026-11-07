@@ -6,12 +6,12 @@ interface MetricsStripProps {
 
 export default function MetricsStrip({ metrics }: MetricsStripProps) {
   return (
-    <section className="bg-[#F4F4F5] border-y border-[var(--border)]">
+    <section className="border-y border-[var(--border)] bg-[#F4F4F5]">
       <div className="service-container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--border-strong)]">
+        <div className="grid grid-cols-1 divide-y divide-[var(--border-strong)] md:grid-cols-3 md:divide-x md:divide-y-0">
           {metrics.map((metric, i) => (
-            <div key={i} className="text-center py-6 md:py-0 md:px-8 first:md:pl-0 last:md:pr-0">
-              <div className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-1">
+            <div key={i} className="py-6 text-center md:px-8 md:py-0 first:md:pl-0 last:md:pr-0">
+              <div className="mb-1 text-3xl font-bold text-[var(--text-primary)] md:text-4xl">
                 {metric.value}
               </div>
               <div className="text-[14px] text-[var(--text-secondary)]">{metric.label}</div>

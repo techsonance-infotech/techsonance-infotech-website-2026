@@ -88,14 +88,14 @@ export default function AdminBlogListPage() {
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="animate-in fade-in space-y-6 duration-300">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             Blog Articles
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
             Create, edit, and publish engineering articles and technical insights.
           </p>
         </div>
@@ -104,9 +104,9 @@ export default function AdminBlogListPage() {
           <Button
             variant="default"
             size="sm"
-            className="rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-md shadow-[#1155CC]/20 font-bold text-xs"
+            className="rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-md shadow-[#1155CC]/20 hover:bg-[#0d44a4]"
           >
-            <Plus className="w-4 h-4 mr-1.5" />
+            <Plus className="mr-1.5 h-4 w-4" />
             <span>Create Article</span>
           </Button>
         </Link>
@@ -114,15 +114,15 @@ export default function AdminBlogListPage() {
 
       {/* Filter Tabs & Search Bar */}
       <Card>
-        <CardContent className="p-4 sm:p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <CardContent className="space-y-4 p-4 sm:p-6">
+          <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
             {/* Tab Pills */}
-            <div className="flex items-center gap-1.5 p-1 bg-slate-100/80 rounded-xl overflow-x-auto">
+            <div className="flex items-center gap-1.5 overflow-x-auto rounded-xl bg-slate-100/80 p-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
                     activeTab === tab.value
                       ? "bg-white text-slate-900 shadow-2xs"
                       : "text-slate-500 hover:text-slate-800"
@@ -135,12 +135,12 @@ export default function AdminBlogListPage() {
 
             {/* Search Box */}
             <div className="relative w-full sm:w-72">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
                 placeholder="Search articles by title..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 h-9 text-xs rounded-xl"
+                className="h-9 rounded-xl pl-9 text-xs"
               />
             </div>
           </div>
@@ -148,21 +148,21 @@ export default function AdminBlogListPage() {
           {/* Posts Table */}
           <div className="overflow-x-auto rounded-xl border border-slate-100">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-100">
+              <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                 <tr>
-                  <th className="py-3 px-4">Article</th>
-                  <th className="py-3 px-4">Slug</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Read Time</th>
-                  <th className="py-3 px-4">Last Updated</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="px-4 py-3">Article</th>
+                  <th className="px-4 py-3">Slug</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Read Time</th>
+                  <th className="px-4 py-3">Last Updated</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="py-12 text-center text-slate-400">
-                      <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#1155CC]" />
+                      <RefreshCw className="mx-auto mb-2 h-5 w-5 animate-spin text-[#1155CC]" />
                       <span>Loading articles...</span>
                     </td>
                   </tr>
@@ -174,24 +174,24 @@ export default function AdminBlogListPage() {
                   </tr>
                 ) : (
                   posts.map((post) => (
-                    <tr key={post.id} className="hover:bg-slate-50/80 transition-colors group">
-                      <td className="py-3.5 px-4 max-w-sm">
+                    <tr key={post.id} className="group transition-colors hover:bg-slate-50/80">
+                      <td className="max-w-sm px-4 py-3.5">
                         <Link
                           href={`/admin/blog/${post.id}`}
-                          className="font-bold text-slate-900 hover:text-[#1155CC] transition-colors block line-clamp-1"
+                          className="line-clamp-1 block font-bold text-slate-900 transition-colors hover:text-[#1155CC]"
                         >
                           {post.title}
                         </Link>
                         {post.excerpt && (
-                          <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
+                          <p className="mt-0.5 line-clamp-1 text-[11px] text-slate-400">
                             {post.excerpt}
                           </p>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500">
+                      <td className="px-4 py-3.5 font-mono text-[11px] text-slate-500">
                         /{post.slug}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="px-4 py-3.5">
                         <Badge
                           variant={
                             post.status === "PUBLISHED"
@@ -205,13 +205,13 @@ export default function AdminBlogListPage() {
                           {post.status}
                         </Badge>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-500 font-medium">
+                      <td className="px-4 py-3.5 font-medium text-slate-500">
                         {post.readTime || "5 min read"}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-500 font-medium">
+                      <td className="px-4 py-3.5 font-medium text-slate-500">
                         {new Date(post.updatedAt).toLocaleDateString()}
                       </td>
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="px-4 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           {post.status === "DRAFT" && (
                             <Button
@@ -219,7 +219,7 @@ export default function AdminBlogListPage() {
                               size="sm"
                               disabled={actionLoadingId === post.id}
                               onClick={() => handleSubmitForReview(post.id)}
-                              className="h-7 px-2 text-[11px] font-bold text-amber-600 hover:bg-amber-50 rounded-lg"
+                              className="h-7 rounded-lg px-2 text-[11px] font-bold text-amber-600 hover:bg-amber-50"
                               title="Submit for editorial review"
                             >
                               Submit
@@ -231,29 +231,29 @@ export default function AdminBlogListPage() {
                               size="sm"
                               disabled={actionLoadingId === post.id}
                               onClick={() => handlePublish(post.id)}
-                              className="h-7 px-2 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg"
+                              className="h-7 rounded-lg px-2 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50"
                             >
                               Publish
                             </Button>
                           )}
                           <Link href={`/admin/blog/${post.id}`}>
-                            <button className="p-1.5 text-slate-400 hover:text-[#1155CC] rounded-lg hover:bg-slate-100 transition-colors">
-                              <Edit className="w-3.5 h-3.5" />
+                            <button className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-[#1155CC]">
+                              <Edit className="h-3.5 w-3.5" />
                             </button>
                           </Link>
                           {post.status === "PUBLISHED" && (
                             <Link href={`/blog/${post.slug}`} target="_blank">
-                              <button className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors">
-                                <ExternalLink className="w-3.5 h-3.5" />
+                              <button className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-800">
+                                <ExternalLink className="h-3.5 w-3.5" />
                               </button>
                             </Link>
                           )}
                           <button
                             disabled={actionLoadingId === post.id}
                             onClick={() => handleDelete(post.id, post.title)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                            className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </td>

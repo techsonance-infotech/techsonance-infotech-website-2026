@@ -292,38 +292,38 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
     <section className="service-section bg-[var(--bg-subtle)] py-20 md:py-24">
       <div className="service-container">
         {/* Subtitle / Category Label */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-6 h-[1.5px] bg-[#22B6F6]" />
-          <span className="text-[10px] font-black uppercase text-[#1155CC] tracking-widest">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="h-[1.5px] w-6 bg-[#22B6F6]" />
+          <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
             Industry Reality
           </span>
         </div>
 
         {/* Header Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+        <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h2
-              className="text-[var(--text-primary)] font-medium tracking-tight"
+              className="font-medium tracking-tight text-[var(--text-primary)]"
               style={{ fontSize: "var(--text-section-title)", lineHeight: 1.1 }}
             >
               What most {service.problemHeadline} get <span className="text-[#1155CC]">wrong</span>
             </h2>
           </div>
           <div className="lg:col-span-4 lg:text-right">
-            <p className="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed max-w-sm lg:ml-auto">
+            <p className="max-w-sm text-xs leading-relaxed font-medium text-slate-500 sm:text-sm lg:ml-auto">
               {content.headerRightText}
             </p>
           </div>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
           {content.cards.map((card, idx) => {
             const isHighlighted = idx === 1;
             return (
               <div
                 key={idx}
-                className={`bg-white rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 relative flex flex-col justify-between transition-all duration-300 ${
+                className={`relative flex flex-col justify-between rounded-2xl bg-white p-5 transition-all duration-300 sm:p-6 md:rounded-3xl md:p-8 ${
                   isHighlighted
                     ? "border-2 border-[#22B6F6]/40 shadow-[0_10px_50px_rgba(34, 182, 246,0.06)] hover:shadow-[0_12px_55px_rgba(34, 182, 246,0.1)]"
                     : "border border-slate-100/80 shadow-[0_4px_30px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_40px_rgba(17, 85, 204,0.03)]"
@@ -331,39 +331,39 @@ export default function ProblemStatement({ service }: ProblemStatementProps) {
               >
                 <div>
                   {/* Top row with Icon and Number/Badge */}
-                  <div className="flex justify-between items-center mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50/70 flex items-center justify-center text-[var(--accent-blue)] select-none">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50/70 text-[var(--accent-blue)] select-none">
                       <EmojiOrLucideIcon
                         icon={card.icon}
-                        className="w-5 h-5 text-[var(--accent-blue)]"
+                        className="h-5 w-5 text-[var(--accent-blue)]"
                       />
                     </div>
-                    <div className="flex items-center gap-2 relative">
-                      <span className="text-[40px] sm:text-[52px] font-black text-slate-100 select-none leading-[0.8] tracking-tighter">
+                    <div className="relative flex items-center gap-2">
+                      <span className="text-[40px] leading-[0.8] font-black tracking-tighter text-slate-100 select-none sm:text-[52px]">
                         {card.number}
                       </span>
-                      <span className="absolute right-0 -bottom-1 text-[8px] font-black uppercase text-[#EF4444] bg-[#EF4444]/10 rounded-full px-2.5 py-1 tracking-wider whitespace-nowrap">
+                      <span className="absolute right-0 -bottom-1 rounded-full bg-[#EF4444]/10 px-2.5 py-1 text-[8px] font-black tracking-wider whitespace-nowrap text-[#EF4444] uppercase">
                         {card.badge}
                       </span>
                     </div>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-[15px] font-medium text-[var(--text-primary)] leading-snug mb-4">
+                  <h3 className="mb-4 text-[15px] leading-snug font-medium text-[var(--text-primary)]">
                     {card.title}
                   </h3>
 
                   {/* Blockquote Quote */}
-                  <div className="border-l-2 border-slate-200 pl-4 mb-6">
-                    <p className="text-[13px] text-slate-500 leading-relaxed italic">
+                  <div className="mb-6 border-l-2 border-slate-200 pl-4">
+                    <p className="text-[13px] leading-relaxed text-slate-500 italic">
                       &ldquo;{card.quote}&rdquo;
                     </p>
                   </div>
                 </div>
 
                 {/* Resolution footer */}
-                <div className="flex items-start gap-2 text-[12px] text-green-600 font-semibold mt-auto pt-4 border-t border-slate-50">
-                  <span className="text-green-500 shrink-0 text-sm leading-none">✓</span>
+                <div className="mt-auto flex items-start gap-2 border-t border-slate-50 pt-4 text-[12px] font-semibold text-green-600">
+                  <span className="shrink-0 text-sm leading-none text-green-500">✓</span>
                   <span className="leading-tight">{card.resolution}</span>
                 </div>
               </div>

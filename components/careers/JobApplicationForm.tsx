@@ -169,12 +169,12 @@ export function JobApplicationForm({
   // 1. Success State
   if (submittedRef) {
     return (
-      <div className="p-8 text-center rounded-2xl border border-emerald-200 bg-emerald-50/50 dark:bg-emerald-950/20 dark:border-emerald-800">
-        <CheckCircle2 className="w-12 h-12 text-emerald-600 dark:text-emerald-400 mx-auto mb-3" />
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-8 text-center dark:border-emerald-800 dark:bg-emerald-950/20">
+        <CheckCircle2 className="mx-auto mb-3 h-12 w-12 text-emerald-600 dark:text-emerald-400" />
         <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
           Application Submitted!
         </h3>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-md mx-auto">
+        <p className="mx-auto mt-1 max-w-md text-sm text-zinc-600 dark:text-zinc-400">
           Thank you for applying for the <strong>{jobTitle}</strong> position. Your reference code
           is{" "}
           <code className="font-mono font-semibold text-emerald-700 dark:text-emerald-300">
@@ -201,19 +201,19 @@ export function JobApplicationForm({
       {apiError && (
         <div
           role="alert"
-          className="p-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/20 text-sm text-red-700 flex items-start gap-2.5"
+          className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:bg-red-950/20"
         >
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-600" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
           <span>{apiError}</span>
         </div>
       )}
 
       {/* Candidate Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label
             htmlFor="apply-candidateName"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             Full Name <span className="text-red-500">*</span>
           </label>
@@ -222,17 +222,17 @@ export function JobApplicationForm({
             type="text"
             {...register("candidateName", { required: "Full name is required" })}
             placeholder="Jane Doe"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
           {errors.candidateName && (
-            <p className="text-xs text-red-500 mt-1">{errors.candidateName.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.candidateName.message}</p>
           )}
         </div>
 
         <div>
           <label
             htmlFor="apply-email"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             Email Address <span className="text-red-500">*</span>
           </label>
@@ -247,17 +247,17 @@ export function JobApplicationForm({
               },
             })}
             placeholder="jane@example.com"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
-          {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
+          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label
             htmlFor="apply-phone"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             Phone Number
           </label>
@@ -266,14 +266,14 @@ export function JobApplicationForm({
             type="tel"
             {...register("phone")}
             placeholder="+91 98765 43210"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
 
         <div>
           <label
             htmlFor="apply-location"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             Current Location
           </label>
@@ -282,17 +282,17 @@ export function JobApplicationForm({
             type="text"
             {...register("currentLocation")}
             placeholder="e.g. Bhubaneswar, India"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
       </div>
 
       {/* Online Profiles */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div>
           <label
             htmlFor="apply-portfolio"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             Portfolio / Website URL
           </label>
@@ -301,13 +301,13 @@ export function JobApplicationForm({
             type="url"
             {...register("portfolioUrl")}
             placeholder="https://janedoe.dev"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
         <div>
           <label
             htmlFor="apply-github"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             GitHub URL
           </label>
@@ -316,13 +316,13 @@ export function JobApplicationForm({
             type="url"
             {...register("githubUrl")}
             placeholder="https://github.com/janedoe"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
         <div>
           <label
             htmlFor="apply-linkedin"
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
           >
             LinkedIn URL
           </label>
@@ -331,7 +331,7 @@ export function JobApplicationForm({
             type="url"
             {...register("linkedinUrl")}
             placeholder="https://linkedin.com/in/janedoe"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
       </div>
@@ -340,7 +340,7 @@ export function JobApplicationForm({
       <div>
         <label
           htmlFor="apply-resume"
-          className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+          className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
         >
           Resume Document (PDF or DOCX, max 5MB) <span className="text-red-500">*</span>
         </label>
@@ -351,23 +351,23 @@ export function JobApplicationForm({
             type="file"
             accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             onChange={handleFileChange}
-            className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-zinc-800 dark:file:text-zinc-200"
+            className="text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-zinc-800 dark:file:text-zinc-200"
           />
         </div>
         {resumeFile && (
-          <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
-            <Upload className="w-3.5 h-3.5" /> Selected: {resumeFile.name} (
+          <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+            <Upload className="h-3.5 w-3.5" /> Selected: {resumeFile.name} (
             {(resumeFile.size / 1024).toFixed(0)} KB)
           </p>
         )}
-        {fileError && <p className="text-xs text-red-500 mt-1 font-medium">{fileError}</p>}
+        {fileError && <p className="mt-1 text-xs font-medium text-red-500">{fileError}</p>}
       </div>
 
       {/* Cover Letter */}
       <div>
         <label
           htmlFor="apply-coverletter"
-          className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1"
+          className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
         >
           Cover Letter or Note to Hiring Team (Optional)
         </label>
@@ -376,14 +376,14 @@ export function JobApplicationForm({
           rows={3}
           {...register("coverLetter")}
           placeholder="Briefly introduce your engineering philosophy, passion projects, or what excites you about this role..."
-          className="w-full px-3 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
         />
       </div>
 
       {/* Screening Questions (if any) */}
       {screeningQuestions.length > 0 && (
-        <div className="space-y-4 pt-2 border-t border-zinc-200 dark:border-zinc-800">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+        <div className="space-y-4 border-t border-zinc-200 pt-2 dark:border-zinc-800">
+          <h4 className="text-xs font-bold tracking-wider text-zinc-500 uppercase">
             Role-Specific Screening Questions
           </h4>
           {screeningQuestions.map((sq) => (
@@ -393,7 +393,7 @@ export function JobApplicationForm({
               </label>
               {sq.type === "boolean" ? (
                 <div className="flex gap-4">
-                  <label className="inline-flex items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300">
                     <input
                       type="radio"
                       name={`sq_${sq.id}`}
@@ -402,7 +402,7 @@ export function JobApplicationForm({
                     />
                     Yes
                   </label>
-                  <label className="inline-flex items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                  <label className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300">
                     <input
                       type="radio"
                       name={`sq_${sq.id}`}
@@ -418,7 +418,7 @@ export function JobApplicationForm({
                   onChange={(e) =>
                     setScreeningAnswers((prev) => ({ ...prev, [sq.id]: e.target.value }))
                   }
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900"
                 >
                   <option value="">Select an option...</option>
                   {sq.options.map((opt) => (
@@ -434,7 +434,7 @@ export function JobApplicationForm({
                   onChange={(e) =>
                     setScreeningAnswers((prev) => ({ ...prev, [sq.id]: e.target.value }))
                   }
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs dark:border-zinc-700 dark:bg-zinc-900"
                 />
               )}
             </div>
@@ -443,8 +443,8 @@ export function JobApplicationForm({
       )}
 
       {/* Consent Checkboxes */}
-      <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
-        <label className="flex items-start gap-2.5 text-xs text-zinc-700 dark:text-zinc-300 cursor-pointer">
+      <div className="space-y-2 border-t border-zinc-200 pt-2 dark:border-zinc-800">
+        <label className="flex cursor-pointer items-start gap-2.5 text-xs text-zinc-700 dark:text-zinc-300">
           <input
             type="checkbox"
             {...register("privacyConsent", {
@@ -462,7 +462,7 @@ export function JobApplicationForm({
           <p className="text-xs text-red-500">{errors.privacyConsent.message}</p>
         )}
 
-        <label className="flex items-start gap-2.5 text-xs text-zinc-600 dark:text-zinc-400 cursor-pointer">
+        <label className="flex cursor-pointer items-start gap-2.5 text-xs text-zinc-600 dark:text-zinc-400">
           <input
             type="checkbox"
             {...register("talentPoolConsent")}
@@ -479,11 +479,11 @@ export function JobApplicationForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-2.5 px-4 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition-all hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             <span>Submitting Application...</span>
           </>
         ) : (

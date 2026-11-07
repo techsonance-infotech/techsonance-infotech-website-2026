@@ -34,22 +34,22 @@ export default async function ApprovePage({
 
   if (!data || !data.request || !data.post) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl text-center space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
-            <XCircle className="w-6 h-6" />
+      <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] p-4">
+        <div className="w-full max-w-md space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-xl">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+            <XCircle className="h-6 w-6" />
           </div>
-          <h1 className="text-xl font-black text-slate-900 font-sora">Invalid Approval Link</h1>
-          <p className="text-xs text-slate-500 leading-relaxed">
+          <h1 className="font-sora text-xl font-black text-slate-900">Invalid Approval Link</h1>
+          <p className="text-xs leading-relaxed text-slate-500">
             This token does not exist or has been revoked. Please check your email or log into the
             Studio CMS.
           </p>
           <Link
             href="/admin/blog"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1155CC] hover:underline pt-2"
+            className="inline-flex items-center gap-1.5 pt-2 text-xs font-bold text-[#1155CC] hover:underline"
           >
             <span>Open Studio CMS</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>
@@ -62,19 +62,19 @@ export default async function ApprovePage({
 
   if (isUsed || isExpired) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/80 p-8 shadow-xl text-center space-y-4">
+      <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] p-4">
+        <div className="w-full max-w-md space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-xl">
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto ${
+            className={`mx-auto flex h-12 w-12 items-center justify-center rounded-2xl ${
               isUsed ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
             }`}
           >
-            {isUsed ? <CheckCircle2 className="w-6 h-6" /> : <Clock className="w-6 h-6" />}
+            {isUsed ? <CheckCircle2 className="h-6 w-6" /> : <Clock className="h-6 w-6" />}
           </div>
-          <h1 className="text-xl font-black text-slate-900 font-sora">
+          <h1 className="font-sora text-xl font-black text-slate-900">
             {isUsed ? "Decision Already Recorded" : "Approval Link Expired"}
           </h1>
-          <p className="text-xs text-slate-500 leading-relaxed">
+          <p className="text-xs leading-relaxed text-slate-500">
             {isUsed
               ? `This request was already decided as ${request.decision?.toUpperCase()} on ${new Date(
                   request.usedAt!,
@@ -83,10 +83,10 @@ export default async function ApprovePage({
           </p>
           <Link
             href={`/admin/blog/${post.id}`}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1155CC] hover:underline pt-2"
+            className="inline-flex items-center gap-1.5 pt-2 text-xs font-bold text-[#1155CC] hover:underline"
           >
             <span>Inspect Post in Studio CMS</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>
@@ -97,35 +97,35 @@ export default async function ApprovePage({
     action === "reject" ? "reject" : action === "improve" ? "improve" : "approve";
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between p-4 sm:p-6 md:p-8 antialiased">
+    <div className="flex min-h-screen flex-col justify-between bg-[#F8FAFC] p-4 antialiased sm:p-6 md:p-8">
       {/* Top Header */}
-      <header className="max-w-3xl w-full mx-auto flex items-center justify-between pb-6 border-b border-slate-200/80">
+      <header className="mx-auto flex w-full max-w-3xl items-center justify-between border-b border-slate-200/80 pb-6">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-white flex items-center justify-center font-black text-sm shadow-md shadow-[#1155CC]/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-sm font-black text-white shadow-md shadow-[#1155CC]/20">
             TS
           </div>
           <div>
-            <span className="font-black text-sm text-slate-900 tracking-tight font-sora block">
+            <span className="block font-sora text-sm font-black tracking-tight text-slate-900">
               TechSonance
             </span>
-            <span className="text-[10px] font-semibold text-[#1155CC] uppercase tracking-wider block">
+            <span className="block text-[10px] font-semibold tracking-wider text-[#1155CC] uppercase">
               Editorial Verification
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
           <span>Single-Use Signed Token</span>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-3xl w-full mx-auto my-8 space-y-6">
-        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+      <main className="mx-auto my-8 w-full max-w-3xl space-y-6">
+        <div className="space-y-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-blue-600" />
+            <span className="flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold tracking-wider text-blue-700 uppercase">
+              <Sparkles className="h-3 w-3 text-blue-600" />
               Autonomous AI Draft (v{request.postVersion})
             </span>
             <span className="text-[11px] font-medium text-slate-400">
@@ -134,27 +134,27 @@ export default async function ApprovePage({
           </div>
 
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora leading-tight">
+            <h1 className="font-sora text-2xl leading-tight font-black tracking-tight text-slate-900 sm:text-3xl">
               {post.title}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium mt-2 leading-relaxed">
+            <p className="mt-2 text-xs leading-relaxed font-medium text-slate-500 sm:text-sm">
               {post.excerpt || "Technical analysis and engineering best practices by TechSonance."}
             </p>
           </div>
 
           {post.heroImage && (
-            <div className="rounded-2xl overflow-hidden border border-slate-200/80 max-h-80 relative bg-slate-50">
+            <div className="relative max-h-80 overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-50">
               <Image
                 src={post.heroImage}
                 alt={post.thumbnailAlt || post.title}
                 width={800}
                 height={450}
-                className="w-full h-auto object-cover max-h-80"
+                className="h-auto max-h-80 w-full object-cover"
               />
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs text-slate-500">
+          <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2 text-xs text-slate-500">
             <span className="font-semibold text-slate-700">Estimated Reading Time:</span>
             <span>{post.readTime || "5 min read"}</span>
             <span className="mx-2 text-slate-300">•</span>
@@ -168,7 +168,7 @@ export default async function ApprovePage({
       </main>
 
       {/* Footer */}
-      <footer className="max-w-3xl w-full mx-auto text-center pt-4 border-t border-slate-100 text-[11px] text-slate-400">
+      <footer className="mx-auto w-full max-w-3xl border-t border-slate-100 pt-4 text-center text-[11px] text-slate-400">
         TechSonance Infotech • Autonomous Content & Publishing Platform • Security Guaranteed
       </footer>
     </div>

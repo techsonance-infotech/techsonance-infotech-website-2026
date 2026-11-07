@@ -241,6 +241,12 @@
       "skillPath": "skills/next-partial-prefetching-optimizer/SKILL.md",
       "computedHash": "97b935496e9f821417229fd4afe153dc57732911991b48144371b15b11716fbe"
     },
+    "oxlint-tailwindcss": {
+      "source": "sergioazoc/oxlint-tailwindcss",
+      "sourceType": "github",
+      "skillPath": "skills/oxlint-tailwindcss/SKILL.md",
+      "computedHash": "c6d63d22697ad5eebbbf0123459dec756b978e56407e050d0b7fcd7825e148e3"
+    },
     "pdf": {
       "source": "anthropics/skills",
       "sourceType": "github",

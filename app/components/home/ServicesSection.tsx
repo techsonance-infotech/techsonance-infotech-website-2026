@@ -275,11 +275,11 @@ export default function ServicesSection() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="py-24 bg-[#FAFBFD] relative overflow-hidden border-t border-b border-gray-100 w-full"
+      className="relative w-full overflow-hidden border-t border-b border-gray-100 bg-[#FAFBFD] py-24"
     >
       {/* Background Fine Grid detail */}
       <div
-        className="absolute inset-0 opacity-[0.012] pointer-events-none"
+        className="pointer-events-none absolute inset-0 opacity-[0.012]"
         style={{
           backgroundImage:
             "linear-gradient(#1155CC 1px, transparent 1px), linear-gradient(90deg, #1155CC 1px, transparent 1px)",
@@ -287,58 +287,58 @@ export default function ServicesSection() {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Block */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="eco-header-anim inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1155CC] animate-pulse" />
-            <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+        <div className="mx-auto mb-20 max-w-3xl text-center">
+          <div className="eco-header-anim mb-4 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#1155CC]" />
+            <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
               What We Do
             </span>
           </div>
-          <h2 className="eco-header-anim text-4xl sm:text-5xl font-medium leading-[1.15] tracking-tight text-gray-900 mb-5 leading-tight">
+          <h2 className="eco-header-anim mb-5 text-4xl leading-[1.15] leading-tight font-medium tracking-tight text-gray-900 sm:text-5xl">
             End-to-End Solutions. <br />
-            <span className="italic text-[#1155CC]">Engineered for Growth.</span>
+            <span className="text-[#1155CC] italic">Engineered for Growth.</span>
           </h2>
-          <p className="eco-header-anim text-lg text-gray-600 leading-relaxed">
+          <p className="eco-header-anim text-lg leading-relaxed text-gray-600">
             We build powerful digital systems, automate operations with AI, and deliver scalable
             products that help businesses grow faster.
           </p>
         </div>
 
         {/* ─── DESKTOP FUTURISTIC ECOSYSTEM GRID (lg and up) ─── */}
-        <div className="hidden lg:block relative w-full aspect-[1.25] max-w-6xl mx-auto select-none">
+        <div className="relative mx-auto hidden aspect-[1.25] w-full max-w-6xl select-none lg:block">
           {/* Parallax Background Layer (Particles, Orbs & Glows) */}
           <motion.div
             style={{ x: bgX, y: bgY }}
-            className="absolute inset-0 z-0 pointer-events-none"
+            className="pointer-events-none absolute inset-0 z-0"
           >
             {/* Subtle Volumetric Glow behind center hub */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] bg-gradient-to-r from-blue-400/10 to-indigo-400/10 rounded-full blur-3xl mix-blend-screen" />
+            <div className="absolute top-1/2 left-1/2 h-[450px] w-[450px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-400/10 to-indigo-400/10 mix-blend-screen blur-3xl" />
 
             {/* Hover Glow Background - shifts to match hovered service color */}
             {hoveredNode !== null && (
               <div
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full blur-3xl opacity-40 transition-all duration-700 mix-blend-screen"
+                className="absolute top-1/2 left-1/2 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 mix-blend-screen blur-3xl transition-all duration-700"
                 style={{ backgroundColor: `${serviceNodes[hoveredNode].color}20` }}
               />
             )}
 
             {/* Floating particles */}
             <div className="absolute inset-0">
-              <span className="eco-particle absolute w-1.5 h-1.5 bg-[#1155CC]/20 rounded-full left-[12%] top-[20%] animate-pulse" />
+              <span className="eco-particle absolute top-[20%] left-[12%] h-1.5 w-1.5 animate-pulse rounded-full bg-[#1155CC]/20" />
               <span
-                className="eco-particle absolute w-2 h-2 bg-[#7C3AED]/20 rounded-full left-[22%] top-[70%] animate-ping"
+                className="eco-particle absolute top-[70%] left-[22%] h-2 w-2 animate-ping rounded-full bg-[#7C3AED]/20"
                 style={{ animationDuration: "3s" }}
               />
-              <span className="eco-particle absolute w-1.5 h-1.5 bg-[#0891B2]/30 rounded-full left-[85%] top-[15%] animate-pulse" />
+              <span className="eco-particle absolute top-[15%] left-[85%] h-1.5 w-1.5 animate-pulse rounded-full bg-[#0891B2]/30" />
               <span
-                className="eco-particle absolute w-2.5 h-2.5 bg-pink-500/15 rounded-full left-[78%] top-[65%] animate-pulse"
+                className="eco-particle absolute top-[65%] left-[78%] h-2.5 w-2.5 animate-pulse rounded-full bg-pink-500/15"
                 style={{ animationDuration: "4s" }}
               />
-              <span className="eco-particle absolute w-1 h-1 bg-[#10B981]/40 rounded-full left-[48%] top-[10%] animate-pulse" />
+              <span className="eco-particle absolute top-[10%] left-[48%] h-1 w-1 animate-pulse rounded-full bg-[#10B981]/40" />
               <span
-                className="eco-particle absolute w-1.5 h-1.5 bg-amber-500/20 rounded-full left-[55%] top-[88%] animate-ping"
+                className="eco-particle absolute top-[88%] left-[55%] h-1.5 w-1.5 animate-ping rounded-full bg-amber-500/20"
                 style={{ animationDuration: "5s" }}
               />
             </div>
@@ -349,7 +349,7 @@ export default function ServicesSection() {
             {/* SVG Connection System */}
             <svg
               viewBox="0 0 1000 800"
-              className="absolute inset-0 w-full h-full pointer-events-none"
+              className="pointer-events-none absolute inset-0 h-full w-full"
             >
               <defs>
                 {/* Connection Gradients */}
@@ -429,17 +429,17 @@ export default function ServicesSection() {
 
             {/* ─── CENTRAL ENGINE ORB ─── */}
             <div
-              className="eco-orb-container absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center pointer-events-none"
+              className="eco-orb-container pointer-events-none absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
               style={{
                 left: "50%",
                 top: "50%",
               }}
             >
               {/* Outer Glowing Concentric Rings */}
-              <div className="absolute w-[340px] h-[340px] rounded-full border border-blue-500/10 animate-[spin_25s_linear_infinite]" />
-              <div className="absolute w-[300px] h-[300px] rounded-full border border-dashed border-blue-400/5 animate-[spin_35s_linear_infinite_reverse]" />
+              <div className="absolute h-[340px] w-[340px] animate-[spin_25s_linear_infinite] rounded-full border border-blue-500/10" />
+              <div className="absolute h-[300px] w-[300px] animate-[spin_35s_linear_infinite_reverse] rounded-full border border-dashed border-blue-400/5" />
               <div
-                className="absolute w-[275px] h-[275px] rounded-full border border-[#1155CC]/20 transition-all duration-500"
+                className="absolute h-[275px] w-[275px] rounded-full border border-[#1155CC]/20 transition-all duration-500"
                 style={{
                   transform: hoveredNode !== null ? "scale(1.05)" : "scale(1)",
                   boxShadow:
@@ -451,7 +451,7 @@ export default function ServicesSection() {
 
               {/* Interactive Core Engine Card */}
               <div
-                className={`w-[230px] h-[230px] rounded-full flex flex-col items-center justify-center p-6 text-center bg-[#07132B]/95 border border-[#1155CC]/35 shadow-[0_0_60px_rgba(17, 85, 204,0.3)] z-30 transition-all duration-500 ${
+                className={`z-30 flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full border border-[#1155CC]/35 bg-[#07132B]/95 p-6 text-center shadow-[0_0_60px_rgba(17, 85, 204,0.3)] transition-all duration-500 ${
                   hoveredNode !== null ? "scale-[1.03]" : "scale-100"
                 }`}
                 style={{
@@ -491,35 +491,35 @@ export default function ServicesSection() {
                   </svg>
                 </div>
 
-                <h4 className="text-[10px] font-black tracking-widest text-blue-400 uppercase mb-1">
+                <h4 className="mb-1 text-[10px] font-black tracking-widest text-blue-400 uppercase">
                   Your Business
                 </h4>
-                <h3 className="text-lg font-black text-white leading-tight mb-2 tracking-tight">
+                <h3 className="mb-2 text-lg leading-tight font-black tracking-tight text-white">
                   Growth Engine
                 </h3>
 
-                <div className="w-16 h-[1px] bg-gray-700/80 mb-3 mx-auto" />
+                <div className="mx-auto mb-3 h-[1px] w-16 bg-gray-700/80" />
 
-                <p className="text-[8px] font-bold text-gray-400 tracking-wider uppercase leading-relaxed max-w-[150px]">
+                <p className="max-w-[150px] text-[8px] leading-relaxed font-bold tracking-wider text-gray-400 uppercase">
                   Technology • Automation • Scale
                 </p>
 
                 {/* Animated Mini status graph */}
-                <div className="flex items-end gap-1.5 mt-3 h-5 justify-center">
+                <div className="mt-3 flex h-5 items-end justify-center gap-1.5">
                   <div
-                    className="w-1 bg-blue-500/60 rounded-t animate-[pulse_1.2s_infinite]"
+                    className="w-1 animate-[pulse_1.2s_infinite] rounded-t bg-blue-500/60"
                     style={{ height: "40%" }}
                   />
                   <div
-                    className="w-1 bg-blue-400 rounded-t animate-[pulse_1.5s_infinite]"
+                    className="w-1 animate-[pulse_1.5s_infinite] rounded-t bg-blue-400"
                     style={{ height: "65%" }}
                   />
                   <div
-                    className="w-1 bg-[#22B6F6] rounded-t animate-[pulse_1s_infinite]"
+                    className="w-1 animate-[pulse_1s_infinite] rounded-t bg-[#22B6F6]"
                     style={{ height: "85%" }}
                   />
                   <div
-                    className="w-1 bg-blue-300 rounded-t animate-[pulse_1.8s_infinite]"
+                    className="w-1 animate-[pulse_1.8s_infinite] rounded-t bg-blue-300"
                     style={{ height: "50%" }}
                   />
                 </div>
@@ -535,7 +535,7 @@ export default function ServicesSection() {
                   key={node.id}
                   onMouseEnter={() => setHoveredNode(node.id)}
                   onMouseLeave={() => setHoveredNode(null)}
-                  className={`eco-card-node-${node.id} absolute z-20 transition-all duration-500 cursor-pointer`}
+                  className={`eco-card-node-${node.id} absolute z-20 cursor-pointer transition-all duration-500`}
                   style={{
                     left: `${(node.x / 1000) * 100}%`,
                     top: `${(node.y / 800) * 100}%`,
@@ -548,7 +548,7 @@ export default function ServicesSection() {
                   <Link href={`/services/${node.slug}`} className="block h-full">
                     {/* Glassmorphic Card Container */}
                     <div
-                      className={`h-full bg-white/90 backdrop-blur-md border rounded-[24px] p-5 shadow-[0_4px_16px_rgba(0,0,0,0.015)] transition-all duration-500 relative overflow-hidden flex flex-col justify-center ${
+                      className={`relative flex h-full flex-col justify-center overflow-hidden rounded-[24px] border bg-white/90 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.015)] backdrop-blur-md transition-all duration-500 ${
                         isHovered
                           ? "shadow-[0_16px_36px_rgba(0,0,0,0.04)] border-transparent"
                           : "border-gray-100"
@@ -556,7 +556,7 @@ export default function ServicesSection() {
                     >
                       {/* Interactive Glow Aura on Hover */}
                       <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                         style={{
                           background: `radial-gradient(150px circle at 100% 100%, ${node.color}08, transparent)`,
                         }}
@@ -564,7 +564,7 @@ export default function ServicesSection() {
 
                       {/* Card border glow ring on hover */}
                       <div
-                        className="absolute -inset-px rounded-[24px] border-2 pointer-events-none transition-all duration-500"
+                        className="pointer-events-none absolute -inset-px rounded-[24px] border-2 transition-all duration-500"
                         style={{
                           borderColor: node.color,
                           opacity: isHovered ? 0.22 : 0,
@@ -572,10 +572,10 @@ export default function ServicesSection() {
                         }}
                       />
 
-                      <div className="flex items-center gap-4 relative z-10">
+                      <div className="relative z-10 flex items-center gap-4">
                         {/* Rounded square icon */}
                         <div
-                          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-500"
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-transform duration-500"
                           style={{
                             backgroundColor: `${node.color}08`,
                             borderColor: `${node.color}18`,
@@ -583,15 +583,15 @@ export default function ServicesSection() {
                             transform: isHovered ? "scale(1.08) rotate(4deg)" : "none",
                           }}
                         >
-                          <Icon name={node.icon as IconName} className="w-5 h-5" />
+                          <Icon name={node.icon as IconName} className="h-5 w-5" />
                         </div>
 
                         {/* Title and Summary */}
-                        <div className="min-w-0 pr-4 flex flex-col justify-center">
-                          <h3 className="text-xs xl:text-sm font-black text-gray-900 leading-snug mb-1">
+                        <div className="flex min-w-0 flex-col justify-center pr-4">
+                          <h3 className="mb-1 text-xs leading-snug font-black text-gray-900 xl:text-sm">
                             {node.title}
                           </h3>
-                          <p className="text-[10px] xl:text-[11px] text-gray-500 leading-normal line-clamp-2 mb-1">
+                          <p className="mb-1 line-clamp-2 text-[10px] leading-normal text-gray-500 xl:text-[11px]">
                             {node.description}
                           </p>
                           <div
@@ -617,7 +617,7 @@ export default function ServicesSection() {
         </div>
 
         {/* ─── MOBILE / TABLET GRID LAYOUT (md and down) ─── */}
-        <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:hidden">
           {serviceNodes.map((node, index) => (
             <motion.div
               key={node.id}
@@ -628,25 +628,25 @@ export default function ServicesSection() {
               className="group"
             >
               <Link href={`/services/${node.slug}`} className="block">
-                <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md">
                   <div className="flex items-start gap-4">
                     {/* Icon */}
                     <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border"
                       style={{
                         backgroundColor: `${node.color}08`,
                         borderColor: `${node.color}15`,
                         color: node.color,
                       }}
                     >
-                      <Icon name={node.icon as IconName} className="w-5 h-5" />
+                      <Icon name={node.icon as IconName} className="h-5 w-5" />
                     </div>
                     {/* Details */}
                     <div className="flex-grow">
-                      <h3 className="font-bold text-gray-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">
+                      <h3 className="mb-1.5 text-sm font-bold text-gray-900 transition-colors group-hover:text-blue-600">
                         {node.title}
                       </h3>
-                      <p className="text-xs text-gray-500 leading-relaxed mb-4">
+                      <p className="mb-4 text-xs leading-relaxed text-gray-500">
                         {node.description}
                       </p>
                       <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1155CC]">

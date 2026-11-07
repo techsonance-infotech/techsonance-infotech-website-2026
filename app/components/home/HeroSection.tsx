@@ -22,8 +22,8 @@ function HeroCTAButtons({ onBookClick }: { onBookClick: () => void }) {
 
 function HeroHeadline() {
   return (
-    <h1 className="text-[2.25rem] font-medium leading-[1.15] tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-[4rem] 2xl:text-[4.5rem]">
-      We Build <span className="italic text-[#1155CC]">Digital Products</span>
+    <h1 className="text-[2.25rem] leading-[1.15] font-medium tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-[4rem] 2xl:text-[4.5rem]">
+      We Build <span className="text-[#1155CC] italic">Digital Products</span>
       <br />
       That Drive Growth.
     </h1>
@@ -128,7 +128,7 @@ function ClientLogo({ client }: { client: ClientLogoData }) {
 function TrustedClientsMarquee() {
   return (
     <div className="w-full border-t border-gray-100 py-10">
-      <p className="mb-6 text-center text-xs font-semibold uppercase tracking-widest text-gray-400">
+      <p className="mb-6 text-center text-xs font-semibold tracking-widest text-gray-400 uppercase">
         Engineered &amp; Trusted by Global Clients
       </p>
 
@@ -170,7 +170,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative flex flex-col items-center overflow-hidden bg-white px-4 sm:px-6 xl:px-10 min-[1920px]:px-15 pb-4 pt-30 sm:pt-36 lg:pt-40">
+      <section className="relative flex flex-col items-center overflow-hidden bg-white px-4 pt-30 pb-4 min-[1920px]:px-15 sm:px-6 sm:pt-36 lg:pt-40 xl:px-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -189,7 +189,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        <div className="mt-20 w-full max-w-7xl mx-auto">
+        <div className="mx-auto mt-20 w-full max-w-7xl">
           <TrustedClientsMarquee />
         </div>
       </section>

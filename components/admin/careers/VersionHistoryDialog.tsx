@@ -3,23 +3,19 @@
 import React, { useState, useEffect } from "react";
 import { History, X, Loader2, RotateCcw, ChevronDown, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
-
-interface VersionItem {
-  id: string;
-  entityType: string;
-  entityId: string;
-  snapshot: Record<string, any>;
-  changedBy?: string | null;
-  createdAt: string | Date;
-}
+import {
+  listAdminJobVersions,
+  restoreAdminJobVersion,
+  type JobVersionItem,
+} from "@/lib/api/admin-jobs.api";
+import type { Job } from "@/lib/types/careers";
 
 interface VersionHistoryDialogProps {
   isOpen: boolean;
   onClose: () => void;
   jobId: string;
   currentVersionId?: number | null;
-  onRestoreSuccess: (restoredJob: any) => void;
+  onRestoreSuccess: (restoredJob: Job) => void;
 }
 
 export function VersionHistoryDialog({
@@ -29,7 +25,7 @@ export function VersionHistoryDialog({
   currentVersionId,
   onRestoreSuccess,
 }: VersionHistoryDialogProps) {
-  const [versions, setVersions] = useState<VersionItem[]>([]);
+  const [versions, setVersions] = useState<JobVersionItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [restoringVersionId, setRestoringVersionId] = useState<string | null>(null);
   const [expandedVersionId, setExpandedVersionId] = useState<string | null>(null);
@@ -45,28 +41,21 @@ export function VersionHistoryDialog({
       setErrorMessage("");
       setSuccessMessage("");
       try {
-        const res = await fetch(API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(jobId));
-        const data = await res.json();
-        if (!res.ok) {
-          const msg =
-            (typeof data.error === "object" ? data.error?.message : data.error) ||
-            data.message ||
-            "Failed to load version history";
-          throw new Error(msg);
-        }
+        const data = await listAdminJobVersions(jobId);
         if (isMounted) {
-          setVersions(data.data?.versions || data.versions || []);
+          setVersions(data);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (isMounted) {
-          setErrorMessage(err.message || "Failed to load versions");
+          const msg = err instanceof Error ? err.message : "Failed to load versions";
+          setErrorMessage(msg);
         }
       } finally {
         if (isMounted) setIsLoading(false);
       }
     }
 
-    loadVersions();
+    void loadVersions();
     return () => {
       isMounted = false;
     };
@@ -74,7 +63,7 @@ export function VersionHistoryDialog({
 
   if (!isOpen) return null;
 
-  const handleRestore = async (version: VersionItem) => {
+  const handleRestore = async (version: JobVersionItem) => {
     const confirmMsg = `Are you sure you want to restore snapshot from ${new Date(
       version.createdAt,
     ).toLocaleString()}? Current unsaved changes will be replaced.`;
@@ -85,46 +74,34 @@ export function VersionHistoryDialog({
     setSuccessMessage("");
 
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(jobId), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ versionId: version.id }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        const msg =
-          (typeof data.error === "object" ? data.error?.message : data.error) ||
-          data.message ||
-          "Failed to restore version";
-        throw new Error(msg);
-      }
+      const restored = await restoreAdminJobVersion(jobId, version.id);
 
       setSuccessMessage("Version successfully restored!");
-      onRestoreSuccess(data.data?.job || data.job);
+      onRestoreSuccess(restored);
       setTimeout(() => {
         onClose();
       }, 800);
-    } catch (err: any) {
-      setErrorMessage(err.message || "Failed to restore version");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to restore version";
+      setErrorMessage(msg);
     } finally {
       setRestoringVersionId(null);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="version-history-dialog-title"
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl animate-in zoom-in-95 duration-150"
+        className="animate-in zoom-in-95 flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-              <History className="w-5 h-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+              <History className="h-5 w-5" />
             </div>
             <div>
               <h3
@@ -140,34 +117,34 @@ export function VersionHistoryDialog({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="rounded-xl p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Status alerts */}
         {errorMessage && (
-          <div className="mt-3 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded-xl text-xs text-rose-600 dark:text-rose-400 font-medium">
+          <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-medium text-rose-600 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-400">
             {errorMessage}
           </div>
         )}
         {successMessage && (
-          <div className="mt-3 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 rounded-xl text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-2">
-            <Check className="w-4 h-4" />
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
+            <Check className="h-4 w-4" />
             {successMessage}
           </div>
         )}
 
         {/* Content list */}
-        <div className="flex-1 overflow-y-auto py-4 space-y-3">
+        <div className="flex-1 space-y-3 overflow-y-auto py-4">
           {isLoading ? (
-            <div className="py-12 flex flex-col items-center justify-center text-slate-400 gap-2">
-              <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+            <div className="flex flex-col items-center justify-center gap-2 py-12 text-slate-400">
+              <Loader2 className="h-6 w-6 animate-spin text-indigo-500" />
               <p className="text-xs">Loading version history...</p>
             </div>
           ) : versions.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 text-sm">
+            <div className="py-12 text-center text-sm text-slate-400">
               No previous version snapshots found for this position.
             </div>
           ) : (
@@ -187,18 +164,18 @@ export function VersionHistoryDialog({
               return (
                 <div
                   key={ver.id}
-                  className="border border-slate-200 dark:border-slate-800 rounded-2xl p-4 transition-colors hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30"
+                  className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4 transition-colors hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800/30 dark:hover:border-slate-700"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <button
                       type="button"
                       onClick={() => setExpandedVersionId(isExpanded ? null : ver.id)}
-                      className="flex items-center gap-2 text-left flex-1"
+                      className="flex flex-1 items-center gap-2 text-left"
                     >
                       {isExpanded ? (
-                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <ChevronDown className="h-4 w-4 text-slate-400" />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                        <ChevronRight className="h-4 w-4 text-slate-400" />
                       )}
                       <div>
                         <div className="flex items-center gap-2">
@@ -206,13 +183,13 @@ export function VersionHistoryDialog({
                             Version {ver.snapshot?.versionId || `#${versions.length - idx}`}
                           </span>
                           {isCurrent && (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                               Current Active
                             </span>
                           )}
                           <span className="text-[11px] text-slate-400">{dateStr}</span>
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                        <p className="mt-0.5 line-clamp-1 text-xs text-slate-500 dark:text-slate-400">
                           {ver.snapshot?.title || "Untitled Job"} &bull;{" "}
                           {ver.snapshot?.status || "DRAFT"}
                         </p>
@@ -225,19 +202,19 @@ export function VersionHistoryDialog({
                       size="sm"
                       onClick={() => handleRestore(ver)}
                       disabled={restoringVersionId === ver.id || isCurrent}
-                      className="rounded-xl text-xs gap-1.5 h-8 shrink-0 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600"
+                      className="h-8 shrink-0 gap-1.5 rounded-xl text-xs hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950/60"
                     >
                       {restoringVersionId === ver.id ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       ) : (
-                        <RotateCcw className="w-3.5 h-3.5" />
+                        <RotateCcw className="h-3.5 w-3.5" />
                       )}
                       Restore
                     </Button>
                   </div>
 
                   {isExpanded && (
-                    <div className="mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 text-xs space-y-2 font-mono bg-white dark:bg-slate-900/60 p-3 rounded-xl border">
+                    <div className="mt-3 space-y-2 rounded-xl border border-t border-slate-200/60 bg-white p-3 pt-3 font-mono text-xs dark:border-slate-700/60 dark:bg-slate-900/60">
                       <div className="grid grid-cols-2 gap-2 text-[11px]">
                         <div>
                           <span className="text-slate-400">Title:</span>{" "}
@@ -264,10 +241,12 @@ export function VersionHistoryDialog({
                           </span>
                         </div>
                       </div>
-                      {ver.snapshot?.responsibilities?.length > 0 && (
+                      {Boolean(
+                        ver.snapshot?.responsibilities && ver.snapshot.responsibilities.length > 0,
+                      ) && (
                         <div className="pt-1">
-                          <span className="text-slate-400 text-[10px] block">
-                            Responsibilities: {ver.snapshot.responsibilities.length} items
+                          <span className="block text-[10px] text-slate-400">
+                            Responsibilities: {ver.snapshot.responsibilities?.length} items
                           </span>
                         </div>
                       )}
@@ -280,7 +259,7 @@ export function VersionHistoryDialog({
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+        <div className="flex justify-end border-t border-slate-100 pt-3 dark:border-slate-800">
           <Button type="button" variant="outline" onClick={onClose} className="rounded-xl">
             Close
           </Button>

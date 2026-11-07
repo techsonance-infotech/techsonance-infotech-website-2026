@@ -22,9 +22,9 @@ export function FloatingPaths({ position }: FloatingPathsProps) {
   }));
 
   return (
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="pointer-events-none absolute inset-0">
       <svg
-        className="w-full h-full text-[#1155CC]/15 dark:text-blue-400/15"
+        className="h-full w-full text-[#1155CC]/15 dark:text-blue-400/15"
         viewBox="0 0 696 316"
         fill="none"
         preserveAspectRatio="none"
@@ -59,22 +59,22 @@ export function BackgroundPaths({ title = "Background Paths" }: { title?: string
   const words = title.split(" ");
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-white dark:bg-neutral-950">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white dark:bg-neutral-950">
       <div className="absolute inset-0">
         <FloatingPaths position={1} />
         <FloatingPaths position={-1} />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 md:px-6 text-center">
+      <div className="relative z-10 container mx-auto px-4 text-center md:px-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2 }}
-          className="max-w-4xl mx-auto"
+          className="mx-auto max-w-4xl"
         >
-          <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold mb-8 tracking-tighter">
+          <h1 className="mb-8 text-5xl font-bold tracking-tighter sm:text-7xl md:text-8xl">
             {words.map((word, wordIndex) => (
-              <span key={wordIndex} className="inline-block mr-4 last:mr-0">
+              <span key={wordIndex} className="mr-4 inline-block last:mr-0">
                 {word.split("").map((letter, letterIndex) => (
                   <motion.span
                     key={`${wordIndex}-${letterIndex}`}
@@ -86,8 +86,8 @@ export function BackgroundPaths({ title = "Background Paths" }: { title?: string
                       stiffness: 150,
                       damping: 25,
                     }}
-                    className="inline-block text-transparent bg-clip-text 
-                                        bg-gradient-to-r from-neutral-900 to-neutral-700/80 
+                    className="inline-block bg-gradient-to-r from-neutral-900 
+                                        to-neutral-700/80 bg-clip-text text-transparent 
                                         dark:from-white dark:to-white/80"
                   >
                     {letter}
@@ -98,24 +98,24 @@ export function BackgroundPaths({ title = "Background Paths" }: { title?: string
           </h1>
 
           <div
-            className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 
-                        dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg 
-                        overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b 
+                        from-black/10 to-white/10 p-px shadow-lg backdrop-blur-lg 
+                        transition-shadow duration-300 hover:shadow-xl dark:from-white/10 dark:to-black/10"
           >
             <Button
               variant="ghost"
-              className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
-                            bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 
-                            text-black dark:text-white transition-all duration-300 
-                            group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
-                            hover:shadow-md dark:hover:shadow-neutral-800/50"
+              className="rounded-[1.15rem] border border-black/10 bg-white/95 px-8 py-6 
+                            text-lg font-semibold text-black backdrop-blur-md 
+                            transition-all duration-300 group-hover:-translate-y-0.5 hover:bg-white/100 
+                            hover:shadow-md dark:border-white/10 dark:bg-black/95 dark:text-white
+                            dark:hover:bg-black/100 dark:hover:shadow-neutral-800/50"
             >
-              <span className="opacity-90 group-hover:opacity-100 transition-opacity">
+              <span className="opacity-90 transition-opacity group-hover:opacity-100">
                 Discover Excellence
               </span>
               <span
-                className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 
-                                transition-all duration-300"
+                className="ml-3 opacity-70 transition-all duration-300 
+                                group-hover:translate-x-1.5 group-hover:opacity-100"
               >
                 →
               </span>

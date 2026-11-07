@@ -90,40 +90,40 @@ export function JobLivePreview({
   };
 
   return (
-    <div className={`flex flex-col items-center w-full ${className}`}>
+    <div className={`flex w-full flex-col items-center ${className}`}>
       {/* Viewport Control Bar */}
       {showViewportControls && (
-        <div className="flex items-center justify-between w-full max-w-4xl mb-3 px-2">
+        <div className="mb-3 flex w-full max-w-4xl items-center justify-between px-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-500 font-sora">Device Viewport:</span>
-            <div className="inline-flex items-center rounded-xl bg-slate-100 dark:bg-slate-800 p-1">
+            <span className="font-sora text-xs font-bold text-slate-500">Device Viewport:</span>
+            <div className="inline-flex items-center rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
               <button
                 type="button"
                 onClick={() => setViewport("desktop")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold transition-all ${
                   !isMobile
                     ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-xs"
                     : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Monitor className="w-3.5 h-3.5" />
+                <Monitor className="h-3.5 w-3.5" />
                 <span>Desktop (1024px)</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewport("mobile")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold transition-all ${
                   isMobile
                     ? "bg-white dark:bg-slate-900 text-[#1155CC] shadow-xs"
                     : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Smartphone className="w-3.5 h-3.5" />
+                <Smartphone className="h-3.5 w-3.5" />
                 <span>Mobile (375px)</span>
               </button>
             </div>
           </div>
-          <span className="text-[11px] font-mono text-slate-400">
+          <span className="font-mono text-[11px] text-slate-400">
             {isMobile ? "Viewport: 375 × 667" : "Viewport: 1024 × Responsive"}
           </span>
         </div>
@@ -131,7 +131,7 @@ export function JobLivePreview({
 
       {/* Frame Container */}
       <div
-        className={`transition-all duration-300 mx-auto ${
+        className={`mx-auto transition-all duration-300 ${
           isMobile
             ? "w-[375px] max-w-[390px] border-[8px] border-slate-900 rounded-[48px] shadow-2xl overflow-hidden bg-white dark:bg-slate-950 my-2"
             : "w-full max-w-4xl border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm bg-white dark:bg-slate-900 overflow-hidden"
@@ -139,28 +139,28 @@ export function JobLivePreview({
       >
         {/* Browser or Phone Frame Header */}
         {isMobile ? (
-          <div className="bg-slate-900 px-6 pt-3 pb-2 flex items-center justify-between text-white text-[10px]">
+          <div className="flex items-center justify-between bg-slate-900 px-6 pt-3 pb-2 text-[10px] text-white">
             <span className="font-semibold">9:41</span>
-            <div className="w-20 h-4 bg-black rounded-full mx-auto" />
+            <div className="mx-auto h-4 w-20 rounded-full bg-black" />
             <div className="flex items-center gap-1">
               <span className="font-mono text-[9px]">5G</span>
-              <div className="w-4 h-2 rounded-xs border border-white/60 bg-white" />
+              <div className="h-2 w-4 rounded-xs border border-white/60 bg-white" />
             </div>
           </div>
         ) : (
-          <div className="bg-slate-100 dark:bg-slate-800/80 px-4 py-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <div className="flex items-center justify-between border-b border-slate-200 bg-slate-100 px-4 py-2.5 dark:border-slate-800 dark:bg-slate-800/80">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-rose-400" />
-              <div className="w-3 h-3 rounded-full bg-amber-400" />
-              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+              <div className="h-3 w-3 rounded-full bg-rose-400" />
+              <div className="h-3 w-3 rounded-full bg-amber-400" />
+              <div className="h-3 w-3 rounded-full bg-emerald-400" />
             </div>
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-1 text-[11px] text-slate-500 font-mono flex items-center gap-1.5 w-80 justify-center truncate">
+            <div className="flex w-80 items-center justify-center gap-1.5 truncate rounded-xl border border-slate-200 bg-white px-4 py-1 font-mono text-[11px] text-slate-500 dark:border-slate-700 dark:bg-slate-900">
               <span>https://techsonance.co.in/careers/</span>
-              <span className="text-slate-800 dark:text-slate-200 font-bold">
+              <span className="font-bold text-slate-800 dark:text-slate-200">
                 {job.slug || "role-preview"}
               </span>
             </div>
-            <div className="text-[10px] uppercase font-bold text-slate-400 font-mono tracking-wider">
+            <div className="font-mono text-[10px] font-bold tracking-wider text-slate-400 uppercase">
               Live Preview
             </div>
           </div>
@@ -168,7 +168,7 @@ export function JobLivePreview({
 
         {/* Main Content */}
         <div
-          className={`p-6 sm:p-10 space-y-8 ${
+          className={`space-y-8 p-6 sm:p-10 ${
             isMobile ? "max-h-[700px] overflow-y-auto text-xs" : ""
           }`}
         >
@@ -178,7 +178,7 @@ export function JobLivePreview({
               {job.department && (
                 <Badge
                   variant="outline"
-                  className="rounded-full px-3 py-1 text-xs font-bold text-[#1155CC] border-[#1155CC]/30 bg-[#1155CC]/5"
+                  className="rounded-full border-[#1155CC]/30 bg-[#1155CC]/5 px-3 py-1 text-xs font-bold text-[#1155CC]"
                 >
                   {job.department}
                 </Badge>
@@ -186,7 +186,7 @@ export function JobLivePreview({
               {job.workMode && (
                 <Badge
                   variant="secondary"
-                  className="rounded-full px-3 py-1 text-xs font-semibold uppercase font-mono tracking-wider"
+                  className="rounded-full px-3 py-1 font-mono text-xs font-semibold tracking-wider uppercase"
                 >
                   {job.workMode.toUpperCase().replace(/_/g, " ")}
                 </Badge>
@@ -197,55 +197,55 @@ export function JobLivePreview({
                 </Badge>
               )}
               {job.referenceCode && (
-                <span className="text-[10px] text-slate-400 font-mono ml-auto">
+                <span className="ml-auto font-mono text-[10px] text-slate-400">
                   REF: {job.referenceCode}
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight font-sora">
+            <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-4xl dark:text-white">
               {job.title || "Untitled Role Opening"}
             </h1>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-500">
               {job.location && (
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#1155CC]" />
+                  <MapPin className="h-3.5 w-3.5 text-[#1155CC]" />
                   {job.location}
                 </span>
               )}
               {job.experienceLevel && (
                 <span className="flex items-center gap-1">
-                  <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                  <Briefcase className="h-3.5 w-3.5 text-slate-400" />
                   {job.experienceLevel} Level
                 </span>
               )}
               <span className="flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                <Building2 className="h-3.5 w-3.5 text-slate-400" />
                 TechSonance Infotech
               </span>
               {job.openingsCount && job.openingsCount > 1 && (
-                <span className="text-[#1155CC] font-bold">{job.openingsCount} Openings</span>
+                <span className="font-bold text-[#1155CC]">{job.openingsCount} Openings</span>
               )}
             </div>
           </div>
 
           {/* Compensation Card */}
           {job.showSalaryPublicly && job.salaryMin && job.salaryMax && (
-            <div className="bg-gradient-to-r from-blue-50/80 to-indigo-50/50 dark:from-slate-800/80 dark:to-slate-800/40 border border-blue-100 dark:border-slate-700 rounded-3xl p-5 flex items-center justify-between">
+            <div className="flex items-center justify-between rounded-3xl border border-blue-100 bg-gradient-to-r from-blue-50/80 to-indigo-50/50 p-5 dark:border-slate-700 dark:from-slate-800/80 dark:to-slate-800/40">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1155CC] font-mono">
+                <span className="font-mono text-[10px] font-bold tracking-wider text-[#1155CC] uppercase">
                   Estimated Compensation
                 </span>
-                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-sora mt-0.5">
+                <div className="mt-0.5 font-sora text-xl font-black text-slate-900 sm:text-2xl dark:text-white">
                   {formatSalary(job.salaryMin, job.salaryCurrency)} –{" "}
                   {formatSalary(job.salaryMax, job.salaryCurrency)}
-                  <span className="text-xs font-normal text-slate-500 ml-1.5">
+                  <span className="ml-1.5 text-xs font-normal text-slate-500">
                     / {job.salaryPeriod?.toLowerCase() || "year"}
                   </span>
                 </div>
                 {job.compensationNotes && (
-                  <p className="text-xs text-slate-500 mt-1">{job.compensationNotes}</p>
+                  <p className="mt-1 text-xs text-slate-500">{job.compensationNotes}</p>
                 )}
               </div>
             </div>
@@ -253,17 +253,17 @@ export function JobLivePreview({
 
           {/* Summary */}
           {job.summary && (
-            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed italic">
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-xs leading-relaxed font-medium text-slate-600 italic sm:text-sm dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-300">
               "{job.summary}"
             </div>
           )}
 
           {/* Description */}
           <div className="space-y-3">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+            <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
               About the Role
             </h2>
-            <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+            <div className="text-xs leading-relaxed whitespace-pre-line text-slate-600 sm:text-sm dark:text-slate-300">
               {job.description || "Position description will appear here."}
             </div>
           </div>
@@ -271,16 +271,16 @@ export function JobLivePreview({
           {/* Key Responsibilities */}
           {job.responsibilities && job.responsibilities.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Key Responsibilities
               </h2>
               <ul className="space-y-2">
                 {job.responsibilities.map((resp, i) => (
                   <li
                     key={i}
-                    className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2.5"
+                    className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-[#1155CC] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#1155CC]" />
                     <span>{resp}</span>
                   </li>
                 ))}
@@ -291,16 +291,16 @@ export function JobLivePreview({
           {/* Requirements */}
           {job.requirements && job.requirements.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Requirements & Qualifications
               </h2>
               <ul className="space-y-2">
                 {job.requirements.map((req, i) => (
                   <li
                     key={i}
-                    className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2.5"
+                    className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0 mt-2" />
+                    <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
                     <span>{req}</span>
                   </li>
                 ))}
@@ -311,16 +311,16 @@ export function JobLivePreview({
           {/* Preferred Qualifications */}
           {job.preferredQualifications && job.preferredQualifications.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Bonus Points & Preferred Qualifications
               </h2>
               <ul className="space-y-2">
                 {job.preferredQualifications.map((bonus, i) => (
                   <li
                     key={i}
-                    className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 flex items-start gap-2.5"
+                    className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                    <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
                     <span>{bonus}</span>
                   </li>
                 ))}
@@ -331,14 +331,14 @@ export function JobLivePreview({
           {/* Skills Chips */}
           {job.skills && job.skills.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Tech Stack & Core Competencies
               </h2>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+                    className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
                     {skill}
                   </span>
@@ -350,16 +350,16 @@ export function JobLivePreview({
           {/* Benefits */}
           {job.benefits && job.benefits.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Perks & Benefits
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 {job.benefits.map((b, i) => (
                   <div
                     key={i}
-                    className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2"
+                    className="flex items-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
                     <span>{b}</span>
                   </div>
                 ))}
@@ -370,22 +370,22 @@ export function JobLivePreview({
           {/* Hiring Process */}
           {job.hiringProcess && job.hiringProcess.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-sora">
+              <h2 className="font-sora text-base font-bold text-slate-900 sm:text-lg dark:text-white">
                 Hiring Journey
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {job.hiringProcess.map((step, idx) => (
                   <div
                     key={idx}
-                    className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800"
+                    className="rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40"
                   >
-                    <div className="text-[10px] font-mono font-bold text-[#1155CC] uppercase">
+                    <div className="font-mono text-[10px] font-bold text-[#1155CC] uppercase">
                       Step {step.step || String(idx + 1).padStart(2, "0")}
                     </div>
-                    <div className="font-bold text-slate-900 dark:text-white text-xs mt-0.5">
+                    <div className="mt-0.5 text-xs font-bold text-slate-900 dark:text-white">
                       {step.title}
                     </div>
-                    {step.desc && <p className="text-[11px] text-slate-500 mt-1">{step.desc}</p>}
+                    {step.desc && <p className="mt-1 text-[11px] text-slate-500">{step.desc}</p>}
                   </div>
                 ))}
               </div>
@@ -394,8 +394,8 @@ export function JobLivePreview({
 
           {/* Screening Questions Notice */}
           {job.screeningQuestions && job.screeningQuestions.length > 0 && (
-            <div className="p-3.5 rounded-2xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 text-xs flex items-center gap-2.5 text-blue-900 dark:text-blue-300">
-              <HelpCircle className="w-4 h-4 text-[#1155CC] shrink-0" />
+            <div className="flex items-center gap-2.5 rounded-2xl border border-blue-100 bg-blue-50/60 p-3.5 text-xs text-blue-900 dark:border-blue-900/40 dark:bg-blue-950/20 dark:text-blue-300">
+              <HelpCircle className="h-4 w-4 shrink-0 text-[#1155CC]" />
               <span>
                 <strong>{job.screeningQuestions.length} screening questions</strong> will be
                 presented to applicants during submission.
@@ -405,9 +405,9 @@ export function JobLivePreview({
 
           {/* Equal Opportunity */}
           {job.equalOpportunityStatement && (
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 leading-relaxed space-y-1">
-              <div className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-[#1155CC]" />
+            <div className="space-y-1 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-[11px] leading-relaxed text-slate-500 dark:border-slate-800 dark:bg-slate-800/40">
+              <div className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-300">
+                <Shield className="h-3.5 w-3.5 text-[#1155CC]" />
                 Equal Opportunity Employer
               </div>
               <p>{job.equalOpportunityStatement}</p>
@@ -415,9 +415,9 @@ export function JobLivePreview({
           )}
 
           {/* Action Button */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
             <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white font-sora">
+              <div className="font-sora text-xs font-bold text-slate-900 dark:text-white">
                 Ready to create what's next?
               </div>
               <div className="text-[11px] text-slate-400">
@@ -426,10 +426,10 @@ export function JobLivePreview({
             </div>
             <Button
               type="button"
-              className="rounded-2xl bg-[#1155CC] hover:bg-[#0d44a5] text-white font-bold text-xs h-10 px-6 shadow-md flex items-center gap-1.5 cursor-pointer"
+              className="flex h-10 cursor-pointer items-center gap-1.5 rounded-2xl bg-[#1155CC] px-6 text-xs font-bold text-white shadow-md hover:bg-[#0d44a5]"
             >
               Apply Now
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

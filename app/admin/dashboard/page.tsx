@@ -73,14 +73,14 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="animate-in fade-in space-y-8 duration-500">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             Studio Dashboard
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
             Real-time control over blog articles, career opportunities, and autonomous AI agents.
           </p>
         </div>
@@ -90,9 +90,9 @@ export default async function AdminDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-700 hover:text-[#1155CC] font-bold text-xs"
+              className="rounded-xl border-slate-200 text-xs font-bold text-slate-700 hover:text-[#1155CC]"
             >
-              <FileText className="w-3.5 h-3.5 mr-1.5" />
+              <FileText className="mr-1.5 h-3.5 w-3.5" />
               <span>Blog Articles</span>
             </Button>
           </Link>
@@ -100,9 +100,9 @@ export default async function AdminDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-slate-200 text-slate-700 hover:text-[#1155CC] font-bold text-xs"
+              className="rounded-xl border-slate-200 text-xs font-bold text-slate-700 hover:text-[#1155CC]"
             >
-              <Briefcase className="w-3.5 h-3.5 mr-1.5" />
+              <Briefcase className="mr-1.5 h-3.5 w-3.5" />
               <span>Manage Jobs</span>
             </Button>
           </Link>
@@ -110,27 +110,27 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         {kpis.map((kpi) => {
           const IconComp = kpi.icon;
           return (
             <Card
               key={kpi.title}
-              className="relative overflow-hidden border-slate-200/80 bg-white/80 backdrop-blur hover:border-slate-300 transition-all duration-300"
+              className="relative overflow-hidden border-slate-200/80 bg-white/80 backdrop-blur transition-all duration-300 hover:border-slate-300"
             >
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs font-bold tracking-wider text-slate-500 uppercase">
                   {kpi.title}
                 </CardTitle>
                 <div
-                  className={`w-8 h-8 rounded-xl ${kpi.bgColor} flex items-center justify-center`}
+                  className={`h-8 w-8 rounded-xl ${kpi.bgColor} flex items-center justify-center`}
                 >
-                  <IconComp className={`w-4 h-4 ${kpi.textColor}`} />
+                  <IconComp className={`h-4 w-4 ${kpi.textColor}`} />
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="flex items-baseline justify-between">
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+                  <div className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
                     {kpi.value}
                   </div>
                   {kpi.badge && (
@@ -139,7 +139,7 @@ export default async function AdminDashboardPage() {
                     </Badge>
                   )}
                 </div>
-                <div className="mt-2 pt-2 border-t border-slate-50">
+                <div className="mt-2 border-t border-slate-50 pt-2">
                   <p className="text-[11px] font-medium text-slate-400">{kpi.subtext}</p>
                 </div>
               </CardContent>
@@ -157,11 +157,11 @@ export default async function AdminDashboardPage() {
                 <Badge variant="warning" dot={true}>
                   Requires Review
                 </Badge>
-                <CardTitle className="text-base font-bold text-slate-900 font-sora">
+                <CardTitle className="font-sora text-base font-bold text-slate-900">
                   Submissions Awaiting Approval
                 </CardTitle>
               </div>
-              <CardDescription className="text-xs mt-1">
+              <CardDescription className="mt-1 text-xs">
                 Drafts submitted by editors or autonomous AI agents that require approval before
                 publishing.
               </CardDescription>
@@ -172,16 +172,16 @@ export default async function AdminDashboardPage() {
               {inReviewRes.posts.map((post) => (
                 <div
                   key={post.id}
-                  className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                  className="group flex flex-col justify-between gap-3 py-3.5 sm:flex-row sm:items-center"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-amber-100/80 text-amber-700 flex items-center justify-center shrink-0 font-bold text-xs">
-                      <Clock className="w-4 h-4" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 text-xs font-bold text-amber-700">
+                      <Clock className="h-4 w-4" />
                     </div>
                     <div>
                       <Link
                         href={`/admin/blog/${post.id}`}
-                        className="font-bold text-sm text-slate-900 hover:text-[#1155CC] transition-colors leading-tight block mb-1"
+                        className="mb-1 block text-sm leading-tight font-bold text-slate-900 transition-colors hover:text-[#1155CC]"
                       >
                         {post.title}
                       </Link>
@@ -215,49 +215,49 @@ export default async function AdminDashboardPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <div>
-            <CardTitle className="text-base font-bold text-slate-900 font-sora">
+            <CardTitle className="font-sora text-base font-bold text-slate-900">
               Recent Blog Articles
             </CardTitle>
-            <CardDescription className="text-xs mt-0.5">
+            <CardDescription className="mt-0.5 text-xs">
               Latest created or published stories in the database
             </CardDescription>
           </div>
           <Link
             href="/admin/blog"
-            className="text-xs font-bold text-[#1155CC] hover:underline flex items-center gap-1"
+            className="flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
           >
             <span>View All ({postsRes.total})</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/75 border-b border-slate-100 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              <thead className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                 <tr>
-                  <th className="py-3 px-4">Title & Slug</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Created Date</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="px-4 py-3">Title & Slug</th>
+                  <th className="px-4 py-3">Category</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Created Date</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {postsRes.posts.slice(0, 5).map((post) => (
-                  <tr key={post.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-4 font-semibold text-slate-900 max-w-xs truncate">
+                  <tr key={post.id} className="transition-colors hover:bg-slate-50/80">
+                    <td className="max-w-xs truncate px-4 py-3.5 font-semibold text-slate-900">
                       <Link
                         href={`/admin/blog/${post.id}`}
-                        className="hover:text-[#1155CC] block truncate font-medium"
+                        className="block truncate font-medium hover:text-[#1155CC]"
                       >
                         {post.title}
                       </Link>
-                      <span className="text-[10px] text-slate-400 font-mono">/{post.slug}</span>
+                      <span className="font-mono text-[10px] text-slate-400">/{post.slug}</span>
                     </td>
-                    <td className="py-3.5 px-4 text-slate-600 font-medium">
+                    <td className="px-4 py-3.5 font-medium text-slate-600">
                       {post.categoryId ? "Engineering" : "General"}
                     </td>
-                    <td className="py-3.5 px-4">
+                    <td className="px-4 py-3.5">
                       <Badge
                         variant={
                           post.status === "PUBLISHED"
@@ -271,10 +271,10 @@ export default async function AdminDashboardPage() {
                         {post.status}
                       </Badge>
                     </td>
-                    <td className="py-3.5 px-4 text-slate-500 font-medium">
+                    <td className="px-4 py-3.5 font-medium text-slate-500">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       <Link
                         href={`/admin/blog/${post.id}`}
                         className="text-xs font-bold text-[#1155CC] hover:underline"

@@ -26,18 +26,18 @@ export const TestimonialsColumn = (props: {
           ease: "linear",
           repeatType: "loop",
         }}
-        className="flex flex-col gap-6 pb-6 bg-transparent"
+        className="flex flex-col gap-6 bg-transparent pb-6"
       >
         {new Array(2).fill(0).map((_, index) => (
           <React.Fragment key={index}>
             {props.testimonials.map(({ text, image, name, role }, i) => (
               <div
-                className="p-8 rounded-2xl border border-gray-100/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] max-w-xs w-full bg-white hover:shadow-lg transition-shadow duration-300"
+                className="w-full max-w-xs rounded-2xl border border-gray-100/80 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow duration-300 hover:shadow-lg"
                 key={i}
               >
-                <div className="text-gray-700 text-[14px] leading-relaxed font-medium">{text}</div>
-                <div className="flex items-center gap-3 mt-6">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#1155CC] to-indigo-600 text-white flex items-center justify-center font-medium text-sm border border-[#1155CC]/10 select-none shrink-0">
+                <div className="text-[14px] leading-relaxed font-medium text-gray-700">{text}</div>
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#1155CC]/10 bg-gradient-to-br from-[#1155CC] to-indigo-600 text-sm font-medium text-white select-none">
                     {name
                       .split(" ")
                       .map((n) => n[0])
@@ -46,10 +46,10 @@ export const TestimonialsColumn = (props: {
                       .slice(0, 2)}
                   </div>
                   <div className="flex flex-col">
-                    <div className="font-medium text-gray-900 tracking-tight leading-5 text-sm">
+                    <div className="text-sm leading-5 font-medium tracking-tight text-gray-900">
                       {name}
                     </div>
-                    <div className="leading-5 text-[11px] text-[#1155CC] font-bold tracking-tight uppercase">
+                    <div className="text-[11px] leading-5 font-bold tracking-tight text-[#1155CC] uppercase">
                       {role}
                     </div>
                   </div>

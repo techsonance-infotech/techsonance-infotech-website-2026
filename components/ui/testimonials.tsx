@@ -53,31 +53,31 @@ const thirdColumn = testimonials.slice(4, 6);
 
 export const Testimonials = () => {
   return (
-    <section className="bg-transparent my-20 relative">
-      <div className="container z-10 mx-auto px-4 md:px-6">
+    <section className="relative my-20 bg-transparent">
+      <div className="z-10 container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center max-w-[540px] mx-auto text-center"
+          className="mx-auto flex max-w-[540px] flex-col items-center justify-center text-center"
         >
           <div className="flex justify-center">
-            <div className="bg-[#F1F5F9] border border-[#1155CC]/15 rounded-full px-4 py-1.5 text-xs font-bold text-[#1155CC] tracking-wide uppercase">
+            <div className="rounded-full border border-[#1155CC]/15 bg-[#F1F5F9] px-4 py-1.5 text-xs font-bold tracking-wide text-[#1155CC] uppercase">
               Testimonials
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mt-5 text-slate-900">
+          <h2 className="mt-5 text-3xl font-medium tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             What our clients say
           </h2>
-          <p className="text-center mt-5 text-slate-600">
+          <p className="mt-5 text-center text-slate-600">
             See what our clients have to say about us and how our solutions transformed their
             workflows.
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] max-h-[600px] overflow-hidden">
+        <div className="mt-10 flex max-h-[600px] justify-center gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]">
           <TestimonialsColumn testimonials={firstColumn} duration={15} />
           <TestimonialsColumn
             testimonials={secondColumn}

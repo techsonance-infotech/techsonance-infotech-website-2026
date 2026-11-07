@@ -56,7 +56,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.1 }}
-      className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 shadow-[0_2px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_40px_rgba(17, 85, 204,0.10)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden"
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_40px_rgba(17, 85, 204,0.10)]"
     >
       {/* Mockup top */}
       <div className="relative p-4 pb-0">
@@ -72,18 +72,18 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-6 gap-4">
+      <div className="flex flex-1 flex-col gap-4 p-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-medium text-lg text-gray-900 leading-tight">{project.title}</h3>
-            <p className="text-xs text-gray-400 font-medium mt-0.5">{project.industry}</p>
+            <h3 className="text-lg leading-tight font-medium text-gray-900">{project.title}</h3>
+            <p className="mt-0.5 text-xs font-medium text-gray-400">{project.industry}</p>
           </div>
           {project.liveUrl && (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+              className="shrink-0 rounded-xl bg-gray-50 p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
               aria-label="View live demo"
             >
               <svg
@@ -103,13 +103,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           )}
         </div>
 
-        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
+        <p className="line-clamp-2 text-sm leading-relaxed text-gray-500">
           {project.shortDescription}
         </p>
 
         {/* Result callout */}
         <div
-          className="rounded-xl px-3 py-2.5 text-xs font-medium leading-snug"
+          className="rounded-xl px-3 py-2.5 text-xs leading-snug font-medium"
           style={{ background: `${project.accentColor}0d`, color: project.accentColor }}
         >
           <span className="font-bold">Result:</span> {project.result}
@@ -121,7 +121,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <TechBadge key={t.name} name={t.name} category={t.category} size="sm" />
           ))}
           {project.techStack.length > 4 && (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-400">
+            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-400">
               +{project.techStack.length - 4}
             </span>
           )}
@@ -173,7 +173,7 @@ export default function PortfolioClient() {
       : allProjects.filter((p) => p.category === activeCategory);
 
   return (
-    <main className="min-h-screen bg-[#FAFBFD] text-[#0F172A] overflow-x-clip">
+    <main className="min-h-screen overflow-x-clip bg-[#FAFBFD] text-[#0F172A]">
       {/* ── Hero ──────────────────────────────────────────────────────────────── */}
       <ArcGalleryHero
         images={[
@@ -190,29 +190,29 @@ export default function PortfolioClient() {
           "/images/portfolio-hero-images/cloud-architecture-mockup.png",
           "/images/zion/zion-event-ticket-booking-analytics.png",
         ]}
-        className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
+        className="min-h-[90vh] bg-[#FAFBFD] pt-24 pb-16 text-[#0F172A]"
       >
         <div
-          className="text-center max-w-4xl px-6 opacity-0 animate-fade-in flex flex-col items-center relative z-10"
+          className="animate-fade-in relative z-10 flex max-w-4xl flex-col items-center px-6 text-center opacity-0"
           style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
         >
-          <div className="inline-flex items-center gap-2 bg-white border border-[#1155CC]/15 rounded-full px-4 py-1.5 shadow-sm mb-6">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
-            <span className="text-xs font-bold text-[#1155CC] tracking-wide uppercase">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/15 bg-white px-4 py-1.5 shadow-sm">
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#22B6F6]" />
+            <span className="text-xs font-bold tracking-wide text-[#1155CC] uppercase">
               Portfolio &amp; Case Studies
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-medium text-gray-900 leading-[1.06] tracking-tight mb-6">
+          <h1 className="mb-6 text-4xl leading-[1.06] font-medium tracking-tight text-gray-900 sm:text-5xl lg:text-7xl">
             Our Best Work, <br /> <span className="text-[#1155CC]">Live in Production.</span>
           </h1>
 
-          <p className="mt-4 text-base sm:text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="mx-auto mt-4 mb-8 max-w-2xl text-base leading-relaxed text-gray-500 sm:text-lg">
             We&apos;re proud to showcase a diverse collection of our work that highlights our
             expertise and creativity.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
               onClick={() => {
                 document.getElementById("projects-list")?.scrollIntoView({ behavior: "smooth" });
@@ -227,14 +227,14 @@ export default function PortfolioClient() {
       </ArcGalleryHero>
 
       {/* ── Filter + Grid Section Wrapper with Background Effects ───────────────── */}
-      <div className="relative w-full overflow-hidden bg-[#FAFBFD] border-t border-slate-100">
+      <div className="relative w-full overflow-hidden border-t border-slate-100 bg-[#FAFBFD]">
         {/* Ambient Gradient Background Glows */}
-        <div className="absolute top-10 left-[10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none z-0" />
-        <div className="absolute bottom-20 right-[5%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none z-0" />
+        <div className="pointer-events-none absolute top-10 left-[10%] z-0 h-[300px] w-[300px] rounded-full bg-[#1155CC]/5 blur-[100px] sm:h-[500px] sm:w-[500px]" />
+        <div className="pointer-events-none absolute right-[5%] bottom-20 z-0 h-[300px] w-[300px] rounded-full bg-[#22B6F6]/5 blur-[120px] sm:h-[500px] sm:w-[500px]" />
 
         {/* Premium SVG Wave Lines */}
         <svg
-          className="absolute top-[20%] left-0 w-full h-[250px] opacity-[0.04] text-[#1155CC] pointer-events-none z-0"
+          className="pointer-events-none absolute top-[20%] left-0 z-0 h-[250px] w-full text-[#1155CC] opacity-[0.04]"
           viewBox="0 0 1440 250"
           fill="none"
         >
@@ -255,25 +255,25 @@ export default function PortfolioClient() {
 
         <section
           id="projects-list"
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10"
+          className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"
         >
           {/* Section label */}
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-medium text-gray-900">
+          <div className="mb-10 text-center">
+            <h2 className="text-2xl font-medium text-gray-900 sm:text-3xl">
               All <span className="text-[#1155CC]">Projects</span>
             </h2>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="mt-2 text-sm text-gray-500">
               {allProjects.length} products across {categories.length - 1} categories
             </p>
           </div>
 
           {/* Category filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-10">
+          <div className="mb-10 flex flex-wrap justify-center gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border cursor-pointer ${
+                className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                   activeCategory === cat
                     ? "bg-[#1155CC] text-white border-[#1155CC] shadow-[0_2px_12px_rgba(17, 85, 204,0.25)]"
                     : "bg-white text-gray-600 border-gray-200 hover:border-[#1155CC]/40 hover:text-[#1155CC]"
@@ -292,7 +292,7 @@ export default function PortfolioClient() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
               {filtered.map((project, index) => (
                 <ProjectCard key={project.slug} project={project} index={index} />
@@ -301,7 +301,7 @@ export default function PortfolioClient() {
           </AnimatePresence>
 
           {filtered.length === 0 && (
-            <div className="text-center py-24 text-gray-400">
+            <div className="py-24 text-center text-gray-400">
               <p className="text-lg font-medium">No projects in this category yet.</p>
             </div>
           )}
@@ -309,8 +309,8 @@ export default function PortfolioClient() {
       </div>
 
       {/* ── Bottom CTA ─────────────────────────────────────────────────────────── */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 brand-gradient opacity-95" />
+      <section className="relative overflow-hidden py-20">
+        <div className="brand-gradient absolute inset-0 opacity-95" />
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -319,13 +319,13 @@ export default function PortfolioClient() {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="relative z-10 max-w-3xl mx-auto text-center px-4">
+        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl font-medium text-white mb-4"
+            className="mb-4 text-3xl font-medium text-white sm:text-4xl"
           >
             Ready to build your product?
           </motion.h2>
@@ -334,7 +334,7 @@ export default function PortfolioClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-white/80 text-base mb-8"
+            className="mb-8 text-base text-white/80"
           >
             Let&apos;s turn your idea into a production-ready system. Free consultation, no
             commitments.
@@ -344,19 +344,19 @@ export default function PortfolioClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col justify-center gap-4 sm:flex-row"
           >
             <Button
               onClick={() => setIsBookModalOpen(true)}
               variant="secondary"
-              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#1155CC] hover:text-[#1155CC] border-transparent hover:border-transparent shadow-md hover:shadow-lg focus:ring-white/20"
+              className="w-full border-transparent bg-white text-[#1155CC] shadow-md hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
             >
               Book Free Consultation
             </Button>
             <Button
               asChild
               variant="secondary"
-              className="w-full sm:w-auto border-white/40 hover:border-white text-white hover:text-white hover:bg-white/10 hover:shadow-lg focus:ring-white/20"
+              className="w-full border-white/40 text-white hover:border-white hover:bg-white/10 hover:text-white hover:shadow-lg focus:ring-white/20 sm:w-auto"
             >
               <Link href="/">Back to Home</Link>
             </Button>

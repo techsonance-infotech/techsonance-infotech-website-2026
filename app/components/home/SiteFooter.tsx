@@ -14,52 +14,53 @@ export default function SiteFooter() {
 
   return (
     <>
-      <footer className="w-full bg-[#071A35] text-slate-200 border-t border-white/10 pt-20 pb-12 relative overflow-hidden">
+      <footer className="relative w-full overflow-hidden border-t border-white/10 bg-[#071A35] pt-20 pb-12 text-slate-200">
         {/* Ambient glowing gradients */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-tr from-[#22B6F6]/10 to-transparent rounded-full blur-3xl opacity-40 pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-[#1155CC]/10 to-transparent rounded-full blur-3xl opacity-30 pointer-events-none" />
+        <div className="pointer-events-none absolute top-0 left-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-[#22B6F6]/10 to-transparent opacity-40 blur-3xl" />
+        <div className="pointer-events-none absolute right-1/4 bottom-0 h-[500px] w-[500px] rounded-full bg-gradient-to-bl from-[#1155CC]/10 to-transparent opacity-30 blur-3xl" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-white/10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
             {/* Column 1: Brand details */}
-            <div className="lg:col-span-4 flex flex-col gap-6">
+            <div className="flex flex-col gap-6 lg:col-span-4">
               <div>
-                <Link href="/" className="flex items-center gap-3 mb-6 self-start group">
+                <Link href="/" className="group mb-6 flex items-center gap-3 self-start">
                   <Image
                     src="/images/logo-icon.png"
                     alt="TechSonance logo"
                     width={56}
                     height={56}
                     className="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-105"
+                    style={{ width: "auto", height: "auto" }}
                   />
                   <div className="flex flex-col items-center">
-                    <span className="flex items-center gap-1.5 text-[22px] font-bold font-sora leading-none tracking-[0.04em]">
+                    <span className="flex items-center gap-1.5 font-sora text-[22px] leading-none font-bold tracking-[0.04em]">
                       <TechSvg className="text-white" />
                       <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">
                         SONΛNCE
                       </span>
                     </span>
-                    <span className="w-full flex items-center gap-2 text-[10px] font-medium font-sans uppercase tracking-[0.25em] text-[#94A3B8] mt-0.5">
+                    <span className="mt-0.5 flex w-full items-center gap-2 font-sans text-[10px] font-medium tracking-[0.25em] text-[#94A3B8] uppercase">
                       <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#475569]" />
                       INFOTECH LLP
                       <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#475569]" />
                     </span>
-                    <span className="block text-[7.5px] font-medium font-sans uppercase tracking-[0.15em] text-slate-355 mt-1.5 text-center">
+                    <span className="text-slate-355 mt-1.5 block text-center font-sans text-[7.5px] font-medium tracking-[0.15em] uppercase">
                       Where Innovation Finds Its Resonance
                     </span>
                   </div>
                 </Link>
 
-                <p className="text-xs text-slate-300 leading-relaxed max-w-sm mb-6">
+                <p className="mb-6 max-w-sm text-xs leading-relaxed text-slate-300">
                   Engineering high-performance enterprise custom platforms, multi-tenant SaaS
                   products, and agentic AI automation workflows. Built on robust types, scalability,
                   and 99.9% reliability.
                 </p>
 
                 <div className="mt-8">
-                  <div className="flex items-center gap-3 text-xs text-slate-200 font-medium">
+                  <div className="flex items-center gap-3 text-xs font-medium text-slate-200">
                     <svg
-                      className="w-4 h-4 text-[#22B6F6] shrink-0"
+                      className="h-4 w-4 shrink-0 text-[#22B6F6]"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.2"
@@ -73,7 +74,7 @@ export default function SiteFooter() {
                     </svg>
                     <a
                       href="mailto:hr@techsonance.co.in"
-                      className="hover:text-white transition-colors"
+                      className="transition-colors hover:text-white"
                     >
                       hr@techsonance.co.in
                     </a>
@@ -84,7 +85,7 @@ export default function SiteFooter() {
 
             {/* Column 2: Core services */}
             <div className="lg:col-span-3 lg:pl-6">
-              <h3 className="text-[10px] font-black text-white uppercase tracking-widest mb-5">
+              <h3 className="mb-5 text-[10px] font-black tracking-widest text-white uppercase">
                 Expertise & Services
               </h3>
               <ul className="space-y-3.5 text-xs">
@@ -92,7 +93,7 @@ export default function SiteFooter() {
                   <li key={service.slug}>
                     <Link
                       href={`/services/${service.slug}`}
-                      className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                      className="inline-block text-slate-300 transition-colors hover:translate-x-0.5 hover:text-[#22B6F6]"
                     >
                       {service.shortTitle || service.title}
                     </Link>
@@ -101,7 +102,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/technologies/nestjs"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                    className="inline-block text-slate-300 transition-colors hover:translate-x-0.5 hover:text-[#22B6F6]"
                   >
                     NestJS Microservices
                   </Link>
@@ -109,7 +110,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/services/rag-chatbot-development"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                    className="inline-block text-slate-300 transition-colors hover:translate-x-0.5 hover:text-[#22B6F6]"
                   >
                     Enterprise RAG Chatbots
                   </Link>
@@ -117,7 +118,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/technologies/nextjs"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors hover:translate-x-0.5 inline-block"
+                    className="inline-block text-slate-300 transition-colors hover:translate-x-0.5 hover:text-[#22B6F6]"
                   >
                     Next.js 15 & React 19
                   </Link>
@@ -127,14 +128,14 @@ export default function SiteFooter() {
 
             {/* Column 3: Navigation */}
             <div className="lg:col-span-2">
-              <h3 className="text-[10px] font-black text-white uppercase tracking-widest mb-5">
+              <h3 className="mb-5 text-[10px] font-black tracking-widest text-white uppercase">
                 Corporate Directory
               </h3>
               <ul className="space-y-3.5 text-xs">
                 <li>
                   <Link
                     href="/services"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Our Services
                   </Link>
@@ -142,7 +143,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/portfolio"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Case Studies
                   </Link>
@@ -150,7 +151,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/about"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     About the Agency
                   </Link>
@@ -158,7 +159,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/locations/surat"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Surat Office & Dev Hub
                   </Link>
@@ -166,7 +167,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/blog"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Blog & Insights
                   </Link>
@@ -174,7 +175,7 @@ export default function SiteFooter() {
                 <li>
                   <button
                     onClick={() => setIsBookModalOpen(true)}
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors cursor-pointer text-left"
+                    className="cursor-pointer text-left text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Book Scoping Call
                   </button>
@@ -182,7 +183,7 @@ export default function SiteFooter() {
                 <li>
                   <Link
                     href="/careers"
-                    className="text-slate-300 hover:text-[#22B6F6] transition-colors"
+                    className="text-slate-300 transition-colors hover:text-[#22B6F6]"
                   >
                     Careers (We&apos;re Hiring)
                   </Link>
@@ -192,10 +193,10 @@ export default function SiteFooter() {
 
             {/* Column 4: Contact/Newsletter info */}
             <div className="lg:col-span-3">
-              <h3 className="text-[10px] font-black text-white uppercase tracking-widest mb-5">
+              <h3 className="mb-5 text-[10px] font-black tracking-widest text-white uppercase">
                 Contact Tech Lead
               </h3>
-              <p className="text-xs text-slate-300 leading-relaxed mb-4">
+              <p className="mb-4 text-xs leading-relaxed text-slate-300">
                 Schedule a tech scoping session to review your product design, system flowcharts,
                 and architecture roadmap.
               </p>
@@ -203,15 +204,15 @@ export default function SiteFooter() {
                 onClick={() => setIsBookModalOpen(true)}
                 variant="secondary"
                 size="sm"
-                className="border-slate-800 hover:border-slate-700 text-white hover:text-white hover:bg-slate-850 transition-all shadow-md group cursor-pointer"
+                className="hover:bg-slate-850 group cursor-pointer border-slate-800 text-white shadow-md transition-all hover:border-slate-700 hover:text-white"
               >
                 Book Free Session
                 <Icon
                   name="arrow"
-                  className="w-3.5 h-3.5 text-slate-300 group-hover:text-white transition-all transform group-hover:translate-x-0.5 ml-2"
+                  className="ml-2 h-3.5 w-3.5 transform text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-white"
                 />
               </Button>
-              <div className="mt-6 text-[10px] text-slate-400 leading-relaxed">
+              <div className="mt-6 text-[10px] leading-relaxed text-slate-400">
                 Office Hours: Mon - Fri, 9AM - 6PM IST <br />
                 Standard response timeline: 24 Hours
               </div>
@@ -219,18 +220,18 @@ export default function SiteFooter() {
           </div>
 
           {/* Center row: Follow Us socials */}
-          <div className="py-8 flex flex-col sm:flex-row justify-center items-center gap-4 border-b border-white/10">
-            <span className="text-xs font-bold text-slate-300 tracking-wider">Follow Us:</span>
+          <div className="flex flex-col items-center justify-center gap-4 border-b border-white/10 py-8 sm:flex-row">
+            <span className="text-xs font-bold tracking-wider text-slate-300">Follow Us:</span>
             <div className="flex items-center gap-3">
               <a
                 href="https://linkedin.com/company/techsonance-infotech/"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-[#22B6F6] hover:bg-slate-800/80 transition-all"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-[#22B6F6] hover:bg-slate-800/80 hover:text-white"
                 aria-label="LinkedIn Profile"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -247,10 +248,10 @@ export default function SiteFooter() {
                 href="https://x.com/techsonance_in"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-[#22B6F6] hover:bg-slate-800/80 transition-all"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-[#22B6F6] hover:bg-slate-800/80 hover:text-white"
                 aria-label="Twitter X Profile"
               >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
@@ -258,11 +259,11 @@ export default function SiteFooter() {
                 href="https://www.instagram.com/techsonance_infotech/?igsh=MTZqNm04enMxaGZmbg%3D%3D#"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-[#22B6F6] hover:bg-slate-800/80 transition-all"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-[#22B6F6] hover:bg-slate-800/80 hover:text-white"
                 aria-label="Instagram Profile"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -279,11 +280,11 @@ export default function SiteFooter() {
                 href="https://www.facebook.com/people/TechSonance-InfoTech/61583918872159/?rdid=hWr8x5FiMIPKTaVJ&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1TKgqjwQ9u%2F"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-[#22B6F6] hover:bg-slate-800/80 transition-all"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-[#22B6F6] hover:bg-slate-800/80 hover:text-white"
                 aria-label="Facebook Profile"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -298,11 +299,11 @@ export default function SiteFooter() {
                 href="https://github.com/techsonance-infotech"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-[#22B6F6] hover:bg-slate-800/80 transition-all"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 transition-all hover:border-[#22B6F6] hover:bg-slate-800/80 hover:text-white"
                 aria-label="GitHub Profile"
               >
                 <svg
-                  className="w-4.5 h-4.5"
+                  className="h-4.5 w-4.5"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -317,14 +318,14 @@ export default function SiteFooter() {
           </div>
 
           {/* Lower row: copyright & compliance */}
-          <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-5 text-[11px] text-slate-400">
-            <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+          <div className="flex flex-col items-center justify-between gap-5 pt-8 text-[11px] text-slate-400 md:flex-row">
+            <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-left">
               <span>
                 © {currentYear} All rights reserved by{" "}
                 <span className="font-medium text-[#22B6F6]">TechSonance InfoTech LLP</span>
               </span>
             </div>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center md:justify-end">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 md:justify-end">
               <Link href="/careers" className="hover:text-slate-350 transition-colors">
                 Career
               </Link>

@@ -56,12 +56,12 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
       <header
         className={
           transparent
-            ? `fixed top-0 left-0 right-0 z-50 py-3 transition-all duration-300 ${
+            ? `fixed top-0 right-0 left-0 z-50 py-3 transition-all duration-300 ${
                 isScrolled || isMobileMenuOpen
                   ? "border-b border-gray-100 bg-white md:bg-white/85 shadow-sm"
                   : "border-b border-transparent bg-transparent"
               }`
-            : "fixed top-0 left-0 right-0 md:sticky z-50 border-b border-gray-100 bg-white md:bg-white/80 w-full"
+            : "fixed top-0 right-0 left-0 z-50 w-full border-b border-gray-100 bg-white md:sticky md:bg-white/80"
         }
         style={{
           ...((!transparent || isScrolled || isMobileMenuOpen) && (!mounted || !isMobile)
@@ -73,7 +73,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
           WebkitBackfaceVisibility: "hidden",
         }}
       >
-        <div className="mx-auto flex h-12 sm:h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:h-14 sm:px-6 lg:px-8">
           <Link
             href="/"
             className="flex items-center gap-2 sm:gap-3"
@@ -90,17 +90,18 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               alt="TechSonance logo"
               width={56}
               height={56}
-              className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
+              className="h-8 w-8 object-contain sm:h-10 sm:w-10"
+              style={{ width: "auto", height: "auto" }}
               priority
             />
             <span className="flex flex-col items-center">
-              <span className="flex items-center gap-1 sm:gap-1.5 text-[13px] sm:text-[20px] font-bold font-sora leading-none tracking-[0.04em]">
+              <span className="flex items-center gap-1 font-sora text-[13px] leading-none font-bold tracking-[0.04em] sm:gap-1.5 sm:text-[20px]">
                 <TechSvg className="text-[#071A35]" />
                 <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">
                   SONΛNCE
                 </span>
               </span>
-              <span className="w-full flex items-center gap-1 sm:gap-2 text-[6.5px] sm:text-[9px] font-medium font-sans uppercase tracking-[0.24em] text-[#4B5563] mt-0.5">
+              <span className="mt-0.5 flex w-full items-center gap-1 font-sans text-[6.5px] font-medium tracking-[0.24em] text-[#4B5563] uppercase sm:gap-2 sm:text-[9px]">
                 <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#DDE3EA]" />
                 INFOTECH LLP
                 <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#DDE3EA]" />
@@ -127,29 +128,29 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                     </Link>
 
                     {/* Mega-menu Submenu panel */}
-                    <div className="absolute top-[calc(100%-8px)] left-1/2 -translate-x-1/2 w-[740px] bg-white border border-gray-100 rounded-[28px] p-6 shadow-[0_20px_50px_rgba(17, 85, 204,0.08)] pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 z-50">
+                    <div className="pointer-events-none absolute top-[calc(100%-8px)] left-1/2 z-50 w-[740px] -translate-x-1/2 translate-y-3 rounded-[28px] border border-gray-100 bg-white p-6 opacity-0 shadow-[0_20px_50px_rgba(17, 85, 204,0.08)] transition-all duration-300 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
                       <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                         {services.map((service) => (
                           <Link
                             key={service.slug}
                             href={`/services/${service.slug}`}
-                            className="flex items-start gap-4 p-3 rounded-2xl transition-all duration-300 hover:bg-[#FAFBFD] border border-transparent hover:border-blue-500/5 group/item"
+                            className="group/item flex items-start gap-4 rounded-2xl border border-transparent p-3 transition-all duration-300 hover:border-blue-500/5 hover:bg-[#FAFBFD]"
                           >
                             <div
-                              className="w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 transition-all duration-300 group-hover/item:scale-105"
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 group-hover/item:scale-105"
                               style={{
                                 backgroundColor: `${service.accentColor}08`,
                                 borderColor: `${service.accentColor}15`,
                                 color: service.accentColor,
                               }}
                             >
-                              <Icon name={service.icon as IconName} className="w-4.5 h-4.5" />
+                              <Icon name={service.icon as IconName} className="h-4.5 w-4.5" />
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-xs font-bold text-gray-900 group-hover/item:text-[#1155CC] transition-colors leading-snug mb-0.5">
+                              <h4 className="mb-0.5 text-xs leading-snug font-bold text-gray-900 transition-colors group-hover/item:text-[#1155CC]">
                                 {service.title}
                               </h4>
-                              <p className="text-[10px] text-gray-400 leading-normal line-clamp-1">
+                              <p className="line-clamp-1 text-[10px] leading-normal text-gray-400">
                                 {service.quickSummary}
                               </p>
                             </div>
@@ -158,16 +159,16 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                       </div>
 
                       {/* Submenu footer panel */}
-                      <div className="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                      <div className="mt-5 flex items-center justify-between border-t border-gray-50 pt-4">
+                        <span className="text-[9px] font-bold tracking-widest text-gray-400 uppercase">
                           Growth Ecosystem
                         </span>
                         <Link
                           href="/services"
-                          className="text-xs font-bold text-[#1155CC] hover:underline inline-flex items-center gap-1"
+                          className="inline-flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
                         >
                           All Services
-                          <Icon name="arrow" className="w-3.5 h-3.5" />
+                          <Icon name="arrow" className="h-3.5 w-3.5" />
                         </Link>
                       </div>
                     </div>
@@ -204,7 +205,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
             {/* Mobile menu trigger */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-200/80 text-gray-700 hover:bg-gray-50 focus:outline-none lg:hidden"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-gray-200/80 text-gray-700 hover:bg-gray-50 focus:outline-none sm:h-10 sm:w-10 lg:hidden"
               aria-label="Toggle navigation menu"
               style={{
                 backfaceVisibility: "hidden",
@@ -240,15 +241,15 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
 
         {/* ─── MOBILE DROP-DOWN MENU (lg and down) ─── */}
         {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 border-b border-gray-100 bg-white shadow-xl lg:hidden">
-            <div className="flex flex-col gap-1.5 px-4 py-5 sm:px-6 max-h-[calc(100vh-48px)] sm:max-h-[calc(100vh-56px)] overflow-y-auto">
+          <div className="absolute top-full right-0 left-0 border-b border-gray-100 bg-white shadow-xl lg:hidden">
+            <div className="flex max-h-[calc(100vh-48px)] flex-col gap-1.5 overflow-y-auto px-4 py-5 sm:max-h-[calc(100vh-56px)] sm:px-6">
               {navLinks.map((link) => {
                 if (link.name === "Services") {
                   return (
                     <div key={link.name} className="border-b border-gray-100/50 py-1">
                       <button
                         onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
-                        className="flex items-center justify-between text-sm font-bold font-sans text-gray-700 hover:text-[#1155CC] transition-colors py-3 w-full cursor-pointer"
+                        className="flex w-full cursor-pointer items-center justify-between py-3 font-sans text-sm font-bold text-gray-700 transition-colors hover:text-[#1155CC]"
                       >
                         <span className="font-bold">{link.name}</span>
                         <Icon
@@ -261,7 +262,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
 
                       {/* Mobile submenu list accordion layout */}
                       {isMobileServicesOpen && (
-                        <div className="pl-4 pb-3 flex flex-col gap-2.5 mt-1 border-l-2 border-gray-100">
+                        <div className="mt-1 flex flex-col gap-2.5 border-l-2 border-gray-100 pb-3 pl-4">
                           {services.map((service) => (
                             <Link
                               key={service.slug}
@@ -270,36 +271,36 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                                 setIsMobileServicesOpen(false);
                                 setIsMobileMenuOpen(false);
                               }}
-                              className="flex items-center gap-3 py-1.5 group"
+                              className="group flex items-center gap-3 py-1.5"
                             >
                               <div
-                                className="w-7.5 h-7.5 rounded-lg flex items-center justify-center border shrink-0"
+                                className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg border"
                                 style={{
                                   backgroundColor: `${service.accentColor}06`,
                                   borderColor: `${service.accentColor}12`,
                                   color: service.accentColor,
                                 }}
                               >
-                                <Icon name={service.icon as IconName} className="w-4 h-4" />
+                                <Icon name={service.icon as IconName} className="h-4 w-4" />
                               </div>
-                              <span className="text-xs font-semibold text-gray-600 group-hover:text-[#1155CC] transition-colors">
+                              <span className="text-xs font-semibold text-gray-600 transition-colors group-hover:text-[#1155CC]">
                                 {service.title}
                               </span>
                             </Link>
                           ))}
 
                           {/* All Services Link */}
-                          <div className="mt-2 pt-2.5 border-t border-gray-100/50 flex items-center">
+                          <div className="mt-2 flex items-center border-t border-gray-100/50 pt-2.5">
                             <Link
                               href="/services"
                               onClick={() => {
                                 setIsMobileServicesOpen(false);
                                 setIsMobileMenuOpen(false);
                               }}
-                              className="text-xs font-bold text-[#1155CC] hover:underline flex items-center gap-1.5 py-1"
+                              className="flex items-center gap-1.5 py-1 text-xs font-bold text-[#1155CC] hover:underline"
                             >
                               All Services
-                              <Icon name="arrow" className="w-3.5 h-3.5" />
+                              <Icon name="arrow" className="h-3.5 w-3.5" />
                             </Link>
                           </div>
                         </div>
@@ -313,7 +314,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between text-sm font-bold font-sans text-gray-700 hover:text-[#1155CC] transition-colors py-3 border-b border-gray-100/50 last:border-0"
+                    className="flex items-center justify-between border-b border-gray-100/50 py-3 font-sans text-sm font-bold text-gray-700 transition-colors last:border-0 hover:text-[#1155CC]"
                   >
                     <span className="font-bold">{link.name}</span>
                     <svg
@@ -329,7 +330,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                 );
               })}
 
-              <div className="pt-4 mt-2 border-t border-gray-100">
+              <div className="mt-2 border-t border-gray-100 pt-4">
                 <Button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
@@ -348,7 +349,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
         )}
       </header>
       {!transparent && (
-        <div className="block md:hidden h-12 sm:h-14 w-full shrink-0 pointer-events-none" />
+        <div className="pointer-events-none block h-12 w-full shrink-0 sm:h-14 md:hidden" />
       )}
 
       {/* Get a Quote Modal */}

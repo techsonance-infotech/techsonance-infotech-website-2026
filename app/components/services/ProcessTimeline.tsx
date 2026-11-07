@@ -81,7 +81,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
   return (
     <section
       ref={sectionRef}
-      className="bg-[var(--bg-muted)] border-y border-[var(--border)] overflow-hidden"
+      className="overflow-hidden border-y border-[var(--border)] bg-[var(--bg-muted)]"
     >
       <div className="py-16 md:py-24">
         {/* Header */}
@@ -89,12 +89,12 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
           <div className="max-w-3xl">
             <span className="section-label">Our Approach</span>
             <h2
-              className="text-[var(--text-primary)] font-medium tracking-tight"
+              className="font-medium tracking-tight text-[var(--text-primary)]"
               style={{ fontSize: "var(--text-section-title)" }}
             >
               How We Work
             </h2>
-            <p className="text-[var(--text-secondary)] mt-3 text-sm sm:text-base md:text-lg leading-relaxed">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)] sm:text-base md:text-lg">
               Our structured engineering process ensures transparency, velocity, and high-fidelity
               output from kick-off to deployment.
             </p>
@@ -104,7 +104,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
         {/* Horizontal track (desktop) / Stacked grid (mobile) */}
         <div className="relative">
           {/* Timeline bar — desktop */}
-          <div className="hidden md:block absolute top-[68px] left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-blue)]/20 to-transparent pointer-events-none z-0" />
+          <div className="pointer-events-none absolute top-[68px] right-0 left-0 z-0 hidden h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-blue)]/20 to-transparent md:block" />
 
           <div
             ref={trackRef}
@@ -115,10 +115,10 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
             style={{ willChange: "transform" }}
           >
             {service.process.map((step, i) => (
-              <div key={i} className="process-card md:w-[340px] lg:w-[380px] md:shrink-0 md:pr-6">
+              <div key={i} className="process-card md:w-[340px] md:shrink-0 md:pr-6 lg:w-[380px]">
                 {/* Timeline node — desktop only */}
-                <div className="hidden md:flex items-center justify-center mb-6">
-                  <div className="relative z-10 w-9 h-9 rounded-full border-2 border-[var(--accent-blue)] bg-[var(--bg-muted)] flex items-center justify-center shadow-sm">
+                <div className="mb-6 hidden items-center justify-center md:flex">
+                  <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-[var(--accent-blue)] bg-[var(--bg-muted)] shadow-sm">
                     <span className="text-[10px] font-medium text-[var(--accent-blue)]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -126,27 +126,27 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
                 </div>
 
                 {/* Card */}
-                <div className="bg-white rounded-xl md:rounded-2xl border border-[var(--border)] p-5 md:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(17,85,204,0.06)] hover:-translate-y-0.5 transition-all duration-300 h-full">
+                <div className="h-full rounded-xl border border-[var(--border)] bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(17,85,204,0.06)] md:rounded-2xl md:p-6">
                   {/* Mobile step badge */}
-                  <div className="flex items-center gap-2.5 mb-3 md:hidden">
-                    <div className="w-7 h-7 rounded-full border-2 border-[var(--accent-blue)] flex items-center justify-center">
+                  <div className="mb-3 flex items-center gap-2.5 md:hidden">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[var(--accent-blue)]">
                       <span className="text-[9px] font-medium text-[var(--accent-blue)]">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     </div>
-                    <div className="flex-1 h-px bg-[var(--border)]" />
+                    <div className="h-px flex-1 bg-[var(--border)]" />
                   </div>
 
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl border border-[var(--border)] bg-[var(--bg-subtle)] flex items-center justify-center text-[var(--accent-blue)] shrink-0">
-                      <Icon name={step.icon as IconName} className="w-4.5 h-4.5" />
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-subtle)] text-[var(--accent-blue)]">
+                      <Icon name={step.icon as IconName} className="h-4.5 w-4.5" />
                     </div>
-                    <h3 className="text-base md:text-lg font-bold text-[var(--text-primary)] leading-tight">
+                    <h3 className="text-base leading-tight font-bold text-[var(--text-primary)] md:text-lg">
                       {step.title}
                     </h3>
                   </div>
 
-                  <p className="text-[var(--text-secondary)] leading-relaxed text-[13px] md:text-[14px]">
+                  <p className="text-[13px] leading-relaxed text-[var(--text-secondary)] md:text-[14px]">
                     {step.description}
                   </p>
                 </div>

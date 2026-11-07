@@ -33,7 +33,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-godui-fade-in data-[state=closed]:animate-godui-fade-out",
+        "fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-godui-fade-out data-[state=open]:animate-godui-fade-in",
         className,
       )}
       {...props}
@@ -55,7 +55,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg outline-none data-[state=open]:animate-godui-fade-scale-in data-[state=closed]:animate-godui-fade-scale-out sm:max-w-lg",
+          "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg outline-none data-[state=closed]:animate-godui-fade-scale-out data-[state=open]:animate-godui-fade-scale-in sm:max-w-lg",
           className,
         )}
         {...props}

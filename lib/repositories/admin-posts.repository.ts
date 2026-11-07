@@ -71,6 +71,9 @@ export class AdminPostsRepository {
       if (options.status) whereObj.status = options.status;
 
       const hasFilters = Object.keys(whereObj).length > 0;
+      const conditions = [];
+      if (whereObj.siteId) conditions.push(eq(postsTable.siteId, whereObj.siteId));
+      if (whereObj.status) conditions.push(eq(postsTable.status, whereObj.status));
 
       const [posts, totalResult] = await Promise.all([
         this.db.query.postsTable.findMany({
@@ -78,19 +81,14 @@ export class AdminPostsRepository {
           limit,
           offset,
           with: { category: true },
-          where: hasFilters ? whereObj : undefined,
+          ...(hasFilters ? { where: whereObj } : {}),
         }),
-        this.db
-          .select({ cnt: count() })
-          .from(postsTable)
-          .where(
-            hasFilters
-              ? and(
-                  whereObj.siteId ? eq(postsTable.siteId, whereObj.siteId) : undefined,
-                  whereObj.status ? eq(postsTable.status, whereObj.status) : undefined,
-                )
-              : undefined,
-          ),
+        conditions.length > 0
+          ? this.db
+              .select({ cnt: count() })
+              .from(postsTable)
+              .where(and(...conditions))
+          : this.db.select({ cnt: count() }).from(postsTable),
       ]);
 
       let filteredPosts = (posts as Post[]) || [];

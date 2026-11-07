@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { loginAdmin } from "@/lib/api/admin-governance.api";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -21,24 +21,11 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.AUTH.LOGIN, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        const errorMsg =
-          typeof data.error === "string"
-            ? data.error
-            : data.error?.message || data.message || "Failed to sign in";
-        throw new Error(errorMsg);
-      }
+      await loginAdmin({ email, password });
 
       router.push("/admin/dashboard");
       router.refresh();
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Invalid credentials");
     } finally {
       setLoading(false);
@@ -46,30 +33,30 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAFBFD] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#FAFBFD] p-4">
       {/* Background Ambience Waves */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#1155CC]/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#22B6F6]/10 rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#1155CC]/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#22B6F6]/10 blur-3xl" />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-white shadow-xl shadow-[#1155CC]/30 mb-4">
-            <span className="font-black text-xl font-sora">TS</span>
+      <div className="relative z-10 w-full max-w-md">
+        <div className="mb-8 text-center">
+          <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-white shadow-xl shadow-[#1155CC]/30">
+            <span className="font-sora text-xl font-black">TS</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             Studio Control Platform
           </h1>
-          <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
             Sign in to manage agency publishing & automation
           </p>
         </div>
 
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(17,85,204,0.08)] p-6 sm:p-8 backdrop-blur-xl">
+        <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_60px_-15px_rgba(17,85,204,0.08)] backdrop-blur-xl sm:p-8">
           {error && (
-            <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <div className="animate-in fade-in mb-6 flex items-center gap-2.5 rounded-2xl border border-rose-200/80 bg-rose-50 p-4 text-xs font-semibold text-rose-700">
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
               <span>{error}</span>
             </div>
           )}
@@ -78,12 +65,12 @@ export default function AdminLoginPage() {
             <div>
               <label
                 htmlFor="login-email"
-                className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
+                className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase"
               >
                 Work Email
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                   id="login-email"
                   type="email"
@@ -91,22 +78,22 @@ export default function AdminLoginPage() {
                   placeholder="admin@techsonance.co.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-11 rounded-xl bg-slate-50/50 border-slate-200 text-sm focus:bg-white"
+                  className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pl-10 text-sm focus:bg-white"
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <label
                   htmlFor="login-password"
-                  className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                  className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
                 >
                   Password
                 </label>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                   id="login-password"
                   type="password"
@@ -114,7 +101,7 @@ export default function AdminLoginPage() {
                   placeholder="••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-11 rounded-xl bg-slate-50/50 border-slate-200 text-sm focus:bg-white"
+                  className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pl-10 text-sm focus:bg-white"
                 />
               </div>
             </div>
@@ -122,19 +109,19 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-11 rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-lg shadow-[#1155CC]/25 font-bold normal-case tracking-normal text-xs sm:text-sm mt-2 flex items-center justify-center gap-2"
+              className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1155CC] text-xs font-bold tracking-normal text-white normal-case shadow-lg shadow-[#1155CC]/25 hover:bg-[#0d44a4] sm:text-sm"
             >
               <span>{loading ? "Authenticating..." : "Sign In to Admin"}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+          <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-6 text-[11px] font-medium text-slate-400">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               Protected by Native DB Auth & Secure Session
             </span>
-            <Link href="/" className="hover:text-slate-600 underline">
+            <Link href="/" className="underline hover:text-slate-600">
               Back to site
             </Link>
           </div>

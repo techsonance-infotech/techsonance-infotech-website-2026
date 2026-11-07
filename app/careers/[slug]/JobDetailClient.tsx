@@ -308,15 +308,15 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen font-sans text-slate-900 overflow-x-hidden pt-28 pb-32">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="min-h-screen overflow-x-hidden bg-[#FAFBFD] pt-28 pb-32 font-sans text-slate-900">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Back link */}
           <div className="mb-6">
             <Link
               href="/careers"
-              className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-[#1155CC] transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 transition-colors hover:text-[#1155CC]"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back to all open positions</span>
             </Link>
           </div>
@@ -327,59 +327,59 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
           )}
 
           {/* Role Header Card */}
-          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-10 shadow-sm relative overflow-hidden mb-10">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/[0.04] rounded-full blur-3xl pointer-events-none" />
+          <div className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-10">
+            <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/[0.04] blur-3xl" />
 
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-100 relative z-10">
-              <div className="space-y-3 max-w-3xl">
+            <div className="relative z-10 flex flex-col justify-between gap-6 border-b border-slate-100 pb-8 lg:flex-row lg:items-center">
+              <div className="max-w-3xl space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] font-black tracking-wider uppercase px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#1155CC]">
+                  <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
                     {job.department}
                   </span>
                   {job.experienceLevel && (
-                    <span className="text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold tracking-wider text-slate-600 uppercase">
                       Level: {job.experienceLevel}
                     </span>
                   )}
                   {job.referenceCode && (
-                    <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-slate-50 text-slate-400 border border-slate-200/60">
+                    <span className="rounded-full border border-slate-200/60 bg-slate-50 px-2.5 py-1 font-mono text-[10px] text-slate-400">
                       Ref: {job.referenceCode}
                     </span>
                   )}
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-3xl leading-tight font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
                   {job.title}
                 </h1>
 
                 {job.summary && (
-                  <p className="text-base text-slate-600 leading-relaxed font-medium">
+                  <p className="text-base leading-relaxed font-medium text-slate-600">
                     {job.summary}
                   </p>
                 )}
               </div>
 
               {canApply && (
-                <div className="flex sm:flex-col gap-3 shrink-0">
+                <div className="flex shrink-0 gap-3 sm:flex-col">
                   {job.applicationMethod === "external" && job.externalApplyUrl ? (
                     <Button
                       asChild
                       size="lg"
-                      className="w-full sm:w-auto font-bold shadow-md shadow-blue-500/10"
+                      className="w-full font-bold shadow-md shadow-blue-500/10 sm:w-auto"
                     >
                       <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                         <span>Apply Externally</span>
-                        <ExternalLink className="w-4 h-4 ml-1.5" />
+                        <ExternalLink className="ml-1.5 h-4 w-4" />
                       </a>
                     </Button>
                   ) : (
                     <Button
                       size="lg"
                       onClick={() => setIsApplyOpen(true)}
-                      className="w-full sm:w-auto font-bold shadow-md shadow-blue-500/10"
+                      className="w-full font-bold shadow-md shadow-blue-500/10 sm:w-auto"
                     >
                       <span>Apply for this Role</span>
-                      <Send className="w-4 h-4 ml-1.5" />
+                      <Send className="ml-1.5 h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -387,58 +387,58 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             </div>
 
             {/* Summary Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 relative z-10">
+            <div className="relative z-10 grid grid-cols-2 gap-4 pt-6 sm:grid-cols-4 sm:gap-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1155CC] shrink-0">
-                  <MapPin className="w-5 h-5" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-[#1155CC]">
+                  <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                     Location
                   </div>
-                  <div className="text-xs sm:text-sm font-semibold text-slate-800">
+                  <div className="text-xs font-semibold text-slate-800 sm:text-sm">
                     {job.location}
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
-                  <Briefcase className="w-5 h-5" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-indigo-100 bg-indigo-50 text-indigo-600">
+                  <Briefcase className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                     Work Mode / Type
                   </div>
-                  <div className="text-xs sm:text-sm font-semibold text-slate-800">
+                  <div className="text-xs font-semibold text-slate-800 sm:text-sm">
                     {job.workMode ? `${job.workMode} • ${job.type}` : job.type}
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                  <Banknote className="w-5 h-5" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-100 bg-emerald-50 text-emerald-600">
+                  <Banknote className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                     Compensation
                   </div>
-                  <div className="text-xs sm:text-sm font-semibold text-slate-800">
+                  <div className="text-xs font-semibold text-slate-800 sm:text-sm">
                     {formattedSalary || "Competitive / Undisclosed"}
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                  <Calendar className="w-5 h-5" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-100 bg-amber-50 text-amber-600">
+                  <Calendar className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                     Application Deadline
                   </div>
-                  <div className="text-xs sm:text-sm font-semibold text-slate-800">
+                  <div className="text-xs font-semibold text-slate-800 sm:text-sm">
                     {job.closesAt
                       ? new Date(job.closesAt).toLocaleDateString("en-US", {
                           month: "short",
@@ -452,26 +452,26 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             </div>
 
             {/* Social Share Strip */}
-            <div className="mt-8 pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-              <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                <Share2 className="w-3.5 h-3.5 text-slate-400" />
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-6">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                <Share2 className="h-3.5 w-3.5 text-slate-400" />
                 <span>Share this opening with colleagues:</span>
               </span>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                   aria-label="Copy job link"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
                       <span className="text-emerald-700">Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5 text-slate-500" />
+                      <Copy className="h-3.5 w-3.5 text-slate-500" />
                       <span>Copy link</span>
                     </>
                   )}
@@ -483,10 +483,10 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-[#0A66C2] hover:border-[#0A66C2]/30 transition-colors"
+                  className="rounded-xl border border-slate-200 p-2 text-slate-600 transition-colors hover:border-[#0A66C2]/30 hover:text-[#0A66C2]"
                   aria-label="Share on LinkedIn"
                 >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                   </svg>
                 </a>
@@ -497,10 +497,10 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   )}&url=${encodeURIComponent(currentUrl)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-black hover:border-black/30 transition-colors"
+                  className="rounded-xl border border-slate-200 p-2 text-slate-600 transition-colors hover:border-black/30 hover:text-black"
                   aria-label="Share on X / Twitter"
                 >
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
                 </a>
@@ -511,43 +511,43 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   )}&body=${encodeURIComponent(
                     `Hey, thought you might be interested in this opening:\n\n${job.title}\n${currentUrl}`,
                   )}`}
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-rose-600 hover:border-rose-200 transition-colors"
+                  className="rounded-xl border border-slate-200 p-2 text-slate-600 transition-colors hover:border-rose-200 hover:text-rose-600"
                   aria-label="Share via Email"
                 >
-                  <Mail className="w-4 h-4" />
+                  <Mail className="h-4 w-4" />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Main Content Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            <div className="lg:col-span-8 space-y-12">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+            <div className="space-y-12 lg:col-span-8">
               {/* 1. About the Role */}
-              <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#1155CC]" />
+              <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                <h2 className="mb-4 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                  <Sparkles className="h-4 w-4 text-[#1155CC]" />
                   <span>{"// About the Role"}</span>
                 </h2>
-                <div className="text-slate-700 leading-relaxed font-normal whitespace-pre-line text-sm sm:text-base">
+                <div className="text-sm leading-relaxed font-normal whitespace-pre-line text-slate-700 sm:text-base">
                   {job.description}
                 </div>
               </section>
 
               {/* 2. Key Responsibilities */}
               {job.responsibilities && job.responsibilities.length > 0 && (
-                <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                  <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
-                    <Check className="w-4 h-4 text-[#1155CC]" />
+                <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                  <h2 className="mb-6 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                    <Check className="h-4 w-4 text-[#1155CC]" />
                     <span>{"// Key Responsibilities"}</span>
                   </h2>
                   <ul className="space-y-4">
                     {job.responsibilities.map((resp, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700"
+                        className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
-                        <span className="w-5 h-5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1155CC] shrink-0 mt-0.5 text-xs font-bold">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-blue-100 bg-blue-50 text-xs font-bold text-[#1155CC]">
                           ✓
                         </span>
                         <span className="leading-snug">{resp}</span>
@@ -559,18 +559,18 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
               {/* 3. Requirements & Qualifications */}
               {job.requirements && job.requirements.length > 0 && (
-                <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                  <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
-                    <Award className="w-4 h-4 text-indigo-600" />
+                <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                  <h2 className="mb-6 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                    <Award className="h-4 w-4 text-indigo-600" />
                     <span>{"// Requirements & Qualifications"}</span>
                   </h2>
                   <ul className="space-y-4">
                     {job.requirements.map((req, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700"
+                        className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
-                        <span className="w-5 h-5 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0 mt-0.5 text-xs font-bold">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-indigo-100 bg-indigo-50 text-xs font-bold text-indigo-600">
                           ✓
                         </span>
                         <span className="leading-snug">{req}</span>
@@ -582,18 +582,18 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
               {/* 4. Preferred Qualifications */}
               {job.preferredQualifications && job.preferredQualifications.length > 0 && (
-                <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                  <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-violet-600" />
+                <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                  <h2 className="mb-6 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                    <Sparkles className="h-4 w-4 text-violet-600" />
                     <span>{"// Preferred Qualifications (Bonus Points)"}</span>
                   </h2>
                   <ul className="space-y-4">
                     {job.preferredQualifications.map((pref, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700"
+                        className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
-                        <span className="w-5 h-5 rounded-full bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 shrink-0 mt-0.5 text-xs font-bold">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-100 bg-violet-50 text-xs font-bold text-violet-600">
                           +
                         </span>
                         <span className="leading-snug">{pref}</span>
@@ -605,21 +605,21 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
               {/* 5. Benefits & Perks */}
               {job.benefits && job.benefits.length > 0 && (
-                <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                  <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-6 flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                  <h2 className="mb-6 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                    <ShieldCheck className="h-4 w-4 text-emerald-600" />
                     <span>{"// Benefits & Perks"}</span>
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {job.benefits.map((benefit, i) => (
                       <div
                         key={i}
-                        className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-3"
+                        className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4"
                       >
-                        <span className="w-6 h-6 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 text-xs font-bold">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-xs font-bold text-emerald-700">
                           ★
                         </span>
-                        <span className="text-xs sm:text-sm font-semibold text-slate-800 leading-snug">
+                        <span className="text-xs leading-snug font-semibold text-slate-800 sm:text-sm">
                           {benefit}
                         </span>
                       </div>
@@ -629,35 +629,35 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
               )}
 
               {/* 6. About the Team */}
-              <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-4 flex items-center gap-2">
-                  <Users className="w-4 h-4 text-blue-600" />
+              <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                <h2 className="mb-4 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                  <Users className="h-4 w-4 text-blue-600" />
                   <span>{"// About the Team"}</span>
                 </h2>
-                <p className="text-slate-700 leading-relaxed font-normal text-sm sm:text-base">
+                <p className="text-sm leading-relaxed font-normal text-slate-700 sm:text-base">
                   {job.aboutTeam ||
                     "You will work alongside senior software engineers, system architects, and technical product managers who are passionate about engineering craftsmanship. We believe in autonomous squads, fast feedback loops, continuous learning, and zero micro-management."}
                 </p>
               </section>
 
               {/* 7. Hiring Process Steps */}
-              <section className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-sm">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 font-mono mb-8 flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[#1155CC]" />
+              <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+                <h2 className="mb-8 flex items-center gap-2 font-mono text-xs font-black tracking-wider text-slate-400 uppercase">
+                  <Clock className="h-4 w-4 text-[#1155CC]" />
                   <span>{"// Hiring Process Steps"}</span>
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   {hiringSteps.map((step) => (
                     <div
                       key={step.step}
-                      className="p-5 rounded-2xl bg-[#FAFBFD] border border-slate-100 space-y-2 relative"
+                      className="relative space-y-2 rounded-2xl border border-slate-100 bg-[#FAFBFD] p-5"
                     >
-                      <div className="text-xs font-black font-mono text-[#1155CC] tracking-wider">
+                      <div className="font-mono text-xs font-black tracking-wider text-[#1155CC]">
                         STEP {step.step}
                       </div>
                       <h3 className="text-base font-bold text-slate-900">{step.title}</h3>
                       {step.desc && (
-                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">
                           {step.desc}
                         </p>
                       )}
@@ -667,11 +667,11 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
               </section>
 
               {/* 8. Equal Opportunity Statement */}
-              <section className="bg-slate-100/60 border border-slate-200/60 rounded-3xl p-6 sm:p-8">
-                <h2 className="text-xs font-black uppercase tracking-wider text-slate-500 font-mono mb-3">
+              <section className="rounded-3xl border border-slate-200/60 bg-slate-100/60 p-6 sm:p-8">
+                <h2 className="mb-3 font-mono text-xs font-black tracking-wider text-slate-500 uppercase">
                   {"// Equal Opportunity Employer"}
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                <p className="text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   {eeocStatement}
                 </p>
               </section>
@@ -680,49 +680,49 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             {/* Sidebar Sticky Panel */}
             <aside
               aria-label="Role overview and application sidebar"
-              className="lg:col-span-4 space-y-6 lg:sticky lg:top-28"
+              className="space-y-6 lg:sticky lg:top-28 lg:col-span-4"
             >
               {/* Quick Info Box */}
-              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-4">
+              <div className="space-y-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                <h3 className="border-b border-slate-100 pb-4 text-sm font-bold tracking-wider text-slate-900 uppercase">
                   Position Snapshot
                 </h3>
 
                 <div className="space-y-4 text-xs">
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">Role Title</span>
-                    <span className="font-bold text-slate-800 text-sm">{job.title}</span>
+                    <span className="mb-0.5 block font-semibold text-slate-400">Role Title</span>
+                    <span className="text-sm font-bold text-slate-800">{job.title}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">Department</span>
+                    <span className="mb-0.5 block font-semibold text-slate-400">Department</span>
                     <span className="font-bold text-slate-800">{job.department}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">Location</span>
+                    <span className="mb-0.5 block font-semibold text-slate-400">Location</span>
                     <span className="font-bold text-slate-800">{job.location}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">
+                    <span className="mb-0.5 block font-semibold text-slate-400">
                       Work Arrangement
                     </span>
                     <span className="font-bold text-slate-800">{job.workMode || "Hybrid"}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-semibold block mb-0.5">
+                    <span className="mb-0.5 block font-semibold text-slate-400">
                       Employment Type
                     </span>
                     <span className="font-bold text-slate-800">{job.type}</span>
                   </div>
                   {job.skills && job.skills.length > 0 && (
                     <div>
-                      <span className="text-slate-400 font-semibold block mb-2">
+                      <span className="mb-2 block font-semibold text-slate-400">
                         Key Competencies
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {job.skills.map((skill) => (
                           <span
                             key={skill}
-                            className="px-2.5 py-1 rounded-lg bg-blue-50/70 text-[#1155CC] text-[11px] font-semibold border border-blue-100/50"
+                            className="rounded-lg border border-blue-100/50 bg-blue-50/70 px-2.5 py-1 text-[11px] font-semibold text-[#1155CC]"
                           >
                             {skill}
                           </span>
@@ -733,7 +733,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                 </div>
 
                 {canApply ? (
-                  <div className="pt-4 border-t border-slate-100">
+                  <div className="border-t border-slate-100 pt-4">
                     {job.applicationMethod === "external" && job.externalApplyUrl ? (
                       <Button
                         asChild
@@ -742,7 +742,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                       >
                         <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                           <span>Apply Externally</span>
-                          <ExternalLink className="w-4 h-4 ml-1.5" />
+                          <ExternalLink className="ml-1.5 h-4 w-4" />
                         </a>
                       </Button>
                     ) : (
@@ -752,13 +752,13 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                         className="w-full font-bold shadow-md shadow-blue-500/10"
                       >
                         <span>Apply for this Position</span>
-                        <Send className="w-4 h-4 ml-1.5" />
+                        <Send className="ml-1.5 h-4 w-4" />
                       </Button>
                     )}
                   </div>
                 ) : (
-                  <div className="pt-4 border-t border-slate-100 text-center">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                  <div className="border-t border-slate-100 pt-4 text-center">
+                    <span className="block text-xs font-bold tracking-wider text-slate-400 uppercase">
                       Applications Inactive
                     </span>
                   </div>
@@ -770,29 +770,29 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
         {/* Sticky Mobile Apply Bar */}
         {canApply && (
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-3 shadow-lg">
-            <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
+          <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-slate-200/80 bg-white/95 px-4 py-3 shadow-lg backdrop-blur-md lg:hidden">
+            <div className="mx-auto flex max-w-md items-center justify-between gap-4">
               <div className="truncate">
-                <div className="text-xs font-bold text-slate-900 truncate">{job.title}</div>
-                <div className="text-[11px] text-slate-500 truncate">
+                <div className="truncate text-xs font-bold text-slate-900">{job.title}</div>
+                <div className="truncate text-[11px] text-slate-500">
                   {job.location} • {job.type}
                 </div>
               </div>
               {job.applicationMethod === "external" && job.externalApplyUrl ? (
-                <Button asChild size="sm" className="font-bold shrink-0">
+                <Button asChild size="sm" className="shrink-0 font-bold">
                   <a href={job.externalApplyUrl} target="_blank" rel="noopener noreferrer">
                     <span>Apply</span>
-                    <ExternalLink className="w-3.5 h-3.5 ml-1" />
+                    <ExternalLink className="ml-1 h-3.5 w-3.5" />
                   </a>
                 </Button>
               ) : (
                 <Button
                   size="sm"
                   onClick={() => setIsApplyOpen(true)}
-                  className="font-bold shrink-0"
+                  className="shrink-0 font-bold"
                 >
                   <span>Apply Now</span>
-                  <Send className="w-3.5 h-3.5 ml-1" />
+                  <Send className="ml-1 h-3.5 w-3.5" />
                 </Button>
               )}
             </div>
@@ -803,20 +803,20 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
         <Dialog open={isApplyOpen} onOpenChange={handleDialogChange}>
           <DialogContent
             data-lenis-prevent="true"
-            className="sm:max-w-2xl max-h-[90vh] p-0 flex flex-col overflow-hidden overscroll-contain bg-white rounded-3xl border border-slate-200/90 shadow-2xl"
+            className="flex max-h-[90vh] flex-col overflow-hidden overscroll-contain rounded-3xl border border-slate-200/90 bg-white p-0 shadow-2xl sm:max-w-2xl"
           >
             {/* Sticky Modal Header */}
-            <div className="p-6 pb-4 border-b border-slate-100 shrink-0 bg-white">
+            <div className="shrink-0 border-b border-slate-100 bg-white p-6 pb-4">
               <DialogHeader>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1155CC]">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
                     {job.department}
                   </span>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                     {job.workMode || job.location}
                   </span>
                 </div>
-                <DialogTitle className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-sora">
+                <DialogTitle className="font-sora text-xl font-black tracking-tight text-slate-900 sm:text-2xl">
                   Apply for {job.title}
                 </DialogTitle>
                 <DialogDescription className="text-xs text-slate-500">
@@ -828,25 +828,25 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             {formStatus === "success" ? (
               <div
                 data-lenis-prevent="true"
-                className="py-10 px-6 text-center space-y-4 overflow-y-auto overscroll-contain flex-1"
+                className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-6 py-10 text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl font-black shadow-sm">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl font-black text-emerald-600 shadow-sm">
                   ✓
                 </div>
-                <h4 className="text-2xl font-black text-slate-900 tracking-tight font-sora">
+                <h4 className="font-sora text-2xl font-black tracking-tight text-slate-900">
                   Application Submitted!
                 </h4>
-                <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                <p className="mx-auto max-w-md text-sm leading-relaxed text-slate-600">
                   Thank you, <strong>{submittedCandidate?.name}</strong>. We have received your
                   application for <strong>{job.title}</strong> and sent a confirmation to{" "}
                   <span className="font-semibold text-slate-900">{submittedCandidate?.email}</span>.
                 </p>
 
-                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 max-w-md mx-auto text-left space-y-2 mt-4 text-xs text-slate-600">
-                  <div className="font-bold text-slate-800 uppercase tracking-wider text-[10px]">
+                <div className="mx-auto mt-4 max-w-md space-y-2 rounded-2xl border border-slate-200/80 bg-slate-50 p-4 text-left text-xs text-slate-600">
+                  <div className="text-[10px] font-bold tracking-wider text-slate-800 uppercase">
                     What happens next:
                   </div>
-                  <ul className="list-disc pl-4 space-y-1">
+                  <ul className="list-disc space-y-1 pl-4">
                     <li>Our hiring team reviews your resume and project links.</li>
                     <li>If aligned, our recruiter will reach out within 3 business days.</li>
                     <li>
@@ -856,14 +856,14 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   </ul>
                 </div>
 
-                <div className="pt-4 flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-3 pt-4">
                   <Button variant="outline" onClick={() => handleDialogChange(false)}>
                     Close
                   </Button>
                   <Button
                     asChild
                     variant="default"
-                    className="bg-[#1155CC] hover:bg-[#0d44a4] text-white"
+                    className="bg-[#1155CC] text-white hover:bg-[#0d44a4]"
                   >
                     <Link href="/careers">Explore Other Roles</Link>
                   </Button>
@@ -872,12 +872,12 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
             ) : (
               <form
                 onSubmit={handleSubmit(onFormSubmit)}
-                className="flex flex-col flex-1 overflow-hidden"
+                className="flex flex-1 flex-col overflow-hidden"
               >
                 {/* Scrollable Form Body */}
                 <div
                   data-lenis-prevent="true"
-                  className="overflow-y-auto overscroll-contain p-6 space-y-4 flex-1 focus:outline-none"
+                  className="flex-1 space-y-4 overflow-y-auto overscroll-contain p-6 focus:outline-none"
                 >
                   {/* Honeypot field for bot defeat */}
                   <input
@@ -890,40 +890,40 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   />
 
                   {formError && (
-                    <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-start gap-2">
-                      <span className="font-bold shrink-0">⚠️</span>
+                    <div className="flex items-start gap-2 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs font-semibold text-rose-700">
+                      <span className="shrink-0 font-bold">⚠️</span>
                       <span>{formError}</span>
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                       Full Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Maya Sharma"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                       {...register("fullName", { required: "Full name is required" })}
                     />
                     {errors.fullName && (
-                      <p className="text-xs text-rose-500 font-semibold mt-1">
+                      <p className="mt-1 text-xs font-semibold text-rose-500">
                         {errors.fullName.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                         Email Address <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="email"
                         required
                         placeholder="maya@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("email", {
                           required: "Email address is required",
                           pattern: {
@@ -933,44 +933,44 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                         })}
                       />
                       {errors.email && (
-                        <p className="text-xs text-rose-500 font-semibold mt-1">
+                        <p className="mt-1 text-xs font-semibold text-rose-500">
                           {errors.email.message}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                         Phone Number
                       </label>
                       <input
                         type="tel"
                         placeholder="+91 98765 43210"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("phone")}
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                         Current Location
                       </label>
                       <input
                         type="text"
                         placeholder="e.g. Bengaluru, India"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("currentLocation")}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                         Notice Period / Availability
                       </label>
                       <select
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("noticePeriodWeeks", {
                           valueAsNumber: true,
                         })}
@@ -984,37 +984,49 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label
+                        htmlFor="apply-linkedin"
+                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         LinkedIn
                       </label>
                       <input
+                        id="apply-linkedin"
                         type="url"
                         placeholder="https://linkedin.com/in/..."
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("linkedinUrl")}
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label
+                        htmlFor="apply-github"
+                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         GitHub
                       </label>
                       <input
+                        id="apply-github"
                         type="url"
                         placeholder="https://github.com/..."
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("githubUrl")}
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                      <label
+                        htmlFor="apply-portfolio"
+                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         Portfolio
                       </label>
                       <input
+                        id="apply-portfolio"
                         type="url"
                         placeholder="https://portfolio.dev"
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("portfolioUrl")}
                       />
                     </div>
@@ -1022,11 +1034,11 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
                   {/* Resume Upload */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                       Resume / CV (PDF or DOCX, max 5MB){" "}
                       {job.resumeRequired !== false && <span className="text-rose-500">*</span>}
                     </label>
-                    <div className="mt-1 flex items-center justify-center px-4 py-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-blue-400 transition-colors bg-slate-50/50">
+                    <div className="mt-1 flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 px-4 py-4 transition-colors hover:border-blue-400">
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -1037,9 +1049,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                       />
                       <label
                         htmlFor="resume-upload-modal"
-                        className="cursor-pointer flex flex-col items-center gap-1.5 text-center w-full"
+                        className="flex w-full cursor-pointer flex-col items-center gap-1.5 text-center"
                       >
-                        <Upload className="w-5 h-5 text-slate-400" />
+                        <Upload className="h-5 w-5 text-slate-400" />
                         <span className="text-xs font-semibold text-slate-700">
                           {resumeFile ? resumeFile.name : "Click to select a resume file"}
                         </span>
@@ -1049,25 +1061,25 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                       </label>
                     </div>
                     {fileError && (
-                      <p className="text-xs text-rose-600 font-semibold mt-1.5">{fileError}</p>
+                      <p className="mt-1.5 text-xs font-semibold text-rose-600">{fileError}</p>
                     )}
                   </div>
 
                   {/* Cover Letter */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
                       Cover Letter / Notes{" "}
                       {job.coverLetterRequirement === "REQUIRED" && (
                         <span className="text-rose-500">*</span>
                       )}
                       {job.coverLetterRequirement === "OPTIONAL" && (
-                        <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                        <span className="font-normal text-slate-400 lowercase">(optional)</span>
                       )}
                     </label>
                     <textarea
                       rows={3}
                       placeholder="Tell us what excites you about this role and why you're a great fit..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                       {...register("coverLetter")}
                     />
                   </div>
@@ -1076,8 +1088,8 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   {job.screeningQuestions &&
                     Array.isArray(job.screeningQuestions) &&
                     job.screeningQuestions.length > 0 && (
-                      <div className="space-y-3 pt-2 border-t border-slate-100">
-                        <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                      <div className="space-y-3 border-t border-slate-100 pt-2">
+                        <h5 className="text-xs font-bold tracking-wider text-slate-900 uppercase">
                           Role Screening Questions
                         </h5>
                         {job.screeningQuestions.map((sq, index) => (
@@ -1088,7 +1100,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                             </label>
                             {sq.type === "boolean" ? (
                               <div className="flex items-center gap-4 text-xs font-medium text-slate-700">
-                                <label className="flex items-center gap-1.5 cursor-pointer">
+                                <label className="flex cursor-pointer items-center gap-1.5">
                                   <input
                                     type="radio"
                                     name={`sq-${sq.id}`}
@@ -1102,7 +1114,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                                   />
                                   <span>Yes</span>
                                 </label>
-                                <label className="flex items-center gap-1.5 cursor-pointer">
+                                <label className="flex cursor-pointer items-center gap-1.5">
                                   <input
                                     type="radio"
                                     name={`sq-${sq.id}`}
@@ -1126,7 +1138,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                                     [sq.id]: e.target.value,
                                   })
                                 }
-                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                               >
                                 <option value="">Select an option...</option>
                                 {sq.options.map((opt: string) => (
@@ -1146,7 +1158,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                                   })
                                 }
                                 placeholder="Your answer..."
-                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                               />
                             ) : (
                               <input
@@ -1159,7 +1171,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                                   })
                                 }
                                 placeholder="Your answer..."
-                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                               />
                             )}
                           </div>
@@ -1168,8 +1180,8 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     )}
 
                   {/* Consent Checkboxes */}
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
-                    <label className="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
+                  <div className="space-y-2 border-t border-slate-100 pt-2">
+                    <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600">
                       <input
                         type="checkbox"
                         required
@@ -1183,21 +1195,21 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                         <Link
                           href="/privacy-policy"
                           target="_blank"
-                          className="text-[#1155CC] underline font-semibold"
+                          className="font-semibold text-[#1155CC] underline"
                         >
                           Privacy Policy
                         </Link>{" "}
                         and consent to the processing of my application data.{" "}
-                        <span className="text-rose-500 font-bold">*</span>
+                        <span className="font-bold text-rose-500">*</span>
                       </span>
                     </label>
                     {errors.privacyConsent && (
-                      <p className="text-xs text-rose-500 font-semibold">
+                      <p className="text-xs font-semibold text-rose-500">
                         {errors.privacyConsent.message}
                       </p>
                     )}
 
-                    <label className="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
+                    <label className="flex cursor-pointer items-start gap-2.5 text-xs text-slate-600">
                       <input
                         type="checkbox"
                         className="mt-0.5 rounded border-slate-300 text-[#1155CC] focus:ring-[#1155CC]"
@@ -1212,7 +1224,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                 </div>
 
                 {/* Sticky Action Footer */}
-                <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/90 backdrop-blur-xs flex items-center justify-end gap-3 shrink-0">
+                <div className="flex shrink-0 items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/90 p-4 backdrop-blur-xs sm:p-5">
                   <Button
                     type="button"
                     variant="outline"
@@ -1225,7 +1237,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   <Button
                     type="submit"
                     disabled={formStatus === "loading"}
-                    className="font-bold bg-[#1155CC] hover:bg-[#0d44a4] text-white rounded-xl px-6 shadow-sm"
+                    className="rounded-xl bg-[#1155CC] px-6 font-bold text-white shadow-sm hover:bg-[#0d44a4]"
                   >
                     {formStatus === "loading" ? "Submitting Application..." : "Submit Application"}
                   </Button>

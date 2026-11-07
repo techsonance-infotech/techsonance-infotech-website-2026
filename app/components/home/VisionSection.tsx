@@ -109,42 +109,42 @@ const STATS_ITEMS: StatItem[] = [
 
 export default function VisionSection() {
   return (
-    <section className="w-full bg-[#F8FAFC] max-w-7xl mx-auto relative overflow-hidden select-none">
+    <section className="relative mx-auto w-full max-w-7xl overflow-hidden bg-[#F8FAFC] select-none">
       {/* Container max-width 1440px with exact padding constraints */}
-      <div className="max-w-[1440px] mx-auto px-[24px] sm:px-[40px] lg:px-[60px] py-[60px] sm:py-[80px] lg:py-[100px] flex flex-col lg:flex-row gap-12 lg:gap-[120px] justify-between items-start">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-12 px-[24px] py-[60px] sm:px-[40px] sm:py-[80px] lg:flex-row lg:gap-[120px] lg:px-[60px] lg:py-[100px]">
         {/* Left Column: Heading and semi-circular dashboard (flex-1 max-w-480px) */}
-        <div className="flex-1 w-full lg:max-w-[480px] flex flex-col justify-start">
+        <div className="flex w-full flex-1 flex-col justify-start lg:max-w-[480px]">
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="text-[36px] sm:text-[46px] lg:text-[56px] font-medium leading-[1.15] tracking-tight text-[#111827] tracking-tight"
+            className="text-[36px] leading-[1.15] font-medium tracking-tight tracking-tight text-[#111827] sm:text-[46px] lg:text-[56px]"
           >
             <span className="lg:whitespace-nowrap">A Team of Builders &amp;</span>
             <br />
-            <span className="italic text-[#2563EB] font-medium">Innovators</span>
+            <span className="font-medium text-[#2563EB] italic">Innovators</span>
           </motion.h2>
 
           {/* Semicircle Dashboard (moved upward to sit close to the title) */}
-          <div className="mt-6 lg:mt-[24px] w-full">
+          <div className="mt-6 w-full lg:mt-[24px]">
             <SemiCircleDashboard groups={GROUPS} />
           </div>
         </div>
 
         {/* Right Column: Paragraph and stats (flex-1 max-w-480px) */}
-        <div className="flex-1 w-full lg:max-w-[480px] flex flex-col justify-start space-y-6 lg:space-y-8">
+        <div className="flex w-full flex-1 flex-col justify-start space-y-6 lg:max-w-[480px] lg:space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="space-y-6 animate-fade-in"
+            className="animate-fade-in space-y-6"
           >
-            <h3 className="text-[20px] sm:text-[22px] lg:text-[24px] font-semibold text-[#111827] leading-[1.45]">
+            <h3 className="text-[20px] leading-[1.45] font-semibold text-[#111827] sm:text-[22px] lg:text-[24px]">
               we combine creativity with engineering discipline to build products that users love.
             </h3>
-            <p className="text-[16px] sm:text-[17px] lg:text-[18px] font-normal text-[#6B7280] leading-relaxed">
+            <p className="text-[16px] leading-relaxed font-normal text-[#6B7280] sm:text-[17px] lg:text-[18px]">
               From <span className="font-semibold text-gray-800">early-stage</span> startups to
               established enterprises, we help our clients transform complex problems into simple,
               elegant solutions.

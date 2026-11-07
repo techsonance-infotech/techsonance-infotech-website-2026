@@ -38,8 +38,8 @@ export default function Home() {
         <WhyChooseSection />
         <Testimonials />
         <TechnologiesSection />
-        <section id="project-request" className="py-20 bg-[#FAFBFD]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="project-request" className="bg-[#FAFBFD] py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ScopingContactForm />
           </div>
         </section>

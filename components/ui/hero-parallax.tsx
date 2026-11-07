@@ -38,7 +38,7 @@ export const HeroParallax = ({
   return (
     <div
       ref={ref}
-      className="h-[225vh] py-20 overflow-hidden antialiased relative flex flex-col self-auto bg-[#FAFBFD] [perspective:1000px] [transform-style:preserve-3d]"
+      className="relative flex h-[225vh] flex-col self-auto overflow-hidden bg-[#FAFBFD] py-20 antialiased [perspective:1000px] [transform-style:preserve-3d]"
     >
       {/* Full-hero gradient — spans header + upper parallax, fades into page bg */}
       <div
@@ -55,7 +55,7 @@ export const HeroParallax = ({
         }}
         className="relative z-10"
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
+        <motion.div className="mb-20 flex flex-row-reverse space-x-20 space-x-reverse">
           {firstRow.map((product, idx) => (
             <ProductCard
               product={product}
@@ -65,7 +65,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row mb-20 space-x-20">
+        <motion.div className="mb-20 flex flex-row space-x-20">
           {secondRow.map((product, idx) => (
             <ProductCard
               product={product}
@@ -75,7 +75,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
+        <motion.div className="flex flex-row-reverse space-x-20 space-x-reverse">
           {thirdRow.map((product) => (
             <ProductCard product={product} translate={translateX} key={product.title} />
           ))}
@@ -87,25 +87,25 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="w-full relative z-30">
-      <div className="max-w-7xl mx-auto py-12 md:py-20 px-6 md:px-12 text-center flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 bg-white/70 border border-[#1155CC]/10 rounded-full px-4.5 py-1.5 mb-6 relative z-10 backdrop-blur-sm">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#22B6F6] animate-pulse" />
-          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+    <div className="relative z-30 w-full">
+      <div className="mx-auto flex max-w-7xl flex-col items-center px-6 py-12 text-center md:px-12 md:py-20">
+        <div className="relative z-10 mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-white/70 px-4.5 py-1.5 backdrop-blur-sm">
+          <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#22B6F6]" />
+          <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
             Our Capabilities
           </span>
         </div>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-black leading-[1.1] mb-4 tracking-tight relative z-10">
+        <h1 className="relative z-10 mb-4 text-4xl leading-[1.1] font-black tracking-tight text-black md:text-5xl lg:text-6xl">
           Custom Software, AI and{" "}
           <span className="bg-gradient-to-r from-[#1155CC] to-[#22B6F6] bg-clip-text text-transparent">
             Cloud Engineering
           </span>{" "}
           Services
         </h1>
-        <p className="max-w-2xl text-base md:text-lg lg:text-xl text-slate-800 font-semibold mb-3 relative z-10">
+        <p className="relative z-10 mb-3 max-w-2xl text-base font-semibold text-slate-800 md:text-lg lg:text-xl">
           Engineering the Future of Your Business.
         </p>
-        <p className="max-w-2xl text-sm font-medium md:text-base lg:text-lg text-black relative z-10 font-semibold leading-relaxed">
+        <p className="relative z-10 max-w-2xl text-sm leading-relaxed font-medium font-semibold text-black md:text-base lg:text-lg">
           From concept to deployment, we build high-performance software engineering and AI
           automation solutions that scale.
         </p>
@@ -136,23 +136,23 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-80 w-[26rem] relative flex-shrink-0"
+      className="group/product relative h-80 w-[26rem] flex-shrink-0"
     >
       <Link
         href={product.link}
-        className="block group-hover/product:shadow-2xl w-full h-full relative"
+        className="relative block h-full w-full group-hover/product:shadow-2xl"
       >
         <SafeImage
           src={product.thumbnail}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0 rounded-2xl border border-gray-200/80 shadow-md bg-white"
+          className="absolute inset-0 h-full w-full rounded-2xl border border-gray-200/80 bg-white object-cover object-left-top shadow-md"
           alt={product.title}
           priority={priority}
         />
       </Link>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-40 bg-black pointer-events-none rounded-2xl transition-opacity duration-300"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white font-bold text-lg bg-black/60 px-3 py-1.5 rounded-xl backdrop-blur-sm transition-opacity duration-300">
+      <div className="pointer-events-none absolute inset-0 h-full w-full rounded-2xl bg-black opacity-0 transition-opacity duration-300 group-hover/product:opacity-40"></div>
+      <h2 className="absolute bottom-4 left-4 rounded-xl bg-black/60 px-3 py-1.5 text-lg font-bold text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover/product:opacity-100">
         {product.title}
       </h2>
     </motion.div>

@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import { POST_LIMITS, POST_DEFAULTS } from "@/lib/constants/posts.constants";
 
 export const listAdminPostsQuerySchema = z.strictObject({
-  status: z.nativeEnum(PostStatus).optional(),
+  status: z.enum(PostStatus).optional(),
   search: z.string().trim().max(POST_LIMITS.TITLE_MAX).optional(),
   siteId: z.string().uuid().optional(),
   limit: z.coerce
@@ -43,7 +43,7 @@ export const createAdminPostSchema = z.strictObject({
     .max(POST_LIMITS.TAGS_MAX_COUNT)
     .default([]),
   readTime: z.string().trim().max(POST_LIMITS.READ_TIME_MAX).default(POST_DEFAULTS.READ_TIME),
-  status: z.nativeEnum(PostStatus).default(PostStatus.DRAFT),
+  status: z.enum(PostStatus).default(PostStatus.DRAFT),
 });
 
 export type CreateAdminPostInput = z.input<typeof createAdminPostSchema>;
@@ -89,7 +89,7 @@ export const updateAdminPostSchema = z.strictObject({
     .max(POST_LIMITS.TAGS_MAX_COUNT)
     .optional(),
   readTime: z.string().trim().max(POST_LIMITS.READ_TIME_MAX).optional(),
-  status: z.nativeEnum(PostStatus).optional(),
+  status: z.enum(PostStatus).optional(),
 });
 
 export type UpdateAdminPostInput = z.input<typeof updateAdminPostSchema>;

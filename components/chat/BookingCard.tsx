@@ -200,16 +200,16 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
   if (bookedRef) {
     const userEmail = getValues("email");
     return (
-      <div className="bg-white border border-emerald-200 rounded-2xl p-5 shadow-xs text-slate-800 animate-fade-in my-2">
-        <div className="flex items-center gap-3 text-emerald-600 mb-3">
-          <CheckCircle2 className="w-6 h-6 shrink-0" />
-          <h4 className="font-semibold text-base text-slate-900">Consultation Confirmed!</h4>
+      <div className="animate-fade-in my-2 rounded-2xl border border-emerald-200 bg-white p-5 text-slate-800 shadow-xs">
+        <div className="mb-3 flex items-center gap-3 text-emerald-600">
+          <CheckCircle2 className="h-6 w-6 shrink-0" />
+          <h4 className="text-base font-semibold text-slate-900">Consultation Confirmed!</h4>
         </div>
-        <p className="text-xs text-slate-600 mb-3 leading-relaxed">
+        <p className="mb-3 text-xs leading-relaxed text-slate-600">
           We have sent your confirmation email and calendar invite (.ics) to{" "}
           <strong>{userEmail}</strong>.
         </p>
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs flex justify-between items-center mb-3">
+        <div className="mb-3 flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs">
           <span className="text-slate-500">Booking Reference:</span>
           <span className="font-mono font-bold text-[#1155CC]">{bookedRef}</span>
         </div>
@@ -226,15 +226,15 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
       data-lenis-prevent
       data-lenis-prevent-wheel
       data-lenis-prevent-touch
-      className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-md my-2 text-slate-900 animate-fade-in"
+      className="animate-fade-in my-2 rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 shadow-md sm:p-5"
     >
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+      <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#1155CC]/10 text-[#1155CC] flex items-center justify-center font-semibold text-xs">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1155CC]/10 text-xs font-semibold text-[#1155CC]">
             TS
           </div>
           <div>
-            <h4 className="font-semibold text-sm text-slate-900 leading-tight">
+            <h4 className="text-sm leading-tight font-semibold text-slate-900">
               Book Free 30-Min Consultation
             </h4>
             <p className="text-[11px] text-slate-500">
@@ -243,24 +243,24 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           </div>
         </div>
         <div className="flex items-center gap-1 text-[11px] text-slate-400">
-          <Globe className="w-3 h-3" />
-          <span className="truncate max-w-[90px]">
+          <Globe className="h-3 w-3" />
+          <span className="max-w-[90px] truncate">
             {visitorTimezone.split("/")[1] || visitorTimezone}
           </span>
         </div>
       </div>
 
       {errorMsg && (
-        <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+        <div className="mb-3 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-600">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {slotsError && (
-        <div className="mb-3 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700 flex items-center justify-between gap-2">
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-700">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{slotsError}</span>
           </div>
           <button
@@ -268,7 +268,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             onClick={() => void refetchSlots()}
             className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 hover:underline"
           >
-            <RefreshCw className="w-3 h-3" /> Retry
+            <RefreshCw className="h-3 w-3" /> Retry
           </button>
         </div>
       )}
@@ -284,38 +284,38 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         />
 
         {/* Name & Email */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div>
             <label
               htmlFor="booking-name"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Your Name <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <User className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+              <User className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <input
                 id="booking-name"
                 type="text"
                 {...register("name", { required: "Name is required" })}
                 placeholder="Alex Morgan"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 py-2 pr-2.5 pl-8 text-xs focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] focus:outline-hidden"
               />
             </div>
             {errors.name && (
-              <p className="text-[10px] text-red-500 mt-0.5">{errors.name.message}</p>
+              <p className="mt-0.5 text-[10px] text-red-500">{errors.name.message}</p>
             )}
           </div>
 
           <div>
             <label
               htmlFor="booking-email"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Work Email <span className="text-red-500">*</span>
             </label>
             <div className="relative">
-              <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+              <Mail className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <input
                 id="booking-email"
                 type="email"
@@ -327,32 +327,32 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
                   },
                 })}
                 placeholder="alex@company.com"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 py-2 pr-2.5 pl-8 text-xs focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] focus:outline-hidden"
               />
             </div>
             {errors.email && (
-              <p className="text-[10px] text-red-500 mt-0.5">{errors.email.message}</p>
+              <p className="mt-0.5 text-[10px] text-red-500">{errors.email.message}</p>
             )}
           </div>
         </div>
 
         {/* Phone & Company */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div>
             <label
               htmlFor="booking-phone"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Phone / WhatsApp (Optional)
             </label>
             <div className="relative">
-              <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+              <Phone className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <input
                 id="booking-phone"
                 type="tel"
                 {...register("phone")}
                 placeholder="+1 (555) 000-0000"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 py-2 pr-2.5 pl-8 text-xs focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] focus:outline-hidden"
               />
             </div>
           </div>
@@ -360,38 +360,38 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           <div>
             <label
               htmlFor="booking-company"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Company (Optional)
             </label>
             <div className="relative">
-              <Building className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+              <Building className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <input
                 id="booking-company"
                 type="text"
                 {...register("company")}
                 placeholder="Acme Inc."
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 py-2 pr-2.5 pl-8 text-xs focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] focus:outline-hidden"
               />
             </div>
           </div>
         </div>
 
         {/* Project Type & Budget */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div>
             <label
               htmlFor="booking-project-type"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Project Type
             </label>
             <div className="relative">
-              <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
+              <Briefcase className="pointer-events-none absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <select
                 id="booking-project-type"
                 {...register("projectType")}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-2 pl-8 text-xs focus:border-[#1155CC] focus:outline-hidden"
               >
                 {PROJECT_TYPES.map((pt) => (
                   <option key={pt} value={pt}>
@@ -405,16 +405,16 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           <div>
             <label
               htmlFor="booking-budget"
-              className="block text-[11px] font-medium text-slate-600 mb-1"
+              className="mb-1 block text-[11px] font-medium text-slate-600"
             >
               Target Budget
             </label>
             <div className="relative">
-              <DollarSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
+              <DollarSign className="pointer-events-none absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <select
                 id="booking-budget"
                 {...register("budgetRange")}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-2 pl-8 text-xs focus:border-[#1155CC] focus:outline-hidden"
               >
                 {BUDGET_RANGES.map((b) => (
                   <option key={b} value={b}>
@@ -430,17 +430,17 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         <div>
           <label
             htmlFor="booking-slot"
-            className="block text-[11px] font-medium text-slate-600 mb-1"
+            className="mb-1 block text-[11px] font-medium text-slate-600"
           >
             Select Preferred Time Slot ({visitorTimezone}) <span className="text-red-500">*</span>
           </label>
           {loadingSlots ? (
-            <div className="flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-500">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1155CC]" />
+            <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-500">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-[#1155CC]" />
               <span>Fetching live engineering availability...</span>
             </div>
           ) : noSlotsAvailable || Object.keys(slotsByDate).length === 0 ? (
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 text-center">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-center text-xs text-slate-600">
               No slots available in the next 14 days. Please contact{" "}
               <a href="mailto:info@techsonance.co.in" className="text-[#1155CC] underline">
                 info@techsonance.co.in
@@ -449,11 +449,11 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             </div>
           ) : (
             <div className="relative">
-              <Clock className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
+              <Clock className="pointer-events-none absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               <select
                 id="booking-slot"
                 {...register("slotIso", { required: "Please select an available slot" })}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-2 pl-8 text-xs focus:border-[#1155CC] focus:outline-hidden"
               >
                 {Object.entries(slotsByDate).map(([dateStr, dateSlots]) => (
                   <optgroup key={dateStr} label={`${dateSlots[0]?.dayOfWeek ?? ""}, ${dateStr}`}>
@@ -468,7 +468,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             </div>
           )}
           {errors.slotIso && (
-            <p className="text-[10px] text-red-500 mt-0.5">{errors.slotIso.message}</p>
+            <p className="mt-0.5 text-[10px] text-red-500">{errors.slotIso.message}</p>
           )}
         </div>
 
@@ -476,7 +476,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         <div>
           <label
             htmlFor="booking-overview"
-            className="block text-[11px] font-medium text-slate-600 mb-1"
+            className="mb-1 block text-[11px] font-medium text-slate-600"
           >
             Brief Project Overview (Optional)
           </label>
@@ -485,7 +485,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
             rows={2}
             {...register("message")}
             placeholder="Tell us what you're building, key features, or any questions..."
-            className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] resize-none"
+            className="w-full resize-none rounded-lg border border-slate-200 p-2.5 text-xs focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] focus:outline-hidden"
           />
         </div>
 
@@ -493,16 +493,16 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         <button
           type="submit"
           disabled={submitting || loadingSlots}
-          className="w-full py-2.5 px-4 bg-linear-to-r from-[#1155CC] to-[#008BD9] hover:from-[#0D47A1] hover:to-[#0070BA] text-white rounded-xl font-medium text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#1155CC] to-[#008BD9] px-4 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:from-[#0D47A1] hover:to-[#0070BA] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
               <span>Confirming Reservation...</span>
             </>
           ) : (
             <>
-              <Calendar className="w-3.5 h-3.5" />
+              <Calendar className="h-3.5 w-3.5" />
               <span>Confirm Free Consultation</span>
             </>
           )}

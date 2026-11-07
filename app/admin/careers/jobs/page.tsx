@@ -62,14 +62,14 @@ export default function AdminJobsPage() {
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="animate-in fade-in space-y-6 duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl dark:text-white">
             Careers & Job Openings
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
             Manage open positions displayed on the agency careers portal and configure live
             application screening.
           </p>
@@ -80,10 +80,10 @@ export default function AdminJobsPage() {
             asChild
             variant="default"
             size="sm"
-            className="rounded-2xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-md shadow-[#1155CC]/20 font-bold text-xs h-10 px-4"
+            className="h-10 rounded-2xl bg-[#1155CC] px-4 text-xs font-bold text-white shadow-md shadow-[#1155CC]/20 hover:bg-[#0d44a4]"
           >
             <Link href="/admin/careers/jobs/new">
-              <Plus className="w-4 h-4 mr-1.5" />
+              <Plus className="mr-1.5 h-4 w-4" />
               <span>Post New Position</span>
             </Link>
           </Button>
@@ -92,20 +92,20 @@ export default function AdminJobsPage() {
 
       {/* Filter Tabs & Search */}
       <Card className="rounded-3xl border-slate-200 dark:border-slate-800">
-        <CardContent className="p-4 sm:p-6 space-y-4">
+        <CardContent className="space-y-4 p-4 sm:p-6">
           {errorMsg && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-600">
               {errorMsg}
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 p-1 bg-slate-100/80 dark:bg-slate-800 rounded-2xl overflow-x-auto">
+          <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-1.5 overflow-x-auto rounded-2xl bg-slate-100/80 p-1 dark:bg-slate-800">
               {tabs.map((tab) => (
                 <button
                   key={tab.value}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                  className={`cursor-pointer rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                     activeTab === tab.value
                       ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs"
                       : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
@@ -117,12 +117,12 @@ export default function AdminJobsPage() {
             </div>
 
             <div className="relative min-w-[240px]">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
               <Input
                 placeholder="Search position by title..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 text-xs rounded-2xl"
+                className="rounded-2xl pl-8 text-xs"
               />
             </div>
           </div>
@@ -130,21 +130,21 @@ export default function AdminJobsPage() {
           {/* Table */}
           <div className="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-400 tracking-wider border-b border-slate-100 dark:border-slate-800">
+              <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold tracking-wider text-slate-400 uppercase dark:border-slate-800 dark:bg-slate-800/50">
                 <tr>
-                  <th className="py-3 px-4">Role Title</th>
-                  <th className="py-3 px-4">Department</th>
-                  <th className="py-3 px-4">Location</th>
-                  <th className="py-3 px-4">Type</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="px-4 py-3">Role Title</th>
+                  <th className="px-4 py-3">Department</th>
+                  <th className="px-4 py-3">Location</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="py-12 text-center text-slate-400">
-                      <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#1155CC]" />
+                      <RefreshCw className="mx-auto mb-2 h-5 w-5 animate-spin text-[#1155CC]" />
                       <span>Loading positions...</span>
                     </td>
                   </tr>
@@ -158,32 +158,32 @@ export default function AdminJobsPage() {
                   jobs.map((job) => (
                     <tr
                       key={job.id}
-                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group"
+                      className="group transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
                     >
-                      <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                      <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
                         <Link
                           href={`/admin/careers/jobs/${job.id}`}
-                          className="hover:text-[#1155CC] transition-colors"
+                          className="transition-colors hover:text-[#1155CC]"
                         >
                           <span>{job.title}</span>
-                          <span className="block text-[10px] text-slate-400 font-mono">
+                          <span className="block font-mono text-[10px] text-slate-400">
                             /{job.slug}
                           </span>
                         </Link>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300 font-medium">
+                      <td className="px-4 py-3.5 font-medium text-slate-600 dark:text-slate-300">
                         {job.department}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300 font-medium">
+                      <td className="px-4 py-3.5 font-medium text-slate-600 dark:text-slate-300">
                         <div className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
+                          <MapPin className="h-3 w-3 text-slate-400" />
                           <span>{job.location}</span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300 font-medium">
+                      <td className="px-4 py-3.5 font-medium text-slate-600 dark:text-slate-300">
                         {job.type}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="px-4 py-3.5">
                         <Badge
                           variant={
                             job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
@@ -197,21 +197,21 @@ export default function AdminJobsPage() {
                           {job.status}
                         </Badge>
                       </td>
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="px-4 py-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             href={`/admin/careers/jobs/${job.id}`}
-                            className="p-1.5 text-slate-400 hover:text-[#1155CC] rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
+                            className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-blue-50 hover:text-[#1155CC] dark:hover:bg-slate-800"
                             title="Edit Role"
                           >
-                            <Edit3 className="w-3.5 h-3.5" />
+                            <Edit3 className="h-3.5 w-3.5" />
                           </Link>
                           <button
                             onClick={() => handleDeleteJob(job.id, job.title)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                            className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-slate-800"
                             title="Delete Role"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </td>

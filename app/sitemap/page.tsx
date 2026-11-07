@@ -41,24 +41,24 @@ export default function SitemapPage() {
   return (
     <>
       <SiteHeader transparent={true} />
-      <main className="bg-[#FAFBFD] min-h-screen pt-24 pb-20 relative overflow-hidden">
+      <main className="relative min-h-screen overflow-hidden bg-[#FAFBFD] pt-24 pb-20">
         {/* Ambient background glows */}
         <div
           className={cn(
-            "absolute top-0 left-0 bg-[#1155CC]/5 rounded-full blur-[100px] pointer-events-none",
-            isMobile ? "w-[250px] h-[250px]" : "w-[500px] h-[500px]",
+            "pointer-events-none absolute top-0 left-0 rounded-full bg-[#1155CC]/5 blur-[100px]",
+            isMobile ? "h-[250px] w-[250px]" : "h-[500px] w-[500px]",
           )}
         />
         <div
           className={cn(
-            "absolute top-[40%] right-0 bg-[#22B6F6]/5 rounded-full blur-[120px] pointer-events-none",
-            isMobile ? "w-[300px] h-[300px]" : "w-[600px] h-[600px]",
+            "pointer-events-none absolute top-[40%] right-0 rounded-full bg-[#22B6F6]/5 blur-[120px]",
+            isMobile ? "h-[300px] w-[300px]" : "h-[600px] w-[600px]",
           )}
         />
 
         {/* Hero Banner Header */}
-        <section className="relative py-16 sm:py-24 overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] text-white">
-          <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+        <section className="relative overflow-hidden border-b border-[#1E293B] bg-gradient-to-br from-[#071A35] via-[#0F172A] to-[#0b2447] py-16 text-white sm:py-24">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.05]">
             <div
               className="absolute inset-0"
               style={{
@@ -69,14 +69,14 @@ export default function SitemapPage() {
           </div>
 
           {/* Floating Elegant Shapes */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <ElegantShape
               delay={0.3}
               width={isMobile ? 200 : 400}
               height={isMobile ? 60 : 120}
               rotate={12}
               gradient="from-[#1155CC]/20 to-transparent"
-              className="left-[-10%] top-[10%]"
+              className="top-[10%] left-[-10%]"
             />
             <ElegantShape
               delay={0.5}
@@ -88,12 +88,12 @@ export default function SitemapPage() {
             />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
             <motion.span
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-[10px] font-black tracking-[0.25em] text-[#22B6F6] uppercase bg-[#22B6F6]/10 px-3 py-1.5 rounded-full mb-4 inline-block"
+              className="mb-4 inline-block rounded-full bg-[#22B6F6]/10 px-3 py-1.5 text-[10px] font-black tracking-[0.25em] text-[#22B6F6] uppercase"
             >
               Corporate Directory
             </motion.span>
@@ -101,7 +101,7 @@ export default function SitemapPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-black font-sora text-white tracking-tight"
+              className="font-sora text-3xl font-black tracking-tight text-white sm:text-4xl md:text-5xl"
             >
               Site{" "}
               <span className="bg-gradient-to-r from-[#22B6F6] to-[#00E5FF] bg-clip-text text-transparent">
@@ -112,7 +112,7 @@ export default function SitemapPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-4 text-xs sm:text-sm font-semibold text-slate-350 max-w-xl mx-auto"
+              className="text-slate-350 mx-auto mt-4 max-w-xl text-xs font-semibold sm:text-sm"
             >
               Quick access directory to all pages, services, case studies, and corporate policies.
             </motion.p>
@@ -120,24 +120,24 @@ export default function SitemapPage() {
         </section>
 
         {/* Main Content Layout */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
+        <section className="relative z-10 mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-6 lg:px-8">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="grid grid-cols-1 gap-8 md:grid-cols-2"
           >
             {/* Card 1: Core Navigation */}
             <motion.div
               variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] transition-all group duration-300"
+              className="group rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] sm:p-8"
             >
-              <div className="flex gap-4 items-start mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                  <Icon name="monitor" className="w-5 h-5" />
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                  <Icon name="monitor" className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                  <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                     Core Navigation
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -158,12 +158,12 @@ export default function SitemapPage() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold text-slate-700 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
+                      className="group/item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-3 text-xs font-bold text-slate-700 transition-all hover:border-[#1155CC]/20 hover:bg-slate-100/50 hover:text-[#1155CC] sm:text-sm"
                     >
                       <span>{link.label}</span>
                       <Icon
                         name="arrow"
-                        className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all"
+                        className="h-4 w-4 text-slate-400 transition-all group-hover/item:translate-x-1 group-hover/item:text-[#1155CC]"
                       />
                     </Link>
                   </li>
@@ -174,14 +174,14 @@ export default function SitemapPage() {
             {/* Card 2: Legal & Corporate */}
             <motion.div
               variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] transition-all group duration-300"
+              className="group rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] sm:p-8"
             >
-              <div className="flex gap-4 items-start mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                  <Icon name="shield" className="w-5 h-5" />
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                  <Icon name="shield" className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                  <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                     Legal & Corporate
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -198,12 +198,12 @@ export default function SitemapPage() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs sm:text-sm font-bold text-slate-700 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
+                      className="group/item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-3 text-xs font-bold text-slate-700 transition-all hover:border-[#1155CC]/20 hover:bg-slate-100/50 hover:text-[#1155CC] sm:text-sm"
                     >
                       <span>{link.label}</span>
                       <Icon
                         name="arrow"
-                        className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all"
+                        className="h-4 w-4 text-slate-400 transition-all group-hover/item:translate-x-1 group-hover/item:text-[#1155CC]"
                       />
                     </Link>
                   </li>
@@ -214,14 +214,14 @@ export default function SitemapPage() {
             {/* Card 3: Our Expertises & Services */}
             <motion.div
               variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] transition-all group duration-300 md:col-span-2"
+              className="group rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] sm:p-8 md:col-span-2"
             >
-              <div className="flex gap-4 items-start mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                  <Icon name="code" className="w-5 h-5" />
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                  <Icon name="code" className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                  <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                     Our Expertises & Services
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -229,24 +229,24 @@ export default function SitemapPage() {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {services.map((service) => (
                   <Link
                     key={service.slug}
                     href={`/services/${service.slug}`}
-                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
+                    className="group/item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-[#1155CC]/20 hover:bg-slate-100/50 hover:text-[#1155CC]"
                   >
                     <div>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover/item:text-[#1155CC] block mb-0.5">
+                      <span className="mb-0.5 block text-xs font-bold text-slate-800 group-hover/item:text-[#1155CC] sm:text-sm">
                         {service.title}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-semibold line-clamp-1">
+                      <span className="line-clamp-1 text-[10px] font-semibold text-slate-400">
                         {service.tagline}
                       </span>
                     </div>
                     <Icon
                       name="arrow"
-                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                      className="ml-4 h-4 w-4 shrink-0 text-slate-400 transition-all group-hover/item:translate-x-1 group-hover/item:text-[#1155CC]"
                     />
                   </Link>
                 ))}
@@ -256,14 +256,14 @@ export default function SitemapPage() {
             {/* Card 4: Case Studies / Proof of Work */}
             <motion.div
               variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] transition-all group duration-300 md:col-span-2"
+              className="group rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] sm:p-8 md:col-span-2"
             >
-              <div className="flex gap-4 items-start mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                  <Icon name="beaker" className="w-5 h-5" />
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                  <Icon name="beaker" className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                  <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                     Featured Case Studies
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -271,24 +271,24 @@ export default function SitemapPage() {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {projects.map((project) => (
                   <Link
                     key={project.slug}
                     href={`/portfolio/${project.slug}`}
-                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
+                    className="group/item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-[#1155CC]/20 hover:bg-slate-100/50 hover:text-[#1155CC]"
                   >
                     <div>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover/item:text-[#1155CC] block mb-0.5">
+                      <span className="mb-0.5 block text-xs font-bold text-slate-800 group-hover/item:text-[#1155CC] sm:text-sm">
                         {project.title}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-semibold">
+                      <span className="text-[10px] font-semibold text-slate-400">
                         {project.industry} &bull; {project.category}
                       </span>
                     </div>
                     <Icon
                       name="arrow"
-                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                      className="ml-4 h-4 w-4 shrink-0 text-slate-400 transition-all group-hover/item:translate-x-1 group-hover/item:text-[#1155CC]"
                     />
                   </Link>
                 ))}
@@ -298,14 +298,14 @@ export default function SitemapPage() {
             {/* Card 5: Blog Insights */}
             <motion.div
               variants={itemVariants}
-              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-[0_15px_35px_rgba(17,85,204,0.02)] hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] transition-all group duration-300 md:col-span-2"
+              className="group rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] sm:p-8 md:col-span-2"
             >
-              <div className="flex gap-4 items-start mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#1155CC]/5 text-[#1155CC] flex items-center justify-center shrink-0">
-                  <Icon name="brain" className="w-5 h-5" />
+              <div className="mb-6 flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1155CC]/5 text-[#1155CC]">
+                  <Icon name="brain" className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-medium text-slate-900 mb-1 font-sora">
+                  <h2 className="mb-1 font-sora text-lg font-medium text-slate-900">
                     Blog & Engineering Insights
                   </h2>
                   <p className="text-xs font-semibold text-slate-400">
@@ -313,24 +313,24 @@ export default function SitemapPage() {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {blogPosts.map((post) => (
                   <Link
                     key={post.slug}
                     href={`/blog/${post.slug}`}
-                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:text-[#1155CC] hover:bg-slate-100/50 hover:border-[#1155CC]/20 transition-all group/item"
+                    className="group/item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-[#1155CC]/20 hover:bg-slate-100/50 hover:text-[#1155CC]"
                   >
                     <div>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover/item:text-[#1155CC] block mb-0.5">
+                      <span className="mb-0.5 block text-xs font-bold text-slate-800 group-hover/item:text-[#1155CC] sm:text-sm">
                         {post.title}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-semibold">
+                      <span className="text-[10px] font-semibold text-slate-400">
                         {post.category} &bull; {post.readTime}
                       </span>
                     </div>
                     <Icon
                       name="arrow"
-                      className="w-4 h-4 text-slate-400 group-hover/item:text-[#1155CC] group-hover/item:translate-x-1 transition-all shrink-0 ml-4"
+                      className="ml-4 h-4 w-4 shrink-0 text-slate-400 transition-all group-hover/item:translate-x-1 group-hover/item:text-[#1155CC]"
                     />
                   </Link>
                 ))}

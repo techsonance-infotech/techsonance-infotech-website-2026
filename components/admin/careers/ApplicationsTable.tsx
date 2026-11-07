@@ -63,7 +63,7 @@ const STAGE_STYLES: Record<ApplicationStatus, { label: string; class: string }> 
 export function ApplicationsTable({ applications, onSelectApplication }: ApplicationsTableProps) {
   if (applications.length === 0) {
     return (
-      <div className="p-12 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-2">
+      <div className="space-y-2 rounded-3xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
         <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">
           No applications match current filters
         </h4>
@@ -75,17 +75,17 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xs">
+    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50/70 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400">
+          <thead className="border-b border-slate-200 bg-slate-50/70 text-[10px] font-black tracking-wider text-slate-400 uppercase dark:border-slate-800 dark:bg-slate-800/50">
             <tr>
-              <th className="py-4 px-6">Candidate</th>
-              <th className="py-4 px-6">Role</th>
-              <th className="py-4 px-6">Stage</th>
-              <th className="py-4 px-6">Rating</th>
-              <th className="py-4 px-6">Applied Date</th>
-              <th className="py-4 px-6 text-right">Action</th>
+              <th className="px-6 py-4">Candidate</th>
+              <th className="px-6 py-4">Role</th>
+              <th className="px-6 py-4">Stage</th>
+              <th className="px-6 py-4">Rating</th>
+              <th className="px-6 py-4">Applied Date</th>
+              <th className="px-6 py-4 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -93,42 +93,42 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
               <tr
                 key={app.id}
                 onClick={() => onSelectApplication(app.id)}
-                className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group"
+                className="group cursor-pointer transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40"
               >
                 {/* Candidate Name & Flags */}
-                <td className="py-4 px-6">
+                <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#1155CC]/10 text-[#1155CC] font-bold flex items-center justify-center shrink-0">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1155CC]/10 font-bold text-[#1155CC]">
                       {app.candidateName.slice(0, 1).toUpperCase()}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#1155CC] transition-colors">
+                        <span className="font-bold text-slate-900 transition-colors group-hover:text-[#1155CC] dark:text-white">
                           {app.candidateName}
                         </span>
                         {app.knockoutTriggered && (
                           <span
                             title="Knockout question failed"
-                            className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 px-1.5 py-0.5 rounded-md"
+                            className="inline-flex items-center gap-1 rounded-md border border-rose-200 bg-rose-50 px-1.5 py-0.5 text-[10px] font-bold text-rose-600 dark:border-rose-900 dark:bg-rose-950/40"
                           >
-                            <AlertTriangle className="w-3 h-3" /> Knockout
+                            <AlertTriangle className="h-3 w-3" /> Knockout
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] text-slate-400 block">{app.email}</span>
+                      <span className="block text-[11px] text-slate-400">{app.email}</span>
                     </div>
                   </div>
                 </td>
 
                 {/* Role */}
-                <td className="py-4 px-6 font-medium text-slate-700 dark:text-slate-300">
+                <td className="px-6 py-4 font-medium text-slate-700 dark:text-slate-300">
                   {app.jobTitle || "Open Role"}
                 </td>
 
                 {/* Stage Badge */}
-                <td className="py-4 px-6">
+                <td className="px-6 py-4">
                   <span
-                    className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full border ${
+                    className={`inline-block rounded-full border px-2.5 py-1 text-[11px] font-bold ${
                       STAGE_STYLES[app.status]?.class || "bg-slate-100 text-slate-700"
                     }`}
                   >
@@ -137,13 +137,13 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
                 </td>
 
                 {/* Star Rating */}
-                <td className="py-4 px-6">
+                <td className="px-6 py-4">
                   {app.rating ? (
                     <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((s) => (
                         <Star
                           key={s}
-                          className={`w-3.5 h-3.5 ${
+                          className={`h-3.5 w-3.5 ${
                             app.rating! >= s
                               ? "fill-amber-400 text-amber-400"
                               : "text-slate-200 dark:text-slate-700"
@@ -152,14 +152,14 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
                       ))}
                     </div>
                   ) : (
-                    <span className="text-slate-300 dark:text-slate-700 font-mono text-[11px]">
+                    <span className="font-mono text-[11px] text-slate-300 dark:text-slate-700">
                       —
                     </span>
                   )}
                 </td>
 
                 {/* Applied Date */}
-                <td className="py-4 px-6 text-slate-500 font-medium whitespace-nowrap">
+                <td className="px-6 py-4 font-medium whitespace-nowrap text-slate-500">
                   {new Date(app.createdAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -168,17 +168,17 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
                 </td>
 
                 {/* Action CTA */}
-                <td className="py-4 px-6 text-right">
+                <td className="px-6 py-4 text-right">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-xl text-xs h-8 group-hover:border-[#1155CC] group-hover:text-[#1155CC]"
+                    className="h-8 rounded-xl text-xs group-hover:border-[#1155CC] group-hover:text-[#1155CC]"
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelectApplication(app.id);
                     }}
                   >
-                    <Eye className="w-3.5 h-3.5 mr-1" /> Review
+                    <Eye className="mr-1 h-3.5 w-3.5" /> Review
                   </Button>
                 </td>
               </tr>

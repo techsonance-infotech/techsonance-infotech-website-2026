@@ -58,7 +58,7 @@ export function MessageList({
       data-lenis-prevent-touch
       onWheel={(e) => e.stopPropagation()}
       onTouchMove={(e) => e.stopPropagation()}
-      className="flex-1 overflow-y-auto overscroll-contain min-h-0 p-3.5 sm:p-4 space-y-3.5 text-xs"
+      className="min-h-0 flex-1 space-y-3.5 overflow-y-auto overscroll-contain p-3.5 text-xs sm:p-4"
       style={{ WebkitOverflowScrolling: "touch" }}
     >
       {messages.map((msg, index) => {
@@ -72,11 +72,11 @@ export function MessageList({
           >
             {/* Avatar */}
             <div
-              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-white font-medium text-[11px] shadow-2xs ${
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium text-white shadow-2xs ${
                 isUser ? "bg-slate-700" : "bg-gradient-to-tr from-[#0F52BA] to-[#008BD9]"
               }`}
             >
-              {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+              {isUser ? <User className="h-3.5 w-3.5" /> : <Bot className="h-3.5 w-3.5" />}
             </div>
 
             {/* Bubble Container */}
@@ -84,7 +84,7 @@ export function MessageList({
               className={`space-y-1.5 ${msg.showBooking ? "w-full max-w-full" : "max-w-[85%]"} ${isUser ? "items-end text-right" : "items-start text-left"}`}
             >
               <div
-                className={`p-3.5 rounded-2xl leading-relaxed whitespace-pre-wrap ${
+                className={`rounded-2xl p-3.5 leading-relaxed whitespace-pre-wrap ${
                   isUser
                     ? "bg-[#1155CC] text-white rounded-tr-xs shadow-xs ml-auto"
                     : "bg-white text-slate-800 border border-slate-100 rounded-tl-xs shadow-2xs"
@@ -94,11 +94,11 @@ export function MessageList({
               </div>
 
               {/* Timestamp */}
-              <div className="text-[10px] text-slate-400 px-1">{formatTime(msg.ts)}</div>
+              <div className="px-1 text-[10px] text-slate-400">{formatTime(msg.ts)}</div>
 
               {/* Render BookingCard if flagged */}
               {msg.showBooking && (
-                <div className="pt-1 w-full">
+                <div className="w-full pt-1">
                   <BookingCard recentMessages={recentMessagesForBooking} />
                 </div>
               )}
@@ -117,15 +117,15 @@ export function MessageList({
       {/* Streaming message indicator */}
       {isStreaming && (
         <div className="flex items-start gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#0F52BA] to-[#008BD9] flex items-center justify-center text-white shrink-0 shadow-2xs">
-            <Bot className="w-3.5 h-3.5" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#0F52BA] to-[#008BD9] text-white shadow-2xs">
+            <Bot className="h-3.5 w-3.5" />
           </div>
 
           <div
             className={`space-y-1.5 ${streamingShowBooking ? "w-full max-w-full" : "max-w-[85%]"}`}
           >
             {streamingText ? (
-              <div className="p-3.5 rounded-2xl rounded-tl-xs bg-white text-slate-800 border border-slate-100 shadow-2xs leading-relaxed whitespace-pre-wrap">
+              <div className="rounded-2xl rounded-tl-xs border border-slate-100 bg-white p-3.5 leading-relaxed whitespace-pre-wrap text-slate-800 shadow-2xs">
                 {streamingText}
               </div>
             ) : (
@@ -133,7 +133,7 @@ export function MessageList({
             )}
 
             {streamingShowBooking && (
-              <div className="pt-1 w-full">
+              <div className="w-full pt-1">
                 <BookingCard recentMessages={recentMessagesForBooking} />
               </div>
             )}

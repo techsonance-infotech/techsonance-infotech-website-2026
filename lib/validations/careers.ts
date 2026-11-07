@@ -135,7 +135,12 @@ export const jobPostingInputSchema = z.object(jobPostingBaseFields);
 export const createJobSchema = jobPostingInputSchema
   .refine(
     (data) => {
-      if (data.salaryMin != null && data.salaryMax != null) {
+      if (
+        data.salaryMin !== null &&
+        data.salaryMin !== undefined &&
+        data.salaryMax !== null &&
+        data.salaryMax !== undefined
+      ) {
         return data.salaryMin <= data.salaryMax;
       }
       return true;
@@ -176,7 +181,12 @@ export const updateJobSchema = jobPostingInputSchema
   .partial()
   .refine(
     (data) => {
-      if (data.salaryMin != null && data.salaryMax != null) {
+      if (
+        data.salaryMin !== null &&
+        data.salaryMin !== undefined &&
+        data.salaryMax !== null &&
+        data.salaryMax !== undefined
+      ) {
         return data.salaryMin <= data.salaryMax;
       }
       return true;
@@ -203,19 +213,22 @@ export const updateJobSchema = jobPostingInputSchema
 
 export const jobStatusTransitionSchema = z
   .object({
-    targetStatus: z.nativeEnum(JobStatus).optional(),
-    status: z.nativeEnum(JobStatus).optional(),
+    targetStatus: z.enum(JobStatus).optional(),
+    status: z.enum(JobStatus).optional(),
     comment: z.string().optional(),
   })
   .refine((data) => Boolean(data.targetStatus || data.status), {
     message: "Target status is required",
     path: ["targetStatus"],
   })
-  .transform((data) => ({
-    targetStatus: (data.targetStatus || data.status)!,
-    status: (data.targetStatus || data.status)!,
-    comment: data.comment,
-  }));
+  .transform((data) => {
+    const resolvedStatus = (data.targetStatus || data.status) as JobStatus;
+    return {
+      targetStatus: resolvedStatus,
+      status: resolvedStatus,
+      comment: data.comment,
+    };
+  });
 
 export const applicationSubmissionSchema = z.object({
   jobId: z.string().uuid().optional(),

@@ -129,17 +129,17 @@ export function StructuredListInput({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+        <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
           {label} {required && <span className="text-rose-500">*</span>}
-          <span className="text-slate-400 font-mono font-normal ml-1">({items.length})</span>
+          <span className="ml-1 font-mono font-normal text-slate-400">({items.length})</span>
         </label>
         {lastRemoved && (
           <button
             type="button"
             onClick={handleUndo}
-            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1155CC] hover:underline cursor-pointer"
+            className="inline-flex cursor-pointer items-center gap-1 text-[11px] font-bold text-[#1155CC] hover:underline"
           >
-            <Undo2 className="w-3 h-3" />
+            <Undo2 className="h-3 w-3" />
             <span>Undo removal</span>
           </button>
         )}
@@ -163,16 +163,16 @@ export function StructuredListInput({
           type="button"
           onClick={handleAdd}
           disabled={!inputValue.trim()}
-          className="rounded-xl bg-[#1155CC] hover:bg-[#0d44a5] text-white text-xs font-bold shrink-0 gap-1 cursor-pointer disabled:opacity-50"
+          className="shrink-0 cursor-pointer gap-1 rounded-xl bg-[#1155CC] text-xs font-bold text-white hover:bg-[#0d44a5] disabled:opacity-50"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="h-3.5 w-3.5" />
           <span>Add</span>
         </Button>
       </div>
 
       {helperText && (
-        <p className="text-[11px] text-slate-400 flex items-center gap-1">
-          <ListPlus className="w-3 h-3 text-slate-400 shrink-0" />
+        <p className="flex items-center gap-1 text-[11px] text-slate-400">
+          <ListPlus className="h-3 w-3 shrink-0 text-slate-400" />
           <span>{helperText}</span>
         </p>
       )}
@@ -183,10 +183,10 @@ export function StructuredListInput({
           {items.map((item, idx) => (
             <div
               key={`${idx}-${item.slice(0, 10)}`}
-              className="group flex items-start justify-between gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 text-xs transition-colors hover:border-slate-300 dark:hover:border-slate-700"
+              className="group flex items-start justify-between gap-2 rounded-xl border border-slate-200/80 bg-slate-50 p-2.5 text-xs transition-colors hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800/40 dark:hover:border-slate-700"
             >
               {editingIndex === idx ? (
-                <div className="flex-1 flex items-center gap-1.5">
+                <div className="flex flex-1 items-center gap-1.5">
                   <Input
                     value={editingText}
                     onChange={(e) => setEditingText(e.target.value)}
@@ -199,72 +199,72 @@ export function StructuredListInput({
                       }
                     }}
                     autoFocus
-                    className="h-7 text-xs rounded-lg"
+                    className="h-7 rounded-lg text-xs"
                   />
                   <button
                     type="button"
                     onClick={() => saveEdit(idx)}
-                    className="p-1 text-emerald-600 hover:text-emerald-700 cursor-pointer"
+                    className="cursor-pointer p-1 text-emerald-600 hover:text-emerald-700"
                     aria-label="Save item"
                   >
-                    <Check className="w-3.5 h-3.5" />
+                    <Check className="h-3.5 w-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingIndex(null)}
-                    className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
                     aria-label="Cancel editing"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
               ) : (
                 <>
-                  <div className="flex items-start gap-2 min-w-0 flex-1 pt-0.5">
-                    <CheckCircle2 className={`w-3.5 h-3.5 ${itemIconColor} shrink-0 mt-0.5`} />
-                    <span className="text-slate-700 dark:text-slate-300 break-words leading-relaxed select-text">
+                  <div className="flex min-w-0 flex-1 items-start gap-2 pt-0.5">
+                    <CheckCircle2 className={`h-3.5 w-3.5 ${itemIconColor} mt-0.5 shrink-0`} />
+                    <span className="leading-relaxed break-words text-slate-700 select-text dark:text-slate-300">
                       {item}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-0.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <div className="flex shrink-0 items-center gap-0.5 opacity-80 transition-opacity group-hover:opacity-100">
                     <button
                       type="button"
                       disabled={idx === 0}
                       onClick={() => handleMove(idx, "up")}
-                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 cursor-pointer"
+                      className="cursor-pointer p-1 text-slate-400 hover:text-slate-700 disabled:opacity-20 dark:hover:text-slate-200"
                       title="Move up"
                       aria-label="Move item up"
                     >
-                      <ArrowUp className="w-3 h-3" />
+                      <ArrowUp className="h-3 w-3" />
                     </button>
                     <button
                       type="button"
                       disabled={idx === items.length - 1}
                       onClick={() => handleMove(idx, "down")}
-                      className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-20 cursor-pointer"
+                      className="cursor-pointer p-1 text-slate-400 hover:text-slate-700 disabled:opacity-20 dark:hover:text-slate-200"
                       title="Move down"
                       aria-label="Move item down"
                     >
-                      <ArrowDown className="w-3 h-3" />
+                      <ArrowDown className="h-3 w-3" />
                     </button>
                     <button
                       type="button"
                       onClick={() => startEdit(idx, item)}
-                      className="p-1 text-slate-400 hover:text-[#1155CC] cursor-pointer"
+                      className="cursor-pointer p-1 text-slate-400 hover:text-[#1155CC]"
                       title="Edit item inline"
                       aria-label="Edit item"
                     >
-                      <Edit2 className="w-3 h-3" />
+                      <Edit2 className="h-3 w-3" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleRemove(idx)}
-                      className="p-1 text-slate-400 hover:text-rose-600 cursor-pointer"
+                      className="cursor-pointer p-1 text-slate-400 hover:text-rose-600"
                       title="Remove item"
                       aria-label="Delete item"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="h-3 w-3" />
                     </button>
                   </div>
                 </>
@@ -273,7 +273,7 @@ export function StructuredListInput({
           ))}
         </div>
       ) : (
-        <div className="p-3.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-center text-xs text-slate-400">
+        <div className="rounded-xl border border-dashed border-slate-200 p-3.5 text-center text-xs text-slate-400 dark:border-slate-800">
           No items added yet. {minItems > 0 && `Minimum required: ${minItems}`}
         </div>
       )}

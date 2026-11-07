@@ -123,42 +123,42 @@ export default function ScopingContactForm({
   const formContent = (
     <div
       id={embedded ? undefined : "contact"}
-      className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+      className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16"
     >
       {/* Left: copy + bullets */}
       <div className="flex flex-col justify-center">
-        <div className="inline-flex items-center gap-2 bg-[#F1F5F9] border border-[#1155CC]/10 rounded-full px-4 py-1.5 mb-6 w-fit">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#22B6F6] animate-pulse" />
-          <span className="text-[10px] font-black text-[#1155CC] tracking-widest uppercase">
+        <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22B6F6]" />
+          <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
             Contact Us
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-medium text-[#0F172A] mb-6 leading-tight">
+        <h2 className="mb-6 text-3xl leading-tight font-medium text-[#0F172A] sm:text-4xl">
           Have an idea in mind? <br />
           <span className="text-[#1155CC]">Let&apos;s build it.</span>
         </h2>
 
-        <p className="text-[15px] text-slate-500 font-medium leading-relaxed mb-8 max-w-md">
+        <p className="mb-8 max-w-md text-[15px] leading-relaxed font-medium text-slate-500">
           Share your requirements and our engineers will follow up within 24 hours to schedule a
           free scoping call.
         </p>
 
-        <ul className="space-y-4 text-[14px] text-slate-650 font-medium">
+        <ul className="text-slate-650 space-y-4 text-[14px] font-medium">
           <li className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 font-bold text-xs border border-[#1155CC]/10">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] text-xs font-bold text-[#1155CC]">
               ✓
             </span>
             Response within 24 hours
           </li>
           <li className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 font-bold text-xs border border-[#1155CC]/10">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] text-xs font-bold text-[#1155CC]">
               ✓
             </span>
             Free scoping call with a senior engineer
           </li>
           <li className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center shrink-0 font-bold text-xs border border-[#1155CC]/10">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] text-xs font-bold text-[#1155CC]">
               ✓
             </span>
             NDA available on request
@@ -169,21 +169,21 @@ export default function ScopingContactForm({
       {/* Right: form */}
       <div className="relative">
         {/* Decorative background glow behind form */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-[#1155CC]/10 to-[#22B6F6]/10 rounded-2xl blur-xl opacity-30 pointer-events-none" />
+        <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#1155CC]/10 to-[#22B6F6]/10 opacity-30 blur-xl" />
 
-        <div className="relative rounded-2xl p-6 sm:p-8 shadow-[0_8px_32px_rgba(17,85,204,0.08)]">
+        <div className="relative rounded-2xl p-6 shadow-[0_8px_32px_rgba(17,85,204,0.08)] sm:p-8">
           {formStatus === "success" ? (
-            <div className="bg-[#F8FAFE] rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[360px]">
-              <div className="w-12 h-12 rounded-full bg-[#F1F5F9] text-[#1155CC] flex items-center justify-center text-lg mb-4 font-bold border border-[#1155CC]/10">
+            <div className="flex min-h-[360px] flex-col items-center justify-center rounded-xl bg-[#F8FAFE] p-8 text-center">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] text-lg font-bold text-[#1155CC]">
                 ✓
               </div>
-              <h3 className="text-lg font-medium text-[#0F172A] mb-2">Request Submitted</h3>
-              <p className="text-sm text-slate-500 max-w-xs leading-relaxed mb-6">
+              <h3 className="mb-2 text-lg font-medium text-[#0F172A]">Request Submitted</h3>
+              <p className="mb-6 max-w-xs text-sm leading-relaxed text-slate-500">
                 A tech lead will review your submission and connect with you shortly.
               </p>
               <button
                 onClick={() => setFormStatus("idle")}
-                className="text-sm font-bold text-[#1155CC] hover:underline underline-offset-4 cursor-pointer"
+                className="cursor-pointer text-sm font-bold text-[#1155CC] underline-offset-4 hover:underline"
               >
                 Submit another request
               </button>
@@ -202,10 +202,10 @@ export default function ScopingContactForm({
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-                    Name <span className="text-red-500 font-bold">*</span>
+                  <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                    Name <span className="font-bold text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -223,14 +223,14 @@ export default function ScopingContactForm({
                     className={inputBaseClass("name")}
                   />
                   {getValidationError("name") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                    <p className="mt-1 text-[10px] font-semibold text-red-500">
                       {getValidationError("name")}
                     </p>
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-                    Email <span className="text-red-500 font-bold">*</span>
+                  <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                    Email <span className="font-bold text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -245,7 +245,7 @@ export default function ScopingContactForm({
                     className={inputBaseClass("email")}
                   />
                   {getValidationError("email") && (
-                    <p className="text-[10px] font-semibold text-red-500 mt-1">
+                    <p className="mt-1 text-[10px] font-semibold text-red-500">
                       {getValidationError("email")}
                     </p>
                   )}
@@ -253,7 +253,7 @@ export default function ScopingContactForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                   Company
                 </label>
                 <input
@@ -261,18 +261,18 @@ export default function ScopingContactForm({
                   placeholder="Company name"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-3 bg-white border border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all"
+                  className="w-full rounded-xl border border-[#1155CC]/15 bg-white px-4 py-3 text-sm text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                   Service
                 </label>
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 bg-white border border-[#1155CC]/15 focus:border-[#1155CC] focus:ring-[#1155CC]/10 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 transition-all cursor-pointer font-medium"
+                  className="w-full cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
                 >
                   {services.map((s) => (
                     <option key={s.slug} value={s.title} className="bg-white">
@@ -283,8 +283,8 @@ export default function ScopingContactForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wide">
-                  Message <span className="text-red-500 font-bold">*</span>
+                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                  Message <span className="font-bold text-red-500">*</span>
                 </label>
                 <textarea
                   required
@@ -299,14 +299,14 @@ export default function ScopingContactForm({
                   className={`${inputBaseClass("message")} resize-none`}
                 />
                 {getValidationError("message") && (
-                  <p className="text-[10px] font-semibold text-red-500 mt-1">
+                  <p className="mt-1 text-[10px] font-semibold text-red-500">
                     {getValidationError("message")}
                   </p>
                 )}
               </div>
 
               {errorMessage && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-xs font-semibold text-red-500 text-center">
+                <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-center text-xs font-semibold text-red-500">
                   {errorMessage}
                 </div>
               )}
@@ -320,7 +320,7 @@ export default function ScopingContactForm({
               >
                 {formStatus === "submitting" ? (
                   <>
-                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2" />
+                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                     Submitting...
                   </>
                 ) : (
@@ -337,7 +337,7 @@ export default function ScopingContactForm({
   if (embedded) return formContent;
 
   return (
-    <section className="bg-white border-2 border-[#22B6F6] shadow-[0_20px_50px_rgba(17,85,204,0.12)] rounded-3xl p-6 sm:p-10 lg:p-12">
+    <section className="rounded-3xl border-2 border-[#22B6F6] bg-white p-6 shadow-[0_20px_50px_rgba(17,85,204,0.12)] sm:p-10 lg:p-12">
       {formContent}
     </section>
   );

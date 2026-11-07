@@ -53,8 +53,8 @@ export function Composer({
   };
 
   return (
-    <div className="p-3 bg-white border-t border-slate-100 relative">
-      <div className="flex items-end gap-2 bg-slate-50 border border-slate-200 rounded-2xl p-1.5 focus-within:border-[#1155CC] focus-within:ring-1 focus-within:ring-[#1155CC] focus-within:bg-white transition-all">
+    <div className="relative border-t border-slate-100 bg-white p-3">
+      <div className="flex items-end gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-1.5 transition-all focus-within:border-[#1155CC] focus-within:bg-white focus-within:ring-1 focus-within:ring-[#1155CC]">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -63,7 +63,7 @@ export function Composer({
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder={placeholder}
-          className="w-full text-xs text-slate-800 bg-transparent px-2.5 py-1.5 focus:outline-none resize-none max-h-[120px] leading-relaxed placeholder:text-slate-400"
+          className="max-h-[120px] w-full resize-none bg-transparent px-2.5 py-1.5 text-xs leading-relaxed text-slate-800 placeholder:text-slate-400 focus:outline-none"
         />
 
         <button
@@ -71,18 +71,18 @@ export function Composer({
           onClick={handleSend}
           disabled={!input.trim() || disabled}
           aria-label="Send message"
-          className="p-2 rounded-xl bg-[#1155CC] text-white hover:bg-[#0D47A1] disabled:opacity-40 disabled:hover:bg-[#1155CC] transition-all cursor-pointer disabled:cursor-not-allowed shrink-0"
+          className="shrink-0 cursor-pointer rounded-xl bg-[#1155CC] p-2 text-white transition-all hover:bg-[#0D47A1] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[#1155CC]"
         >
           {disabled ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <SendHorizontal className="w-4 h-4" />
+            <SendHorizontal className="h-4 w-4" />
           )}
         </button>
       </div>
 
       {input.length > 350 && (
-        <div className="text-[10px] text-slate-400 text-right px-1 mt-1">
+        <div className="mt-1 px-1 text-right text-[10px] text-slate-400">
           {input.length}/{maxChars}
         </div>
       )}

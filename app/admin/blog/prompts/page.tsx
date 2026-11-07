@@ -16,19 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface PromptTemplate {
-  id: string;
-  stepName: string;
-  version: number;
-  systemPrompt: string;
-  userPromptTemplate: string;
-  modelPreference: string;
-  temperature: number;
-}
+import { listAdminAiPrompts, updateAdminAiPrompt } from "@/lib/api/admin-ai.api";
+import type { PromptTemplateDto } from "@/lib/contracts/admin-ai-prompts.contract";
 
 export default function PromptsManagementPage() {
-  const [templates, setTemplates] = useState<PromptTemplate[]>([]);
+  const [templates, setTemplates] = useState<PromptTemplateDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedStep, setSelectedStep] = useState<string>("outline");
   const [saving, setSaving] = useState(false);
@@ -67,20 +59,17 @@ export default function PromptsManagementPage() {
   const loadTemplates = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/admin/ai/prompts");
-      if (res.ok) {
-        const data = await res.json();
-        setTemplates(data.templates || []);
-      }
+      const data = await listAdminAiPrompts();
+      setTemplates(data);
     } catch {
-      // Silent error
+      // Non-blocking template load error handling
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadTemplates();
+    void loadTemplates();
   }, []);
 
   useEffect(() => {
@@ -94,29 +83,26 @@ export default function PromptsManagementPage() {
   }, [selectedStep, templates]);
 
   const handleSave = async () => {
+    const active = templates.find((t) => t.stepName === selectedStep);
+    if (!active) {
+      showToast("Selected prompt step template not found");
+      return;
+    }
+
     try {
       setSaving(true);
-      const res = await fetch("/api/admin/ai/prompts", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          stepName: selectedStep,
-          systemPrompt,
-          userPromptTemplate,
-          modelPreference,
-          temperature,
-        }),
+      const updated = await updateAdminAiPrompt(active.id, {
+        systemPrompt,
+        userPromptTemplate,
+        modelPreference,
+        temperature,
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        setTemplates((prev) => prev.map((t) => (t.stepName === selectedStep ? data.template : t)));
-        showToast("Prompt template updated successfully!");
-      } else {
-        showToast("Failed to save template");
-      }
-    } catch {
-      showToast("Network error saving prompt");
+      setTemplates((prev) => prev.map((t) => (t.id === active.id ? updated : t)));
+      showToast("Prompt template updated successfully!");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to save template";
+      showToast(msg);
     } finally {
       setSaving(false);
     }
@@ -145,22 +131,22 @@ export default function PromptsManagementPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl space-y-8">
       {/* Toast */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-in slide-in-from-bottom">
-          <Check className="w-4 h-4 text-emerald-400" />
+        <div className="animate-in slide-in-from-bottom fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl">
+          <Check className="h-4 w-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-sora">
+          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
             Prompt Template Studio
           </h1>
-          <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1">
+          <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
             Tune AI pipeline prompts at runtime without code deploys (FD-1 & FD-6).
           </p>
         </div>
@@ -168,17 +154,17 @@ export default function PromptsManagementPage() {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-lg shadow-blue-500/20"
+          className="rounded-2xl bg-blue-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
         >
-          <Save className="w-4 h-4 mr-2" />
+          <Save className="mr-2 h-4 w-4" />
           {saving ? "Saving Changes..." : "Save Prompt Version"}
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Step Selector Sidebar */}
-        <div className="lg:col-span-1 space-y-2">
-          <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2 px-1">
+        <div className="space-y-2 lg:col-span-1">
+          <label className="mb-2 block px-1 text-xs font-bold tracking-wider text-slate-400 uppercase">
             Pipeline Steps
           </label>
           {steps.map((s) => {
@@ -188,44 +174,44 @@ export default function PromptsManagementPage() {
               <button
                 key={s.key}
                 onClick={() => setSelectedStep(s.key)}
-                className={`w-full text-left p-3.5 rounded-2xl transition-all border ${
+                className={`w-full rounded-2xl border p-3.5 text-left transition-all ${
                   isSelected
                     ? "bg-white border-blue-600 shadow-md shadow-blue-600/5 ring-2 ring-blue-600/10"
                     : "bg-white/60 border-slate-200/80 hover:bg-white text-slate-600"
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
+                <div className="mb-1 flex items-center justify-between">
                   <span
                     className={`text-xs font-bold ${isSelected ? "text-blue-600" : "text-slate-800"}`}
                   >
                     {s.name}
                   </span>
                   {t && (
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                    <Badge variant="outline" className="h-4 px-1.5 py-0 text-[10px]">
                       v{t.version}
                     </Badge>
                   )}
                 </div>
-                <p className="text-[11px] text-slate-500 line-clamp-1">{s.desc}</p>
+                <p className="line-clamp-1 text-[11px] text-slate-500">{s.desc}</p>
               </button>
             );
           })}
         </div>
 
         {/* Editor Area */}
-        <div className="lg:col-span-3 space-y-6">
-          <Card className="rounded-3xl border-slate-200/80 shadow-sm bg-white p-6 space-y-6">
+        <div className="space-y-6 lg:col-span-3">
+          <Card className="space-y-6 rounded-3xl border-slate-200/80 bg-white p-6 shadow-sm">
             {/* Model & Temperature Controls */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4 border-b border-slate-100">
+            <div className="grid grid-cols-1 gap-4 border-b border-slate-100 pb-4 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-blue-600" />
+                <label className="mb-1 block flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                  <Terminal className="h-3.5 w-3.5 text-blue-600" />
                   Target Model Preference
                 </label>
                 <select
                   value={modelPreference}
                   onChange={(e) => setModelPreference(e.target.value)}
-                  className="w-full h-9 rounded-xl border border-slate-200 text-xs px-3 bg-white font-medium"
+                  className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
                 >
                   <option value="gemini-2.5-flash">
                     Gemini 2.5 Flash (Recommended - Fast & Free)
@@ -237,12 +223,12 @@ export default function PromptsManagementPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <label className="mb-1 block flex items-center justify-between text-xs font-bold text-slate-700">
                   <span className="flex items-center gap-1.5">
-                    <Sliders className="w-3.5 h-3.5 text-blue-600" />
+                    <Sliders className="h-3.5 w-3.5 text-blue-600" />
                     Temperature: {(temperature / 100).toFixed(2)}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-medium">
+                  <span className="text-[10px] font-medium text-slate-400">
                     {temperature < 40
                       ? "Deterministic"
                       : temperature > 75
@@ -256,16 +242,16 @@ export default function PromptsManagementPage() {
                   max="100"
                   value={temperature}
                   onChange={(e) => setTemperature(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-2"
+                  className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-100 accent-blue-600"
                 />
               </div>
             </div>
 
             {/* System Prompt Editor */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <FileCode className="w-4 h-4 text-purple-600" />
+              <div className="mb-2 flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                  <FileCode className="h-4 w-4 text-purple-600" />
                   System Instructions (Persona & Guardrails)
                 </label>
                 <span className="text-[10px] text-slate-400">
@@ -277,15 +263,15 @@ export default function PromptsManagementPage() {
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
                 placeholder="Enter system prompt instructions..."
-                className="w-full text-xs font-mono p-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
 
             {/* User Prompt Template Editor */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <Layers className="w-4 h-4 text-indigo-600" />
+              <div className="mb-2 flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                  <Layers className="h-4 w-4 text-indigo-600" />
                   User Prompt Template
                 </label>
                 <span className="text-[10px] text-slate-400">
@@ -297,22 +283,22 @@ export default function PromptsManagementPage() {
                 value={userPromptTemplate}
                 onChange={(e) => setUserPromptTemplate(e.target.value)}
                 placeholder="Enter user prompt with {{tokens}}..."
-                className="w-full text-xs font-mono p-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
 
             {/* Variable Tokens Helper */}
-            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
-              <span className="text-[11px] font-bold text-slate-600 block mb-2">
+            <div className="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
+              <span className="mb-2 block text-[11px] font-bold text-slate-600">
                 Available Variable Placeholders for this step:
               </span>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2">
                 {getVariablesForStep(selectedStep).map((tok) => (
                   <button
                     key={tok}
                     type="button"
                     onClick={() => setUserPromptTemplate((prev) => prev + ` ${tok}`)}
-                    className="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-blue-600 hover:border-blue-400"
+                    className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-blue-600 hover:border-blue-400"
                   >
                     {tok}
                   </button>

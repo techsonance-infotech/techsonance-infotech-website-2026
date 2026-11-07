@@ -20,11 +20,11 @@ export default function SafeImage({
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden w-full h-full ${wrapperClassName}`}>
+    <div className={`relative h-full w-full overflow-hidden ${wrapperClassName}`}>
       {/* Premium Shimmering Skeleton Loader */}
       {!isLoaded && (
         <div
-          className={`absolute inset-0 z-10 shimmer-loader rounded-[inherit] ${skeletonClassName}`}
+          className={`shimmer-loader absolute inset-0 z-10 rounded-[inherit] ${skeletonClassName}`}
           style={{ width: "100%", height: "100%" }}
         />
       )}
