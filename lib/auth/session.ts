@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { getEnv } from "@/lib/env";
 
-const SESSION_COOKIE = "ts_admin_session";
+export const SESSION_COOKIE = "ts_admin_session";
 
 function getSecret(): string {
   try {

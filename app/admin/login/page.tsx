@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/admin/auth/login", {
+      const res = await fetch(API_ENDPOINTS.ADMIN.AUTH.LOGIN, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -28,7 +29,11 @@ export default function AdminLoginPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to sign in");
+        const errorMsg =
+          typeof data.error === "string"
+            ? data.error
+            : data.error?.message || data.message || "Failed to sign in";
+        throw new Error(errorMsg);
       }
 
       router.push("/admin/dashboard");
