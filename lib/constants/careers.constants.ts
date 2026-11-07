@@ -69,6 +69,7 @@ export const CAREER_ERRORS = {
   FORBIDDEN_ADMIN_OR_OWNER: "Forbidden: Admin or Owner role required",
   FORBIDDEN_COMPLIANCE_EXPORT: "Forbidden: Admin or Owner role required for compliance data export",
   FORBIDDEN_COMPLIANCE_PURGE: "Forbidden: Admin or Owner role required for candidate data purge",
+  FORBIDDEN_ORIGIN: "Forbidden origin",
   FORBIDDEN_ROLE_TRANSITION: "Forbidden: You do not have permission to transition job status",
   FORBIDDEN_ROLE_APPROVE: "Forbidden: Only Admins can approve or return roles under review",
   FORBIDDEN_ROLE_REOPEN: "Forbidden: Only Admins can re-open or archive closed roles",
@@ -125,6 +126,11 @@ export const CAREER_AUDIT_ACTIONS = {
   JOB_APPROVE: "job.approve",
   JOB_RETURN: "job.return",
   JOB_RESTORE_VERSION: "job.restore_version",
+} as const;
+
+export const CAREER_COMPLIANCE_MESSAGES = {
+  EXPORT_SUCCESS: "Candidate compliance data exported successfully.",
+  PURGE_SUCCESS: "Candidate records and files purged successfully.",
 } as const;
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
