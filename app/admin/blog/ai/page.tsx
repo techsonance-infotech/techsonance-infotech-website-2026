@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { AdminGenerationJob } from "@/lib/types/admin.types";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -57,10 +58,10 @@ export default function AdminAIPage() {
   const fetchJobs = useCallback(async (showLoader = false) => {
     if (showLoader) setLoading(true);
     try {
-      const res = await fetch("/api/admin/ai/jobs");
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.JOBS);
       const data = await res.json();
       if (data.ok) {
-        setJobs(data.jobs || []);
+        setJobs(data.data?.jobs || data.jobs || []);
       }
     } catch (err) {
       console.error("Failed to load AI jobs", err);
@@ -87,7 +88,7 @@ export default function AdminAIPage() {
     setSuccessMsg(null);
 
     try {
-      const res = await fetch("/api/admin/ai/jobs", {
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.JOBS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topicText: topicText.trim(), category }),
@@ -95,7 +96,11 @@ export default function AdminAIPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to trigger generation");
+        const errorMsg =
+          typeof data.error === "object" && data.error?.message
+            ? data.error.message
+            : data.error || "Failed to trigger generation";
+        throw new Error(errorMsg);
       }
 
       setSuccessMsg("Autonomous generation job enqueued! Pipeline running in background.");

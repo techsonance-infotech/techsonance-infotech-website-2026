@@ -22,6 +22,13 @@ export class JobOrchestratorService {
   ) {}
 
   /**
+   * Lists recent AI generation jobs
+   */
+  async listJobs(limit: number = 30): Promise<GenerationJob[]> {
+    return await this.jobsRepo.listRecent(limit);
+  }
+
+  /**
    * Enqueues a new autonomous blog post generation job
    */
   async createJob(options: {
