@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AiTopicStatus } from "@/lib/constants/enums/ai.enum";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 interface Topic {
   id: string;
@@ -57,7 +58,7 @@ export default function TopicsBacklogPage() {
   const loadTopics = async () => {
     try {
       setLoading(true);
-      const url = new URL("/api/admin/ai/topics", window.location.origin);
+      const url = new URL(API_ENDPOINTS.ADMIN.AI.TOPICS, window.location.origin);
       if (activeTab !== "ALL") {
         url.searchParams.set("status", activeTab);
       }
@@ -67,7 +68,7 @@ export default function TopicsBacklogPage() {
       const res = await fetch(url.toString());
       if (res.ok) {
         const data = await res.json();
-        setTopics(data.topics || []);
+        setTopics(data.data?.topics || data.topics || []);
       }
     } catch {
       // Silent error
@@ -82,7 +83,7 @@ export default function TopicsBacklogPage() {
 
   const handleUpdateStatus = async (id: string, status: AiTopicStatus) => {
     try {
-      const res = await fetch(`/api/admin/ai/topics/${id}`, {
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC(id), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -99,7 +100,7 @@ export default function TopicsBacklogPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this topic from backlog?")) return;
     try {
-      const res = await fetch(`/api/admin/ai/topics/${id}`, { method: "DELETE" });
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC(id), { method: "DELETE" });
       if (res.ok) {
         setTopics((prev) => prev.filter((t) => t.id !== id));
         showMessage("Topic removed");
@@ -160,7 +161,7 @@ export default function TopicsBacklogPage() {
         .map((k) => k.trim())
         .filter(Boolean);
 
-      const res = await fetch("/api/admin/ai/topics", {
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPICS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
