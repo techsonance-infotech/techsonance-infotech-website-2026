@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (25/25 Committed & 100% Verified)
+## 2. Completed Endpoints (26/26 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -53,6 +53,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 23 | `/api/admin/ai/topics/[id]/launch` | `POST` | 1-Click Autonomous Job Trigger | ✅ Done & Tested | `322ea01` |
 | 24 | `/api/admin/ai/usage` | `GET` | AI Telemetry & Resource Caps | ✅ Done & Tested | `2e6c999` |
 | 25 | `/api/admin/ai/prompts` | `GET`, `PATCH` | AI Prompt Template Management | ✅ Done & Tested | `cffc7b5` |
+| 26 | `/api/admin/auth/login` | `POST` | Admin Auth & Security | ✅ Done & Tested | `add805c` |
 
 ---
 
@@ -142,8 +143,17 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ### Phase D: Admin Governance & System Maintenance
 
-- [ ] **11. `POST /api/admin/auth/login`**
+- [x] **11. `POST /api/admin/auth/login`**
   - **Purpose**: Admin credential verification, password hashing check, rate-limited login attempts, session cookie issuance, and audit record.
+  - **Controller**: `app/api/admin/auth/login/route.ts` (3-tier HTTP boundary, origin check, `RateLimiterService` brute-force guard, Zod 4 contract validation, session cookie issuance, structured audit logging)
+  - **Contract**: `lib/contracts/admin-auth.contract.ts` (`adminLoginContract`, `adminLoginBodySchema`, `adminLoginResponseSchema`)
+  - **Service**: `AdminAuthService.authenticate(email, password)`
+  - **Repository**: `AdminUsersRepository`
+  - **Constants**: `AUTH_LIMITS`, `AUTH_ERRORS`, `AUTH_MESSAGES` in `lib/constants/auth.constants.ts`
+  - **Vitest Suite**: `tests/admin-auth-login-blackbox.test.ts` (8 test cases)
+  - **Standalone Script**: `blackbox-testing/auth/verify_admin_auth_login_blackbox.ts` ✅ **40/40 assertions passed**
+  - **Integration Guide**: `docs/auth/POST-api-admin-auth-login-integration.md`
+  - **Git Commit**: `add805c`
 - [ ] **12. `POST /api/admin/auth/logout`**
   - **Purpose**: Revokes current session token and clears HTTP-only authentication cookies.
 - [ ] **13. `POST /api/admin/revalidate`**
@@ -156,7 +166,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `GET, POST /api/admin/ai/prompts` (Phase C: Autonomous AI Content Generation Pipeline)"*.
+1. State: *"Proceed with `POST /api/admin/auth/logout` (Phase D: Admin Governance & System Maintenance)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
