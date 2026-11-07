@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defineContract, noParams, noQuery } from "@/lib/contracts/define";
+import { defineContract, noParams, noQuery, noBody } from "@/lib/contracts/define";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import { AUTH_ERRORS, AUTH_LIMITS } from "@/lib/constants/auth.constants";
 
@@ -45,3 +45,21 @@ export const adminLoginContract = defineContract({
   response: adminLoginResponseSchema,
   status: 200,
 });
+
+export const adminLogoutResponseSchema = z.object({
+  message: z.string(),
+});
+
+export type AdminLogoutResponse = z.infer<typeof adminLogoutResponseSchema>;
+
+export const adminLogoutContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.AUTH.LOGOUT,
+  auth: "none",
+  params: noParams,
+  query: noQuery,
+  body: noBody,
+  response: adminLogoutResponseSchema,
+  status: 200,
+});
+

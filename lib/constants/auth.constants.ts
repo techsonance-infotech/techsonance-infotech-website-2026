@@ -17,6 +17,7 @@ export const AUTH_ERRORS = {
   VALIDATION_FAILED: "Validation failed",
   RATE_LIMITED: "Too many login attempts. Please try again later.",
   LOGIN_FAILED: "An unexpected error occurred during login",
+  LOGOUT_FAILED: "Failed to sign out. Please try again.",
 } as const;
 
 export const AUTH_MESSAGES = {
