@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (28/28 Committed & 100% Verified)
+## 2. Completed Endpoints (29/29 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -56,6 +56,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 26 | `/api/admin/auth/login` | `POST` | Admin Auth & Security | ✅ Done & Tested | `add805c` |
 | 27 | `/api/admin/auth/logout` | `POST` | Admin Auth & Security | ✅ Done & Tested | `be0f62e` |
 | 28 | `/api/admin/revalidate` | `POST` | Admin ISR Cache Revalidation | ✅ Done & Tested | `b345bd3` |
+| 29 | `/api/admin/careers/compliance` | `GET`, `POST` | Careers Compliance & GDPR | ✅ Done & Tested | `1327a26` |
 
 ---
 
@@ -174,19 +175,26 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Standalone Script**: `blackbox-testing/admin/verify_admin_revalidate_blackbox.ts` ✅ **36/36 assertions passed**
   - **Integration Guide**: `docs/admin/POST-api-admin-revalidate-integration.md`
   - **Git Commit**: `b345bd3`
-- [ ] **14. `GET, POST /api/admin/careers/compliance`** *(Low Priority / Deferred)*
+- [x] **14. `GET, POST /api/admin/careers/compliance`**
   - **Purpose**: Candidate GDPR data access export and permanent PII deletion/purging.
+  - **Controller**: `app/api/admin/careers/compliance/route.ts` (3-tier HTTP boundary, origin check, session auth check, RBAC `Admin+` enforcement, Zod 4 contract validation, candidate records export & storage file purge, structured audit logging)
+  - **Contract**: `lib/contracts/admin-careers-compliance.contract.ts` (`exportCandidateDataContract`, `purgeCandidateDataContract`, Zod schemas)
+  - **Service**: `ApplicationsService.exportCandidateData`, `ApplicationsService.purgeCandidateData`
+  - **Repository**: `AdminApplicationsRepository.findCandidateRecords`, `AdminApplicationsRepository.purgeCandidateRecords`
+  - **Constants**: `CAREER_ERRORS`, `CAREER_COMPLIANCE_MESSAGES` in `lib/constants/careers.constants.ts`
+  - **Vitest Suite**: `tests/admin-careers-compliance-blackbox.test.ts` (11 test cases)
+  - **Standalone Script**: `blackbox-testing/careers/verify_admin_careers_compliance_blackbox.ts` ✅ **46/46 assertions passed**
+  - **Integration Guide**: `docs/careers/GET-POST-api-admin-careers-compliance-integration.md`
+  - **Git Commit**: `1327a26`
 
 ---
 
-## 4. How to Resume the Next Endpoint
+## 4. Final Verification & Roadmap Completion Status
 
-When starting the next turn:
-1. State: *"Proceed with `GET, POST /api/admin/careers/compliance` (Phase D: Admin Governance & System Maintenance)"*.
-2. Follow the 5-step DoD pipeline:
-   - Contract definition in `lib/contracts/`
-   - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
-   - Controller implementation in `app/api/`
-   - Vitest suite in `tests/` + Standalone script in `blackbox-testing/`
-   - Frontend integration guide in `docs/`
-   - Boundary checks, typecheck, full test run, and git commit.
+🎉 **All 29 Endpoints in the Backend API Implementation & Audit Roadmap are 100% COMPLETE & VERIFIED!**
+
+- **Phase A: Blog / CMS Publishing & Media**: 3/3 Completed (`publish`, `submit`, `media/upload`)
+- **Phase B: Public Consultation & Booking Engine**: 1/1 Completed (`book`)
+- **Phase C: Autonomous AI Content Generation Pipeline**: 5/5 Completed (`jobs`, `topics`, `suggest`, `launch`, `usage`, `prompts`)
+- **Phase D: Admin Governance & System Maintenance**: 4/4 Completed (`login`, `logout`, `revalidate`, `compliance`)
+- **Overall**: 29/29 endpoints implemented, covered with Zod 4 contracts, RBAC guards, standalone hardcore blackbox scripts, integration guides, and zero regression.
