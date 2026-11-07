@@ -48,6 +48,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 18 | `/api/admin/media/upload` | `POST` | Media Management | ✅ Done & Tested | `7a2a48a` |
 | 19 | `/api/book` | `POST` | Consultation Booking Engine | ✅ Done & Tested | `4126693` |
 | 20 | `/api/admin/ai/jobs` | `GET`, `POST` | Autonomous AI Pipeline | ✅ Done & Tested | `8bd22f2` |
+| 21 | `/api/admin/ai/topics`, `[id]` | `GET`, `POST`, `PATCH`, `DELETE` | Topic Backlog & Management | ✅ Done & Tested | `58a442f` |
 
 ---
 
@@ -96,8 +97,12 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Service**: `JobOrchestratorService`
   - **Repository**: `GenerationJobsRepository`
   - **Required Tests**: 401 unauthenticated, 403 origin, 403 role permissions (Viewer vs Editor+), 422 validation, 200 get jobs list, 201 job trigger/creation.
-- [ ] **6. `GET, POST /api/admin/ai/topics` & `GET /api/admin/ai/topics/[id]`**
-  - **Purpose**: AI content ideation topic cluster inbox, keyword density, and search intent classification.
+- [x] **6. `GET, POST /api/admin/ai/topics` & `GET, PATCH, DELETE /api/admin/ai/topics/[id]`**
+  - **Purpose**: AI content ideation topic cluster inbox, keyword density, search intent classification, and lifecycle management.
+  - **Controller**: `app/api/admin/ai/topics/route.ts` & `app/api/admin/ai/topics/[id]/route.ts`
+  - **Service**: `AdminTopicsService`
+  - **Repository**: `TopicsRepository`
+  - **Required Tests**: 401 unauthenticated, 403 origin, 403 role permissions (Viewer vs Editor+), 422 validation, 404 not found, 200 get list, 201 create topic, 200 update status, 200 delete topic.
 - [ ] **7. `POST /api/admin/ai/topics/suggest`**
   - **Purpose**: Autonomous topic ideation generator powered by LLM / search intent cues.
 - [ ] **8. `POST /api/admin/ai/topics/[id]/launch`**
@@ -125,7 +130,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `GET, POST /api/admin/ai/topics` & `GET /api/admin/ai/topics/[id]` (Phase C: Autonomous AI Content Generation Pipeline)"*.
+1. State: *"Proceed with `POST /api/admin/ai/topics/suggest` (Phase C: Autonomous AI Content Generation Pipeline)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
