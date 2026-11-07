@@ -8,33 +8,37 @@ import type {
   AdminRevalidateBodyInput,
   AdminRevalidateResponse,
 } from "@/lib/contracts/admin-revalidate.contract";
+import { safeFetch } from "@/lib/http/safeFetch";
+import {
+  safeAdminLoginResponseSchema,
+  safeAdminLogoutResponseSchema,
+  safeAdminRevalidateResponseSchema,
+} from "@/lib/validations/admin-login-boundary.schema";
+
+export interface AdminGovernanceRequestOptions {
+  signal?: AbortSignal;
+  timeoutMs?: number;
+}
 
 /**
  * Authenticates an admin and issues an HTTP-only session cookie.
  * Endpoint: POST /api/admin/auth/login
  * Contract: adminLoginContract
  */
-export async function loginAdmin(payload: AdminLoginBodyInput): Promise<AdminLoginResponse> {
+export async function loginAdmin(
+  payload: AdminLoginBodyInput,
+  options: AdminGovernanceRequestOptions = {},
+): Promise<AdminLoginResponse> {
   const url = API_ENDPOINTS.ADMIN.AUTH.LOGIN;
 
-  const response = await fetch(url, {
+  return safeFetch(url, safeAdminLoginResponseSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal: options.signal,
+    timeoutMs: options.timeoutMs ?? 10_000,
   });
-
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to sign in.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
 }
 
 /**
@@ -42,26 +46,18 @@ export async function loginAdmin(payload: AdminLoginBodyInput): Promise<AdminLog
  * Endpoint: POST /api/admin/auth/logout
  * Contract: adminLogoutContract
  */
-export async function logoutAdmin(): Promise<AdminLogoutResponse> {
+export async function logoutAdmin(
+  options: AdminGovernanceRequestOptions = {},
+): Promise<AdminLogoutResponse> {
   const url = API_ENDPOINTS.ADMIN.AUTH.LOGOUT;
 
-  const response = await fetch(url, {
+  return safeFetch(url, safeAdminLogoutResponseSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    signal: options.signal,
+    timeoutMs: options.timeoutMs ?? 10_000,
   });
-
-  const resJson = await response.json().catch(() => ({ ok: response.ok }));
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to sign out.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
 }
 
 /**
@@ -71,25 +67,16 @@ export async function logoutAdmin(): Promise<AdminLogoutResponse> {
  */
 export async function revalidateAdminCache(
   payload: AdminRevalidateBodyInput,
+  options: AdminGovernanceRequestOptions = {},
 ): Promise<AdminRevalidateResponse> {
   const url = API_ENDPOINTS.ADMIN.REVALIDATE;
 
-  const response = await fetch(url, {
+  return safeFetch(url, safeAdminRevalidateResponseSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal: options.signal,
+    timeoutMs: options.timeoutMs ?? 10_000,
   });
-
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to revalidate cache.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
 }

@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
+import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginAdmin } from "@/lib/api/admin-governance.api";
+import { ApiError } from "@/lib/http/safeFetch";
+import { ErrorCode } from "@/lib/errors";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -14,21 +16,78 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isRateLimited, setIsRateLimited] = useState(false);
+
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Clean up any in-flight requests on unmount
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) setError(null);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) setError(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent double submission
+    if (loading) return;
+
+    // Abort previous in-flight request if any
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setError(null);
+    setIsRateLimited(false);
     setLoading(true);
 
     try {
-      await loginAdmin({ email, password });
+      await loginAdmin(
+        { email: email.trim(), password },
+        { signal: controller.signal },
+      );
 
       router.push("/admin/dashboard");
       router.refresh();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Invalid credentials");
+      // Ignore manual aborts when unmounting
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      if (err instanceof ApiError) {
+        if (err.code === ErrorCode.RATE_LIMITED || err.status === 429) {
+          setIsRateLimited(true);
+          setError(
+            err.message || "Too many login attempts. Please wait 60 seconds before trying again.",
+          );
+        } else if (err.code === ErrorCode.UNAUTHENTICATED || err.status === 401) {
+          setError(err.message || "Invalid work email or password. Please try again.");
+        } else if (err.code === ErrorCode.FORBIDDEN || err.status === 403) {
+          setError(err.message || "Access denied. Your account may be deactivated or unauthorized.");
+        } else {
+          setError(err.message || "Authentication service temporarily unavailable. Please try again.");
+        }
+      } else if (err instanceof Error) {
+        setError(err.message || "Invalid credentials");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   };
 
@@ -55,13 +114,29 @@ export default function AdminLoginPage() {
 
         <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_60px_-15px_rgba(17,85,204,0.08)] backdrop-blur-xl sm:p-8">
           {error && (
-            <div className="animate-in fade-in mb-6 flex items-center gap-2.5 rounded-2xl border border-rose-200/80 bg-rose-50 p-4 text-xs font-semibold text-rose-700">
-              <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
-              <span>{error}</span>
+            <div
+              id="login-error-msg"
+              role="alert"
+              aria-live="polite"
+              className={`animate-in fade-in mb-6 flex items-start gap-2.5 rounded-2xl border p-4 text-xs font-semibold ${
+                isRateLimited
+                  ? "border-amber-200/90 bg-amber-50 text-amber-900"
+                  : "border-rose-200/80 bg-rose-50 text-rose-700"
+              }`}
+            >
+              {isRateLimited ? (
+                <Clock className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+              ) : (
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
+              )}
+              <div className="flex-1">
+                <span className="block font-bold">{isRateLimited ? "Security Lockout" : "Authentication Failed"}</span>
+                <span className="mt-0.5 block font-normal leading-relaxed">{error}</span>
+              </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
             <div>
               <label
                 htmlFor="login-email"
@@ -73,11 +148,15 @@ export default function AdminLoginPage() {
                 <Mail className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                   id="login-email"
+                  name="email"
                   type="email"
                   required
+                  autoComplete="username"
                   placeholder="admin@techsonance.co.in"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "login-error-msg" : undefined}
                   className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pl-10 text-sm focus:bg-white"
                 />
               </div>
@@ -96,11 +175,15 @@ export default function AdminLoginPage() {
                 <Lock className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
                   id="login-password"
+                  name="password"
                   type="password"
                   required
+                  autoComplete="current-password"
                   placeholder="••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "login-error-msg" : undefined}
                   className="h-11 rounded-xl border-slate-200 bg-slate-50/50 pl-10 text-sm focus:bg-white"
                 />
               </div>
@@ -109,7 +192,7 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1155CC] text-xs font-bold tracking-normal text-white normal-case shadow-lg shadow-[#1155CC]/25 hover:bg-[#0d44a4] sm:text-sm"
+              className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1155CC] text-xs font-bold tracking-normal text-white normal-case shadow-lg shadow-[#1155CC]/25 hover:bg-[#0d44a4] disabled:opacity-70 sm:text-sm"
             >
               <span>{loading ? "Authenticating..." : "Sign In to Admin"}</span>
               <ArrowRight className="h-4 w-4" />
