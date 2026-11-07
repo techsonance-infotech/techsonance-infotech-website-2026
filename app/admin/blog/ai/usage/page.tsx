@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TelemetrySummary } from "@/lib/types/admin.types";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export default function AIUsageTelemetryPage() {
   const [data, setData] = useState<TelemetrySummary | null>(null);
@@ -26,7 +27,7 @@ export default function AIUsageTelemetryPage() {
   const loadTelemetry = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/admin/ai/usage");
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.USAGE);
       if (res.ok) {
         const json = await res.json();
         setData(json);

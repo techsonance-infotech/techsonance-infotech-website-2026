@@ -53,3 +53,9 @@ export const AI_TOPICS_MESSAGES = {
   TOPICS_SUGGESTED: "AI topic suggestions generated and added to backlog.",
   TOPIC_LAUNCHED: "Autonomous generation job triggered successfully.",
 } as const;
+
+export const AI_USAGE_ERRORS = {
+  UNAUTHORIZED: "You must be signed in to access AI telemetry and usage metrics",
+  FORBIDDEN_ORIGIN: "Forbidden origin",
+  LOAD_FAILED: "Failed to load AI telemetry usage metrics",
+} as const;
