@@ -9,10 +9,7 @@ import {
 } from "@/lib/contracts/admin-careers-compliance.contract";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { logger } from "@/lib/logger";
-import {
-  CAREER_ERRORS,
-  CAREER_COMPLIANCE_MESSAGES,
-} from "@/lib/constants/careers.constants";
+import { CAREER_ERRORS, CAREER_COMPLIANCE_MESSAGES } from "@/lib/constants/careers.constants";
 import { getRequestId } from "@/lib/server/requestContext";
 import { isAllowedOrigin } from "@/lib/utils/text";
 
@@ -247,11 +244,7 @@ export async function POST(req: Request) {
     const { email } = parseResult.data;
     const ipAddress = req.headers.get("x-forwarded-for") || undefined;
     const applicationsService = container.get(ApplicationsService);
-    const result = await applicationsService.purgeCandidateData(
-      email,
-      session.userId,
-      ipAddress,
-    );
+    const result = await applicationsService.purgeCandidateData(email, session.userId, ipAddress);
 
     logger.info("Compliance candidate data purged", {
       adminId: session.userId,

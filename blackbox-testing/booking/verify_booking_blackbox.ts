@@ -82,7 +82,7 @@ async function runBlackboxSuite() {
   const validSlot = futureSlots[5].iso;
   const alreadyBookedSlot = futureSlots[2].iso;
 
-  let storedBookings: any[] = [
+  const storedBookings: any[] = [
     {
       id: "seed-booking-id-1",
       reference: "TS-EXISTING1",
@@ -92,7 +92,7 @@ async function runBlackboxSuite() {
       status: BookingStatus.CONFIRMED,
     },
   ];
-  let emailDispatches: any[] = [];
+  const emailDispatches: any[] = [];
 
   const mockEmailService = {
     createICSCalendar: () => "BEGIN:VCALENDAR\nSUMMARY:Discovery Call\nEND:VCALENDAR",
@@ -243,7 +243,8 @@ async function runBlackboxSuite() {
     const pastSlot = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
     logRequest({
       caseNum: 4,
-      description: "Business rule validation: Past or non-existent slot rejected with 422 VALIDATION",
+      description:
+        "Business rule validation: Past or non-existent slot rejected with 422 VALIDATION",
       method: "POST",
       path: API_ENDPOINTS.BOOKING.BOOK,
       payload: { ...standardPayload, slotIso: pastSlot },
@@ -272,7 +273,8 @@ async function runBlackboxSuite() {
   {
     logRequest({
       caseNum: 5,
-      description: "Spam protection: Honeypot 'website' field triggers silent success without DB or email",
+      description:
+        "Spam protection: Honeypot 'website' field triggers silent success without DB or email",
       method: "POST",
       path: API_ENDPOINTS.BOOKING.BOOK,
       payload: { ...standardPayload, website: "https://spam-bot-marketing.com" },
@@ -331,7 +333,8 @@ async function runBlackboxSuite() {
   {
     logRequest({
       caseNum: 7,
-      description: "Happy path: Valid consultation booking created with 201 CREATED, DB persistence & email",
+      description:
+        "Happy path: Valid consultation booking created with 201 CREATED, DB persistence & email",
       method: "POST",
       path: API_ENDPOINTS.BOOKING.BOOK,
       payload: standardPayload,
@@ -356,8 +359,14 @@ async function runBlackboxSuite() {
     assert(/^TS-[A-Z0-9]+$/.test(json.data.ref), "Reference must follow TS-XXXXXX format");
     assert(json.data.slotIso === validSlot, "Returned slotIso must match requested slot");
     assert(json.data.status === BookingStatus.CONFIRMED, "Booking status must be CONFIRMED");
-    assert(storedBookings.length === prevDbCount + 1, "Database booking record successfully inserted");
-    assert(emailDispatches.length === prevEmailCount + 1, "Confirmation email dispatched successfully");
+    assert(
+      storedBookings.length === prevDbCount + 1,
+      "Database booking record successfully inserted",
+    );
+    assert(
+      emailDispatches.length === prevEmailCount + 1,
+      "Confirmation email dispatched successfully",
+    );
     assert(Boolean(res.headers.get("x-request-id")), "x-request-id header must be present");
   }
 

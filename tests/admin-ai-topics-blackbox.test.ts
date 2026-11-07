@@ -160,7 +160,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
   });
 
   it("3. GET /api/admin/ai/topics returns 200 OK with topics list", async () => {
-    const req = new Request("http://localhost:3000/api/admin/ai/topics?limit=10", { method: "GET" });
+    const req = new Request("http://localhost:3000/api/admin/ai/topics?limit=10", {
+      method: "GET",
+    });
     const res = await listTopicsGET(req as any);
     expect(res.status).toBe(200);
 
@@ -277,7 +279,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(401);
 
     const json = await res.json();
@@ -290,7 +294,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: "invalid-not-uuid" }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: "invalid-not-uuid" }),
+    });
     expect(res.status).toBe(422);
 
     const json = await res.json();
@@ -303,7 +309,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: nonExistentId }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: nonExistentId }),
+    });
     expect(res.status).toBe(404);
 
     const json = await res.json();
@@ -317,7 +325,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(200);
 
     const json = await res.json();
@@ -336,7 +346,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       body: JSON.stringify({ status: AiTopicStatus.QUEUED }),
     });
 
-    const res = await updateTopicPATCH(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await updateTopicPATCH(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(200);
 
     const json = await res.json();
@@ -352,7 +364,9 @@ describe("GET & POST /api/admin/ai/topics and [id] — Black Box Integration Tes
       method: "DELETE",
     });
 
-    const res = await deleteTopicDELETE(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await deleteTopicDELETE(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(200);
 
     const json = await res.json();

@@ -38,4 +38,3 @@ export const talentPoolContract = defineContract({
   response: talentPoolResponseSchema,
   status: 200,
 });
-

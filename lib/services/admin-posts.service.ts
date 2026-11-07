@@ -47,11 +47,9 @@ export class AdminPostsService {
     if (slug) {
       const existing = await this.postsRepo.findPostBySlug(slug);
       if (existing) {
-        throw new AppError(
-          ErrorCode.CONFLICT,
-          `A post with slug "${slug}" already exists`,
-          { fieldErrors: { slug: ["Slug is already taken"] } },
-        );
+        throw new AppError(ErrorCode.CONFLICT, `A post with slug "${slug}" already exists`, {
+          fieldErrors: { slug: ["Slug is already taken"] },
+        });
       }
     }
 

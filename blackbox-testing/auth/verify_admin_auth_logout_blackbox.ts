@@ -125,8 +125,14 @@ async function run() {
 
     assert(res.status === 200, "Status code must be 200 OK");
     assert(body.ok === true, "Envelope ok must be true");
-    assert(body.data?.message === AUTH_MESSAGES.LOGOUT_SUCCESS, "data.message matches LOGOUT_SUCCESS");
-    assert(body.message === AUTH_MESSAGES.LOGOUT_SUCCESS, "Top-level message present (backwards-compat)");
+    assert(
+      body.data?.message === AUTH_MESSAGES.LOGOUT_SUCCESS,
+      "data.message matches LOGOUT_SUCCESS",
+    );
+    assert(
+      body.message === AUTH_MESSAGES.LOGOUT_SUCCESS,
+      "Top-level message present (backwards-compat)",
+    );
     assert(body.success === true, "Top-level success boolean is true");
     assert(setCookie !== null, "set-cookie header is present in response");
     assert(setCookie?.includes(SESSION_COOKIE) === true, `set-cookie references ${SESSION_COOKIE}`);

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
 import {
   ArrowLeft,
   Save,
@@ -14,6 +15,7 @@ import {
   AlertCircle,
   Tag,
   Clock,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +23,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import {
+  submitPostForReview,
+  publishPost,
+  deletePost,
+  createPost,
+  updatePost,
+} from "@/lib/api/admin-posts.api";
+import { uploadMediaAsset } from "@/lib/api/media.api";
 import type { AdminPost } from "@/lib/types/admin.types";
+
+export interface PostFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  heroImage: string;
+  tagsInput: string;
+  readTime: string;
+  status: string;
+}
 
 interface PostEditorProps {
   initialPost?: Partial<AdminPost>;
@@ -31,34 +52,60 @@ interface PostEditorProps {
 export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
   const router = useRouter();
 
-  const [title, setTitle] = useState(initialPost?.title || "");
-  const [slug, setSlug] = useState(initialPost?.slug || "");
-  const [excerpt, setExcerpt] = useState(initialPost?.excerpt || "");
-  const [content, setContent] = useState(initialPost?.content || "");
-  const [heroImage, setHeroImage] = useState(initialPost?.heroImage || "");
-  const [tagsInput, setTagsInput] = useState((initialPost?.tags || []).join(", "));
-  const [status, setStatus] = useState(initialPost?.status || "DRAFT");
-  const [readTime, setReadTime] = useState(initialPost?.readTime || "5 min read");
-
   const [uploadingImage, setUploadingImage] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Initialize React Hook Form for full state and validation management
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors, isDirty },
+  } = useForm<PostFormData>({
+    defaultValues: {
+      title: initialPost?.title || "",
+      slug: initialPost?.slug || "",
+      excerpt: initialPost?.excerpt || "",
+      content: initialPost?.content || "",
+      heroImage: initialPost?.heroImage || "",
+      tagsInput: (initialPost?.tags || []).join(", "),
+      status: initialPost?.status || "DRAFT",
+      readTime: initialPost?.readTime || "5 min read",
+    },
+  });
+
+  // Watch reactive fields for real-time calculation and previews
+  const title = watch("title");
+  const slug = watch("slug");
+  const excerpt = watch("excerpt");
+  const content = watch("content");
+  const heroImage = watch("heroImage");
+  const status = watch("status");
+  const readTime = watch("readTime");
+
   // Auto-generate slug from title if new or slug is empty
-  const handleTitleChange = (val: string) => {
-    setTitle(val);
-    if (isNew || !slug) {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue("title", val, { shouldValidate: true, shouldDirty: true });
+    if (isNew || !getValues("slug")) {
       const generated = val
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)+/g, "");
-      setSlug(generated);
+      setValue("slug", generated, { shouldValidate: true, shouldDirty: true });
     }
   };
 
   // Auto-calculate word count & read time from content
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const wordCount = content?.trim() ? content.trim().split(/\s+/).length : 0;
   const estimatedReadTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,21 +115,8 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
     try {
       setUploadingImage(true);
       setError(null);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "blog/thumbnails");
-
-      const res = await fetch("/api/admin/media/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to upload image");
-      }
-
-      setHeroImage(data.secureUrl);
+      const data = await uploadMediaAsset(file, "blog/thumbnails");
+      setValue("heroImage", data.secureUrl, { shouldDirty: true, shouldValidate: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Image upload failed");
     } finally {
@@ -96,51 +130,43 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
     setSaving(true);
 
     try {
-      const tags = tagsInput
+      const formValues = getValues();
+      const tags = formValues.tagsInput
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean);
 
       const payload = {
-        title,
-        slug,
-        excerpt,
-        content,
-        heroImage,
+        title: formValues.title,
+        slug: formValues.slug,
+        excerpt: formValues.excerpt,
+        content: formValues.content,
+        heroImage: formValues.heroImage,
         tags,
-        readTime: estimatedReadTime,
-        status: targetStatus || status,
+        readTime: formValues.readTime || estimatedReadTime,
+        status: targetStatus || formValues.status,
       };
 
-      let res: Response;
+      let savedPost: AdminPost;
       if (isNew) {
-        res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POSTS, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        savedPost = await createPost(payload);
       } else {
-        res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST(initialPost!.id!), {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        savedPost = await updatePost(initialPost!.id!, payload);
       }
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to save post");
+      if (targetStatus) {
+        setValue("status", targetStatus, { shouldDirty: false });
       }
+      reset(formValues);
 
-      if (targetStatus) setStatus(targetStatus);
       setSuccessMsg(
         targetStatus === "PUBLISHED"
           ? "Article published and CDN cache revalidated!"
           : "Article saved successfully!",
       );
 
-      if (isNew && data.post?.id) {
-        router.push(`/admin/blog/${data.post.id}`);
+      if (isNew && savedPost?.id) {
+        router.push(`/admin/blog/${savedPost.id}`);
       } else {
         router.refresh();
       }
@@ -148,6 +174,172 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
+    }
+  };
+
+  /**
+   * Endpoint 1 Integration: POST /api/admin/blog/posts/[id]/submit
+   * Submits a draft post for editorial review.
+   */
+  const handleSubmitForReview = async () => {
+    setError(null);
+    setSuccessMsg(null);
+    setSubmitting(true);
+
+    try {
+      let postId = initialPost?.id;
+      const formValues = getValues();
+
+      const tags = formValues.tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      // Ensure post exists in DRAFT state first
+      if (isNew || !postId) {
+        const payload = {
+          title: formValues.title,
+          slug: formValues.slug,
+          excerpt: formValues.excerpt,
+          content: formValues.content,
+          heroImage: formValues.heroImage,
+          tags,
+          readTime: formValues.readTime || estimatedReadTime,
+          status: "DRAFT",
+        };
+
+        const post = await createPost(payload);
+        postId = post.id;
+      } else {
+        // Save latest modifications prior to submission
+        const payload = {
+          title: formValues.title,
+          slug: formValues.slug,
+          excerpt: formValues.excerpt,
+          content: formValues.content,
+          heroImage: formValues.heroImage,
+          tags,
+          readTime: formValues.readTime || estimatedReadTime,
+        };
+
+        await updatePost(postId, payload);
+      }
+
+      if (!postId) {
+        throw new Error("Missing post identifier for submission");
+      }
+
+      // Call dedicated submission endpoint: POST /api/admin/blog/posts/[id]/submit
+      const res = await submitPostForReview(postId);
+
+      setValue("status", "IN_REVIEW", { shouldDirty: false });
+      reset({ ...formValues, status: "IN_REVIEW" });
+      setSuccessMsg(res.message || "Post submitted for editorial review successfully");
+
+      if (isNew && postId) {
+        router.push(`/admin/blog/${postId}`);
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to submit post for review");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  /**
+   * Endpoint 2 Integration: POST /api/admin/blog/posts/[id]/publish
+   * Publishes a draft or in-review article to the live site with ISR cache revalidation.
+   */
+  const handlePublish = async () => {
+    setError(null);
+    setSuccessMsg(null);
+    setPublishing(true);
+
+    try {
+      let postId = initialPost?.id;
+      const formValues = getValues();
+
+      const tags = formValues.tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+
+      // Ensure post exists first if new
+      if (isNew || !postId) {
+        const payload = {
+          title: formValues.title,
+          slug: formValues.slug,
+          excerpt: formValues.excerpt,
+          content: formValues.content,
+          heroImage: formValues.heroImage,
+          tags,
+          readTime: formValues.readTime || estimatedReadTime,
+          status: "DRAFT",
+        };
+
+        const post = await createPost(payload);
+        postId = post.id;
+      } else {
+        // Save latest modifications prior to publishing
+        const payload = {
+          title: formValues.title,
+          slug: formValues.slug,
+          excerpt: formValues.excerpt,
+          content: formValues.content,
+          heroImage: formValues.heroImage,
+          tags,
+          readTime: formValues.readTime || estimatedReadTime,
+        };
+
+        await updatePost(postId, payload);
+      }
+
+      if (!postId) {
+        throw new Error("Missing post identifier for publishing");
+      }
+
+      // Call dedicated publish endpoint: POST /api/admin/blog/posts/[id]/publish
+      const res = await publishPost(postId);
+
+      setValue("status", "PUBLISHED", { shouldDirty: false });
+      reset({ ...formValues, status: "PUBLISHED" });
+      setSuccessMsg(res.message || "Article published and CDN cache revalidated!");
+
+      if (isNew && postId) {
+        router.push(`/admin/blog/${postId}`);
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to publish article");
+    } finally {
+      setPublishing(false);
+    }
+  };
+
+  /**
+   * Endpoint 3 Integration: DELETE /api/admin/blog/posts/[id]
+   * Deletes a blog post and redirects back to the post management list.
+   */
+  const handleDeletePost = async () => {
+    if (!initialPost?.id) return;
+    const titleVal = getValues("title") || "this article";
+    if (!confirm(`Are you sure you want to delete "${titleVal}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    setError(null);
+    setSuccessMsg(null);
+    setDeleting(true);
+
+    try {
+      await deletePost(initialPost.id);
+      router.push("/admin/blog");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete post");
+      setDeleting(false);
     }
   };
 
@@ -178,6 +370,11 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               >
                 {status}
               </Badge>
+              {isDirty && (
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-amber-600 border border-amber-200">
+                  Unsaved changes
+                </span>
+              )}
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
               {wordCount} words • {estimatedReadTime}
@@ -186,10 +383,23 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
         </div>
 
         <div className="flex items-center gap-2.5">
+          {!isNew && initialPost?.id && (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={saving || submitting || publishing || deleting}
+              onClick={handleDeletePost}
+              className="rounded-xl text-xs font-bold text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700"
+            >
+              <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+              <span>{deleting ? "Deleting..." : "Delete"}</span>
+            </Button>
+          )}
+
           <Button
             variant="outline"
             size="sm"
-            disabled={saving}
+            disabled={saving || submitting || publishing || deleting}
             onClick={() => handleSave("DRAFT")}
             className="rounded-xl text-xs font-bold text-slate-700"
           >
@@ -201,24 +411,30 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
             <Button
               variant="outline"
               size="sm"
-              disabled={saving}
-              onClick={() => handleSave("IN_REVIEW")}
+              disabled={saving || submitting || publishing || deleting}
+              onClick={handleSubmitForReview}
               className="rounded-xl text-xs font-bold text-amber-700 border-amber-200 hover:bg-amber-50"
             >
               <Send className="w-3.5 h-3.5 mr-1.5" />
-              <span>Submit for Review</span>
+              <span>{submitting ? "Submitting..." : "Submit for Review"}</span>
             </Button>
           )}
 
           <Button
             variant="default"
             size="sm"
-            disabled={saving}
-            onClick={() => handleSave("PUBLISHED")}
+            disabled={saving || submitting || publishing || deleting}
+            onClick={handlePublish}
             className="rounded-xl bg-[#1155CC] hover:bg-[#0d44a4] text-white shadow-md shadow-[#1155CC]/20 text-xs font-bold"
           >
             <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
-            <span>{saving ? "Publishing..." : "Publish to Live Site"}</span>
+            <span>
+              {publishing
+                ? "Publishing..."
+                : status === "PUBLISHED"
+                  ? "Republish Live Site"
+                  : "Publish to Live Site"}
+            </span>
           </Button>
         </div>
       </div>
@@ -248,16 +464,23 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   htmlFor="post-title"
                   className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
                 >
-                  Article Title
+                  Article Title <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   id="post-title"
-                  required
                   placeholder="e.g. Architecting Scalable Next.js 16 Applications in 2026"
-                  value={title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
+                  {...register("title", {
+                    required: "Article title is required",
+                    minLength: { value: 3, message: "Title must be at least 3 characters" },
+                  })}
+                  onChange={handleTitleChange}
                   className="text-base sm:text-lg font-bold font-sora h-12"
                 />
+                {errors.title && (
+                  <p className="text-[11px] font-semibold text-rose-600 mt-1.5">
+                    {errors.title.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -265,7 +488,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   htmlFor="post-slug"
                   className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2"
                 >
-                  URL Slug
+                  URL Slug <span className="text-rose-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono text-slate-400 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200">
@@ -273,13 +496,22 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   </span>
                   <Input
                     id="post-slug"
-                    required
                     placeholder="architecting-scalable-nextjs-16"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
+                    {...register("slug", {
+                      required: "URL slug is required",
+                      pattern: {
+                        value: /^[a-z0-9-]+$/,
+                        message: "Slug must be lowercase alphanumeric with hyphens",
+                      },
+                    })}
                     className="font-mono text-xs"
                   />
                 </div>
+                {errors.slug && (
+                  <p className="text-[11px] font-semibold text-rose-600 mt-1.5">
+                    {errors.slug.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -292,8 +524,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                 <Textarea
                   id="post-excerpt"
                   placeholder="A concise synopsis for search engines, cards, and RSS feeds..."
-                  value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
+                  {...register("excerpt")}
                   className="min-h-[70px] text-xs"
                 />
               </div>
@@ -304,18 +535,24 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                     htmlFor="post-content"
                     className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
                   >
-                    Article Body (Markdown)
+                    Article Body (Markdown) <span className="text-rose-500">*</span>
                   </label>
                   <span className="text-[11px] text-slate-400 font-mono">{wordCount} words</span>
                 </div>
                 <Textarea
                   id="post-content"
-                  required
                   placeholder="Write in Markdown or HTML. Supports headings (##), bold (**text**), lists, and code blocks..."
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  {...register("content", {
+                    required: "Article content is required",
+                    minLength: { value: 10, message: "Content must be at least 10 characters" },
+                  })}
                   className="min-h-[420px] font-mono text-xs sm:text-sm leading-relaxed"
                 />
+                {errors.content && (
+                  <p className="text-[11px] font-semibold text-rose-600 mt-1.5">
+                    {errors.content.message}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -343,7 +580,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button
                       type="button"
-                      onClick={() => setHeroImage("")}
+                      onClick={() => setValue("heroImage", "", { shouldDirty: true })}
                       className="px-3 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold shadow-md hover:bg-rose-700"
                     >
                       Remove
@@ -383,8 +620,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                 <Input
                   id="hero-image-url"
                   placeholder="https://res.cloudinary.com/..."
-                  value={heroImage}
-                  onChange={(e) => setHeroImage(e.target.value)}
+                  {...register("heroImage")}
                   className="text-xs font-mono"
                 />
               </div>
@@ -411,8 +647,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   <Input
                     id="post-tags"
                     placeholder="Next.js, Architecture, Supabase"
-                    value={tagsInput}
-                    onChange={(e) => setTagsInput(e.target.value)}
+                    {...register("tagsInput")}
                     className="pl-8 text-xs"
                   />
                 </div>
@@ -430,8 +665,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   <Input
                     id="post-readtime"
                     placeholder="5 min read"
-                    value={readTime}
-                    onChange={(e) => setReadTime(e.target.value)}
+                    {...register("readTime")}
                     className="pl-8 text-xs"
                   />
                 </div>
@@ -456,7 +690,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
               </h4>
               <p className="text-xs text-slate-600 line-clamp-2">
                 {excerpt ||
-                  content.slice(0, 140) ||
+                  (content ? content.slice(0, 140) : "") ||
                   "Article summary snippet as it will appear on Google."}
               </p>
             </CardContent>

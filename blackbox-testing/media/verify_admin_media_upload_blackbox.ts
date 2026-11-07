@@ -53,7 +53,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`);
+  console.log(
+    `Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -80,9 +82,7 @@ async function runBlackboxSuite() {
   };
 
   const validJpegBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]);
-  const validPngBuffer = Buffer.from([
-    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
-  ]);
+  const validPngBuffer = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00]);
   const validWebpBuffer = Buffer.from([
     0x52, 0x49, 0x46, 0x46, 0x24, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
   ]);
@@ -233,7 +233,11 @@ async function runBlackboxSuite() {
     logResponse(res.status, res.headers, body);
 
     assertTest(res.status === 413, 5, "Status code is 413");
-    assertTest(body.error?.code === ErrorCode.PAYLOAD_TOO_LARGE, 5, "Error code is PAYLOAD_TOO_LARGE");
+    assertTest(
+      body.error?.code === ErrorCode.PAYLOAD_TOO_LARGE,
+      5,
+      "Error code is PAYLOAD_TOO_LARGE",
+    );
   }
 
   // ─── CASE 6: 415 UNSUPPORTED_MEDIA (BAD MIME) ─────────────────────────────
@@ -256,7 +260,11 @@ async function runBlackboxSuite() {
     logResponse(res.status, res.headers, body);
 
     assertTest(res.status === 415, 6, "Status code is 415");
-    assertTest(body.error?.code === ErrorCode.UNSUPPORTED_MEDIA, 6, "Error code is UNSUPPORTED_MEDIA");
+    assertTest(
+      body.error?.code === ErrorCode.UNSUPPORTED_MEDIA,
+      6,
+      "Error code is UNSUPPORTED_MEDIA",
+    );
   }
 
   // ─── CASE 7: 415 UNSUPPORTED_MEDIA (MAGIC BYTE MISMATCH) ──────────────────
@@ -279,7 +287,11 @@ async function runBlackboxSuite() {
     logResponse(res.status, res.headers, body);
 
     assertTest(res.status === 415, 7, "Status code is 415");
-    assertTest(body.error?.code === ErrorCode.UNSUPPORTED_MEDIA, 7, "Error code is UNSUPPORTED_MEDIA");
+    assertTest(
+      body.error?.code === ErrorCode.UNSUPPORTED_MEDIA,
+      7,
+      "Error code is UNSUPPORTED_MEDIA",
+    );
   }
 
   // ─── CASE 8: 201 CREATED (VALID JPEG) ─────────────────────────────────────

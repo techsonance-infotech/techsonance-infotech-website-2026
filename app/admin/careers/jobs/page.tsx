@@ -2,38 +2,34 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, ArrowRight } from "lucide-react";
+import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Job } from "@/lib/types/careers";
 import { JobStatus } from "@/lib/constants/enums";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { listAdminJobs, deleteAdminJob } from "@/lib/api/admin-jobs.api";
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("ALL");
   const [search, setSearch] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const fetchJobs = useCallback(async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams();
-      if (activeTab !== "ALL") {
-        params.set("status", activeTab);
-      }
-      if (search.trim()) {
-        params.set("search", search.trim());
-      }
-      const res = await fetch(`${API_ENDPOINTS.ADMIN.JOBS}?${params.toString()}`);
-      const data = await res.json();
-      if (data.ok) {
-        setJobs(data.jobs || []);
-      }
-    } catch (err) {
-      console.error("Failed to load jobs", err);
+      setErrorMsg(null);
+      const items = await listAdminJobs({
+        status: activeTab,
+        search,
+      });
+      setJobs(items);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load positions.";
+      setErrorMsg(msg);
     } finally {
       setLoading(false);
     }
@@ -48,12 +44,11 @@ export default function AdminJobsPage() {
       return;
     }
     try {
-      const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id), { method: "DELETE" });
-      if (res.ok) {
-        await fetchJobs();
-      }
-    } catch (err) {
-      console.error("Failed to delete job", err);
+      await deleteAdminJob(id);
+      await fetchJobs();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete position.";
+      alert(msg);
     }
   };
 
@@ -98,6 +93,12 @@ export default function AdminJobsPage() {
       {/* Filter Tabs & Search */}
       <Card className="rounded-3xl border-slate-200 dark:border-slate-800">
         <CardContent className="p-4 sm:p-6 space-y-4">
+          {errorMsg && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-600">
+              {errorMsg}
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="flex items-center gap-1.5 p-1 bg-slate-100/80 dark:bg-slate-800 rounded-2xl overflow-x-auto">
               {tabs.map((tab) => (

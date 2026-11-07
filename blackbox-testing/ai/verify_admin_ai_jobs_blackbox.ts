@@ -156,7 +156,8 @@ async function runBlackboxSuite() {
     activeSession = null;
     logRequest({
       caseNum: 1,
-      description: "GET /api/admin/ai/jobs: Rejects unauthenticated request with 401 UNAUTHENTICATED",
+      description:
+        "GET /api/admin/ai/jobs: Rejects unauthenticated request with 401 UNAUTHENTICATED",
       method: "GET",
       path: API_ENDPOINTS.ADMIN.AI.JOBS,
     });
@@ -171,7 +172,10 @@ async function runBlackboxSuite() {
 
     assert(res.status === 401, "Status must be 401 Unauthorized");
     assert(json.ok === false, "Envelope ok must be false");
-    assert(json.error.code === ErrorCode.UNAUTHENTICATED, `Code must be ${ErrorCode.UNAUTHENTICATED}`);
+    assert(
+      json.error.code === ErrorCode.UNAUTHENTICATED,
+      `Code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
   }
 
   // ─── Case 2: GET untrusted origin (403 FORBIDDEN) ───────────────────────────
@@ -231,7 +235,8 @@ async function runBlackboxSuite() {
     activeSession = null;
     logRequest({
       caseNum: 4,
-      description: "POST /api/admin/ai/jobs: Rejects unauthenticated request with 401 UNAUTHENTICATED",
+      description:
+        "POST /api/admin/ai/jobs: Rejects unauthenticated request with 401 UNAUTHENTICATED",
       method: "POST",
       path: API_ENDPOINTS.ADMIN.AI.JOBS,
       payload: { topicText: "Valid Topic" },
@@ -249,7 +254,10 @@ async function runBlackboxSuite() {
 
     assert(res.status === 401, "Status must be 401 Unauthorized");
     assert(json.ok === false, "Envelope ok must be false");
-    assert(json.error.code === ErrorCode.UNAUTHENTICATED, `Code must be ${ErrorCode.UNAUTHENTICATED}`);
+    assert(
+      json.error.code === ErrorCode.UNAUTHENTICATED,
+      `Code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
   }
 
   // ─── Case 5: POST viewer role denied (403 FORBIDDEN) ────────────────────────
@@ -257,7 +265,8 @@ async function runBlackboxSuite() {
     activeSession = sampleViewerSession;
     logRequest({
       caseNum: 5,
-      description: "POST /api/admin/ai/jobs: Rejects viewer role with 403 FORBIDDEN (Editor+ required)",
+      description:
+        "POST /api/admin/ai/jobs: Rejects viewer role with 403 FORBIDDEN (Editor+ required)",
       method: "POST",
       path: API_ENDPOINTS.ADMIN.AI.JOBS,
       actor: "viewer@techsonance.co.in",
@@ -277,7 +286,10 @@ async function runBlackboxSuite() {
     assert(res.status === 403, "Status must be 403 Forbidden");
     assert(json.ok === false, "Envelope ok must be false");
     assert(json.error.code === ErrorCode.FORBIDDEN, `Code must be ${ErrorCode.FORBIDDEN}`);
-    assert(json.error.message === AI_JOBS_ERRORS.FORBIDDEN_ROLE, "Message must indicate insufficient role");
+    assert(
+      json.error.message === AI_JOBS_ERRORS.FORBIDDEN_ROLE,
+      "Message must indicate insufficient role",
+    );
   }
 
   // ─── Case 6: POST payload validation failure: Short topic (422 VALIDATION) ──
@@ -319,7 +331,8 @@ async function runBlackboxSuite() {
 
     logRequest({
       caseNum: 7,
-      description: "POST /api/admin/ai/jobs: Enqueues job with 201 CREATED & starts background pipeline",
+      description:
+        "POST /api/admin/ai/jobs: Enqueues job with 201 CREATED & starts background pipeline",
       method: "POST",
       path: API_ENDPOINTS.ADMIN.AI.JOBS,
       actor: "editor@techsonance.co.in",
@@ -341,7 +354,10 @@ async function runBlackboxSuite() {
     assert(json.data.job.id === "job-new-uuid-999", "Created job id must match");
     assert(json.data.job.topicText === payload.topicText, "Topic text must match payload");
     assert(json.data.message === AI_JOBS_MESSAGES.JOB_ENQUEUED, "Message must indicate enqueued");
-    assert(backgroundJobTriggered === "job-new-uuid-999", "Background pipeline execution triggered");
+    assert(
+      backgroundJobTriggered === "job-new-uuid-999",
+      "Background pipeline execution triggered",
+    );
     assert(Boolean(res.headers.get("x-request-id")), "x-request-id header must be present");
   }
 

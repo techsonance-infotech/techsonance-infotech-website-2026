@@ -18,9 +18,7 @@ describe("POST /api/admin/media/upload — Black Box Integration Tests", () => {
   };
 
   const validJpegBuffer = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]);
-  const validPngBuffer = Buffer.from([
-    0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00,
-  ]);
+  const validPngBuffer = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00]);
   const validWebpBuffer = Buffer.from([
     0x52, 0x49, 0x46, 0x46, 0x24, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
   ]);
@@ -156,7 +154,11 @@ describe("POST /api/admin/media/upload — Black Box Integration Tests", () => {
 
   it("6. Rejects unsupported MIME type (application/pdf) with 415 UNSUPPORTED_MEDIA", async () => {
     const formData = new FormData();
-    formData.append("file", new Blob(["%PDF-1.4 file content"], { type: "application/pdf" }), "doc.pdf");
+    formData.append(
+      "file",
+      new Blob(["%PDF-1.4 file content"], { type: "application/pdf" }),
+      "doc.pdf",
+    );
 
     const req = new Request("http://localhost:3000/api/admin/media/upload", {
       method: "POST",

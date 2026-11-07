@@ -52,7 +52,9 @@ function logRequest(details: {
   if (details.actor) console.log(`[ACTOR]   ${details.actor}`);
   if (details.headers) console.log(`[HEADERS] ${JSON.stringify(details.headers)}`);
   if (details.payload !== undefined) {
-    console.log(`[PAYLOAD] ${typeof details.payload === "string" ? details.payload : JSON.stringify(details.payload)}`);
+    console.log(
+      `[PAYLOAD] ${typeof details.payload === "string" ? details.payload : JSON.stringify(details.payload)}`,
+    );
   }
 }
 
@@ -160,7 +162,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_USAGE_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === AI_USAGE_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 2: Unauthenticated Access (401) ────────────────────────────
@@ -184,8 +189,14 @@ async function run() {
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === AI_USAGE_ERRORS.UNAUTHORIZED, "Unauthorized error message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === AI_USAGE_ERRORS.UNAUTHORIZED,
+      "Unauthorized error message matched",
+    );
   }
 
   // ─── TEST CASE 3: Viewer Role Access (200) ────────────────────────────────
@@ -262,7 +273,10 @@ async function run() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === AI_USAGE_ERRORS.LOAD_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === AI_USAGE_ERRORS.LOAD_FAILED,
+      "Internal error message matches constant",
+    );
   }
 
   // ─── SUMMARY SCOREBOARD ──────────────────────────────────────────────────

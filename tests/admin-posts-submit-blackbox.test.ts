@@ -194,7 +194,9 @@ describe("POST /api/admin/blog/posts/[id]/submit — Black Box Integration Tests
   });
 
   it("8. Returns 500 INTERNAL when unexpected exception occurs", async () => {
-    mockPostsService.submitForReview.mockRejectedValueOnce(new Error("Database pool connection timed out"));
+    mockPostsService.submitForReview.mockRejectedValueOnce(
+      new Error("Database pool connection timed out"),
+    );
 
     const req = new Request(`http://localhost:3000/api/admin/posts/${validPostId}/submit`, {
       method: "POST",

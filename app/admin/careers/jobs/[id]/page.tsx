@@ -1,32 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, use } from "react";
+import React, { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Save,
   CheckCircle2,
   AlertCircle,
-  Clock,
-  Sparkles,
   ExternalLink,
-  ShieldCheck,
-  RefreshCw,
   History,
   CheckCheck,
   Undo2,
   Copy,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import {
   JobEditorForm,
   type JobFormData,
@@ -35,7 +24,13 @@ import {
 import { evaluateCompleteness } from "@/components/admin/careers/CompletenessChecklist";
 import { ApprovalActionDialog } from "@/components/admin/careers/ApprovalActionDialog";
 import { VersionHistoryDialog } from "@/components/admin/careers/VersionHistoryDialog";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import {
+  getAdminJob,
+  createAdminJob,
+  updateAdminJob,
+  updateAdminJobStatus,
+  toJobFormData,
+} from "@/lib/api/admin-jobs.api";
 
 interface JobEditorPageProps {
   params: Promise<{ id: string }>;
@@ -60,29 +55,35 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [duplicating, setDuplicating] = useState(false);
 
-  // Fetch existing job if not "new"
-  const fetchJob = useCallback(async () => {
-    if (isNew) return;
-    try {
-      setLoading(true);
-      const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id));
-      const data = await res.json();
-      if (data.ok && data.job) {
-        setJobData(data.job);
-      } else {
-        setAlertMessage({ type: "error", text: data.error || "Failed to load position." });
-      }
-    } catch (err: any) {
-      console.error("Fetch job error:", err);
-      setAlertMessage({ type: "error", text: "Network error loading position data." });
-    } finally {
-      setLoading(false);
-    }
-  }, [id, isNew]);
-
   useEffect(() => {
-    fetchJob();
-  }, [fetchJob]);
+    let ignore = false;
+    if (isNew) return;
+
+    async function load() {
+      try {
+        setLoading(true);
+        const job = await getAdminJob(id);
+        if (!ignore) {
+          setJobData(toJobFormData(job));
+        }
+      } catch (err: unknown) {
+        if (!ignore) {
+          const msg = err instanceof Error ? err.message : "Network error loading position data.";
+          setAlertMessage({ type: "error", text: msg });
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void load();
+
+    return () => {
+      ignore = true;
+    };
+  }, [id, isNew]);
 
   // Save handler (Create new or update existing)
   const handleSave = async (updatedData: JobFormData) => {
@@ -92,71 +93,25 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
     try {
       if (isNew) {
-        const res = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedData),
-        });
-        const data = await res.json();
-        if (res.ok && data.ok && data.job) {
-          setSaveStatus("saved");
-          setLastSavedAt(new Date());
-          setJobData(data.job);
-          setAlertMessage({ type: "success", text: "Role draft created successfully!" });
-          // Redirect to the newly created job ID
-          router.replace(`/admin/careers/jobs/${data.job.id}`);
-        } else {
-          setSaveStatus("error");
-          const msg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error?.message || "Failed to create position.";
-          setAlertMessage({ type: "error", text: msg });
-        }
+        const job = await createAdminJob(updatedData);
+        setSaveStatus("saved");
+        setLastSavedAt(new Date());
+        setJobData(toJobFormData(job));
+        setAlertMessage({ type: "success", text: "Role draft created successfully!" });
+        // Redirect to the newly created job ID
+        router.replace(`/admin/careers/jobs/${job.id}`);
       } else {
-        const res = await fetch(API_ENDPOINTS.ADMIN.JOB(id), {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedData),
-        });
-        const data = await res.json();
-        if (data.ok && data.job) {
-          setSaveStatus("saved");
-          setLastSavedAt(new Date());
-          setJobData(data.job);
-          setAlertMessage({ type: "success", text: "Draft changes saved." });
-          setTimeout(
-            () => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)),
-            4000,
-          );
-        } else {
-          setSaveStatus("error");
-          const msg =
-            typeof data.error === "string"
-              ? data.error
-              : data.error?.message || "Failed to save changes.";
-          const details = data.details
-            ? Object.entries(data.details)
-                .filter(([k]) => k !== "_errors")
-                .map(([field, err]: [string, any]) => {
-                  const fieldErrors = Array.isArray(err)
-                    ? err
-                    : (err as { _errors?: string[] })?._errors || [];
-                  return `${field}: ${fieldErrors.join(", ")}`;
-                })
-                .filter(Boolean)
-                .join("; ")
-            : "";
-          setAlertMessage({
-            type: "error",
-            text: details ? `${msg} (${details})` : msg,
-          });
-        }
+        const job = await updateAdminJob(id, updatedData);
+        setSaveStatus("saved");
+        setLastSavedAt(new Date());
+        setJobData(toJobFormData(job));
+        setAlertMessage({ type: "success", text: "Draft changes saved." });
+        setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
       }
-    } catch (err: any) {
-      console.error("Save job error:", err);
+    } catch (err: unknown) {
       setSaveStatus("error");
-      setAlertMessage({ type: "error", text: "Network error saving position." });
+      const msg = err instanceof Error ? err.message : "Failed to save changes.";
+      setAlertMessage({ type: "error", text: msg });
     } finally {
       setSaving(false);
     }
@@ -175,32 +130,13 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         status: "DRAFT",
       };
       delete duplicateData.id;
-      delete (duplicateData as any).versionId;
-      delete (duplicateData as any).createdAt;
-      delete (duplicateData as any).updatedAt;
-      delete (duplicateData as any).approvalComment;
-      delete (duplicateData as any).approvedAt;
-      delete (duplicateData as any).approvedBy;
 
-      const res = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(duplicateData),
-      });
-      const data = await res.json();
-      if (res.ok && data.ok && data.job) {
-        setAlertMessage({ type: "success", text: "Role duplicated as new draft!" });
-        router.push(`/admin/careers/jobs/${data.job.id}`);
-      } else {
-        const msg =
-          typeof data.error === "string"
-            ? data.error
-            : data.error?.message || "Failed to duplicate role";
-        setAlertMessage({ type: "error", text: msg });
-      }
+      const created = await createAdminJob(duplicateData);
+      setAlertMessage({ type: "success", text: "Role duplicated as new draft!" });
+      router.push(`/admin/careers/jobs/${created.id}`);
     } catch (err: unknown) {
-      console.error("Duplicate role error:", err);
-      setAlertMessage({ type: "error", text: "Network error duplicating role." });
+      const msg = err instanceof Error ? err.message : "Failed to duplicate role";
+      setAlertMessage({ type: "error", text: msg });
     } finally {
       setDuplicating(false);
     }
@@ -222,51 +158,27 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       // If still new, save first
       let currentJobId = id;
       if (isNew) {
-        const createRes = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
-        });
-        const createData = await createRes.json();
-        if (!createRes.ok || !createData.ok || !createData.job) {
-          const msg =
-            typeof createData.error === "string"
-              ? createData.error
-              : createData.error?.message || "Failed to create initial draft";
-          throw new Error(msg);
-        }
-        currentJobId = createData.job.id;
+        const job = await createAdminJob({ ...updatedData, status: "DRAFT" });
+        currentJobId = job.id;
       }
 
       // Transition to IN_REVIEW
-      const transitionRes = await fetch(API_ENDPOINTS.ADMIN.JOB_STATUS(currentJobId), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetStatus: "IN_REVIEW",
-          comment: "Submitted by recruiter for executive approval.",
-        }),
+      const transitionJob = await updateAdminJobStatus(currentJobId, {
+        targetStatus: "IN_REVIEW",
+        comment: "Submitted by recruiter for executive approval.",
       });
-      const transitionData = await transitionRes.json();
-      if (transitionRes.ok && transitionData.ok && transitionData.job) {
-        setJobData(transitionData.job);
-        setAlertMessage({
-          type: "success",
-          text: "Role submitted for review! Hiring managers and admins have been notified.",
-        });
-        if (isNew) {
-          router.replace(`/admin/careers/jobs/${currentJobId}`);
-        }
-      } else {
-        const msg =
-          typeof transitionData.error === "string"
-            ? transitionData.error
-            : transitionData.error?.message || "Status transition failed";
-        throw new Error(msg);
+
+      setJobData(toJobFormData(transitionJob));
+      setAlertMessage({
+        type: "success",
+        text: "Role submitted for review! Hiring managers and admins have been notified.",
+      });
+      if (isNew) {
+        router.replace(`/admin/careers/jobs/${currentJobId}`);
       }
-    } catch (err: any) {
-      console.error("Submit for review error:", err);
-      setAlertMessage({ type: "error", text: err?.message || "Failed to submit for review." });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to submit for review.";
+      setAlertMessage({ type: "error", text: msg });
     } finally {
       setSaving(false);
     }
@@ -287,50 +199,26 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
     try {
       let currentJobId = id;
       if (isNew) {
-        const createRes = await fetch(API_ENDPOINTS.ADMIN.JOBS, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...updatedData, status: "DRAFT" }),
-        });
-        const createData = await createRes.json();
-        if (!createRes.ok || !createData.ok || !createData.job) {
-          const msg =
-            typeof createData.error === "string"
-              ? createData.error
-              : createData.error?.message || "Failed to create draft";
-          throw new Error(msg);
-        }
-        currentJobId = createData.job.id;
+        const job = await createAdminJob({ ...updatedData, status: "DRAFT" });
+        currentJobId = job.id;
       }
 
-      const statusRes = await fetch(API_ENDPOINTS.ADMIN.JOB_STATUS(currentJobId), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          targetStatus: "PUBLISHED",
-          comment: "Published directly to public careers portal.",
-        }),
+      const statusJob = await updateAdminJobStatus(currentJobId, {
+        targetStatus: "PUBLISHED",
+        comment: "Published directly to public careers portal.",
       });
-      const statusData = await statusRes.json();
-      if (statusRes.ok && statusData.ok && statusData.job) {
-        setJobData(statusData.job);
-        setAlertMessage({
-          type: "success",
-          text: "Role is now LIVE on the public careers portal!",
-        });
-        if (isNew) {
-          router.replace(`/admin/careers/jobs/${currentJobId}`);
-        }
-      } else {
-        const msg =
-          typeof statusData.error === "string"
-            ? statusData.error
-            : statusData.error?.message || "Publishing failed";
-        throw new Error(msg);
+
+      setJobData(toJobFormData(statusJob));
+      setAlertMessage({
+        type: "success",
+        text: "Role is now LIVE on the public careers portal!",
+      });
+      if (isNew) {
+        router.replace(`/admin/careers/jobs/${currentJobId}`);
       }
-    } catch (err: any) {
-      console.error("Publish error:", err);
-      setAlertMessage({ type: "error", text: err?.message || "Failed to publish role." });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to publish role.";
+      setAlertMessage({ type: "error", text: msg });
     } finally {
       setSaving(false);
     }
@@ -536,7 +424,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           }}
           mode={approvalMode}
           onSuccess={(updatedJob) => {
-            setJobData(updatedJob);
+            setJobData(toJobFormData(updatedJob));
             setAlertMessage({
               type: "success",
               text:

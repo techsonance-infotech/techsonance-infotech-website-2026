@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 import type { Contract } from "@/lib/contracts/define";
 import { errorPayloadSchema } from "@/lib/contracts/define";
 import { ErrorCode } from "@/lib/errors";

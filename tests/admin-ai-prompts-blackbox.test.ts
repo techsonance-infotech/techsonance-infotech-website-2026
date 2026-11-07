@@ -222,7 +222,11 @@ describe("PATCH /api/admin/ai/prompts — Black Box Integration Tests", () => {
     return id ? `${base}?id=${id}` : base;
   };
 
-  const makePatchReq = (url: string, body: unknown = {}, extraHeaders: Record<string, string> = {}) =>
+  const makePatchReq = (
+    url: string,
+    body: unknown = {},
+    extraHeaders: Record<string, string> = {},
+  ) =>
     new Request(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...extraHeaders },
@@ -252,7 +256,9 @@ describe("PATCH /api/admin/ai/prompts — Black Box Integration Tests", () => {
   it("7. Rejects unauthenticated PATCH with 401", async () => {
     mockAuthService.getCurrentSession.mockResolvedValue(null);
 
-    const res = await patchPromptsPATCH(makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated prompt text." }) as any);
+    const res = await patchPromptsPATCH(
+      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated prompt text." }) as any,
+    );
     expect(res.status).toBe(401);
 
     const json = await res.json();
@@ -266,7 +272,9 @@ describe("PATCH /api/admin/ai/prompts — Black Box Integration Tests", () => {
     mockAuthService.getCurrentSession.mockResolvedValue(viewerSession);
     mockAuthService.hasPermission.mockReturnValue(false);
 
-    const res = await patchPromptsPATCH(makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated prompt text." }) as any);
+    const res = await patchPromptsPATCH(
+      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated prompt text." }) as any,
+    );
     expect(res.status).toBe(403);
 
     const json = await res.json();
@@ -278,7 +286,9 @@ describe("PATCH /api/admin/ai/prompts — Black Box Integration Tests", () => {
   // ─── VALIDATION TESTS ──────────────────────────────────────────────────────
 
   it("9. Returns 422 when id query param is missing or invalid UUID", async () => {
-    const res = await patchPromptsPATCH(makePatchReq(makeUrl("not-a-uuid"), { systemPrompt: "Updated prompt text." }) as any);
+    const res = await patchPromptsPATCH(
+      makePatchReq(makeUrl("not-a-uuid"), { systemPrompt: "Updated prompt text." }) as any,
+    );
     expect(res.status).toBe(422);
 
     const json = await res.json();
@@ -289,7 +299,9 @@ describe("PATCH /api/admin/ai/prompts — Black Box Integration Tests", () => {
 
   it("10. Returns 422 when body fields violate schema constraints", async () => {
     // systemPrompt below minimum length
-    const res = await patchPromptsPATCH(makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "short" }) as any);
+    const res = await patchPromptsPATCH(
+      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "short" }) as any,
+    );
     expect(res.status).toBe(422);
 
     const json = await res.json();

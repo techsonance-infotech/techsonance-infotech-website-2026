@@ -26,12 +26,7 @@ export const createAiJobSchema = z.strictObject({
     .max(AI_JOBS_LIMITS.TOPIC_MAX, {
       error: `Topic cannot exceed ${AI_JOBS_LIMITS.TOPIC_MAX} characters`,
     }),
-  category: z
-    .string()
-    .trim()
-    .max(AI_JOBS_LIMITS.CATEGORY_MAX)
-    .optional()
-    .default("Engineering"),
+  category: z.string().trim().max(AI_JOBS_LIMITS.CATEGORY_MAX).optional().default("Engineering"),
   siteId: z.string().uuid().optional(),
 });
 

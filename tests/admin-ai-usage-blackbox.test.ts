@@ -143,7 +143,9 @@ describe("GET /api/admin/ai/usage — Black Box Integration Tests", () => {
   // ─── ERROR HANDLING TESTS ─────────────────────────────────────────────────
 
   it("5. Handles unexpected telemetry service crash with clean 500 status", async () => {
-    mockTelemetryService.getTelemetrySummary.mockRejectedValue(new Error("Telemetry DB pool timeout"));
+    mockTelemetryService.getTelemetrySummary.mockRejectedValue(
+      new Error("Telemetry DB pool timeout"),
+    );
 
     const req = new Request("http://localhost:3000/api/admin/ai/usage", {
       method: "GET",

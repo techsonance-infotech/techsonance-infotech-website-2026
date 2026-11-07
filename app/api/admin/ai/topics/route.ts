@@ -65,9 +65,7 @@ export async function GET(req: NextRequest) {
     const queryObj = Object.fromEntries(url.searchParams.entries());
     const parseResult = listAiTopicsQuerySchema.safeParse(queryObj);
 
-    const query = parseResult.success
-      ? parseResult.data
-      : { limit: 50, offset: 0 };
+    const query = parseResult.success ? parseResult.data : { limit: 50, offset: 0 };
 
     // 4. Fetch topics from service
     const topicsService = container.get(AdminTopicsService);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { UploadCloud, Image as ImageIcon, Copy, Check, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { uploadMediaAsset } from "@/lib/api/media.api";
 
 interface UploadedMedia {
   secureUrl: string;
@@ -29,19 +30,7 @@ export default function MediaLibraryPage() {
       setUploading(true);
       setError(null);
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "agency/media");
-
-      const res = await fetch("/api/admin/media/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to upload image");
-      }
+      const data = await uploadMediaAsset(file, "agency/media");
 
       const item: UploadedMedia = {
         secureUrl: data.secureUrl,

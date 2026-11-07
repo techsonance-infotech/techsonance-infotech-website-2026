@@ -22,11 +22,15 @@ export const BOOKING_ERRORS = {
   FORBIDDEN_ORIGIN: "Forbidden origin",
   FAILED_TO_FETCH_SLOTS: "Failed to retrieve available slots",
   INVALID_QUERY_PARAMS: "Invalid query parameters for slots",
-  SLOT_UNAVAILABLE_OR_INVALID: "Selected time slot is unavailable or invalid. Please select another slot.",
-  SLOT_ALREADY_BOOKED: "This consultation slot has already been booked. Please select another available time slot.",
+  SLOT_UNAVAILABLE_OR_INVALID:
+    "Selected time slot is unavailable or invalid. Please select another slot.",
+  SLOT_ALREADY_BOOKED:
+    "This consultation slot has already been booked. Please select another available time slot.",
   MISSING_REQUIRED_FIELDS: "Please provide your name, email, and select an available time slot.",
-  RATE_LIMITED: "Too many booking attempts. Please try again later or reach out via WhatsApp at +91 9173101711.",
-  EMAIL_SEND_FAILED: "We could not send your confirmation email. Please contact us directly at info@techsonance.co.in or WhatsApp +91 9173101711.",
+  RATE_LIMITED:
+    "Too many booking attempts. Please try again later or reach out via WhatsApp at +91 9173101711.",
+  EMAIL_SEND_FAILED:
+    "We could not send your confirmation email. Please contact us directly at info@techsonance.co.in or WhatsApp +91 9173101711.",
   CAPTCHA_FAILED: "Captcha verification failed. Please refresh and try again.",
 } as const;
 

@@ -3,10 +3,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
-import {
-  createAiJobSchema,
-  listAiJobsQuerySchema,
-} from "@/lib/contracts/admin-ai-jobs.contract";
+import { createAiJobSchema, listAiJobsQuerySchema } from "@/lib/contracts/admin-ai-jobs.contract";
 import { AppError, ErrorCode, toFieldErrors } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { AI_JOBS_ERRORS, AI_JOBS_MESSAGES } from "@/lib/constants/ai.constants";
@@ -63,11 +60,9 @@ export async function GET(req: Request) {
     // 3. Query params validation
     const url = new URL(req.url);
     const rawLimit = url.searchParams.get("limit");
-    const parsedQuery = listAiJobsQuerySchema.safeParse(
-      rawLimit ? { limit: rawLimit } : {},
-    );
+    const parsedQuery = listAiJobsQuerySchema.safeParse(rawLimit ? { limit: rawLimit } : {});
 
-    const limit = parsedQuery.success ? parsedQuery.data.limit ?? 30 : 30;
+    const limit = parsedQuery.success ? (parsedQuery.data.limit ?? 30) : 30;
 
     // 4. Fetch AI jobs from service
     const orchestrator = container.get(JobOrchestratorService);

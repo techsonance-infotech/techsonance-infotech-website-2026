@@ -53,7 +53,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`);
+  console.log(
+    `Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -262,7 +264,11 @@ async function runBlackboxSuite() {
 
     assertTest(res.status === 200, 6, "Status code is 200");
     assertTest(body.ok === true, 6, "Response envelope ok=true");
-    assertTest(body.data?.post?.status === PostStatus.IN_REVIEW, 6, "Post status transitioned to IN_REVIEW");
+    assertTest(
+      body.data?.post?.status === PostStatus.IN_REVIEW,
+      6,
+      "Post status transitioned to IN_REVIEW",
+    );
     assertTest(body.data?.post?.versionId === 2, 6, "versionId is incremented");
   }
 

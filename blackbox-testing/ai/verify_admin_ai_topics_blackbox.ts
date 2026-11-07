@@ -110,7 +110,7 @@ async function runBlackboxSuite() {
 
   let activeSession: any = sampleEditorSession;
 
-  let storedTopics: any[] = [
+  const storedTopics: any[] = [
     {
       id: validTopicId,
       siteId: "site-uuid-1111",
@@ -197,7 +197,8 @@ async function runBlackboxSuite() {
     activeSession = null;
     logRequest({
       caseNum: 1,
-      description: "GET /api/admin/ai/topics: Rejects unauthenticated request with 401 UNAUTHENTICATED",
+      description:
+        "GET /api/admin/ai/topics: Rejects unauthenticated request with 401 UNAUTHENTICATED",
       method: "GET",
       path: API_ENDPOINTS.ADMIN.AI.TOPICS,
     });
@@ -212,7 +213,10 @@ async function runBlackboxSuite() {
 
     assert(res.status === 401, "Status must be 401 Unauthorized");
     assert(json.ok === false, "Envelope ok must be false");
-    assert(json.error.code === ErrorCode.UNAUTHENTICATED, `Code must be ${ErrorCode.UNAUTHENTICATED}`);
+    assert(
+      json.error.code === ErrorCode.UNAUTHENTICATED,
+      `Code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
   }
 
   // ─── Case 2: GET /api/admin/ai/topics untrusted origin (403 FORBIDDEN) ──────
@@ -271,7 +275,8 @@ async function runBlackboxSuite() {
     activeSession = sampleViewerSession;
     logRequest({
       caseNum: 4,
-      description: "POST /api/admin/ai/topics: Viewer role rejected with 403 FORBIDDEN (Editor+ required)",
+      description:
+        "POST /api/admin/ai/topics: Viewer role rejected with 403 FORBIDDEN (Editor+ required)",
       method: "POST",
       path: API_ENDPOINTS.ADMIN.AI.TOPICS,
       actor: "viewer@techsonance.co.in",
@@ -355,7 +360,10 @@ async function runBlackboxSuite() {
     assert(json.ok === true, "Envelope ok must be true");
     assert(json.data.topic.title === payload.title, "Created topic title must match payload");
     assert(json.data.topic.category === payload.category, "Category must match payload");
-    assert(json.success === true, "Top-level success boolean preserved for backwards compatibility");
+    assert(
+      json.success === true,
+      "Top-level success boolean preserved for backwards compatibility",
+    );
     assert(storedTopics.length === 2, "Database now holds 2 topics");
   }
 
@@ -373,7 +381,9 @@ async function runBlackboxSuite() {
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: nonExistentId }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: nonExistentId }),
+    });
     const json = await res.json();
     logResponse(res.status, json);
 
@@ -396,7 +406,9 @@ async function runBlackboxSuite() {
       method: "GET",
     });
 
-    const res = await getTopicByIdGET(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await getTopicByIdGET(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const json = await res.json();
     logResponse(res.status, json);
 
@@ -423,7 +435,9 @@ async function runBlackboxSuite() {
       body: JSON.stringify({ status: AiTopicStatus.QUEUED }),
     });
 
-    const res = await updateTopicPATCH(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await updateTopicPATCH(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const json = await res.json();
     logResponse(res.status, json);
 
@@ -447,7 +461,9 @@ async function runBlackboxSuite() {
       method: "DELETE",
     });
 
-    const res = await deleteTopicDELETE(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await deleteTopicDELETE(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const json = await res.json();
     logResponse(res.status, json);
 

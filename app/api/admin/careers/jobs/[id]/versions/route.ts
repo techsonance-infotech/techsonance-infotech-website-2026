@@ -20,7 +20,7 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-const ALLOWED_ADMIN_ROLES = ["owner", "admin", "recruiter", "editor"];
+const ALLOWED_ADMIN_ROLES = new Set(["owner", "admin", "recruiter", "editor"]);
 
 export async function GET(req: Request, { params }: RouteParams) {
   const requestId = await getRequestId();
@@ -70,7 +70,7 @@ export async function GET(req: Request, { params }: RouteParams) {
     }
 
     const role = (session.role || "").toLowerCase();
-    if (!ALLOWED_ADMIN_ROLES.includes(role)) {
+    if (!ALLOWED_ADMIN_ROLES.has(role)) {
       return NextResponse.json(
         {
           ok: false,
@@ -205,7 +205,7 @@ export async function POST(req: Request, { params }: RouteParams) {
     }
 
     const role = (session.role || "").toLowerCase();
-    if (!ALLOWED_ADMIN_ROLES.includes(role)) {
+    if (!ALLOWED_ADMIN_ROLES.has(role)) {
       return NextResponse.json(
         {
           ok: false,

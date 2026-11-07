@@ -3,10 +3,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminPostsService } from "@/lib/services/admin-posts.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
-import {
-  adminPostParamsSchema,
-  updateAdminPostSchema,
-} from "@/lib/contracts/admin-posts.contract";
+import { adminPostParamsSchema, updateAdminPostSchema } from "@/lib/contracts/admin-posts.contract";
 import { logger } from "@/lib/logger";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { POST_ERRORS, POST_AUTHOR_ROLES } from "@/lib/constants/posts.constants";
@@ -267,12 +264,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
 
     // 6. Execution via Service layer
     const postsService = container.get(AdminPostsService);
-    const updated = await postsService.updatePost(
-      id,
-      parseResult.data,
-      session.userId,
-      ipAddress,
-    );
+    const updated = await postsService.updatePost(id, parseResult.data, session.userId, ipAddress);
 
     return NextResponse.json(
       {

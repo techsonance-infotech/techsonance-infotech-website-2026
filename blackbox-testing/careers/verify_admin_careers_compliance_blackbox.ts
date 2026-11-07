@@ -35,10 +35,7 @@ import { ApplicationsService } from "@/lib/services/applications.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import { ErrorCode } from "@/lib/errors";
-import {
-  CAREER_ERRORS,
-  CAREER_COMPLIANCE_MESSAGES,
-} from "@/lib/constants/careers.constants";
+import { CAREER_ERRORS, CAREER_COMPLIANCE_MESSAGES } from "@/lib/constants/careers.constants";
 
 const PASS = "✓ PASS";
 const FAIL = "✗ FAIL";
@@ -206,7 +203,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === CAREER_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === CAREER_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 2: Unauthenticated Export (401) ────────────────────────────
@@ -228,7 +228,10 @@ async function run() {
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
 
     currentSession = adminSession; // Reset
   }
@@ -253,7 +256,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === CAREER_ERRORS.FORBIDDEN_COMPLIANCE_EXPORT, "Compliance export forbidden message matched");
+    assert(
+      body.error?.message === CAREER_ERRORS.FORBIDDEN_COMPLIANCE_EXPORT,
+      "Compliance export forbidden message matched",
+    );
 
     currentSession = adminSession; // Reset
   }
@@ -298,8 +304,14 @@ async function run() {
     assert(body.ok === true, "Envelope ok must be true");
     assert(body.data?.email === "candidate@example.com", "data.email matches candidate");
     assert(body.data?.applications?.length === 1, "data.applications has 1 entry");
-    assert(body.candidateData?.email === "candidate@example.com", "candidateData.email present (backwards-compat)");
-    assert(body.message === CAREER_COMPLIANCE_MESSAGES.EXPORT_SUCCESS, "Success message matches constant");
+    assert(
+      body.candidateData?.email === "candidate@example.com",
+      "candidateData.email present (backwards-compat)",
+    );
+    assert(
+      body.message === CAREER_COMPLIANCE_MESSAGES.EXPORT_SUCCESS,
+      "Success message matches constant",
+    );
   }
 
   // ─── TEST CASE 6: Service Error on Export (500) ───────────────────────────
@@ -322,7 +334,10 @@ async function run() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === CAREER_ERRORS.FAILED_EXPORT_COMPLIANCE, "Internal error message matches constant");
+    assert(
+      body.error?.message === CAREER_ERRORS.FAILED_EXPORT_COMPLIANCE,
+      "Internal error message matches constant",
+    );
 
     exportShouldThrow = false; // Reset
   }
@@ -378,7 +393,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === CAREER_ERRORS.FORBIDDEN_COMPLIANCE_PURGE, "Compliance purge forbidden message matched");
+    assert(
+      body.error?.message === CAREER_ERRORS.FORBIDDEN_COMPLIANCE_PURGE,
+      "Compliance purge forbidden message matched",
+    );
 
     currentSession = adminSession; // Reset
   }
@@ -426,7 +444,10 @@ async function run() {
     assert(body.data?.deletedApplicationsCount === 1, "data.deletedApplicationsCount is 1");
     assert(body.data?.deletedFilesCount === 1, "data.deletedFilesCount is 1");
     assert(body.result?.success === true, "result.success is true (backwards-compat)");
-    assert(body.message === CAREER_COMPLIANCE_MESSAGES.PURGE_SUCCESS, "Success message matches constant");
+    assert(
+      body.message === CAREER_COMPLIANCE_MESSAGES.PURGE_SUCCESS,
+      "Success message matches constant",
+    );
   }
 
   // ─── TEST CASE 11: Service Error on Purge (500) ───────────────────────────
@@ -450,7 +471,10 @@ async function run() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === CAREER_ERRORS.FAILED_PURGE_CANDIDATE, "Internal error message matches constant");
+    assert(
+      body.error?.message === CAREER_ERRORS.FAILED_PURGE_CANDIDATE,
+      "Internal error message matches constant",
+    );
 
     purgeShouldThrow = false; // Reset
   }

@@ -219,7 +219,10 @@ async function run() {
     assert(res.status === 429, "Status code must be 429 Too Many Requests");
     assert(res.headers.get("Retry-After") === "60", "Retry-After header set to 60s");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.RATE_LIMITED, `Error code must be ${ErrorCode.RATE_LIMITED}`);
+    assert(
+      body.error?.code === ErrorCode.RATE_LIMITED,
+      `Error code must be ${ErrorCode.RATE_LIMITED}`,
+    );
     assert(body.error?.message === AUTH_ERRORS.RATE_LIMITED, "Rate limit error message matched");
     assert(body.error?.retryAfterSec === 60, "retryAfterSec matches 60");
 
@@ -246,8 +249,14 @@ async function run() {
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === AUTH_ERRORS.INVALID_CREDENTIALS, "Invalid credentials message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === AUTH_ERRORS.INVALID_CREDENTIALS,
+      "Invalid credentials message matched",
+    );
 
     authShouldThrow = null; // Reset
   }
@@ -265,7 +274,10 @@ async function run() {
       payload: { email: "deactivated@techsonance.co.in", password: "CorrectPassword123!" },
     });
 
-    const req = makeReq({ email: "deactivated@techsonance.co.in", password: "CorrectPassword123!" });
+    const req = makeReq({
+      email: "deactivated@techsonance.co.in",
+      password: "CorrectPassword123!",
+    });
     const res = await postLoginPOST(req);
     const body = await res.json();
     logResponse(res.status, body);
@@ -273,7 +285,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AUTH_ERRORS.ACCOUNT_DISABLED, "Account disabled message matched");
+    assert(
+      body.error?.message === AUTH_ERRORS.ACCOUNT_DISABLED,
+      "Account disabled message matched",
+    );
 
     authShouldThrow = null; // Reset
   }
@@ -298,7 +313,10 @@ async function run() {
     assert(res.status === 200, "Status code must be 200 OK");
     assert(body.ok === true, "Envelope ok must be true");
     assert(body.data?.user?.id === sampleValidUser.id, "data.user.id matches expected user ID");
-    assert(body.data?.user?.email === "admin@techsonance.co.in", "data.user.email matches submitted email");
+    assert(
+      body.data?.user?.email === "admin@techsonance.co.in",
+      "data.user.email matches submitted email",
+    );
     assert(body.data?.user?.role === "owner", "data.user.role matches owner");
     assert(body.user?.id === sampleValidUser.id, "top-level user.id present (backwards-compat)");
     assert(body.message === AUTH_MESSAGES.LOGIN_SUCCESS, "Success message matches constant");
@@ -328,7 +346,10 @@ async function run() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === AUTH_ERRORS.LOGIN_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === AUTH_ERRORS.LOGIN_FAILED,
+      "Internal error message matches constant",
+    );
 
     authShouldThrow = null; // Reset
   }

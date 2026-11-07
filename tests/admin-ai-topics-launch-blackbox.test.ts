@@ -76,7 +76,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       },
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(403);
 
     const json = await res.json();
@@ -94,7 +96,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(401);
 
     const json = await res.json();
@@ -110,7 +114,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(403);
 
     const json = await res.json();
@@ -126,7 +132,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(403);
 
     const json = await res.json();
@@ -142,7 +150,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: "not-a-valid-uuid" }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: "not-a-valid-uuid" }),
+    });
     expect(res.status).toBe(400);
 
     const json = await res.json();
@@ -155,11 +165,16 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
   // ─── BUSINESS LOGIC & ERROR HANDLING TESTS ────────────────────────────────
 
   it("6. Returns 404 Not Found when topic does not exist", async () => {
-    const req = new Request(`http://localhost:3000/api/admin/ai/topics/${nonExistentTopicId}/launch`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000/api/admin/ai/topics/${nonExistentTopicId}/launch`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: nonExistentTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: nonExistentTopicId }),
+    });
     expect(res.status).toBe(404);
 
     const json = await res.json();
@@ -172,7 +187,9 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(200);
 
     const json = await res.json();
@@ -186,13 +203,17 @@ describe("POST /api/admin/ai/topics/[id]/launch — Black Box Integration Tests"
   });
 
   it("8. Handles unexpected service crash cleanly with 500 status", async () => {
-    mockTopicsService.launchTopicGeneration.mockRejectedValue(new Error("Job queue Redis connection drop"));
+    mockTopicsService.launchTopicGeneration.mockRejectedValue(
+      new Error("Job queue Redis connection drop"),
+    );
 
     const req = new Request(`http://localhost:3000/api/admin/ai/topics/${validTopicId}/launch`, {
       method: "POST",
     });
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     expect(res.status).toBe(500);
 
     const json = await res.json();

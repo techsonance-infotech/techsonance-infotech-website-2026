@@ -46,7 +46,9 @@ describe("POST /api/book — Consultation Booking Engine Black Box Tests", () =>
     ];
 
     mockEmailService = {
-      createICSCalendar: vi.fn().mockReturnValue("BEGIN:VCALENDAR\nSUMMARY:Discovery Call\nEND:VCALENDAR"),
+      createICSCalendar: vi
+        .fn()
+        .mockReturnValue("BEGIN:VCALENDAR\nSUMMARY:Discovery Call\nEND:VCALENDAR"),
       sendConsultationEmails: vi.fn().mockImplementation(async () => {
         emailSentCount++;
         return { ok: true, messageId: "msg-test-12345" };

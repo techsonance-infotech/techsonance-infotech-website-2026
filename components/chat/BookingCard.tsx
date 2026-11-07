@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import {
   Calendar,
   Clock,
@@ -14,18 +15,30 @@ import {
   Building,
   Briefcase,
   DollarSign,
+  RefreshCw,
 } from "lucide-react";
 import { getVisitorProfile, saveVisitorProfile, saveBookingCopy } from "@/lib/chat/storage";
-import type { Slot } from "@/lib/slots";
 import { trackBookingFormSubmit } from "@/lib/analytics";
 import { callApi } from "@/lib/api/callApi";
-import { getSlotsContract } from "@/lib/contracts/booking.contract";
-import { toSlotsViewModel } from "@/features/booking/view-models";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { createBookingContract } from "@/lib/contracts/booking.contract";
+import { useBookingSlots } from "@/features/booking/hooks/useBookingSlots";
 
 interface BookingCardProps {
   onSuccess?: (ref: string) => void;
   recentMessages?: { role: "user" | "assistant"; content: string }[];
+}
+
+export interface BookingFormData {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  projectType: string;
+  budgetRange: string;
+  timeline: string;
+  slotIso: string;
+  message: string;
+  website: string; // Honeypot
 }
 
 const PROJECT_TYPES = [
@@ -55,8 +68,6 @@ const TIMELINES = [
 ];
 
 export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
-  const [slots, setSlots] = useState<Slot[]>([]);
-  const [loadingSlots, setLoadingSlots] = useState(true);
   const [visitorTimezone] = useState(() => {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata";
@@ -65,122 +76,113 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
     }
   });
 
-  // Form State
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [company, setCompany] = useState("");
-  const [projectType, setProjectType] = useState(PROJECT_TYPES[0]);
-  const [budgetRange, setBudgetRange] = useState(BUDGET_RANGES[0]);
-  const [timeline] = useState(TIMELINES[0]);
-  const [selectedSlotIso, setSelectedSlotIso] = useState("");
-  const [message, setMessage] = useState("");
-  const [honeypot, setHoneypot] = useState("");
-  const [consent] = useState(true);
+  // Dedicated slots query via useBookingSlots (GET /api/slots)
+  const {
+    slots,
+    slotsByDate,
+    isLoading: loadingSlots,
+    errorMessage: slotsError,
+    isEmpty: noSlotsAvailable,
+    refetch: refetchSlots,
+  } = useBookingSlots();
 
   // Status State
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [bookedRef, setBookedRef] = useState<string | null>(null);
 
+  // React Hook Form for state & validation management
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<BookingFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      projectType: PROJECT_TYPES[0],
+      budgetRange: BUDGET_RANGES[0],
+      timeline: TIMELINES[0],
+      slotIso: "",
+      message: "",
+      website: "",
+    },
+  });
+
+  // 1. Prefill profile from Dexie DB
   useEffect(() => {
-    // 1. Prefill profile from Dexie DB
     getVisitorProfile().then((profile) => {
       if (profile) {
-        if (profile.name) setName(profile.name);
-        if (profile.email) setEmail(profile.email);
-        if (profile.phone) setPhone(profile.phone);
-        if (profile.company) setCompany(profile.company);
+        if (profile.name) setValue("name", profile.name, { shouldValidate: true });
+        if (profile.email) setValue("email", profile.email, { shouldValidate: true });
+        if (profile.phone) setValue("phone", profile.phone);
+        if (profile.company) setValue("company", profile.company);
       }
     });
+  }, [setValue]);
 
-    // 2. Fetch available consultation slots
-    callApi(getSlotsContract)
-      .then((res) => {
-        if (res.ok) {
-          const vm = toSlotsViewModel(res.data);
-          setSlots(vm.slots);
-          if (vm.slots.length > 0) {
-            setSelectedSlotIso(vm.slots[0].iso);
-          }
-        } else {
-          setErrorMsg(
-            res.error.message ||
-              "Failed to load time slots. You can still reach us directly at info@techsonance.co.in.",
-          );
-        }
-      })
-      .catch(() => {
-        setErrorMsg(
-          "Failed to load time slots. You can still reach us directly at info@techsonance.co.in.",
-        );
-      })
-      .finally(() => setLoadingSlots(false));
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg(null);
-
-    if (!name.trim() || !email.trim() || !selectedSlotIso) {
-      setErrorMsg("Please provide your name, email, and select an available time slot.");
-      return;
+  // 2. Select default slot once slots load
+  useEffect(() => {
+    if (slots.length > 0 && !getValues("slotIso")) {
+      setValue("slotIso", slots[0].iso, { shouldValidate: true });
     }
+  }, [slots, getValues, setValue]);
 
+  const onSubmit = async (formData: BookingFormData) => {
+    setErrorMsg(null);
     setSubmitting(true);
 
     try {
       // Save profile locally in IndexedDB
-      await saveVisitorProfile({ name, email, phone, company, consent });
+      await saveVisitorProfile({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        consent: true,
+      });
 
       const payload = {
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim() || undefined,
-        company: company.trim() || undefined,
-        projectType,
-        budgetRange,
-        timeline,
-        slotIso: selectedSlotIso,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim() || undefined,
+        company: formData.company.trim() || undefined,
+        projectType: formData.projectType,
+        budgetRange: formData.budgetRange,
+        timeline: formData.timeline || TIMELINES[0],
+        slotIso: formData.slotIso,
         visitorTimezone,
-        message: message.trim() || undefined,
-        website: honeypot, // Honeypot
+        message: formData.message.trim() || undefined,
+        website: formData.website || undefined,
         recentMessages: recentMessages?.slice(-5),
       };
 
-      const res = await fetch(API_ENDPOINTS.BOOKING.BOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
+      // Call typed booking endpoint: POST /api/book
+      const res = await callApi(createBookingContract, { body: payload });
 
       if (!res.ok) {
-        const errorMsg =
-          typeof data.error === "object" && data.error?.message
-            ? data.error.message
-            : typeof data.error === "string"
-              ? data.error
-              : "Failed to schedule consultation.";
-        throw new Error(errorMsg);
+        throw new Error(res.error.message || "Failed to schedule consultation.");
       }
 
-      const ref = data.data?.ref || data.ref || "TS-CONFIRMED";
+      const ref = res.data.ref || "TS-CONFIRMED";
       setBookedRef(ref);
 
       trackBookingFormSubmit({
-        projectType,
-        budgetRange,
-        timeline,
+        projectType: formData.projectType,
+        budgetRange: formData.budgetRange,
+        timeline: formData.timeline,
         referenceId: ref,
       });
 
       // Save booking copy locally in IndexedDB
       await saveBookingCopy({
         ref,
-        slot: selectedSlotIso,
-        project: projectType,
+        slot: formData.slotIso,
+        project: formData.projectType,
         ts: Date.now(),
       });
 
@@ -195,25 +197,17 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
     }
   };
 
-  // Group slots by Date for cleaner dropdown / selection
-  const slotsByDate: Record<string, Slot[]> = {};
-  for (const s of slots.slice(0, 30)) {
-    if (!slotsByDate[s.dateIST]) {
-      slotsByDate[s.dateIST] = [];
-    }
-    slotsByDate[s.dateIST].push(s);
-  }
-
   if (bookedRef) {
+    const userEmail = getValues("email");
     return (
-      <div className="bg-white border border-emerald-200 rounded-2xl p-5 shadow-sm text-slate-800 animate-fade-in my-2">
+      <div className="bg-white border border-emerald-200 rounded-2xl p-5 shadow-xs text-slate-800 animate-fade-in my-2">
         <div className="flex items-center gap-3 text-emerald-600 mb-3">
           <CheckCircle2 className="w-6 h-6 shrink-0" />
           <h4 className="font-semibold text-base text-slate-900">Consultation Confirmed!</h4>
         </div>
         <p className="text-xs text-slate-600 mb-3 leading-relaxed">
           We have sent your confirmation email and calendar invite (.ics) to{" "}
-          <strong>{email}</strong>.
+          <strong>{userEmail}</strong>.
         </p>
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs flex justify-between items-center mb-3">
           <span className="text-slate-500">Booking Reference:</span>
@@ -263,13 +257,27 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      {slotsError && (
+        <div className="mb-3 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{slotsError}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => void refetchSlots()}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 hover:underline"
+          >
+            <RefreshCw className="w-3 h-3" /> Retry
+          </button>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         {/* Honeypot hidden input */}
         <input
           type="text"
-          name="website"
-          value={honeypot}
-          onChange={(e) => setHoneypot(e.target.value)}
+          {...register("website")}
           className="hidden"
           tabIndex={-1}
           autoComplete="off"
@@ -289,13 +297,14 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <input
                 id="booking-name"
                 type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register("name", { required: "Name is required" })}
                 placeholder="Alex Morgan"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
               />
             </div>
+            {errors.name && (
+              <p className="text-[10px] text-red-500 mt-0.5">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
@@ -310,13 +319,20 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <input
                 id="booking-email"
                 type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email", {
+                  required: "Work email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Valid email is required",
+                  },
+                })}
                 placeholder="alex@company.com"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
               />
             </div>
+            {errors.email && (
+              <p className="text-[10px] text-red-500 mt-0.5">{errors.email.message}</p>
+            )}
           </div>
         </div>
 
@@ -334,10 +350,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <input
                 id="booking-phone"
                 type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                {...register("phone")}
                 placeholder="+1 (555) 000-0000"
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
               />
             </div>
           </div>
@@ -354,10 +369,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <input
                 id="booking-company"
                 type="text"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
+                {...register("company")}
                 placeholder="Acme Inc."
-                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
+                className="w-full text-xs pl-8 pr-2.5 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC]"
               />
             </div>
           </div>
@@ -376,9 +390,8 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
                 id="booking-project-type"
-                value={projectType}
-                onChange={(e) => setProjectType(e.target.value)}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-[#1155CC]"
+                {...register("projectType")}
+                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
               >
                 {PROJECT_TYPES.map((pt) => (
                   <option key={pt} value={pt}>
@@ -400,9 +413,8 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <DollarSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
                 id="booking-budget"
-                value={budgetRange}
-                onChange={(e) => setBudgetRange(e.target.value)}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-[#1155CC]"
+                {...register("budgetRange")}
+                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
               >
                 {BUDGET_RANGES.map((b) => (
                   <option key={b} value={b}>
@@ -427,18 +439,24 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
               <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1155CC]" />
               <span>Fetching live engineering availability...</span>
             </div>
+          ) : noSlotsAvailable || Object.keys(slotsByDate).length === 0 ? (
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 text-center">
+              No slots available in the next 14 days. Please contact{" "}
+              <a href="mailto:info@techsonance.co.in" className="text-[#1155CC] underline">
+                info@techsonance.co.in
+              </a>
+              .
+            </div>
           ) : (
             <div className="relative">
               <Clock className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
               <select
                 id="booking-slot"
-                required
-                value={selectedSlotIso}
-                onChange={(e) => setSelectedSlotIso(e.target.value)}
-                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-[#1155CC]"
+                {...register("slotIso", { required: "Please select an available slot" })}
+                className="w-full text-xs pl-8 pr-2 py-2 border border-slate-200 rounded-lg bg-white focus:outline-hidden focus:border-[#1155CC]"
               >
                 {Object.entries(slotsByDate).map(([dateStr, dateSlots]) => (
-                  <optgroup key={dateStr} label={`${dateSlots[0].dayOfWeek}, ${dateStr}`}>
+                  <optgroup key={dateStr} label={`${dateSlots[0]?.dayOfWeek ?? ""}, ${dateStr}`}>
                     {dateSlots.map((s) => (
                       <option key={s.iso} value={s.iso}>
                         {s.dayOfWeek}, {s.dateIST} • {s.startIST} IST
@@ -448,6 +466,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
                 ))}
               </select>
             </div>
+          )}
+          {errors.slotIso && (
+            <p className="text-[10px] text-red-500 mt-0.5">{errors.slotIso.message}</p>
           )}
         </div>
 
@@ -462,10 +483,9 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
           <textarea
             id="booking-overview"
             rows={2}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            {...register("message")}
             placeholder="Tell us what you're building, key features, or any questions..."
-            className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] resize-none"
+            className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[#1155CC] focus:ring-1 focus:ring-[#1155CC] resize-none"
           />
         </div>
 
@@ -473,7 +493,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
         <button
           type="submit"
           disabled={submitting || loadingSlots}
-          className="w-full py-2.5 px-4 bg-gradient-to-r from-[#1155CC] to-[#008BD9] hover:from-[#0D47A1] hover:to-[#0070BA] text-white rounded-xl font-medium text-xs shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2.5 px-4 bg-linear-to-r from-[#1155CC] to-[#008BD9] hover:from-[#0D47A1] hover:to-[#0070BA] text-white rounded-xl font-medium text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? (
             <>

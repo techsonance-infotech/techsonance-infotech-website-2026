@@ -71,10 +71,7 @@ export class BookingRepository {
         throw new AppError(ErrorCode.CONFLICT, BOOKING_ERRORS.SLOT_ALREADY_BOOKED);
       }
 
-      const rows = await this.db
-        .insert(consultationBookingsTable)
-        .values(bookingData)
-        .returning();
+      const rows = await this.db.insert(consultationBookingsTable).values(bookingData).returning();
 
       if (!rows || rows.length === 0) {
         throw new AppError(ErrorCode.INTERNAL, "Failed to insert consultation booking record");

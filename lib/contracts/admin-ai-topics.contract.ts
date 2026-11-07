@@ -30,12 +30,7 @@ export const createAiTopicSchema = z.strictObject({
     .array(z.string().trim().max(AI_TOPICS_LIMITS.KEYWORD_MAX))
     .max(AI_TOPICS_LIMITS.KEYWORDS_MAX_COUNT)
     .default([]),
-  category: z
-    .string()
-    .trim()
-    .max(AI_TOPICS_LIMITS.CATEGORY_MAX)
-    .optional()
-    .default("Engineering"),
+  category: z.string().trim().max(AI_TOPICS_LIMITS.CATEGORY_MAX).optional().default("Engineering"),
   targetAudience: z
     .string()
     .trim()

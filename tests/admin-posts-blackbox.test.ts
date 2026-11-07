@@ -87,9 +87,12 @@ describe("GET & POST /api/admin/blog/posts — Black Box Integration Tests", () 
   });
 
   it("3. GET /api/admin/posts rejects invalid query parameters with 400 VALIDATION", async () => {
-    const req = new Request("http://localhost:3000/api/admin/posts?limit=9999&status=INVALID_STATUS", {
-      method: "GET",
-    });
+    const req = new Request(
+      "http://localhost:3000/api/admin/posts?limit=9999&status=INVALID_STATUS",
+      {
+        method: "GET",
+      },
+    );
 
     const res = await GET(req);
     expect(res.status).toBe(400);

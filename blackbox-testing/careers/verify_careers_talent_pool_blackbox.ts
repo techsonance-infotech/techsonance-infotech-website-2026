@@ -49,7 +49,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`);
+  console.log(
+    `Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -93,7 +95,10 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: CareerApplyService, useValue: mockApplyService as unknown as CareerApplyService });
+  container.bind({
+    provide: CareerApplyService,
+    useValue: mockApplyService as unknown as CareerApplyService,
+  });
 
   // Case 1: Untrusted origin
   {
@@ -120,12 +125,20 @@ async function runBlackboxSuite() {
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 403 && json.ok === false && json.code === ErrorCode.FORBIDDEN, 1, "Returns 403 FORBIDDEN for untrusted origin");
+    assertTest(
+      res.status === 403 && json.ok === false && json.code === ErrorCode.FORBIDDEN,
+      1,
+      "Returns 403 FORBIDDEN for untrusted origin",
+    );
   }
 
   // Case 2: Bot honeypot defeat
   {
-    const payload = { website_url: "https://bot-crawler.ru", name: "Spam Bot", email: "bot@spam.com" };
+    const payload = {
+      website_url: "https://bot-crawler.ru",
+      name: "Spam Bot",
+      email: "bot@spam.com",
+    };
     logRequest({
       caseNum: 2,
       description: "Defeat spam bots with 200 OK simulated-id",
@@ -145,7 +158,11 @@ async function runBlackboxSuite() {
     const json = await res.json();
     logResponse(res.status, res.headers, json);
 
-    assertTest(res.status === 200 && json.ok === true && json.id === "simulated-id", 2, "Returns 200 simulated-id for honeypot bot");
+    assertTest(
+      res.status === 200 && json.ok === true && json.id === "simulated-id",
+      2,
+      "Returns 200 simulated-id for honeypot bot",
+    );
   }
 
   // Case 3: Missing candidate name
@@ -171,7 +188,10 @@ async function runBlackboxSuite() {
     logResponse(res.status, res.headers, json);
 
     assertTest(
-      res.status === 400 && json.ok === false && json.code === ErrorCode.VALIDATION && Boolean(json.errorPayload?.fieldErrors?.name),
+      res.status === 400 &&
+        json.ok === false &&
+        json.code === ErrorCode.VALIDATION &&
+        Boolean(json.errorPayload?.fieldErrors?.name),
       3,
       "Returns 400 VALIDATION with fieldErrors for name",
     );
@@ -200,7 +220,10 @@ async function runBlackboxSuite() {
     logResponse(res.status, res.headers, json);
 
     assertTest(
-      res.status === 400 && json.ok === false && json.code === ErrorCode.VALIDATION && Boolean(json.errorPayload?.fieldErrors?.email),
+      res.status === 400 &&
+        json.ok === false &&
+        json.code === ErrorCode.VALIDATION &&
+        Boolean(json.errorPayload?.fieldErrors?.email),
       4,
       "Returns 400 VALIDATION with fieldErrors for email",
     );
@@ -265,7 +288,11 @@ async function runBlackboxSuite() {
       description: "Happy path: submit candidate profile via Multipart FormData with resume",
       method: "POST",
       path: API_ENDPOINTS.CAREERS.TALENT_POOL,
-      payload: { name: "Aarav Sharma", email: "aarav.sharma@example.com", resumeFile: "aarav_resume.pdf" },
+      payload: {
+        name: "Aarav Sharma",
+        email: "aarav.sharma@example.com",
+        resumeFile: "aarav_resume.pdf",
+      },
       caller: { role: "candidate" },
     });
 

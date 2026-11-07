@@ -16,6 +16,7 @@ import {
 import { ClosedJobBanner } from "@/components/careers/ClosedJobBanner";
 import type { JobPosting } from "@/lib/content/types";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { submitCareerApplication } from "@/lib/api/careers.api";
 import {
   MapPin,
   Briefcase,
@@ -226,62 +227,33 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
     setFormError("");
 
     try {
-      const data = new FormData();
-      // Honeypot for bot defeat
-      if (values.website_url) {
-        data.append("website_url", values.website_url);
-      }
+      const screeningPayload =
+        job.screeningQuestions && Array.isArray(job.screeningQuestions)
+          ? job.screeningQuestions.map((q) => ({
+              questionId: q.id,
+              question: q.question,
+              answer: screeningAnswers[q.id] ?? "",
+            }))
+          : undefined;
 
-      data.append("jobId", job.id || job.slug);
-      data.append("candidateName", values.fullName.trim());
-      data.append("email", values.email.trim());
-      if (values.phone) data.append("phone", values.phone.trim());
-      if (values.currentLocation) data.append("currentLocation", values.currentLocation.trim());
-      if (values.portfolioUrl) data.append("portfolioUrl", values.portfolioUrl.trim());
-      if (values.githubUrl) data.append("githubUrl", values.githubUrl.trim());
-      if (values.linkedinUrl) data.append("linkedinUrl", values.linkedinUrl.trim());
-      if (values.coverLetter) data.append("coverLetter", values.coverLetter.trim());
-      data.append("noticePeriodWeeks", String(values.noticePeriodWeeks || 0));
-      data.append("privacyConsent", values.privacyConsent ? "true" : "false");
-      data.append("talentPoolConsent", values.talentPoolConsent ? "true" : "false");
-      data.append("source", "careers_page");
-
-      // Format screening answers
-      if (job.screeningQuestions && Array.isArray(job.screeningQuestions)) {
-        const answersFormatted = job.screeningQuestions.map((q) => ({
-          questionId: q.id,
-          question: q.question,
-          answer: screeningAnswers[q.id] ?? "",
-        }));
-        data.append("screeningAnswers", JSON.stringify(answersFormatted));
-      }
-
-      if (resumeFile) {
-        data.append("resumeFile", resumeFile);
-      }
-
-      const response = await fetch(API_ENDPOINTS.CAREERS.APPLY, {
-        method: "POST",
-        body: data,
+      await submitCareerApplication({
+        jobId: job.id || job.slug,
+        candidateName: values.fullName,
+        email: values.email,
+        phone: values.phone,
+        currentLocation: values.currentLocation,
+        portfolioUrl: values.portfolioUrl,
+        githubUrl: values.githubUrl,
+        linkedinUrl: values.linkedinUrl,
+        coverLetter: values.coverLetter,
+        noticePeriodWeeks: values.noticePeriodWeeks,
+        privacyConsent: values.privacyConsent,
+        talentPoolConsent: values.talentPoolConsent,
+        source: "careers_page",
+        screeningAnswers: screeningPayload,
+        resumeFile,
+        website_url: values.website_url,
       });
-
-      const result = (await response.json()) as {
-        ok?: boolean;
-        error?: string | { code?: string; message?: string };
-        data?: { applicationId: string; status: string };
-      };
-      if (!response.ok || !result.ok) {
-        if (response.status === 409) {
-          throw new Error(
-            "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
-          );
-        }
-        const errMessage =
-          typeof result.error === "string"
-            ? result.error
-            : result.error?.message || "Failed to submit application. Please verify your details.";
-        throw new Error(errMessage);
-      }
 
       setSubmittedCandidate({ name: values.fullName, email: values.email });
       setFormStatus("success");

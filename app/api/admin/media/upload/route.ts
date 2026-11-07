@@ -171,7 +171,7 @@ export async function POST(req: Request) {
     const sanitizedFolder = rawFolder
       .trim()
       .slice(0, MEDIA_LIMITS.FOLDER_MAX_LENGTH)
-      .replace(/[^a-zA-Z0-9_\/-]/g, "");
+      .replace(/[^a-zA-Z0-9_/-]/g, "");
 
     // 9. Execution via MediaService
     const mediaService = container.get(MediaService);

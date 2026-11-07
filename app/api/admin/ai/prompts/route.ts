@@ -9,10 +9,7 @@ import {
 } from "@/lib/contracts/admin-ai-prompts.contract";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { logger } from "@/lib/logger";
-import {
-  AI_PROMPTS_ERRORS,
-  AI_PROMPTS_MESSAGES,
-} from "@/lib/constants/ai.constants";
+import { AI_PROMPTS_ERRORS, AI_PROMPTS_MESSAGES } from "@/lib/constants/ai.constants";
 import { getRequestId } from "@/lib/server/requestContext";
 import { isAllowedOrigin } from "@/lib/utils/text";
 
@@ -169,7 +166,9 @@ export async function PATCH(req: NextRequest) {
 
   // 4. Validate `id` query param
   const url = new URL(req.url);
-  const paramsParseResult = updateAiPromptParamsSchema.safeParse({ id: url.searchParams.get("id") });
+  const paramsParseResult = updateAiPromptParamsSchema.safeParse({
+    id: url.searchParams.get("id"),
+  });
 
   if (!paramsParseResult.success) {
     return NextResponse.json(

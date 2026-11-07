@@ -60,12 +60,7 @@ export const updateAiPromptBodySchema = z.strictObject({
     .min(AI_PROMPTS_LIMITS.USER_PROMPT_TEMPLATE_MIN)
     .max(AI_PROMPTS_LIMITS.USER_PROMPT_TEMPLATE_MAX)
     .optional(),
-  modelPreference: z
-    .string()
-    .trim()
-    .min(1)
-    .max(AI_PROMPTS_LIMITS.MODEL_PREFERENCE_MAX)
-    .optional(),
+  modelPreference: z.string().trim().min(1).max(AI_PROMPTS_LIMITS.MODEL_PREFERENCE_MAX).optional(),
   temperature: z
     .number()
     .int()

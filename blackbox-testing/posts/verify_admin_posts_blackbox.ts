@@ -53,7 +53,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`);
+  console.log(
+    `Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -127,8 +129,14 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: AdminAuthService, useValue: mockAuthService as unknown as AdminAuthService });
-  container.bind({ provide: AdminPostsService, useValue: mockPostsService as unknown as AdminPostsService });
+  container.bind({
+    provide: AdminAuthService,
+    useValue: mockAuthService as unknown as AdminAuthService,
+  });
+  container.bind({
+    provide: AdminPostsService,
+    useValue: mockPostsService as unknown as AdminPostsService,
+  });
 
   const BASE_URL = "http://localhost:3000";
 

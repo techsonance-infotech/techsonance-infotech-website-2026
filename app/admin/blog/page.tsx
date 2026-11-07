@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { submitPostForReview, publishPost, deletePost, listPosts } from "@/lib/api/admin-posts.api";
 import type { AdminPost } from "@/lib/types/admin.types";
 
 export default function AdminBlogListPage() {
@@ -21,18 +22,11 @@ export default function AdminBlogListPage() {
     async (showLoader = false) => {
       if (showLoader) setLoading(true);
       try {
-        const params = new URLSearchParams();
-        if (activeTab !== "ALL") {
-          params.set("status", activeTab);
-        }
-        if (search.trim()) {
-          params.set("search", search.trim());
-        }
-        const res = await fetch(`${API_ENDPOINTS.ADMIN.BLOG.POSTS}?${params.toString()}`);
-        const data = await res.json();
-        if (data.ok) {
-          setPosts(data.posts || []);
-        }
+        const data = await listPosts({
+          status: activeTab !== "ALL" ? activeTab : undefined,
+          search: search.trim() || undefined,
+        });
+        setPosts(data.posts || []);
       } catch (err) {
         console.error("Failed to load posts", err);
       } finally {
@@ -49,12 +43,24 @@ export default function AdminBlogListPage() {
   const handlePublish = async (id: string) => {
     try {
       setActionLoadingId(id);
-      const res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST_PUBLISH(id), { method: "POST" });
-      if (res.ok) {
-        await fetchPosts();
-      }
+      await publishPost(id);
+      await fetchPosts();
     } catch (err) {
       console.error(err);
+      alert(err instanceof Error ? err.message : "Failed to publish post");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleSubmitForReview = async (id: string) => {
+    try {
+      setActionLoadingId(id);
+      await submitPostForReview(id);
+      await fetchPosts();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : "Failed to submit post for review");
     } finally {
       setActionLoadingId(null);
     }
@@ -64,12 +70,11 @@ export default function AdminBlogListPage() {
     if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
     try {
       setActionLoadingId(id);
-      const res = await fetch(API_ENDPOINTS.ADMIN.BLOG.POST(id), { method: "DELETE" });
-      if (res.ok) {
-        await fetchPosts();
-      }
+      await deletePost(id);
+      await fetchPosts();
     } catch (err) {
       console.error(err);
+      alert(err instanceof Error ? err.message : "Failed to delete post");
     } finally {
       setActionLoadingId(null);
     }
@@ -208,6 +213,18 @@ export default function AdminBlogListPage() {
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
+                          {post.status === "DRAFT" && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={actionLoadingId === post.id}
+                              onClick={() => handleSubmitForReview(post.id)}
+                              className="h-7 px-2 text-[11px] font-bold text-amber-600 hover:bg-amber-50 rounded-lg"
+                              title="Submit for editorial review"
+                            >
+                              Submit
+                            </Button>
+                          )}
                           {post.status !== "PUBLISHED" && (
                             <Button
                               variant="ghost"

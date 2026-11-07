@@ -187,7 +187,10 @@ async function runGetTests() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 2: Unauthenticated Access (401) ─────────────────────────────
@@ -209,8 +212,14 @@ async function runGetTests() {
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.UNAUTHORIZED, "Unauthorized error message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.UNAUTHORIZED,
+      "Unauthorized error message matched",
+    );
   }
 
   // ─── TEST CASE 3: Viewer Role Access (200) ─────────────────────────────────
@@ -260,7 +269,10 @@ async function runGetTests() {
     assert(body.ok === true, "Envelope ok must be true");
     assert(body.templates?.[0]?.stepName === "outline", "First template stepName is 'outline'");
     assert(body.templates?.[1]?.stepName === "section", "Second template stepName is 'section'");
-    assert(body.data?.templates?.[0]?.id === TEMPLATE_ID, "data.templates[0].id matches expected UUID");
+    assert(
+      body.data?.templates?.[0]?.id === TEMPLATE_ID,
+      "data.templates[0].id matches expected UUID",
+    );
   }
 
   // ─── TEST CASE 5: Unexpected Service Error (500) ───────────────────────────
@@ -283,7 +295,10 @@ async function runGetTests() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.LIST_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.LIST_FAILED,
+      "Internal error message matches constant",
+    );
   }
 }
 
@@ -331,10 +346,13 @@ async function runPatchTests() {
   container.bind({ provide: AdminAuthService, useValue: mockAuthService as any });
   container.bind({ provide: AdminPromptsService, useValue: mockPromptsService as any });
 
-  const makeUrl = (id?: string) =>
-    id ? `${BASE_URL}?id=${id}` : BASE_URL;
+  const makeUrl = (id?: string) => (id ? `${BASE_URL}?id=${id}` : BASE_URL);
 
-  const makePatchReq = (url: string, body: unknown = {}, extraHeaders: Record<string, string> = {}) =>
+  const makePatchReq = (
+    url: string,
+    body: unknown = {},
+    extraHeaders: Record<string, string> = {},
+  ) =>
     new Request(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...extraHeaders },
@@ -355,7 +373,9 @@ async function runPatchTests() {
     const req = new Request(makeUrl(TEMPLATE_ID), {
       method: "PATCH",
       headers: { origin: "https://evil-hacker.site", "Content-Type": "application/json" },
-      body: JSON.stringify({ systemPrompt: "Updated system prompt text for comprehensive testing." }),
+      body: JSON.stringify({
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }),
     });
 
     const res = await patchPromptsPATCH(req as any);
@@ -365,7 +385,10 @@ async function runPatchTests() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 7: Unauthenticated PATCH (401) ─────────────────────────────
@@ -382,15 +405,23 @@ async function runPatchTests() {
     });
 
     const res = await patchPromptsPATCH(
-      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated system prompt text for comprehensive testing." }) as any,
+      makePatchReq(makeUrl(TEMPLATE_ID), {
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }) as any,
     );
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.UNAUTHORIZED, "Unauthorized error message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.UNAUTHORIZED,
+      "Unauthorized error message matched",
+    );
   }
 
   // ─── TEST CASE 8: Viewer Forbidden on PATCH (403) ─────────────────────────
@@ -408,7 +439,9 @@ async function runPatchTests() {
     });
 
     const res = await patchPromptsPATCH(
-      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated system prompt text for comprehensive testing." }) as any,
+      makePatchReq(makeUrl(TEMPLATE_ID), {
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }) as any,
     );
     const body = await res.json();
     logResponse(res.status, body);
@@ -416,7 +449,10 @@ async function runPatchTests() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ROLE, "Role forbidden message matched");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.FORBIDDEN_ROLE,
+      "Role forbidden message matched",
+    );
   }
 
   // ─── TEST CASE 9: Invalid ID param (422) ──────────────────────────────────
@@ -434,7 +470,9 @@ async function runPatchTests() {
     });
 
     const res = await patchPromptsPATCH(
-      makePatchReq(makeUrl("not-a-uuid"), { systemPrompt: "Updated system prompt text for comprehensive testing." }) as any,
+      makePatchReq(makeUrl("not-a-uuid"), {
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }) as any,
     );
     const body = await res.json();
     logResponse(res.status, body);
@@ -442,7 +480,10 @@ async function runPatchTests() {
     assert(res.status === 422, "Status code must be 422 Validation Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.VALIDATION, `Error code must be ${ErrorCode.VALIDATION}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.INVALID_ID, "Invalid ID error message matched");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.INVALID_ID,
+      "Invalid ID error message matched",
+    );
   }
 
   // ─── TEST CASE 10: Body schema violation (422) ────────────────────────────
@@ -491,9 +532,15 @@ async function runPatchTests() {
     assert(res.status === 200, "Status code must be 200 OK");
     assert(body.ok === true, "Envelope ok must be true");
     assert(body.data?.template?.id === TEMPLATE_ID, "data.template.id matches expected UUID");
-    assert(body.data?.template?.systemPrompt === updatedTemplate.systemPrompt, "Updated systemPrompt returned");
+    assert(
+      body.data?.template?.systemPrompt === updatedTemplate.systemPrompt,
+      "Updated systemPrompt returned",
+    );
     assert(body.template?.id === TEMPLATE_ID, "Top-level template.id present (backwards-compat)");
-    assert(body.message === AI_PROMPTS_MESSAGES.TEMPLATE_UPDATED, "Success message matches constant");
+    assert(
+      body.message === AI_PROMPTS_MESSAGES.TEMPLATE_UPDATED,
+      "Success message matches constant",
+    );
   }
 
   // ─── TEST CASE 12: Template Not Found (404) ───────────────────────────────
@@ -510,7 +557,9 @@ async function runPatchTests() {
     });
 
     const res = await patchPromptsPATCH(
-      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated system prompt text for comprehensive testing." }) as any,
+      makePatchReq(makeUrl(TEMPLATE_ID), {
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }) as any,
     );
     const body = await res.json();
     logResponse(res.status, body);
@@ -518,7 +567,10 @@ async function runPatchTests() {
     assert(res.status === 404, "Status code must be 404 Not Found");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.NOT_FOUND, `Error code must be ${ErrorCode.NOT_FOUND}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.TEMPLATE_NOT_FOUND, "Not found error message matched");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.TEMPLATE_NOT_FOUND,
+      "Not found error message matched",
+    );
   }
 
   // ─── TEST CASE 13: Unexpected Service Error on PATCH (500) ────────────────
@@ -536,7 +588,9 @@ async function runPatchTests() {
     });
 
     const res = await patchPromptsPATCH(
-      makePatchReq(makeUrl(TEMPLATE_ID), { systemPrompt: "Updated system prompt text for comprehensive testing." }) as any,
+      makePatchReq(makeUrl(TEMPLATE_ID), {
+        systemPrompt: "Updated system prompt text for comprehensive testing.",
+      }) as any,
     );
     const body = await res.json();
     logResponse(res.status, body);
@@ -544,7 +598,10 @@ async function runPatchTests() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === AI_PROMPTS_ERRORS.UPDATE_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === AI_PROMPTS_ERRORS.UPDATE_FAILED,
+      "Internal error message matches constant",
+    );
   }
 }
 

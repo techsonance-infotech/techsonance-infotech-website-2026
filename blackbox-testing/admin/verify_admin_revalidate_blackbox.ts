@@ -153,7 +153,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === REVALIDATE_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === REVALIDATE_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 2: Unauthenticated Access (401) ─────────────────────────────
@@ -176,8 +179,14 @@ async function run() {
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === REVALIDATE_ERRORS.UNAUTHORIZED, "Unauthorized error message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === REVALIDATE_ERRORS.UNAUTHORIZED,
+      "Unauthorized error message matched",
+    );
   }
 
   // ─── TEST CASE 3: Role Authorization / RBAC (403) ──────────────────────────
@@ -201,7 +210,10 @@ async function run() {
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === REVALIDATE_ERRORS.FORBIDDEN_ROLE, "Role forbidden message matched");
+    assert(
+      body.error?.message === REVALIDATE_ERRORS.FORBIDDEN_ROLE,
+      "Role forbidden message matched",
+    );
 
     currentSession = editorSession; // Reset to editor
   }
@@ -229,7 +241,10 @@ async function run() {
 
     assert(res.status === 400, "Status code must be 400 Bad Request");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.BAD_REQUEST, `Error code must be ${ErrorCode.BAD_REQUEST}`);
+    assert(
+      body.error?.code === ErrorCode.BAD_REQUEST,
+      `Error code must be ${ErrorCode.BAD_REQUEST}`,
+    );
   }
 
   // ─── TEST CASE 5: Schema Validation Failure (422) ──────────────────────────
@@ -251,7 +266,10 @@ async function run() {
     assert(res.status === 422, "Status code must be 422 Validation Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.VALIDATION, `Error code must be ${ErrorCode.VALIDATION}`);
-    assert(body.error?.message === REVALIDATE_ERRORS.VALIDATION_FAILED, "Validation failure message matched");
+    assert(
+      body.error?.message === REVALIDATE_ERRORS.VALIDATION_FAILED,
+      "Validation failure message matched",
+    );
     assert(body.error?.fieldErrors?.tags !== undefined, "fieldErrors.tags is present");
   }
 
@@ -277,7 +295,10 @@ async function run() {
       "data.revalidatedTags matches DEFAULT_REVALIDATE_TAGS",
     );
     assert(body.data?.revalidatedPaths?.length === 0, "data.revalidatedPaths is empty array");
-    assert(body.data?.message === REVALIDATE_MESSAGES.REVALIDATE_SUCCESS, "Message matches constant");
+    assert(
+      body.data?.message === REVALIDATE_MESSAGES.REVALIDATE_SUCCESS,
+      "Message matches constant",
+    );
     assert(body.success === true, "Top-level success boolean is true (backwards-compat)");
     assert(
       JSON.stringify(body.revalidated) === JSON.stringify(DEFAULT_REVALIDATE_TAGS),
@@ -340,7 +361,10 @@ async function run() {
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === REVALIDATE_ERRORS.REVALIDATE_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === REVALIDATE_ERRORS.REVALIDATE_FAILED,
+      "Internal error message matches constant",
+    );
 
     authShouldThrow = false; // Reset
   }

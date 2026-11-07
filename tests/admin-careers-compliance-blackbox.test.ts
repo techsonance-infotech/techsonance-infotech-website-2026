@@ -7,10 +7,7 @@ import { getContainer, resetRootContainer } from "@/lib/di/container";
 import { ApplicationsService } from "@/lib/services/applications.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { ErrorCode } from "@/lib/errors";
-import {
-  CAREER_ERRORS,
-  CAREER_COMPLIANCE_MESSAGES,
-} from "@/lib/constants/careers.constants";
+import { CAREER_ERRORS, CAREER_COMPLIANCE_MESSAGES } from "@/lib/constants/careers.constants";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 describe("GET & POST /api/admin/careers/compliance — Black Box Integration Tests", () => {

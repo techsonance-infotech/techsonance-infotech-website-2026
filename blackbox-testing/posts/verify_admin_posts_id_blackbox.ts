@@ -53,7 +53,9 @@ function logRequest(details: {
 
 function logResponse(status: number, headers: Headers, body: unknown) {
   console.log(`Controller Response (HTTP ${status}):`);
-  console.log(`Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`);
+  console.log(
+    `Headers: x-request-id=${headers.get("x-request-id")}, cache-control=${headers.get("cache-control")}`,
+  );
   console.log(JSON.stringify(body, null, 2));
 }
 
@@ -142,8 +144,14 @@ async function runBlackboxSuite() {
   };
 
   const container = getContainer();
-  container.bind({ provide: AdminAuthService, useValue: mockAuthService as unknown as AdminAuthService });
-  container.bind({ provide: AdminPostsService, useValue: mockPostsService as unknown as AdminPostsService });
+  container.bind({
+    provide: AdminAuthService,
+    useValue: mockAuthService as unknown as AdminAuthService,
+  });
+  container.bind({
+    provide: AdminPostsService,
+    useValue: mockPostsService as unknown as AdminPostsService,
+  });
 
   const BASE_URL = "http://localhost:3000";
 
@@ -403,7 +411,11 @@ async function runBlackboxSuite() {
 
     assertTest(res.status === 200, 10, "Status code is 200 OK");
     assertTest(body.ok === true, 10, "Envelope ok is true");
-    assertTest(body.data?.post?.title === "Next.js 16 Architecture & Performance Guide (Updated)", 10, "Title updated");
+    assertTest(
+      body.data?.post?.title === "Next.js 16 Architecture & Performance Guide (Updated)",
+      10,
+      "Title updated",
+    );
     assertTest(body.data?.post?.versionId === 2, 10, "versionId incremented to 2");
   }
 

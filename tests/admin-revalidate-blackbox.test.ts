@@ -172,7 +172,9 @@ describe("POST /api/admin/revalidate — Black Box Integration Tests", () => {
   // ─── 5. UNEXPECTED ERROR HANDLING ─────────────────────────────────────────
 
   it("8. Handles unexpected session failure with clean 500 status", async () => {
-    mockAuthService.getCurrentSession.mockRejectedValue(new Error("Database pool connection timeout"));
+    mockAuthService.getCurrentSession.mockRejectedValue(
+      new Error("Database pool connection timeout"),
+    );
 
     const req = makeReq({ tags: ["posts"] });
     const res = await postRevalidatePOST(req);

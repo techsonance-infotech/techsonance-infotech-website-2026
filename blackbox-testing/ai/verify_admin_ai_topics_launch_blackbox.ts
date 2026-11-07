@@ -54,7 +54,9 @@ function logRequest(details: {
   if (details.actor) console.log(`[ACTOR]   ${details.actor}`);
   if (details.headers) console.log(`[HEADERS] ${JSON.stringify(details.headers)}`);
   if (details.payload !== undefined) {
-    console.log(`[PAYLOAD] ${typeof details.payload === "string" ? details.payload : JSON.stringify(details.payload)}`);
+    console.log(
+      `[PAYLOAD] ${typeof details.payload === "string" ? details.payload : JSON.stringify(details.payload)}`,
+    );
   }
 }
 
@@ -147,19 +149,27 @@ async function run() {
       headers: { origin: "https://evil-hacker.site" },
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-      headers: { origin: "https://evil-hacker.site" },
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+        headers: { origin: "https://evil-hacker.site" },
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_TOPICS_ERRORS.FORBIDDEN_ORIGIN, "Origin mismatch message matched");
+    assert(
+      body.error?.message === AI_TOPICS_ERRORS.FORBIDDEN_ORIGIN,
+      "Origin mismatch message matched",
+    );
   }
 
   // ─── TEST CASE 2: Unauthenticated Access (401) ────────────────────────────
@@ -173,18 +183,29 @@ async function run() {
       actor: "Anonymous Visitor",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 401, "Status code must be 401 Unauthenticated");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.UNAUTHENTICATED, `Error code must be ${ErrorCode.UNAUTHENTICATED}`);
-    assert(body.error?.message === AI_TOPICS_ERRORS.UNAUTHORIZED, "Unauthorized error message matched");
+    assert(
+      body.error?.code === ErrorCode.UNAUTHENTICATED,
+      `Error code must be ${ErrorCode.UNAUTHENTICATED}`,
+    );
+    assert(
+      body.error?.message === AI_TOPICS_ERRORS.UNAUTHORIZED,
+      "Unauthorized error message matched",
+    );
   }
 
   // ─── TEST CASE 3: Insufficient Role - Viewer (403) ────────────────────────
@@ -198,18 +219,26 @@ async function run() {
       actor: "Viewer (Read-Only)",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 403, "Status code must be 403 Forbidden");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.FORBIDDEN, `Error code must be ${ErrorCode.FORBIDDEN}`);
-    assert(body.error?.message === AI_TOPICS_ERRORS.FORBIDDEN_ROLE, "Insufficient permissions message matched");
+    assert(
+      body.error?.message === AI_TOPICS_ERRORS.FORBIDDEN_ROLE,
+      "Insufficient permissions message matched",
+    );
   }
 
   // ─── TEST CASE 4: Insufficient Role - Author (403) ────────────────────────
@@ -223,11 +252,16 @@ async function run() {
       actor: "Author (Blog writer)",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
@@ -247,17 +281,25 @@ async function run() {
       actor: "Editor",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH("invalid-topic-uuid")}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH("invalid-topic-uuid")}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: "invalid-topic-uuid" }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: "invalid-topic-uuid" }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 400, "Status code must be 400 Bad Request");
     assert(body.ok === false, "Envelope ok must be false");
-    assert(body.error?.code === ErrorCode.BAD_REQUEST, `Error code must be ${ErrorCode.BAD_REQUEST}`);
+    assert(
+      body.error?.code === ErrorCode.BAD_REQUEST,
+      `Error code must be ${ErrorCode.BAD_REQUEST}`,
+    );
     assert(body.error?.fieldErrors?.id !== undefined, "Field error indicates invalid ID");
   }
 
@@ -271,11 +313,16 @@ async function run() {
       actor: "Editor",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(nonExistentTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(nonExistentTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: nonExistentTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: nonExistentTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
@@ -294,11 +341,16 @@ async function run() {
       actor: "Editor",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
@@ -321,18 +373,26 @@ async function run() {
       actor: "Editor",
     });
 
-    const req = new Request(`http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`, {
-      method: "POST",
-    });
+    const req = new Request(
+      `http://localhost:3000${API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(validTopicId)}`,
+      {
+        method: "POST",
+      },
+    );
 
-    const res = await launchTopicPOST(req as any, { params: Promise.resolve({ id: validTopicId }) });
+    const res = await launchTopicPOST(req as any, {
+      params: Promise.resolve({ id: validTopicId }),
+    });
     const body = await res.json();
     logResponse(res.status, body);
 
     assert(res.status === 500, "Status code must be 500 Internal Server Error");
     assert(body.ok === false, "Envelope ok must be false");
     assert(body.error?.code === ErrorCode.INTERNAL, `Error code must be ${ErrorCode.INTERNAL}`);
-    assert(body.error?.message === AI_TOPICS_ERRORS.LAUNCH_FAILED, "Internal error message matches constant");
+    assert(
+      body.error?.message === AI_TOPICS_ERRORS.LAUNCH_FAILED,
+      "Internal error message matches constant",
+    );
   }
 
   // ─── SUMMARY SCOREBOARD ──────────────────────────────────────────────────

@@ -62,4 +62,3 @@ export const adminLogoutContract = defineContract({
   response: adminLogoutResponseSchema,
   status: 200,
 });
-

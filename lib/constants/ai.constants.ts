@@ -9,7 +9,8 @@ export const AI_JOBS_LIMITS = {
 export const AI_JOBS_ERRORS = {
   UNAUTHORIZED: "You must be signed in to access AI generation jobs",
   FORBIDDEN_ORIGIN: "Forbidden origin",
-  FORBIDDEN_ROLE: "Insufficient permissions. Only editors and admins can trigger AI generation jobs.",
+  FORBIDDEN_ROLE:
+    "Insufficient permissions. Only editors and admins can trigger AI generation jobs.",
   TOPIC_REQUIRED: "Topic text is required and must be between 5 and 300 characters.",
   JOB_NOT_FOUND: "AI generation job not found",
   TRIGGER_FAILED: "Failed to trigger AI generation job",
@@ -75,7 +76,8 @@ export const AI_PROMPTS_LIMITS = {
 export const AI_PROMPTS_ERRORS = {
   UNAUTHORIZED: "You must be signed in to manage AI prompt templates",
   FORBIDDEN_ORIGIN: "Forbidden origin",
-  FORBIDDEN_ROLE: "Insufficient permissions. Only editors and admins can modify AI prompt templates.",
+  FORBIDDEN_ROLE:
+    "Insufficient permissions. Only editors and admins can modify AI prompt templates.",
   TEMPLATE_NOT_FOUND: "AI prompt template not found",
   LIST_FAILED: "Failed to list AI prompt templates",
   UPDATE_FAILED: "Failed to update AI prompt template",
