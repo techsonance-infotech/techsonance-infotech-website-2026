@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (27/27 Committed & 100% Verified)
+## 2. Completed Endpoints (28/28 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -55,6 +55,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 25 | `/api/admin/ai/prompts` | `GET`, `PATCH` | AI Prompt Template Management | ✅ Done & Tested | `cffc7b5` |
 | 26 | `/api/admin/auth/login` | `POST` | Admin Auth & Security | ✅ Done & Tested | `add805c` |
 | 27 | `/api/admin/auth/logout` | `POST` | Admin Auth & Security | ✅ Done & Tested | `be0f62e` |
+| 28 | `/api/admin/revalidate` | `POST` | Admin ISR Cache Revalidation | ✅ Done & Tested | `b345bd3` |
 
 ---
 
@@ -164,8 +165,15 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Standalone Script**: `blackbox-testing/auth/verify_admin_auth_logout_blackbox.ts` ✅ **11/11 assertions passed**
   - **Integration Guide**: `docs/auth/POST-api-admin-auth-logout-integration.md`
   - **Git Commit**: `be0f62e`
-- [ ] **13. `POST /api/admin/revalidate`**
+- [x] **13. `POST /api/admin/revalidate`**
   - **Purpose**: On-demand Next.js ISR tag and path cache revalidation endpoint for editors.
+  - **Controller**: `app/api/admin/revalidate/route.ts` (3-tier HTTP boundary, origin check, session auth check, RBAC `Editor+` enforcement, Zod 4 contract validation, fallback default tags, `revalidateTag` & `revalidatePath`, structured audit logging)
+  - **Contract**: `lib/contracts/admin-revalidate.contract.ts` (`adminRevalidateContract`, `adminRevalidateBodySchema`, `adminRevalidateResponseSchema`)
+  - **Constants**: `REVALIDATE_LIMITS`, `DEFAULT_REVALIDATE_TAGS`, `REVALIDATE_ERRORS`, `REVALIDATE_MESSAGES` in `lib/constants/revalidate.constants.ts`
+  - **Vitest Suite**: `tests/admin-revalidate-blackbox.test.ts` (8 test cases)
+  - **Standalone Script**: `blackbox-testing/admin/verify_admin_revalidate_blackbox.ts` ✅ **36/36 assertions passed**
+  - **Integration Guide**: `docs/admin/POST-api-admin-revalidate-integration.md`
+  - **Git Commit**: `b345bd3`
 - [ ] **14. `GET, POST /api/admin/careers/compliance`** *(Low Priority / Deferred)*
   - **Purpose**: Candidate GDPR data access export and permanent PII deletion/purging.
 
@@ -174,7 +182,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/revalidate` (Phase D: Admin Governance & System Maintenance)"*.
+1. State: *"Proceed with `GET, POST /api/admin/careers/compliance` (Phase D: Admin Governance & System Maintenance)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
