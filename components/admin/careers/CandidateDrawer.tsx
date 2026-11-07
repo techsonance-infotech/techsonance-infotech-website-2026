@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, startTransition } from "react";
 import {
   X,
   Star,
@@ -11,7 +11,6 @@ import {
   Phone,
   MapPin,
   Clock,
-  Briefcase,
   Globe,
   Loader2,
   Save,
@@ -114,30 +113,42 @@ export function CandidateDrawer({
 
   useEffect(() => {
     if (!isOpen || !applicationId) {
-      setApp(null);
+      startTransition(() => {
+        setApp(null);
+      });
       return;
     }
 
     let isMounted = true;
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
 
     getAdminApplication(applicationId)
       .then((data) => {
         if (isMounted && data) {
-          setApp(data);
-          setNotes(data.internalNotes || "");
-          setRating(data.rating || null);
+          startTransition(() => {
+            setApp(data);
+            setNotes(data.internalNotes || "");
+            setRating(data.rating || null);
+          });
         }
       })
       .catch((err: unknown) => {
         if (isMounted) {
           const msg = err instanceof Error ? err.message : "Failed to load candidate application";
-          setError(msg);
+          startTransition(() => {
+            setError(msg);
+          });
         }
       })
       .finally(() => {
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          startTransition(() => {
+            setLoading(false);
+          });
+        }
       });
 
     return () => {
@@ -222,11 +233,10 @@ export function CandidateDrawer({
   return (
     <>
       <div className="animate-in fade-in fixed inset-0 z-40 flex justify-end overflow-hidden bg-slate-900/50 backdrop-blur-xs duration-200">
-        <div
-          role="dialog"
-          aria-modal="true"
+        <dialog
+          open
           aria-label="Candidate Evaluation"
-          className="z-40 flex h-full w-full max-w-2xl flex-col border-l border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+          className="z-40 m-0 flex h-full w-full max-w-2xl flex-col border-l border-slate-200 bg-white p-0 shadow-2xl dark:border-slate-800 dark:bg-slate-900"
         >
           {/* Drawer Header */}
           <div className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50/70 px-6 py-5 dark:border-slate-800 dark:bg-slate-900/70">
@@ -498,10 +508,17 @@ export function CandidateDrawer({
 
                   {/* Interactive Rating Stars (1-5) */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    <span
+                      id="candidate-rating-label"
+                      className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-400"
+                    >
                       Candidate Rating (1-5 Stars):
-                    </label>
-                    <div className="flex items-center gap-1.5">
+                    </span>
+                    <div
+                      role="radiogroup"
+                      aria-labelledby="candidate-rating-label"
+                      className="flex items-center gap-1.5"
+                    >
                       {[1, 2, 3, 4, 5].map((star) => {
                         const isFilled = (hoverRating ?? rating ?? 0) >= star;
                         return (
@@ -544,10 +561,14 @@ export function CandidateDrawer({
 
                   {/* Internal Notes Textarea */}
                   <div className="space-y-2">
-                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    <label
+                      htmlFor="candidate-internal-notes"
+                      className="block text-xs font-semibold text-slate-600 dark:text-slate-400"
+                    >
                       Internal Notes:
                     </label>
                     <textarea
+                      id="candidate-internal-notes"
                       rows={4}
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
@@ -579,9 +600,9 @@ export function CandidateDrawer({
                       Screening Question Answers
                     </h4>
                     <div className="space-y-3 pt-1">
-                      {app.screeningAnswers.map((ans: ScreeningAnswerItem, idx: number) => (
+                      {app.screeningAnswers.map((ans: ScreeningAnswerItem) => (
                         <div
-                          key={idx}
+                          key={`qa-${ans.question.slice(0, 30)}`}
                           className="space-y-1.5 rounded-2xl border border-slate-200/60 bg-slate-50 p-3.5 text-xs dark:border-slate-700/60 dark:bg-slate-800/60"
                         >
                           <div className="flex items-start justify-between gap-2">
@@ -621,7 +642,7 @@ export function CandidateDrawer({
               </>
             ) : null}
           </div>
-        </div>
+        </dialog>
       </div>
 
       {/* Rejection Reason Dialog */}

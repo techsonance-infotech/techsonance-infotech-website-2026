@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getJobSource } from "@/lib/content/jobs";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
-import JobPostingJsonLd from "@/components/careers/JobPostingJsonLd";
+import { JobPostingJsonLd } from "@/components/careers/JobPostingJsonLd";
 import JobDetailClient from "./JobDetailClient";
 import { JobStatus } from "@/lib/constants/enums";
 import type { JobPosting } from "@/lib/content/types";

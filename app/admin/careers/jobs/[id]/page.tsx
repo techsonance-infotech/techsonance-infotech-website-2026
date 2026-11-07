@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, startTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -75,7 +75,9 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
   useEffect(() => {
     const controller = new AbortController();
-    loadJob(controller.signal);
+    startTransition(() => {
+      void loadJob(controller.signal);
+    });
     return () => {
       controller.abort();
     };

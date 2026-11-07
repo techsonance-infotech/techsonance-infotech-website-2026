@@ -1,27 +1,63 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, startTransition } from "react";
 import {
   FileCode,
   Save,
-  Sparkles,
   Sliders,
   Check,
-  RefreshCw,
-  Info,
   Layers,
   Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { listAdminAiPrompts, updateAdminAiPrompt } from "@/lib/api/admin-ai.api";
 import type { PromptTemplateDto } from "@/lib/contracts/admin-ai-prompts.contract";
 
+const STEPS = [
+  {
+    key: "outline",
+    name: "1. Outline Generator",
+    desc: "Generates headings & key technical points",
+  },
+  {
+    key: "section",
+    name: "2. Section Writer",
+    desc: "Generates code snippets & technical prose",
+  },
+  {
+    key: "meta",
+    name: "3. SEO & Metadata",
+    desc: "Generates title, slug, excerpt, and image prompt",
+  },
+  {
+    key: "image",
+    name: "4. Thumbnail Prompt",
+    desc: "FLUX.1 / Pollinations image generation prompt",
+  },
+  { key: "critic", name: "5. Quality Critic", desc: "Evaluates depth, voice, and quality score" },
+];
+
+function getVariablesForStep(step: string) {
+  switch (step) {
+    case "outline":
+      return ["{{topic}}", "{{category}}", "{{targetAudience}}", "{{difficulty}}"];
+    case "section":
+      return ["{{topic}}", "{{heading}}", "{{keyPoints}}"];
+    case "meta":
+      return ["{{topic}}", "{{category}}", "{{headings}}"];
+    case "image":
+      return ["{{topic}}", "{{category}}"];
+    case "critic":
+      return ["{{title}}", "{{wordCount}}", "{{content}}"];
+    default:
+      return ["{{topic}}"];
+  }
+}
+
 export default function PromptsManagementPage() {
   const [templates, setTemplates] = useState<PromptTemplateDto[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedStep, setSelectedStep] = useState<string>("outline");
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -32,53 +68,32 @@ export default function PromptsManagementPage() {
   const [modelPreference, setModelPreference] = useState("gemini-2.5-flash");
   const [temperature, setTemperature] = useState(70);
 
-  const steps = [
-    {
-      key: "outline",
-      name: "1. Outline Generator",
-      desc: "Generates headings & key technical points",
-    },
-    {
-      key: "section",
-      name: "2. Section Writer",
-      desc: "Generates code snippets & technical prose",
-    },
-    {
-      key: "meta",
-      name: "3. SEO & Metadata",
-      desc: "Generates title, slug, excerpt, and image prompt",
-    },
-    {
-      key: "image",
-      name: "4. Thumbnail Prompt",
-      desc: "FLUX.1 / Pollinations image generation prompt",
-    },
-    { key: "critic", name: "5. Quality Critic", desc: "Evaluates depth, voice, and quality score" },
-  ];
-
-  const loadTemplates = async () => {
+  const loadTemplates = useCallback(async () => {
     try {
-      setLoading(true);
       const data = await listAdminAiPrompts();
-      setTemplates(data);
+      startTransition(() => {
+        setTemplates(data);
+      });
     } catch {
       // Non-blocking template load error handling
-    } finally {
-      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    void loadTemplates();
-  }, []);
+    startTransition(() => {
+      void loadTemplates();
+    });
+  }, [loadTemplates]);
 
   useEffect(() => {
     const active = templates.find((t) => t.stepName === selectedStep);
     if (active) {
-      setSystemPrompt(active.systemPrompt);
-      setUserPromptTemplate(active.userPromptTemplate);
-      setModelPreference(active.modelPreference || "gemini-2.5-flash");
-      setTemperature(active.temperature ?? 70);
+      startTransition(() => {
+        setSystemPrompt(active.systemPrompt);
+        setUserPromptTemplate(active.userPromptTemplate);
+        setModelPreference(active.modelPreference || "gemini-2.5-flash");
+        setTemperature(active.temperature ?? 70);
+      });
     }
   }, [selectedStep, templates]);
 
@@ -111,23 +126,6 @@ export default function PromptsManagementPage() {
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
-  };
-
-  const getVariablesForStep = (step: string) => {
-    switch (step) {
-      case "outline":
-        return ["{{topic}}", "{{category}}", "{{targetAudience}}", "{{difficulty}}"];
-      case "section":
-        return ["{{topic}}", "{{heading}}", "{{keyPoints}}"];
-      case "meta":
-        return ["{{topic}}", "{{category}}", "{{headings}}"];
-      case "image":
-        return ["{{topic}}", "{{category}}"];
-      case "critic":
-        return ["{{title}}", "{{wordCount}}", "{{content}}"];
-      default:
-        return ["{{topic}}"];
-    }
   };
 
   return (
@@ -164,15 +162,16 @@ export default function PromptsManagementPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Step Selector Sidebar */}
         <div className="space-y-2 lg:col-span-1">
-          <label className="mb-2 block px-1 text-xs font-bold tracking-wider text-slate-400 uppercase">
+          <span className="mb-2 block px-1 text-xs font-bold tracking-wider text-slate-400 uppercase">
             Pipeline Steps
-          </label>
-          {steps.map((s) => {
+          </span>
+          {STEPS.map((s) => {
             const isSelected = selectedStep === s.key;
             const t = templates.find((item) => item.stepName === s.key);
             return (
               <button
                 key={s.key}
+                type="button"
                 onClick={() => setSelectedStep(s.key)}
                 className={`w-full rounded-2xl border p-3.5 text-left transition-all ${
                   isSelected
@@ -204,11 +203,15 @@ export default function PromptsManagementPage() {
             {/* Model & Temperature Controls */}
             <div className="grid grid-cols-1 gap-4 border-b border-slate-100 pb-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                <label
+                  htmlFor="model-preference-select"
+                  className="mb-1 flex items-center gap-1.5 text-xs font-bold text-slate-700"
+                >
                   <Terminal className="h-3.5 w-3.5 text-blue-600" />
                   Target Model Preference
                 </label>
                 <select
+                  id="model-preference-select"
                   value={modelPreference}
                   onChange={(e) => setModelPreference(e.target.value)}
                   className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
@@ -223,7 +226,10 @@ export default function PromptsManagementPage() {
               </div>
 
               <div>
-                <label className="mb-1 block flex items-center justify-between text-xs font-bold text-slate-700">
+                <label
+                  htmlFor="temperature-range"
+                  className="mb-1 flex items-center justify-between text-xs font-bold text-slate-700"
+                >
                   <span className="flex items-center gap-1.5">
                     <Sliders className="h-3.5 w-3.5 text-blue-600" />
                     Temperature: {(temperature / 100).toFixed(2)}
@@ -237,6 +243,7 @@ export default function PromptsManagementPage() {
                   </span>
                 </label>
                 <input
+                  id="temperature-range"
                   type="range"
                   min="0"
                   max="100"
@@ -250,7 +257,10 @@ export default function PromptsManagementPage() {
             {/* System Prompt Editor */}
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                <label
+                  htmlFor="system-prompt-textarea"
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-800"
+                >
                   <FileCode className="h-4 w-4 text-purple-600" />
                   System Instructions (Persona & Guardrails)
                 </label>
@@ -259,6 +269,7 @@ export default function PromptsManagementPage() {
                 </span>
               </div>
               <textarea
+                id="system-prompt-textarea"
                 rows={6}
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
@@ -270,7 +281,10 @@ export default function PromptsManagementPage() {
             {/* User Prompt Template Editor */}
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                <label
+                  htmlFor="user-prompt-textarea"
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-800"
+                >
                   <Layers className="h-4 w-4 text-indigo-600" />
                   User Prompt Template
                 </label>
@@ -279,6 +293,7 @@ export default function PromptsManagementPage() {
                 </span>
               </div>
               <textarea
+                id="user-prompt-textarea"
                 rows={5}
                 value={userPromptTemplate}
                 onChange={(e) => setUserPromptTemplate(e.target.value)}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import SiteHeader from "@/app/components/home/SiteHeader";
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { ClosedJobBanner } from "@/components/careers/ClosedJobBanner";
 import type { JobPosting } from "@/lib/content/types";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import { submitCareerApplication } from "@/lib/api/careers.api";
 import {
   MapPin,
@@ -83,7 +82,12 @@ interface ApplicationFormValues {
   website_url?: string;
 }
 
-export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClientProps) {
+const DEFAULT_SIMILAR_JOBS: JobPosting[] = [];
+
+export default function JobDetailClient({
+  job,
+  similarJobs = DEFAULT_SIMILAR_JOBS,
+}: JobDetailClientProps) {
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
@@ -130,13 +134,14 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
     if (isApplyOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      if (typeof window !== "undefined" && (window as Window)?.__lenis) {
-        (window as Window)?.__lenis?.stop();
+      const win = typeof window !== "undefined" ? (window as unknown as Record<string, { stop: () => void; start: () => void }>) : null;
+      if (win && win["__lenis"]) {
+        win["__lenis"].stop();
       }
       return () => {
         document.body.style.overflow = originalOverflow;
-        if (typeof window !== "undefined" && (window as Window)?.__lenis) {
-          (window as Window)?.__lenis?.start();
+        if (win && win["__lenis"]) {
+          win["__lenis"].start();
         }
       };
     }
@@ -144,7 +149,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
   // Read the URL on the client only (avoids SSR/hydration issues)
   useEffect(() => {
-    setCurrentUrl(window.location.href);
+    startTransition(() => {
+      setCurrentUrl(window.location.href);
+    });
   }, []);
 
   const handleCopyLink = async () => {
@@ -157,6 +164,11 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
     } catch {
       // Ignore clipboard write failures
     }
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    void handleSubmit(onFormSubmit)(e);
   };
 
   const handleDialogChange = (open: boolean) => {
@@ -549,9 +561,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     <span>{"// Key Responsibilities"}</span>
                   </h2>
                   <ul className="space-y-4">
-                    {job.responsibilities.map((resp, i) => (
+                    {job.responsibilities.map((resp) => (
                       <li
-                        key={i}
+                        key={`resp-${resp.slice(0, 30)}`}
                         className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-blue-100 bg-blue-50 text-xs font-bold text-[#1155CC]">
@@ -572,9 +584,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     <span>{"// Requirements & Qualifications"}</span>
                   </h2>
                   <ul className="space-y-4">
-                    {job.requirements.map((req, i) => (
+                    {job.requirements.map((req) => (
                       <li
-                        key={i}
+                        key={`req-${req.slice(0, 30)}`}
                         className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-indigo-100 bg-indigo-50 text-xs font-bold text-indigo-600">
@@ -595,9 +607,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     <span>{"// Preferred Qualifications (Bonus Points)"}</span>
                   </h2>
                   <ul className="space-y-4">
-                    {job.preferredQualifications.map((pref, i) => (
+                    {job.preferredQualifications.map((pref) => (
                       <li
-                        key={i}
+                        key={`pref-${pref.slice(0, 30)}`}
                         className="flex items-start gap-3.5 text-sm text-slate-700 sm:text-base"
                       >
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-100 bg-violet-50 text-xs font-bold text-violet-600">
@@ -618,9 +630,9 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     <span>{"// Benefits & Perks"}</span>
                   </h2>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {job.benefits.map((benefit, i) => (
+                    {job.benefits.map((benefit) => (
                       <div
-                        key={i}
+                        key={`benefit-${benefit.slice(0, 30)}`}
                         className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4"
                       >
                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-xs font-bold text-emerald-700">
@@ -878,7 +890,7 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
               </div>
             ) : (
               <form
-                onSubmit={handleSubmit(onFormSubmit)}
+                onSubmit={handleFormSubmit}
                 className="flex flex-1 flex-col overflow-hidden"
               >
                 {/* Scrollable Form Body */}
@@ -904,10 +916,14 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                   )}
 
                   <div>
-                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                    <label
+                      htmlFor="apply-fullName"
+                      className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase"
+                    >
                       Full Name <span className="text-rose-500">*</span>
                     </label>
                     <input
+                      id="apply-fullName"
                       type="text"
                       required
                       placeholder="e.g. Maya Sharma"
@@ -923,10 +939,14 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                      <label
+                        htmlFor="apply-email"
+                        className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         Email Address <span className="text-rose-500">*</span>
                       </label>
                       <input
+                        id="apply-email"
                         type="email"
                         required
                         placeholder="maya@example.com"
@@ -947,10 +967,14 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
                     </div>
 
                     <div>
-                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                      <label
+                        htmlFor="apply-phone"
+                        className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         Phone Number
                       </label>
                       <input
+                        id="apply-phone"
                         type="tel"
                         placeholder="+91 98765 43210"
                         className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
@@ -961,32 +985,40 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                      <label
+                        htmlFor="apply-location"
+                        className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         Current Location
                       </label>
                       <input
+                        id="apply-location"
                         type="text"
-                        placeholder="e.g. Bengaluru, India"
+                        placeholder="e.g. Surat, Gujarat, India"
                         className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("currentLocation")}
                       />
                     </div>
 
                     <div>
-                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                      <label
+                        htmlFor="apply-noticePeriodWeeks"
+                        className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase"
+                      >
                         Notice Period / Availability
                       </label>
                       <select
+                        id="apply-noticePeriodWeeks"
                         className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         {...register("noticePeriodWeeks", {
                           valueAsNumber: true,
                         })}
                       >
                         <option value={0}>Immediate availability</option>
-                        <option value={2}>2 weeks</option>
-                        <option value={4}>1 month (4 weeks)</option>
-                        <option value={8}>2 months (8 weeks)</option>
-                        <option value={12}>3 months (12 weeks)</option>
+                        <option value={2}>2 weeks (15 days)</option>
+                        <option value={4}>1 month (30 days)</option>
+                        <option value={8}>2 months (60 days)</option>
+                        <option value={12}>3 months (90 days)</option>
                       </select>
                     </div>
                   </div>

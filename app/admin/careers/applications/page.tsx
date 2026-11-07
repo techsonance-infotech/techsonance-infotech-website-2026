@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import {
   Search,
   Filter,
@@ -78,7 +78,9 @@ export default function ApplicationsInboxPage() {
   // Load jobs filter list safely via listAdminJobs
   useEffect(() => {
     const controller = new AbortController();
-    setLoadingJobs(true);
+    startTransition(() => {
+      setLoadingJobs(true);
+    });
 
     listAdminJobs({ limit: 100, signal: controller.signal })
       .then((items) => {
@@ -87,13 +89,17 @@ export default function ApplicationsInboxPage() {
           title: j.title || "Untitled Role",
           department: j.department || "General",
         }));
-        setJobs(mappedJobs);
+        startTransition(() => {
+          setJobs(mappedJobs);
+        });
       })
       .catch(() => {
         // Fallback gracefully without breaking candidate view
       })
       .finally(() => {
-        setLoadingJobs(false);
+        startTransition(() => {
+          setLoadingJobs(false);
+        });
       });
 
     return () => {
@@ -147,7 +153,9 @@ export default function ApplicationsInboxPage() {
   }, [selectedJobId, selectedStatus, debouncedSearch, knockoutOnly]);
 
   useEffect(() => {
-    fetchApplications();
+    startTransition(() => {
+      void fetchApplications();
+    });
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();

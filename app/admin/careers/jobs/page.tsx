@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, Briefcase, AlertCircle, X } from "lucide-react";
+import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, Briefcase, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -72,7 +72,9 @@ export default function AdminJobsPage() {
   }, [activeTab, debouncedSearch]);
 
   useEffect(() => {
-    fetchJobs();
+    startTransition(() => {
+      void fetchJobs();
+    });
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -243,7 +245,10 @@ export default function AdminJobsPage() {
                         key={job.id}
                         className="group transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
                       >
-                        <td className="px-4 py-3.5 font-bold text-slate-900 dark:text-white">
+                        <td
+                          aria-label={`Position: ${job.title || "Untitled Position"}`}
+                          className="px-4 py-3.5 font-bold text-slate-900 dark:text-white"
+                        >
                           <Link
                             href={`/admin/careers/jobs/${job.id}`}
                             className="transition-colors hover:text-[#1155CC]"
@@ -280,7 +285,10 @@ export default function AdminJobsPage() {
                             {job.status}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3.5 text-right">
+                        <td
+                          aria-label="Actions"
+                          className="px-4 py-3.5 text-right"
+                        >
                           <div className="flex items-center justify-end gap-1">
                             <Link
                               href={`/admin/careers/jobs/${job.id}`}
@@ -311,13 +319,13 @@ export default function AdminJobsPage() {
 
       {/* Non-blocking Deletion Confirmation Modal */}
       {jobToDelete && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs"
-        >
-          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="font-sora text-base font-bold text-slate-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+          <dialog
+            open
+            aria-labelledby="delete-job-dialog-title"
+            className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+          >
+            <h3 id="delete-job-dialog-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
               Permanently Delete Position?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
@@ -356,7 +364,7 @@ export default function AdminJobsPage() {
                 )}
               </Button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
     </div>

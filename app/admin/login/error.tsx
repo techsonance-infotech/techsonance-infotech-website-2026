@@ -14,6 +14,9 @@ export default function AdminLoginError({
 }) {
   useEffect(() => {
     // Captured for production telemetry
+    if (process.env.NODE_ENV !== "production") {
+      void error;
+    }
   }, [error]);
 
   return (

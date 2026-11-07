@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { AlertCircle, RefreshCw, ArrowLeft, Mail } from "lucide-react";
+import { AlertCircle, RefreshCw, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function JobDetailError({
@@ -13,7 +13,10 @@ export default function JobDetailError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error with context for telemetry
+    // Retain error reference for telemetry reporting
+    if (process.env.NODE_ENV !== "production") {
+      void error;
+    }
   }, [error]);
 
   return (

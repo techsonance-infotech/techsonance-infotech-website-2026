@@ -2,16 +2,16 @@
 
 import React, {
   useState,
-  useRef,
   useSyncExternalStore,
   useEffect,
   useMemo,
   useCallback,
+  startTransition,
 } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Search, X, Sparkles, MapPin, Briefcase, RotateCcw } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
@@ -97,6 +97,11 @@ const cultureValues = [
   },
 ];
 
+const subscribeClientTime = () => () => {};
+const clientLoadedTimestamp = typeof window !== "undefined" ? Date.now() : 0;
+const getClientTime = () => clientLoadedTimestamp;
+const getServerTime = () => 0;
+
 export default function CareersClient({ initialJobs }: { initialJobs?: JobPosting[] } = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -122,13 +127,15 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
 
   // Sync state from URL when user navigates back/forward
   useEffect(() => {
-    setSearchTerm(searchParams.get("search") || "");
-    setSelectedDept(searchParams.get("dept") || searchParams.get("department") || "all");
-    setSelectedMode(searchParams.get("mode") || searchParams.get("workMode") || "all");
-    setSelectedType(searchParams.get("type") || "all");
-    setSelectedExp(searchParams.get("exp") || searchParams.get("experienceLevel") || "all");
-    setSelectedSort(searchParams.get("sort") || "newest");
-    setVisibleCount(PAGE_SIZE);
+    startTransition(() => {
+      setSearchTerm(searchParams.get("search") || "");
+      setSelectedDept(searchParams.get("dept") || searchParams.get("department") || "all");
+      setSelectedMode(searchParams.get("mode") || searchParams.get("workMode") || "all");
+      setSelectedType(searchParams.get("type") || "all");
+      setSelectedExp(searchParams.get("exp") || searchParams.get("experienceLevel") || "all");
+      setSelectedSort(searchParams.get("sort") || "newest");
+      setVisibleCount(PAGE_SIZE);
+    });
   }, [searchParams]);
 
   // Sync state to URL with shallow replace
@@ -212,6 +219,8 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
   const displayedJobs = useMemo(() => {
     return filteredJobs.slice(0, visibleCount);
   }, [filteredJobs, visibleCount]);
+
+  const currentTimestamp = useSyncExternalStore(subscribeClientTime, getClientTime, getServerTime);
 
   const departments = useMemo(() => {
     const set = new Set<string>();
@@ -347,7 +356,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               </span>
             </div>
 
-            <h1 className="lg:text-6.5xl mb-6 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="mb-6 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
               Build Your Engineering Career With <br />
               <span className="text-[#1155CC]">TechSonance InfoTech LLP</span>
             </h1>
@@ -475,7 +484,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                       <h4 className="mb-3 text-base font-bold text-slate-900 transition-colors duration-200 group-hover:text-[#1155CC]">
                         {val.title}
                       </h4>
-                      <p className="text-slate-450 text-xs leading-relaxed font-medium">
+                      <p className="text-xs leading-relaxed font-medium text-slate-400">
                         {val.desc}
                       </p>
                     </div>
@@ -736,12 +745,12 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                   const closeTime = job.closesAt ? new Date(job.closesAt).getTime() : NaN;
                   const isNew = Boolean(
                     Number.isFinite(pubTime) &&
-                    Date.now() - pubTime <= 14 * 24 * 60 * 60 * 1000,
+                    currentTimestamp - pubTime <= 14 * 24 * 60 * 60 * 1000,
                   );
                   const isClosingSoon = Boolean(
                     Number.isFinite(closeTime) &&
-                    closeTime > Date.now() &&
-                    closeTime - Date.now() <= 7 * 24 * 60 * 60 * 1000,
+                    closeTime > currentTimestamp &&
+                    closeTime - currentTimestamp <= 7 * 24 * 60 * 60 * 1000,
                   );
 
                   return (
@@ -971,7 +980,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           id="talent-pool"
           className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8"
         >
-          <div className="via-slate-850 relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 to-blue-950 p-8 text-white shadow-xl sm:p-14">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-linear-to-br from-slate-900 via-slate-800 to-blue-950 p-8 text-white shadow-xl sm:p-14">
             <div className="pointer-events-none absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
             <div className="relative z-10 max-w-2xl space-y-5">

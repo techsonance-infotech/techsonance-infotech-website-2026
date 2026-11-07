@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { RefreshCw, X, CheckCircle2, AlertTriangle, Layers, Loader2 } from "lucide-react";
+import { RefreshCw, X, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { revalidateAdminCache } from "@/lib/api/admin-governance.api";
@@ -106,9 +106,9 @@ export function CacheRevalidateDialog({ isOpen, onClose }: CacheRevalidateDialog
 
         <form onSubmit={handleRevalidate} className="space-y-4">
           <div>
-            <label className="mb-2 block text-xs font-bold tracking-wider text-slate-600 uppercase dark:text-slate-400">
+            <span className="mb-2 block text-xs font-bold tracking-wider text-slate-600 uppercase dark:text-slate-400">
               Select Cache Tags to Invalidate
-            </label>
+            </span>
             <div className="flex flex-wrap gap-2">
               {availableTags.map((tag) => {
                 const isSelected = selectedTags.includes(tag);

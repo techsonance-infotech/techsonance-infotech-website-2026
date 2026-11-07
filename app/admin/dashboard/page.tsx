@@ -144,8 +144,7 @@ export default async function AdminDashboardPage() {
       <div className="animate-in fade-in space-y-8 duration-500">
         {/* Partial Outage Warning Banner */}
         {hasPartialFailure && (
-          <div
-            role="status"
+          <output
             className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-xs font-semibold text-amber-800"
           >
             <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
@@ -153,7 +152,7 @@ export default async function AdminDashboardPage() {
               Some operational metrics could not be synchronized with the database. Displaying
               currently available metrics.
             </p>
-          </div>
+          </output>
         )}
 
         {/* Header Banner */}

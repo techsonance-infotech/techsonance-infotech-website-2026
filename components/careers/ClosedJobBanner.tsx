@@ -8,7 +8,9 @@ interface ClosedJobBannerProps {
   similarJobs?: JobPosting[];
 }
 
-export function ClosedJobBanner({ status, similarJobs = [] }: ClosedJobBannerProps) {
+const EMPTY_SIMILAR_JOBS: JobPosting[] = [];
+
+export function ClosedJobBanner({ status, similarJobs = EMPTY_SIMILAR_JOBS }: ClosedJobBannerProps) {
   const isPaused = status === "PAUSED";
   const isClosed = status === "CLOSED";
 

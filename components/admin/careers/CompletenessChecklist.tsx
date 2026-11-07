@@ -414,7 +414,7 @@ export function CompletenessChecklist({
                 <div className="flex items-center justify-between gap-1.5 font-bold">
                   <div className="flex items-center gap-1.5 truncate">
                     <span className="truncate">{item.label}</span>
-                    <span className="py-0.2 rounded bg-amber-100 px-1.5 font-mono text-[9px] tracking-wider text-amber-700 uppercase dark:bg-amber-900/50 dark:text-amber-300">
+                    <span className="rounded bg-amber-100 px-1.5 py-0.5 font-mono text-[9px] tracking-wider text-amber-700 uppercase dark:bg-amber-900/50 dark:text-amber-300">
                       Required
                     </span>
                   </div>

@@ -168,7 +168,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
             <div className="col-span-1 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-9">
               {/* Main Content Render */}
               <div
-                className="prose prose-slate prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline max-w-none"
+                className="max-w-none text-slate-700 leading-relaxed [&>h1]:font-sora [&>h1]:font-medium [&>h2]:font-sora [&>h2]:font-medium [&>h3]:font-sora [&>h3]:font-medium [&>p]:text-slate-600 [&>p]:leading-relaxed [&>a]:text-[#1155CC] [&>a]:hover:underline"
                 dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 

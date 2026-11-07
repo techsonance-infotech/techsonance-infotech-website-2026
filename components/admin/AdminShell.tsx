@@ -111,7 +111,7 @@ export function AdminShell({
   return (
     <div
       data-lenis-prevent
-      className="flex h-[100dvh] h-screen flex-col overflow-hidden bg-[#F8FAFC] font-sans text-slate-800 antialiased md:flex-row"
+      className="flex h-[100dvh] flex-col overflow-hidden bg-[#F8FAFC] font-sans text-slate-800 antialiased md:flex-row"
     >
       {/* Mobile Top Bar */}
       <div className="z-30 flex shrink-0 items-center justify-between border-b border-slate-200 bg-white p-4 md:hidden">

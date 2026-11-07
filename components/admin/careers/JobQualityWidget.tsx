@@ -31,17 +31,17 @@ interface JobQualityWidgetProps {
   className?: string;
 }
 
+function getScoreColor(score: number): string {
+  if (score >= 85)
+    return "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800";
+  if (score >= 70)
+    return "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800";
+  return "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800";
+}
+
 export function JobQualityWidget({ data, onApplyFix, className = "" }: JobQualityWidgetProps) {
   const [expanded, setExpanded] = useState(false);
   const report: JobQualityReport = auditJobQuality(data);
-
-  const getScoreColor = (score: number) => {
-    if (score >= 85)
-      return "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800";
-    if (score >= 70)
-      return "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800";
-    return "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800";
-  };
 
   return (
     <div
@@ -101,9 +101,9 @@ export function JobQualityWidget({ data, onApplyFix, className = "" }: JobQualit
                 <span>Opportunities to Polish</span>
               </div>
               <div className="space-y-1.5">
-                {report.issues.map((issue, idx) => (
+                {report.issues.map((issue) => (
                   <div
-                    key={idx}
+                    key={`${issue.type}-${issue.word}-${issue.reason}`}
                     className="flex flex-col items-start justify-between gap-2 rounded-xl border border-slate-200 bg-white p-2.5 sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900"
                   >
                     <div>
@@ -152,9 +152,9 @@ export function JobQualityWidget({ data, onApplyFix, className = "" }: JobQualit
               <span>Passed Standards ({report.passedChecks.length})</span>
             </div>
             <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-              {report.passedChecks.map((check, idx) => (
+              {report.passedChecks.map((check) => (
                 <div
-                  key={idx}
+                  key={check}
                   className="flex items-center gap-1.5 text-[11px] font-medium text-slate-600 dark:text-slate-400"
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />

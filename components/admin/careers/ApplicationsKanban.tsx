@@ -5,12 +5,8 @@ import {
   Star,
   AlertTriangle,
   ArrowRight,
-  Clock,
-  MoreVertical,
-  CheckCircle2,
-  UserX,
-  Calendar,
   Briefcase,
+  Calendar,
 } from "lucide-react";
 import { ApplicationStatus } from "@/lib/constants/enums";
 import type { ApplicationItem } from "./ApplicationsTable";
@@ -186,12 +182,13 @@ export function ApplicationsKanban({
                   </div>
                 ) : (
                   colApps.map((app) => (
-                    <div
+                    <button
                       key={app.id}
+                      type="button"
                       draggable
                       onDragStart={(e) => handleDragStart(e, app.id)}
                       onClick={() => onSelectApplication(app.id)}
-                      className="group cursor-pointer space-y-2.5 rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs transition-all hover:border-[#1155CC]/50 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800 dark:hover:border-[#1155CC]/50"
+                      className="group cursor-pointer space-y-2.5 rounded-2xl border border-slate-200 bg-white p-3.5 text-left shadow-xs transition-all hover:border-[#1155CC]/50 hover:shadow-md dark:border-slate-700/80 dark:bg-slate-800 dark:hover:border-[#1155CC]/50"
                     >
                       {/* Top row: Name & Knockout warning */}
                       <div className="flex items-start justify-between gap-1">
@@ -261,7 +258,7 @@ export function ApplicationsKanban({
                           </button>
                         </div>
                       )}
-                    </div>
+                    </button>
                   ))
                 )}
               </div>

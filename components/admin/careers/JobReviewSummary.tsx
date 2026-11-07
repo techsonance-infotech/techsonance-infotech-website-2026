@@ -7,16 +7,11 @@ import {
   FileText,
   DollarSign,
   Settings2,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  Globe,
   Search,
   Eye,
   Calendar,
   Layers,
   Edit3,
-  ExternalLink,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -33,6 +28,10 @@ interface JobReviewSummaryProps {
   ) => void;
   className?: string;
 }
+
+const clientLoadedTime = typeof window !== "undefined" ? Date.now() : 0;
+const clientMinDateIso =
+  typeof window !== "undefined" ? new Date().toISOString().slice(0, 16) : "";
 
 export function JobReviewSummary({
   job,
@@ -83,7 +82,7 @@ export function JobReviewSummary({
     if (job.publishAt) {
       const pubDate = new Date(job.publishAt);
       if (!isNaN(pubDate.getTime())) {
-        if (pubDate.getTime() > Date.now()) {
+        if (pubDate.getTime() > clientLoadedTime) {
           parts.push(
             `This role is scheduled to automatically publish on ${pubDate.toLocaleDateString(
               undefined,
@@ -400,7 +399,10 @@ export function JobReviewSummary({
             <div className="grid grid-cols-1 gap-3 pt-2">
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                  <label
+                    htmlFor="review-seo-title"
+                    className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                  >
                     SEO Meta Title
                   </label>
                   <span
@@ -414,6 +416,7 @@ export function JobReviewSummary({
                   </span>
                 </div>
                 <Input
+                  id="review-seo-title"
                   placeholder="e.g. Lead Distributed Systems Engineer Careers | TechSonance"
                   value={job.seoTitle || ""}
                   onChange={(e) => updateField("seoTitle", e.target.value)}
@@ -427,7 +430,10 @@ export function JobReviewSummary({
 
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                  <label
+                    htmlFor="review-seo-desc"
+                    className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                  >
                     SEO Meta Description (Decoupled from Card Summary)
                   </label>
                   <span
@@ -441,6 +447,7 @@ export function JobReviewSummary({
                   </span>
                 </div>
                 <textarea
+                  id="review-seo-desc"
                   rows={2}
                   placeholder="Compelling snippet specifically engineered for search engine result pages (SERPs)."
                   value={job.seoDescription || ""}
@@ -488,10 +495,14 @@ export function JobReviewSummary({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="review-publish-at"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Scheduled Publish Date
                 </label>
                 <Input
+                  id="review-publish-at"
                   type="datetime-local"
                   value={job.publishAt ? new Date(job.publishAt).toISOString().slice(0, 16) : ""}
                   onChange={(e) =>
@@ -502,12 +513,16 @@ export function JobReviewSummary({
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="review-closes-at"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Application Deadline (closesAt)
                 </label>
                 <Input
+                  id="review-closes-at"
                   type="datetime-local"
-                  min={new Date().toISOString().slice(0, 16)}
+                  min={clientMinDateIso}
                   value={job.closesAt ? new Date(job.closesAt).toISOString().slice(0, 16) : ""}
                   onChange={(e) =>
                     updateField("closesAt", e.target.value ? new Date(e.target.value) : null)

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, startTransition } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -68,7 +68,9 @@ export default function AdminAIPage() {
   }, []);
 
   useEffect(() => {
-    void fetchJobs(false);
+    startTransition(() => {
+      void fetchJobs(false);
+    });
     // Auto-refresh every 8 seconds if there are running or queued jobs
     const interval = setInterval(() => {
       void fetchJobs(false);

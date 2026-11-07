@@ -99,7 +99,7 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
 
   // Sort
   if (filters.sortBy === "closing_soon") {
-    return filtered.sort((a, b) => {
+    return filtered.toSorted((a, b) => {
       const aDate = a.closesAt ? new Date(a.closesAt).getTime() : NaN;
       const bDate = b.closesAt ? new Date(b.closesAt).getTime() : NaN;
       const aTime = Number.isFinite(aDate) ? aDate : Infinity;
@@ -109,11 +109,11 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
   }
 
   if (filters.sortBy === "title") {
-    return filtered.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    return filtered.toSorted((a, b) => (a.title || "").localeCompare(b.title || ""));
   }
 
   // Default: newest first (if dates are available)
-  return filtered.sort((a, b) => {
+  return filtered.toSorted((a, b) => {
     const aDate = a.publishedAt ? new Date(a.publishedAt).getTime() : NaN;
     const bDate = b.publishedAt ? new Date(b.publishedAt).getTime() : NaN;
     const aTime = Number.isFinite(aDate) ? aDate : 0;

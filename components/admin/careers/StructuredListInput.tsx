@@ -43,9 +43,11 @@ export function splitPastedItems(text: string): string[] {
     .filter((s) => s.length > 0);
 }
 
+const DEFAULT_EMPTY_ITEMS: string[] = [];
+
 export function StructuredListInput({
   label,
-  items = [],
+  items = DEFAULT_EMPTY_ITEMS,
   onChange,
   placeholder = "Add an item or paste multiple bullet points...",
   required = false,
@@ -182,7 +184,7 @@ export function StructuredListInput({
         <div className="space-y-1.5 pt-1">
           {items.map((item, idx) => (
             <div
-              key={`${idx}-${item.slice(0, 10)}`}
+              key={item}
               className="group flex items-start justify-between gap-2 rounded-xl border border-slate-200/80 bg-slate-50 p-2.5 text-xs transition-colors hover:border-slate-300 dark:border-slate-800 dark:bg-slate-800/40 dark:hover:border-slate-700"
             >
               {editingIndex === idx ? (
@@ -198,7 +200,6 @@ export function StructuredListInput({
                         setEditingIndex(null);
                       }
                     }}
-                    autoFocus
                     className="h-7 rounded-lg text-xs"
                   />
                   <button

@@ -87,8 +87,8 @@ export const DEFAULT_JOB_FORM: JobFormData = {
   openingsCount: 1,
   summary: "",
   workMode: "hybrid",
-  location: "Bhubaneswar, India",
-  remoteEligibility: "Pan-India",
+  location: "Surat, Gujarat, India",
+  remoteEligibility: "Pan-India Remote",
   visaSupport: "no",
   type: "Full Time",
   experienceLevel: "Mid-Senior",
@@ -538,12 +538,27 @@ export function JobEditorForm({
     };
 
     const periodStr = period === "year" ? "yr" : period === "month" ? "mo" : "hr";
+    const isLpaApplicable = currency === "INR" && period === "year";
+
+    const formatLpa = (val: number) => {
+      const lpa = val / 100_000;
+      return Number.isInteger(lpa) ? `${lpa} LPA` : `${lpa.toFixed(1)} LPA`;
+    };
 
     if (min !== undefined && max !== undefined) {
+      if (isLpaApplicable && min >= 100_000 && max >= 100_000) {
+        return `${fmt(min)} – ${fmt(max)} (${formatLpa(min)} – ${formatLpa(max)}) / ${periodStr}`;
+      }
       return `${fmt(min)} – ${fmt(max)} / ${periodStr}`;
     }
     if (min !== undefined) {
+      if (isLpaApplicable && min >= 100_000) {
+        return `From ${fmt(min)} (${formatLpa(min)}) / ${periodStr}`;
+      }
       return `From ${fmt(min)} / ${periodStr}`;
+    }
+    if (isLpaApplicable && max! >= 100_000) {
+      return `Up to ${fmt(max!)} (${formatLpa(max!)}) / ${periodStr}`;
     }
     return `Up to ${fmt(max!)} / ${periodStr}`;
   };
@@ -776,10 +791,14 @@ export function JobEditorForm({
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+              <label
+                htmlFor="job-title-input"
+                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+              >
                 Job Title <span className="text-rose-500">*</span>
               </label>
               <Input
+                id="job-title-input"
                 required
                 placeholder="e.g. Lead Distributed Systems Engineer"
                 value={job.title || ""}
@@ -790,10 +809,14 @@ export function JobEditorForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-slug-input"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   URL Slug
                 </label>
                 <Input
+                  id="job-slug-input"
                   placeholder="e.g. lead-distributed-systems-engineer"
                   value={job.slug || ""}
                   onChange={(e) => updateField("slug", slugify(e.target.value))}
@@ -804,11 +827,15 @@ export function JobEditorForm({
                 </p>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-refcode-input"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Reference Code{" "}
                   <span className="font-normal text-slate-400 lowercase">(optional)</span>
                 </label>
                 <Input
+                  id="job-refcode-input"
                   placeholder="e.g. ENG-2026-04"
                   value={job.referenceCode || ""}
                   onChange={(e) => updateField("referenceCode", e.target.value)}
@@ -851,7 +878,10 @@ export function JobEditorForm({
 
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-summary-textarea"
+                  className="text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Role Summary (Job Card Snippet)
                 </label>
                 <span
@@ -865,6 +895,7 @@ export function JobEditorForm({
                 </span>
               </div>
               <Textarea
+                id="job-summary-textarea"
                 rows={3}
                 placeholder="Concise 1-2 sentence overview shown in job cards, search snippets, and mobile summaries."
                 value={job.summary || ""}
@@ -898,9 +929,9 @@ export function JobEditorForm({
             </div>
 
             <div>
-              <label className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+              <span className="mb-2 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
                 Work Mode <span className="text-rose-500">*</span>
-              </label>
+              </span>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { value: "on_site", label: "On-site", desc: "100% in-office hub" },
@@ -925,12 +956,16 @@ export function JobEditorForm({
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+              <label
+                htmlFor="job-location-input"
+                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+              >
                 Primary Location / City <span className="text-rose-500">*</span>
               </label>
               <Input
+                id="job-location-input"
                 required
-                placeholder="e.g. Bhubaneswar, India or Bengaluru, India"
+                placeholder="e.g. Surat, Gujarat, India or Bengaluru, India"
                 value={job.location || ""}
                 onChange={(e) => updateField("location", e.target.value)}
                 className="rounded-xl text-xs font-medium"
@@ -972,11 +1007,15 @@ export function JobEditorForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-remote-eligibility"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Remote Eligibility Region (India)
                 </label>
                 <Input
-                  placeholder="e.g. Pan-India, Odisha or Hybrid"
+                  id="job-remote-eligibility"
+                  placeholder="e.g. Pan-India, Gujarat or Hybrid"
                   value={job.remoteEligibility || ""}
                   onChange={(e) => updateField("remoteEligibility", e.target.value)}
                   className="rounded-xl text-xs font-medium"
@@ -1058,10 +1097,14 @@ export function JobEditorForm({
 
             {/* Description Markdown */}
             <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+              <label
+                htmlFor="job-description-textarea"
+                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+              >
                 Full Role Description <span className="text-rose-500">*</span>
               </label>
               <Textarea
+                id="job-description-textarea"
                 rows={6}
                 required
                 placeholder="In-depth narrative of the position, team mission, and impact on client systems."
@@ -1290,10 +1333,14 @@ export function JobEditorForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-salary-min-input"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Minimum Salary
                 </label>
                 <Input
+                  id="job-salary-min-input"
                   type="number"
                   min={0}
                   placeholder="e.g. 1200000"
@@ -1312,10 +1359,14 @@ export function JobEditorForm({
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-salary-max-input"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   Maximum Salary
                 </label>
                 <Input
+                  id="job-salary-max-input"
                   type="number"
                   min={0}
                   placeholder="e.g. 1800000"
@@ -1373,10 +1424,14 @@ export function JobEditorForm({
               )}
 
             <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+              <label
+                htmlFor="job-compensation-notes"
+                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+              >
                 Compensation Notes &amp; Equity
               </label>
               <Textarea
+                id="job-compensation-notes"
                 rows={3}
                 placeholder="e.g. Annual discretionary performance bonus, equity options for senior bands, health perks"
                 value={job.compensationNotes || ""}
@@ -1432,10 +1487,14 @@ export function JobEditorForm({
 
             {job.applicationMethod === "external" && (
               <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300">
+                <label
+                  htmlFor="job-external-apply-url"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                >
                   External Application URL <span className="text-rose-500">*</span>
                 </label>
                 <Input
+                  id="job-external-apply-url"
                   type="url"
                   placeholder="https://jobs.lever.co/techsonance/..."
                   value={job.externalApplyUrl || ""}
@@ -1542,10 +1601,14 @@ export function JobEditorForm({
                       </div>
 
                       <div>
-                        <label className="mb-1 block text-[10px] font-bold text-amber-600 uppercase">
+                        <label
+                          htmlFor={`knockout-input-${idx}`}
+                          className="mb-1 block text-[10px] font-bold text-amber-600 uppercase"
+                        >
                           Knockout Answer (Alerts ATS)
                         </label>
                         <Input
+                          id={`knockout-input-${idx}`}
                           placeholder="Optional disqualifying value"
                           value={String(q.knockoutAnswer ?? "")}
                           onChange={(e) =>

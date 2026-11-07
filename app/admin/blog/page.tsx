@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
 import { Plus, Search, ExternalLink, Edit, Trash2, RefreshCw, FileText, AlertCircle, X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,9 @@ export default function AdminBlogListPage() {
   );
 
   useEffect(() => {
-    fetchPosts(true);
+    startTransition(() => {
+      fetchPosts(true);
+    });
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -171,8 +173,7 @@ export default function AdminBlogListPage() {
 
       {/* Non-blocking Action Feedback */}
       {actionSuccess && (
-        <div
-          role="status"
+        <output
           className="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"
         >
           <div className="flex items-center gap-2">
@@ -180,12 +181,13 @@ export default function AdminBlogListPage() {
             <span>{actionSuccess}</span>
           </div>
           <button
+            type="button"
             onClick={() => setActionSuccess(null)}
             className="cursor-pointer font-bold text-emerald-900 hover:opacity-80 dark:text-emerald-200"
           >
             Dismiss
           </button>
-        </div>
+        </output>
       )}
 
       {actionError && (
@@ -320,7 +322,7 @@ export default function AdminBlogListPage() {
                         <td className="max-w-sm px-4 py-3.5">
                           <Link
                             href={`/admin/blog/${post.id}`}
-                            className="line-clamp-1 block font-bold text-slate-900 transition-colors hover:text-[#1155CC] dark:text-white"
+                            className="line-clamp-1 font-bold text-slate-900 transition-colors hover:text-[#1155CC] dark:text-white"
                           >
                             {post.title || "Untitled Article"}
                           </Link>
@@ -428,13 +430,13 @@ export default function AdminBlogListPage() {
 
       {/* Non-blocking Deletion Confirmation Modal */}
       {postToDelete && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs"
-        >
-          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="font-sora text-base font-bold text-slate-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+          <dialog
+            open
+            aria-labelledby="delete-article-title"
+            className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+          >
+            <h3 id="delete-article-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
               Permanently Delete Article?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
@@ -465,7 +467,7 @@ export default function AdminBlogListPage() {
                 )}
               </Button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
     </div>

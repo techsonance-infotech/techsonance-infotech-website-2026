@@ -399,6 +399,31 @@
   }
 }
 
+@utility animate-in {
+  animation-duration: var(--godui-duration-base, 200ms);
+  animation-fill-mode: both;
+}
+
+@utility fade-in {
+  animation-name: godui-fade-in;
+}
+
+@utility fade-out {
+  animation-name: godui-fade-out;
+}
+
+@utility zoom-in-95 {
+  animation-name: godui-fade-scale-in;
+}
+
+@utility zoom-out-95 {
+  animation-name: godui-fade-scale-out;
+}
+
+@utility slide-in-from-bottom {
+  transform: translateY(1rem);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Star, AlertTriangle, Eye, Clock, Mail, Phone } from "lucide-react";
+import { Star, AlertTriangle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationStatus } from "@/lib/constants/enums";
 import { safeInitials, formatDateSafe } from "@/lib/utils/formatters";
@@ -97,7 +97,7 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
                 className="group cursor-pointer transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40"
               >
                 {/* Candidate Name & Flags */}
-                <td className="px-6 py-4">
+                <td className="px-6 py-4" aria-label={`Candidate: ${app.candidateName}`}>
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1155CC]/10 font-bold text-[#1155CC]">
                       {safeInitials(app.candidateName)}

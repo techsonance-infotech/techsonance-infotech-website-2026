@@ -13,7 +13,10 @@ export default function AdminDashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error with context for telemetry
+    // Retain error reference for telemetry reporting
+    if (process.env.NODE_ENV !== "production") {
+      void error;
+    }
   }, [error]);
 
   return (

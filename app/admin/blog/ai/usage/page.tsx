@@ -1,22 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import React, { useState, useEffect, useCallback, startTransition } from "react";
 import {
-  Activity,
   Zap,
   BarChart3,
-  Clock,
-  ShieldCheck,
-  Server,
   RefreshCw,
   Cpu,
-  CheckCircle2,
-  AlertTriangle,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { getAdminAiUsage } from "@/lib/api/admin-ai.api";
 import type { AiTelemetrySummary } from "@/lib/contracts/admin-ai-usage.contract";
 
@@ -24,21 +17,29 @@ export default function AIUsageTelemetryPage() {
   const [data, setData] = useState<AiTelemetrySummary | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadTelemetry = async () => {
+  const loadTelemetry = useCallback(async () => {
     try {
-      setLoading(true);
+      startTransition(() => {
+        setLoading(true);
+      });
       const telemetry = await getAdminAiUsage();
-      setData(telemetry);
+      startTransition(() => {
+        setData(telemetry);
+      });
     } catch {
       // Non-blocking telemetry loading
     } finally {
-      setLoading(false);
+      startTransition(() => {
+        setLoading(false);
+      });
     }
-  };
+  }, []);
 
   useEffect(() => {
-    void loadTelemetry();
-  }, []);
+    startTransition(() => {
+      void loadTelemetry();
+    });
+  }, [loadTelemetry]);
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">

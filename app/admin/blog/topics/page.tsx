@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -10,13 +10,7 @@ import {
   XCircle,
   Play,
   Trash2,
-  Tag,
-  Users,
-  BarChart2,
   Clock,
-  ArrowRight,
-  Filter,
-  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,9 +59,9 @@ export default function TopicsBacklogPage() {
   const [newAudience, setNewAudience] = useState("Tech Leads & Engineers");
   const [newDifficulty, setNewDifficulty] = useState("intermediate");
 
-  const abortControllerRef = React.useRef<AbortController | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const loadTopics = async () => {
+  const loadTopics = useCallback(async () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -83,22 +77,26 @@ export default function TopicsBacklogPage() {
         },
         controller.signal,
       );
-      setTopics(data.topics);
+      startTransition(() => {
+        setTopics(data.topics);
+      });
     } catch {
       // Handled cleanly via boundary
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, search]);
 
   useEffect(() => {
-    void loadTopics();
+    startTransition(() => {
+      void loadTopics();
+    });
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
     };
-  }, [activeTab, search]);
+  }, [loadTopics]);
 
   const handleUpdateStatus = async (id: string, status: AiTopicStatus) => {
     try {
@@ -287,8 +285,14 @@ export default function TopicsBacklogPage() {
 
             <form onSubmit={handleCreateTopic} className="space-y-4">
               <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700">Topic Title</label>
+                <label
+                  htmlFor="new-topic-title"
+                  className="mb-1 block text-xs font-bold text-slate-700"
+                >
+                  Topic Title
+                </label>
                 <Input
+                  id="new-topic-title"
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
@@ -299,8 +303,14 @@ export default function TopicsBacklogPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1 block text-xs font-bold text-slate-700">Category</label>
+                  <label
+                    htmlFor="new-topic-category"
+                    className="mb-1 block text-xs font-bold text-slate-700"
+                  >
+                    Category
+                  </label>
                   <Input
+                    id="new-topic-category"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     placeholder="Engineering"
@@ -308,8 +318,14 @@ export default function TopicsBacklogPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-bold text-slate-700">Difficulty</label>
+                  <label
+                    htmlFor="new-topic-difficulty"
+                    className="mb-1 block text-xs font-bold text-slate-700"
+                  >
+                    Difficulty
+                  </label>
                   <select
+                    id="new-topic-difficulty"
                     value={newDifficulty}
                     onChange={(e) => setNewDifficulty(e.target.value)}
                     className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
@@ -322,10 +338,14 @@ export default function TopicsBacklogPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700">
+                <label
+                  htmlFor="new-topic-keywords"
+                  className="mb-1 block text-xs font-bold text-slate-700"
+                >
                   Target Keywords (comma-separated)
                 </label>
                 <Input
+                  id="new-topic-keywords"
                   value={newKeywords}
                   onChange={(e) => setNewKeywords(e.target.value)}
                   placeholder="Next.js 16, Turbopack, High Performance"
@@ -334,10 +354,14 @@ export default function TopicsBacklogPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold text-slate-700">
+                <label
+                  htmlFor="new-topic-audience"
+                  className="mb-1 block text-xs font-bold text-slate-700"
+                >
                   Target Audience
                 </label>
                 <Input
+                  id="new-topic-audience"
                   value={newAudience}
                   onChange={(e) => setNewAudience(e.target.value)}
                   placeholder="Tech Leads & Senior Engineers"
@@ -434,9 +458,9 @@ export default function TopicsBacklogPage() {
 
                 {topic.keywords && topic.keywords.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {topic.keywords.map((kw: string, i: number) => (
+                    {topic.keywords.map((kw: string) => (
                       <span
-                        key={i}
+                        key={`kw-${topic.id}-${kw}`}
                         className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
                       >
                         #{kw}
@@ -510,13 +534,13 @@ export default function TopicsBacklogPage() {
 
       {/* Non-blocking Topic Deletion Modal */}
       {topicToDelete && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs"
-        >
-          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="font-sora text-base font-bold text-slate-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+          <dialog
+            open
+            aria-labelledby="delete-topic-title"
+            className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+          >
+            <h3 id="delete-topic-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
               Delete Topic Proposal?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
@@ -541,7 +565,7 @@ export default function TopicsBacklogPage() {
                 {deleting ? "Deleting…" : "Delete Topic"}
               </Button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
     </div>

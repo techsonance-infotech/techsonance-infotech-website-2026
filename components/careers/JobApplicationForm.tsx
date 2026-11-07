@@ -35,13 +35,15 @@ export interface JobApplicationFormProps {
   onSuccess?: (applicationId: string) => void;
 }
 
+const DEFAULT_SCREENING_QUESTIONS: ScreeningQuestionItem[] = [];
+
 /**
  * Standard Job Application Form implementing React Hook Form and POST /api/careers/apply.
  */
 export function JobApplicationForm({
   jobId,
   jobTitle,
-  screeningQuestions = [],
+  screeningQuestions = DEFAULT_SCREENING_QUESTIONS,
   onSuccess,
 }: JobApplicationFormProps) {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -166,6 +168,11 @@ export function JobApplicationForm({
     }
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void handleSubmit(onSubmit)(e);
+  };
+
   // 1. Success State
   if (submittedRef) {
     return (
@@ -187,7 +194,7 @@ export function JobApplicationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleFormSubmit} className="space-y-6">
       {/* Bot Honeypot */}
       <input
         type="text"
@@ -253,7 +260,7 @@ export function JobApplicationForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div>
           <label
             htmlFor="apply-phone"
@@ -281,9 +288,29 @@ export function JobApplicationForm({
             id="apply-location"
             type="text"
             {...register("currentLocation")}
-            placeholder="e.g. Bhubaneswar, India"
+            placeholder="e.g. Surat, Gujarat / Bangalore"
             className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
           />
+        </div>
+
+        <div>
+          <label
+            htmlFor="apply-notice"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+          >
+            Notice Period
+          </label>
+          <select
+            id="apply-notice"
+            {...register("noticePeriodWeeks", { valueAsNumber: true })}
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
+          >
+            <option value={0}>Immediate Joiner (0 days)</option>
+            <option value={2}>15 Days (2 weeks)</option>
+            <option value={4}>30 Days / 1 Month (Standard)</option>
+            <option value={8}>60 Days / 2 Months</option>
+            <option value={12}>90 Days / 3 Months</option>
+          </select>
         </div>
       </div>
 
@@ -454,7 +481,7 @@ export function JobApplicationForm({
           />
           <span>
             I consent to the collection and processing of my personal data for the purpose of
-            evaluating my employment application in accordance with the Privacy Policy.{" "}
+            evaluating my employment application in accordance with the Privacy Policy and applicable data protection regulations (including the India Digital Personal Data Protection Act 2023).{" "}
             <span className="text-red-500">*</span>
           </span>
         </label>

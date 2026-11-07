@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   MapPin,
   Briefcase,
-  DollarSign,
   CheckCircle2,
   Sparkles,
   ArrowRight,
@@ -13,7 +12,6 @@ import {
   Monitor,
   Smartphone,
   HelpCircle,
-  Clock,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,7 +44,7 @@ export interface JobLivePreviewData {
   compensationNotes?: string;
   applicationMethod?: string;
   externalApplyUrl?: string;
-  screeningQuestions?: any[];
+  screeningQuestions?: unknown[];
   status?: string;
 }
 
@@ -56,6 +54,18 @@ interface JobLivePreviewProps {
   onViewportChange?: (viewport: "desktop" | "mobile") => void;
   showViewportControls?: boolean;
   className?: string;
+}
+
+function formatSalary(amount: number, currency = "INR"): string {
+  try {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `${currency} ${amount.toLocaleString()}`;
+  }
 }
 
 export function JobLivePreview({
@@ -74,18 +84,6 @@ export function JobLivePreview({
       onViewportChange(vp);
     } else {
       setInternalViewport(vp);
-    }
-  };
-
-  const formatSalary = (amount: number, currency = "INR") => {
-    try {
-      return new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency,
-        maximumFractionDigits: 0,
-      }).format(amount);
-    } catch {
-      return `${currency} ${amount.toLocaleString()}`;
     }
   };
 
@@ -275,9 +273,9 @@ export function JobLivePreview({
                 Key Responsibilities
               </h2>
               <ul className="space-y-2">
-                {job.responsibilities.map((resp, i) => (
+                {job.responsibilities.map((resp) => (
                   <li
-                    key={i}
+                    key={resp}
                     className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#1155CC]" />
@@ -295,9 +293,9 @@ export function JobLivePreview({
                 Requirements & Qualifications
               </h2>
               <ul className="space-y-2">
-                {job.requirements.map((req, i) => (
+                {job.requirements.map((req) => (
                   <li
-                    key={i}
+                    key={req}
                     className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
                     <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
@@ -315,9 +313,9 @@ export function JobLivePreview({
                 Bonus Points & Preferred Qualifications
               </h2>
               <ul className="space-y-2">
-                {job.preferredQualifications.map((bonus, i) => (
+                {job.preferredQualifications.map((bonus) => (
                   <li
-                    key={i}
+                    key={bonus}
                     className="flex items-start gap-2.5 text-xs text-slate-600 sm:text-sm dark:text-slate-300"
                   >
                     <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
@@ -335,9 +333,9 @@ export function JobLivePreview({
                 Tech Stack & Core Competencies
               </h2>
               <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill, i) => (
+                {job.skills.map((skill) => (
                   <span
-                    key={i}
+                    key={skill}
                     className="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
                     {skill}
@@ -354,9 +352,9 @@ export function JobLivePreview({
                 Perks & Benefits
               </h2>
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                {job.benefits.map((b, i) => (
+                {job.benefits.map((b) => (
                   <div
-                    key={i}
+                    key={b}
                     className="flex items-center gap-2 rounded-2xl border border-slate-100 bg-slate-50 p-3 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
@@ -376,7 +374,7 @@ export function JobLivePreview({
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {job.hiringProcess.map((step, idx) => (
                   <div
-                    key={idx}
+                    key={`${step.step || ""}-${step.title || ""}`}
                     className="rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40"
                   >
                     <div className="font-mono text-[10px] font-bold text-[#1155CC] uppercase">

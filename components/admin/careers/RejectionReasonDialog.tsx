@@ -49,12 +49,12 @@ export function RejectionReasonDialog({
   };
 
   return (
-    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
-      <div
-        role="dialog"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
+      <dialog
+        open
         aria-modal="true"
         aria-labelledby="reject-dialog-title"
-        className="animate-in zoom-in-95 w-full max-w-md space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
+        className="w-full max-w-md space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -142,14 +142,19 @@ export function RejectionReasonDialog({
         </div>
 
         {/* Optional notification toggle */}
-        <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200/60 bg-slate-50 p-3 dark:border-slate-800/60 dark:bg-slate-800/40">
+        <label
+          htmlFor="notify-candidate-checkbox"
+          aria-label="Send polite status update email"
+          className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200/60 bg-slate-50 p-3 dark:border-slate-800/60 dark:bg-slate-800/40"
+        >
           <input
+            id="notify-candidate-checkbox"
             type="checkbox"
             checked={notifyCandidate}
             onChange={(e) => setNotifyCandidate(e.target.checked)}
             className="mt-0.5 rounded border-slate-300 text-rose-600 focus:ring-rose-500"
           />
-          <div className="text-xs">
+          <span className="text-xs">
             <span className="flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">
               <Mail className="h-3.5 w-3.5 text-slate-400" />
               Send polite status update email
@@ -157,7 +162,7 @@ export function RejectionReasonDialog({
             <span className="mt-0.5 block text-[11px] text-slate-500">
               Notifies candidate their application has not progressed at this time.
             </span>
-          </div>
+          </span>
         </label>
 
         {/* Actions */}
@@ -189,7 +194,7 @@ export function RejectionReasonDialog({
             )}
           </Button>
         </div>
-      </div>
+      </dialog>
     </div>
   );
 }
