@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (14/14 Committed & 100% Verified)
+## 2. Completed Endpoints (16/16 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -43,6 +43,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 13 | `/api/careers/talent-pool` | `POST` | Public Talent Pool | ✅ Done & Tested | `bbb9fd7` |
 | 14 | `/api/admin/posts` | `GET`, `POST` | Blog / CMS Posts | ✅ Done & Tested | `6b30587` |
 | 15 | `/api/admin/posts/[id]` | `GET`, `PATCH`, `DELETE` | Post CRUD by ID | ✅ Done & Tested | `8032f1e` |
+| 16 | `/api/admin/posts/[id]/publish` | `POST` | Blog / CMS Publishing | ✅ Done & Tested | Pending Commit |
 
 ---
 
@@ -50,7 +51,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ### Phase A: Blog / CMS Publishing & Media (Immediate Next Priority)
 
-- [ ] **1. `POST /api/admin/posts/[id]/publish`**
+- [x] **1. `POST /api/admin/posts/[id]/publish`**
   - **Purpose**: Transitions a draft or in-review blog post into `PUBLISHED` state, sets `publishedAt = new Date()`, updates `versionId`, writes audit log (`post.publish`), and triggers on-demand cache revalidation for `posts` and `post:<slug>`.
   - **Controller**: `app/api/admin/posts/[id]/publish/route.ts`
   - **Service**: `AdminPostsService.publishPost(id, actorId, ipAddress)`
@@ -116,7 +117,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/posts/[id]/publish`"*.
+1. State: *"Proceed with `POST /api/admin/posts/[id]/submit`"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`

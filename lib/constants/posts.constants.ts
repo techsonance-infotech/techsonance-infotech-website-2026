@@ -9,6 +9,7 @@ export const POST_ERRORS = {
   FORBIDDEN_ORIGIN: "Forbidden origin: request rejected.",
   FORBIDDEN_ROLE: "Forbidden: your account does not have permission to create or edit posts.",
   FORBIDDEN_DELETE: "Forbidden: editor or higher required to delete posts.",
+  FORBIDDEN_PUBLISH: "Forbidden: editor or higher required to publish posts.",
   NOT_FOUND: "The requested post could not be found.",
   SLUG_EXISTS: "A post with this slug already exists.",
   VALIDATION_FAILED: "Post validation failed. Please check your inputs.",
@@ -18,8 +19,10 @@ export const POST_ERRORS = {
   FAILED_CREATE_POST: "Failed to create post due to an internal server error.",
   FAILED_UPDATE_POST: "Failed to update post due to an internal server error.",
   FAILED_DELETE_POST: "Failed to delete post due to an internal server error.",
+  FAILED_PUBLISH_POST: "Failed to publish post due to an internal server error.",
   SITE_REQUIRED: "Site ID is required to create a post.",
   POST_DELETED_SUCCESS: "Post deleted successfully",
+  POST_PUBLISHED_SUCCESS: "Post published successfully",
 } as const;
 
 export const POST_LIMITS = {

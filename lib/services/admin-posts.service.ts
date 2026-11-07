@@ -92,6 +92,7 @@ export class AdminPostsService {
     updates: Partial<InsertPost>,
     actorId?: string,
     ipAddress?: string,
+    auditAction: string = "post.update",
   ): Promise<Post> {
     const existing = await this.getPostById(id);
     if (!existing) {
@@ -119,7 +120,7 @@ export class AdminPostsService {
 
     const auditData = {
       actorId,
-      action: "post.update",
+      action: auditAction,
       entityType: "post",
       entityId: id,
       beforeState: existing as unknown as Record<string, unknown>,
@@ -158,6 +159,7 @@ export class AdminPostsService {
       },
       actorId,
       ipAddress,
+      "post.publish",
     );
 
     this.revalidatePostCache(updated.slug);
@@ -172,6 +174,7 @@ export class AdminPostsService {
       },
       actorId,
       ipAddress,
+      "post.submit",
     );
   }
 

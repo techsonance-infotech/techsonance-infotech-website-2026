@@ -143,3 +143,25 @@ export const deleteAdminPostContract = defineContract({
   response: deleteAdminPostResponseSchema,
   status: 200,
 });
+
+export const publishAdminPostContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.POST_PUBLISH(":id"),
+  auth: "required",
+  params: adminPostParamsSchema,
+  query: noQuery,
+  body: z.undefined(),
+  response: singleAdminPostResponseSchema,
+  status: 200,
+});
+
+export const submitAdminPostContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.POST_SUBMIT(":id"),
+  auth: "required",
+  params: adminPostParamsSchema,
+  query: noQuery,
+  body: z.undefined(),
+  response: singleAdminPostResponseSchema,
+  status: 200,
+});
