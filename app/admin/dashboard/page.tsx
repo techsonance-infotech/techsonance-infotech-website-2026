@@ -25,12 +25,22 @@ export default async function AdminDashboardPage() {
   const postsService = container.get(AdminPostsService);
   const jobsService = container.get(AdminJobsService);
 
-  const [postsRes, inReviewRes, publishedRes, jobsRes] = await Promise.all([
-    postsService.listPosts({ limit: 10 }),
-    postsService.listPosts({ status: "IN_REVIEW", limit: 5 }),
-    postsService.listPosts({ status: "PUBLISHED", limit: 1 }),
-    jobsService.listJobs({ status: JobStatus.OPEN, limit: 5 }),
-  ]);
+  const [postsSettled, inReviewSettled, publishedSettled, jobsSettled] =
+    await Promise.allSettled([
+      postsService.listPosts({ limit: 10 }),
+      postsService.listPosts({ status: "IN_REVIEW", limit: 5 }),
+      postsService.listPosts({ status: "PUBLISHED", limit: 1 }),
+      jobsService.listJobs({ status: JobStatus.OPEN, limit: 5 }),
+    ]);
+
+  const postsRes =
+    postsSettled.status === "fulfilled" ? postsSettled.value : { posts: [], total: 0 };
+  const inReviewRes =
+    inReviewSettled.status === "fulfilled" ? inReviewSettled.value : { posts: [], total: 0 };
+  const publishedRes =
+    publishedSettled.status === "fulfilled" ? publishedSettled.value : { posts: [], total: 0 };
+  const jobsRes =
+    jobsSettled.status === "fulfilled" ? jobsSettled.value : { jobs: [], total: 0 };
 
   const kpis = [
     {

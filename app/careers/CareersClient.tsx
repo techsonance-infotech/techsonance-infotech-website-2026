@@ -1019,14 +1019,14 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
               <Button
                 asChild
                 variant="secondary"
-                className="w-full border-transparent bg-white text-[#1155CC] shadow-md hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
+                className="w-full border-transparent bg-white font-bold text-[#1155CC] shadow-md hover:border-transparent hover:bg-slate-50 hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 <Link href="/about">About Company</Link>
               </Button>
               <Button
                 asChild
-                variant="secondary"
-                className="w-full border-white/40 text-white hover:border-white hover:bg-white/10 hover:text-white hover:shadow-lg focus:ring-white/20 sm:w-auto"
+                variant="outline"
+                className="w-full border-2 border-white/70 bg-white/10 font-bold text-white backdrop-blur-xs hover:border-white hover:bg-white hover:text-[#1155CC] hover:shadow-lg focus:ring-white/20 sm:w-auto"
               >
                 <Link href="/contact">Contact Us</Link>
               </Button>

@@ -201,17 +201,26 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       if (isNew) {
         const job = await createAdminJob({ ...updatedData, status: "DRAFT" });
         currentJobId = job.id;
+      } else {
+        await updateAdminJob(id, updatedData);
       }
 
-      const statusJob = await updateAdminJobStatus(currentJobId, {
-        targetStatus: "PUBLISHED",
-        comment: "Published directly to public careers portal.",
-      });
+      if (jobData.status !== "PUBLISHED" && jobData.status !== "OPEN") {
+        const statusJob = await updateAdminJobStatus(currentJobId, {
+          targetStatus: "PUBLISHED",
+          comment: "Published directly to public careers portal.",
+        });
+        setJobData(toJobFormData(statusJob));
+      } else {
+        const refreshed = await getAdminJob(currentJobId);
+        setJobData(toJobFormData(refreshed));
+      }
 
-      setJobData(toJobFormData(statusJob));
       setAlertMessage({
         type: "success",
-        text: "Role is now LIVE on the public careers portal!",
+        text: isNew
+          ? "Role is now LIVE on the public careers portal!"
+          : "Role details updated and live changes saved!",
       });
       if (isNew) {
         router.replace(`/admin/careers/jobs/${currentJobId}`);

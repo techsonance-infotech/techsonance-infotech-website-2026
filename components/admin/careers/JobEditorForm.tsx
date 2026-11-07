@@ -439,7 +439,9 @@ export function JobEditorForm({
   };
 
   const completeness = evaluateCompleteness(job);
-  const canPublishDirectly = job.status === "DRAFT" || job.status === "IN_REVIEW" || !job.status;
+  const isAlreadyPublished = job.status === "PUBLISHED" || job.status === "OPEN";
+  const canPublishDirectly =
+    job.status === "DRAFT" || job.status === "IN_REVIEW" || !job.status || isAlreadyPublished;
   const isPublishDisabled = isSaving || saveStatus === "saving" || hasBlockingError;
 
   const getFieldTab = (
@@ -1633,7 +1635,7 @@ export function JobEditorForm({
                 className="cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>Publish Role Now</span>
+                <span>{isAlreadyPublished ? "Update Published Role" : "Publish Role Now"}</span>
               </Button>
             ) : (
               <Button

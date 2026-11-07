@@ -43,7 +43,7 @@
     "motion": "^14.9.0",
     "next": "^16.4.4",
     "nodemailer": "^10.3.1",
-    "postgres": "^4.0.0",
+    "postgres": "^4.1.0",
     "radix-ui": "^1.8.1",
     "react": "^19.1.10",
     "react-dom": "^19.1.10",
@@ -61,13 +61,13 @@
     "drizzle-kit": "^1.0.0-rc.5",
     "gitnexus": "^1.6.12",
     "oxfmt": "^0.76.0",
-    "oxlint": "^1.90.0",
+    "oxlint": "^1.91.0",
     "oxlint-tailwindcss": "^1.17.1",
     "react-doctor": "^0.9.22",
     "tailwindcss": "^4.3.4",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5",
+    "vite": "^8.3.6",
     "vitest": "^5.1.0"
   }
 }

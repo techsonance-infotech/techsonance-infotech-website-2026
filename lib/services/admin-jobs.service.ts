@@ -29,7 +29,7 @@ export class AdminJobsService {
         error: String(error),
         cause: error?.cause ? String(error.cause?.message || error.cause) : undefined,
       });
-      throw error;
+      return { jobs: [], total: 0 };
     }
   }
 
@@ -223,7 +223,12 @@ export class AdminJobsService {
 
       case JobStatus.PUBLISHED:
       case JobStatus.OPEN:
-        if (targetStatus === JobStatus.PAUSED || targetStatus === JobStatus.CLOSED) {
+        if (
+          targetStatus === JobStatus.PAUSED ||
+          targetStatus === JobStatus.CLOSED ||
+          targetStatus === JobStatus.IN_REVIEW ||
+          targetStatus === JobStatus.DRAFT
+        ) {
           break;
         }
         throw new AppError(

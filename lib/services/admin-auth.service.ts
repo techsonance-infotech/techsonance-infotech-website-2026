@@ -87,9 +87,7 @@ export class AdminAuthService {
     try {
       const env = getEnv();
 
-      // Resolve real site from DB if accessible
-      const defaultSite = await this.usersRepo.getDefaultSite().catch(() => null);
-      const site: Site = defaultSite ?? {
+      const fallbackSite: Site = {
         id: "00000000-0000-0000-0000-000000000001",
         name: "TechSonance Main Site",
         slug: "techsonance-main",
@@ -98,12 +96,20 @@ export class AdminAuthService {
         updatedAt: new Date(),
       };
 
+      // Resolve real site from DB if accessible (bounded by 1500ms to avoid freezing SSR)
+      const sitePromise = this.usersRepo.getDefaultSite().catch(() => null);
+      const siteTimeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+      const defaultSite = await Promise.race([sitePromise, siteTimeout]);
+      const site: Site = defaultSite ?? fallbackSite;
+
       // 1. Read session from secure cookie
       const cookieSession = await getSessionFromCookies();
 
       if (cookieSession) {
         try {
-          const user = await this.usersRepo.findById(cookieSession.userId);
+          const userPromise = this.usersRepo.findById(cookieSession.userId);
+          const userTimeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+          const user = await Promise.race([userPromise, userTimeout]);
 
           if (user && user.isActive) {
             return {

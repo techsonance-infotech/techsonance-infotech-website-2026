@@ -3,7 +3,10 @@ import crypto from "node:crypto";
 import { inject } from "@needle-di/core";
 import { ENV_CONFIG_TOKEN, SUPABASE_CLIENT_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database/index";
-import { ApplicationStatus, JobExperienceLevel } from "@/lib/database/enum/content.enum";
+import {
+  ApplicationStatus,
+  JobExperienceLevel,
+} from "@/lib/database/enum/content.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
 import { logger } from "@/lib/logger";
 import { getEnv, type Env } from "@/lib/env";
@@ -125,7 +128,9 @@ export class CareerApplyService {
   private repository: CareerApplicationsRepository;
 
   constructor(
-    repoOrDb: CareerApplicationsRepository | Database = inject(CareerApplicationsRepository),
+    repoOrDb: CareerApplicationsRepository | Database = inject(
+      CareerApplicationsRepository,
+    ),
     emailService?: EmailService,
     supabaseAdmin?: SupabaseClient | null,
     env?: Env,
@@ -157,7 +162,8 @@ export class CareerApplyService {
 
     if (this.supabaseAdmin === undefined) {
       try {
-        this.supabaseAdmin = inject(SUPABASE_CLIENT_TOKEN) || createAdminClient();
+        this.supabaseAdmin =
+          inject(SUPABASE_CLIENT_TOKEN) || createAdminClient();
       } catch {
         this.supabaseAdmin = null;
       }
@@ -188,7 +194,9 @@ export class CareerApplyService {
 
     const fileName = (file.name || "").toLowerCase();
     const isAllowedExt =
-      fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".doc");
+      fileName.endsWith(".pdf") ||
+      fileName.endsWith(".docx") ||
+      fileName.endsWith(".doc");
 
     if (!ALLOWED_MIME_TYPES.has(file.type) && !isAllowedExt) {
       throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_BAD_FORMAT);
@@ -206,10 +214,12 @@ export class CareerApplyService {
     }
 
     if (bytes.length >= 4) {
-      const isPdfExt = fileName.endsWith(".pdf") || file.type === "application/pdf";
+      const isPdfExt =
+        fileName.endsWith(".pdf") || file.type === "application/pdf";
       const isDocxExt =
         fileName.endsWith(".docx") ||
-        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
       if (isPdfExt) {
         const matchesPdf =
@@ -221,7 +231,10 @@ export class CareerApplyService {
           bytes[4] === PDF_MAGIC[4];
 
         if (!matchesPdf) {
-          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_PDF_MAGIC);
+          throw new AppError(
+            "UNSUPPORTED_MEDIA",
+            CAREER_ERRORS.RESUME_PDF_MAGIC,
+          );
         }
       } else if (isDocxExt) {
         const matchesDocx =
@@ -231,7 +244,10 @@ export class CareerApplyService {
           bytes[3] === DOCX_MAGIC[3];
 
         if (!matchesDocx) {
-          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_DOCX_MAGIC);
+          throw new AppError(
+            "UNSUPPORTED_MEDIA",
+            CAREER_ERRORS.RESUME_DOCX_MAGIC,
+          );
         }
       }
     }
@@ -255,12 +271,39 @@ export class CareerApplyService {
 
     if (this.supabaseAdmin?.storage) {
       try {
-        const { error: uploadError } = await this.supabaseAdmin.storage
+        let { error: uploadError } = await this.supabaseAdmin.storage
           .from(RESUME_BUCKET)
           .upload(storagePath, fileBuffer, {
             contentType: mimeType || "application/pdf",
             upsert: false,
           });
+
+        // If bucket doesn't exist, auto-create it using admin service role and retry
+        if (
+          uploadError &&
+          (uploadError.message?.toLowerCase().includes("bucket not found") ||
+            (uploadError as unknown as { statusCode?: string | number }).statusCode === "404" ||
+            (uploadError as unknown as { statusCode?: string | number }).statusCode === 404)
+        ) {
+          const { error: createError } = await this.supabaseAdmin.storage.createBucket(
+            RESUME_BUCKET,
+            {
+              public: false,
+              fileSizeLimit: MAX_RESUME_BYTES,
+              allowedMimeTypes: Array.from(ALLOWED_RESUME_MIME_TYPES),
+            },
+          );
+
+          if (!createError) {
+            const retry = await this.supabaseAdmin.storage
+              .from(RESUME_BUCKET)
+              .upload(storagePath, fileBuffer, {
+                contentType: mimeType || "application/pdf",
+                upsert: false,
+              });
+            uploadError = retry.error;
+          }
+        }
 
         if (uploadError) {
           logger.warn(`Storage upload warning: ${uploadError.message}`);
@@ -280,7 +323,10 @@ export class CareerApplyService {
   async submitApplication(payload: ApplicationSubmitPayload) {
     // 1. Consent validation
     if (!payload.privacyConsent) {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.PRIVACY_CONSENT_REQUIRED);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.PRIVACY_CONSENT_REQUIRED,
+      );
     }
 
     // 2. Resume file validation (including magic bytes)
@@ -294,16 +340,25 @@ export class CareerApplyService {
     }
 
     if (job.status !== "PUBLISHED" && job.status !== "OPEN") {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.JOB_NOT_ACCEPTING);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.JOB_NOT_ACCEPTING,
+      );
     }
 
     if (job.closesAt && new Date(job.closesAt).getTime() < Date.now()) {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.JOB_DEADLINE_PASSED);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.JOB_DEADLINE_PASSED,
+      );
     }
 
     // 4. Check for duplicate application
     const normalizedEmail = payload.email.trim().toLowerCase();
-    const existing = await this.repository.findExistingApplication(payload.jobId, normalizedEmail);
+    const existing = await this.repository.findExistingApplication(
+      payload.jobId,
+      normalizedEmail,
+    );
     if (existing) {
       throw new AppError("CONFLICT", CAREER_ERRORS.DUPLICATE_APPLICATION);
     }
@@ -314,7 +369,11 @@ export class CareerApplyService {
       ? (job.screeningQuestions as any[])
       : [];
 
-    if (questions.length > 0 && payload.screeningAnswers && payload.screeningAnswers.length > 0) {
+    if (
+      questions.length > 0 &&
+      payload.screeningAnswers &&
+      payload.screeningAnswers.length > 0
+    ) {
       for (const answer of payload.screeningAnswers) {
         const questionDef = questions.find((q) => q.id === answer.questionId);
         if (questionDef && questionDef.knockoutAnswer !== undefined) {
@@ -394,7 +453,9 @@ export class CareerApplyService {
           disabilityStatus: payload.eeoc.disabilityStatus?.trim() || null,
         });
       } catch (eeocErr) {
-        logger.warn(`Failed to store anonymous EEOC response: ${String(eeocErr)}`);
+        logger.warn(
+          `Failed to store anonymous EEOC response: ${String(eeocErr)}`,
+        );
       }
     }
 
@@ -418,14 +479,15 @@ export class CareerApplyService {
           html: candidateEmail.html,
         })
         .catch((err) =>
-          logger.error(`Failed to send candidate confirmation email: ${String(err)}`),
+          logger.error(
+            `Failed to send candidate confirmation email: ${String(err)}`,
+          ),
         );
 
       // Email B: Recruiter notification
       const recruiterRecipient =
-        ((this.envConfig as Record<string, unknown>)?.RECRUITER_NOTIFICATION_EMAIL as
-          | string
-          | undefined) ??
+        ((this.envConfig as Record<string, unknown>)
+          ?.RECRUITER_NOTIFICATION_EMAIL as string | undefined) ??
         this.envConfig?.ADMIN_EMAIL ??
         DEFAULT_RECRUITER_EMAIL;
 
@@ -445,7 +507,9 @@ export class CareerApplyService {
           text: recruiterEmail.text,
           html: recruiterEmail.html,
         })
-        .catch((err) => logger.error(`Failed to send recruiter alert email: ${String(err)}`));
+        .catch((err) =>
+          logger.error(`Failed to send recruiter alert email: ${String(err)}`),
+        );
     }
 
     return application;
@@ -456,13 +520,19 @@ export class CareerApplyService {
    */
   async submitTalentPool(payload: TalentPoolSubmitPayload) {
     if (!payload.name || payload.name.trim().length < 2) {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.TALENT_NAME_TOO_SHORT);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.TALENT_NAME_TOO_SHORT,
+      );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const normalizedEmail = (payload.email || "").trim().toLowerCase();
     if (!emailRegex.test(normalizedEmail)) {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.TALENT_EMAIL_INVALID);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.TALENT_EMAIL_INVALID,
+      );
     }
 
     // Resolve site ID
@@ -491,7 +561,9 @@ export class CareerApplyService {
               upsert: false,
             });
         } catch (uploadErr) {
-          logger.warn(`Talent pool resume storage upload warning: ${String(uploadErr)}`);
+          logger.warn(
+            `Talent pool resume storage upload warning: ${String(uploadErr)}`,
+          );
         }
       }
     }
@@ -503,7 +575,8 @@ export class CareerApplyService {
       phone: payload.phone?.trim() || null,
       skills: payload.skills || [],
       preferredRole: payload.preferredRole?.trim() || null,
-      experienceLevel: (payload.experienceLevel as any) || JobExperienceLevel.MID,
+      experienceLevel:
+        (payload.experienceLevel as any) || JobExperienceLevel.MID,
       portfolioUrl: payload.portfolioUrl?.trim() || null,
       resumeStoragePath,
       notes: payload.notes?.trim() || null,
@@ -528,7 +601,9 @@ export class CareerApplyService {
           html: talentEmail.html,
         })
         .catch((err) =>
-          logger.error(`Failed to send talent pool confirmation email: ${String(err)}`),
+          logger.error(
+            `Failed to send talent pool confirmation email: ${String(err)}`,
+          ),
         );
     }
 
@@ -550,7 +625,10 @@ export class CareerApplyService {
     const message = payload.message.trim();
 
     if (!fullName) {
-      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.FULL_NAME_REQUIRED);
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        CAREER_ERRORS.FULL_NAME_REQUIRED,
+      );
     }
     if (!email) {
       throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.EMAIL_REQUIRED);
@@ -590,7 +668,9 @@ export class CareerApplyService {
               upsert: false,
             });
         } catch (uploadErr) {
-          logger.warn(`Inquiry resume storage upload warning: ${String(uploadErr)}`);
+          logger.warn(
+            `Inquiry resume storage upload warning: ${String(uploadErr)}`,
+          );
         }
       }
     }
@@ -612,7 +692,9 @@ export class CareerApplyService {
         consentDate: new Date(),
       });
     } catch (dbErr) {
-      logger.warn(`Could not save inquiry candidate to talent pool: ${String(dbErr)}`);
+      logger.warn(
+        `Could not save inquiry candidate to talent pool: ${String(dbErr)}`,
+      );
     }
 
     // Render & dispatch recruiter alert email
