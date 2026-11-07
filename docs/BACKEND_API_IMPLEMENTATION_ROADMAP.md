@@ -43,7 +43,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 13 | `/api/careers/talent-pool` | `POST` | Public Talent Pool | ✅ Done & Tested | `bbb9fd7` |
 | 14 | `/api/admin/posts` | `GET`, `POST` | Blog / CMS Posts | ✅ Done & Tested | `6b30587` |
 | 15 | `/api/admin/posts/[id]` | `GET`, `PATCH`, `DELETE` | Post CRUD by ID | ✅ Done & Tested | `8032f1e` |
-| 16 | `/api/admin/posts/[id]/publish` | `POST` | Blog / CMS Publishing | ✅ Done & Tested | Pending Commit |
+| 16 | `/api/admin/posts/[id]/publish` | `POST` | Blog / CMS Publishing | ✅ Done & Tested | `cf4bae2` |
 
 ---
 
