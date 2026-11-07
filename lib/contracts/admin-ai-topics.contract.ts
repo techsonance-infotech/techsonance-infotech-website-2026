@@ -157,3 +157,20 @@ export const suggestAiTopicsContract = defineContract({
   response: suggestAiTopicsResponseSchema,
   status: 200,
 });
+
+export const launchAiTopicResponseSchema = z.object({
+  success: z.boolean(),
+  jobId: z.string().uuid(),
+  message: z.string(),
+});
+
+export const launchAiTopicContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(":id") as `/api/${string}`,
+  auth: "required",
+  params: aiTopicParamsSchema,
+  query: noQuery,
+  body: noBody,
+  response: launchAiTopicResponseSchema,
+  status: 200,
+});

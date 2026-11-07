@@ -113,7 +113,7 @@ export default function TopicsBacklogPage() {
   const handleLaunchGeneration = async (id: string) => {
     try {
       showMessage("Launching autonomous generation pipeline...");
-      const res = await fetch(`/api/admin/ai/topics/${id}/launch`, { method: "POST" });
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(id), { method: "POST" });
       const data = await res.json();
       if (res.ok) {
         setTopics((prev) =>
