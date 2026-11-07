@@ -9,7 +9,7 @@ import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 import { AIWriterService } from "./ai-writer.service";
 import { JobOrchestratorService } from "./job-orchestrator.service";
 import { logger } from "../logger";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 
 export interface ListTopicsOptions extends ListAdminTopicsOptions {}
 
@@ -65,7 +65,7 @@ export class AdminTopicsService {
     });
 
     if (!updated) {
-      throw new AppError("NOT_FOUND", `Topic not found: ${id}`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Topic not found: ${id}`);
     }
 
     return updated;
@@ -74,7 +74,7 @@ export class AdminTopicsService {
   async deleteTopic(id: string): Promise<void> {
     const success = await this.topicsRepo.delete(id);
     if (!success) {
-      throw new AppError("NOT_FOUND", `Topic not found: ${id}`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Topic not found: ${id}`);
     }
   }
 
@@ -105,7 +105,7 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
       }>;
 
       if (!Array.isArray(topicProposals) || topicProposals.length === 0) {
-        throw new AppError("INTERNAL", "Invalid proposals payload from LLM");
+        throw new AppError(ErrorCode.INTERNAL, "Invalid proposals payload from LLM");
       }
 
       const insertedTopics: Topic[] = [];
@@ -171,7 +171,7 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
   async launchTopicGeneration(topicId: string): Promise<{ jobId: string }> {
     const topic = await this.getTopicById(topicId);
     if (!topic) {
-      throw new AppError("NOT_FOUND", `Topic not found: ${topicId}`);
+      throw new AppError(ErrorCode.NOT_FOUND, `Topic not found: ${topicId}`);
     }
 
     // Mark topic as QUEUED

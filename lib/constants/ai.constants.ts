@@ -41,6 +41,7 @@ export const AI_TOPICS_ERRORS = {
   UPDATE_FAILED: "Failed to update AI topic status",
   DELETE_FAILED: "Failed to delete AI topic",
   LIST_FAILED: "Failed to list AI topics",
+  SUGGEST_FAILED: "Failed to generate AI topic suggestions",
   INVALID_STATUS: "Valid status required: SUGGESTED, ACCEPTED, QUEUED, GENERATED, or REJECTED",
 } as const;
 
@@ -48,4 +49,5 @@ export const AI_TOPICS_MESSAGES = {
   TOPIC_CREATED: "Topic added to backlog successfully.",
   STATUS_UPDATED: "Topic status updated successfully.",
   TOPIC_DELETED: "Topic removed successfully.",
+  TOPICS_SUGGESTED: "AI topic suggestions generated and added to backlog.",
 } as const;

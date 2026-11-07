@@ -132,7 +132,7 @@ export default function TopicsBacklogPage() {
     try {
       setIsSuggesting(true);
       showMessage("AI Strategist generating high-ranking topic ideas...");
-      const res = await fetch("/api/admin/ai/topics/suggest", {
+      const res = await fetch(API_ENDPOINTS.ADMIN.AI.TOPIC_SUGGEST, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ category: "Agentic AI & Next.js 16" }),

@@ -128,3 +128,32 @@ export const deleteAiTopicContract = defineContract({
   response: z.object({ success: z.boolean() }),
   status: 200,
 });
+
+export const suggestAiTopicsSchema = z.strictObject({
+  category: z
+    .string()
+    .trim()
+    .max(AI_TOPICS_LIMITS.CATEGORY_MAX)
+    .optional()
+    .default("Full-Stack & Agentic AI"),
+});
+
+export type SuggestAiTopicsInput = z.input<typeof suggestAiTopicsSchema>;
+export type SuggestAiTopicsOutput = z.output<typeof suggestAiTopicsSchema>;
+
+export const suggestAiTopicsResponseSchema = z.object({
+  success: z.boolean(),
+  count: z.number().int().min(0),
+  topics: z.array(z.any()),
+});
+
+export const suggestAiTopicsContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.AI.TOPIC_SUGGEST,
+  auth: "required",
+  params: noParams,
+  query: noQuery,
+  body: suggestAiTopicsSchema,
+  response: suggestAiTopicsResponseSchema,
+  status: 200,
+});
