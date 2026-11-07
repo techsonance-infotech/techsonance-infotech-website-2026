@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { motion, useScroll, useSpring } from "motion/react";
+import { LazyMotion, domAnimation, m, useScroll, useSpring } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
 import { Icon } from "@/app/components/icons/Icon";
@@ -28,12 +28,12 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
   });
 
   return (
-    <>
+    <LazyMotion features={domAnimation} strict>
       <SiteHeader transparent={true} />
 
       {/* Sticky Top Progress Bar */}
-      <motion.div
-        className="fixed top-0 right-0 left-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-[#1155CC] to-[#22B6F6]"
+      <m.div
+        className="fixed top-0 right-0 left-0 z-[60] h-[3px] origin-left bg-linear-to-r from-[#1155CC] to-[#22B6F6]"
         style={{ scaleX }}
       />
 
@@ -248,6 +248,6 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
         )}
       </main>
       <SiteFooter />
-    </>
+    </LazyMotion>
   );
 }
