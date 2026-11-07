@@ -23,6 +23,8 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
   const experienceFilter = (filters.experienceLevel || "").trim().toLowerCase();
 
   const filtered = jobs.filter((job) => {
+    if (!job || typeof job !== "object") return false;
+
     // 1. Department filter
     if (departmentFilter && departmentFilter !== "all") {
       if ((job.department || "").toLowerCase() !== departmentFilter) {
@@ -84,7 +86,7 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
       const inDesc = (job.description || "").toLowerCase().includes(searchKeyword);
       const inSummary = (job.summary || "").toLowerCase().includes(searchKeyword);
       const inSkills = Array.isArray(job.skills)
-        ? job.skills.some((s) => s.toLowerCase().includes(searchKeyword))
+        ? job.skills.some((s) => typeof s === "string" && s.toLowerCase().includes(searchKeyword))
         : false;
 
       if (!inTitle && !inDept && !inLoc && !inDesc && !inSummary && !inSkills) {
@@ -98,8 +100,10 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
   // Sort
   if (filters.sortBy === "closing_soon") {
     return filtered.sort((a, b) => {
-      const aTime = a.closesAt ? new Date(a.closesAt).getTime() : Infinity;
-      const bTime = b.closesAt ? new Date(b.closesAt).getTime() : Infinity;
+      const aDate = a.closesAt ? new Date(a.closesAt).getTime() : NaN;
+      const bDate = b.closesAt ? new Date(b.closesAt).getTime() : NaN;
+      const aTime = Number.isFinite(aDate) ? aDate : Infinity;
+      const bTime = Number.isFinite(bDate) ? bDate : Infinity;
       return aTime - bTime;
     });
   }
@@ -110,8 +114,10 @@ export function filterJobs(jobs: JobPosting[], filters: FilterOptions): JobPosti
 
   // Default: newest first (if dates are available)
   return filtered.sort((a, b) => {
-    const aTime = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
-    const bTime = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+    const aDate = a.publishedAt ? new Date(a.publishedAt).getTime() : NaN;
+    const bDate = b.publishedAt ? new Date(b.publishedAt).getTime() : NaN;
+    const aTime = Number.isFinite(aDate) ? aDate : 0;
+    const bTime = Number.isFinite(bDate) ? bDate : 0;
     return bTime - aTime;
   });
 }

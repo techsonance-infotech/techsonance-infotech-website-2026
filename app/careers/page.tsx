@@ -3,6 +3,10 @@ import { Suspense } from "react";
 import CareersClient from "./CareersClient";
 import { SEO_METADATA } from "@/lib/seo-aeo-geo-config";
 import { getJobSource } from "@/lib/content/jobs";
+import { JobStatus } from "@/lib/constants/enums";
+import type { JobPosting } from "@/lib/content/types";
+import { publicJobListBoundarySchema } from "@/lib/validations/public-careers-boundary.schema";
+import CareersLoading from "./loading";
 
 export const metadata: Metadata = {
   title: SEO_METADATA.careers.title,
@@ -20,14 +24,22 @@ export const metadata: Metadata = {
 };
 
 export default async function CareersPage() {
-  const jobSource = getJobSource();
-  let jobs = await jobSource.list({ status: "PUBLISHED" });
-  if (!jobs || jobs.length === 0) {
-    jobs = await jobSource.list({ status: "OPEN" });
+  let jobs: JobPosting[] = [];
+
+  try {
+    const jobSource = getJobSource();
+    let rawJobs = await jobSource.list({ status: JobStatus.PUBLISHED });
+    if (!rawJobs || rawJobs.length === 0) {
+      rawJobs = await jobSource.list({ status: JobStatus.OPEN });
+    }
+    jobs = publicJobListBoundarySchema.parse(rawJobs);
+  } catch {
+    // If DB is temporarily unavailable, fall back to empty array and let client show safe fallback
+    jobs = [];
   }
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-slate-950" />}>
+    <Suspense fallback={<CareersLoading />}>
       <CareersClient initialJobs={jobs} />
     </Suspense>
   );

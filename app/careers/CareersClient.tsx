@@ -193,7 +193,10 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
     router.replace(pathname, { scroll: false });
   };
 
-  const allJobs = useMemo(() => initialJobs || [], [initialJobs]);
+  const allJobs = useMemo(() => {
+    if (!initialJobs || !Array.isArray(initialJobs)) return [];
+    return initialJobs.filter((j): j is JobPosting => j !== null && typeof j === "object");
+  }, [initialJobs]);
 
   const filteredJobs = useMemo(() => {
     return filterJobs(allJobs, {
@@ -213,7 +216,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
   const departments = useMemo(() => {
     const set = new Set<string>();
     allJobs.forEach((j) => {
-      if (j.department) set.add(j.department);
+      if (j?.department && typeof j.department === "string") set.add(j.department);
     });
     return ["All", ...Array.from(set)];
   }, [allJobs]);
@@ -728,27 +731,29 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
           <div className="relative z-10 mx-auto max-w-4xl space-y-6">
             {displayedJobs.length > 0 ? (
               <>
-                {displayedJobs.map((job) => {
+                {displayedJobs.map((job, idx) => {
+                  const pubTime = job.publishedAt ? new Date(job.publishedAt).getTime() : NaN;
+                  const closeTime = job.closesAt ? new Date(job.closesAt).getTime() : NaN;
                   const isNew = Boolean(
-                    job.publishedAt &&
-                    Date.now() - new Date(job.publishedAt).getTime() <= 14 * 24 * 60 * 60 * 1000,
+                    Number.isFinite(pubTime) &&
+                    Date.now() - pubTime <= 14 * 24 * 60 * 60 * 1000,
                   );
                   const isClosingSoon = Boolean(
-                    job.closesAt &&
-                    new Date(job.closesAt).getTime() > Date.now() &&
-                    new Date(job.closesAt).getTime() - Date.now() <= 7 * 24 * 60 * 60 * 1000,
+                    Number.isFinite(closeTime) &&
+                    closeTime > Date.now() &&
+                    closeTime - Date.now() <= 7 * 24 * 60 * 60 * 1000,
                   );
 
                   return (
                     <div
-                      key={job.id}
+                      key={job.id || job.slug || String(idx)}
                       className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-xs transition-all duration-300 hover:shadow-md sm:p-8"
                     >
                       <div className="flex flex-col items-start justify-between gap-4 border-b border-slate-100 pb-6 sm:flex-row">
                         <div>
                           <div className="mb-2 flex flex-wrap items-center gap-2">
                             <span className="inline-block rounded-full border border-blue-100/50 bg-blue-50 px-3 py-1 text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
-                              {job.department} • Active Opening
+                              {job.department || "General"} • Active Opening
                             </span>
                             {isNew && (
                               <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-black tracking-wider text-emerald-700 uppercase">
@@ -767,20 +772,20 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             )}
                           </div>
                           <Link
-                            href={`/careers/${job.slug}`}
+                            href={`/careers/${job.slug || "job"}`}
                             className="block text-2xl font-medium tracking-tight text-slate-900 transition-colors hover:text-[#1155CC] sm:text-3xl"
                           >
-                            {job.title}
+                            {job.title || "Untitled Position"}
                           </Link>
                           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
                             <span className="flex items-center gap-1.5">
                               <MapPin className="h-3.5 w-3.5 text-emerald-500" />
-                              {job.location}
+                              {job.location || "Remote, India"}
                             </span>
                             <span className="text-slate-200">•</span>
                             <span className="flex items-center gap-1.5">
                               <Briefcase className="h-3.5 w-3.5 text-slate-400" />
-                              {job.type}
+                              {job.type || "Full Time"}
                             </span>
                             {job.experienceLevel && (
                               <>
@@ -788,13 +793,13 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                                 <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
                               </>
                             )}
-                            {job.showSalaryPublicly && job.salaryMin && (
+                            {job.showSalaryPublicly && typeof job.salaryMin === "number" && Number.isFinite(job.salaryMin) && (
                               <>
                                 <span className="text-slate-200">•</span>
                                 <span className="font-bold text-emerald-600">
-                                  {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString()}
-                                  {job.salaryMax
-                                    ? ` - ${job.salaryMax.toLocaleString()}`
+                                  {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString("en-IN")}
+                                  {typeof job.salaryMax === "number" && Number.isFinite(job.salaryMax)
+                                    ? ` - ${job.salaryMax.toLocaleString("en-IN")}`
                                     : ""} /{" "}
                                   {job.salaryPeriod || "month"}
                                 </span>
@@ -804,29 +809,32 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                         </div>
                         <div className="flex shrink-0 items-center gap-2 self-stretch sm:self-auto">
                           <Button asChild variant="outline" size="sm" className="rounded-xl">
-                            <Link href={`/careers/${job.slug}`}>View Details</Link>
+                            <Link href={`/careers/${job.slug || "job"}`}>View Details</Link>
                           </Button>
                           <Button asChild variant="default" size="sm" className="rounded-xl">
-                            <Link href={`/careers/${job.slug}#apply-form`}>Apply Now</Link>
+                            <Link href={`/careers/${job.slug || "job"}#apply-form`}>Apply Now</Link>
                           </Button>
                         </div>
                       </div>
 
                       <div className="space-y-4 pt-6">
                         <p className="line-clamp-3 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
-                          {job.summary || job.description}
+                          {job.summary || job.description || "No description provided."}
                         </p>
 
-                        {job.skills && job.skills.length > 0 && (
+                        {Array.isArray(job.skills) && job.skills.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 pt-2">
-                            {job.skills.slice(0, 7).map((skill) => (
-                              <span
-                                key={skill}
-                                className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
-                              >
-                                {skill}
-                              </span>
-                            ))}
+                            {job.skills
+                              .filter((s): s is string => typeof s === "string" && s.trim().length > 0)
+                              .slice(0, 7)
+                              .map((skill) => (
+                                <span
+                                  key={skill}
+                                  className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-medium text-slate-600"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
                           </div>
                         )}
                       </div>

@@ -1,4 +1,9 @@
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { safeFetch, ApiError } from "@/lib/http/safeFetch";
+import {
+  careerApplicationResponseSchema,
+  talentPoolResponseSchema,
+} from "@/lib/validations/public-careers-boundary.schema";
 
 export interface ScreeningAnswerItem {
   questionId: string;
@@ -30,6 +35,11 @@ export interface CareerApplicationResult {
   status: string;
 }
 
+export interface CareerApiOptions {
+  signal?: AbortSignal;
+  timeoutMs?: number;
+}
+
 /**
  * Submits a candidate job application with an attached resume.
  * Endpoint: POST /api/careers/apply
@@ -37,6 +47,7 @@ export interface CareerApplicationResult {
  */
 export async function submitCareerApplication(
   payload: CareerApplicationPayload,
+  options?: CareerApiOptions,
 ): Promise<CareerApplicationResult> {
   const formData = new FormData();
 
@@ -71,34 +82,29 @@ export async function submitCareerApplication(
     formData.append("resumeFile", payload.resumeFile);
   }
 
-  const response = await fetch(API_ENDPOINTS.CAREERS.APPLY, {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const data = await safeFetch(API_ENDPOINTS.CAREERS.APPLY, careerApplicationResponseSchema, {
+      method: "POST",
+      body: formData,
+      signal: options?.signal,
+      timeoutMs: options?.timeoutMs ?? 15_000,
+    });
 
-  const json = await response.json();
-
-  if (!response.ok || !json.ok) {
-    if (response.status === 409) {
-      throw new Error(
-        "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
-      );
+    return {
+      applicationId: data.applicationId,
+      status: data.status,
+    };
+  } catch (err: unknown) {
+    if (err instanceof ApiError) {
+      if (err.status === 409) {
+        throw new Error(
+          "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
+        );
+      }
+      throw new Error(err.message);
     }
-    const errMessage =
-      typeof json.error === "string"
-        ? json.error
-        : json.error?.message ||
-          json.errorPayload?.message ||
-          "Failed to submit application. Please verify your details.";
-    throw new Error(errMessage);
+    throw err;
   }
-
-  return (
-    json.data || {
-      applicationId: json.applicationId,
-      status: json.status,
-    }
-  );
 }
 
 export interface TalentPoolPayload {
@@ -126,37 +132,48 @@ export interface TalentPoolResult {
  * Endpoint: POST /api/careers/talent-pool
  * Contract: talentPoolContract
  */
-export async function submitTalentPool(payload: TalentPoolPayload): Promise<TalentPoolResult> {
+export async function submitTalentPool(
+  payload: TalentPoolPayload,
+  options?: CareerApiOptions,
+): Promise<TalentPoolResult> {
   const url = API_ENDPOINTS.CAREERS.TALENT_POOL;
 
-  let response: Response;
+  try {
+    if (payload.resumeFile) {
+      const formData = new FormData();
+      if (payload.website_url) formData.append("website_url", payload.website_url);
+      formData.append("name", payload.name.trim());
+      formData.append("email", payload.email.trim());
+      if (payload.phone?.trim()) formData.append("phone", payload.phone.trim());
+      if (payload.preferredRole?.trim())
+        formData.append("preferredRole", payload.preferredRole.trim());
+      if (payload.experienceLevel) formData.append("experienceLevel", payload.experienceLevel);
+      if (payload.portfolioUrl?.trim()) formData.append("portfolioUrl", payload.portfolioUrl.trim());
+      if (payload.notes?.trim()) formData.append("notes", payload.notes.trim());
+      formData.append("privacyConsent", payload.privacyConsent ? "true" : "false");
 
-  if (payload.resumeFile) {
-    const formData = new FormData();
-    if (payload.website_url) formData.append("website_url", payload.website_url);
-    formData.append("name", payload.name.trim());
-    formData.append("email", payload.email.trim());
-    if (payload.phone?.trim()) formData.append("phone", payload.phone.trim());
-    if (payload.preferredRole?.trim())
-      formData.append("preferredRole", payload.preferredRole.trim());
-    if (payload.experienceLevel) formData.append("experienceLevel", payload.experienceLevel);
-    if (payload.portfolioUrl?.trim()) formData.append("portfolioUrl", payload.portfolioUrl.trim());
-    if (payload.notes?.trim()) formData.append("notes", payload.notes.trim());
-    formData.append("privacyConsent", payload.privacyConsent ? "true" : "false");
+      if (Array.isArray(payload.skills)) {
+        formData.append("skills", payload.skills.join(", "));
+      } else if (payload.skills?.trim()) {
+        formData.append("skills", payload.skills.trim());
+      }
 
-    if (Array.isArray(payload.skills)) {
-      formData.append("skills", payload.skills.join(", "));
-    } else if (payload.skills?.trim()) {
-      formData.append("skills", payload.skills.trim());
+      formData.append("resumeFile", payload.resumeFile);
+
+      const data = await safeFetch(url, talentPoolResponseSchema, {
+        method: "POST",
+        body: formData,
+        signal: options?.signal,
+        timeoutMs: options?.timeoutMs ?? 15_000,
+      });
+
+      return {
+        id: data.id,
+        name: data.name ?? undefined,
+        email: data.email ?? undefined,
+      };
     }
 
-    formData.append("resumeFile", payload.resumeFile);
-
-    response = await fetch(url, {
-      method: "POST",
-      body: formData,
-    });
-  } else {
     const skillsArray = Array.isArray(payload.skills)
       ? payload.skills
       : payload.skills
@@ -166,7 +183,7 @@ export async function submitTalentPool(payload: TalentPoolPayload): Promise<Tale
             .filter(Boolean)
         : [];
 
-    response = await fetch(url, {
+    const data = await safeFetch(url, talentPoolResponseSchema, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -181,26 +198,19 @@ export async function submitTalentPool(payload: TalentPoolPayload): Promise<Tale
         privacyConsent: payload.privacyConsent,
         website_url: payload.website_url || undefined,
       }),
+      signal: options?.signal,
+      timeoutMs: options?.timeoutMs ?? 15_000,
     });
-  }
 
-  const json = await response.json();
-
-  if (!response.ok || !json.ok) {
-    const errMessage =
-      typeof json.error === "string"
-        ? json.error
-        : json.error?.message ||
-          json.errorPayload?.message ||
-          "Failed to join talent pool. Please verify your details.";
-    throw new Error(errMessage);
-  }
-
-  return (
-    json.data || {
-      id: json.id,
-      name: json.name,
-      email: json.email,
+    return {
+      id: data.id,
+      name: data.name ?? undefined,
+      email: data.email ?? undefined,
+    };
+  } catch (err: unknown) {
+    if (err instanceof ApiError) {
+      throw new Error(err.message);
     }
-  );
+    throw err;
+  }
 }

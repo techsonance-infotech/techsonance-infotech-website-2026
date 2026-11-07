@@ -211,12 +211,12 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
     }
 
     // Validate required screening questions
-    if (job.screeningQuestions && Array.isArray(job.screeningQuestions)) {
+    if (Array.isArray(job.screeningQuestions)) {
       for (const sq of job.screeningQuestions) {
-        if (sq.required) {
+        if (sq?.required) {
           const val = screeningAnswers[sq.id];
           if (val === undefined || val === "") {
-            setFormError(`Please answer the screening question: "${sq.question}"`);
+            setFormError(`Please answer the screening question: "${sq.question || "Required question"}"`);
             return;
           }
         }
@@ -227,14 +227,15 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
     setFormError("");
 
     try {
-      const screeningPayload =
-        job.screeningQuestions && Array.isArray(job.screeningQuestions)
-          ? job.screeningQuestions.map((q) => ({
-              questionId: q.id,
-              question: q.question,
+      const screeningPayload = Array.isArray(job.screeningQuestions)
+        ? job.screeningQuestions
+            .filter((q) => q && typeof q === "object")
+            .map((q) => ({
+              questionId: q.id || "q",
+              question: q.question || "",
               answer: screeningAnswers[q.id] ?? "",
             }))
-          : undefined;
+        : undefined;
 
       await submitCareerApplication({
         jobId: job.id || job.slug,
@@ -271,29 +272,35 @@ export default function JobDetailClient({ job, similarJobs = [] }: JobDetailClie
   const formatSalary = () => {
     if (!job.showSalaryPublicly) return null;
     const { salaryMin, salaryMax, salaryCurrency = "INR", salaryPeriod = "year" } = job;
-    if (salaryMin === undefined && salaryMax === undefined) return null;
+    const isMinValid = typeof salaryMin === "number" && Number.isFinite(salaryMin);
+    const isMaxValid = typeof salaryMax === "number" && Number.isFinite(salaryMax);
+    if (!isMinValid && !isMaxValid) return null;
 
-    const formatter = new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: salaryCurrency,
-      maximumFractionDigits: 0,
-    });
+    try {
+      const formatter = new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: salaryCurrency,
+        maximumFractionDigits: 0,
+      });
 
-    const periodLabel =
-      salaryPeriod.toLowerCase() === "month"
-        ? "/ mo"
-        : salaryPeriod.toLowerCase() === "hour"
-          ? "/ hr"
-          : "/ yr";
+      const periodLabel =
+        (salaryPeriod || "").toLowerCase() === "month"
+          ? "/ mo"
+          : (salaryPeriod || "").toLowerCase() === "hour"
+            ? "/ hr"
+            : "/ yr";
 
-    if (salaryMin !== undefined && salaryMax !== undefined) {
-      return `${formatter.format(salaryMin)} – ${formatter.format(salaryMax)} ${periodLabel}`;
-    }
-    if (salaryMin !== undefined) {
-      return `From ${formatter.format(salaryMin)} ${periodLabel}`;
-    }
-    if (salaryMax !== undefined) {
-      return `Up to ${formatter.format(salaryMax)} ${periodLabel}`;
+      if (isMinValid && isMaxValid) {
+        return `${formatter.format(salaryMin!)} – ${formatter.format(salaryMax!)} ${periodLabel}`;
+      }
+      if (isMinValid) {
+        return `From ${formatter.format(salaryMin!)} ${periodLabel}`;
+      }
+      if (isMaxValid) {
+        return `Up to ${formatter.format(salaryMax!)} ${periodLabel}`;
+      }
+    } catch {
+      return null;
     }
     return null;
   };

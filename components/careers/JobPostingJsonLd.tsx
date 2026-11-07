@@ -14,7 +14,24 @@ function mapEmploymentType(type?: string): string {
   return normalized.toUpperCase().replace(/[\s/-]+/g, "_");
 }
 
+function safeIsoDate(dateString?: string): string {
+  if (!dateString) return new Date().toISOString();
+  try {
+    const timestamp = new Date(dateString).getTime();
+    if (Number.isFinite(timestamp)) {
+      return new Date(timestamp).toISOString();
+    }
+  } catch {
+    // Ignore error
+  }
+  return new Date().toISOString();
+}
+
 export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknown> {
+  if (!job || typeof job !== "object") {
+    return {};
+  }
+
   const isRemote = Boolean(
     (job.workMode && job.workMode.toLowerCase() === "remote") ||
     (job.location && job.location.toLowerCase().includes("remote")),
@@ -25,14 +42,14 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
-    title: job.title,
-    description: job.description,
+    title: job.title || "Career Opening",
+    description: job.description || "",
     identifier: {
       "@type": "PropertyValue",
       name: "TechSonance Infotech",
-      value: job.referenceCode || job.slug,
+      value: job.referenceCode || job.slug || "job",
     },
-    datePosted: job.publishedAt || new Date().toISOString(),
+    datePosted: safeIsoDate(job.publishedAt),
     employmentType: mapEmploymentType(job.type),
     hiringOrganization: {
       "@type": "Organization",
@@ -44,7 +61,7 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
       "@type": "Place",
       address: {
         "@type": "PostalAddress",
-        addressLocality: job.location,
+        addressLocality: job.location || "Remote, India",
         addressCountry: "IN",
       },
     },
@@ -64,7 +81,9 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
     };
   }
 
-  if (job.showSalaryPublicly && (job.salaryMin !== undefined || job.salaryMax !== undefined)) {
+  const isMinValid = typeof job.salaryMin === "number" && Number.isFinite(job.salaryMin);
+  const isMaxValid = typeof job.salaryMax === "number" && Number.isFinite(job.salaryMax);
+  if (job.showSalaryPublicly && (isMinValid || isMaxValid)) {
     const period = (job.salaryPeriod || "year").toUpperCase();
     const unitText = period === "HOUR" ? "HOUR" : period === "MONTH" ? "MONTH" : "YEAR";
 
@@ -72,10 +91,10 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
       "@type": "QuantitativeValue",
       unitText,
     };
-    if (job.salaryMin !== undefined) {
+    if (isMinValid) {
       valueObj.minValue = job.salaryMin;
     }
-    if (job.salaryMax !== undefined) {
+    if (isMaxValid) {
       valueObj.maxValue = job.salaryMax;
     }
 
@@ -86,12 +105,12 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
     };
   }
 
-  if (job.skills && job.skills.length > 0) {
-    jsonLd.skills = job.skills.join(", ");
+  if (Array.isArray(job.skills) && job.skills.length > 0) {
+    jsonLd.skills = job.skills.filter(Boolean).join(", ");
   }
 
-  if (job.responsibilities && job.responsibilities.length > 0) {
-    jsonLd.responsibilities = job.responsibilities.join("\n");
+  if (Array.isArray(job.responsibilities) && job.responsibilities.length > 0) {
+    jsonLd.responsibilities = job.responsibilities.filter(Boolean).join("\n");
   }
 
   return jsonLd;
@@ -99,6 +118,9 @@ export function generateJobPostingJsonLd(job: JobPosting): Record<string, unknow
 
 export function JobPostingJsonLd({ job }: { job: JobPosting }) {
   const jsonLd = generateJobPostingJsonLd(job);
+  if (!jsonLd || Object.keys(jsonLd).length === 0) {
+    return null;
+  }
   return (
     <script
       type="application/ld+json"
