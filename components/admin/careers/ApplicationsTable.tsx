@@ -4,6 +4,7 @@ import React from "react";
 import { Star, AlertTriangle, Eye, Clock, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationStatus } from "@/lib/constants/enums";
+import { safeInitials, formatDateSafe } from "@/lib/utils/formatters";
 
 export interface ApplicationItem {
   id: string;
@@ -99,7 +100,7 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1155CC]/10 font-bold text-[#1155CC]">
-                      {app.candidateName.slice(0, 1).toUpperCase()}
+                      {safeInitials(app.candidateName)}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -160,11 +161,7 @@ export function ApplicationsTable({ applications, onSelectApplication }: Applica
 
                 {/* Applied Date */}
                 <td className="px-6 py-4 font-medium whitespace-nowrap text-slate-500">
-                  {new Date(app.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatDateSafe(app.createdAt)}
                 </td>
 
                 {/* Action CTA */}

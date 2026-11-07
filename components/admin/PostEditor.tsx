@@ -57,6 +57,7 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
   const [submitting, setSubmitting] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -323,19 +324,20 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
    * Endpoint 3 Integration: DELETE /api/admin/blog/posts/[id]
    * Deletes a blog post and redirects back to the post management list.
    */
-  const handleDeletePost = async () => {
+  const handleDeletePost = () => {
     if (!initialPost?.id) return;
-    const titleVal = getValues("title") || "this article";
-    if (!confirm(`Are you sure you want to delete "${titleVal}"? This action cannot be undone.`)) {
-      return;
-    }
+    setShowDeleteConfirm(true);
+  };
 
+  const confirmDeletePost = async () => {
+    if (!initialPost?.id) return;
     setError(null);
     setSuccessMsg(null);
     setDeleting(true);
 
     try {
       await deletePost(initialPost.id);
+      setShowDeleteConfirm(false);
       router.push("/admin/blog");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete post");
@@ -697,6 +699,42 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
           </Card>
         </div>
       </div>
+      {/* Non-blocking Deletion Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs"
+        >
+          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+            <h3 className="font-sora text-base font-bold text-slate-900 dark:text-white">
+              Permanently Delete Article?
+            </h3>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{getValues("title") || "this article"}"</strong>? This action cannot be undone.
+            </p>
+            <div className="mt-5 flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={deleting}
+                onClick={() => setShowDeleteConfirm(false)}
+                className="rounded-xl text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                disabled={deleting}
+                onClick={confirmDeletePost}
+                className="rounded-xl bg-rose-600 text-xs text-white hover:bg-rose-700"
+              >
+                {deleting ? "Deleting…" : "Delete Article"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

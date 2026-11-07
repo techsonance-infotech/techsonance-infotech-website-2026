@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type { AdminGenerationJob } from "@/lib/types/admin.types";
 import type {
@@ -10,89 +11,109 @@ import type {
   PromptTemplateDto,
   UpdateAiPromptBodyInput,
 } from "@/lib/contracts/admin-ai-prompts.contract";
+import { safeFetch } from "@/lib/http/safeFetch";
+import {
+  SafeAdminAiTopicsListResponseSchema,
+  SafeAdminAiTopicItemSchema,
+  SafeAdminAiJobsListResponseSchema,
+  SafeAdminAiJobItemSchema,
+  type SafeAdminAiTopicItem,
+} from "@/lib/validations/admin-blog-boundary.schema";
 
-export interface AdminAiTopicItem {
-  id: string;
-  title: string;
-  keywords: string[];
-  category: string;
-  targetAudience: string;
-  difficulty: string;
-  status: AiTopicStatus;
-  priority: number;
-  suggestedBy: string;
-  notes: string | null;
-  createdAt: string;
-  updatedAt?: string;
-}
+export type { AdminAiTopicItem } from "@/lib/validations/admin-blog-boundary.schema";
+
+const SingleJobSchema = z
+  .object({
+    job: z.any(),
+  })
+  .or(SafeAdminAiJobItemSchema);
+
+const SingleTopicSchema = z
+  .object({
+    topic: z.any(),
+  })
+  .or(SafeAdminAiTopicItemSchema);
+
+const TopicSuggestionsSchema = z
+  .object({
+    count: z.number().catch(0),
+    topics: z.array(SafeAdminAiTopicItemSchema).catch([]),
+  })
+  .catch({ count: 0, topics: [] });
+
+const LaunchJobResponseSchema = z
+  .object({
+    jobId: z.string().default(""),
+    status: z.string().default("PENDING"),
+    message: z.string().default("Job launched"),
+  })
+  .catch({ jobId: "", status: "PENDING", message: "Job launched" });
+
+const PromptTemplatesSchema = z
+  .object({
+    templates: z.array(z.any()).catch([]),
+  })
+  .catch({ templates: [] });
+
+const SinglePromptTemplateSchema = z
+  .object({
+    template: z.any(),
+  })
+  .catch({ template: null });
 
 /**
  * Lists autonomous AI content generation jobs.
  * Endpoint: GET /api/admin/ai/jobs
- * Contract: listAiJobsContract
  */
-export async function listAdminAiJobs(limit = 50): Promise<AdminGenerationJob[]> {
+export async function listAdminAiJobs(
+  limit = 50,
+  signal?: AbortSignal,
+): Promise<AdminGenerationJob[]> {
   const url = `${API_ENDPOINTS.ADMIN.AI.JOBS}?limit=${limit}`;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SafeAdminAiJobsListResponseSchema, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load AI generation jobs.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.jobs || resJson.jobs || [];
+  return (data.jobs || []) as unknown as AdminGenerationJob[];
 }
 
 /**
  * Triggers an autonomous content generation job for a topic.
  * Endpoint: POST /api/admin/ai/jobs
- * Contract: createAiJobContract
  */
-export async function createAdminAiJob(payload: {
-  topicText: string;
-  category?: string;
-  siteId?: string;
-}): Promise<AdminGenerationJob> {
+export async function createAdminAiJob(
+  payload: {
+    topicText: string;
+    category?: string;
+    siteId?: string;
+  },
+  signal?: AbortSignal,
+): Promise<AdminGenerationJob> {
   const url = API_ENDPOINTS.ADMIN.AI.JOBS;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SingleJobSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to create generation job.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as AdminGenerationJob;
 }
 
 /**
  * Lists editorial topic proposals in the AI backlog.
  * Endpoint: GET /api/admin/ai/topics
- * Contract: listAiTopicsContract
  */
 export async function listAdminAiTopics(
   query?: ListAiTopicsQueryInput,
-): Promise<{ topics: AdminAiTopicItem[]; total: number }> {
+  signal?: AbortSignal,
+): Promise<{ topics: SafeAdminAiTopicItem[]; total: number }> {
   const params = new URLSearchParams();
   if (query?.status) params.set("status", query.status);
   if (query?.search?.trim()) params.set("search", query.search.trim());
@@ -104,109 +125,74 @@ export async function listAdminAiTopics(
     ? `${API_ENDPOINTS.ADMIN.AI.TOPICS}?${queryStr}`
     : API_ENDPOINTS.ADMIN.AI.TOPICS;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SafeAdminAiTopicsListResponseSchema, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load topic backlog.";
-    throw new Error(errorMsg);
-  }
-
-  const topics = resJson.data?.topics || resJson.topics || [];
-  const total = resJson.data?.total ?? resJson.total ?? topics.length;
-
-  return { topics, total };
+  return {
+    topics: data.topics as SafeAdminAiTopicItem[],
+    total: data.total,
+  };
 }
 
 /**
  * Creates a new editorial topic proposal.
  * Endpoint: POST /api/admin/ai/topics
- * Contract: createAiTopicContract
  */
-export async function createAdminAiTopic(payload: CreateAiTopicInput): Promise<AdminAiTopicItem> {
+export async function createAdminAiTopic(
+  payload: CreateAiTopicInput,
+  signal?: AbortSignal,
+): Promise<SafeAdminAiTopicItem> {
   const url = API_ENDPOINTS.ADMIN.AI.TOPICS;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SingleTopicSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to create topic.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.topic || resJson.topic;
+  return (data && "topic" in data ? data.topic : data) as unknown as SafeAdminAiTopicItem;
 }
 
 /**
  * Updates status of an AI topic (APPROVED, REJECTED, ARCHIVED, etc.)
  * Endpoint: PATCH /api/admin/ai/topics/[id]
- * Contract: updateAiTopicStatusContract
  */
 export async function updateAdminAiTopicStatus(
   id: string,
   status: AiTopicStatus,
-): Promise<AdminAiTopicItem> {
+  signal?: AbortSignal,
+): Promise<SafeAdminAiTopicItem> {
   const url = API_ENDPOINTS.ADMIN.AI.TOPIC(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SingleTopicSchema, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({ status }),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to update topic status.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.topic || resJson.topic;
+  return (data && "topic" in data ? data.topic : data) as unknown as SafeAdminAiTopicItem;
 }
 
 /**
  * Deletes an AI topic from backlog.
  * Endpoint: DELETE /api/admin/ai/topics/[id]
- * Contract: deleteAiTopicContract
  */
-export async function deleteAdminAiTopic(id: string): Promise<boolean> {
+export async function deleteAdminAiTopic(id: string, signal?: AbortSignal): Promise<boolean> {
   const url = API_ENDPOINTS.ADMIN.AI.TOPIC(id);
 
-  const response = await fetch(url, {
+  await safeFetch(url, z.any(), {
     method: "DELETE",
     credentials: "include",
+    signal,
   });
-
-  const resJson = await response.json().catch(() => ({ ok: response.ok }));
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to delete topic.";
-    throw new Error(errorMsg);
-  }
 
   return true;
 }
@@ -214,149 +200,98 @@ export async function deleteAdminAiTopic(id: string): Promise<boolean> {
 /**
  * Suggests new AI blog topic ideas using LLM brainstorming.
  * Endpoint: POST /api/admin/ai/topics/suggest
- * Contract: suggestAiTopicsContract
  */
 export async function suggestAdminAiTopics(
   category = "Agentic AI & Next.js 16",
-): Promise<{ count: number; topics: AdminAiTopicItem[] }> {
+  signal?: AbortSignal,
+): Promise<{ count: number; topics: SafeAdminAiTopicItem[] }> {
   const url = API_ENDPOINTS.ADMIN.AI.TOPIC_SUGGEST;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, TopicSuggestionsSchema, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({ category }),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to generate topic ideas.";
-    throw new Error(errorMsg);
-  }
-
   return {
-    count: resJson.data?.count ?? resJson.count ?? 0,
-    topics: resJson.data?.topics || resJson.topics || [],
+    count: data.count,
+    topics: (data.topics || []) as SafeAdminAiTopicItem[],
   };
 }
 
 /**
  * Launches an autonomous content generation job from a backlog topic.
  * Endpoint: POST /api/admin/ai/topics/[id]/launch
- * Contract: launchAiTopicJobContract
  */
 export async function launchAdminAiTopic(
   id: string,
+  signal?: AbortSignal,
 ): Promise<{ jobId: string; status: string; message: string }> {
   const url = API_ENDPOINTS.ADMIN.AI.TOPIC_LAUNCH(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, LaunchJobResponseSchema, {
     method: "POST",
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to launch autonomous generation.";
-    throw new Error(errorMsg);
-  }
-
-  return {
-    jobId: resJson.data?.jobId || resJson.jobId,
-    status: resJson.data?.status || resJson.status,
-    message: resJson.data?.message || resJson.message,
-  };
+  return data;
 }
 
 /**
  * Retrieves AI token usage, quota limits, and telemetry.
  * Endpoint: GET /api/admin/ai/usage
- * Contract: getAiUsageTelemetryContract
  */
-export async function getAdminAiUsage(): Promise<AiTelemetrySummary> {
+export async function getAdminAiUsage(signal?: AbortSignal): Promise<AiTelemetrySummary> {
   const url = API_ENDPOINTS.ADMIN.AI.USAGE;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load AI telemetry.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
+  return data as AiTelemetrySummary;
 }
 
 /**
  * Lists all customizable prompt engineering templates.
  * Endpoint: GET /api/admin/ai/prompts
- * Contract: listAiPromptsContract
  */
-export async function listAdminAiPrompts(): Promise<PromptTemplateDto[]> {
+export async function listAdminAiPrompts(signal?: AbortSignal): Promise<PromptTemplateDto[]> {
   const url = API_ENDPOINTS.ADMIN.AI.PROMPTS;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, PromptTemplatesSchema, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load prompt templates.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.templates || resJson.templates || [];
+  return (data.templates || []) as PromptTemplateDto[];
 }
 
 /**
  * Updates a specific prompt template configuration by UUID.
  * Endpoint: PATCH /api/admin/ai/prompts?id=<uuid>
- * Contract: updateAiPromptContract
  */
 export async function updateAdminAiPrompt(
   id: string,
   payload: UpdateAiPromptBodyInput,
+  signal?: AbortSignal,
 ): Promise<PromptTemplateDto> {
   const url = `${API_ENDPOINTS.ADMIN.AI.PROMPTS}?id=${encodeURIComponent(id)}`;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SinglePromptTemplateSchema, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to update prompt template.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.template || resJson.template;
+  return (data && "template" in data ? data.template : data) as PromptTemplateDto;
 }

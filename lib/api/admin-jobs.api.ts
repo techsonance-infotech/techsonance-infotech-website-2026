@@ -1,7 +1,13 @@
+import { z } from "zod";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type { Job } from "@/lib/types/careers";
 import type { JobFormData } from "@/components/admin/careers/JobEditorForm";
 import type { JobStatus } from "@/lib/constants/enums";
+import { safeFetch } from "@/lib/http/safeFetch";
+import {
+  SafeJobsListResponseSchema,
+  SafeJobItemSchema,
+} from "@/lib/validations/admin-careers-boundary.schema";
 
 export interface UpdateJobStatusPayload {
   targetStatus: JobStatus | string;
@@ -13,6 +19,7 @@ export interface ListAdminJobsParams {
   search?: string;
   limit?: number;
   offset?: number;
+  signal?: AbortSignal;
 }
 
 export interface ListAdminJobsResponse {
@@ -40,40 +47,44 @@ export interface JobVersionItem {
   createdAt: string | Date;
 }
 
+const SingleJobResponseSchema = z
+  .object({
+    job: z.any(),
+  })
+  .or(SafeJobItemSchema);
+
+const VersionsResponseSchema = z
+  .object({
+    versions: z.array(z.any()).catch([]),
+  })
+  .catch({ versions: [] });
+
 /**
  * Creates a new job posting in draft status.
  * Endpoint: POST /api/admin/jobs
- * Contract: createJobContract
  */
 export async function createAdminJob(payload: Partial<JobFormData>): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOBS;
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
     },
-    credentials: "include",
-    body: JSON.stringify(payload),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || "Failed to create position.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
  * Lists job postings with optional status and text search filtering.
  * Endpoint: GET /api/admin/jobs
- * Contract: listJobsContract
  */
 export async function listAdminJobs(params?: ListAdminJobsParams): Promise<Job[]> {
   const searchParams = new URLSearchParams();
@@ -94,53 +105,33 @@ export async function listAdminJobs(params?: ListAdminJobsParams): Promise<Job[]
   const queryStr = searchParams.toString();
   const url = queryStr ? `${API_ENDPOINTS.ADMIN.JOBS}?${queryStr}` : API_ENDPOINTS.ADMIN.JOBS;
 
-  const response = await fetch(url, {
+  const result = await safeFetch(url, SafeJobsListResponseSchema, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
+    signal: params?.signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || "Failed to load positions.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.jobs || resJson.jobs || [];
+  return result.jobs as unknown as Job[];
 }
 
 /**
  * Fetches an existing job posting by its ID.
  * Endpoint: GET /api/admin/jobs/[id]
  */
-export async function getAdminJob(id: string): Promise<Job> {
+export async function getAdminJob(id: string, signal?: AbortSignal): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "GET",
+      credentials: "include",
+      signal,
     },
-    credentials: "include",
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || "Failed to load position.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
@@ -150,26 +141,20 @@ export async function getAdminJob(id: string): Promise<Job> {
 export async function updateAdminJob(id: string, payload: Partial<JobFormData>): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  const response = await fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
     },
-    credentials: "include",
-    body: JSON.stringify(payload),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || "Failed to save changes.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
@@ -179,20 +164,14 @@ export async function updateAdminJob(id: string, payload: Partial<JobFormData>):
 export async function deleteAdminJob(id: string): Promise<boolean> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  const response = await fetch(url, {
-    method: "DELETE",
-    credentials: "include",
-  });
-
-  const resJson = await response.json().catch(() => ({ ok: response.ok }));
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || "Failed to delete position.";
-    throw new Error(errorMsg);
-  }
+  await safeFetch(
+    url,
+    z.any(),
+    {
+      method: "DELETE",
+      credentials: "include",
+    },
+  );
 
   return true;
 }
@@ -200,7 +179,6 @@ export async function deleteAdminJob(id: string): Promise<boolean> {
 /**
  * Executes a lifecycle state transition on a job requisition.
  * Endpoint: POST /api/admin/jobs/[id]/status
- * Contract: transitionJobStatusContract
  */
 export async function updateAdminJobStatus(
   id: string,
@@ -208,145 +186,108 @@ export async function updateAdminJobStatus(
 ): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB_STATUS(id);
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
     },
-    credentials: "include",
-    body: JSON.stringify(payload),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to update job status.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
  * Approves a job requisition moving it to PUBLISHED or SCHEDULED.
  * Endpoint: POST /api/admin/careers/jobs/[id]/approve
- * Contract: approveJobContract
  */
 export async function approveAdminJob(id: string, comment?: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_APPROVE(id);
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(comment ? { comment } : {}),
     },
-    credentials: "include",
-    body: JSON.stringify(comment ? { comment } : {}),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to approve job requisition.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
  * Returns a job requisition to draft with reviewer feedback.
  * Endpoint: POST /api/admin/careers/jobs/[id]/return
- * Contract: returnJobContract
  */
 export async function returnAdminJob(id: string, comment: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_RETURN(id);
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ comment }),
     },
-    credentials: "include",
-    body: JSON.stringify({ comment }),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to return job requisition.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**
  * Retrieves the version snapshot history for a job requisition.
  * Endpoint: GET /api/admin/careers/jobs/[id]/versions
- * Contract: listJobVersionsContract
  */
-export async function listAdminJobVersions(id: string): Promise<JobVersionItem[]> {
+export async function listAdminJobVersions(
+  id: string,
+  signal?: AbortSignal,
+): Promise<JobVersionItem[]> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, VersionsResponseSchema, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load version history.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.versions || resJson.versions || [];
+  return (data?.versions || []) as unknown as JobVersionItem[];
 }
 
 /**
  * Restores a specific historical version snapshot for a job requisition.
  * Endpoint: POST /api/admin/careers/jobs/[id]/versions
- * Contract: restoreJobVersionContract
  */
 export async function restoreAdminJobVersion(id: string, versionId: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(id);
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const data = await safeFetch(
+    url,
+    SingleJobResponseSchema,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ versionId }),
     },
-    credentials: "include",
-    body: JSON.stringify({ versionId }),
-  });
+  );
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to restore version snapshot.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.job || resJson.job;
+  return (data && "job" in data ? data.job : data) as unknown as Job;
 }
 
 /**

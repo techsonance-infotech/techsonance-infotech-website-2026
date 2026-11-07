@@ -1,5 +1,11 @@
+import { z } from "zod";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type { AdminPost } from "@/lib/types/admin.types";
+import { safeFetch } from "@/lib/http/safeFetch";
+import {
+  SafeAdminPostsListResponseSchema,
+  SafeAdminPostItemSchema,
+} from "@/lib/validations/admin-blog-boundary.schema";
 
 export interface SubmitPostForReviewResponse {
   ok: boolean;
@@ -90,169 +96,180 @@ export interface CreatePostPayload {
 
 export type UpdatePostPayload = Partial<CreatePostPayload>;
 
+const SinglePostResponseSchema = z
+  .object({
+    post: z.any(),
+  })
+  .or(SafeAdminPostItemSchema)
+  .or(z.object({ id: z.string(), title: z.string() }));
+
 /**
  * Creates a new blog post.
  * Endpoint: POST /api/admin/blog/posts
  */
-export async function createPost(payload: CreatePostPayload): Promise<AdminPost> {
+export async function createPost(
+  payload: CreatePostPayload,
+  signal?: AbortSignal,
+): Promise<AdminPost> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POSTS;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SinglePostResponseSchema, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg = resJson.error?.message || resJson.message || "Failed to create post";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.post || resJson.post;
+  return (data && "post" in data ? data.post : data) as unknown as AdminPost;
 }
 
 /**
  * Updates an existing blog post by ID.
  * Endpoint: PATCH /api/admin/blog/posts/[id]
  */
-export async function updatePost(postId: string, payload: UpdatePostPayload): Promise<AdminPost> {
+export async function updatePost(
+  postId: string,
+  payload: UpdatePostPayload,
+  signal?: AbortSignal,
+): Promise<AdminPost> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POST(postId);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SinglePostResponseSchema, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
     body: JSON.stringify(payload),
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg = resJson.error?.message || resJson.message || "Failed to update post";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.post || resJson.post;
+  return (data && "post" in data ? data.post : data) as unknown as AdminPost;
 }
 
 /**
  * Submits a draft blog post for editorial review.
  * Endpoint: POST /api/admin/blog/posts/[id]/submit
  */
-export async function submitPostForReview(postId: string): Promise<SubmitPostForReviewResponse> {
+export async function submitPostForReview(
+  postId: string,
+  signal?: AbortSignal,
+): Promise<SubmitPostForReviewResponse> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POST_SUBMIT(postId);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
+    signal,
   });
 
-  const payload: SubmitPostForReviewResponse = await response.json();
+  const post = (data && "post" in data ? data.post : data?.data?.post || data) as AdminPost;
+  const message = data?.message || "Post submitted for editorial review successfully";
 
-  if (!response.ok || !payload.ok) {
-    const errorMsg =
-      payload.error?.message || payload.message || "Failed to submit post for review";
-    throw new Error(errorMsg);
-  }
-
-  return payload;
+  return {
+    ok: true,
+    data: { post },
+    post,
+    message,
+  };
 }
 
 /**
  * Publishes a draft or in-review blog post to live status and triggers ISR cache revalidation.
  * Endpoint: POST /api/admin/blog/posts/[id]/publish
  */
-export async function publishPost(postId: string): Promise<PublishPostResponse> {
+export async function publishPost(
+  postId: string,
+  signal?: AbortSignal,
+): Promise<PublishPostResponse> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POST_PUBLISH(postId);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
+    signal,
   });
 
-  const payload: PublishPostResponse = await response.json();
+  const post = (data && "post" in data ? data.post : data?.data?.post || data) as AdminPost;
+  const message = data?.message || "Post published successfully";
 
-  if (!response.ok || !payload.ok) {
-    const errorMsg = payload.error?.message || payload.message || "Failed to publish post";
-    throw new Error(errorMsg);
-  }
-
-  return payload;
+  return {
+    ok: true,
+    data: { post },
+    post,
+    message,
+  };
 }
 
 /**
  * Deletes a blog post and records an audit log.
  * Endpoint: DELETE /api/admin/blog/posts/[id]
  */
-export async function deletePost(postId: string): Promise<DeletePostResponse> {
+export async function deletePost(
+  postId: string,
+  signal?: AbortSignal,
+): Promise<DeletePostResponse> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POST(postId);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
+    signal,
   });
 
-  const payload: DeletePostResponse = await response.json();
+  const message = data?.message || data?.data?.message || "Post deleted successfully";
 
-  if (!response.ok || !payload.ok) {
-    const errorMsg = payload.error?.message || payload.message || "Failed to delete post";
-    throw new Error(errorMsg);
-  }
-
-  return payload;
+  return {
+    ok: true,
+    data: { success: true, message },
+    message,
+  };
 }
 
 /**
  * Retrieves a single post by ID with relations.
  * Endpoint: GET /api/admin/blog/posts/[id]
  */
-export async function getPostById(postId: string): Promise<AdminPost> {
+export async function getPostById(postId: string, signal?: AbortSignal): Promise<AdminPost> {
   const url = API_ENDPOINTS.ADMIN.BLOG.POST(postId);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SinglePostResponseSchema, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
+    signal,
   });
 
-  const payload: SinglePostResponse = await response.json();
-
-  if (!response.ok || !payload.ok) {
-    const errorMsg = payload.error?.message || "Failed to retrieve post";
-    throw new Error(errorMsg);
-  }
-
-  return payload.data?.post || payload.post;
+  return (data && "post" in data ? data.post : data) as unknown as AdminPost;
 }
 
 /**
  * Lists posts with search, status filtering, and pagination.
  * Endpoint: GET /api/admin/blog/posts
  */
-export async function listPosts(query?: {
-  status?: string;
-  search?: string;
-  limit?: number;
-  offset?: number;
-}): Promise<ListPostsResponse> {
+export async function listPosts(
+  query?: {
+    status?: string;
+    search?: string;
+    limit?: number;
+    offset?: number;
+  },
+  signal?: AbortSignal,
+): Promise<ListPostsResponse> {
   const params = new URLSearchParams();
   if (query?.status && query.status !== "ALL") {
     params.set("status", query.status);
@@ -270,20 +287,22 @@ export async function listPosts(query?: {
   const qs = params.toString();
   const url = `${API_ENDPOINTS.ADMIN.BLOG.POSTS}${qs ? `?${qs}` : ""}`;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SafeAdminPostsListResponseSchema, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
+    signal,
   });
 
-  const payload: ListPostsResponse = await response.json();
+  const posts = (data.posts || []) as unknown as AdminPost[];
+  const total = data.total ?? posts.length;
 
-  if (!response.ok || !payload.ok) {
-    const errorMsg = payload.error?.message || "Failed to list posts";
-    throw new Error(errorMsg);
-  }
-
-  return payload;
+  return {
+    ok: true,
+    data: { posts, total },
+    posts,
+    total,
+  };
 }

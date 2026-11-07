@@ -42,6 +42,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
   const isNew = id === "new";
   const [loading, setLoading] = useState(!isNew);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [jobData, setJobData] = useState<JobFormData>(DEFAULT_JOB_FORM);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -55,35 +56,30 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [duplicating, setDuplicating] = useState(false);
 
-  useEffect(() => {
-    let ignore = false;
+  const loadJob = React.useCallback(async (signal?: AbortSignal) => {
     if (isNew) return;
-
-    async function load() {
-      try {
-        setLoading(true);
-        const job = await getAdminJob(id);
-        if (!ignore) {
-          setJobData(toJobFormData(job));
-        }
-      } catch (err: unknown) {
-        if (!ignore) {
-          const msg = err instanceof Error ? err.message : "Network error loading position data.";
-          setAlertMessage({ type: "error", text: msg });
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
+    try {
+      setLoading(true);
+      setLoadError(null);
+      const job = await getAdminJob(id, signal);
+      setJobData(toJobFormData(job));
+    } catch (err: unknown) {
+      if (signal?.aborted) return;
+      const msg = err instanceof Error ? err.message : "Network error loading position data.";
+      setLoadError(msg);
+      setAlertMessage({ type: "error", text: msg });
+    } finally {
+      setLoading(false);
     }
-
-    void load();
-
-    return () => {
-      ignore = true;
-    };
   }, [id, isNew]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    loadJob(controller.signal);
+    return () => {
+      controller.abort();
+    };
+  }, [loadJob]);
 
   // Save handler (Create new or update existing)
   const handleSave = async (updatedData: JobFormData) => {
@@ -240,6 +236,31 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         <p className="font-mono text-xs font-bold tracking-wider text-slate-500 uppercase">
           Loading role authoring editor...
         </p>
+      </div>
+    );
+  }
+
+  if (!isNew && loadError && !jobData.id) {
+    return (
+      <div
+        role="alert"
+        className="flex min-h-[50vh] flex-col items-center justify-center p-8 text-center"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
+          <AlertCircle className="h-6 w-6" />
+        </div>
+        <h3 className="mt-4 font-sora text-lg font-bold text-slate-900 dark:text-white">
+          Failed to Load Position
+        </h3>
+        <p className="mt-1 max-w-sm text-xs text-slate-500 dark:text-slate-400">{loadError}</p>
+        <div className="mt-6 flex items-center gap-3">
+          <Button onClick={() => loadJob()} size="sm" className="gap-2 rounded-xl text-xs font-bold">
+            <RefreshCw className="h-3.5 w-3.5" /> Retry Loading
+          </Button>
+          <Button asChild variant="outline" size="sm" className="rounded-xl text-xs">
+            <Link href="/admin/careers/jobs">Back to All Positions</Link>
+          </Button>
+        </div>
       </div>
     );
   }

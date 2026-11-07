@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Search,
   Filter,
@@ -15,10 +15,13 @@ import {
   Clock,
   Loader2,
   ShieldCheck,
+  AlertCircle,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ApplicationStatus } from "@/lib/constants/enums";
 import {
   ApplicationsTable,
@@ -32,7 +35,8 @@ import {
   updateAdminApplication,
   getAdminApplicationsExportUrl,
 } from "@/lib/api/admin-applications.api";
-import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
+import { listAdminJobs } from "@/lib/api/admin-jobs.api";
+import { AsyncState } from "@/components/feedback/AsyncState";
 
 interface JobOption {
   id: string;
@@ -46,6 +50,7 @@ export default function ApplicationsInboxPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,60 +75,84 @@ export default function ApplicationsInboxPage() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Load jobs filter list
+  // Load jobs filter list safely via listAdminJobs
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
     setLoadingJobs(true);
-    fetch(`${API_ENDPOINTS.ADMIN.JOBS}?limit=100`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (isMounted && data.items) {
-          const mappedJobs = data.items.map(
-            (j: { id: string; title: string; department?: string }) => ({
-              id: j.id,
-              title: j.title,
-              department: j.department,
-            }),
-          );
-          setJobs(mappedJobs);
-        }
+
+    listAdminJobs({ limit: 100, signal: controller.signal })
+      .then((items) => {
+        const mappedJobs = (items ?? []).map((j) => ({
+          id: j.id,
+          title: j.title || "Untitled Role",
+          department: j.department || "General",
+        }));
+        setJobs(mappedJobs);
       })
       .catch(() => {
-        // Fallback to empty if jobs cannot be loaded
+        // Fallback gracefully without breaking candidate view
       })
       .finally(() => {
-        if (isMounted) setLoadingJobs(false);
+        setLoadingJobs(false);
       });
 
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, []);
 
+  // Request race condition guard
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const requestSeqRef = useRef<number>(0);
+
   // Fetch applications
   const fetchApplications = useCallback(async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    const currentSeq = ++requestSeqRef.current;
+
     setLoading(true);
     setError(null);
+
     try {
-      const data = await listAdminApplications({
-        jobId: selectedJobId || undefined,
-        status: selectedStatus ? (selectedStatus as ApplicationStatus) : undefined,
-        search: debouncedSearch.trim() || undefined,
-        knockoutTriggered: knockoutOnly ? true : undefined,
-        limit: 100,
-      });
-      setApplications(data.applications);
-      setTotalCount(data.total);
+      const data = await listAdminApplications(
+        {
+          jobId: selectedJobId || undefined,
+          status: selectedStatus ? (selectedStatus as ApplicationStatus) : undefined,
+          search: debouncedSearch.trim() || undefined,
+          knockoutTriggered: knockoutOnly ? true : undefined,
+          limit: 100,
+        },
+        { signal: controller.signal },
+      );
+
+      if (currentSeq === requestSeqRef.current) {
+        setApplications(data.applications ?? []);
+        setTotalCount(data.total ?? 0);
+      }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to load candidate applications";
-      setError(msg);
+      if (controller.signal.aborted) return;
+      if (currentSeq === requestSeqRef.current) {
+        const msg = err instanceof Error ? err.message : "Failed to load candidate applications";
+        setError(msg);
+      }
     } finally {
-      setLoading(false);
+      if (currentSeq === requestSeqRef.current) {
+        setLoading(false);
+      }
     }
   }, [selectedJobId, selectedStatus, debouncedSearch, knockoutOnly]);
 
   useEffect(() => {
     fetchApplications();
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [fetchApplications]);
 
   // Handle stage change (e.g. from Kanban drag or advance)
@@ -133,31 +162,36 @@ export default function ApplicationsInboxPage() {
     rejectionReason?: string,
   ) => {
     try {
+      setActionError(null);
       await updateAdminApplication(id, {
         status: newStage,
         rejectionReason: rejectionReason || undefined,
       });
 
-      // Optimistically or refetch
       await fetchApplications();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to update candidate stage";
-      alert(msg);
+      setActionError(msg);
     }
   };
 
   // Handle CSV export
   const handleExportCsv = () => {
-    const exportUrl = getAdminApplicationsExportUrl(selectedJobId || undefined);
-    window.open(exportUrl, "_blank");
+    try {
+      const exportUrl = getAdminApplicationsExportUrl(selectedJobId || undefined);
+      window.open(exportUrl, "_blank");
+    } catch {
+      setActionError("Unable to open export URL. Please verify popup permissions.");
+    }
   };
 
-  // Quick stats
-  const newCount = applications.filter((a) => a.status === ApplicationStatus.NEW).length;
-  const interviewCount = applications.filter(
+  // Defensive metrics calculation
+  const safeApps = Array.isArray(applications) ? applications : [];
+  const newCount = safeApps.filter((a) => a.status === ApplicationStatus.NEW).length;
+  const interviewCount = safeApps.filter(
     (a) => a.status === ApplicationStatus.INTERVIEW,
   ).length;
-  const knockoutCount = applications.filter((a) => a.knockoutTriggered).length;
+  const knockoutCount = safeApps.filter((a) => a.knockoutTriggered).length;
 
   return (
     <div className="animate-in fade-in space-y-6 duration-300">
@@ -204,6 +238,25 @@ export default function ApplicationsInboxPage() {
           </Button>
         </div>
       </div>
+
+      {/* Non-blocking action error notification */}
+      {actionError && (
+        <div
+          role="alert"
+          className="flex items-center justify-between rounded-2xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-300"
+        >
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+            <span>{actionError}</span>
+          </div>
+          <button
+            onClick={() => setActionError(null)}
+            className="cursor-pointer font-bold text-rose-800 hover:opacity-80 dark:text-rose-200"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Metrics Banner */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
@@ -264,8 +317,16 @@ export default function ApplicationsInboxPage() {
               placeholder="Search candidate or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pr-3 pl-9 text-xs text-slate-800 placeholder:text-slate-400 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pr-8 pl-9 text-xs text-slate-800 placeholder:text-slate-400 focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/20 focus:outline-none dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Job Filter Dropdown */}
@@ -284,7 +345,7 @@ export default function ApplicationsInboxPage() {
             </select>
           </div>
 
-          {/* Stage Filter Dropdown (Active primarily in table view) */}
+          {/* Stage Filter Dropdown */}
           {viewMode === "table" && (
             <div className="relative">
               <select
@@ -346,40 +407,66 @@ export default function ApplicationsInboxPage() {
         </div>
       </div>
 
-      {/* Main View Area */}
-      {loading && applications.length === 0 ? (
-        <div className="space-y-3 rounded-3xl border border-slate-200/80 bg-white py-24 text-center dark:border-slate-800 dark:bg-slate-900">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-[#1155CC]" />
-          <p className="text-xs font-medium text-slate-500">Loading candidate applications...</p>
-        </div>
-      ) : error ? (
-        <div className="space-y-2 rounded-3xl border border-rose-200 bg-rose-50 p-6 text-xs text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-300">
-          <div className="flex items-center gap-2 font-bold">
-            <AlertTriangle className="h-4 w-4" />
-            <span>Failed to load applications</span>
+      {/* Main View Area wrapped in AsyncState */}
+      <AsyncState
+        loading={loading}
+        error={error}
+        data={applications}
+        isEmpty={(items) => items.length === 0}
+        onRetry={fetchApplications}
+        skeleton={
+          <div className="space-y-3 py-12">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} className="h-16 w-full rounded-2xl" />
+            ))}
           </div>
-          <p>{error}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchApplications()}
-            className="mt-2 rounded-xl text-xs"
-          >
-            Try Again
-          </Button>
-        </div>
-      ) : viewMode === "table" ? (
-        <ApplicationsTable
-          applications={applications}
-          onSelectApplication={(id) => setSelectedAppId(id)}
-        />
-      ) : (
-        <ApplicationsKanban
-          applications={applications}
-          onSelectApplication={(id) => setSelectedAppId(id)}
-          onStageChange={handleStageChange}
-        />
-      )}
+        }
+        emptyUI={
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-16 text-center dark:border-slate-800 dark:bg-slate-900">
+            <Users className="h-10 w-10 text-slate-300 dark:text-slate-600" />
+            <h4 className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
+              {debouncedSearch || selectedJobId || selectedStatus || knockoutOnly
+                ? "No applications match current filters"
+                : "No candidate applications received yet"}
+            </h4>
+            <p className="mt-1 max-w-sm text-xs text-slate-400">
+              {debouncedSearch || selectedJobId || selectedStatus || knockoutOnly
+                ? "Try clearing your search query or selecting 'All Open Roles'."
+                : "Public submissions from the careers portal will populate your candidate pipeline automatically."}
+            </p>
+            {(debouncedSearch || selectedJobId || selectedStatus || knockoutOnly) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedJobId("");
+                  setSelectedStatus("");
+                  setKnockoutOnly(false);
+                }}
+                className="mt-4 rounded-xl text-xs"
+              >
+                Clear All Filters
+              </Button>
+            )}
+          </div>
+        }
+      >
+        {(renderedApps) =>
+          viewMode === "table" ? (
+            <ApplicationsTable
+              applications={renderedApps}
+              onSelectApplication={(id) => setSelectedAppId(id)}
+            />
+          ) : (
+            <ApplicationsKanban
+              applications={renderedApps}
+              onSelectApplication={(id) => setSelectedAppId(id)}
+              onStageChange={handleStageChange}
+            />
+          )
+        }
+      </AsyncState>
 
       {/* Candidate Profile Evaluation Drawer */}
       <CandidateDrawer

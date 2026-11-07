@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import type {
   ListApplicationsQueryInput,
@@ -8,6 +9,12 @@ import type {
   CandidateCompliancePurgeResponse,
 } from "@/lib/contracts/admin-careers-compliance.contract";
 import type { ApplicationItem } from "@/components/admin/careers/ApplicationsTable";
+import { safeFetch } from "@/lib/http/safeFetch";
+import {
+  SafeApplicationsListResponseSchema,
+  SafeCandidateDetailSchema,
+  type SafeCandidateDetail,
+} from "@/lib/validations/admin-careers-boundary.schema";
 
 export interface ScreeningAnswerItem {
   question: string;
@@ -15,35 +22,35 @@ export interface ScreeningAnswerItem {
   isKnockout?: boolean;
 }
 
-export interface CandidateApplicationDetail extends ApplicationItem {
-  jobId?: string;
-  currentLocation?: string | null;
-  noticePeriodWeeks?: number | null;
-  resumeFileName?: string | null;
-  resumeUrl?: string | null;
-  portfolioUrl?: string | null;
-  linkedinUrl?: string | null;
-  githubUrl?: string | null;
-  websiteUrl?: string | null;
-  coverLetter?: string | null;
-  screeningAnswers?: ScreeningAnswerItem[] | null;
-  rejectionReason?: string | null;
-  internalNotes?: string | null;
-  updatedAt?: string | Date;
-}
+export type CandidateApplicationDetail = SafeCandidateDetail;
 
 export interface ListApplicationsResult {
   applications: ApplicationItem[];
   total: number;
 }
 
+export interface ListApplicationsFetchOptions {
+  signal?: AbortSignal;
+}
+
+const SingleAppResponseSchema = z
+  .object({
+    application: SafeCandidateDetailSchema,
+  })
+  .or(SafeCandidateDetailSchema);
+
+const ResumeResponseSchema = z.object({
+  signedUrl: z.string(),
+  fileName: z.string().optional(),
+});
+
 /**
  * Lists candidate applications with optional filters.
  * Endpoint: GET /api/admin/careers/applications
- * Contract: listApplicationsContract
  */
 export async function listAdminApplications(
   query?: ListApplicationsQueryInput,
+  options?: ListApplicationsFetchOptions,
 ): Promise<ListApplicationsResult> {
   const params = new URLSearchParams();
 
@@ -61,63 +68,40 @@ export async function listAdminApplications(
     ? `${API_ENDPOINTS.ADMIN.APPLICATIONS}?${queryStr}`
     : API_ENDPOINTS.ADMIN.APPLICATIONS;
 
-  const response = await fetch(url, {
+  const result = await safeFetch(url, SafeApplicationsListResponseSchema, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
+    signal: options?.signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load candidate applications.";
-    throw new Error(errorMsg);
-  }
-
-  const applications = resJson.data?.applications || resJson.applications || [];
-  const total = resJson.data?.total ?? resJson.total ?? applications.length;
-
-  return { applications, total };
+  return {
+    applications: result.applications as unknown as ApplicationItem[],
+    total: result.total,
+  };
 }
 
 /**
  * Retrieves a candidate application by its ID.
  * Endpoint: GET /api/admin/careers/applications/[id]
- * Contract: getApplicationByIdContract
  */
-export async function getAdminApplication(id: string): Promise<CandidateApplicationDetail> {
+export async function getAdminApplication(
+  id: string,
+  signal?: AbortSignal,
+): Promise<CandidateApplicationDetail> {
   const url = API_ENDPOINTS.ADMIN.APPLICATION(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SingleAppResponseSchema, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
+    signal,
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to load application details.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.application || resJson.application;
+  return (data && "application" in data ? data.application : data) as CandidateApplicationDetail;
 }
 
 /**
  * Updates candidate application status, notes, rating, or rejection reason.
  * Endpoint: PATCH /api/admin/careers/applications/[id]
- * Contract: updateApplicationContract
  */
 export async function updateAdminApplication(
   id: string,
@@ -125,7 +109,7 @@ export async function updateAdminApplication(
 ): Promise<CandidateApplicationDetail> {
   const url = API_ENDPOINTS.ADMIN.APPLICATION(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, SingleAppResponseSchema, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -134,57 +118,29 @@ export async function updateAdminApplication(
     body: JSON.stringify(patch),
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to update candidate application.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data?.application || resJson.application;
+  return (data && "application" in data ? data.application : data) as CandidateApplicationDetail;
 }
 
 /**
  * Retrieves a secure short-lived signed URL to preview candidate resume.
  * Endpoint: GET /api/admin/careers/applications/[id]/resume
- * Contract: getApplicationResumeContract
  */
 export async function getAdminApplicationResume(
   id: string,
 ): Promise<{ signedUrl: string; fileName?: string }> {
   const url = API_ENDPOINTS.ADMIN.APPLICATION_RESUME(id);
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, ResumeResponseSchema, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to retrieve resume link.";
-    throw new Error(errorMsg);
-  }
-
-  return {
-    signedUrl: resJson.data?.signedUrl || resJson.signedUrl,
-    fileName: resJson.data?.fileName || resJson.fileName,
-  };
+  return data;
 }
 
 /**
  * Returns formatted URL for downloading candidate applications CSV.
  * Endpoint: GET /api/admin/careers/applications/export
- * Contract: exportApplicationsContract
  */
 export function getAdminApplicationsExportUrl(jobId?: string): string {
   const params = new URLSearchParams();
@@ -198,7 +154,6 @@ export function getAdminApplicationsExportUrl(jobId?: string): string {
 /**
  * Exports GDPR/EEOC compliance data bundle for a specific candidate email.
  * Endpoint: GET /api/admin/careers/compliance?email=...
- * Contract: exportCandidateDataContract
  */
 export async function exportCandidateCompliance(
   email: string,
@@ -206,40 +161,24 @@ export async function exportCandidateCompliance(
   const params = new URLSearchParams({ email });
   const url = `${API_ENDPOINTS.ADMIN.COMPLIANCE}?${params.toString()}`;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
     credentials: "include",
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message ||
-          resJson.message ||
-          "Failed to export candidate compliance data.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
+  return data as CandidateComplianceExportResponse;
 }
 
 /**
  * Permanently purges all candidate data, resumes, and submissions (Right to be Forgotten).
  * Endpoint: POST /api/admin/careers/compliance
- * Contract: purgeCandidateDataContract
  */
 export async function purgeCandidateCompliance(
   email: string,
 ): Promise<CandidateCompliancePurgeResponse> {
   const url = API_ENDPOINTS.ADMIN.COMPLIANCE;
 
-  const response = await fetch(url, {
+  const data = await safeFetch(url, z.any(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -248,15 +187,5 @@ export async function purgeCandidateCompliance(
     body: JSON.stringify({ email }),
   });
 
-  const resJson = await response.json();
-
-  if (!response.ok || !resJson.ok) {
-    const errorMsg =
-      typeof resJson.error === "string"
-        ? resJson.error
-        : resJson.error?.message || resJson.message || "Failed to purge candidate data.";
-    throw new Error(errorMsg);
-  }
-
-  return resJson.data || resJson;
+  return data as CandidateCompliancePurgeResponse;
 }

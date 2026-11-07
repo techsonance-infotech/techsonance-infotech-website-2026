@@ -55,6 +55,8 @@ export default function TopicsBacklogPage() {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [topicToDelete, setTopicToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // New topic modal state
   const [newTitle, setNewTitle] = useState("");
@@ -63,16 +65,27 @@ export default function TopicsBacklogPage() {
   const [newAudience, setNewAudience] = useState("Tech Leads & Engineers");
   const [newDifficulty, setNewDifficulty] = useState("intermediate");
 
+  const abortControllerRef = React.useRef<AbortController | null>(null);
+
   const loadTopics = async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       setLoading(true);
-      const data = await listAdminAiTopics({
-        status: activeTab !== "ALL" ? (activeTab as AiTopicStatus) : undefined,
-        search: search.trim() || undefined,
-      });
+      const data = await listAdminAiTopics(
+        {
+          status: activeTab !== "ALL" ? (activeTab as AiTopicStatus) : undefined,
+          search: search.trim() || undefined,
+        },
+        controller.signal,
+      );
       setTopics(data.topics);
     } catch {
-      // Non-blocking fetch error handling
+      // Handled cleanly via boundary
     } finally {
       setLoading(false);
     }
@@ -80,6 +93,11 @@ export default function TopicsBacklogPage() {
 
   useEffect(() => {
     void loadTopics();
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [activeTab, search]);
 
   const handleUpdateStatus = async (id: string, status: AiTopicStatus) => {
@@ -93,15 +111,23 @@ export default function TopicsBacklogPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this topic from backlog?")) return;
+  const handleDelete = (id: string, title: string) => {
+    setTopicToDelete({ id, title });
+  };
+
+  const confirmDeleteTopic = async () => {
+    if (!topicToDelete) return;
     try {
-      await deleteAdminAiTopic(id);
-      setTopics((prev) => prev.filter((t) => t.id !== id));
+      setDeleting(true);
+      await deleteAdminAiTopic(topicToDelete.id);
+      setTopics((prev) => prev.filter((t) => t.id !== topicToDelete.id));
       showMessage("Topic removed");
+      setTopicToDelete(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to delete topic";
       showMessage(msg);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -112,7 +138,8 @@ export default function TopicsBacklogPage() {
       setTopics((prev) =>
         prev.map((t) => (t.id === id ? { ...t, status: AiTopicStatus.QUEUED } : t)),
       );
-      showMessage(`Autonomous job created! Job ID: ${res.jobId.slice(0, 8)}...`);
+      const shortId = res.jobId ? `${res.jobId.slice(0, 8)}...` : "queued";
+      showMessage(`Autonomous job created! Job ID: ${shortId}`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error launching job";
       showMessage(msg);
@@ -407,7 +434,7 @@ export default function TopicsBacklogPage() {
 
                 {topic.keywords && topic.keywords.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {topic.keywords.map((kw, i) => (
+                    {topic.keywords.map((kw: string, i: number) => (
                       <span
                         key={i}
                         className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500"
@@ -470,7 +497,7 @@ export default function TopicsBacklogPage() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => handleDelete(topic.id)}
+                  onClick={() => handleDelete(topic.id, topic.title)}
                   className="h-8 w-8 rounded-xl p-0 text-slate-400 hover:text-rose-600"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -478,6 +505,43 @@ export default function TopicsBacklogPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Non-blocking Topic Deletion Modal */}
+      {topicToDelete && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs"
+        >
+          <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+            <h3 className="font-sora text-base font-bold text-slate-900 dark:text-white">
+              Delete Topic Proposal?
+            </h3>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{topicToDelete.title}"</strong> from the backlog?
+            </p>
+            <div className="mt-5 flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={deleting}
+                onClick={() => setTopicToDelete(null)}
+                className="rounded-xl text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                disabled={deleting}
+                onClick={confirmDeleteTopic}
+                className="rounded-xl bg-rose-600 text-xs text-white hover:bg-rose-700"
+              >
+                {deleting ? "Deleting…" : "Delete Topic"}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

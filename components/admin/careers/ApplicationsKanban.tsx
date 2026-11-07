@@ -16,6 +16,7 @@ import { ApplicationStatus } from "@/lib/constants/enums";
 import type { ApplicationItem } from "./ApplicationsTable";
 import { STAGE_CONFIG } from "./CandidateDrawer";
 import { RejectionReasonDialog } from "./RejectionReasonDialog";
+import { formatDateSafe } from "@/lib/utils/formatters";
 
 interface ApplicationsKanbanProps {
   applications: ApplicationItem[];
@@ -239,7 +240,7 @@ export function ApplicationsKanban({
 
                         <span className="flex items-center gap-1">
                           <Calendar className="h-2.5 w-2.5" />
-                          {new Date(app.createdAt).toLocaleDateString("en-US", {
+                          {formatDateSafe(app.createdAt, {
                             month: "short",
                             day: "numeric",
                           })}
