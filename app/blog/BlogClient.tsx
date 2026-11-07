@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { LazyMotion, domMax, AnimatePresence } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
@@ -19,17 +19,28 @@ interface BlogClientProps {
 }
 
 export default function BlogClient({ initialPosts }: BlogClientProps): React.JSX.Element {
-  const posts = initialPosts ?? blogPosts;
+  const rawPosts = initialPosts ?? blogPosts;
+  const posts = useMemo(() => {
+    if (!Array.isArray(rawPosts)) return [];
+    return rawPosts.filter((p): p is BlogPost => p !== null && typeof p === "object");
+  }, [rawPosts]);
+
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  const filteredPosts =
-    selectedCategory === "All" ? posts : posts.filter((post) => post.category === selectedCategory);
+  const filteredPosts = useMemo(() => {
+    if (selectedCategory === "All") return posts;
+    return posts.filter(
+      (post) => (post?.category || "").toLowerCase() === selectedCategory.toLowerCase(),
+    );
+  }, [posts, selectedCategory]);
 
   // Use the first post as featured
   const featuredPost = posts[0];
-  const gridPosts = filteredPosts.filter(
-    (post) => post.slug !== featuredPost?.slug || selectedCategory !== "All",
-  );
+  const gridPosts = useMemo(() => {
+    return filteredPosts.filter(
+      (post) => post?.slug !== featuredPost?.slug || selectedCategory !== "All",
+    );
+  }, [filteredPosts, featuredPost, selectedCategory]);
 
   return (
     <LazyMotion features={domMax} strict>
@@ -46,7 +57,7 @@ export default function BlogClient({ initialPosts }: BlogClientProps): React.JSX
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                className={`cursor-pointer rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                   selectedCategory === category
                     ? "bg-[#1155CC] text-white shadow-md shadow-[#1155CC]/15"
                     : "border border-slate-100 bg-white text-slate-600 hover:border-[#1155CC]/20 hover:text-[#1155CC]"
@@ -64,7 +75,7 @@ export default function BlogClient({ initialPosts }: BlogClientProps): React.JSX
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {gridPosts.map((post) => (
-                <BlogCard key={post.slug} post={post} />
+                <BlogCard key={post.slug || "post"} post={post} />
               ))}
             </AnimatePresence>
           </div>
@@ -74,9 +85,18 @@ export default function BlogClient({ initialPosts }: BlogClientProps): React.JSX
             <div className="rounded-3xl border border-slate-100 bg-white py-20 text-center shadow-[0_15px_30px_rgba(17,85,204,0.01)]">
               <Icon name="beaker" className="mx-auto mb-4 h-12 w-12 text-[#1155CC]/30" />
               <h3 className="mb-1 text-base font-medium text-slate-900">No articles found</h3>
-              <p className="text-xs font-semibold text-slate-400">
+              <p className="mb-4 text-xs font-semibold text-slate-400">
                 Check back later or try selecting another category.
               </p>
+              {selectedCategory !== "All" && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("All")}
+                  className="rounded-xl bg-[#1155CC] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#0d44a4]"
+                >
+                  View All Categories
+                </button>
+              )}
             </div>
           )}
         </section>

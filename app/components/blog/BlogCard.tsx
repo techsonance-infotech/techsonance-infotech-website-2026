@@ -11,6 +11,11 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post }: BlogCardProps): React.JSX.Element {
+  const authors =
+    Array.isArray(post.authors) && post.authors.length > 0
+      ? post.authors
+      : [{ name: "TechSonance Team", role: "Engineering", avatar: "TS" }];
+
   return (
     <m.article
       layout
@@ -29,19 +34,19 @@ export function BlogCard({ post }: BlogCardProps): React.JSX.Element {
             className="h-12 w-12 text-[#1155CC]/25 transition-all duration-500 group-hover:scale-110"
           />
           <span className="absolute top-4 left-4 rounded-lg border border-slate-100 bg-white/90 px-2.5 py-1 text-[9px] font-black tracking-wider text-[#1155CC] uppercase backdrop-blur-sm">
-            {post.category}
+            {post.category || "Software Engineering"}
           </span>
         </div>
 
         {/* Card details */}
         <div className="p-6">
-          <Link href={`/blog/${post.slug}`}>
+          <Link href={`/blog/${post.slug || "post"}`}>
             <h4 className="mb-2.5 line-clamp-2 font-sora text-base leading-snug font-medium text-slate-900 transition-colors hover:text-[#1155CC] sm:text-lg">
-              {post.title}
+              {post.title || "Untitled Article"}
             </h4>
           </Link>
           <p className="line-clamp-3 text-xs leading-relaxed font-semibold text-slate-500">
-            {post.excerpt}
+            {post.excerpt || "Read our technical analysis and architectural breakdown."}
           </p>
         </div>
       </div>
@@ -51,31 +56,31 @@ export function BlogCard({ post }: BlogCardProps): React.JSX.Element {
         <div className="mt-2 flex items-center justify-between border-t border-slate-50/50 pt-4">
           <div className="flex items-center gap-2">
             <div className="flex -space-x-2 overflow-hidden">
-              {post.authors.map((auth, index) => (
+              {authors.map((auth, index) => (
                 <div
-                  key={auth.name}
+                  key={auth.name || String(index)}
                   className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white bg-[#1155CC]/5 text-[10px] font-bold text-[#1155CC] shadow-sm"
                   style={{ zIndex: 10 - index }}
                 >
-                  {auth.avatar}
+                  {auth.avatar || "TS"}
                 </div>
               ))}
             </div>
             <div>
               <span className="block text-[10px] leading-tight font-bold text-slate-800">
-                {post.authors.map((a) => a.name).join(" & ")}
+                {authors.map((a) => a.name || "TechSonance Team").join(" & ")}
               </span>
               <span className="mt-0.5 block text-[9px] leading-none font-medium text-slate-400">
-                {post.authors.map((a) => a.role).join(" / ")}
+                {authors.map((a) => a.role || "Engineering").join(" / ")}
               </span>
             </div>
           </div>
           <div className="text-right">
             <span className="mb-0.5 block text-[9px] font-bold text-slate-400">
-              {post.date}
+              {post.date || ""}
             </span>
             <span className="text-[9px] font-semibold text-[#1155CC]">
-              {post.readTime}
+              {post.readTime || "5 min read"}
             </span>
           </div>
         </div>

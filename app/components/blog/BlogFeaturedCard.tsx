@@ -11,6 +11,11 @@ interface BlogFeaturedCardProps {
 }
 
 export function BlogFeaturedCard({ post }: BlogFeaturedCardProps): React.JSX.Element {
+  const authors =
+    Array.isArray(post.authors) && post.authors.length > 0
+      ? post.authors
+      : [{ name: "TechSonance Team", role: "Engineering", avatar: "TS" }];
+
   return (
     <m.div
       initial={{ opacity: 0, y: 30 }}
@@ -34,46 +39,46 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps): React.JSX.Ele
       <div className="flex flex-col justify-between p-6 sm:p-8 lg:col-span-6">
         <div>
           <span className="mb-2 block text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
-            {post.category}
+            {post.category || "Software Engineering"}
           </span>
-          <Link href={`/blog/${post.slug}`}>
+          <Link href={`/blog/${post.slug || "post"}`}>
             <h3 className="mb-4 font-sora text-xl leading-tight font-medium text-slate-900 transition-colors hover:text-[#1155CC] sm:text-2xl">
-              {post.title}
+              {post.title || "Untitled Featured Article"}
             </h3>
           </Link>
           <p className="mb-6 text-xs leading-relaxed font-medium text-slate-500 sm:text-sm">
-            {post.excerpt}
+            {post.excerpt || "Explore our in-depth architecture insights and software solutions."}
           </p>
         </div>
 
         <div className="mt-4 flex items-center justify-between border-t border-slate-50 pt-4">
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2.5 overflow-hidden">
-              {post.authors.map((auth, index) => (
+              {authors.map((auth, index) => (
                 <div
-                  key={auth.name}
+                  key={auth.name || String(index)}
                   className="relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#1155CC] text-xs font-bold text-white shadow-inner"
                   style={{ zIndex: 10 - index }}
                 >
-                  {auth.avatar}
+                  {auth.avatar || "TS"}
                 </div>
               ))}
             </div>
             <div>
               <span className="mb-1 block text-xs leading-none font-bold text-slate-800">
-                {post.authors.map((a) => a.name).join(" & ")}
+                {authors.map((a) => a.name || "TechSonance Team").join(" & ")}
               </span>
               <span className="block text-[10px] leading-none font-medium text-slate-400">
-                {post.authors.map((a) => a.role).join(" / ")}
+                {authors.map((a) => a.role || "Engineering").join(" / ")}
               </span>
             </div>
           </div>
           <div className="text-right">
             <span className="mb-1 block text-[10px] leading-none font-bold text-slate-400">
-              {post.date}
+              {post.date || ""}
             </span>
             <span className="rounded-full bg-[#1155CC]/5 px-2 py-0.5 text-[10px] font-semibold text-[#1155CC]">
-              {post.readTime}
+              {post.readTime || "5 min read"}
             </span>
           </div>
         </div>

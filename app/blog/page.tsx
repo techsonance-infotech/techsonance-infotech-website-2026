@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import BlogClient from "./BlogClient";
 import JsonLd from "@/app/components/JsonLd";
 import { BASE_URL, SEO_METADATA } from "@/lib/seo-aeo-geo-config";
 import { getPostSource } from "@/lib/content/posts";
+import type { BlogPost } from "@/lib/content/types";
+import { publicBlogListBoundarySchema } from "@/lib/validations/public-blog-boundary.schema";
+import BlogLoading from "./loading";
 
 export const metadata: Metadata = {
   title: SEO_METADATA.blog.title,
@@ -20,8 +24,16 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogListingPage() {
-  const source = getPostSource();
-  const posts = await source.list();
+  let posts: BlogPost[] = [];
+
+  try {
+    const source = getPostSource();
+    const rawPosts = await source.list();
+    posts = publicBlogListBoundarySchema.parse(rawPosts);
+  } catch {
+    posts = [];
+  }
+
   const blogUrl = `${BASE_URL}/blog`;
 
   const schema = {
@@ -71,7 +83,9 @@ export default async function BlogListingPage() {
   return (
     <>
       <JsonLd schema={schema} />
-      <BlogClient initialPosts={posts} />
+      <Suspense fallback={<BlogLoading />}>
+        <BlogClient initialPosts={posts} />
+      </Suspense>
     </>
   );
 }

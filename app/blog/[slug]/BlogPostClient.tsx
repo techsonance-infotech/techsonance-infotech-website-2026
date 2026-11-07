@@ -16,8 +16,10 @@ interface BlogPostClientProps {
 
 export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
   useEffect(() => {
-    trackBlogPostView(post.slug, post.title, post.category);
-  }, [post.slug, post.title, post.category]);
+    if (post?.slug) {
+      trackBlogPostView(post.slug, post.title || "Post", post.category || "General");
+    }
+  }, [post?.slug, post?.title, post?.category]);
 
   // Scroll Progress Hook
   const { scrollYProgress } = useScroll();
@@ -26,6 +28,14 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
     damping: 30,
     restDelta: 0.001,
   });
+
+  const authors =
+    Array.isArray(post.authors) && post.authors.length > 0
+      ? post.authors
+      : [{ name: "TechSonance Team", role: "Engineering", avatar: "TS" }];
+
+  const tags = Array.isArray(post.tags) ? post.tags : [];
+  const safeRelatedPosts = Array.isArray(relatedPosts) ? relatedPosts.filter(Boolean) : [];
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -71,35 +81,35 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
             </Link>
 
             <span className="mb-3 block text-[10px] font-black tracking-wider text-[#1155CC] uppercase">
-              {post.category}
+              {post.category || "Software Engineering"}
             </span>
 
             <h1 className="mb-6 font-sora text-3xl leading-tight font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-              {post.title}
+              {post.title || "Untitled Article"}
             </h1>
 
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-slate-400">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2 overflow-hidden">
-                  {post.authors.map((auth, index) => (
+                  {authors.map((auth, index) => (
                     <div
-                      key={auth.name}
+                      key={auth.name || String(index)}
                       className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white bg-[#1155CC] text-xs font-bold text-white shadow-inner"
                       style={{ zIndex: 10 - index }}
                     >
-                      {auth.avatar}
+                      {auth.avatar || "TS"}
                     </div>
                   ))}
                 </div>
                 <span className="text-slate-700">
-                  {post.authors.map((a) => a.name).join(" & ")}
+                  {authors.map((a) => a.name || "TechSonance Team").join(" & ")}
                 </span>
               </div>
               <span>&bull;</span>
-              <span>{post.date}</span>
+              <span>{post.date || ""}</span>
               <span>&bull;</span>
               <span className="rounded-full bg-[#1155CC]/5 px-2.5 py-0.5 text-[#1155CC]">
-                {post.readTime}
+                {post.readTime || "5 min read"}
               </span>
             </div>
           </div>
@@ -114,19 +124,19 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
                   AUTHOR
                 </span>
-                {post.authors.map((auth) => (
+                {authors.map((auth, idx) => (
                   <div
-                    key={auth.name}
+                    key={auth.name || String(idx)}
                     className="mb-4 flex items-center gap-3 border-b border-slate-50 pb-3 last:mb-0 last:border-b-0 last:pb-0"
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-100 font-bold text-[#1155CC]">
-                      {auth.avatar}
+                      {auth.avatar || "TS"}
                     </div>
                     <div>
                       <h4 className="mb-0.5 text-xs leading-tight font-black text-slate-800">
-                        {auth.name}
+                        {auth.name || "TechSonance Team"}
                       </h4>
-                      <p className="text-[10px] font-semibold text-slate-400">{auth.role}</p>
+                      <p className="text-[10px] font-semibold text-slate-400">{auth.role || "Engineering"}</p>
                     </div>
                   </div>
                 ))}
@@ -135,21 +145,23 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
-                <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
-                  TAGS
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-lg border border-slate-100 bg-slate-50 px-2 py-1 text-[9px] font-bold text-slate-500"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+              {tags.length > 0 && (
+                <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
+                  <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
+                    TAGS
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-lg border border-slate-100 bg-slate-50 px-2 py-1 text-[9px] font-bold text-slate-500"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Post Content */}
@@ -157,11 +169,11 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
               {/* Main Content Render */}
               <div
                 className="prose prose-slate prose-headings:font-sora prose-headings:font-medium prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#1155CC] hover:prose-a:underline max-w-none"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 
               {/* FAQ Section (AEO & FAQPage Schema Alignment) */}
-              {post.faqs && post.faqs.length > 0 && (
+              {Array.isArray(post.faqs) && post.faqs.length > 0 && (
                 <div className="mt-12 border-t border-slate-100 pt-8">
                   <div className="mb-6 flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-[#1155CC]" />
@@ -172,7 +184,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                   <div className="space-y-4">
                     {post.faqs.map((faq, idx) => (
                       <div
-                        key={faq.question}
+                        key={faq.question || String(idx)}
                         className="rounded-2xl border border-slate-100 bg-slate-50/80 p-5 transition-colors hover:border-slate-200"
                       >
                         <h4 className="mb-2 flex items-start gap-2 font-sora text-sm font-bold text-slate-900 sm:text-base">
@@ -189,49 +201,51 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
               )}
 
               {/* Tag section (Mobile Only) */}
-              <div className="mt-8 flex flex-wrap gap-1.5 border-t border-slate-50 pt-6 lg:hidden">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-1 text-[9px] font-bold text-slate-500"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {tags.length > 0 && (
+                <div className="mt-8 flex flex-wrap gap-1.5 border-t border-slate-50 pt-6 lg:hidden">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-1 text-[9px] font-bold text-slate-500"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
 
         {/* Related Posts Section */}
-        {relatedPosts.length > 0 && (
+        {safeRelatedPosts.length > 0 && (
           <section className="relative z-10 mx-auto mt-20 max-w-7xl border-t border-slate-100 px-4 pt-16 sm:px-6 lg:px-8">
             <h3 className="mb-8 text-center font-sora text-lg font-medium text-slate-900 sm:text-left">
               Keep Reading
             </h3>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              {relatedPosts.map((rPost) => (
+              {safeRelatedPosts.map((rPost, idx) => (
                 <div
-                  key={rPost.slug}
+                  key={rPost.slug || String(idx)}
                   className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)]"
                 >
                   <div className="p-6">
                     <span className="mb-2 block text-[9px] font-black tracking-wider text-[#1155CC] uppercase">
-                      {rPost.category}
+                      {rPost.category || "Software Engineering"}
                     </span>
-                    <Link href={`/blog/${rPost.slug}`}>
+                    <Link href={`/blog/${rPost.slug || "post"}`}>
                       <h4 className="mb-2.5 line-clamp-2 font-sora text-base font-medium text-slate-900 transition-colors hover:text-[#1155CC] sm:text-lg">
-                        {rPost.title}
+                        {rPost.title || "Untitled Article"}
                       </h4>
                     </Link>
                     <p className="line-clamp-2 text-xs leading-relaxed font-semibold text-slate-500">
-                      {rPost.excerpt}
+                      {rPost.excerpt || ""}
                     </p>
                   </div>
                   <div className="flex items-center justify-between p-6 pt-0">
-                    <span className="text-[10px] font-bold text-slate-400">{rPost.date}</span>
+                    <span className="text-[10px] font-bold text-slate-400">{rPost.date || ""}</span>
                     <Link
-                      href={`/blog/${rPost.slug}`}
+                      href={`/blog/${rPost.slug || "post"}`}
                       className="group/link flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
                     >
                       Read Article

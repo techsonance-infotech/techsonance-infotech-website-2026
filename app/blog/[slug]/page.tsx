@@ -4,102 +4,147 @@ import { getPostSource } from "@/lib/content/posts";
 import BlogPostClient from "./BlogPostClient";
 import JsonLd, { getArticleSchema } from "@/app/components/JsonLd";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
+import type { BlogPost } from "@/lib/content/types";
+import {
+  publicBlogPostBoundarySchema,
+  publicBlogListBoundarySchema,
+} from "@/lib/validations/public-blog-boundary.schema";
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  const source = getPostSource();
-  const slugs = await source.slugs();
-  return slugs.map((slug) => ({
-    slug,
-  }));
+  try {
+    const source = getPostSource();
+    const slugs = await source.slugs();
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const source = getPostSource();
-  const post = await source.get(slug);
-
-  if (!post) {
-    return { title: "Post Not Found | TechSonance Blog" };
-  }
-
-  const canonicalUrl = `${BASE_URL}/blog/${post.slug}`;
-  const heroImageUrl = post.heroImage.startsWith("http")
-    ? post.heroImage
-    : `${BASE_URL}${post.heroImage}`;
-
-  let publishedTime: string;
   try {
-    publishedTime = new Date(post.date).toISOString();
-  } catch {
-    publishedTime = new Date("2026-10-14T00:00:00.000Z").toISOString();
-  }
+    const source = getPostSource();
+    const rawPost = await source.get(slug);
 
-  return {
-    title: `${post.title} | TechSonance Blog`,
-    description: post.excerpt,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      url: canonicalUrl,
-      publishedTime,
-      authors: post.authors.map((a) => a.name),
-      images: [
-        {
-          url: heroImageUrl,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
+    if (!rawPost) {
+      return { title: "Post Not Found | TechSonance Blog" };
+    }
+
+    const post = publicBlogPostBoundarySchema.parse(rawPost);
+    const canonicalUrl = `${BASE_URL}/blog/${post.slug}`;
+    const rawHero = post.heroImage || "";
+    const heroImageUrl = rawHero.startsWith("http")
+      ? rawHero
+      : rawHero
+        ? `${BASE_URL}${rawHero}`
+        : `${BASE_URL}/images/og/blog.png`;
+
+    let publishedTime: string;
+    const parsedTimestamp = new Date(post.date).getTime();
+    if (Number.isFinite(parsedTimestamp)) {
+      publishedTime = new Date(parsedTimestamp).toISOString();
+    } else {
+      publishedTime = new Date().toISOString();
+    }
+
+    const authorNames = Array.isArray(post.authors) && post.authors.length > 0
+      ? post.authors.map((a) => a?.name || "TechSonance Team")
+      : ["TechSonance Team"];
+
+    return {
       title: `${post.title} | TechSonance Blog`,
       description: post.excerpt,
-      images: [heroImageUrl],
-    },
-  };
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      openGraph: {
+        title: post.title,
+        description: post.excerpt,
+        type: "article",
+        url: canonicalUrl,
+        publishedTime,
+        authors: authorNames,
+        images: [
+          {
+            url: heroImageUrl,
+            width: 1200,
+            height: 630,
+            alt: post.title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${post.title} | TechSonance Blog`,
+        description: post.excerpt,
+        images: [heroImageUrl],
+      },
+    };
+  } catch {
+    return { title: "TechSonance Engineering Blog" };
+  }
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const source = getPostSource();
-  const post = await source.get(slug);
+  let post: BlogPost;
+  let relatedPosts: BlogPost[] = [];
 
-  if (!post) {
-    notFound();
+  try {
+    const source = getPostSource();
+    const rawPost = await source.get(slug);
+
+    if (!rawPost) {
+      notFound();
+    }
+
+    post = publicBlogPostBoundarySchema.parse(rawPost);
+
+    const allPostsRaw = await source.list();
+    const allPosts = publicBlogListBoundarySchema.parse(allPostsRaw);
+    relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  } catch (err: unknown) {
+    if (typeof err === "object" && err !== null && "digest" in err) {
+      const digest = String((err as { digest?: string }).digest || "");
+      if (digest.includes("NEXT_NOT_FOUND") || digest.includes("NEXT_REDIRECT")) {
+        throw err;
+      }
+    }
+    throw err;
   }
 
-  const allPosts = await source.list();
-  const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
-
-  const heroImageUrl = post.heroImage.startsWith("http")
-    ? post.heroImage
-    : `${BASE_URL}${post.heroImage}`;
+  const rawHero = post.heroImage || "";
+  const heroImageUrl = rawHero.startsWith("http")
+    ? rawHero
+    : rawHero
+      ? `${BASE_URL}${rawHero}`
+      : `${BASE_URL}/images/og/blog.png`;
 
   let publishedTime: string;
-  try {
-    publishedTime = new Date(post.date).toISOString();
-  } catch {
-    publishedTime = new Date("2026-10-14T00:00:00.000Z").toISOString();
+  const parsedTimestamp = new Date(post.date).getTime();
+  if (Number.isFinite(parsedTimestamp)) {
+    publishedTime = new Date(parsedTimestamp).toISOString();
+  } else {
+    publishedTime = new Date().toISOString();
   }
 
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
+  const authorsString = Array.isArray(post.authors) && post.authors.length > 0
+    ? post.authors.map((a) => a?.name || "TechSonance Team").join(" & ")
+    : "TechSonance Team";
 
   const articleSchema = getArticleSchema(
     post.title,
     post.excerpt,
     heroImageUrl,
     publishedTime,
-    post.authors.map((a) => a.name).join(" & "),
+    authorsString,
     postUrl,
   );
 
@@ -129,18 +174,20 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   };
 
   const faqSchema =
-    post.faqs && post.faqs.length > 0
+    Array.isArray(post.faqs) && post.faqs.length > 0
       ? {
           "@type": "FAQPage",
           "@id": `${postUrl}#faq`,
-          mainEntity: post.faqs.map((faq) => ({
-            "@type": "Question",
-            name: faq.question,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: faq.answer,
-            },
-          })),
+          mainEntity: post.faqs
+            .filter((faq) => faq && faq.question && faq.answer)
+            .map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
         }
       : null;
 
