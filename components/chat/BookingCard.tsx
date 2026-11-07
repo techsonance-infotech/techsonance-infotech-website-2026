@@ -157,10 +157,16 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Failed to schedule consultation.");
+        const errorMsg =
+          typeof data.error === "object" && data.error?.message
+            ? data.error.message
+            : typeof data.error === "string"
+              ? data.error
+              : "Failed to schedule consultation.";
+        throw new Error(errorMsg);
       }
 
-      const ref = data.ref || "TS-CONFIRMED";
+      const ref = data.data?.ref || data.ref || "TS-CONFIRMED";
       setBookedRef(ref);
 
       trackBookingFormSubmit({

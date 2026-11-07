@@ -46,6 +46,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 16 | `/api/admin/blog/posts/[id]/publish` | `POST` | Blog / Publishing | ✅ Done & Tested | `cf4bae2` |
 | 17 | `/api/admin/blog/posts/[id]/submit` | `POST` | Blog / Review Workflow | ✅ Done & Tested | `e47705d` |
 | 18 | `/api/admin/media/upload` | `POST` | Media Management | ✅ Done & Tested | `7a2a48a` |
+| 19 | `/api/book` | `POST` | Consultation Booking Engine | ✅ Done & Tested | Current |
 
 ---
 
@@ -75,24 +76,14 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-### Phase B: Public Consultation & Booking Engine (Next Priority)
+### Phase B: Public Consultation & Booking Engine (Completed)
 
-- [ ] **4. `POST /api/book`**
+- [x] **4. `POST /api/book`**
   - **Purpose**: Client consultation appointment booking. Validates selected slot from `GET /api/slots`, prevents double-booking race conditions with transactional locking, generates an `.ics` calendar file attachment, sends confirmation emails via Nodemailer, and stores booking in `ts_web_consultation_bookings`.
   - **Controller**: `app/api/book/route.ts`
   - **Service**: `BookingService.createBooking`
   - **Repository**: `BookingRepository.createBookingWithSlotLock`
   - **Required Tests**: 403 origin, 400 validation (name, email, time range), 409 conflict on already-booked slot, 201 booked success with calendar invite.
-
----
-
-### Phase B: Public Consultation & Booking Engine
-
-- [ ] **4. `POST /api/book`**
-  - **Purpose**: Client consultation appointment booking. Validates selected slot from `GET /api/slots`, prevents double-booking race conditions with transactional locking, generates an `.ics` calendar file attachment, sends confirmation emails via Nodemailer, and stores booking in `ts_web_consultation_bookings`.
-  - **Controller**: `app/api/book/route.ts`
-  - **Service**: `BookingService.createBooking`
-  - **Repository**: `BookingRepository.createBookingWithSlotLock`
   - **Required Tests**: 403 origin, 400 validation (name, email, time range), 409 conflict on already-booked slot, 201 booked success with calendar invite.
 
 ---
@@ -130,7 +121,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/book`"*.
+1. State: *"Proceed with `GET, POST /api/admin/ai/jobs` (Phase C: Autonomous AI Content Generation Pipeline)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`

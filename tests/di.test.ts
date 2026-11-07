@@ -4,6 +4,7 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "../lib/di/tokens";
 import { RateLimiterService } from "../lib/services/ratelimit.service";
 import { EmailService } from "../lib/services/email.service";
 import { BookingService } from "../lib/services/booking.service";
+import { BookingRepository } from "../lib/repositories/booking.repository";
 import { KBSearchService } from "../lib/services/kb-search.service";
 import { RAGService } from "../lib/services/rag.service";
 import { LLMHealthService } from "../lib/services/llm-health.service";
@@ -92,6 +93,21 @@ describe("Needle DI Container Infrastructure", () => {
             emailSent = true;
             return { ok: true };
           },
+        } as any,
+      },
+      {
+        provide: BookingRepository,
+        useValue: {
+          findBookingBySlot: async () => null,
+          findBookingByReference: async () => null,
+          createBookingWithSlotLock: async (data: any) => ({
+            id: "mock-booking-id",
+            reference: data.reference,
+            slotIso: data.slotIso,
+            status: "CONFIRMED",
+            name: data.name,
+            email: data.email,
+          }),
         } as any,
       },
       BookingService,
