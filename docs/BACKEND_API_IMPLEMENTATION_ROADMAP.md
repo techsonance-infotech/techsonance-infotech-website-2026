@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (26/26 Committed & 100% Verified)
+## 2. Completed Endpoints (27/27 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -54,6 +54,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 24 | `/api/admin/ai/usage` | `GET` | AI Telemetry & Resource Caps | ✅ Done & Tested | `2e6c999` |
 | 25 | `/api/admin/ai/prompts` | `GET`, `PATCH` | AI Prompt Template Management | ✅ Done & Tested | `cffc7b5` |
 | 26 | `/api/admin/auth/login` | `POST` | Admin Auth & Security | ✅ Done & Tested | `add805c` |
+| 27 | `/api/admin/auth/logout` | `POST` | Admin Auth & Security | ✅ Done & Tested | `be0f62e` |
 
 ---
 
@@ -154,8 +155,15 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Standalone Script**: `blackbox-testing/auth/verify_admin_auth_login_blackbox.ts` ✅ **40/40 assertions passed**
   - **Integration Guide**: `docs/auth/POST-api-admin-auth-login-integration.md`
   - **Git Commit**: `add805c`
-- [ ] **12. `POST /api/admin/auth/logout`**
+- [x] **12. `POST /api/admin/auth/logout`**
   - **Purpose**: Revokes current session token and clears HTTP-only authentication cookies.
+  - **Controller**: `app/api/admin/auth/logout/route.ts` (3-tier HTTP boundary, origin check, explicit cookie deletion via `clearSessionCookie` and `response.cookies.delete`, structured audit logging)
+  - **Contract**: `lib/contracts/admin-auth.contract.ts` (`adminLogoutContract`, `adminLogoutResponseSchema`)
+  - **Constants**: `AUTH_MESSAGES.LOGOUT_SUCCESS`, `AUTH_ERRORS.LOGOUT_FAILED`
+  - **Vitest Suite**: `tests/admin-auth-logout-blackbox.test.ts` (2 test cases)
+  - **Standalone Script**: `blackbox-testing/auth/verify_admin_auth_logout_blackbox.ts` ✅ **11/11 assertions passed**
+  - **Integration Guide**: `docs/auth/POST-api-admin-auth-logout-integration.md`
+  - **Git Commit**: `be0f62e`
 - [ ] **13. `POST /api/admin/revalidate`**
   - **Purpose**: On-demand Next.js ISR tag and path cache revalidation endpoint for editors.
 - [ ] **14. `GET, POST /api/admin/careers/compliance`** *(Low Priority / Deferred)*
@@ -166,7 +174,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/auth/logout` (Phase D: Admin Governance & System Maintenance)"*.
+1. State: *"Proceed with `POST /api/admin/revalidate` (Phase D: Admin Governance & System Maintenance)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
