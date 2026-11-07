@@ -59,3 +59,30 @@ export const AI_USAGE_ERRORS = {
   FORBIDDEN_ORIGIN: "Forbidden origin",
   LOAD_FAILED: "Failed to load AI telemetry usage metrics",
 } as const;
+
+export const AI_PROMPTS_LIMITS = {
+  STEP_NAME_MIN: 1,
+  STEP_NAME_MAX: 64,
+  SYSTEM_PROMPT_MIN: 10,
+  SYSTEM_PROMPT_MAX: 8000,
+  USER_PROMPT_TEMPLATE_MIN: 5,
+  USER_PROMPT_TEMPLATE_MAX: 4000,
+  MODEL_PREFERENCE_MAX: 100,
+  TEMPERATURE_MIN: 0,
+  TEMPERATURE_MAX: 100,
+} as const;
+
+export const AI_PROMPTS_ERRORS = {
+  UNAUTHORIZED: "You must be signed in to manage AI prompt templates",
+  FORBIDDEN_ORIGIN: "Forbidden origin",
+  FORBIDDEN_ROLE: "Insufficient permissions. Only editors and admins can modify AI prompt templates.",
+  TEMPLATE_NOT_FOUND: "AI prompt template not found",
+  LIST_FAILED: "Failed to list AI prompt templates",
+  UPDATE_FAILED: "Failed to update AI prompt template",
+  INVALID_ID: "Invalid template ID format. Expected a valid UUID.",
+  VALIDATION_FAILED: "Prompt template validation failed",
+} as const;
+
+export const AI_PROMPTS_MESSAGES = {
+  TEMPLATE_UPDATED: "Prompt template updated successfully.",
+} as const;
