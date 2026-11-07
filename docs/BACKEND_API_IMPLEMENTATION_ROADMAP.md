@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (17/17 Committed & 100% Verified)
+## 2. Completed Endpoints (18/18 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -45,12 +45,13 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 15 | `/api/admin/blog/posts/[id]` | `GET`, `PATCH`, `DELETE` | Blog / Editorial CMS | ✅ Done & Tested | `8032f1e` |
 | 16 | `/api/admin/blog/posts/[id]/publish` | `POST` | Blog / Publishing | ✅ Done & Tested | `cf4bae2` |
 | 17 | `/api/admin/blog/posts/[id]/submit` | `POST` | Blog / Review Workflow | ✅ Done & Tested | `e47705d` |
+| 18 | `/api/admin/media/upload` | `POST` | Media Management | ✅ Done & Tested | Current |
 
 ---
 
 ## 3. Remaining Endpoints to Implement (Prioritized Backlog)
 
-### Phase A: Blog / CMS Publishing & Media (Immediate Next Priority)
+### Phase A: Blog / CMS Publishing & Media (Completed)
 
 - [x] **1. `POST /api/admin/blog/posts/[id]/publish`**
   - **Purpose**: Transitions a draft or in-review blog post into `PUBLISHED` state, sets `publishedAt = new Date()`, updates `versionId`, writes audit log (`post.publish`), and triggers on-demand cache revalidation for `posts` and `post:<slug>`.
@@ -66,11 +67,22 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Repository**: `AdminPostsRepository.updatePostWithAudit`
   - **Required Tests**: 401, 403 origin, 404 not found, 200 state transition success.
 
-- [ ] **3. `POST /api/admin/media/upload`**
+- [x] **3. `POST /api/admin/media/upload`**
   - **Purpose**: Uploads blog cover images, article infographics, and rich media assets to private Supabase storage.
   - **Controller**: `app/api/admin/media/upload/route.ts`
   - **Service**: Media upload service with MIME type verification, size bounding (max 10MB), Sharp image verification, and CDN URL return.
   - **Required Tests**: 401, 403, 415 unsupported media, 413 payload too large, 201 upload success with URL.
+
+---
+
+### Phase B: Public Consultation & Booking Engine (Next Priority)
+
+- [ ] **4. `POST /api/book`**
+  - **Purpose**: Client consultation appointment booking. Validates selected slot from `GET /api/slots`, prevents double-booking race conditions with transactional locking, generates an `.ics` calendar file attachment, sends confirmation emails via Nodemailer, and stores booking in `ts_web_consultation_bookings`.
+  - **Controller**: `app/api/book/route.ts`
+  - **Service**: `BookingService.createBooking`
+  - **Repository**: `BookingRepository.createBookingWithSlotLock`
+  - **Required Tests**: 403 origin, 400 validation (name, email, time range), 409 conflict on already-booked slot, 201 booked success with calendar invite.
 
 ---
 
@@ -118,7 +130,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/media/upload`"*.
+1. State: *"Proceed with `POST /api/book`"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
