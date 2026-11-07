@@ -3,10 +3,11 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";
+import { AboutHeroBackground } from "@/app/components/about/AboutHeroBackground";
 
 const emptySubscribe = () => () => {};
 
@@ -50,113 +51,7 @@ export default function AboutHero() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-gray-100 bg-[#FAFBFD] pt-32 pb-20 md:py-28">
-        {/* Animated Background */}
-        <div className="pointer-events-none absolute inset-0 z-0">
-          {/* Base Premium Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#EFF5FA] via-[#F6FAFD] to-[#FAFBFD]" />
-
-          {/* Glowing Drifting Blobs */}
-          {mounted && !isMobile ? (
-            <>
-              <motion.div
-                animate={{
-                  x: [0, 40, -20, 0],
-                  y: [0, -30, 20, 0],
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute -top-20 -left-20 h-[400px] w-[400px] rounded-full bg-blue-400/10 blur-[100px]"
-              />
-              <motion.div
-                animate={{
-                  x: [0, -50, 30, 0],
-                  y: [0, 40, -30, 0],
-                }}
-                transition={{
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute top-1/3 right-[-100px] h-[500px] w-[500px] rounded-full bg-cyan-300/10 blur-[120px]"
-              />
-            </>
-          ) : (
-            mounted && (
-              <>
-                <div className="absolute -top-10 -left-10 h-[200px] w-[200px] rounded-full bg-blue-400/10 blur-[60px]" />
-                <div className="absolute top-1/3 right-[-50px] h-[250px] w-[250px] rounded-full bg-cyan-300/10 blur-[80px]" />
-              </>
-            )
-          )}
-
-          {/* Animated SVG Grid Lines & Light Beams */}
-          <svg
-            className="absolute inset-0 h-full w-full opacity-60"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="grid-glow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#1155CC" stopOpacity="0" />
-                <stop offset="50%" stopColor="#1155CC" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#1155CC" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="grid-glow-cyan" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#22B6F6" stopOpacity="0" />
-                <stop offset="50%" stopColor="#22B6F6" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#22B6F6" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Horizontal Grid Lines */}
-            <line x1="0" y1="15%" x2="100%" y2="15%" stroke="#E2E8F0" strokeWidth="1" />
-            <line x1="0" y1="45%" x2="100%" y2="45%" stroke="#E2E8F0" strokeWidth="1" />
-            <line x1="0" y1="75%" x2="100%" y2="75%" stroke="#E2E8F0" strokeWidth="1" />
-
-            {/* Vertical Grid Lines */}
-            <line x1="25%" y1="0" x2="25%" y2="100%" stroke="#E2E8F0" strokeWidth="1" />
-            <line x1="55%" y1="0" x2="55%" y2="100%" stroke="#E2E8F0" strokeWidth="1" />
-            <line x1="85%" y1="0" x2="85%" y2="100%" stroke="#E2E8F0" strokeWidth="1" />
-
-            {/* Light trails animation */}
-            {mounted && !isMobile && (
-              <>
-                <motion.path
-                  d="M 0,45% L 100vw,45%"
-                  fill="none"
-                  stroke="url(#grid-glow)"
-                  strokeWidth="2"
-                  strokeDasharray="200 800"
-                  animate={{
-                    strokeDashoffset: [-1000, 1000],
-                  }}
-                  transition={{
-                    duration: 9,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
-                <motion.path
-                  d="M 55%,0 L 55%,100vh"
-                  fill="none"
-                  stroke="url(#grid-glow-cyan)"
-                  strokeWidth="2"
-                  strokeDasharray="150 700"
-                  animate={{
-                    strokeDashoffset: [900, -900],
-                  }}
-                  transition={{
-                    duration: 12,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
-              </>
-            )}
-          </svg>
-        </div>
+        <AboutHeroBackground mounted={mounted} isMobile={isMobile} />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
@@ -164,7 +59,7 @@ export default function AboutHero() {
             <div className="relative flex flex-col justify-between lg:col-span-4 lg:min-h-[520px]">
               <div>
                 {/* Micro badge */}
-                <motion.div
+                <m.div
                   custom={0}
                   variants={fadeUp}
                   initial="hidden"
@@ -179,9 +74,9 @@ export default function AboutHero() {
                   <span className="text-[10px] font-medium tracking-widest text-[#1155CC] uppercase">
                     OUR MISSION
                   </span>
-                </motion.div>
+                </m.div>
 
-                <motion.h1
+                <m.h1
                   custom={1}
                   variants={fadeUp}
                   initial="hidden"
@@ -198,9 +93,9 @@ export default function AboutHero() {
                   <span className="block text-[#1155CC] lg:inline-block">
                     Software &amp; AI Engineering Partner in Surat
                   </span>
-                </motion.h1>
+                </m.h1>
 
-                <motion.p
+                <m.p
                   custom={2}
                   variants={fadeUp}
                   initial="hidden"
@@ -213,12 +108,12 @@ export default function AboutHero() {
                 >
                   We are a premium team of software architects and product engineers delivering
                   scalable codebases that accelerate business outcomes.
-                </motion.p>
+                </m.p>
               </div>
 
               {/* Info Blocks */}
               <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-0 lg:grid-cols-1">
-                <motion.div
+                <m.div
                   custom={3}
                   variants={fadeUp}
                   initial="hidden"
@@ -237,9 +132,9 @@ export default function AboutHero() {
                     Production systems built for scale - custom software, SaaS platforms, and AI
                     automation for real businesses.
                   </p>
-                </motion.div>
+                </m.div>
 
-                <motion.div
+                <m.div
                   custom={4}
                   variants={fadeUp}
                   initial="hidden"
@@ -258,12 +153,12 @@ export default function AboutHero() {
                     One engineering team from architecture through deployment. You own the code, we
                     own the execution.
                   </p>
-                </motion.div>
+                </m.div>
               </div>
             </div>
 
             {/* Center Column: Interactive Large Team Image */}
-            <motion.div
+            <m.div
               custom={0}
               variants={imageReveal}
               initial="hidden"
@@ -288,11 +183,11 @@ export default function AboutHero() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Right Column: Mini card + Philosophy block */}
             <div className="flex flex-col gap-6 lg:col-span-3 lg:min-h-[520px]">
-              <motion.div
+              <m.div
                 custom={1}
                 variants={imageReveal}
                 initial="hidden"
@@ -326,9 +221,9 @@ export default function AboutHero() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
 
-              <motion.div
+              <m.div
                 custom={3}
                 variants={fadeUp}
                 initial="hidden"
@@ -353,7 +248,7 @@ export default function AboutHero() {
                     <Link href="/portfolio">View our work</Link>
                   </Button>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           </div>
         </div>

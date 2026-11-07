@@ -202,14 +202,14 @@ export default function SiteFooter() {
               </p>
               <Button
                 onClick={() => setIsBookModalOpen(true)}
-                variant="secondary"
+                variant="default"
                 size="sm"
-                className="hover:bg-slate-850 group cursor-pointer border-slate-800 text-white shadow-md transition-all hover:border-slate-700 hover:text-white"
+                className="group cursor-pointer rounded-full bg-[#1155CC] px-5 py-2.5 text-xs font-semibold text-white shadow-md transition-all hover:bg-[#0E47AD] hover:shadow-lg hover:shadow-[#1155CC]/25 active:scale-95"
               >
                 Book Free Session
                 <Icon
                   name="arrow"
-                  className="ml-2 h-3.5 w-3.5 transform text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                  className="ml-2 h-3.5 w-3.5 transform text-white transition-all group-hover:translate-x-0.5"
                 />
               </Button>
               <div className="mt-6 text-[10px] leading-relaxed text-slate-400">
