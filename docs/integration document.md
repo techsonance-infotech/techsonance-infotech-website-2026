@@ -1,3 +1,7 @@
+# Backend Integration Master Directory
+
+> **Live Integration Progress & Status Tracker**: See [`docs/frontend-integration-status.md`](file:///c:/Users/manis/DEVELOPMENT-CODES-AND-PROJECTS/techsonance-infotech-website-2026/docs/frontend-integration-status.md) (12 of 29 Endpoints Completed — 41.4%).
+
 The master reference matrix mapping each endpoint to its exact integration document:
 
 ---
