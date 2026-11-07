@@ -45,7 +45,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 15 | `/api/admin/blog/posts/[id]` | `GET`, `PATCH`, `DELETE` | Blog / Editorial CMS | ✅ Done & Tested | `8032f1e` |
 | 16 | `/api/admin/blog/posts/[id]/publish` | `POST` | Blog / Publishing | ✅ Done & Tested | `cf4bae2` |
 | 17 | `/api/admin/blog/posts/[id]/submit` | `POST` | Blog / Review Workflow | ✅ Done & Tested | `e47705d` |
-| 18 | `/api/admin/media/upload` | `POST` | Media Management | ✅ Done & Tested | Current |
+| 18 | `/api/admin/media/upload` | `POST` | Media Management | ✅ Done & Tested | `7a2a48a` |
 
 ---
 
