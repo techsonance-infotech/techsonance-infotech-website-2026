@@ -49,6 +49,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 19 | `/api/book` | `POST` | Consultation Booking Engine | ✅ Done & Tested | `4126693` |
 | 20 | `/api/admin/ai/jobs` | `GET`, `POST` | Autonomous AI Pipeline | ✅ Done & Tested | `8bd22f2` |
 | 21 | `/api/admin/ai/topics`, `[id]` | `GET`, `POST`, `PATCH`, `DELETE` | Topic Backlog & Management | ✅ Done & Tested | `58a442f` |
+| 22 | `/api/admin/ai/topics/suggest` | `POST` | AI Topic Ideation Generator | ✅ Done & Tested | `681c515` |
 
 ---
 
@@ -103,8 +104,12 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Service**: `AdminTopicsService`
   - **Repository**: `TopicsRepository`
   - **Required Tests**: 401 unauthenticated, 403 origin, 403 role permissions (Viewer vs Editor+), 422 validation, 404 not found, 200 get list, 201 create topic, 200 update status, 200 delete topic.
-- [ ] **7. `POST /api/admin/ai/topics/suggest`**
-  - **Purpose**: Autonomous topic ideation generator powered by LLM / search intent cues.
+- [x] **7. `POST /api/admin/ai/topics/suggest`**
+  - **Purpose**: Autonomous topic ideation generator powered by LLM / search intent cues, persisting proposals into `ts_ai_topics`.
+  - **Controller**: `app/api/admin/ai/topics/suggest/route.ts`
+  - **Service**: `AdminTopicsService.suggestTopicsWithAI(category)`
+  - **Contract**: `lib/contracts/admin-ai-topics.contract.ts` (`suggestAiTopicsContract`)
+  - **Required Tests**: 401 unauthenticated, 403 foreign origin, 403 viewer/author denied, 400 bad JSON, 422 validation, 200 suggest with custom category, 200 default category, 500 error mapping.
 - [ ] **8. `POST /api/admin/ai/topics/[id]/launch`**
   - **Purpose**: Triggers end-to-end autonomous content generation for a specific queued topic.
 - [ ] **9. `GET /api/admin/ai/usage`**
@@ -130,7 +135,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/ai/topics/suggest` (Phase C: Autonomous AI Content Generation Pipeline)"*.
+1. State: *"Proceed with `POST /api/admin/ai/topics/[id]/launch` (Phase C: Autonomous AI Content Generation Pipeline)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
