@@ -24,7 +24,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 
 ---
 
-## 2. Completed Endpoints (18/18 Committed & 100% Verified)
+## 2. Completed Endpoints (25/25 Committed & 100% Verified)
 
 | # | Endpoint | Method | Domain | Status | Key Commits |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -52,6 +52,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 22 | `/api/admin/ai/topics/suggest` | `POST` | AI Topic Ideation Generator | ✅ Done & Tested | `681c515` |
 | 23 | `/api/admin/ai/topics/[id]/launch` | `POST` | 1-Click Autonomous Job Trigger | ✅ Done & Tested | `322ea01` |
 | 24 | `/api/admin/ai/usage` | `GET` | AI Telemetry & Resource Caps | ✅ Done & Tested | `2e6c999` |
+| 25 | `/api/admin/ai/prompts` | `GET`, `PATCH` | AI Prompt Template Management | ✅ Done & Tested | `cffc7b5` |
 
 ---
 
@@ -125,8 +126,17 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Repository**: `AdminTelemetryRepository.getTelemetryAggregates`
   - **Contract**: `lib/contracts/admin-ai-usage.contract.ts` (`getAiUsageTelemetryContract`)
   - **Required Tests**: 401 unauthenticated, 403 foreign origin, 200 get telemetry for viewer role, 200 get telemetry for editor role, 500 error mapping.
-- [ ] **10. `GET, POST /api/admin/ai/prompts`**
+- [x] **10. `GET, PATCH /api/admin/ai/prompts`**
   - **Purpose**: Configures dynamic prompt templates for autonomous article generation and image synthesis.
+  - **Controller**: `app/api/admin/ai/prompts/route.ts` (fully rewritten — DoD-compliant with origin check, RBAC, Zod validation, `{ok, data}` envelope, `x-request-id`, `Cache-Control: private, no-store`)
+  - **Contract**: `lib/contracts/admin-ai-prompts.contract.ts` (`listAiPromptsContract`, `updateAiPromptContract`)
+  - **Service**: `AdminPromptsService.listTemplates()` / `.updateTemplate(id, patch)` — existing, unchanged
+  - **Repository**: `AdminPromptsRepository` — existing, unchanged
+  - **Constants**: `AI_PROMPTS_LIMITS`, `AI_PROMPTS_ERRORS`, `AI_PROMPTS_MESSAGES` added to `lib/constants/ai.constants.ts`
+  - **Vitest Suite**: `tests/admin-ai-prompts-blackbox.test.ts` (13 test cases)
+  - **Standalone Script**: `blackbox-testing/ai/verify_admin_ai_prompts_blackbox.ts` ✅ **57/57 assertions passed**
+  - **Integration Guide**: `docs/ai/GET-PATCH-api-admin-ai-prompts-integration.md`
+  - **Git Commit**: `cffc7b5`
 
 ---
 
