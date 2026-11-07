@@ -50,6 +50,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 | 20 | `/api/admin/ai/jobs` | `GET`, `POST` | Autonomous AI Pipeline | ✅ Done & Tested | `8bd22f2` |
 | 21 | `/api/admin/ai/topics`, `[id]` | `GET`, `POST`, `PATCH`, `DELETE` | Topic Backlog & Management | ✅ Done & Tested | `58a442f` |
 | 22 | `/api/admin/ai/topics/suggest` | `POST` | AI Topic Ideation Generator | ✅ Done & Tested | `681c515` |
+| 23 | `/api/admin/ai/topics/[id]/launch` | `POST` | 1-Click Autonomous Job Trigger | ✅ Done & Tested | `322ea01` |
 
 ---
 
@@ -110,8 +111,12 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
   - **Service**: `AdminTopicsService.suggestTopicsWithAI(category)`
   - **Contract**: `lib/contracts/admin-ai-topics.contract.ts` (`suggestAiTopicsContract`)
   - **Required Tests**: 401 unauthenticated, 403 foreign origin, 403 viewer/author denied, 400 bad JSON, 422 validation, 200 suggest with custom category, 200 default category, 500 error mapping.
-- [ ] **8. `POST /api/admin/ai/topics/[id]/launch`**
-  - **Purpose**: Triggers end-to-end autonomous content generation for a specific queued topic.
+- [x] **8. `POST /api/admin/ai/topics/[id]/launch`**
+  - **Purpose**: Triggers end-to-end autonomous content generation for a specific queued topic and transitions status to QUEUED.
+  - **Controller**: `app/api/admin/ai/topics/[id]/launch/route.ts`
+  - **Service**: `AdminTopicsService.launchTopicGeneration(id)` & `JobOrchestratorService`
+  - **Contract**: `lib/contracts/admin-ai-topics.contract.ts` (`launchAiTopicContract`)
+  - **Required Tests**: 401 unauthenticated, 403 origin, 403 viewer/author denied, 400 invalid UUID, 404 not found, 200 launch success returning jobId, 500 error mapping.
 - [ ] **9. `GET /api/admin/ai/usage`**
   - **Purpose**: Tracks AI provider API quotas, token usage, latency metrics, and Cloudflare/Gemini costs.
 - [ ] **10. `GET, POST /api/admin/ai/prompts`**
@@ -135,7 +140,7 @@ Every endpoint in this pipeline adheres to the following rigorous definition of 
 ## 4. How to Resume the Next Endpoint
 
 When starting the next turn:
-1. State: *"Proceed with `POST /api/admin/ai/topics/[id]/launch` (Phase C: Autonomous AI Content Generation Pipeline)"*.
+1. State: *"Proceed with `GET /api/admin/ai/usage` (Phase C: Autonomous AI Content Generation Pipeline)"*.
 2. Follow the 5-step DoD pipeline:
    - Contract definition in `lib/contracts/`
    - Repository & Service enhancements in `lib/repositories/` & `lib/services/`
