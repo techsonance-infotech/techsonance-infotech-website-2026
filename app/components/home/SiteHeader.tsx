@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
@@ -22,18 +22,21 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
-  useEffect(() => {
-    setMounted(true);
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useSyncExternalStore(
+    (notify) => {
+      window.addEventListener("resize", notify);
+      return () => window.removeEventListener("resize", notify);
+    },
+    () => window.innerWidth < 768,
+    () => false,
+  );
 
   useEffect(() => {
     if (!transparent) return;

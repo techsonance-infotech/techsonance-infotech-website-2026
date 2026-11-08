@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { getAllProjects, type Project } from "@/data/projects";
@@ -9,41 +9,6 @@ import { ProjectMockup } from "@/app/components/projects/ProjectMockup";
 import { ArcGalleryHero } from "@/components/ui/arc-gallery-hero-component";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";
-
-// ─── Hero stats ────────────────────────────────────────────────────────────────
-const heroStats = [
-  { value: 10, suffix: "+", label: "Products Shipped" },
-  { value: 6, suffix: "+", label: "Industries Served" },
-  { value: 5, suffix: "+", label: "Years of Building" },
-  { value: 100, suffix: "k+", label: "Users Impacted" },
-];
-
-// ─── Animated counter ─────────────────────────────────────────────────────────
-function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!inView) return;
-    const steps = 60;
-    const step = value / steps;
-    let current = 0;
-    const interval = setInterval(() => {
-      current = Math.min(current + step, value);
-      setCount(Math.round(current));
-      if (current >= value) clearInterval(interval);
-    }, 1800 / steps);
-    return () => clearInterval(interval);
-  }, [inView, value]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {count}
-      {suffix}
-    </span>
-  );
-}
 
 // ─── Projects listing card ──────────────────────────────────────────────────────
 function ProjectCard({ project, index }: { project: Project; index: number }) {

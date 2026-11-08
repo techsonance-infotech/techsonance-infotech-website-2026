@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import type { AvatarGroup } from "./types";
 import Arc from "./Arc";
 
@@ -25,9 +26,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [step, setStep] = useState(0);
-
-  // Store previous angles to detect snap wrap-around (60 -> -60)
-  const prevAnglesRef = useRef<Record<string, number>>({});
+  const [prevAngles, setPrevAngles] = useState<Record<string, number>>({});
 
   // Measure container width and scale design space proportionally
   useEffect(() => {
@@ -44,10 +43,33 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
   // Clockwise auto-rotating timer (every 4 seconds)
   useEffect(() => {
     const timer = setInterval(() => {
-      setStep((s) => s + 1);
+      setStep((s) => {
+        const nextStep = s + 1;
+        if (groups && groups.length >= 3) {
+          const nextAngles: Record<string, number> = {};
+          const actIdx = ACTIVE_ORDER[nextStep % 3];
+          groups.slice(0, 3).forEach((group, idx) => {
+            let a = 0;
+            if (idx === actIdx) {
+              a = 0;
+            } else if (
+              (actIdx === 1 && idx === 0) ||
+              (actIdx === 2 && idx === 1) ||
+              (actIdx === 0 && idx === 2)
+            ) {
+              a = 60;
+            } else {
+              a = -60;
+            }
+            nextAngles[group.id] = a;
+          });
+          setPrevAngles(nextAngles);
+        }
+        return nextStep;
+      });
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [groups]);
 
   if (!groups || groups.length < 3) return null;
   const visibleGroups = groups.slice(0, 3);
@@ -253,8 +275,7 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
           const isActive = idx === activeIdx;
 
           // Detect wrap-around snaps to prevent backslide animations
-          const prevAngle = prevAnglesRef.current[group.id];
-          prevAnglesRef.current[group.id] = angle;
+          const prevAngle = prevAngles[group.id];
           const isWrapping = prevAngle === 60 && angle === -60;
 
           // For preview groups, only show the first 3 avatars
@@ -320,10 +341,13 @@ export default function SemiCircleDashboard({ groups }: SemiCircleDashboardProps
                     }`}
                   >
                     {member.avatarUrl ? (
-                      <img
+                      <Image
                         src={member.avatarUrl}
                         alt="Team"
+                        width={100}
+                        height={100}
                         className="h-full w-full object-cover"
+                        unoptimized
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-400 select-none">

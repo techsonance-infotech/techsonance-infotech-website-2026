@@ -1,10 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useTransform, animate, useMotionTemplate } from "motion/react";
+import { motion, useMotionValue, useTransform, animate } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { services, type Service } from "@/data/services";
 import { Icon, type IconName } from "@/app/components/icons/Icon";
 
 // Register ScrollTrigger with GSAP
@@ -296,7 +295,7 @@ export default function ServicesSection() {
               What We Do
             </span>
           </div>
-          <h2 className="eco-header-anim mb-5 text-4xl leading-[1.15] leading-tight font-medium tracking-tight text-gray-900 sm:text-5xl">
+          <h2 className="eco-header-anim mb-5 text-4xl leading-[1.15] font-medium tracking-tight text-gray-900 sm:text-5xl">
             End-to-End Solutions. <br />
             <span className="text-[#1155CC] italic">Engineered for Growth.</span>
           </h2>
@@ -429,7 +428,7 @@ export default function ServicesSection() {
 
             {/* ─── CENTRAL ENGINE ORB ─── */}
             <div
-              className="eco-orb-container pointer-events-none absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+              className="pointer-events-none absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
               style={{
                 left: "50%",
                 top: "50%",

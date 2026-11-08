@@ -45,7 +45,7 @@ export default function SiteFooter() {
                       INFOTECH LLP
                       <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#475569]" />
                     </span>
-                    <span className="text-slate-355 mt-1.5 block text-center font-sans text-[7.5px] font-medium tracking-[0.15em] uppercase">
+                    <span className="mt-1.5 block text-center font-sans text-[7.5px] font-medium tracking-[0.15em] text-slate-400 uppercase">
                       Where Innovation Finds Its Resonance
                     </span>
                   </div>
@@ -326,23 +326,23 @@ export default function SiteFooter() {
               </span>
             </div>
             <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 md:justify-end">
-              <Link href="/careers" className="hover:text-slate-350 transition-colors">
+              <Link href="/careers" className="transition-colors hover:text-slate-300">
                 Career
               </Link>
               <span className="text-slate-800">•</span>
-              <Link href="/about" className="hover:text-slate-350 transition-colors">
+              <Link href="/about" className="transition-colors hover:text-slate-300">
                 About Us
               </Link>
               <span className="text-slate-800">•</span>
-              <Link href="/privacy-policy" className="hover:text-slate-350 transition-colors">
+              <Link href="/privacy-policy" className="transition-colors hover:text-slate-300">
                 Privacy Policy
               </Link>
               <span className="text-slate-800">•</span>
-              <Link href="/terms" className="hover:text-slate-350 transition-colors">
+              <Link href="/terms" className="transition-colors hover:text-slate-300">
                 Terms & Conditions
               </Link>
               <span className="text-slate-800">•</span>
-              <Link href="/sitemap" className="hover:text-slate-350 transition-colors">
+              <Link href="/sitemap" className="transition-colors hover:text-slate-300">
                 Sitemap
               </Link>
             </div>

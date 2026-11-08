@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
-import { Icon } from "@/app/components/icons/Icon";
 
 export type TechLogoItem = {
   label: string;
@@ -266,17 +266,14 @@ export default function TechnologiesSection() {
                 {card.items.map((item) => (
                   <div key={item.label} className="group flex items-center gap-1.5">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 p-1 transition-all group-hover:border-blue-100 group-hover:bg-white group-hover:shadow-sm">
-                      <img
+                      <Image
                         src={item.src}
                         alt={item.label}
                         width={28}
                         height={28}
                         className="h-full w-full object-contain"
                         style={{ filter: item.color === "#000000" ? "none" : undefined }}
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          target.style.display = "none";
-                        }}
+                        unoptimized
                       />
                     </div>
                     <span className="text-[11px] font-semibold text-gray-600">{item.label}</span>

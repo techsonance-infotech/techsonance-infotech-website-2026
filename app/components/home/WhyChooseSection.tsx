@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import type { IconName } from "@/app/components/icons/Icon";
 import { Icon } from "@/app/components/icons/Icon";
@@ -505,7 +504,7 @@ function ScalableGridVisual() {
 
   return (
     <div className="relative flex h-[260px] w-full items-center justify-center [perspective:1000px]">
-      <div className="bg-dashed absolute top-[20%] bottom-[20%] left-1/2 z-0 w-[1.5px] -translate-x-1/2 bg-blue-100" />
+      <div className="absolute top-[20%] bottom-[20%] left-1/2 z-0 w-[1.5px] -translate-x-1/2 border-l border-dashed border-blue-200" />
 
       {nodes.map((node, idx) => {
         const isBottom = idx === nodes.length - 1;
@@ -842,7 +841,7 @@ function WhyChooseNav({
                   : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md",
               ].join(" ")}
             >
-              <div className="pointer-events-none absolute top-1/2 left-[-24px] z-10 flex hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center lg:flex">
+              <div className="pointer-events-none absolute top-1/2 left-[-24px] z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center lg:flex">
                 {active ? (
                   <div className="relative flex items-center justify-center">
                     <div className="h-2.5 w-2.5 rounded-full border-2 border-white bg-[#1155CC] shadow-sm" />

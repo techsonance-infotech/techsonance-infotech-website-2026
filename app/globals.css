@@ -452,6 +452,30 @@
   animation: pulseCursor 1s infinite;
 }
 
+@utility marquee-track {
+  display: flex;
+}
+
+@utility eco-header-anim {
+  will-change: transform, opacity;
+}
+
+@utility eco-particle {
+  pointer-events: none;
+}
+
+@utility connection-path {
+  pointer-events: none;
+}
+
+@utility flowing-dash-line {
+  pointer-events: none;
+}
+
+@utility eco-orb-container {
+  pointer-events: none;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

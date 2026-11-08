@@ -86,7 +86,7 @@ export default function CookieConsent() {
                 onClick={handleDecline}
                 variant="secondary"
                 size="sm"
-                className="hover:border-slate-350 w-1/2 border-slate-200 text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-800 sm:w-auto"
+                className="w-1/2 border-slate-200 text-slate-500 shadow-sm hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 sm:w-auto"
               >
                 Decline
               </Button>

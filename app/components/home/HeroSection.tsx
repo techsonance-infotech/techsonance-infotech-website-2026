@@ -138,7 +138,7 @@ function TrustedClientsMarquee() {
           maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
         }}
       >
-        <div className="marquee-track flex w-max items-center">
+        <div className="marquee-track w-max items-center">
           {[...trustedClients, ...trustedClients].map((client, i) => (
             <ClientLogo key={`${client.name}-${i}`} client={client} />
           ))}

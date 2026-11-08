@@ -89,8 +89,10 @@ function ScreenshotGallery({
         </RevealSection>
 
         {/* Main active image - no fixed height, let the image define its size */}
-        <div
-          className="relative mb-5 w-full cursor-zoom-in overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl sm:rounded-3xl"
+        <button
+          type="button"
+          aria-label="Enlarge screenshot in lightbox"
+          className="relative mb-5 block w-full cursor-zoom-in overflow-hidden rounded-2xl border border-gray-200 bg-white p-0 text-left shadow-2xl sm:rounded-3xl"
           onClick={() => setLightbox(true)}
         >
           {/* Browser chrome - only for web apps */}
@@ -170,7 +172,7 @@ function ScreenshotGallery({
               </button>
             )}
           </div>
-        </div>
+        </button>
 
         {/* Caption */}
         <p className="mb-6 text-center text-sm text-gray-500 italic">
@@ -276,9 +278,11 @@ function ScreenshotGallery({
 
             {/* Lightbox nav */}
             <div className="mt-4 flex gap-3">
-              {screenshots.map((_, i) => (
+              {screenshots.map((item, i) => (
                 <button
-                  key={i}
+                  key={item.src}
+                  type="button"
+                  aria-label={`View screenshot ${i + 1}: ${item.caption}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     setActive(i);
@@ -561,7 +565,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                     if (!items.length) return null;
                     return (
                       <div key={cat} className="mb-6">
-                        <p className="mb-3 text-[10px] font-black tracking-widest text-gray-400 capitalize uppercase">
+                        <p className="mb-3 text-[10px] font-black tracking-widest text-gray-400 uppercase">
                           {cat === "ai" ? "AI / ML" : cat === "infra" ? "Infrastructure" : cat}
                         </p>
                         <div className="flex flex-wrap gap-2">

@@ -35,19 +35,20 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
   // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
+    const lenis = (window as unknown as { __lenis?: { start: () => void; stop: () => void } }).__lenis;
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
-      window.__lenis?.stop();
+      lenis?.stop();
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
-      window.__lenis?.start();
+      lenis?.start();
     }
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
-      window.__lenis?.start();
+      lenis?.start();
     };
   }, [isOpen]);
 
@@ -301,10 +302,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   {/* First Name & Last Name */}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      <label htmlFor="quote-firstName" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                         First Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
+                        id="quote-firstName"
                         type="text"
                         required
                         placeholder="John"
@@ -326,10 +328,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      <label htmlFor="quote-lastName" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                         Last Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
+                        id="quote-lastName"
                         type="text"
                         required
                         placeholder="Doe"
@@ -354,10 +357,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label htmlFor="quote-email" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                       Email Address <span className="font-bold text-red-500">*</span>
                     </label>
                     <input
+                      id="quote-email"
                       type="email"
                       required
                       placeholder="you@company.com"
@@ -378,11 +382,12 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Phone */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label htmlFor="quote-phone" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                       Phone Number <span className="font-bold text-red-500">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
                       <select
+                        aria-label="Country Code"
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                         className="w-[90px] shrink-0 cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-2 py-3 text-xs font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none sm:w-[110px] sm:px-3 sm:text-sm"
@@ -396,6 +401,7 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                         <option value="+49">🇩🇪 +49</option>
                       </select>
                       <input
+                        id="quote-phone"
                         type="tel"
                         required
                         placeholder={
@@ -420,10 +426,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Interest */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label htmlFor="quote-interest" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                       I&apos;m interested in
                     </label>
                     <select
+                      id="quote-interest"
                       value={formData.interest}
                       onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                       className="w-full cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
@@ -439,10 +446,11 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Message */}
                   <div className="space-y-1.5">
-                    <label className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label htmlFor="quote-message" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
                       Message <span className="font-bold text-red-500">*</span>
                     </label>
                     <textarea
+                      id="quote-message"
                       required
                       rows={4}
                       placeholder="Tell us about your project goals, requirements, or timeline..."
