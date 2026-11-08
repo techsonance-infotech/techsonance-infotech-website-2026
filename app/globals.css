@@ -424,6 +424,34 @@
   transform: translateY(1rem);
 }
 
+@utility animate-fade-in {
+  animation: fadeIn 200ms ease-in-out;
+}
+
+@utility animate-fade-in-up {
+  animation: fadeInUp 250ms ease-out;
+}
+
+@utility reveal-up {
+  will-change: transform, opacity;
+}
+
+@utility card-grid {
+  display: grid;
+}
+
+@utility capability-card {
+  position: relative;
+}
+
+@utility process-card {
+  position: relative;
+}
+
+@utility anim-cursor {
+  animation: pulseCursor 1s infinite;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

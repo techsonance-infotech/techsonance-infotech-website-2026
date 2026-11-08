@@ -479,7 +479,7 @@ export default function ServicesClient() {
                       setFaqSearch(e.target.value);
                       setOpenFaqIdx(null); // Reset accordion on filter
                     }}
-                    className="border-gray-150 w-full rounded-xl border bg-white px-4.5 py-3 text-xs text-gray-800 placeholder-gray-400 transition-colors focus:border-[#1155CC] focus:outline-none"
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4.5 py-3 text-xs text-gray-800 placeholder-gray-400 transition-colors focus:border-[#1155CC] focus:outline-none"
                   />
                   {faqSearch && (
                     <button

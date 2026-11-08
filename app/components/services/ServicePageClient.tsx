@@ -58,7 +58,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                   <h3 className="mb-2 text-xs font-black tracking-wider text-gray-400 uppercase">
                     Who is it for?
                   </h3>
-                  <p className="text-gray-750 text-sm leading-relaxed">{geoData.whoIsItFor}</p>
+                  <p className="text-sm leading-relaxed text-gray-700">{geoData.whoIsItFor}</p>
                 </div>
 
                 <div className="space-y-4 rounded-2xl border border-[#22B6F6]/10 bg-blue-50/40 p-6">
@@ -78,7 +78,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                       {geoData.technologiesUsed.map((tech) => (
                         <span
                           key={tech}
-                          className="border-slate-150 rounded-full border bg-white px-2.5 py-1 text-[10px] font-bold text-gray-600"
+                          className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-gray-600"
                         >
                           {tech}
                         </span>

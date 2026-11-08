@@ -14,7 +14,7 @@ export default function ProcessTimeline({ service }: ProcessTimelineProps) {
 
   useEffect(() => {
     let ctx: { revert: () => void } | undefined;
-    let mm: ReturnType<typeof import("gsap").gsap.matchMedia> | undefined;
+    let mm: { add: (query: string, func: () => void) => void; revert: () => void } | undefined;
 
     async function init() {
       const { gsap } = await import("gsap");

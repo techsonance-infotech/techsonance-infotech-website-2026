@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import Image from "next/image";
 import type { Service } from "@/lib/services-data";
 
 interface TechStackProps {
@@ -192,15 +193,13 @@ function MarqueeTrack({
           style={{ backgroundColor: (iconInfo?.color || item.color) + "14" }}
         >
           {iconInfo ? (
-            <img
+            <Image
               src={iconInfo.src}
               alt={item.name}
               width={16}
               height={16}
               className="h-4 w-4 object-contain"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
+              unoptimized
             />
           ) : (
             <span className="text-[9px] font-bold" style={{ color: item.color }}>

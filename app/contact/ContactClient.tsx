@@ -275,11 +275,11 @@ export default function ContactClient() {
               </span>
             </div>
 
-            <h1 className="lg:text-6.5xl mb-4 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="mb-4 text-4xl leading-tight font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
               Let&apos;s Build <span className="text-[#1155CC]">Something Together</span>
             </h1>
 
-            <p className="text-slate-505 mx-auto max-w-xl text-sm leading-relaxed font-medium sm:text-base">
+            <p className="mx-auto max-w-xl text-sm leading-relaxed font-medium text-slate-500 sm:text-base">
               Tell us about your project - we&apos;ll get back within 24 hours.
             </p>
           </div>

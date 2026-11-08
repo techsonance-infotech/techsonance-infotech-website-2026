@@ -144,7 +144,7 @@ export default function ScopingContactForm({
           free scoping call.
         </p>
 
-        <ul className="text-slate-650 space-y-4 text-[14px] font-medium">
+        <ul className="space-y-4 text-[14px] font-medium text-slate-600">
           <li className="flex items-center gap-3">
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] text-xs font-bold text-[#1155CC]">
               ✓
@@ -204,10 +204,11 @@ export default function ScopingContactForm({
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                  <label htmlFor="scoping-name" className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                     Name <span className="font-bold text-red-500">*</span>
                   </label>
                   <input
+                    id="scoping-name"
                     type="text"
                     required
                     placeholder="Your name"
@@ -229,10 +230,11 @@ export default function ScopingContactForm({
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                  <label htmlFor="scoping-email" className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                     Email <span className="font-bold text-red-500">*</span>
                   </label>
                   <input
+                    id="scoping-email"
                     type="email"
                     required
                     placeholder="you@company.com"
@@ -253,10 +255,11 @@ export default function ScopingContactForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                <label htmlFor="scoping-company" className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                   Company
                 </label>
                 <input
+                  id="scoping-company"
                   type="text"
                   placeholder="Company name"
                   value={formData.company}
@@ -266,10 +269,11 @@ export default function ScopingContactForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                <label htmlFor="scoping-service" className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                   Service
                 </label>
                 <select
+                  id="scoping-service"
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                   className="w-full cursor-pointer rounded-xl border border-[#1155CC]/15 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-all focus:border-[#1155CC] focus:ring-2 focus:ring-[#1155CC]/10 focus:outline-none"
@@ -283,10 +287,11 @@ export default function ScopingContactForm({
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
+                <label htmlFor="scoping-message" className="block text-[11px] font-bold tracking-wide text-slate-500 uppercase">
                   Message <span className="font-bold text-red-500">*</span>
                 </label>
                 <textarea
+                  id="scoping-message"
                   required
                   rows={4}
                   placeholder="Tell us about your project..."

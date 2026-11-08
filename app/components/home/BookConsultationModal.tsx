@@ -184,6 +184,7 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }): React.JSX
             title="Book a consultation with TechSonance"
             className="h-full w-full border-0"
             allow="calendar; payment"
+            sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
             onLoad={() => setIframeLoading(false)}
           />
         </div>
@@ -195,20 +196,27 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }): React.JSX
 export default function BookConsultationModal({ isOpen, onClose }: BookConsultationModalProps): React.JSX.Element {
   // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
+    const win = typeof window !== "undefined" ? (window as unknown as Record<string, { stop: () => void; start: () => void }>) : null;
     if (isOpen) {
       trackBookingModalOpen("global_modal");
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
-      window.__lenis?.stop();
+      if (win && win["__lenis"]) {
+        win["__lenis"].stop();
+      }
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
-      window.__lenis?.start();
+      if (win && win["__lenis"]) {
+        win["__lenis"].start();
+      }
     }
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
-      window.__lenis?.start();
+      if (win && win["__lenis"]) {
+        win["__lenis"].start();
+      }
     };
   }, [isOpen]);
 

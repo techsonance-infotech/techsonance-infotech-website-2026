@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export function ServiceIllustration({ slug }: { slug: string }) {
   const animations = (
@@ -47,9 +48,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
             </div>
             {/* Browser Content */}
             <div className="relative flex flex-grow items-center justify-center overflow-hidden bg-white">
-              <img
+              <Image
                 src="/images/projects/freightflow/freightflow-logistics-fleet-management-dashboard.png"
                 alt="FreightFlow Dashboard"
+                width={600}
+                height={400}
                 className="h-full w-full object-contain"
               />
               {/* Glassmorphic overlay */}
@@ -79,9 +82,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
             </div>
             {/* Browser Content */}
             <div className="relative flex flex-grow items-center justify-center overflow-hidden bg-white p-2">
-              <img
+              <Image
                 src="/images/AI Automation.png"
                 alt="AI Automation Workflow"
+                width={600}
+                height={400}
                 className="h-full w-full object-contain"
               />
             </div>
@@ -98,9 +103,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
             {/* Screen */}
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-xl border-[4px] border-slate-800 bg-slate-950 p-0.5 shadow-2xl">
               {/* Web screen content */}
-              <img
+              <Image
                 src="/images/projects/syncserve/syncserve-retail-pos-sales-analytics.png"
                 alt="SaaS Analytics Dashboard"
+                width={500}
+                height={320}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -119,9 +126,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
           {animations}
           {/* Card containing clean illustration of Web Development */}
           <div className="flex h-full w-full transform items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl transition-transform duration-500 group-hover:scale-[1.01]">
-            <img
+            <Image
               src="/images/Web development.png"
               alt="Web Development"
+              width={500}
+              height={350}
               className="h-full w-full object-contain"
             />
           </div>
@@ -134,9 +143,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
           {animations}
           {/* Card containing clean illustration of two iPhones side by side */}
           <div className="flex h-full w-full transform items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl transition-transform duration-500 group-hover:scale-[1.01]">
-            <img
+            <Image
               src="/images/mobile app.png"
               alt="Mobile App Development"
+              width={500}
+              height={350}
               className="h-full w-full object-contain"
             />
           </div>
@@ -216,9 +227,11 @@ export function ServiceIllustration({ slug }: { slug: string }) {
             </div>
             {/* Browser Content */}
             <div className="relative flex flex-grow items-center justify-center overflow-hidden bg-white p-3">
-              <img
+              <Image
                 src="/images/third-party-api-integration-services.svg"
                 alt="API & Systems Integration"
+                width={500}
+                height={350}
                 className="h-full w-full object-contain"
               />
             </div>
@@ -243,7 +256,7 @@ export function ServiceIllustration({ slug }: { slug: string }) {
 
             <div className="flex-grow space-y-3">
               {/* Task 1 */}
-              <div className="border-gray-150/80 flex items-center justify-between rounded-lg border bg-slate-50 p-2.5 shadow-sm">
+              <div className="flex items-center justify-between rounded-lg border border-gray-100 bg-slate-50 p-2.5 shadow-sm">
                 <div className="flex items-center gap-2.5">
                   <span className="text-xs text-emerald-500">✓</span>
                   <div>

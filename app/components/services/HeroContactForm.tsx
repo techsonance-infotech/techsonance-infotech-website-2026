@@ -214,10 +214,11 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
         {/* First & Last Name */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
-            <label className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+            <label htmlFor="hero-firstName" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
               First Name <span className="text-red-500">*</span>
             </label>
             <input
+              id="hero-firstName"
               type="text"
               placeholder="First name"
               value={formData.firstName}
@@ -237,10 +238,11 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+            <label htmlFor="hero-lastName" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
               Last Name <span className="text-red-500">*</span>
             </label>
             <input
+              id="hero-lastName"
               type="text"
               placeholder="Last name"
               value={formData.lastName}
@@ -262,10 +264,11 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Email Address */}
         <div className="space-y-1">
-          <label className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label htmlFor="hero-email" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
             Email Address <span className="text-red-500">*</span>
           </label>
           <input
+            id="hero-email"
             type="email"
             placeholder="you@company.com"
             value={formData.email}
@@ -286,11 +289,12 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Phone Number */}
         <div className="space-y-1">
-          <label className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label htmlFor="hero-phone" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
             Phone Number <span className="text-red-500">*</span>
           </label>
           <div className="flex flex-row gap-2">
             <select
+              aria-label="Country code"
               value={formData.countryCode}
               onChange={(e) => handleChange("countryCode", e.target.value)}
               className="w-[90px] shrink-0 cursor-pointer rounded-lg border border-neutral-200 bg-neutral-50/50 px-1 py-2 text-xs text-neutral-900 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none sm:w-[110px] sm:px-2 sm:text-sm"
@@ -302,6 +306,7 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
               ))}
             </select>
             <input
+              id="hero-phone"
               type="tel"
               placeholder="Phone number"
               value={formData.phone}
@@ -323,10 +328,11 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Message */}
         <div className="space-y-1">
-          <label className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label htmlFor="hero-message" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
             Message <span className="text-red-500">*</span>
           </label>
           <textarea
+            id="hero-message"
             rows={3}
             placeholder="Describe your requirements or what expert help you need..."
             value={formData.message}
