@@ -112,7 +112,7 @@ export default function SitemapPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-350 mx-auto mt-4 max-w-xl text-xs font-semibold sm:text-sm"
+              className="mx-auto mt-4 max-w-xl text-xs font-semibold text-slate-300 sm:text-sm"
             >
               Quick access directory to all pages, services, case studies, and corporate policies.
             </motion.p>

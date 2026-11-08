@@ -155,10 +155,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
       <form onSubmit={handleSubmit} className="space-y-4">
         {decision === "improve" && (
           <div className="space-y-2">
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+            <label htmlFor="improve-feedback" className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
               Feedback for Revision (Required)
             </label>
             <Textarea
+              id="improve-feedback"
               required
               rows={4}
               placeholder="Explain what needs to be changed (e.g., 'Make section 2 more technical, add benchmarks for Postgres query performance')..."
@@ -171,10 +172,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
         {decision === "reject" && (
           <div className="space-y-2">
-            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+            <label htmlFor="reject-feedback" className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
               Rejection Reason (Optional)
             </label>
             <Textarea
+              id="reject-feedback"
               rows={3}
               placeholder="Reason for archiving this draft..."
               value={feedback}

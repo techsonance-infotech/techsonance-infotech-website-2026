@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { motion, useInView, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { getFeaturedProjects, type Project } from "@/data/projects";
@@ -38,14 +38,15 @@ function FeaturedProjectRow({
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { once: true, margin: "-10%" });
 
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia("(min-width: 1024px)");
-    setIsDesktop(media.matches);
-    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, []);
+  const isDesktop = useSyncExternalStore(
+    (notify) => {
+      const media = window.matchMedia("(min-width: 1024px)");
+      media.addEventListener("change", notify);
+      return () => media.removeEventListener("change", notify);
+    },
+    () => window.matchMedia("(min-width: 1024px)").matches,
+    () => false,
+  );
 
   // Sticky stack scroll progress: tracks starting to stick until completely scrolled past
   const { scrollYProgress } = useScroll({
@@ -138,7 +139,7 @@ function FeaturedProjectRow({
               initial={{ opacity: 0, y: 12 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={t(0.14)}
-              className="text-gray-550 line-clamp-2 max-w-md text-xs leading-relaxed sm:text-[13px]"
+              className="line-clamp-2 max-w-md text-xs leading-relaxed text-gray-500 sm:text-[13px]"
             >
               {project.shortDescription}
             </motion.p>

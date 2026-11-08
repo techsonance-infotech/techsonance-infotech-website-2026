@@ -20,7 +20,7 @@ export class WidgetBoundary extends Component<Props, State> {
     if (!this.state.failed) return this.props.children;
     return (
       this.props.fallback ?? (
-        <p role="status" className="py-2 text-sm text-slate-500">
+        <output className="block py-2 text-sm text-slate-500">
           This section is unavailable right now.{" "}
           <button
             type="button"
@@ -29,7 +29,7 @@ export class WidgetBoundary extends Component<Props, State> {
           >
             Retry
           </button>
-        </p>
+        </output>
       )
     );
   }

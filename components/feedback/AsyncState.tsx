@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
 import { AlertCircle, RefreshCw, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -25,20 +25,18 @@ export function AsyncState<T>({
   emptyUI,
   children,
 }: AsyncStateProps<T>) {
-  const [isOnline, setIsOnline] = useState(true);
-
-  useEffect(() => {
-    setIsOnline(typeof navigator !== "undefined" ? navigator.onLine : true);
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const isOnline = useSyncExternalStore(
+    (notify) => {
+      window.addEventListener("online", notify);
+      window.addEventListener("offline", notify);
+      return () => {
+        window.removeEventListener("online", notify);
+        window.removeEventListener("offline", notify);
+      };
+    },
+    () => navigator.onLine,
+    () => true,
+  );
 
   if (!isOnline) {
     return (

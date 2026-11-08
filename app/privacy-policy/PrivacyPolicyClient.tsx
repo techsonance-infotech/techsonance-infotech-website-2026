@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
 import SiteHeader from "@/app/components/home/SiteHeader";
 import SiteFooter from "@/app/components/home/SiteFooter";
@@ -25,18 +25,20 @@ const sections = [
 ];
 
 export default function PrivacyPolicyClient() {
-  const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
-  useEffect(() => {
-    setMounted(true);
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isMobile = useSyncExternalStore(
+    (notify) => {
+      window.addEventListener("resize", notify);
+      return () => window.removeEventListener("resize", notify);
+    },
+    () => window.innerWidth < 768,
+    () => false,
+  );
 
   const [activeSection, setActiveSection] = useState("introduction");
 
@@ -124,7 +126,7 @@ export default function PrivacyPolicyClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-slate-350 mx-auto mt-4 max-w-xl text-xs font-semibold sm:text-sm"
+              className="mx-auto mt-4 max-w-xl text-xs font-semibold text-slate-300 sm:text-sm"
             >
               Effective Date: January 1, 2026 &bull; Last Updated: June 18, 2026
             </motion.p>
@@ -219,7 +221,7 @@ export default function PrivacyPolicyClient() {
                       We collect personal details that you voluntarily submit to us during project
                       consultations, applications, or contact requests:
                     </p>
-                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         Full name and job title
@@ -249,7 +251,7 @@ export default function PrivacyPolicyClient() {
                       We automatically collect browser, network, and device logs when you navigate
                       our platform:
                     </p>
-                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                         IP address and browser agent
@@ -275,7 +277,7 @@ export default function PrivacyPolicyClient() {
                     <h4 className="mb-3 text-xs font-black tracking-wider text-[#1155CC] uppercase">
                       Project-Related Data
                     </h4>
-                    <ul className="grid grid-cols-1 gap-2 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-700 sm:grid-cols-2">
                       <li className="flex items-center gap-2.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#22B6F6]" />
                         System specifications & flows
@@ -309,7 +311,7 @@ export default function PrivacyPolicyClient() {
                     <p className="text-xs font-semibold text-slate-400">Processing objectives</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4 text-xs font-bold font-semibold text-slate-700 sm:grid-cols-2 sm:text-sm">
+                <div className="grid grid-cols-1 gap-4 text-xs font-semibold text-slate-700 sm:grid-cols-2 sm:text-sm">
                   <div className="rounded-2xl border border-slate-100/50 bg-slate-50 p-4">
                     <span className="mb-1 block font-bold text-[#1155CC]">Service Delivery</span>
                     <p className="text-xs font-medium text-slate-500">
@@ -355,11 +357,11 @@ export default function PrivacyPolicyClient() {
                     </p>
                   </div>
                 </div>
-                <p className="mb-4 text-xs leading-relaxed font-bold font-medium text-slate-600 sm:text-sm">
+                <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   We value your trust and do not sell, rent, or lease your personal information.
                   Sharing occurs exclusively under the following terms:
                 </p>
-                <ul className="space-y-3 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
+                <ul className="space-y-3 text-xs font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-start gap-3">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1155CC]" />
                     <span>
@@ -444,7 +446,7 @@ export default function PrivacyPolicyClient() {
                 <p className="mb-4 text-xs leading-relaxed font-medium text-slate-600 sm:text-sm">
                   We use cookies and Web beacons to identify traffic routing and user preferences:
                 </p>
-                <ul className="space-y-3 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
+                <ul className="space-y-3 text-xs font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-start gap-2.5">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#22B6F6]" />
                     <span>
@@ -527,7 +529,7 @@ export default function PrivacyPolicyClient() {
                   For custom product development, we handle project architecture metadata under key
                   confidentiality rules:
                 </p>
-                <ul className="space-y-2.5 text-xs font-bold font-semibold text-slate-700 sm:text-sm">
+                <ul className="space-y-2.5 text-xs font-semibold text-slate-700 sm:text-sm">
                   <li className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]" />
                     Mutual Non-Disclosure Agreements (NDAs) signed prior to project kick-offs.

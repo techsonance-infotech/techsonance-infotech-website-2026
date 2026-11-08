@@ -4,7 +4,12 @@ export function sanitizeInput(text: string): string {
   if (!text) return "";
   return text
     .replace(/<[^>]*>?/gm, "") // Strip HTML tags
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // Strip non-printable ASCII
+    .split("")
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return (code >= 32 && code !== 127) || code === 9 || code === 10 || code === 13;
+    })
+    .join("")
     .trim();
 }
 
