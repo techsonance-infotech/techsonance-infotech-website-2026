@@ -7,7 +7,7 @@ import { services } from "@/data/services";
 import GetQuoteModal from "@/app/components/home/GetQuoteModal";
 import { Button } from "@/components/ui/button";
 import { CurrencySelector } from "@/components/currency/CurrencySelector";
-import { SHOW_PRICING_SECTION } from "@/lib/constants/pricing.constants";
+import { SHOW_PRICING_SECTION, SHOW_CURRENCY_SELECTOR } from "@/lib/constants/pricing.constants";
 
 export const navLinks = [
   { name: "Home", href: "/" },
@@ -198,7 +198,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <CurrencySelector compact />
+            {SHOW_CURRENCY_SELECTOR && <CurrencySelector compact />}
             <Button
               onClick={() => setIsQuoteModalOpen(true)}
               variant="primary"
@@ -338,10 +338,12 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
               })}
 
               <div className="mt-2 flex flex-col gap-3 border-t border-gray-100 pt-4">
-                <div className="flex items-center justify-between px-1">
-                  <span className="text-xs font-semibold text-gray-500">Currency</span>
-                  <CurrencySelector compact />
-                </div>
+                {SHOW_CURRENCY_SELECTOR && (
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-xs font-semibold text-gray-500">Currency</span>
+                    <CurrencySelector compact />
+                  </div>
+                )}
                 <Button
                   onClick={() => {
                     setIsMobileMenuOpen(false);

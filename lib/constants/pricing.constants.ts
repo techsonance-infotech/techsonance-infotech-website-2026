@@ -206,3 +206,9 @@ export const REGION_COOKIE_KEY = "ts_region";
  * Kept false by default. Toggle to true when ready to show public pricing.
  */
 export const SHOW_PRICING_SECTION = false;
+
+/**
+ * Feature flag for currency selector pill visibility in the site header and navigation.
+ * Kept false by default as requested. Toggle to true to display the currency switcher in the header.
+ */
+export const SHOW_CURRENCY_SELECTOR = false;
