@@ -20,26 +20,33 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { AdminGenerationJob } from "@/lib/types/admin.types";
 import { listAdminAiJobs, createAdminAiJob } from "@/lib/api/admin-ai.api";
+import { AiJobStatus } from "@/lib/constants/enums/ai.enum";
 
-const getStatusBadge = (status: string) => {
+const getStatusBadge = (status: AiJobStatus | string) => {
   switch (status) {
-    case "COMPLETED":
+    case AiJobStatus.COMPLETED:
       return (
         <Badge variant="success" dot={true}>
           COMPLETED
         </Badge>
       );
-    case "RUNNING":
+    case AiJobStatus.RUNNING:
       return (
         <Badge variant="info" dot={true}>
           RUNNING
         </Badge>
       );
-    case "QUEUED":
+    case AiJobStatus.QUEUED:
       return <Badge variant="secondary">QUEUED</Badge>;
-    case "WAITING_QUOTA":
+    case AiJobStatus.WAITING_QUOTA:
       return <Badge variant="warning">WAITING QUOTA</Badge>;
-    case "FAILED":
+    case AiJobStatus.NEEDS_REVIEW:
+      return (
+        <Badge variant="warning" dot={true}>
+          NEEDS REVIEW
+        </Badge>
+      );
+    case AiJobStatus.FAILED:
       return <Badge variant="destructive">FAILED</Badge>;
     default:
       return <Badge variant="outline">{status}</Badge>;
@@ -325,7 +332,7 @@ export default function AdminAIPage() {
                             <span>Inspect Post</span>
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
-                        ) : job.status === "FAILED" ? (
+                        ) : job.status === AiJobStatus.FAILED ? (
                           <span
                             className="text-[11px] font-semibold text-rose-600"
                             title={JSON.stringify(job.errorDetails)}
