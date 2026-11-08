@@ -88,7 +88,7 @@ export default function Capabilities({ service }: CapabilitiesProps) {
     <section className="service-section bg-white">
       <div className="service-container">
         {/* Header */}
-        <div className="reveal-up mb-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-10 flex flex-col gap-8 reveal-up lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="mb-4 flex items-center gap-2">
               <span className="h-px w-5 bg-[var(--accent-blue)]" />

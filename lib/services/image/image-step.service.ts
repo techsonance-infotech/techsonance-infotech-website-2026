@@ -3,6 +3,7 @@ import { inject } from "@needle-di/core";
 import { MediaService } from "../media.service";
 import { CloudflareImageAdapter } from "./cloudflare-image.adapter";
 import { PollinationsImageAdapter } from "./pollinations.adapter";
+import { logger } from "@/lib/logger";
 
 export interface ThumbnailGenerationResult {
   url: string;
@@ -35,10 +36,9 @@ export class ImageStepService {
     try {
       buffer = await this.cfAdapter.generateImage(styledPrompt, { width: 1200, height: 630 });
     } catch (cfError) {
-      console.warn(
-        "Cloudflare Workers AI generation failed, falling back to Pollinations.ai:",
-        cfError,
-      );
+      logger.warn("Cloudflare Workers AI generation failed, falling back to Pollinations.ai", {
+        error: cfError,
+      });
 
       // 2. Try Pollinations.ai FLUX fallback
       try {
@@ -48,7 +48,7 @@ export class ImageStepService {
           height: 630,
         });
       } catch (pollinationsError) {
-        console.error("Pollinations.ai generation also failed:", pollinationsError);
+        logger.error("Pollinations.ai generation also failed", { error: pollinationsError });
       }
     }
 
@@ -67,7 +67,7 @@ export class ImageStepService {
           thumbnailMissing: false,
         };
       } catch (uploadError) {
-        console.error("Cloudinary upload of generated thumbnail failed:", uploadError);
+        logger.error("Cloudinary upload of generated thumbnail failed", { error: uploadError });
       }
     }
 

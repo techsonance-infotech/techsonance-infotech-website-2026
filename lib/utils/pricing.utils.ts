@@ -52,14 +52,19 @@ export function detectRegionAndTimezone(tz?: string): {
   region: Region;
   currency: Currency;
 } {
-  const timezone = tz || (typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "");
+  const timezone =
+    tz || (typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "");
 
   if (!timezone) {
     return { region: DEFAULT_REGION, currency: DEFAULT_CURRENCY };
   }
 
   // India & South Asia
-  if (timezone.includes("Kolkata") || timezone.includes("Calcutta") || timezone.includes("Colombo")) {
+  if (
+    timezone.includes("Kolkata") ||
+    timezone.includes("Calcutta") ||
+    timezone.includes("Colombo")
+  ) {
     return { region: Region.APAC_INDIA, currency: Currency.INR };
   }
 

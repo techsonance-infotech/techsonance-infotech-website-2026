@@ -2,6 +2,7 @@ import "server-only";
 import { inject } from "@needle-di/core";
 import { LLMRouterService } from "./llm-router.service";
 import type { LLMChatRequest } from "../llm/types";
+import { logger } from "../logger";
 
 export interface OutlineResult {
   headings: string[];
@@ -44,7 +45,7 @@ export class AIWriterService {
         result += chunk;
       }
     } catch (error) {
-      console.error("AIWriterService completion error:", error);
+      logger.error("AIWriterService completion error", { error });
       throw error;
     }
 

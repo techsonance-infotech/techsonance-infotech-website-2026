@@ -134,7 +134,10 @@ export default function JobDetailClient({
     if (isApplyOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      const win = typeof window !== "undefined" ? (window as unknown as Record<string, { stop: () => void; start: () => void }>) : null;
+      const win =
+        typeof window !== "undefined"
+          ? (window as unknown as Record<string, { stop: () => void; start: () => void }>)
+          : null;
       if (win && win["__lenis"]) {
         win["__lenis"].stop();
       }
@@ -228,7 +231,9 @@ export default function JobDetailClient({
         if (sq?.required) {
           const val = screeningAnswers[sq.id];
           if (val === undefined || val === "") {
-            setFormError(`Please answer the screening question: "${sq.question || "Required question"}"`);
+            setFormError(
+              `Please answer the screening question: "${sq.question || "Required question"}"`,
+            );
             return;
           }
         }
@@ -889,10 +894,7 @@ export default function JobDetailClient({
                 </div>
               </div>
             ) : (
-              <form
-                onSubmit={handleFormSubmit}
-                className="flex flex-1 flex-col overflow-hidden"
-              >
+              <form onSubmit={handleFormSubmit} className="flex flex-1 flex-col overflow-hidden">
                 {/* Scrollable Form Body */}
                 <div
                   data-lenis-prevent="true"

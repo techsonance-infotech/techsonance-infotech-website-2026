@@ -136,11 +136,9 @@ export class AdminPromptsService {
 
   async seedDefaults(): Promise<PromptTemplate[]> {
     const siteId = await this.promptsRepo.getDefaultSiteId();
-    const inserted: PromptTemplate[] = [];
-
-    for (const def of DEFAULT_PROMPT_TEMPLATES) {
-      try {
-        const row = await this.promptsRepo.create({
+    const results = await Promise.allSettled(
+      DEFAULT_PROMPT_TEMPLATES.map((def) =>
+        this.promptsRepo.create({
           siteId,
           stepName: def.stepName,
           systemPrompt: def.systemPrompt,
@@ -149,14 +147,21 @@ export class AdminPromptsService {
           temperature: def.temperature,
           isActive: true,
           version: 1,
-        });
-        inserted.push(row);
-      } catch (err) {
-        logger.warn(`Could not seed default template for step: ${def.stepName}`, {
-          error: String(err),
-        });
+        }),
+      ),
+    );
+
+    const inserted: PromptTemplate[] = [];
+    results.forEach((res, idx) => {
+      if (res.status === "fulfilled") {
+        inserted.push(res.value);
+      } else {
+        logger.warn(
+          `Could not seed default template for step: ${DEFAULT_PROMPT_TEMPLATES[idx]?.stepName}`,
+          { error: String(res.reason) },
+        );
       }
-    }
+    });
 
     return inserted;
   }

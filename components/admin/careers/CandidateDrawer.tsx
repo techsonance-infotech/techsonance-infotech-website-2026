@@ -232,7 +232,7 @@ export function CandidateDrawer({
 
   return (
     <>
-      <div className="animate-in fade-in fixed inset-0 z-40 flex justify-end overflow-hidden bg-slate-900/50 backdrop-blur-xs duration-200">
+      <div className="fixed inset-0 z-40 flex justify-end overflow-hidden bg-slate-900/50 backdrop-blur-xs duration-200 animate-in fade-in">
         <dialog
           open
           aria-label="Candidate Evaluation"
@@ -500,7 +500,7 @@ export function CandidateDrawer({
                       Reviewer Evaluation & Notes
                     </h4>
                     {notesSavedSuccess && (
-                      <span className="animate-in fade-in flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                      <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600 animate-in fade-in">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Saved
                       </span>
                     )}

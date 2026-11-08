@@ -184,7 +184,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
             return (
               <div
                 key={i}
-                className="animate-fade-in-up absolute opacity-0"
+                className="absolute animate-fade-in-up opacity-0"
                 style={{
                   width: `${dimensions.cardSize}px`,
                   height: `${dimensions.cardSize}px`,
@@ -221,7 +221,7 @@ export const ArcGalleryHero: React.FC<ArcGalleryHeroProps> = ({
           children
         ) : (
           <div
-            className="animate-fade-in max-w-2xl px-6 text-center opacity-0"
+            className="max-w-2xl animate-fade-in px-6 text-center opacity-0"
             style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
           >
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">

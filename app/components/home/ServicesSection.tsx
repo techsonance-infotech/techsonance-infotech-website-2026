@@ -289,17 +289,17 @@ export default function ServicesSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Block */}
         <div className="mx-auto mb-20 max-w-3xl text-center">
-          <div className="eco-header-anim mb-4 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/10 bg-[#F1F5F9] px-4 py-1.5 eco-header-anim">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#1155CC]" />
             <span className="text-[10px] font-black tracking-widest text-[#1155CC] uppercase">
               What We Do
             </span>
           </div>
-          <h2 className="eco-header-anim mb-5 text-4xl leading-[1.15] font-medium tracking-tight text-gray-900 sm:text-5xl">
+          <h2 className="mb-5 text-4xl leading-[1.15] font-medium tracking-tight text-gray-900 eco-header-anim sm:text-5xl">
             End-to-End Solutions. <br />
             <span className="text-[#1155CC] italic">Engineered for Growth.</span>
           </h2>
-          <p className="eco-header-anim text-lg leading-relaxed text-gray-600">
+          <p className="text-lg leading-relaxed text-gray-600 eco-header-anim">
             We build powerful digital systems, automate operations with AI, and deliver scalable
             products that help businesses grow faster.
           </p>

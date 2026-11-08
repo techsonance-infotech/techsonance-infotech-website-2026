@@ -25,7 +25,7 @@ export default function AdminDashboardLoading() {
               <Skeleton className="h-3 w-28 rounded-md" />
               <Skeleton className="h-8 w-8 rounded-xl" />
             </CardHeader>
-            <CardContent className="p-0 pt-2 space-y-3">
+            <CardContent className="space-y-3 p-0 pt-2">
               <Skeleton className="h-9 w-20 rounded-lg" />
               <Skeleton className="h-3 w-32 rounded-md" />
             </CardContent>

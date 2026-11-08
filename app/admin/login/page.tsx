@@ -53,10 +53,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      await loginAdmin(
-        { email: email.trim(), password },
-        { signal: controller.signal },
-      );
+      await loginAdmin({ email: email.trim(), password }, { signal: controller.signal });
 
       router.push("/admin/dashboard");
       router.refresh();
@@ -75,9 +72,13 @@ export default function AdminLoginPage() {
         } else if (err.code === ErrorCode.UNAUTHENTICATED || err.status === 401) {
           setError(err.message || "Invalid work email or password. Please try again.");
         } else if (err.code === ErrorCode.FORBIDDEN || err.status === 403) {
-          setError(err.message || "Access denied. Your account may be deactivated or unauthorized.");
+          setError(
+            err.message || "Access denied. Your account may be deactivated or unauthorized.",
+          );
         } else {
-          setError(err.message || "Authentication service temporarily unavailable. Please try again.");
+          setError(
+            err.message || "Authentication service temporarily unavailable. Please try again.",
+          );
         }
       } else if (err instanceof Error) {
         setError(err.message || "Invalid credentials");
@@ -118,7 +119,7 @@ export default function AdminLoginPage() {
               id="login-error-msg"
               role="alert"
               aria-live="polite"
-              className={`animate-in fade-in mb-6 flex items-start gap-2.5 rounded-2xl border p-4 text-xs font-semibold ${
+              className={`mb-6 flex items-start gap-2.5 rounded-2xl border p-4 text-xs font-semibold animate-in fade-in ${
                 isRateLimited
                   ? "border-amber-200/90 bg-amber-50 text-amber-900"
                   : "border-rose-200/80 bg-rose-50 text-rose-700"
@@ -130,8 +131,10 @@ export default function AdminLoginPage() {
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
               )}
               <div className="flex-1">
-                <span className="block font-bold">{isRateLimited ? "Security Lockout" : "Authentication Failed"}</span>
-                <span className="mt-0.5 block font-normal leading-relaxed">{error}</span>
+                <span className="block font-bold">
+                  {isRateLimited ? "Security Lockout" : "Authentication Failed"}
+                </span>
+                <span className="mt-0.5 block leading-relaxed font-normal">{error}</span>
               </div>
             </div>
           )}

@@ -90,12 +90,12 @@ export function ComplianceAuditModal({
   };
 
   return (
-    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200 animate-in fade-in">
       <dialog
         open
         aria-modal="true"
         aria-labelledby="compliance-modal-title"
-        className="animate-in zoom-in-95 m-0 block w-full max-w-lg space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
+        className="m-0 block w-full max-w-lg space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">

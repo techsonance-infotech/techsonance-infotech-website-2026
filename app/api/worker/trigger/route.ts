@@ -5,6 +5,7 @@ import { getContainer } from "@/lib/di/container";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { getEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
 
 const triggerSchema = z.object({
   topicText: z.string().optional(),
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
       message: "Autonomous generation job enqueued",
     });
   } catch (err) {
-    console.error("Worker trigger error:", err);
+    logger.error("Worker trigger error", { error: err });
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Internal error" },
       { status: 500 },

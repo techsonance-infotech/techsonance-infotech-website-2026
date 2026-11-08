@@ -158,7 +158,7 @@ export default function PortfolioClient() {
         className="min-h-[90vh] bg-[#FAFBFD] pt-24 pb-16 text-[#0F172A]"
       >
         <div
-          className="animate-fade-in relative z-10 flex max-w-4xl flex-col items-center px-6 text-center opacity-0"
+          className="relative z-10 flex max-w-4xl animate-fade-in flex-col items-center px-6 text-center opacity-0"
           style={{ animationDelay: "800ms", animationFillMode: "forwards" }}
         >
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1155CC]/15 bg-white px-4 py-1.5 shadow-sm">

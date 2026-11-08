@@ -76,7 +76,9 @@ export const publicBlogPostBoundarySchema: z.ZodType<BlogPost> = z
     tags: z
       .array(z.string().catch(""))
       .nullish()
-      .transform((v) => (v ?? []).filter((t): t is string => typeof t === "string" && t.trim().length > 0))
+      .transform((v) =>
+        (v ?? []).filter((t): t is string => typeof t === "string" && t.trim().length > 0),
+      )
       .catch([]),
     faqs: z
       .array(publicBlogPostFaqSchema)

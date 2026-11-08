@@ -53,8 +53,7 @@ export function PricingCalculator({ onBookPod }: { onBookPod: () => void }) {
   const activePod = POD_OPTIONS.find((p) => p.id === selectedPodId) || POD_OPTIONS[0];
   const activeDuration = DURATIONS.find((d) => d.months === selectedDuration) || DURATIONS[1];
 
-  const discountedMonthlyUsd =
-    activePod.monthlyUsd * (1 - activeDuration.discountPercent / 100);
+  const discountedMonthlyUsd = activePod.monthlyUsd * (1 - activeDuration.discountPercent / 100);
   const totalInvestmentUsd = discountedMonthlyUsd * activeDuration.months;
 
   const formattedMonthly = formatCurrency(discountedMonthlyUsd, currency);

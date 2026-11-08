@@ -54,7 +54,9 @@ export function PricingHero() {
 
             <div className="flex items-center gap-1.5 pr-2 text-xs text-slate-600">
               <Clock className="h-3.5 w-3.5 text-emerald-600" />
-              <span className="font-medium text-slate-800">{activeRegion?.label.split(" ")[0]}</span>
+              <span className="font-medium text-slate-800">
+                {activeRegion?.label.split(" ")[0]}
+              </span>
               <span className="text-[11px] text-slate-400">({activeCurrency?.symbol} billing)</span>
             </div>
           </div>

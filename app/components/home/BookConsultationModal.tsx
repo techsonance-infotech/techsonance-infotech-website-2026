@@ -13,11 +13,41 @@ const CAL_URL = "https://cal.id/techsonance-infotech/connect-with-founder?durati
 
 const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 const DATE_CELL_KEYS = [
-  "c-1", "c-2", "c-3", "c-4", "c-5", "c-6", "c-7",
-  "c-8", "c-9", "c-10", "c-11", "c-12", "c-13", "c-14",
-  "c-15", "c-16", "c-17", "c-18", "c-19", "c-20", "c-21",
-  "c-22", "c-23", "c-24", "c-25", "c-26", "c-27", "c-28",
-  "c-29", "c-30", "c-31", "c-32", "c-33", "c-34", "c-35",
+  "c-1",
+  "c-2",
+  "c-3",
+  "c-4",
+  "c-5",
+  "c-6",
+  "c-7",
+  "c-8",
+  "c-9",
+  "c-10",
+  "c-11",
+  "c-12",
+  "c-13",
+  "c-14",
+  "c-15",
+  "c-16",
+  "c-17",
+  "c-18",
+  "c-19",
+  "c-20",
+  "c-21",
+  "c-22",
+  "c-23",
+  "c-24",
+  "c-25",
+  "c-26",
+  "c-27",
+  "c-28",
+  "c-29",
+  "c-30",
+  "c-31",
+  "c-32",
+  "c-33",
+  "c-34",
+  "c-35",
 ] as const;
 const TIME_SLOT_KEYS = ["s-1", "s-2", "s-3", "s-4", "s-5", "s-6", "s-7", "s-8"] as const;
 
@@ -28,7 +58,7 @@ function CalendarSkeleton(): React.JSX.Element {
       aria-label="Loading booking calendar"
       className="absolute inset-0 z-10 flex flex-col overflow-y-auto bg-[#FAFBFD] p-3 sm:p-5"
     >
-      <div className="mx-auto flex w-full max-w-[820px] flex-col gap-3 animate-pulse sm:gap-4">
+      <div className="mx-auto flex w-full max-w-[820px] animate-pulse flex-col gap-3 sm:gap-4">
         {/* Top bar controls */}
         <div className="flex items-center justify-between px-1">
           <div className="h-6 w-6 rounded-md bg-slate-200" />
@@ -97,7 +127,10 @@ function CalendarSkeleton(): React.JSX.Element {
               </div>
               <div className="flex flex-col gap-1.5">
                 {TIME_SLOT_KEYS.map((key) => (
-                  <div key={key} className="h-7 w-full rounded-md border border-slate-200/70 bg-slate-50" />
+                  <div
+                    key={key}
+                    className="h-7 w-full rounded-md border border-slate-200/70 bg-slate-50"
+                  />
                 ))}
               </div>
             </div>
@@ -167,7 +200,10 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }): React.JSX
           </button>
 
           <div className="flex flex-col pr-8">
-            <h2 id="consultation-modal-title" className="text-sm leading-tight font-black text-[#0F172A] sm:text-base">
+            <h2
+              id="consultation-modal-title"
+              className="text-sm leading-tight font-black text-[#0F172A] sm:text-base"
+            >
               Schedule Your <span className="text-[#1155CC]">Free Consultation</span>
             </h2>
             <p className="mt-1 text-[10px] leading-none font-medium text-slate-500 sm:text-xs">
@@ -193,10 +229,16 @@ function BookConsultationDialog({ onClose }: { onClose: () => void }): React.JSX
   );
 }
 
-export default function BookConsultationModal({ isOpen, onClose }: BookConsultationModalProps): React.JSX.Element {
+export default function BookConsultationModal({
+  isOpen,
+  onClose,
+}: BookConsultationModalProps): React.JSX.Element {
   // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
-    const win = typeof window !== "undefined" ? (window as unknown as Record<string, { stop: () => void; start: () => void }>) : null;
+    const win =
+      typeof window !== "undefined"
+        ? (window as unknown as Record<string, { stop: () => void; start: () => void }>)
+        : null;
     if (isOpen) {
       trackBookingModalOpen("global_modal");
       document.body.style.overflow = "hidden";

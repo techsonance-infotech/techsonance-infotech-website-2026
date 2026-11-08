@@ -108,23 +108,23 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
         throw new AppError(ErrorCode.INTERNAL, "Invalid proposals payload from LLM");
       }
 
-      const insertedTopics: Topic[] = [];
-      for (const p of topicProposals) {
-        if (!p.title) continue;
-        const inserted = await this.topicsRepo.create({
-          siteId,
-          title: p.title,
-          keywords: p.keywords ?? [],
-          category: p.category ?? category,
-          targetAudience: p.targetAudience ?? "Tech Leads & Engineers",
-          difficulty: p.difficulty ?? "intermediate",
-          status: AiTopicStatus.SUGGESTED,
-          suggestedBy: "ai",
-          priority: 1,
-          notes: p.notes ?? null,
-        });
-        insertedTopics.push(inserted);
-      }
+      const validProposals = topicProposals.filter((p) => Boolean(p.title));
+      const insertedTopics = await Promise.all(
+        validProposals.map((p) =>
+          this.topicsRepo.create({
+            siteId,
+            title: p.title,
+            keywords: p.keywords ?? [],
+            category: p.category ?? category,
+            targetAudience: p.targetAudience ?? "Tech Leads & Engineers",
+            difficulty: p.difficulty ?? "intermediate",
+            status: AiTopicStatus.SUGGESTED,
+            suggestedBy: "ai",
+            priority: 1,
+            notes: p.notes ?? null,
+          }),
+        ),
+      );
 
       return insertedTopics;
     } catch (err) {
@@ -147,22 +147,22 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
         },
       ];
 
-      const insertedFallbacks: Topic[] = [];
-      for (const f of fallbacks) {
-        const inserted = await this.topicsRepo.create({
-          siteId,
-          title: f.title,
-          keywords: f.keywords,
-          category: f.category,
-          targetAudience: "Engineering Teams",
-          difficulty: "intermediate",
-          status: AiTopicStatus.SUGGESTED,
-          suggestedBy: "ai",
-          priority: 0,
-          notes: "Curated agency topic recommendation",
-        });
-        insertedFallbacks.push(inserted);
-      }
+      const insertedFallbacks = await Promise.all(
+        fallbacks.map((f) =>
+          this.topicsRepo.create({
+            siteId,
+            title: f.title,
+            keywords: f.keywords,
+            category: f.category,
+            targetAudience: "Engineering Teams",
+            difficulty: "intermediate",
+            status: AiTopicStatus.SUGGESTED,
+            suggestedBy: "ai",
+            priority: 0,
+            notes: "Curated agency topic recommendation",
+          }),
+        ),
+      );
 
       return insertedFallbacks;
     }

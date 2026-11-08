@@ -49,7 +49,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
   if (completed) {
     return (
-      <div className="animate-in fade-in space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-sm duration-300">
+      <div className="space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-sm duration-300 animate-in fade-in">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
           <CheckCircle2 className="h-8 w-8" />
         </div>
@@ -155,7 +155,10 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
       <form onSubmit={handleSubmit} className="space-y-4">
         {decision === "improve" && (
           <div className="space-y-2">
-            <label htmlFor="improve-feedback" className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+            <label
+              htmlFor="improve-feedback"
+              className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
+            >
               Feedback for Revision (Required)
             </label>
             <Textarea
@@ -172,7 +175,10 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
         {decision === "reject" && (
           <div className="space-y-2">
-            <label htmlFor="reject-feedback" className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+            <label
+              htmlFor="reject-feedback"
+              className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
+            >
               Rejection Reason (Optional)
             </label>
             <Textarea

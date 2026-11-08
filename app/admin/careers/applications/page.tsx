@@ -196,13 +196,11 @@ export default function ApplicationsInboxPage() {
   // Defensive metrics calculation
   const safeApps = Array.isArray(applications) ? applications : [];
   const newCount = safeApps.filter((a) => a.status === ApplicationStatus.NEW).length;
-  const interviewCount = safeApps.filter(
-    (a) => a.status === ApplicationStatus.INTERVIEW,
-  ).length;
+  const interviewCount = safeApps.filter((a) => a.status === ApplicationStatus.INTERVIEW).length;
   const knockoutCount = safeApps.filter((a) => a.knockoutTriggered).length;
 
   return (
-    <div className="animate-in fade-in space-y-6 duration-300">
+    <div className="space-y-6 duration-300 animate-in fade-in">
       {/* Top Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>

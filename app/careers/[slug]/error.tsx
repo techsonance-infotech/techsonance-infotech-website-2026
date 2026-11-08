@@ -33,8 +33,8 @@ export default function JobDetailError({
           Role Details Unavailable
         </h1>
         <p className="mb-6 text-sm leading-relaxed text-slate-600">
-          We couldn&apos;t load the specifications for this position right now. You can try refreshing
-          or return to the careers overview to view all other available positions.
+          We couldn&apos;t load the specifications for this position right now. You can try
+          refreshing or return to the careers overview to view all other available positions.
         </p>
 
         {error.digest && (
@@ -52,7 +52,11 @@ export default function JobDetailError({
             <RefreshCw className="h-4 w-4" />
             Try again
           </Button>
-          <Button asChild variant="outline" className="flex items-center justify-center gap-2 rounded-xl">
+          <Button
+            asChild
+            variant="outline"
+            className="flex items-center justify-center gap-2 rounded-xl"
+          >
             <Link href="/careers">
               <ArrowLeft className="h-4 w-4" />
               All Open Positions

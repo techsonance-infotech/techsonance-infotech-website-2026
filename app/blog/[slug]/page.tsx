@@ -53,9 +53,10 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
       publishedTime = new Date().toISOString();
     }
 
-    const authorNames = Array.isArray(post.authors) && post.authors.length > 0
-      ? post.authors.map((a) => a?.name || "TechSonance Team")
-      : ["TechSonance Team"];
+    const authorNames =
+      Array.isArray(post.authors) && post.authors.length > 0
+        ? post.authors.map((a) => a?.name || "TechSonance Team")
+        : ["TechSonance Team"];
 
     return {
       title: `${post.title} | TechSonance Blog`,
@@ -135,9 +136,10 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   }
 
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
-  const authorsString = Array.isArray(post.authors) && post.authors.length > 0
-    ? post.authors.map((a) => a?.name || "TechSonance Team").join(" & ")
-    : "TechSonance Team";
+  const authorsString =
+    Array.isArray(post.authors) && post.authors.length > 0
+      ? post.authors.map((a) => a?.name || "TechSonance Team").join(" & ")
+      : "TechSonance Team";
 
   const articleSchema = getArticleSchema(
     post.title,

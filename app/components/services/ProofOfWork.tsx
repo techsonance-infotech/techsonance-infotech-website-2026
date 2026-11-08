@@ -15,7 +15,7 @@ export default function ProofOfWork({ service }: ProofOfWorkProps) {
   return (
     <section id="proof-of-work" className="service-section bg-[var(--bg-subtle)] py-20 md:py-28">
       <div className="service-container">
-        <div className="reveal-up mb-12 md:mb-16">
+        <div className="mb-12 reveal-up md:mb-16">
           <span className="section-label">Proof of Work</span>
           <h2
             className="font-medium tracking-tight text-[var(--text-primary)]"

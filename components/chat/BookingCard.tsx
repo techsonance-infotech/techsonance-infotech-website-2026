@@ -73,7 +73,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
   const { currency } = useCurrency();
   const dynamicBudgetRanges = React.useMemo(
     () => getBudgetRangesForCurrency(currency).map((b) => b.label),
-    [currency]
+    [currency],
   );
 
   const [visitorTimezone] = useState(() => {
@@ -208,7 +208,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
   if (bookedRef) {
     const userEmail = getValues("email");
     return (
-      <div className="animate-fade-in my-2 rounded-2xl border border-emerald-200 bg-white p-5 text-slate-800 shadow-xs">
+      <div className="my-2 animate-fade-in rounded-2xl border border-emerald-200 bg-white p-5 text-slate-800 shadow-xs">
         <div className="mb-3 flex items-center gap-3 text-emerald-600">
           <CheckCircle2 className="h-6 w-6 shrink-0" />
           <h4 className="text-base font-semibold text-slate-900">Consultation Confirmed!</h4>
@@ -234,7 +234,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
       data-lenis-prevent
       data-lenis-prevent-wheel
       data-lenis-prevent-touch
-      className="animate-fade-in my-2 rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 shadow-md sm:p-5"
+      className="my-2 animate-fade-in rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 shadow-md sm:p-5"
     >
       <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center gap-2">

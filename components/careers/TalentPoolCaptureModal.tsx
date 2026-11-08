@@ -82,7 +82,7 @@ export function TalentPoolCaptureModal({ isOpen, onClose }: TalentPoolCaptureMod
   };
 
   return (
-    <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm duration-200 animate-in fade-in">
       <div className="relative w-full max-w-lg space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8 dark:border-slate-800 dark:bg-slate-900">
         <button
           type="button"

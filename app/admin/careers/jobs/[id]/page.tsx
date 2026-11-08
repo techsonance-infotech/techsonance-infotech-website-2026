@@ -56,22 +56,25 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [duplicating, setDuplicating] = useState(false);
 
-  const loadJob = React.useCallback(async (signal?: AbortSignal) => {
-    if (isNew) return;
-    try {
-      setLoading(true);
-      setLoadError(null);
-      const job = await getAdminJob(id, signal);
-      setJobData(toJobFormData(job));
-    } catch (err: unknown) {
-      if (signal?.aborted) return;
-      const msg = err instanceof Error ? err.message : "Network error loading position data.";
-      setLoadError(msg);
-      setAlertMessage({ type: "error", text: msg });
-    } finally {
-      setLoading(false);
-    }
-  }, [id, isNew]);
+  const loadJob = React.useCallback(
+    async (signal?: AbortSignal) => {
+      if (isNew) return;
+      try {
+        setLoading(true);
+        setLoadError(null);
+        const job = await getAdminJob(id, signal);
+        setJobData(toJobFormData(job));
+      } catch (err: unknown) {
+        if (signal?.aborted) return;
+        const msg = err instanceof Error ? err.message : "Network error loading position data.";
+        setLoadError(msg);
+        setAlertMessage({ type: "error", text: msg });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [id, isNew],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -256,7 +259,11 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         </h3>
         <p className="mt-1 max-w-sm text-xs text-slate-500 dark:text-slate-400">{loadError}</p>
         <div className="mt-6 flex items-center gap-3">
-          <Button onClick={() => loadJob()} size="sm" className="gap-2 rounded-xl text-xs font-bold">
+          <Button
+            onClick={() => loadJob()}
+            size="sm"
+            className="gap-2 rounded-xl text-xs font-bold"
+          >
             <RefreshCw className="h-3.5 w-3.5" /> Retry Loading
           </Button>
           <Button asChild variant="outline" size="sm" className="rounded-xl text-xs">
@@ -268,7 +275,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
   }
 
   return (
-    <div className="animate-in fade-in space-y-6 pb-16 duration-300">
+    <div className="space-y-6 pb-16 duration-300 animate-in fade-in">
       {/* Top Header Bar */}
       <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center dark:border-slate-800">
         <div className="flex items-center gap-3">
@@ -373,7 +380,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
 
       {/* Reviewer Feedback Warning if Returned */}
       {jobData.approvalStatus === "RETURNED" && jobData.approvalComment && (
-        <div className="animate-in fade-in rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 animate-in fade-in dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
           <div className="mb-1 flex items-center gap-2 font-bold">
             <Undo2 className="h-4 w-4 text-amber-600" />
             <span>Reviewer Feedback (Changes Requested):</span>

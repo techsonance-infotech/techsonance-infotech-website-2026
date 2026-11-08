@@ -66,18 +66,14 @@ const VersionsResponseSchema = z
 export async function createAdminJob(payload: Partial<JobFormData>): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOBS;
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -121,15 +117,11 @@ export async function listAdminJobs(params?: ListAdminJobsParams): Promise<Job[]
 export async function getAdminJob(id: string, signal?: AbortSignal): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "GET",
-      credentials: "include",
-      signal,
-    },
-  );
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "GET",
+    credentials: "include",
+    signal,
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -141,18 +133,14 @@ export async function getAdminJob(id: string, signal?: AbortSignal): Promise<Job
 export async function updateAdminJob(id: string, payload: Partial<JobFormData>): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -164,14 +152,10 @@ export async function updateAdminJob(id: string, payload: Partial<JobFormData>):
 export async function deleteAdminJob(id: string): Promise<boolean> {
   const url = API_ENDPOINTS.ADMIN.JOB(id);
 
-  await safeFetch(
-    url,
-    z.any(),
-    {
-      method: "DELETE",
-      credentials: "include",
-    },
-  );
+  await safeFetch(url, z.any(), {
+    method: "DELETE",
+    credentials: "include",
+  });
 
   return true;
 }
@@ -186,18 +170,14 @@ export async function updateAdminJobStatus(
 ): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.JOB_STATUS(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -209,18 +189,14 @@ export async function updateAdminJobStatus(
 export async function approveAdminJob(id: string, comment?: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_APPROVE(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(comment ? { comment } : {}),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify(comment ? { comment } : {}),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -232,18 +208,14 @@ export async function approveAdminJob(id: string, comment?: string): Promise<Job
 export async function returnAdminJob(id: string, comment: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_RETURN(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ comment }),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify({ comment }),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }
@@ -274,18 +246,14 @@ export async function listAdminJobVersions(
 export async function restoreAdminJobVersion(id: string, versionId: string): Promise<Job> {
   const url = API_ENDPOINTS.ADMIN.CAREER_JOB_VERSIONS(id);
 
-  const data = await safeFetch(
-    url,
-    SingleJobResponseSchema,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ versionId }),
+  const data = await safeFetch(url, SingleJobResponseSchema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify({ versionId }),
+  });
 
   return (data && "job" in data ? data.job : data) as unknown as Job;
 }

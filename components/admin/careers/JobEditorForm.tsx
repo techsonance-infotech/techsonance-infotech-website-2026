@@ -780,7 +780,7 @@ export function JobEditorForm({
       <div className="w-full space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs sm:p-5 dark:border-slate-800 dark:bg-slate-900">
         {/* TAB 1: BASICS */}
         {activeTab === "basics" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <div>
               <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Role Identity &amp; Overview
@@ -918,7 +918,7 @@ export function JobEditorForm({
 
         {/* TAB 2: LOCATION & MODE */}
         {activeTab === "location" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <div>
               <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Workplace Location & Flexibility
@@ -1045,7 +1045,7 @@ export function JobEditorForm({
 
         {/* TAB 3: CONTENT */}
         {activeTab === "content" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <div>
               <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Role Description, Requirements & Perks
@@ -1259,7 +1259,7 @@ export function JobEditorForm({
 
         {/* TAB 4: COMPENSATION */}
         {activeTab === "compensation" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <div>
               <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Compensation &amp; Pay Transparency
@@ -1453,7 +1453,7 @@ export function JobEditorForm({
 
         {/* TAB 5: APPLICATION SETTINGS */}
         {activeTab === "application" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <div>
               <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
                 Candidate Intake &amp; Screening Setup
@@ -1638,7 +1638,7 @@ export function JobEditorForm({
 
         {/* TAB 6: REVIEW & PUBLISH (Finding 17, 18, 19, 20) */}
         {activeTab === "review" && (
-          <div className="animate-in fade-in space-y-3.5 duration-200">
+          <div className="space-y-3.5 duration-200 animate-in fade-in">
             <JobReviewSummary
               job={job}
               updateField={updateField}

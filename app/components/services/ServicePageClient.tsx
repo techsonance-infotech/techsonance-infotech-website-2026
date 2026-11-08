@@ -161,7 +161,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
 
       <section className="service-section bg-[var(--bg-base)]">
         <div className="service-container">
-          <div className="reveal-up mb-12 text-center">
+          <div className="mb-12 text-center reveal-up">
             <span className="section-label">FAQ</span>
             <h2
               className="font-bold tracking-tight text-[var(--text-primary)]"

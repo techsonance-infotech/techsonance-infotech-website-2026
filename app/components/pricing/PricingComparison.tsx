@@ -110,7 +110,9 @@ export function PricingComparison() {
                   <tr key={row.feature} className="hover:bg-slate-50/50">
                     <td className="py-3.5 pr-4 pl-6 font-medium text-slate-800">{row.feature}</td>
                     <td className="px-4 py-3.5 text-center">{renderCell(row.mvp)}</td>
-                    <td className="bg-[#1155CC]/5 px-4 py-3.5 text-center">{renderCell(row.pod)}</td>
+                    <td className="bg-[#1155CC]/5 px-4 py-3.5 text-center">
+                      {renderCell(row.pod)}
+                    </td>
                     <td className="py-3.5 pr-6 pl-4 text-center">{renderCell(row.enterprise)}</td>
                   </tr>
                 ))}

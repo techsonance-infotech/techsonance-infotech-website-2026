@@ -51,13 +51,12 @@ export default async function AdminDashboardPage() {
   const postsService = container.get(AdminPostsService);
   const jobsService = container.get(AdminJobsService);
 
-  const [postsSettled, inReviewSettled, publishedSettled, jobsSettled] =
-    await Promise.allSettled([
-      postsService.listPosts({ limit: 10 }),
-      postsService.listPosts({ status: PostStatus.IN_REVIEW, limit: 5 }),
-      postsService.listPosts({ status: PostStatus.PUBLISHED, limit: 1 }),
-      jobsService.listJobs({ status: JobStatus.OPEN, limit: 5 }),
-    ]);
+  const [postsSettled, inReviewSettled, publishedSettled, jobsSettled] = await Promise.allSettled([
+    postsService.listPosts({ limit: 10 }),
+    postsService.listPosts({ status: PostStatus.IN_REVIEW, limit: 5 }),
+    postsService.listPosts({ status: PostStatus.PUBLISHED, limit: 1 }),
+    jobsService.listJobs({ status: JobStatus.OPEN, limit: 5 }),
+  ]);
 
   const hasPartialFailure =
     postsSettled.status === "rejected" ||
@@ -141,12 +140,10 @@ export default async function AdminDashboardPage() {
 
   return (
     <Suspense fallback={<AdminDashboardLoading />}>
-      <div className="animate-in fade-in space-y-8 duration-500">
+      <div className="space-y-8 duration-500 animate-in fade-in">
         {/* Partial Outage Warning Banner */}
         {hasPartialFailure && (
-          <output
-            className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-xs font-semibold text-amber-800"
-          >
+          <output className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-xs font-semibold text-amber-800">
             <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
             <p className="flex-1">
               Some operational metrics could not be synchronized with the database. Displaying
@@ -378,7 +375,10 @@ export default async function AdminDashboardPage() {
                 </p>
                 <div className="mt-4">
                   <Link href="/admin/blog">
-                    <Button size="sm" className="rounded-xl bg-[#1155CC] text-white hover:bg-[#0d44a4]">
+                    <Button
+                      size="sm"
+                      className="rounded-xl bg-[#1155CC] text-white hover:bg-[#0d44a4]"
+                    >
                       <PlusCircle className="mr-1.5 h-3.5 w-3.5" />
                       Create New Article
                     </Button>

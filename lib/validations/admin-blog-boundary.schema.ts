@@ -7,10 +7,19 @@ export const SafeAdminPostItemSchema = z
   .object({
     id: z.string().default(() => crypto.randomUUID()),
     siteId: z.string().optional(),
-    slug: z.string().nullish().transform((v) => v?.trim() || "article"),
-    title: z.string().nullish().transform((v) => v?.trim() || "Untitled Article"),
+    slug: z
+      .string()
+      .nullish()
+      .transform((v) => v?.trim() || "article"),
+    title: z
+      .string()
+      .nullish()
+      .transform((v) => v?.trim() || "Untitled Article"),
     excerpt: z.string().nullish().catch(null),
-    content: z.string().nullish().transform((v) => v ?? ""),
+    content: z
+      .string()
+      .nullish()
+      .transform((v) => v ?? ""),
     categoryId: z.string().nullish().catch(null),
     heroImage: z.string().nullish().catch(null),
     thumbnailMissing: z.boolean().nullish().catch(null),
@@ -23,11 +32,20 @@ export const SafeAdminPostItemSchema = z
       .array(z.string())
       .nullish()
       .transform((t) => t ?? []),
-    readTime: z.string().nullish().transform((v) => v || "5 min read"),
+    readTime: z
+      .string()
+      .nullish()
+      .transform((v) => v || "5 min read"),
     status: z.enum(PostStatus).catch(PostStatus.DRAFT),
     publishedAt: z.string().nullish().catch(null),
-    createdAt: z.string().nullish().transform((v) => v || new Date().toISOString()),
-    updatedAt: z.string().nullish().transform((v) => v || new Date().toISOString()),
+    createdAt: z
+      .string()
+      .nullish()
+      .transform((v) => v || new Date().toISOString()),
+    updatedAt: z
+      .string()
+      .nullish()
+      .transform((v) => v || new Date().toISOString()),
     version: z.coerce.number().int().catch(1),
     category: z
       .object({
@@ -47,7 +65,9 @@ export const SafeAdminPostsListResponseSchema = z.object({
   posts: z
     .array(SafeAdminPostItemSchema)
     .nullish()
-    .transform((items) => (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null)),
+    .transform((items) =>
+      (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null),
+    ),
   total: z.coerce.number().int().catch(0),
 });
 
@@ -57,19 +77,37 @@ export type SafeAdminPostsListResponse = z.infer<typeof SafeAdminPostsListRespon
 export const SafeAdminAiTopicItemSchema = z
   .object({
     id: z.string().default(() => crypto.randomUUID()),
-    title: z.string().nullish().transform((v) => v?.trim() || "Untitled Topic"),
+    title: z
+      .string()
+      .nullish()
+      .transform((v) => v?.trim() || "Untitled Topic"),
     keywords: z
       .array(z.string())
       .nullish()
       .transform((k) => k ?? []),
-    category: z.string().nullish().transform((v) => v || "General"),
-    targetAudience: z.string().nullish().transform((v) => v || "General"),
-    difficulty: z.string().nullish().transform((v) => v || "Intermediate"),
+    category: z
+      .string()
+      .nullish()
+      .transform((v) => v || "General"),
+    targetAudience: z
+      .string()
+      .nullish()
+      .transform((v) => v || "General"),
+    difficulty: z
+      .string()
+      .nullish()
+      .transform((v) => v || "Intermediate"),
     status: z.enum(AiTopicStatus).catch(AiTopicStatus.SUGGESTED),
     priority: z.coerce.number().int().catch(0),
-    suggestedBy: z.string().nullish().transform((v) => v || "Manual"),
+    suggestedBy: z
+      .string()
+      .nullish()
+      .transform((v) => v || "Manual"),
     notes: z.string().nullish().catch(null),
-    createdAt: z.string().nullish().transform((v) => v || new Date().toISOString()),
+    createdAt: z
+      .string()
+      .nullish()
+      .transform((v) => v || new Date().toISOString()),
     updatedAt: z.string().nullish().catch(null),
   })
   .nullable()
@@ -82,7 +120,9 @@ export const SafeAdminAiTopicsListResponseSchema = z.object({
   topics: z
     .array(SafeAdminAiTopicItemSchema)
     .nullish()
-    .transform((items) => (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null)),
+    .transform((items) =>
+      (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null),
+    ),
   total: z.coerce.number().int().catch(0),
 });
 
@@ -91,7 +131,10 @@ export const SafeAdminAiJobItemSchema = z
   .object({
     id: z.string().default(() => crypto.randomUUID()),
     siteId: z.string().optional(),
-    topicText: z.string().nullish().transform((v) => v || "Untitled Generation Job"),
+    topicText: z
+      .string()
+      .nullish()
+      .transform((v) => v || "Untitled Generation Job"),
     category: z.string().nullish().catch(null),
     status: z.enum(AiJobStatus).catch(AiJobStatus.QUEUED),
     currentStep: z.enum(AiJobStep).catch(AiJobStep.OUTLINE),
@@ -100,8 +143,14 @@ export const SafeAdminAiJobItemSchema = z
     attempt: z.coerce.number().int().catch(1),
     maxAttempts: z.coerce.number().int().catch(3),
     version: z.coerce.number().int().catch(1),
-    createdAt: z.string().nullish().transform((v) => v || new Date().toISOString()),
-    updatedAt: z.string().nullish().transform((v) => v || new Date().toISOString()),
+    createdAt: z
+      .string()
+      .nullish()
+      .transform((v) => v || new Date().toISOString()),
+    updatedAt: z
+      .string()
+      .nullish()
+      .transform((v) => v || new Date().toISOString()),
   })
   .nullable()
   .catch(null);
@@ -112,6 +161,8 @@ export const SafeAdminAiJobsListResponseSchema = z.object({
   jobs: z
     .array(SafeAdminAiJobItemSchema)
     .nullish()
-    .transform((items) => (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null)),
+    .transform((items) =>
+      (items ?? []).filter((item): item is NonNullable<typeof item> => item !== null),
+    ),
   total: z.coerce.number().int().catch(0),
 });

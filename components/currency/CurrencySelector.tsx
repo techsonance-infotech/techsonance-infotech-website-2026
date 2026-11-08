@@ -94,7 +94,9 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
           <div className="mt-3 border-t border-slate-100 pt-2">
             <div className="flex items-center justify-between text-[10px] text-slate-400">
               <span>Delivery Timezone</span>
-              <span className="font-bold text-slate-700">{REGIONS[region]?.label.split(" ")[0]}</span>
+              <span className="font-bold text-slate-700">
+                {REGIONS[region]?.label.split(" ")[0]}
+              </span>
             </div>
             <select
               value={region}

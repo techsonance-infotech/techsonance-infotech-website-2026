@@ -214,7 +214,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
         {/* First & Last Name */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
-            <label htmlFor="hero-firstName" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+            <label
+              htmlFor="hero-firstName"
+              className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase"
+            >
               First Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -238,7 +241,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="hero-lastName" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+            <label
+              htmlFor="hero-lastName"
+              className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase"
+            >
               Last Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -264,7 +270,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Email Address */}
         <div className="space-y-1">
-          <label htmlFor="hero-email" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label
+            htmlFor="hero-email"
+            className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase"
+          >
             Email Address <span className="text-red-500">*</span>
           </label>
           <input
@@ -289,7 +298,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Phone Number */}
         <div className="space-y-1">
-          <label htmlFor="hero-phone" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label
+            htmlFor="hero-phone"
+            className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase"
+          >
             Phone Number <span className="text-red-500">*</span>
           </label>
           <div className="flex flex-row gap-2">
@@ -328,7 +340,10 @@ export default function HeroContactForm({ serviceName }: HeroContactFormProps) {
 
         {/* Message */}
         <div className="space-y-1">
-          <label htmlFor="hero-message" className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase">
+          <label
+            htmlFor="hero-message"
+            className="block text-[11px] font-semibold tracking-wider text-neutral-600 uppercase"
+          >
             Message <span className="text-red-500">*</span>
           </label>
           <textarea

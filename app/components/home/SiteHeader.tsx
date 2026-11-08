@@ -25,7 +25,7 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  
+
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,

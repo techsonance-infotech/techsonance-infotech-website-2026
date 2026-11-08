@@ -262,7 +262,7 @@ export default function ChatWidget() {
       <div className="fixed right-5 bottom-5 z-50 flex flex-col items-end gap-2.5">
         {/* Proactive Idle Nudge Bubble */}
         {showProactiveNudge && !isOpen && (
-          <div className="animate-fade-in relative max-w-[280px] rounded-2xl border border-slate-200 bg-white p-3.5 text-xs text-slate-800 shadow-xl">
+          <div className="relative max-w-[280px] animate-fade-in rounded-2xl border border-slate-200 bg-white p-3.5 text-xs text-slate-800 shadow-xl">
             <button
               onClick={() => setShowProactiveNudge(false)}
               className="absolute top-2 right-2 cursor-pointer p-0.5 text-slate-400 hover:text-slate-600"
@@ -313,7 +313,7 @@ export default function ChatWidget() {
           data-lenis-prevent-touch
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
-          className="animate-fade-in fixed right-0 bottom-0 z-50 flex h-[100dvh] w-full flex-col overflow-hidden overscroll-contain border border-slate-200/80 bg-[#FAFBFD] shadow-[0_20px_60px_rgba(0,0,0,0.18)] sm:right-5 sm:bottom-5 sm:h-[620px] sm:w-[390px] sm:max-w-[calc(100vw-32px)] sm:rounded-3xl"
+          className="fixed right-0 bottom-0 z-50 flex h-[100dvh] w-full animate-fade-in flex-col overflow-hidden overscroll-contain border border-slate-200/80 bg-[#FAFBFD] shadow-[0_20px_60px_rgba(0,0,0,0.18)] sm:right-5 sm:bottom-5 sm:h-[620px] sm:w-[390px] sm:max-w-[calc(100vw-32px)] sm:rounded-3xl"
         >
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between bg-linear-to-r from-[#0F52BA] via-[#1155CC] to-[#008BD9] px-4 py-3.5 text-white shadow-xs">

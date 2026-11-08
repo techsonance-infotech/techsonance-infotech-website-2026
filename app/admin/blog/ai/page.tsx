@@ -99,7 +99,7 @@ export default function AdminAIPage() {
   };
 
   return (
-    <div className="animate-in fade-in space-y-8 duration-300">
+    <div className="space-y-8 duration-300 animate-in fade-in">
       {/* Page Header */}
       <div className="flex flex-col justify-between gap-4 pb-2 sm:flex-row sm:items-center">
         <div>

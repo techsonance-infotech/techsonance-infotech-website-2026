@@ -113,13 +113,7 @@ export async function safeFetch<T>(
       const fieldErrors =
         typeof envelope.error === "object" ? envelope.error?.fieldErrors : undefined;
 
-      throw new ApiError(
-        res.status,
-        errorCode,
-        errorMsg,
-        requestId,
-        fieldErrors,
-      );
+      throw new ApiError(res.status, errorCode, errorMsg, requestId, fieldErrors);
     }
 
     payloadToValidate = envelope.data !== undefined ? envelope.data : rawJson;

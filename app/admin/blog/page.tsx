@@ -2,7 +2,18 @@
 
 import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
-import { Plus, Search, ExternalLink, Edit, Trash2, RefreshCw, FileText, AlertCircle, X, CheckCircle2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  ExternalLink,
+  Edit,
+  Trash2,
+  RefreshCw,
+  FileText,
+  AlertCircle,
+  X,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -147,7 +158,7 @@ export default function AdminBlogListPage() {
   ];
 
   return (
-    <div className="animate-in fade-in space-y-6 duration-300">
+    <div className="space-y-6 duration-300 animate-in fade-in">
       {/* Page Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
@@ -173,9 +184,7 @@ export default function AdminBlogListPage() {
 
       {/* Non-blocking Action Feedback */}
       {actionSuccess && (
-        <output
-          className="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"
-        >
+        <output className="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
             <span>{actionSuccess}</span>
@@ -236,7 +245,7 @@ export default function AdminBlogListPage() {
                 placeholder="Search articles by title..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-9 rounded-xl pl-9 pr-8 text-xs"
+                className="h-9 rounded-xl pr-8 pl-9 text-xs"
               />
               {search && (
                 <button
@@ -436,11 +445,16 @@ export default function AdminBlogListPage() {
             aria-labelledby="delete-article-title"
             className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 id="delete-article-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
+            <h3
+              id="delete-article-title"
+              className="font-sora text-base font-bold text-slate-900 dark:text-white"
+            >
               Permanently Delete Article?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{postToDelete.title}"</strong>? This will permanently archive the article and remove it from the index.
+              Are you sure you want to delete{" "}
+              <strong className="text-slate-800 dark:text-slate-200">"{postToDelete.title}"</strong>
+              ? This will permanently archive the article and remove it from the index.
             </p>
             <div className="mt-5 flex items-center justify-end gap-2">
               <Button

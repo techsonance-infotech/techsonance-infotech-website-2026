@@ -35,7 +35,8 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
   // Lock body scroll and pause Lenis when modal is open
   useEffect(() => {
-    const lenis = (window as unknown as { __lenis?: { start: () => void; stop: () => void } }).__lenis;
+    const lenis = (window as unknown as { __lenis?: { start: () => void; stop: () => void } })
+      .__lenis;
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -302,7 +303,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                   {/* First Name & Last Name */}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1.5">
-                      <label htmlFor="quote-firstName" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      <label
+                        htmlFor="quote-firstName"
+                        className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                      >
                         First Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
@@ -328,7 +332,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label htmlFor="quote-lastName" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                      <label
+                        htmlFor="quote-lastName"
+                        className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                      >
                         Last Name <span className="font-bold text-red-500">*</span>
                       </label>
                       <input
@@ -357,7 +364,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <label htmlFor="quote-email" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label
+                      htmlFor="quote-email"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                    >
                       Email Address <span className="font-bold text-red-500">*</span>
                     </label>
                     <input
@@ -382,7 +392,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Phone */}
                   <div className="space-y-1.5">
-                    <label htmlFor="quote-phone" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label
+                      htmlFor="quote-phone"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                    >
                       Phone Number <span className="font-bold text-red-500">*</span>
                     </label>
                     <div className="flex flex-row gap-2">
@@ -426,7 +439,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Interest */}
                   <div className="space-y-1.5">
-                    <label htmlFor="quote-interest" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label
+                      htmlFor="quote-interest"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                    >
                       I&apos;m interested in
                     </label>
                     <select
@@ -446,7 +462,10 @@ export default function GetQuoteModal({ isOpen, onClose }: GetQuoteModalProps) {
 
                   {/* Message */}
                   <div className="space-y-1.5">
-                    <label htmlFor="quote-message" className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase">
+                    <label
+                      htmlFor="quote-message"
+                      className="block text-[11px] font-semibold tracking-wide text-slate-500 uppercase"
+                    >
                       Message <span className="font-bold text-red-500">*</span>
                     </label>
                     <textarea

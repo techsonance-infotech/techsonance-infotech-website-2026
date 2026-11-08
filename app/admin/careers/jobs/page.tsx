@@ -108,7 +108,7 @@ export default function AdminJobsPage() {
   ];
 
   return (
-    <div className="animate-in fade-in space-y-6 duration-300">
+    <div className="space-y-6 duration-300 animate-in fade-in">
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
@@ -280,15 +280,14 @@ export default function AdminJobsPage() {
                                   ? "warning"
                                   : "secondary"
                             }
-                            dot={job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED}
+                            dot={
+                              job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
+                            }
                           >
                             {job.status}
                           </Badge>
                         </td>
-                        <td
-                          aria-label="Actions"
-                          className="px-4 py-3.5 text-right"
-                        >
+                        <td aria-label="Actions" className="px-4 py-3.5 text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Link
                               href={`/admin/careers/jobs/${job.id}`}
@@ -299,7 +298,9 @@ export default function AdminJobsPage() {
                             </Link>
                             <button
                               type="button"
-                              onClick={() => setJobToDelete({ id: job.id, title: job.title || "Position" })}
+                              onClick={() =>
+                                setJobToDelete({ id: job.id, title: job.title || "Position" })
+                              }
                               className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-slate-800"
                               title="Delete Role"
                             >
@@ -325,11 +326,16 @@ export default function AdminJobsPage() {
             aria-labelledby="delete-job-dialog-title"
             className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 id="delete-job-dialog-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
+            <h3
+              id="delete-job-dialog-title"
+              className="font-sora text-base font-bold text-slate-900 dark:text-white"
+            >
               Permanently Delete Position?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{jobToDelete.title}"</strong>? This will permanently archive candidate routing for this role.
+              Are you sure you want to delete{" "}
+              <strong className="text-slate-800 dark:text-slate-200">"{jobToDelete.title}"</strong>?
+              This will permanently archive candidate routing for this role.
             </p>
             {deleteError && (
               <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs text-rose-700">

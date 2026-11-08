@@ -50,7 +50,8 @@ export default function AdminLoginError({
             <div>
               <p className="font-bold text-rose-800">System Handshake Disrupted</p>
               <p className="mt-0.5 font-normal text-rose-600">
-                {error.message || "An unexpected error occurred while loading the authentication portal."}
+                {error.message ||
+                  "An unexpected error occurred while loading the authentication portal."}
               </p>
             </div>
           </div>

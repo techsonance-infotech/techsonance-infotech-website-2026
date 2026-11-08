@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, startTransition } from "react";
-import {
-  FileCode,
-  Save,
-  Sliders,
-  Check,
-  Layers,
-  Terminal,
-} from "lucide-react";
+import { FileCode, Save, Sliders, Check, Layers, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -132,7 +125,7 @@ export default function PromptsManagementPage() {
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Toast */}
       {toastMessage && (
-        <div className="animate-in slide-in-from-bottom fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl">
+        <div className="fixed right-6 bottom-6 z-50 flex slide-in-from-bottom items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl animate-in">
           <Check className="h-4 w-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>

@@ -30,8 +30,7 @@ interface JobReviewSummaryProps {
 }
 
 const clientLoadedTime = typeof window !== "undefined" ? Date.now() : 0;
-const clientMinDateIso =
-  typeof window !== "undefined" ? new Date().toISOString().slice(0, 16) : "";
+const clientMinDateIso = typeof window !== "undefined" ? new Date().toISOString().slice(0, 16) : "";
 
 export function JobReviewSummary({
   job,

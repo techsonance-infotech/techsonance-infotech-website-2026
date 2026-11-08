@@ -46,9 +46,7 @@ export function PricingPlansSection({ onSelectPlan }: PricingPlansSectionProps) 
                   <span className="rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold tracking-wider text-slate-700 uppercase">
                     {plan.badge || "Tier"}
                   </span>
-                  <span className="text-xs font-medium text-slate-400">
-                    {plan.typicalDuration}
-                  </span>
+                  <span className="text-xs font-medium text-slate-400">{plan.typicalDuration}</span>
                 </div>
 
                 <h3 className="mt-4 text-xl font-bold text-slate-900">{plan.name}</h3>
@@ -95,9 +93,7 @@ export function PricingPlansSection({ onSelectPlan }: PricingPlansSectionProps) 
                   <span className="block text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                     Best suited for:
                   </span>
-                  <p className="mt-1 text-xs font-medium text-slate-700">
-                    {plan.recommendedFor}
-                  </p>
+                  <p className="mt-1 text-xs font-medium text-slate-700">{plan.recommendedFor}</p>
                 </div>
 
                 {/* CTA Action */}

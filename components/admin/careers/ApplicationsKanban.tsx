@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Star,
-  AlertTriangle,
-  ArrowRight,
-  Briefcase,
-  Calendar,
-} from "lucide-react";
+import { Star, AlertTriangle, ArrowRight, Briefcase, Calendar } from "lucide-react";
 import { ApplicationStatus } from "@/lib/constants/enums";
 import type { ApplicationItem } from "./ApplicationsTable";
 import { STAGE_CONFIG } from "./CandidateDrawer";

@@ -28,7 +28,8 @@ export default function AdminCareersError({
         Careers Workspace Interrupted
       </h2>
       <p className="mt-1.5 max-w-md text-xs text-slate-500 dark:text-slate-400">
-        The careers workspace encountered an unexpected interface error. Your other administrative sections remain unaffected.
+        The careers workspace encountered an unexpected interface error. Your other administrative
+        sections remain unaffected.
       </p>
       {error.digest && (
         <code className="mt-2 rounded bg-slate-100 px-2 py-1 font-mono text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400">

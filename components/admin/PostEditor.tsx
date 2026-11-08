@@ -707,11 +707,18 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
             aria-labelledby="delete-post-title"
             className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 id="delete-post-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
+            <h3
+              id="delete-post-title"
+              className="font-sora text-base font-bold text-slate-900 dark:text-white"
+            >
               Permanently Delete Article?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{getValues("title") || "this article"}"</strong>? This action cannot be undone.
+              Are you sure you want to delete{" "}
+              <strong className="text-slate-800 dark:text-slate-200">
+                "{getValues("title") || "this article"}"
+              </strong>
+              ? This action cannot be undone.
             </p>
             <div className="mt-5 flex items-center justify-end gap-2">
               <Button

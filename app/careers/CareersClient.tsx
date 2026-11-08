@@ -802,18 +802,22 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                                 <span className="text-[#1155CC]">Level: {job.experienceLevel}</span>
                               </>
                             )}
-                            {job.showSalaryPublicly && typeof job.salaryMin === "number" && Number.isFinite(job.salaryMin) && (
-                              <>
-                                <span className="text-slate-200">•</span>
-                                <span className="font-bold text-emerald-600">
-                                  {job.salaryCurrency || "INR"} {job.salaryMin.toLocaleString("en-IN")}
-                                  {typeof job.salaryMax === "number" && Number.isFinite(job.salaryMax)
-                                    ? ` - ${job.salaryMax.toLocaleString("en-IN")}`
-                                    : ""} /{" "}
-                                  {job.salaryPeriod || "month"}
-                                </span>
-                              </>
-                            )}
+                            {job.showSalaryPublicly &&
+                              typeof job.salaryMin === "number" &&
+                              Number.isFinite(job.salaryMin) && (
+                                <>
+                                  <span className="text-slate-200">•</span>
+                                  <span className="font-bold text-emerald-600">
+                                    {job.salaryCurrency || "INR"}{" "}
+                                    {job.salaryMin.toLocaleString("en-IN")}
+                                    {typeof job.salaryMax === "number" &&
+                                    Number.isFinite(job.salaryMax)
+                                      ? ` - ${job.salaryMax.toLocaleString("en-IN")}`
+                                      : ""}{" "}
+                                    / {job.salaryPeriod || "month"}
+                                  </span>
+                                </>
+                              )}
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-2 self-stretch sm:self-auto">
@@ -834,7 +838,9 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                         {Array.isArray(job.skills) && job.skills.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 pt-2">
                             {job.skills
-                              .filter((s): s is string => typeof s === "string" && s.trim().length > 0)
+                              .filter(
+                                (s): s is string => typeof s === "string" && s.trim().length > 0,
+                              )
                               .slice(0, 7)
                               .map((skill) => (
                                 <span

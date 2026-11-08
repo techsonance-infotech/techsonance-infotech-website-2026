@@ -52,7 +52,11 @@ export default function AdminDashboardError({
             <RefreshCw className="h-4 w-4" />
             Reload Dashboard
           </Button>
-          <Button asChild variant="outline" className="flex items-center justify-center gap-2 rounded-xl">
+          <Button
+            asChild
+            variant="outline"
+            className="flex items-center justify-center gap-2 rounded-xl"
+          >
             <Link href="/admin/login">
               <LogIn className="h-4 w-4" />
               Sign In Again

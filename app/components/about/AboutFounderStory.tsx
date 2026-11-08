@@ -70,9 +70,9 @@ export function AboutFounderStory() {
                 didn&apos;t adapt to real operational workflows.
               </p>
               <p>
-                We built our agency to do the opposite: to deliver custom database design,
-                automated pipeline runs, type-safe API routers, and clean interfaces that feel modern
-                and scale seamlessly.
+                We built our agency to do the opposite: to deliver custom database design, automated
+                pipeline runs, type-safe API routers, and clean interfaces that feel modern and
+                scale seamlessly.
               </p>
               <p>
                 Today, we collaborate directly with tech leadership and company founders, taking

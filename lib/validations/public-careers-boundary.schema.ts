@@ -53,12 +53,16 @@ export const publicJobPostingBoundarySchema: z.ZodType<JobPosting> = z
     responsibilities: z
       .array(z.string().catch(""))
       .nullish()
-      .transform((v) => (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0))
+      .transform((v) =>
+        (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0),
+      )
       .catch([]),
     requirements: z
       .array(z.string().catch(""))
       .nullish()
-      .transform((v) => (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0))
+      .transform((v) =>
+        (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0),
+      )
       .catch([]),
     preferredQualifications: z
       .array(z.string().catch(""))
@@ -83,7 +87,9 @@ export const publicJobPostingBoundarySchema: z.ZodType<JobPosting> = z
     benefits: z
       .array(z.string().catch(""))
       .nullish()
-      .transform((v) => (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0))
+      .transform((v) =>
+        (v ?? []).filter((s): s is string => typeof s === "string" && s.trim().length > 0),
+      )
       .catch([]),
     aboutTeam: z
       .string()
@@ -180,9 +186,7 @@ export const publicJobPostingBoundarySchema: z.ZodType<JobPosting> = z
       .nullish()
       .transform((v) => v ?? undefined)
       .catch(undefined),
-    status: z
-      .enum(JobStatus)
-      .catch(JobStatus.OPEN),
+    status: z.enum(JobStatus).catch(JobStatus.OPEN),
     visibility: z
       .string()
       .nullish()

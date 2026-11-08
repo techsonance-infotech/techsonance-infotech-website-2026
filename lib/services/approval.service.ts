@@ -7,7 +7,7 @@ import { AiApprovalStatus, type AiApprovalDecision } from "@/lib/database/enum/a
 import { EmailService } from "./email.service";
 import { logger } from "@/lib/logger";
 import { getEnv } from "../env";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 
 export interface CreateApprovalResult {
   token: string;
@@ -181,21 +181,21 @@ export class ApprovalService {
     const existing = await this.approvalRepo.findByTokenHash(tokenHash);
 
     if (!existing || !existing.request) {
-      throw new AppError("NOT_FOUND", "Invalid or unknown approval token.");
+      throw new AppError(ErrorCode.NOT_FOUND, "Invalid or unknown approval token.");
     }
 
     const { request: req, post } = existing;
 
     if (req.usedAt) {
-      throw new AppError("CONFLICT", "This approval link has already been used.");
+      throw new AppError(ErrorCode.CONFLICT, "This approval link has already been used.");
     }
 
     if (new Date() > req.expiresAt) {
-      throw new AppError("BAD_REQUEST", "This approval link has expired.");
+      throw new AppError(ErrorCode.BAD_REQUEST, "This approval link has expired.");
     }
 
     if (!post) {
-      throw new AppError("NOT_FOUND", "Associated post not found.");
+      throw new AppError(ErrorCode.NOT_FOUND, "Associated post not found.");
     }
 
     const now = new Date();

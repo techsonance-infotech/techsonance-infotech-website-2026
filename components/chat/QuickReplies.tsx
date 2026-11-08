@@ -15,7 +15,7 @@ export function QuickReplies({
   if (!chips || chips.length === 0) return null;
 
   return (
-    <div className="animate-fade-in flex flex-wrap items-center gap-1.5 px-1 py-1.5">
+    <div className="flex animate-fade-in flex-wrap items-center gap-1.5 px-1 py-1.5">
       {chips.map((chip) => {
         const isBooking =
           chip.toLowerCase().includes("book") || chip.toLowerCase().includes("consultation");

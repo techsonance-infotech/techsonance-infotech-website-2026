@@ -2,16 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  Plus,
-  Search,
-  CheckCircle2,
-  XCircle,
-  Play,
-  Trash2,
-  Clock,
-} from "lucide-react";
+import { Sparkles, Plus, Search, CheckCircle2, XCircle, Play, Trash2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -26,20 +17,6 @@ import {
   launchAdminAiTopic,
   type AdminAiTopicItem,
 } from "@/lib/api/admin-ai.api";
-
-interface Topic {
-  id: string;
-  title: string;
-  keywords: string[];
-  category: string;
-  targetAudience: string;
-  difficulty: string;
-  status: AiTopicStatus;
-  priority: number;
-  suggestedBy: string;
-  notes: string | null;
-  createdAt: string;
-}
 
 export default function TopicsBacklogPage() {
   const [topics, setTopics] = useState<AdminAiTopicItem[]>([]);
@@ -205,7 +182,7 @@ export default function TopicsBacklogPage() {
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Toast Notification */}
       {actionMessage && (
-        <div className="animate-in slide-in-from-bottom fixed right-6 bottom-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl">
+        <div className="fixed right-6 bottom-6 z-50 flex slide-in-from-bottom items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl animate-in">
           <Sparkles className="h-4 w-4 text-blue-400" />
           <span>{actionMessage}</span>
         </div>
@@ -275,7 +252,7 @@ export default function TopicsBacklogPage() {
       {/* New Topic Modal */}
       {isCreating && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-          <div className="animate-in zoom-in-95 w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+          <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl animate-in zoom-in-95 sm:p-8">
             <h2 className="mb-1 font-sora text-lg font-black text-slate-900">
               Add New Topic to Backlog
             </h2>
@@ -540,11 +517,18 @@ export default function TopicsBacklogPage() {
             aria-labelledby="delete-topic-title"
             className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
           >
-            <h3 id="delete-topic-title" className="font-sora text-base font-bold text-slate-900 dark:text-white">
+            <h3
+              id="delete-topic-title"
+              className="font-sora text-base font-bold text-slate-900 dark:text-white"
+            >
               Delete Topic Proposal?
             </h3>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Are you sure you want to delete <strong className="text-slate-800 dark:text-slate-200">"{topicToDelete.title}"</strong> from the backlog?
+              Are you sure you want to delete{" "}
+              <strong className="text-slate-800 dark:text-slate-200">
+                "{topicToDelete.title}"
+              </strong>{" "}
+              from the backlog?
             </p>
             <div className="mt-5 flex items-center justify-end gap-2">
               <Button

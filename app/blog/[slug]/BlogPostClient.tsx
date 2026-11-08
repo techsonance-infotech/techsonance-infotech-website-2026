@@ -136,7 +136,9 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                       <h4 className="mb-0.5 text-xs leading-tight font-black text-slate-800">
                         {auth.name || "TechSonance Team"}
                       </h4>
-                      <p className="text-[10px] font-semibold text-slate-400">{auth.role || "Engineering"}</p>
+                      <p className="text-[10px] font-semibold text-slate-400">
+                        {auth.role || "Engineering"}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -168,7 +170,7 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
             <div className="col-span-1 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-9">
               {/* Main Content Render */}
               <div
-                className="max-w-none text-slate-700 leading-relaxed [&>h1]:font-sora [&>h1]:font-medium [&>h2]:font-sora [&>h2]:font-medium [&>h3]:font-sora [&>h3]:font-medium [&>p]:text-slate-600 [&>p]:leading-relaxed [&>a]:text-[#1155CC] [&>a]:hover:underline"
+                className="max-w-none leading-relaxed text-slate-700 [&>a]:text-[#1155CC] [&>a]:hover:underline [&>h1]:font-sora [&>h1]:font-medium [&>h2]:font-sora [&>h2]:font-medium [&>h3]:font-sora [&>h3]:font-medium [&>p]:leading-relaxed [&>p]:text-slate-600"
                 dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 

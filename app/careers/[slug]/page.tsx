@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getJobSource } from "@/lib/content/jobs";
@@ -48,7 +47,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description,
         url: canonical,
         type: "website",
-        images: job.ogImage ? [{ url: job.ogImage }] : [{ url: `${BASE_URL}/images/og/careers.png` }],
+        images: job.ogImage
+          ? [{ url: job.ogImage }]
+          : [{ url: `${BASE_URL}/images/og/careers.png` }],
       },
       twitter: {
         card: "summary_large_image",

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
 import { getEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
 
 const stepSchema = z.object({
   jobId: z.uuid(),
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
       result,
     });
   } catch (err) {
-    console.error("Worker step error:", err);
+    logger.error("Worker step error", { error: err });
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Internal step error" },
       { status: 500 },

@@ -52,7 +52,11 @@ export default function BlogError({
             <RefreshCw className="h-4 w-4" />
             Try again
           </Button>
-          <Button asChild variant="outline" className="flex items-center justify-center gap-2 rounded-xl">
+          <Button
+            asChild
+            variant="outline"
+            className="flex items-center justify-center gap-2 rounded-xl"
+          >
             <Link href="/">
               <Home className="h-4 w-4" />
               Return Home

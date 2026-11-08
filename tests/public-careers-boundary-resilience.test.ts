@@ -198,7 +198,8 @@ describe("Public Careers Boundary & Resilience Suite", () => {
         ok: false,
         status: 409,
         headers: {
-          get: (header: string) => (header.toLowerCase() === "content-type" ? "application/json" : null),
+          get: (header: string) =>
+            header.toLowerCase() === "content-type" ? "application/json" : null,
         },
         json: vi.fn().mockResolvedValue({
           ok: false,
@@ -223,7 +224,9 @@ describe("Public Careers Boundary & Resilience Suite", () => {
         headers: {
           get: (header: string) => (header.toLowerCase() === "content-type" ? "text/html" : null),
         },
-        json: vi.fn().mockRejectedValue(new SyntaxError("Unexpected token < in JSON at position 0")),
+        json: vi
+          .fn()
+          .mockRejectedValue(new SyntaxError("Unexpected token < in JSON at position 0")),
       } as unknown as Response);
 
       await expect(

@@ -98,7 +98,7 @@ export async function submitCareerApplication(
     if (err instanceof ApiError) {
       if (err.status === 409) {
         throw new Error(
-          "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
+          "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.", { cause: err },
         );
       }
       throw new Error(err.message);
@@ -148,7 +148,8 @@ export async function submitTalentPool(
       if (payload.preferredRole?.trim())
         formData.append("preferredRole", payload.preferredRole.trim());
       if (payload.experienceLevel) formData.append("experienceLevel", payload.experienceLevel);
-      if (payload.portfolioUrl?.trim()) formData.append("portfolioUrl", payload.portfolioUrl.trim());
+      if (payload.portfolioUrl?.trim())
+        formData.append("portfolioUrl", payload.portfolioUrl.trim());
       if (payload.notes?.trim()) formData.append("notes", payload.notes.trim());
       formData.append("privacyConsent", payload.privacyConsent ? "true" : "false");
 
@@ -209,7 +210,7 @@ export async function submitTalentPool(
     };
   } catch (err: unknown) {
     if (err instanceof ApiError) {
-      throw new Error(err.message);
+      throw new Error(err.message, { cause: err });
     }
     throw err;
   }

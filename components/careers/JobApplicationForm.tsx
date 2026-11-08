@@ -481,8 +481,9 @@ export function JobApplicationForm({
           />
           <span>
             I consent to the collection and processing of my personal data for the purpose of
-            evaluating my employment application in accordance with the Privacy Policy and applicable data protection regulations (including the India Digital Personal Data Protection Act 2023).{" "}
-            <span className="text-red-500">*</span>
+            evaluating my employment application in accordance with the Privacy Policy and
+            applicable data protection regulations (including the India Digital Personal Data
+            Protection Act 2023). <span className="text-red-500">*</span>
           </span>
         </label>
         {errors.privacyConsent && (

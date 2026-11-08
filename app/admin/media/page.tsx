@@ -56,7 +56,7 @@ export default function MediaLibraryPage() {
   };
 
   return (
-    <div className="animate-in fade-in space-y-6 duration-300">
+    <div className="space-y-6 duration-300 animate-in fade-in">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">

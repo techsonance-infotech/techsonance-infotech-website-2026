@@ -52,10 +52,7 @@ export function AboutHeroBackground({ mounted, isMobile }: AboutHeroBackgroundPr
       )}
 
       {/* Animated SVG Grid Lines & Light Beams */}
-      <svg
-        className="absolute inset-0 h-full w-full opacity-60"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg className="absolute inset-0 h-full w-full opacity-60" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="grid-glow" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#1155CC" stopOpacity="0" />

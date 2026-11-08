@@ -12,7 +12,10 @@ import {
   type CurrencyConfig,
   type RegionConfig,
 } from "@/lib/constants/pricing.constants";
-import { detectRegionAndTimezone, formatCurrency as formatCurrencyUtil } from "@/lib/utils/pricing.utils";
+import {
+  detectRegionAndTimezone,
+  formatCurrency as formatCurrencyUtil,
+} from "@/lib/utils/pricing.utils";
 
 interface CurrencyContextValue {
   currency: Currency;

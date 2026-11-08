@@ -31,8 +31,8 @@ export function BlogHero(): React.JSX.Element {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="mx-auto mt-4 max-w-2xl text-sm font-semibold text-slate-500 sm:text-base"
       >
-        Engineering strategies, design practices, and operational insights from our custom
-        software development team.
+        Engineering strategies, design practices, and operational insights from our custom software
+        development team.
       </m.p>
     </section>
   );
