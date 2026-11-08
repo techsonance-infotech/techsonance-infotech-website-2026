@@ -169,6 +169,24 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
       "Start scoping your software development project or AI integration workflow today.",
     ogImage: "/images/og/contact.png",
   },
+  pricing: {
+    title: "Transparent Engineering & Software Pricing | TechSonance Infotech",
+    description:
+      "Explore transparent software engineering pricing, dedicated developer pods, and custom SaaS packages. Multi-currency estimates in USD, EUR, GBP, AED, and INR.",
+    keywords: [
+      "Software Development Pricing",
+      "Hire Dedicated Developers Cost",
+      "SaaS Development Cost",
+      "Custom Software Pricing Tiers",
+      "Offshore Engineering Rates",
+      "Software Development Agency Pricing",
+    ],
+    canonical: `${BASE_URL}/pricing`,
+    ogTitle: "Software Development & Engineering Pod Pricing | TechSonance",
+    ogDescription:
+      "Transparent engineering pricing, MVP discovery sprints, and enterprise developer pods with regional delivery alignment.",
+    ogImage: "/images/og/home.png",
+  },
   "custom-software-development": {
     title: "Custom Software Development Company India | TechSonance Infotech LLP",
     description:

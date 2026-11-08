@@ -6,6 +6,7 @@ import LenisProvider from "@/app/components/LenisProvider";
 import CookieConsent from "@/app/components/home/CookieConsent";
 import JsonLd, { getUnifiedRootEntityGraph } from "@/app/components/JsonLd";
 import ChatWidget from "@/components/chat/ChatWidget";
+import { CurrencyProvider } from "@/lib/context/currency-context";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 
 const inter = Inter({
@@ -92,9 +93,11 @@ export default function RootLayout({
         )}
         <JsonLd schema={getUnifiedRootEntityGraph()} />
         <LenisProvider>
-          {children}
-          <CookieConsent />
-          <ChatWidget />
+          <CurrencyProvider>
+            {children}
+            <CookieConsent />
+            <ChatWidget />
+          </CurrencyProvider>
         </LenisProvider>
       </body>
     </html>

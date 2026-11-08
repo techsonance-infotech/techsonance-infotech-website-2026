@@ -22,6 +22,8 @@ import { trackBookingFormSubmit } from "@/lib/analytics";
 import { callApi } from "@/lib/api/callApi";
 import { createBookingContract } from "@/lib/contracts/booking.contract";
 import { useBookingSlots } from "@/features/booking/hooks/useBookingSlots";
+import { useCurrency } from "@/lib/context/currency-context";
+import { getBudgetRangesForCurrency } from "@/lib/utils/pricing.utils";
 
 interface BookingCardProps {
   onSuccess?: (ref: string) => void;
@@ -68,6 +70,12 @@ const TIMELINES = [
 ];
 
 export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
+  const { currency } = useCurrency();
+  const dynamicBudgetRanges = React.useMemo(
+    () => getBudgetRangesForCurrency(currency).map((b) => b.label),
+    [currency]
+  );
+
   const [visitorTimezone] = useState(() => {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata";
@@ -416,7 +424,7 @@ export function BookingCard({ onSuccess, recentMessages }: BookingCardProps) {
                 {...register("budgetRange")}
                 className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-2 pl-8 text-xs focus:border-[#1155CC] focus:outline-hidden"
               >
-                {BUDGET_RANGES.map((b) => (
+                {(dynamicBudgetRanges.length > 0 ? dynamicBudgetRanges : BUDGET_RANGES).map((b) => (
                   <option key={b} value={b}>
                     {b}
                   </option>

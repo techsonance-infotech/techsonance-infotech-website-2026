@@ -9,6 +9,8 @@ import TechnologiesSection from "./components/home/TechnologiesSection";
 import ScopingContactForm from "@/app/components/services/ScopingContactForm";
 import SiteFooter from "./components/home/SiteFooter";
 import { SEO_METADATA } from "@/lib/seo-aeo-geo-config";
+import { SHOW_PRICING_SECTION } from "@/lib/constants/pricing.constants";
+import { PricingPlansSection } from "@/app/components/pricing/PricingPlansSection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -38,6 +40,11 @@ export default function Home() {
         <WhyChooseSection />
         <Testimonials />
         <TechnologiesSection />
+        {SHOW_PRICING_SECTION && (
+          <section id="pricing" className="border-t border-slate-100 bg-white py-16">
+            <PricingPlansSection onSelectPlan={() => {}} />
+          </section>
+        )}
         <section id="project-request" className="bg-[#FAFBFD] py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ScopingContactForm />

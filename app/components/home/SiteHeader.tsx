@@ -6,10 +6,13 @@ import { Icon, type IconName } from "@/app/components/icons/Icon";
 import { services } from "@/data/services";
 import GetQuoteModal from "@/app/components/home/GetQuoteModal";
 import { Button } from "@/components/ui/button";
+import { CurrencySelector } from "@/components/currency/CurrencySelector";
+import { SHOW_PRICING_SECTION } from "@/lib/constants/pricing.constants";
 
 export const navLinks = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
+  ...(SHOW_PRICING_SECTION ? [{ name: "Pricing", href: "/pricing" }] : []),
   { name: "Portfolio", href: "/portfolio" },
   { name: "About", href: "/about" },
   { name: "Blog", href: "/blog" },
@@ -194,7 +197,8 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
             })}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <CurrencySelector compact />
             <Button
               onClick={() => setIsQuoteModalOpen(true)}
               variant="primary"
@@ -333,7 +337,11 @@ export default function SiteHeader({ transparent = false }: { transparent?: bool
                 );
               })}
 
-              <div className="mt-2 border-t border-gray-100 pt-4">
+              <div className="mt-2 flex flex-col gap-3 border-t border-gray-100 pt-4">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-xs font-semibold text-gray-500">Currency</span>
+                  <CurrencySelector compact />
+                </div>
                 <Button
                   onClick={() => {
                     setIsMobileMenuOpen(false);
