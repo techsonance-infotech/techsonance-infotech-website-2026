@@ -49,6 +49,7 @@ import { JobOrchestratorService } from "../services/job-orchestrator.service";
 import { AdminTopicsService } from "../services/admin-topics.service";
 import { AdminPromptsService } from "../services/admin-prompts.service";
 import { AdminTelemetryService } from "../services/admin-telemetry.service";
+import { BlogSchedulerService } from "../services/blog-scheduler.service";
 
 let rootContainer: Container | null = null;
 
@@ -96,6 +97,7 @@ export function configureContainer(container: Container): Container {
   container.bind(AdminTopicsService);
   container.bind(AdminPromptsService);
   container.bind(AdminTelemetryService);
+  container.bind(BlogSchedulerService);
   return container;
 }
 

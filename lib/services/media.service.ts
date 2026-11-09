@@ -20,7 +20,30 @@ export interface MediaUploadResult {
   bytes?: number;
 }
 
+export interface BinnedMediaItem {
+  publicId: string;
+  binnedAt: string;
+  purgeAt: string;
+  retentionDays: number;
+  reason?: string;
+  status: "in_bin" | "purged" | "restored";
+}
+
+export interface TrashCleanupResult {
+  checkedCount: number;
+  purgedCount: number;
+  purgedIds: string[];
+}
+
+export interface DeleteImageOptions {
+  immediate?: boolean;
+  retentionDays?: 15 | 30 | number;
+  reason?: string;
+}
+
 export class MediaService {
+  private static binnedLedger = new Map<string, BinnedMediaItem>();
+
   constructor(private env: Env = inject(ENV_CONFIG_TOKEN)) {}
 
   private getEffectiveEnv(): Env {
@@ -115,5 +138,202 @@ export class MediaService {
       height: data.height,
       bytes: data.bytes,
     };
+  }
+
+  /**
+   * Moves an image to the recycle bin with a 15-day or 30-day retention period (default: 30 days).
+   * Tags the asset in Cloudinary with 'bin' and records purge schedule before permanent cleanup.
+   */
+  async moveToBin(
+    publicId: string,
+    options: { retentionDays?: 15 | 30 | number; reason?: string } = {},
+  ): Promise<boolean> {
+    if (!publicId || !publicId.trim()) return false;
+
+    const env = this.getEffectiveEnv();
+    const cloudName = env.CLOUDINARY_CLOUD_NAME;
+
+    const retentionDays = options.retentionDays === 15 ? 15 : (options.retentionDays ?? 30);
+    const binnedAt = new Date();
+    const purgeAt = new Date(binnedAt.getTime() + retentionDays * 24 * 60 * 60 * 1000);
+
+    // Record into the recycle bin ledger
+    MediaService.binnedLedger.set(publicId, {
+      publicId,
+      binnedAt: binnedAt.toISOString(),
+      purgeAt: purgeAt.toISOString(),
+      retentionDays,
+      reason: options.reason || "Rejected or replaced blog image",
+      status: "in_bin",
+    });
+
+    if (!cloudName || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+      // In development or when Cloudinary is not configured, ledger update succeeds
+      return false;
+    }
+
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const tag = "bin";
+      const command = "add";
+
+      const paramsToSign = `command=${command}&public_ids=${publicId}&tag=${tag}&timestamp=${timestamp}${env.CLOUDINARY_API_SECRET}`;
+      const signature = crypto.createHash("sha1").update(paramsToSign).digest("hex");
+
+      const form = new FormData();
+      form.append("command", command);
+      form.append("tag", tag);
+      form.append("public_ids", publicId);
+      form.append("timestamp", timestamp.toString());
+      form.append("api_key", env.CLOUDINARY_API_KEY);
+      form.append("signature", signature);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/tags`, {
+        method: "POST",
+        body: form,
+      });
+
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Restores an image from the recycle bin back to active status.
+   */
+  async restoreFromBin(publicId: string): Promise<boolean> {
+    if (!publicId || !publicId.trim()) return false;
+
+    const env = this.getEffectiveEnv();
+    const cloudName = env.CLOUDINARY_CLOUD_NAME;
+
+    const item = MediaService.binnedLedger.get(publicId);
+    if (item) {
+      item.status = "restored";
+      MediaService.binnedLedger.set(publicId, item);
+    }
+
+    if (!cloudName || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+      return false;
+    }
+
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const tag = "bin";
+      const command = "remove";
+
+      const paramsToSign = `command=${command}&public_ids=${publicId}&tag=${tag}&timestamp=${timestamp}${env.CLOUDINARY_API_SECRET}`;
+      const signature = crypto.createHash("sha1").update(paramsToSign).digest("hex");
+
+      const form = new FormData();
+      form.append("command", command);
+      form.append("tag", tag);
+      form.append("public_ids", publicId);
+      form.append("timestamp", timestamp.toString());
+      form.append("api_key", env.CLOUDINARY_API_KEY);
+      form.append("signature", signature);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/tags`, {
+        method: "POST",
+        body: form,
+      });
+
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Permanently hard-deletes an asset from Cloudinary (called after retention period expires).
+   */
+  async hardDeleteImage(publicId: string): Promise<boolean> {
+    if (!publicId || !publicId.trim()) return false;
+
+    const env = this.getEffectiveEnv();
+    const cloudName = env.CLOUDINARY_CLOUD_NAME;
+
+    if (!cloudName || !env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET) {
+      return false;
+    }
+
+    try {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${env.CLOUDINARY_API_SECRET}`;
+      const signature = crypto.createHash("sha1").update(paramsToSign).digest("hex");
+
+      const form = new FormData();
+      form.append("public_id", publicId);
+      form.append("timestamp", timestamp.toString());
+      form.append("api_key", env.CLOUDINARY_API_KEY);
+      form.append("signature", signature);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
+        method: "POST",
+        body: form,
+      });
+
+      if (res.ok) {
+        const item = MediaService.binnedLedger.get(publicId);
+        if (item) {
+          item.status = "purged";
+          MediaService.binnedLedger.set(publicId, item);
+        }
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Deletes an image with two-stage retention:
+   * By default, safely moves the asset to the recycle bin for 15 or 30 days (default: 30 days).
+   * If options.immediate is true, performs an immediate hard delete.
+   */
+  async deleteImage(publicId: string, options: DeleteImageOptions = {}): Promise<boolean> {
+    if (options.immediate) {
+      return this.hardDeleteImage(publicId);
+    }
+    return this.moveToBin(publicId, options);
+  }
+
+  /**
+   * Sweeps the recycle bin and permanently destroys all images that have passed their 15 or 30-day retention window.
+   */
+  async cleanupExpiredTrash(): Promise<TrashCleanupResult> {
+    const now = new Date();
+    const purgedIds: string[] = [];
+    let checkedCount = 0;
+
+    for (const [id, item] of MediaService.binnedLedger.entries()) {
+      if (item.status === "in_bin") {
+        checkedCount++;
+        const purgeDate = new Date(item.purgeAt);
+        if (now >= purgeDate) {
+          const success = await this.hardDeleteImage(id);
+          if (success) {
+            purgedIds.push(id);
+          }
+        }
+      }
+    }
+
+    return {
+      checkedCount,
+      purgedCount: purgedIds.length,
+      purgedIds,
+    };
+  }
+
+  /**
+   * Lists all media currently residing in the recycle bin.
+   */
+  listBin(): BinnedMediaItem[] {
+    return Array.from(MediaService.binnedLedger.values()).filter(
+      (item) => item.status === "in_bin",
+    );
   }
 }

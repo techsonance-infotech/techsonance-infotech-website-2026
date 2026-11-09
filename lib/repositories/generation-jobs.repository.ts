@@ -1,12 +1,13 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database/index";
 import {
   generationJobsTable,
   jobStepsTable,
   sitesTable,
+  AiJobStatus,
   type GenerationJob,
   type InsertGenerationJob,
   type JobStep,
@@ -228,6 +229,61 @@ export class GenerationJobsRepository {
     } catch (err) {
       throw mapDbError(err, {
         context: "GenerationJobsRepository.getOrCreateSiteId",
+      });
+    }
+  }
+
+  /**
+   * Sweeps and recovers stalled AI generation jobs left in a RUNNING limbo state
+   * (e.g. after server reboot or serverless timeout).
+   * Re-queues jobs if attempts < maxAttempts, or marks them FAILED if attempts exhausted.
+   */
+  async recoverStalledJobs(): Promise<{ recovered: number; failed: number }> {
+    try {
+      const now = new Date();
+      const stalledJobs = await this.db
+        .select()
+        .from(generationJobsTable)
+        .where(
+          and(
+            eq(generationJobsTable.status, AiJobStatus.RUNNING),
+            lt(generationJobsTable.leaseExpiresAt, now),
+          ),
+        );
+
+      let recovered = 0;
+      let failed = 0;
+
+      for (const job of stalledJobs) {
+        if (job.attempt < job.maxAttempts) {
+          await this.db
+            .update(generationJobsTable)
+            .set({
+              status: AiJobStatus.QUEUED,
+              leaseExpiresAt: new Date(now.getTime() + 180_000),
+              updatedAt: now,
+            })
+            .where(eq(generationJobsTable.id, job.id));
+          recovered++;
+        } else {
+          await this.db
+            .update(generationJobsTable)
+            .set({
+              status: AiJobStatus.FAILED,
+              errorDetails: {
+                error: `Job timed out and exhausted maximum attempts (${job.maxAttempts}).`,
+              },
+              updatedAt: now,
+            })
+            .where(eq(generationJobsTable.id, job.id));
+          failed++;
+        }
+      }
+
+      return { recovered, failed };
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "GenerationJobsRepository.recoverStalledJobs",
       });
     }
   }

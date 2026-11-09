@@ -38,6 +38,14 @@ export enum AiApprovalDecision {
   IMPROVE = "improve",
 }
 
+export enum EditorialDecisionAction {
+  APPROVE_ALL = "approve",
+  APPROVE_CONTENT_RETRY_IMAGE = "approve_content_retry_image",
+  APPROVE_IMAGE_REVISE_CONTENT = "approve_image_revise_content",
+  IMPROVE_ALL = "improve",
+  REJECT_ALL = "reject",
+}
+
 export enum AiTopicStatus {
   SUGGESTED = "SUGGESTED",
   ACCEPTED = "ACCEPTED",

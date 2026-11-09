@@ -6,7 +6,13 @@ import { ApprovalService, type ApprovalDecision } from "@/lib/services/approval.
 import { logger } from "@/lib/logger";
 
 const confirmSchema = z.object({
-  decision: z.enum(["approve", "reject", "improve"]),
+  decision: z.enum([
+    "approve",
+    "reject",
+    "improve",
+    "approve_content_retry_image",
+    "approve_image_revise_content",
+  ]),
   feedback: z.string().optional(),
 });
 
@@ -63,8 +69,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ token: 
 export async function GET(req: Request, { params }: { params: Promise<{ token: string }> }) {
   const url = new URL(req.url);
   const decisionParam = url.searchParams.get("decision") || url.searchParams.get("action");
+  const allowedDecisions = [
+    "approve",
+    "reject",
+    "improve",
+    "approve_content_retry_image",
+    "approve_image_revise_content",
+  ];
 
-  if (!decisionParam || !["approve", "reject", "improve"].includes(decisionParam)) {
+  if (!decisionParam || !allowedDecisions.includes(decisionParam)) {
     return NextResponse.json({ error: "Invalid decision parameter" }, { status: 400 });
   }
 

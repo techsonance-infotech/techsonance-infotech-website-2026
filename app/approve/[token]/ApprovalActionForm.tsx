@@ -2,15 +2,31 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
+import {
+  CheckCircle2,
+  ArrowRight,
+  AlertCircle,
+  Loader2,
+  Sparkles,
+  RefreshCw,
+  FileText,
+  XCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+
+export type UiApprovalDecision =
+  | "approve"
+  | "reject"
+  | "improve"
+  | "approve_content_retry_image"
+  | "approve_image_revise_content";
 
 interface ApprovalActionFormProps {
   token: string;
   postId: string;
   slug?: string | null;
-  initialDecision: "approve" | "reject" | "improve";
+  initialDecision: UiApprovalDecision;
 }
 
 export function ApprovalActionForm({
@@ -19,7 +35,7 @@ export function ApprovalActionForm({
   slug,
   initialDecision,
 }: ApprovalActionFormProps) {
-  const [decision, setDecision] = useState<"approve" | "reject" | "improve">(initialDecision);
+  const [decision, setDecision] = useState<UiApprovalDecision>(initialDecision);
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,28 +75,52 @@ export function ApprovalActionForm({
   };
 
   if (completed) {
+    const isApprove = completed.decision === "approve";
+    const isRetryImage = completed.decision === "approve_content_retry_image";
+    const isReviseContent =
+      completed.decision === "approve_image_revise_content" || completed.decision === "improve";
+
     return (
       <div className="space-y-4 rounded-3xl border border-slate-200/80 bg-white p-8 text-center shadow-sm duration-300 animate-in fade-in">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-          <CheckCircle2 className="h-8 w-8" />
+        <div
+          className={`mx-auto flex h-14 w-14 items-center justify-center rounded-2xl ${
+            isApprove
+              ? "bg-emerald-50 text-emerald-600"
+              : isRetryImage
+                ? "bg-sky-50 text-sky-600"
+                : isReviseContent
+                  ? "bg-amber-50 text-amber-600"
+                  : "bg-rose-50 text-rose-600"
+          }`}
+        >
+          {isApprove && <CheckCircle2 className="h-8 w-8" />}
+          {isRetryImage && <RefreshCw className="h-8 w-8" />}
+          {isReviseContent && <FileText className="h-8 w-8" />}
+          {!isApprove && !isRetryImage && !isReviseContent && <XCircle className="h-8 w-8" />}
         </div>
+
         <h2 className="font-sora text-xl font-black text-slate-900">
-          {completed.decision === "approve"
-            ? "Article Successfully Published Live!"
-            : completed.decision === "improve"
-              ? "Improvement Feedback Dispatched to AI Agent!"
-              : "Article Rejected & Archived"}
+          {isApprove && "Article Successfully Published Live!"}
+          {isRetryImage && "Hero Image Regeneration Queued!"}
+          {isReviseContent && "Article Text Flagged for Revision!"}
+          {!isApprove && !isRetryImage && !isReviseContent && "Article Draft Rejected & Archived"}
         </h2>
+
         <p className="mx-auto max-w-md text-xs leading-relaxed text-slate-500">
-          {completed.decision === "approve"
-            ? "The article is now live on techsonance.co.in and the edge cache has been revalidated."
-            : completed.decision === "improve"
-              ? "Your feedback has been recorded. The autonomous agent will generate an improved revision (v2)."
-              : "This draft has been archived and will not appear on the public site."}
+          {isApprove &&
+            "The article is now live on techsonance.co.in and the edge cache has been revalidated."}
+          {isRetryImage &&
+            "Article content has been approved and locked. The old graphic was moved to the 30-day recycle bin, and Critic AI vision loop is regenerating a fresh hero image. You will receive an updated email preview shortly."}
+          {isReviseContent &&
+            "The hero visual has been approved and locked. Your editorial feedback has been saved and the article draft is ready for revision in Studio CMS."}
+          {!isApprove &&
+            !isRetryImage &&
+            !isReviseContent &&
+            "This draft has been archived and associated hero assets moved to the 30-day recycle bin."}
         </p>
 
         <div className="flex items-center justify-center gap-3 pt-4">
-          {completed.decision === "approve" && (
+          {isApprove && (
             <Link href={completed.slug ? `/blog/${completed.slug}` : "/blog"} target="_blank">
               <Button
                 variant="default"
@@ -92,13 +132,13 @@ export function ApprovalActionForm({
               </Button>
             </Link>
           )}
-          <Link href="/admin/blog">
+          <Link href={`/admin/blog/${postId}`}>
             <Button
               variant="outline"
               size="sm"
               className="rounded-xl border-slate-200 text-xs font-bold text-slate-700"
             >
-              <span>Return to Studio CMS</span>
+              <span>Inspect in Studio CMS</span>
             </Button>
           </Link>
         </div>
@@ -114,7 +154,7 @@ export function ApprovalActionForm({
             Confirm Editorial Decision
           </h2>
           <p className="mt-0.5 text-xs text-slate-400">
-            Select your decision below and click confirm to execute.
+            Choose full publishing or granular component rework for text and hero visuals.
           </p>
         </div>
       </div>
@@ -126,57 +166,144 @@ export function ApprovalActionForm({
         </div>
       )}
 
-      {/* Decision Pill Switcher */}
-      <div className="grid grid-cols-3 gap-2 rounded-2xl bg-slate-100/80 p-1.5">
+      {/* Decision Pill Grid */}
+      <div className="grid grid-cols-1 gap-2 rounded-2xl bg-slate-100/80 p-2 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Option 1: Full Approve */}
         <button
           type="button"
           onClick={() => setDecision("approve")}
-          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold transition-all ${
             decision === "approve"
               ? "bg-emerald-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          ✓ Approve
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          <span>Approve Everything</span>
         </button>
+
+        {/* Option 2: Keep Text, Retry Image */}
         <button
           type="button"
-          onClick={() => setDecision("improve")}
-          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
-            decision === "improve"
+          onClick={() => setDecision("approve_content_retry_image")}
+          className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold transition-all ${
+            decision === "approve_content_retry_image"
+              ? "bg-sky-600 text-white shadow-sm"
+              : "text-slate-600 hover:text-slate-900"
+          }`}
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          <span>Keep Text, Retry Image</span>
+        </button>
+
+        {/* Option 3: Keep Image, Revise Text */}
+        <button
+          type="button"
+          onClick={() => setDecision("approve_image_revise_content")}
+          className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold transition-all ${
+            decision === "approve_image_revise_content"
               ? "bg-amber-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          ✎ Improve
+          <FileText className="h-3.5 w-3.5" />
+          <span>Keep Image, Revise Text</span>
         </button>
+
+        {/* Option 4: Reject Both */}
         <button
           type="button"
           onClick={() => setDecision("reject")}
-          className={`rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-bold transition-all ${
             decision === "reject"
               ? "bg-rose-600 text-white shadow-sm"
               : "text-slate-600 hover:text-slate-900"
           }`}
         >
-          ✕ Reject
+          <XCircle className="h-3.5 w-3.5" />
+          <span>Reject Both</span>
         </button>
       </div>
 
+      {/* Decision Summary Banner */}
+      <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 text-xs">
+        {decision === "approve" && (
+          <div className="flex items-start gap-2.5 text-emerald-800">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+            <div>
+              <strong className="font-bold">Full Publishing Authorization:</strong> Both the article
+              content and hero graphic pass quality checks and will go live immediately on
+              techsonance.co.in.
+            </div>
+          </div>
+        )}
+
+        {decision === "approve_content_retry_image" && (
+          <div className="flex items-start gap-2.5 text-sky-800">
+            <RefreshCw className="h-4 w-4 shrink-0 text-sky-600" />
+            <div>
+              <strong className="font-bold">Granular Image Rework:</strong> Article text is approved
+              and locked. The current hero image is moved to the 30-day recycle bin, and the Critic
+              AI vision loop is triggered to generate a better graphic.
+            </div>
+          </div>
+        )}
+
+        {decision === "approve_image_revise_content" && (
+          <div className="flex items-start gap-2.5 text-amber-800">
+            <FileText className="h-4 w-4 shrink-0 text-amber-600" />
+            <div>
+              <strong className="font-bold">Granular Content Revision:</strong> The hero graphic is
+              approved and permanently locked. The article body is returned to draft status for
+              content revisions.
+            </div>
+          </div>
+        )}
+
+        {decision === "reject" && (
+          <div className="flex items-start gap-2.5 text-rose-800">
+            <XCircle className="h-4 w-4 shrink-0 text-rose-600" />
+            <div>
+              <strong className="font-bold">Full Rejection:</strong> The entire post draft is
+              archived and all associated media assets are moved to the 30-day recycle bin.
+            </div>
+          </div>
+        )}
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        {decision === "improve" && (
+        {decision === "approve_content_retry_image" && (
           <div className="space-y-2">
             <label
-              htmlFor="improve-feedback"
+              htmlFor="image-feedback"
               className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
             >
-              Feedback for Revision (Required)
+              Critic AI Guidance for New Image (Optional)
             </label>
             <Textarea
-              id="improve-feedback"
+              id="image-feedback"
+              rows={3}
+              placeholder="e.g. 'Make it darker, reduce neon saturation, ensure isometric perspective'..."
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="rounded-xl border-slate-200 text-xs"
+            />
+          </div>
+        )}
+
+        {decision === "approve_image_revise_content" && (
+          <div className="space-y-2">
+            <label
+              htmlFor="content-feedback"
+              className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
+            >
+              Revision Feedback for Content (Required)
+            </label>
+            <Textarea
+              id="content-feedback"
               required
               rows={4}
-              placeholder="Explain what needs to be changed (e.g., 'Make section 2 more technical, add benchmarks for Postgres query performance')..."
+              placeholder="e.g. 'Deepen section 2 with concrete code examples, add query benchmarks for Postgres pooler'..."
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               className="rounded-xl border-slate-200 text-xs"
@@ -221,7 +348,24 @@ export function ApprovalActionForm({
             </Button>
           )}
 
-          {decision === "improve" && (
+          {decision === "approve_content_retry_image" && (
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="h-11 w-full rounded-xl bg-sky-600 text-xs font-bold text-white shadow-md shadow-sky-600/20 hover:bg-sky-700 sm:text-sm"
+            >
+              {submitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Triggering Critic AI Regeneration...
+                </span>
+              ) : (
+                "Confirm: Keep Content & Regenerate Image"
+              )}
+            </Button>
+          )}
+
+          {decision === "approve_image_revise_content" && (
             <Button
               type="submit"
               disabled={submitting || !feedback.trim()}
@@ -230,10 +374,10 @@ export function ApprovalActionForm({
               {submitting ? (
                 <span className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Dispatching to Autonomous Agent...
+                  Saving Feedback & Flagging for Revision...
                 </span>
               ) : (
-                "Dispatch Revision Request to AI Agent"
+                "Confirm: Keep Image & Revise Content"
               )}
             </Button>
           )}
@@ -250,7 +394,7 @@ export function ApprovalActionForm({
                   Rejecting Draft...
                 </span>
               ) : (
-                "Confirm Rejection & Archive"
+                "Confirm Rejection & Archive Draft"
               )}
             </Button>
           )}

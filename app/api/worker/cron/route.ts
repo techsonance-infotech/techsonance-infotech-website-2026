@@ -4,6 +4,9 @@ import { getContainer } from "@/lib/di/container";
 import { AdminTelemetryService } from "@/lib/services/admin-telemetry.service";
 import { AdminTopicsService } from "@/lib/services/admin-topics.service";
 import { AdminJobsService } from "@/lib/services/admin-jobs.service";
+import { MediaService } from "@/lib/services/media.service";
+import { BlogSchedulerService } from "@/lib/services/blog-scheduler.service";
+import { GenerationJobsRepository } from "@/lib/repositories/generation-jobs.repository";
 import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logger";
@@ -24,6 +27,7 @@ export async function POST(req: NextRequest) {
   const telemetry = container.get(AdminTelemetryService);
   const topicsService = container.get(AdminTopicsService);
   const jobsService = container.get(AdminJobsService);
+  const generationJobsRepo = container.get(GenerationJobsRepository);
 
   // 1. Run Careers Lifecycle Sweep (publish scheduled roles & close expired roles)
   let careersSweep = { publishedCount: 0, closedCount: 0 };
@@ -33,33 +37,66 @@ export async function POST(req: NextRequest) {
     logger.warn(`Careers lifecycle sweep encountered non-blocking error: ${String(sweepErr)}`);
   }
 
+  // 2. Run Stalled Generation Job Recovery Sweep (recovers jobs stuck in RUNNING limbo)
+  let stalledRecovery = { recovered: 0, failed: 0 };
   try {
-    const summary = await telemetry.getTelemetrySummary();
+    stalledRecovery = await generationJobsRepo.recoverStalledJobs();
+    if (stalledRecovery.recovered > 0 || stalledRecovery.failed > 0) {
+      logger.info("Stalled generation jobs swept", stalledRecovery);
+    }
+  } catch (recoveryErr) {
+    logger.warn(
+      `Stalled generation job sweep encountered non-blocking error: ${String(recoveryErr)}`,
+    );
+  }
 
-    // Check caps
-    if (summary.dailyPostsUsed >= summary.dailyPostCap) {
-      logger.info("Autonomous cron skipped: daily post cap reached", {
-        used: summary.dailyPostsUsed,
-        cap: summary.dailyPostCap,
-      });
-      return NextResponse.json({
-        success: true,
-        skipped: true,
-        reason: "Daily cap reached",
-        dailyUsage: `${summary.dailyPostsUsed}/${summary.dailyPostCap}`,
+  // 3. Run Media Recycle Bin Sweep (permanently cleans up assets in bin for >= 15-30 days)
+  try {
+    const mediaService = container.get(MediaService);
+    const mediaBinSweep = await mediaService.cleanupExpiredTrash();
+    if (mediaBinSweep.purgedCount > 0) {
+      logger.info("Media recycle bin sweep purged expired assets", {
+        purgedCount: mediaBinSweep.purgedCount,
+        checkedCount: mediaBinSweep.checkedCount,
       });
     }
+  } catch (mediaErr) {
+    logger.warn(`Media recycle bin sweep encountered non-blocking error: ${String(mediaErr)}`);
+  }
 
-    if (summary.weeklyPostsUsed >= summary.weeklyPostCap) {
-      logger.info("Autonomous cron skipped: weekly post cap reached", {
-        used: summary.weeklyPostsUsed,
-        cap: summary.weeklyPostCap,
+  try {
+    const summary = await telemetry.getTelemetrySummary();
+    const scheduler = container.get(BlogSchedulerService);
+
+    // 4. Evaluate randomized daytime schedule (2 to 3 blogs per week, random order & daytime timing)
+    const scheduleEvaluation = scheduler.evaluateSchedule(
+      summary.weeklyPostsUsed,
+      summary.dailyPostsUsed,
+    );
+
+    if (!scheduleEvaluation.shouldGenerate) {
+      logger.info("Autonomous cron skipped by randomized daytime schedule", {
+        reason: scheduleEvaluation.reason,
+        weekKey: scheduleEvaluation.weekKey,
+        weeklyTarget: scheduleEvaluation.weeklyTarget,
+        weeklyUsageRatio: scheduleEvaluation.weeklyUsageRatio,
+        scheduledDays: scheduleEvaluation.scheduledDays,
+        currentTime: scheduleEvaluation.currentTimeFormatted,
+        isDaytime: scheduleEvaluation.isDaytime,
       });
+
       return NextResponse.json({
         success: true,
         skipped: true,
-        reason: "Weekly cap reached",
-        weeklyUsage: `${summary.weeklyPostsUsed}/${summary.weeklyPostCap}`,
+        reason: scheduleEvaluation.reason,
+        schedule: {
+          weekKey: scheduleEvaluation.weekKey,
+          weeklyTarget: scheduleEvaluation.weeklyTarget,
+          scheduledDays: scheduleEvaluation.scheduledDays,
+          currentTime: scheduleEvaluation.currentTimeFormatted,
+          isDaytime: scheduleEvaluation.isDaytime,
+          usage: scheduleEvaluation.weeklyUsageRatio,
+        },
       });
     }
 
@@ -86,9 +123,14 @@ export async function POST(req: NextRequest) {
       targetTopicTitle = topic.title;
     }
 
-    logger.info("Autonomous cron triggered job successfully", {
+    logger.info("Autonomous cron triggered job on randomized daytime schedule", {
       jobId: targetJobId,
       topicTitle: targetTopicTitle,
+      weekKey: scheduleEvaluation.weekKey,
+      weeklyTarget: scheduleEvaluation.weeklyTarget,
+      weeklyUsageRatio: scheduleEvaluation.weeklyUsageRatio,
+      scheduledTime: scheduleEvaluation.todaySlot?.targetTimeFormatted,
+      currentTime: scheduleEvaluation.currentTimeFormatted,
     });
 
     return NextResponse.json({
@@ -96,6 +138,12 @@ export async function POST(req: NextRequest) {
       action: "job_started",
       jobId: targetJobId,
       topic: targetTopicTitle,
+      schedule: {
+        weekKey: scheduleEvaluation.weekKey,
+        weeklyTarget: scheduleEvaluation.weeklyTarget,
+        scheduledTime: scheduleEvaluation.todaySlot?.targetTimeFormatted,
+        currentTime: scheduleEvaluation.currentTimeFormatted,
+      },
     });
   } catch (error) {
     logger.error("Autonomous cron failed", { error });

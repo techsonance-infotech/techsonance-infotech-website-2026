@@ -323,17 +323,14 @@ export async function generatePostThumbnail(
   signal?: AbortSignal,
 ): Promise<GeneratePostThumbnailResponse> {
   const schema = z.strictObject({
-    ok: z.boolean(),
-    data: z.strictObject({
-      url: z.string(),
-      provider: z.string(),
-      prompt: z.string(),
-      alt: z.string(),
-      thumbnailMissing: z.boolean(),
-    }),
+    url: z.string(),
+    provider: z.string(),
+    prompt: z.string(),
+    alt: z.string(),
+    thumbnailMissing: z.boolean(),
   });
 
-  return safeFetch(API_ENDPOINTS.ADMIN.BLOG.POST_THUMBNAIL_GENERATE, schema, {
+  const data = await safeFetch(API_ENDPOINTS.ADMIN.BLOG.POST_THUMBNAIL_GENERATE, schema, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -343,4 +340,9 @@ export async function generatePostThumbnail(
     signal,
     timeoutMs: 60_000,
   });
+
+  return {
+    ok: true,
+    data,
+  };
 }

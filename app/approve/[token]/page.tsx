@@ -130,7 +130,15 @@ export default async function ApprovePage({
   }
 
   const initialDecision =
-    action === "reject" ? "reject" : action === "improve" ? "improve" : "approve";
+    action === "reject"
+      ? "reject"
+      : action === "improve"
+        ? "improve"
+        : action === "approve_content_retry_image"
+          ? "approve_content_retry_image"
+          : action === "approve_image_revise_content"
+            ? "approve_image_revise_content"
+            : "approve";
 
   return (
     <div className="flex min-h-screen flex-col justify-between bg-[#F8FAFC] p-4 antialiased sm:p-6 md:p-8">

@@ -562,6 +562,22 @@ const customRenderer = {
     return `<code class="rounded-md border border-slate-200/80 bg-blue-50/70 px-2 py-0.5 font-mono text-xs font-semibold text-[#1155CC]">${text}</code>`;
   },
 
+  image({ href, title, text }: { href: string; title?: string | null; text: string }): string {
+    const titleAttr = title ? ` title="${escapeHtml(title)}"` : "";
+    return `
+      <figure class="my-8 max-w-full">
+        <img
+          src="${escapeHtml(href)}"
+          alt="${escapeHtml(text || "Article illustration")}"
+          loading="lazy"
+          class="w-full h-auto max-w-full rounded-2xl border border-slate-100 object-cover shadow-md"
+          ${titleAttr}
+        />
+        ${text ? `<figcaption class="mt-2.5 text-center text-xs font-medium text-slate-400">${escapeHtml(text)}</figcaption>` : ""}
+      </figure>
+    `;
+  },
+
   hr(): string {
     return `<hr class="my-12 border-slate-200/80" />`;
   },
@@ -610,5 +626,111 @@ export function renderMarkdownToHtml(markdown: string): string {
     return String(html);
   } catch {
     return markdown;
+  }
+}
+
+/**
+ * Converts Markdown text into bulletproof, 100% inline-styled HTML for email clients
+ * (Gmail, Outlook, Apple Mail, newsletter distribution).
+ * Completely eliminates stripped classes, client-side scripts, and broken flexbox/grid.
+ */
+export function renderMarkdownForEmail(markdown: string): string {
+  if (!markdown || typeof markdown !== "string") {
+    return "";
+  }
+
+  try {
+    const cleaned = cleanTrailingCutoffs(markdown);
+    const preprocessed = preprocessMarkdownMath(cleaned);
+
+    const emailRenderer = new marked.Renderer();
+
+    emailRenderer.heading = ({ text, depth }: { text: string; depth: number }) => {
+      const cleanText = text.replace(/<[^>]*>/g, "");
+      const fontSize = depth === 2 ? "20px" : depth === 3 ? "17px" : "15px";
+      const borderTop =
+        depth === 2
+          ? "border-top: 1px solid #e2e8f0; padding-top: 18px; margin-top: 24px;"
+          : "margin-top: 18px;";
+      return `<h${depth} style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: ${fontSize}; font-weight: 800; color: #0f172a; margin-bottom: 8px; line-height: 1.3; ${borderTop}">${cleanText}</h${depth}>`;
+    };
+
+    emailRenderer.paragraph = ({ text }: { text: string }) => {
+      return `<p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.65; color: #334155; margin-top: 0; margin-bottom: 14px;">${text}</p>`;
+    };
+
+    emailRenderer.code = ({ text, lang }: { text: string; lang?: string }) => {
+      if (isMermaidCode(lang, text)) {
+        return `
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin: 16px 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <tr>
+              <td style="padding: 12px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 700; color: #1155cc; border-bottom: 1px solid #e2e8f0;">
+                ❖ Architecture Diagram
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 16px; font-family: Consolas, Monaco, monospace; font-size: 11px; line-height: 1.5; color: #475569; background: #ffffff;">
+                <pre style="margin: 0; white-space: pre-wrap; font-family: Consolas, Monaco, monospace;">${escapeHtml(text.slice(0, 300))}${text.length > 300 ? "..." : ""}</pre>
+                <div style="margin-top: 8px; font-size: 11px; font-weight: 600; color: #1155cc;">Interactive diagram renders on the web version &rarr;</div>
+              </td>
+            </tr>
+          </table>
+        `;
+      }
+
+      return `
+        <div style="margin: 16px 0; background: #0c1222; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;">
+          <div style="background: #080d1a; padding: 6px 12px; border-bottom: 1px solid #1e293b; font-family: monospace; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">
+            ${escapeHtml((lang || "code").toUpperCase())}
+          </div>
+          <pre style="margin: 0; padding: 12px 14px; background: #0c1222; color: #f1f5f9; font-family: Consolas, Monaco, 'Courier New', monospace; font-size: 12px; line-height: 1.5; overflow-x: auto; white-space: pre;"><code>${escapeHtml(text)}</code></pre>
+        </div>
+      `;
+    };
+
+    emailRenderer.codespan = ({ text }: { text: string }) => {
+      return `<code style="font-family: Consolas, Monaco, monospace; font-size: 12px; background: #eff6ff; color: #1155cc; padding: 2px 5px; border-radius: 4px; border: 1px solid #dbeafe;">${text}</code>`;
+    };
+
+    emailRenderer.blockquote = ({ text }: { text: string }) => {
+      return `<div style="margin: 16px 0; padding: 12px 16px; border-left: 4px solid #1155cc; background: #eff6ff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-style: italic; color: #1e3a8a; border-radius: 0 8px 8px 0;"><p style="margin: 0; font-size: 13px; line-height: 1.6;">${text}</p></div>`;
+    };
+
+    emailRenderer.image = ({ href, text }: { href: string; text: string }) => {
+      return `<img src="${escapeHtml(href)}" alt="${escapeHtml(text || "Article Graphic")}" style="width: 100%; max-width: 100%; height: auto; border-radius: 8px; margin: 16px 0; display: block; border: 1px solid #e2e8f0;" />`;
+    };
+
+    emailRenderer.table = function (this: any, token: { header: any[]; rows: any[][] }) {
+      let headerCells = "";
+      for (let r = 0; r < token.header.length; r++) {
+        headerCells += `<th style="border: 1px solid #e2e8f0; padding: 8px 12px; background: #f8fafc; font-weight: 700; color: #0f172a;">${this.parser ? this.parser.parseInline(token.header[r].tokens) : ""}</th>`;
+      }
+      let bodyRows = "";
+      for (let r = 0; r < token.rows.length; r++) {
+        let rowCells = "";
+        for (let i = 0; i < token.rows[r].length; i++) {
+          rowCells += `<td style="border: 1px solid #e2e8f0; padding: 8px 12px; color: #334155;">${this.parser ? this.parser.parseInline(token.rows[r][i].tokens) : ""}</td>`;
+        }
+        bodyRows += `<tr>${rowCells}</tr>`;
+      }
+
+      return `
+        <div style="margin: 16px 0; overflow-x: auto;">
+          <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; border: 1px solid #e2e8f0;">
+            <thead style="background: #f8fafc; color: #0f172a; text-align: left;"><tr>${headerCells}</tr></thead>
+            <tbody>${bodyRows}</tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    const parsed = marked.parse(preprocessed, {
+      renderer: emailRenderer,
+      gfm: true,
+      breaks: true,
+    });
+    return typeof parsed === "string" ? parsed : String(parsed);
+  } catch {
+    return `<p style="font-family: sans-serif; font-size: 14px; line-height: 1.6; color: #334155;">${escapeHtml(markdown).replace(/\n/g, "<br/>")}</p>`;
   }
 }

@@ -81,4 +81,37 @@ describe("POST /api/admin/blog/thumbnail/generate", () => {
     expect(json.data.provider).toBe("pollinations");
     expect(mockPostsRepo.updatePostWithAudit).toHaveBeenCalled();
   });
+
+  it("generatePostThumbnail client helper correctly parses unwrapped envelope data without schema error", async () => {
+    const { generatePostThumbnail } = await import("@/lib/api/admin-posts.api");
+
+    // Mock global fetch to return an API envelope { ok: true, data: { ... } }
+    const mockApiResponse = {
+      ok: true,
+      data: {
+        url: "https://res.cloudinary.com/demo/image/upload/hero.jpg",
+        provider: "pollinations",
+        prompt: "Clean isometric servers",
+        alt: "Hero graphic",
+        thumbnailMissing: false,
+      },
+    };
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify(mockApiResponse), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const clientRes = await generatePostThumbnail({
+      postId: "test-id",
+      title: "Clean isometric servers",
+    });
+
+    expect(clientRes.ok).toBe(true);
+    expect(clientRes.data.url).toBe("https://res.cloudinary.com/demo/image/upload/hero.jpg");
+    expect(clientRes.data.thumbnailMissing).toBe(false);
+    fetchSpy.mockRestore();
+  });
 });

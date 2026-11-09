@@ -313,7 +313,7 @@ export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: Bl
               {post.category || "Software Engineering"}
             </span>
 
-            <h1 className="mb-6 font-sora text-3xl leading-tight font-black tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+            <h1 className="mb-6 font-sora text-[clamp(1.85rem,1.4rem+1.8vw,3.25rem)] leading-[1.18] font-black tracking-tight text-slate-900">
               {post.title || "Untitled Article"}
             </h1>
 
@@ -345,10 +345,10 @@ export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: Bl
         </section>
 
         {/* Main Content Layout */}
-        <section className="relative z-10 mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+        <section className="relative z-10 mx-auto mt-10 w-full max-w-7xl px-4 sm:mt-14 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 xl:gap-12">
             {/* Sticky Share Sidebar (Desktop Only) */}
-            <div className="sticky top-28 hidden space-y-6 lg:col-span-3 lg:block">
+            <div className="sticky top-28 hidden min-w-0 space-y-6 lg:col-span-4 lg:block xl:col-span-3">
               <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
                 <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
                   AUTHOR
@@ -420,31 +420,34 @@ export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: Bl
               )}
             </div>
 
-            {/* Post Content */}
-            <div className="col-span-1 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-9">
-              {/* Hero Featured Image */}
+            {/* Post Content — Responsive Fluid Constraints (max-w-3xl / max-w-prose centered) */}
+            <div className="col-span-1 min-w-0 rounded-3xl border border-slate-100/90 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-8 xl:col-span-9">
+              {/* Hero Featured Image with Responsive Containment */}
               {post.heroImage && (
-                <div className="relative mb-10 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-sm">
+                <div className="relative mb-10 w-full max-w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-sm">
                   <img
                     src={post.heroImage}
                     alt={post.title || "Article Banner"}
-                    className="aspect-video w-full object-cover"
+                    className="aspect-video h-auto w-full max-w-full object-cover"
                   />
                 </div>
               )}
 
-              {/* Main Content Render */}
+              {/* Main Content Render with Fluid Typography & Spacing */}
               <div
-                className="article-content max-w-none text-base leading-relaxed text-slate-700
+                className="article-content mx-auto w-full min-w-0 max-w-3xl text-base leading-relaxed text-slate-700
                   [&_a]:font-semibold [&_a]:text-[#1155CC] [&_a]:underline [&_a:hover]:text-[#0d419d]
-                  [&_img]:my-8 [&_img]:rounded-2xl [&_img]:border [&_img]:border-slate-100 [&_img]:shadow-md
-                  [&_li]:leading-relaxed [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:pl-6
-                  [&_ol]:text-slate-600 [&_p]:mb-5 [&_p]:text-base [&_p]:leading-[1.85] [&_p]:text-slate-600
-                  sm:[&_p]:text-[17px]
+                  [&_figure]:my-8 [&_figure]:w-full [&_figure]:max-w-full
+                  [&_img]:my-8 [&_img]:h-auto [&_img]:w-full [&_img]:max-w-full [&_img]:rounded-2xl [&_img]:border [&_img]:border-slate-100 [&_img]:object-cover [&_img]:shadow-md
+                  [&_li]:leading-relaxed
+                  [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-3 [&_ol]:pl-6 [&_ol]:text-slate-600
+                  [&_p]:mb-6 [&_p]:text-[clamp(0.975rem,0.925rem+0.25vw,1.075rem)] [&_p]:leading-[1.75] [&_p]:text-slate-600 [&_p]:break-words
+                  [&_pre]:w-full [&_pre]:max-w-full [&_pre]:overflow-x-auto
                   [&_strong]:font-bold [&_strong]:text-slate-900
                   [&_sub]:align-sub [&_sub]:text-[0.72em] [&_sub]:font-semibold [&_sub]:text-slate-800
                   [&_sup]:align-super [&_sup]:text-[0.72em] [&_sup]:font-semibold [&_sup]:text-slate-800
-                  [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-6 [&_ul]:text-slate-600"
+                  [&_table]:w-full [&_table]:max-w-full
+                  [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-3 [&_ul]:pl-6 [&_ul]:text-slate-600"
                 dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 
