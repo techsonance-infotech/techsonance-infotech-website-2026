@@ -2,6 +2,20 @@ import path from "path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["nomnoml"],
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve = {
+        ...config.resolve,
+        fallback: {
+          ...config.resolve?.fallback,
+          fs: false,
+          path: false,
+        },
+      };
+    }
+    return config;
+  },
   turbopack: {
     root: path.resolve(__dirname),
   },

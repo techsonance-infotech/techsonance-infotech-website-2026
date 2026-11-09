@@ -1,5 +1,6 @@
 import { marked } from "marked";
 import hljs from "highlight.js";
+import nomnoml from "nomnoml";
 
 function escapeHtml(text: string): string {
   if (!text) return "";
@@ -371,6 +372,17 @@ const customRenderer = {
       const encodedMermaid = encodeURIComponent(normalizedMermaid);
       const encodedRaw = encodeURIComponent(text);
 
+      let renderedNomnomlSvg = "";
+      try {
+        renderedNomnomlSvg = nomnoml.renderSvg(nomnomlCode);
+        renderedNomnomlSvg = renderedNomnomlSvg.replace(
+          /<svg\b/,
+          '<svg class="nomnoml-svg mx-auto max-w-full h-auto" style="max-width: 100%; height: auto;"'
+        );
+      } catch {
+        renderedNomnomlSvg = "";
+      }
+
       return `
         <div class="mermaid-diagram-card my-10 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs" data-card="diagram">
           <div class="mermaid-diagram-header flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/80 px-4 py-2.5">
@@ -399,15 +411,21 @@ const customRenderer = {
             </div>
           </div>
 
-          <!-- Nomnoml Container (Active by default: pristine unclipped labels) -->
+          <!-- Nomnoml Container (Active by default: pristine unclipped labels pre-rendered server-side) -->
           <div class="nomnoml-diagram-view flex justify-center p-6 sm:p-8 overflow-x-auto text-center" data-nomnoml="${encodedNomnoml}">
-            <div class="flex items-center gap-2 text-xs text-slate-400 py-4">
-              <svg class="h-4 w-4 animate-spin text-[#1155CC]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-              </svg>
-              <span>Rendering Nomnoml architecture...</span>
-            </div>
+            ${
+              renderedNomnomlSvg
+                ? renderedNomnomlSvg
+                : `
+              <div class="flex items-center gap-2 text-xs text-slate-400 py-4">
+                <svg class="h-4 w-4 animate-spin text-[#1155CC]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Rendering Nomnoml architecture...</span>
+              </div>
+            `
+            }
           </div>
 
           <!-- Mermaid Container (Parallel rendering, accessible via tab) -->

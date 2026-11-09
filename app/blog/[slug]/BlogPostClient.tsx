@@ -115,51 +115,17 @@ export default function BlogPostClient({
     return () => document.removeEventListener("click", handleTabClick);
   }, []);
 
-  // Dynamic Architecture Diagrams Renderer (Nomnoml + Mermaid parallel)
+  // Dynamic Mermaid Diagram Renderer (runs in parallel for the Mermaid tab)
   useEffect(() => {
     let isMounted = true;
 
-    async function renderDiagrams() {
-      // 1. Render Nomnoml diagrams (crisp unclipped SVG with full labels)
-      const nomnomlContainers = document.querySelectorAll<HTMLElement>(".nomnoml-diagram-view[data-nomnoml]");
-      if (nomnomlContainers.length > 0) {
-        try {
-          const nomnomlModule = await import("nomnoml");
-          const nomnoml = nomnomlModule.default || nomnomlModule;
-
-          nomnomlContainers.forEach((container) => {
-            if (!isMounted || container.getAttribute("data-rendered") === "true") return;
-            const rawNom = container.getAttribute("data-nomnoml");
-            if (!rawNom) return;
-
-            const nomCode = decodeURIComponent(rawNom);
-            try {
-              const svg = nomnoml.renderSvg(nomCode);
-              if (isMounted) {
-                container.innerHTML = svg;
-                container.setAttribute("data-rendered", "true");
-                const svgEl = container.querySelector("svg");
-                if (svgEl) {
-                  svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
-                  svgEl.style.maxWidth = "100%";
-                  svgEl.style.height = "auto";
-                }
-              }
-            } catch (err) {
-              console.warn("Nomnoml render error:", err);
-            }
-          });
-        } catch (e) {
-          console.warn("Failed to load nomnoml:", e);
-        }
-      }
-
-      // 2. Render Mermaid diagrams (parallel view)
+    async function renderMermaidDiagrams() {
       const mermaidContainers = document.querySelectorAll<HTMLElement>(".mermaid-diagram[data-mermaid]");
-      if (mermaidContainers.length > 0) {
-        try {
-          const mermaidModule = await import("mermaid");
-          const mermaid = mermaidModule.default || mermaidModule;
+      if (mermaidContainers.length === 0) return;
+
+      try {
+        const mermaidModule = await import("mermaid");
+        const mermaid = mermaidModule.default || mermaidModule;
 
           if (typeof document !== "undefined" && "fonts" in document) {
             try {
@@ -293,9 +259,8 @@ export default function BlogPostClient({
           // Fallback if mermaid module cannot be loaded
         }
       }
-    }
 
-    void renderDiagrams();
+    void renderMermaidDiagrams();
 
     return () => {
       isMounted = false;

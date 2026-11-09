@@ -70,6 +70,8 @@ describe("renderMarkdownToHtml", () => {
     expect(html1).toContain("Architecture Diagram");
     expect(html1).toContain("Nomnoml (Full Labels)");
     expect(html1).toContain("Mermaid");
+    expect(html1).toContain("nomnoml-svg");
+    expect(html1).toContain("<svg");
     expect(html1).toContain('data-mode="nomnoml"');
     expect(html1).toContain('data-mode="mermaid"');
 
@@ -78,7 +80,8 @@ describe("renderMarkdownToHtml", () => {
     expect(html2).toContain("mermaid-diagram-card");
     expect(html2).toContain("data-mermaid");
     // Verify quotes are added to handle parentheses in node labels
-    expect(decodeURIComponent(html2)).toContain('B["Primary DB (region us-east-1)"]');
+    const mermaidMatch2 = html2.match(/data-mermaid="([^"]+)"/);
+    expect(decodeURIComponent(mermaidMatch2?.[1] || "")).toContain('B["Primary DB (region us-east-1)"]');
 
     // Test complex AI generated flowchart with unicode arrows, escaped newlines, and chained arrows
     const mdComplexAI = `\`\`\`mermaid
@@ -90,7 +93,8 @@ EdgeFn → |JSON payload| APIGW → |HTTPS| Client
 \`\`\``;
     const html3 = renderMarkdownToHtml(mdComplexAI);
     expect(html3).toContain("mermaid-diagram-card");
-    const decoded3 = decodeURIComponent(html3);
+    const mermaidMatch3 = html3.match(/data-mermaid="([^"]+)"/);
+    const decoded3 = decodeURIComponent(mermaidMatch3?.[1] || "");
     expect(decoded3).toContain("-->|HTTPS| APIGW");
     expect(decoded3).toContain("<br/>");
     expect(decoded3).toContain("-->|row-level security (RLS)| EdgeFn");
