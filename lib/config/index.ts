@@ -88,8 +88,8 @@ export const BOT_CONFIG = {
       id: "gemini",
       name: "Google Gemini",
       baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
-      model: "gemini-2.5-flash",
-      fallbackModel: "gemini-2.5-flash-lite",
+      model: "gemini-3.0-flash",
+      fallbackModel: "gemini-3.0-flash-lite",
       apiKeyEnv: "GEMINI_API_KEY",
     },
     cerebras: {
@@ -105,7 +105,7 @@ export const BOT_CONFIG = {
       name: "OpenRouter Free Tier",
       baseUrl: "https://openrouter.ai/api/v1",
       model: "meta-llama/llama-3.3-70b-instruct:free",
-      fallbackModel: "google/gemini-2.0-flash-exp:free",
+      fallbackModel: "google/gemini-3.0-flash:free",
       apiKeyEnv: "OPENROUTER_API_KEY",
     },
     mistral: {

@@ -32,13 +32,12 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
   {
     id: "gemini",
     name: "Google Gemini",
-    defaultModel: "gemini-2.5-flash",
+    defaultModel: "gemini-3.0-flash",
     models: [
-      { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash (Recommended Default)" },
-      { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro (Deep Reasoning)" },
-      { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash" },
-      { id: "gemini-2.0-flash-lite", label: "Gemini 2.0 Flash Lite" },
-      { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
+      { id: "gemini-3.0-flash", label: "Gemini 3.0 Flash (Fast & Capable, Recommended)" },
+      { id: "gemini-3.0-pro", label: "Gemini 3.0 Pro (Advanced Reasoning)" },
+      { id: "gemini-3.0-flash-lite", label: "Gemini 3.0 Flash Lite (Cost-Efficient)" },
+      { id: "gemini-3.0-ultra", label: "Gemini 3.0 Ultra (Deep Enterprise)" },
     ],
   },
   {
@@ -121,7 +120,7 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     models: [
       { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B Free" },
       { id: "deepseek/deepseek-r1:free", label: "DeepSeek R1 Free" },
-      { id: "google/gemini-2.0-flash-exp:free", label: "Gemini 2.0 Flash Free" },
+      { id: "google/gemini-3.0-flash:free", label: "Gemini 3.0 Flash Free" },
       { id: "anthropic/claude-3.5-sonnet", label: "Claude 3.5 Sonnet" },
     ],
   },
@@ -159,7 +158,7 @@ export function AddCredentialModal({
   onSuccess,
 }: AddCredentialModalProps) {
   const [provider, setProvider] = useState("gemini");
-  const [modelOption, setModelOption] = useState("gemini-2.5-flash");
+  const [modelOption, setModelOption] = useState("gemini-3.0-flash");
   const [customModelText, setCustomModelText] = useState("");
   const [label, setLabel] = useState("");
   const [apiKey, setApiKey] = useState("");

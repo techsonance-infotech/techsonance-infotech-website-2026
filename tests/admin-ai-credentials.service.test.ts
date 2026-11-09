@@ -73,18 +73,18 @@ describe("AdminAiCredentialsService", () => {
     const result = await service.addCredential(
       {
         provider: "gemini",
-        model: "gemini-2.5-pro",
+        model: "gemini-3.0-pro",
         label: "Gemini Pro Reasoning",
         apiKey: "AIzaSy_custom_model_key_12345",
       },
       "admin-user-1",
     );
 
-    expect(result.model).toBe("gemini-2.5-pro");
+    expect(result.model).toBe("gemini-3.0-pro");
     expect(mockRepo.createCredential).toHaveBeenCalledWith(
       expect.objectContaining({
         provider: "gemini",
-        model: "gemini-2.5-pro",
+        model: "gemini-3.0-pro",
       }),
     );
   });

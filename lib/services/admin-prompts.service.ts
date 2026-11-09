@@ -7,7 +7,7 @@ import { logger } from "../logger";
 export const DEFAULT_PROMPT_TEMPLATES = [
   {
     stepName: "outline",
-    modelPreference: "gemini-2.5-flash",
+    modelPreference: "gemini-3.0-flash",
     temperature: 70,
     systemPrompt: `You are a Principal Software Architect and Technical Writer at TechSonance Infotech.
 Generate an in-depth, structured outline for an enterprise engineering article.
@@ -26,7 +26,7 @@ Generate 4-6 focused technical headings with actionable key points.`,
   },
   {
     stepName: "section",
-    modelPreference: "gemini-2.5-flash",
+    modelPreference: "gemini-3.0-flash",
     temperature: 70,
     systemPrompt: `You are a Senior Staff Engineer writing an authoritative engineering blog for TechSonance Infotech.
 Write thorough, highly practical, technically deep content.
@@ -41,7 +41,7 @@ Write the full section markdown now.`,
   },
   {
     stepName: "meta",
-    modelPreference: "gemini-2.5-flash",
+    modelPreference: "gemini-3.0-flash",
     temperature: 60,
     systemPrompt: `You are an SEO Strategist & Editor at TechSonance Infotech.
 Analyze the article topic and generate production metadata.
@@ -70,7 +70,7 @@ Generate the metadata JSON.`,
   },
   {
     stepName: "critic",
-    modelPreference: "gemini-2.5-flash",
+    modelPreference: "gemini-3.0-flash",
     temperature: 50,
     systemPrompt: `You are the Executive Editor at TechSonance Infotech reviewing automated content.
 Evaluate technical accuracy, code quality, readability, and brand voice.
