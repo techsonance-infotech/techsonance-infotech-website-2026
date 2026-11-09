@@ -103,9 +103,7 @@ async function fetchCmsPostsRaw(category?: string): Promise<BlogPost[]> {
     const db = getContainer().get(ContentDbService);
     const dbPosts = await db.fetchPublishedPosts(category);
     const dbSlugs = new Set(dbPosts.map((p) => p.slug));
-    const legacy = (await legacyPostSource.list({ category })).filter(
-      (p) => !dbSlugs.has(p.slug),
-    );
+    const legacy = (await legacyPostSource.list({ category })).filter((p) => !dbSlugs.has(p.slug));
     return [...dbPosts, ...legacy];
   } catch {
     return legacyPostSource.list({ category });

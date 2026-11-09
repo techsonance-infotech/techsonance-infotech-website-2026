@@ -64,7 +64,7 @@ export function ReplaceCredentialModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white p-6 shadow-xl rounded-3xl border border-slate-200">
+      <DialogContent className="max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
@@ -75,8 +75,9 @@ export function ReplaceCredentialModal({
             </DialogTitle>
           </div>
           <DialogDescription className="mt-1 text-xs text-slate-500">
-            Replaces <span className="font-semibold text-slate-700">{credential.label}</span> (...{credential.last4}).
-            Traffic seamlessly shifts to the new key, and the old key's ciphertext is permanently wiped.
+            Replaces <span className="font-semibold text-slate-700">{credential.label}</span> (...
+            {credential.last4}). Traffic seamlessly shifts to the new key, and the old key's
+            ciphertext is permanently wiped.
           </DialogDescription>
         </DialogHeader>
 
@@ -136,7 +137,7 @@ export function ReplaceCredentialModal({
             </Button>
             <Button
               type="submit"
-              className="rounded-xl bg-amber-600 text-xs font-bold hover:bg-amber-700 text-white"
+              className="rounded-xl bg-amber-600 text-xs font-bold text-white hover:bg-amber-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Rotating..." : "Rotate & Wipe Old Ciphertext"}

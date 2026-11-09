@@ -2,7 +2,17 @@
 
 import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, Briefcase, X, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  Search,
+  MapPin,
+  Trash2,
+  RefreshCw,
+  Edit3,
+  Briefcase,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -301,7 +311,7 @@ export default function AdminJobsPage() {
                             >
                               {job.status}
                             </Badge>
-                            <ChevronDown className="h-3 w-3 text-slate-400 opacity-60 transition-opacity group-hover/status:opacity-100 group-hover/status:text-[#1155CC]" />
+                            <ChevronDown className="h-3 w-3 text-slate-400 opacity-60 transition-opacity group-hover/status:text-[#1155CC] group-hover/status:opacity-100" />
                           </button>
                         </td>
                         <td aria-label="Actions" className="px-4 py-3.5 text-right">

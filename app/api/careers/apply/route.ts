@@ -133,7 +133,7 @@ export async function POST(req: Request) {
     const rawResumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
     const hasResume = Boolean(
       rawResumeFile &&
-        (typeof rawResumeFile !== "object" || !("size" in rawResumeFile) || rawResumeFile.size > 0),
+      (typeof rawResumeFile !== "object" || !("size" in rawResumeFile) || rawResumeFile.size > 0),
     );
     const resumeFile = hasResume ? rawResumeFile : null;
 

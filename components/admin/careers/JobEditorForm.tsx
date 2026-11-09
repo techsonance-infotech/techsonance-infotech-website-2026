@@ -231,9 +231,7 @@ export function JobEditorForm({
         (!isSlugCustomized && initialJob.title && initialJob.slug !== slugify(initialJob.title));
 
       const resolvedSlug =
-        isTemplateOrUncustomized && initialJob.title
-          ? slugify(initialJob.title)
-          : initialJob.slug;
+        isTemplateOrUncustomized && initialJob.title ? slugify(initialJob.title) : initialJob.slug;
 
       if (isTemplateOrUncustomized && initialJob.title) {
         setIsSlugCustomized(false);
@@ -347,7 +345,11 @@ export function JobEditorForm({
     if (key === "title" && typeof value === "string") {
       const currentSlug = getValues("slug");
       // As long as slug is not explicitly customized, automatically sync slug to title in real-time
-      if (!isSlugCustomized || !currentSlug || currentSlug === "lead-distributed-systems-engineer") {
+      if (
+        !isSlugCustomized ||
+        !currentSlug ||
+        currentSlug === "lead-distributed-systems-engineer"
+      ) {
         setValue("slug", slugify(value), { shouldDirty: true });
       }
       const currentSeoTitle = getValues("seoTitle");
@@ -735,8 +737,8 @@ export function JobEditorForm({
                   completenessStats.percentage === 100
                     ? "bg-emerald-500"
                     : completenessStats.percentage >= 60
-                    ? "bg-[#1155CC]"
-                    : "bg-amber-500"
+                      ? "bg-[#1155CC]"
+                      : "bg-amber-500"
                 }`}
                 style={{ width: `${completenessStats.percentage}%` }}
               />
@@ -1922,13 +1924,11 @@ export function JobEditorForm({
 
       {/* Pre-Publish & Schedule Confirmation Dialog */}
       <Dialog open={publishConfirmOpen} onOpenChange={setPublishConfirmOpen}>
-        <DialogContent className="max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl p-5">
+        <DialogContent className="max-h-[calc(100dvh-2rem)] max-w-md overflow-y-auto rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
             <div
               className={`flex h-9 w-9 items-center justify-center rounded-xl font-bold ${
-                isClosed
-                  ? "bg-blue-500/10 text-[#1155CC]"
-                  : "bg-emerald-500/10 text-emerald-600"
+                isClosed ? "bg-blue-500/10 text-[#1155CC]" : "bg-emerald-500/10 text-emerald-600"
               }`}
             >
               <Sparkles className="h-4 w-4" />
@@ -1960,7 +1960,9 @@ export function JobEditorForm({
                 id="modal-closes-at"
                 type="datetime-local"
                 min={new Date().toISOString().slice(0, 16)}
-                value={scheduleClosesAt ? new Date(scheduleClosesAt).toISOString().slice(0, 16) : ""}
+                value={
+                  scheduleClosesAt ? new Date(scheduleClosesAt).toISOString().slice(0, 16) : ""
+                }
                 onChange={(e) => {
                   const val = e.target.value ? new Date(e.target.value) : null;
                   setScheduleClosesAt(val);
@@ -2024,7 +2026,13 @@ export function JobEditorForm({
               </p>
             ) : scheduleClosesAt ? (
               <p className="text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
-                ✓ Position will go LIVE and auto-close on {new Date(scheduleClosesAt).toLocaleDateString()} at {new Date(scheduleClosesAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.
+                ✓ Position will go LIVE and auto-close on{" "}
+                {new Date(scheduleClosesAt).toLocaleDateString()} at{" "}
+                {new Date(scheduleClosesAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                .
               </p>
             ) : (
               <p className="text-[11px] font-medium text-slate-500">
@@ -2036,12 +2044,13 @@ export function JobEditorForm({
           {/* Slug Mismatch Warning & Fix in Confirmation Modal */}
           {Boolean(job.title && job.slug && job.slug !== slugify(job.title || "")) && (
             <div className="flex items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">
-              <div className="flex items-center gap-2 min-w-0">
+              <div className="flex min-w-0 items-center gap-2">
                 <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
                 <div className="truncate">
                   <p className="font-semibold">Slug doesn&apos;t match Title</p>
                   <p className="text-[11px] text-amber-700 dark:text-amber-300">
-                    Suggested: <strong className="font-mono">/careers/{slugify(job.title || "")}</strong>
+                    Suggested:{" "}
+                    <strong className="font-mono">/careers/{slugify(job.title || "")}</strong>
                   </p>
                 </div>
               </div>
@@ -2106,7 +2115,10 @@ export function JobEditorForm({
                 // Ensure valid closesAt
                 if (scheduleClosesAt && new Date(scheduleClosesAt).getTime() > Date.now()) {
                   values.closesAt = scheduleClosesAt;
-                } else if (!scheduleClosesAt || new Date(scheduleClosesAt).getTime() <= Date.now()) {
+                } else if (
+                  !scheduleClosesAt ||
+                  new Date(scheduleClosesAt).getTime() <= Date.now()
+                ) {
                   values.closesAt = null;
                 }
                 await onPublish?.(values);
@@ -2122,7 +2134,7 @@ export function JobEditorForm({
 
       {/* Missing Requirements Modal Dialog (User Request & Spec 4.6) */}
       <Dialog open={requirementsModalOpen} onOpenChange={setRequirementsModalOpen}>
-        <DialogContent className="max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl p-5">
+        <DialogContent className="max-h-[calc(100dvh-2rem)] max-w-md overflow-y-auto rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 font-bold text-amber-600">
               <AlertCircle className="h-4 w-4" />

@@ -29,9 +29,9 @@ describe("Careers Flow Audit Verification Suite", () => {
           screeningQuestions: [],
         }),
         findExistingApplication: vi.fn().mockResolvedValue(null),
-        insertApplication: vi.fn().mockImplementation((data) =>
-          Promise.resolve({ id: "app-123", ...data }),
-        ),
+        insertApplication: vi
+          .fn()
+          .mockImplementation((data) => Promise.resolve({ id: "app-123", ...data })),
         incrementJobApplyCount: vi.fn().mockResolvedValue(undefined),
       });
 
@@ -109,11 +109,7 @@ describe("Careers Flow Audit Verification Suite", () => {
         insertApplication: vi.fn().mockRejectedValue(new Error("Database write failure")),
       });
 
-      const service = new CareerApplyService(
-        mockRepo,
-        undefined,
-        { storage: mockStorage } as any,
-      );
+      const service = new CareerApplyService(mockRepo, undefined, { storage: mockStorage } as any);
 
       // Standard dummy PDF header %PDF-
       const pdfBytes = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34]);
@@ -156,9 +152,11 @@ describe("Careers Flow Audit Verification Suite", () => {
             closesAt: new Date(Date.now() - 60000), // 1 minute ago
           },
         ]),
-        updateJobWithAudit: vi.fn().mockImplementation((id, updates) =>
-          Promise.resolve({ id, slug: `slug-${id}`, ...updates }),
-        ),
+        updateJobWithAudit: vi
+          .fn()
+          .mockImplementation((id, updates) =>
+            Promise.resolve({ id, slug: `slug-${id}`, ...updates }),
+          ),
       };
 
       const service = new AdminJobsService(mockJobsRepo as any);
@@ -194,9 +192,9 @@ describe("Careers Flow Audit Verification Suite", () => {
           status: JobStatus.PUBLISHED,
           versionId: 2,
         }),
-        updateJobWithAudit: vi.fn().mockImplementation((id, updates) =>
-          Promise.resolve({ id, ...updates }),
-        ),
+        updateJobWithAudit: vi
+          .fn()
+          .mockImplementation((id, updates) => Promise.resolve({ id, ...updates })),
       };
 
       const service = new AdminJobsService(mockJobsRepo as any);

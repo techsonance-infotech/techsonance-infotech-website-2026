@@ -38,9 +38,7 @@ export function ChangeModelModal({
 
   // Match provider catalog to suggest supported models
   const providerEntry = credential
-    ? PROVIDER_CATALOG.find(
-        (p) => p.id.toLowerCase() === credential.provider.toLowerCase(),
-      )
+    ? PROVIDER_CATALOG.find((p) => p.id.toLowerCase() === credential.provider.toLowerCase())
     : null;
 
   useEffect(() => {
@@ -96,35 +94,36 @@ export function ChangeModelModal({
         <form onSubmit={handleSubmit} className="space-y-5">
           <DialogHeader className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 border border-blue-200 text-blue-600">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-600">
                 <Cpu className="h-5 w-5" />
               </div>
               <DialogTitle className="text-lg font-bold text-slate-900">
                 Change Serving Model
               </DialogTitle>
             </div>
-            <DialogDescription className="text-xs text-slate-500 leading-relaxed">
-              Switch the model routed to this credential without modifying or re-entering your API key.
-              Use this when older models are deprecated, out of service, or when upgraded models are deployed.
+            <DialogDescription className="text-xs leading-relaxed text-slate-500">
+              Switch the model routed to this credential without modifying or re-entering your API
+              key. Use this when older models are deprecated, out of service, or when upgraded
+              models are deployed.
             </DialogDescription>
           </DialogHeader>
 
           {/* Current Credential Info Card */}
-          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 space-y-2">
+          <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-500">Provider & Key:</span>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className="font-bold uppercase tracking-wider text-[10px]">
+                <Badge variant="outline" className="text-[10px] font-bold tracking-wider uppercase">
                   {credential.provider}
                 </Badge>
-                <span className="font-mono text-slate-600 font-semibold text-[11px]">
+                <span className="font-mono text-[11px] font-semibold text-slate-600">
                   ••••••••{credential.last4}
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-500">Current Model:</span>
-              <span className="font-mono text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded text-[11px] font-bold">
+              <span className="rounded border border-blue-200/80 bg-blue-50 px-2 py-0.5 font-mono text-[11px] font-bold text-blue-700">
                 {credential.model || "default"}
               </span>
             </div>
@@ -140,12 +139,12 @@ export function ChangeModelModal({
           {/* Catalog Preset Models */}
           {providerEntry && providerEntry.models.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center justify-between">
+              <label className="flex items-center justify-between text-xs font-bold tracking-wider text-slate-600 uppercase">
                 <span>Available Catalog Models</span>
                 <span className="text-[10px] font-normal text-slate-400">Click to select</span>
               </label>
 
-              <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1">
+              <div className="grid max-h-48 grid-cols-1 gap-1.5 overflow-y-auto pr-1">
                 {providerEntry.models.map((m) => {
                   const isSelected = !isCustom && selectedModel === m.id;
                   const isCurrent = credential.model === m.id;
@@ -169,9 +168,12 @@ export function ChangeModelModal({
                         <span className="font-mono text-[11px] font-bold">{m.id}</span>
                         <span className="text-[10px] text-slate-500">{m.label}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <div className="ml-2 flex shrink-0 items-center gap-1.5">
                         {isCurrent && (
-                          <Badge variant="outline" className="text-[9px] border-slate-300 text-slate-500">
+                          <Badge
+                            variant="outline"
+                            className="border-slate-300 text-[9px] text-slate-500"
+                          >
                             Active
                           </Badge>
                         )}
@@ -187,13 +189,13 @@ export function ChangeModelModal({
           {/* Custom Model Input */}
           <div className="space-y-2 pt-1">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
+              <label className="text-xs font-bold tracking-wider text-slate-600 uppercase">
                 Custom / Unlisted Model Identifier
               </label>
               <button
                 type="button"
                 onClick={() => setIsCustom(!isCustom)}
-                className="text-[11px] font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                className="text-[11px] font-semibold text-blue-600 transition-colors hover:text-blue-800"
               >
                 {isCustom ? "Choose from catalog" : "Enter custom model ID"}
               </button>
@@ -205,7 +207,7 @@ export function ChangeModelModal({
                   value={customModel}
                   onChange={(e) => setCustomModel(e.target.value)}
                   placeholder="e.g. llama-3.3-70b-versatile, qwen/qwen3.8-27b"
-                  className="font-mono text-xs h-9 rounded-xl border-slate-200"
+                  className="h-9 rounded-xl border-slate-200 font-mono text-xs"
                   autoFocus
                 />
                 <p className="text-[10px] text-slate-400">
@@ -213,8 +215,9 @@ export function ChangeModelModal({
                 </p>
               </div>
             ) : (
-              <p className="text-[11px] text-slate-400 font-mono">
-                Selected: <span className="text-slate-800 font-bold">{selectedModel || "none"}</span>
+              <p className="font-mono text-[11px] text-slate-400">
+                Selected:{" "}
+                <span className="font-bold text-slate-800">{selectedModel || "none"}</span>
               </p>
             )}
           </div>
@@ -232,7 +235,7 @@ export function ChangeModelModal({
             <Button
               type="submit"
               disabled={isSubmitting || (!selectedModel && !customModel)}
-              className="h-9 rounded-xl bg-blue-600 px-4 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
+              className="h-9 rounded-xl bg-blue-600 px-4 text-xs font-semibold text-white transition-colors hover:bg-blue-700"
             >
               {isSubmitting ? "Updating Model..." : "Apply Model Change"}
             </Button>

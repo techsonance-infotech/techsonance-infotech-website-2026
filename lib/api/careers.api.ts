@@ -98,10 +98,11 @@ export async function submitCareerApplication(
     if (err instanceof ApiError) {
       if (err.status === 409) {
         throw new Error(
-          "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.", { cause: err },
+          "You have already submitted an application for this opening. Our talent acquisition team is actively reviewing your submission.",
+          { cause: err },
         );
       }
-      throw new Error(err.message);
+      throw new Error(err.message, { cause: err });
     }
     throw err;
   }

@@ -160,7 +160,10 @@ export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     category: "image",
     defaultModel: "@cf/black-forest-labs/flux-1-schnell",
     models: [
-      { id: "@cf/black-forest-labs/flux-1-schnell", label: "FLUX.1-schnell (Recommended - Fast 1200x630)" },
+      {
+        id: "@cf/black-forest-labs/flux-1-schnell",
+        label: "FLUX.1-schnell (Recommended - Fast 1200x630)",
+      },
       { id: "@cf/stabilityai/stable-diffusion-xl-base-1.0", label: "Stable Diffusion XL Base 1.0" },
       { id: "@cf/bytedance/stable-diffusion-xl-lightning", label: "SDXL Lightning (Ultra Fast)" },
     ],
@@ -268,9 +271,7 @@ export function AddCredentialModal({
   const isCustomModelActive =
     modelOption === "__custom__" || currentProviderEntry.models.length === 0;
 
-  const resolvedModel = isCustomModelActive
-    ? customModelText.trim()
-    : modelOption;
+  const resolvedModel = isCustomModelActive ? customModelText.trim() : modelOption;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -312,7 +313,7 @@ export function AddCredentialModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg bg-white p-6 shadow-xl rounded-3xl border border-slate-200">
+      <DialogContent className="max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
@@ -323,8 +324,8 @@ export function AddCredentialModal({
             </DialogTitle>
           </div>
           <DialogDescription className="mt-1 text-xs text-slate-500">
-            Keys are encrypted using AES-256-GCM before entering the database. The
-            plaintext key is never stored, logged, or returned.
+            Keys are encrypted using AES-256-GCM before entering the database. The plaintext key is
+            never stored, logged, or returned.
           </DialogDescription>
         </DialogHeader>
 
@@ -338,10 +339,8 @@ export function AddCredentialModal({
         <form onSubmit={handleSubmit} className="space-y-4 pt-1">
           {/* Category Switcher: Text vs Image */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              Engine Category
-            </label>
-            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1 border border-slate-200/60">
+            <label className="mb-1.5 block text-xs font-bold text-slate-700">Engine Category</label>
+            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200/60 bg-slate-100 p-1">
               <button
                 type="button"
                 onClick={() => handleCategoryChange("text")}
@@ -371,13 +370,11 @@ export function AddCredentialModal({
 
           {/* Provider Selection */}
           <div>
-            <label className="block text-xs font-bold text-slate-700">
-              AI Provider
-            </label>
+            <label className="block text-xs font-bold text-slate-700">AI Provider</label>
             <select
               value={provider}
               onChange={(e) => handleProviderChange(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
             >
               {categoryProviders.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -390,9 +387,7 @@ export function AddCredentialModal({
           {/* Model Selection & Custom Input */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-700">
-                Model Identifier
-              </label>
+              <label className="block text-xs font-bold text-slate-700">Model Identifier</label>
               {currentProviderEntry.models.length > 0 && (
                 <button
                   type="button"
@@ -420,16 +415,14 @@ export function AddCredentialModal({
                     setCustomModelText("");
                   }
                 }}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
               >
                 {currentProviderEntry.models.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.label} ({m.id})
                   </option>
                 ))}
-                <option value="__custom__">
-                  ✏️ Custom / Enter exact model name...
-                </option>
+                <option value="__custom__">✏️ Custom / Enter exact model name...</option>
               </select>
             ) : (
               <div className="relative">
@@ -437,22 +430,23 @@ export function AddCredentialModal({
                   value={customModelText}
                   onChange={(e) => setCustomModelText(e.target.value)}
                   placeholder="e.g. @cf/black-forest-labs/flux-1-schnell or openai/gpt-oss-120b"
-                  className="rounded-xl font-mono text-xs pl-8"
+                  className="rounded-xl pl-8 font-mono text-xs"
                   required
                 />
-                <Cpu className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                <Cpu className="absolute top-2.5 left-2.5 h-3.5 w-3.5 text-slate-400" />
               </div>
             )}
             <p className="text-[10px] text-slate-400">
-              Active model for this key: <span className="font-mono font-semibold text-slate-600">{resolvedModel || "None specified"}</span>
+              Active model for this key:{" "}
+              <span className="font-mono font-semibold text-slate-600">
+                {resolvedModel || "None specified"}
+              </span>
             </p>
           </div>
 
           {/* Label */}
           <div>
-            <label className="block text-xs font-bold text-slate-700">
-              Credential Label
-            </label>
+            <label className="block text-xs font-bold text-slate-700">Credential Label</label>
             <Input
               value={label}
               onChange={(e) => setLabel(e.target.value)}
@@ -472,9 +466,7 @@ export function AddCredentialModal({
               <label className="block text-xs font-bold text-slate-700">
                 API Key / Auth Token (Write-Only)
               </label>
-              <span className="text-[10px] font-semibold text-blue-600">
-                AES-256-GCM Sealed
-              </span>
+              <span className="text-[10px] font-semibold text-blue-600">AES-256-GCM Sealed</span>
             </div>
             <Input
               type="password"
@@ -489,9 +481,7 @@ export function AddCredentialModal({
           {/* Budget & Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700">
-                Daily Budget ($USD)
-              </label>
+              <label className="block text-xs font-bold text-slate-700">Daily Budget ($USD)</label>
               <Input
                 type="number"
                 step="0.01"

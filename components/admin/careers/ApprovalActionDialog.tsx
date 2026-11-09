@@ -92,7 +92,7 @@ export function ApprovalActionDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="approval-dialog-title"
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md space-y-5 overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between">

@@ -1,11 +1,7 @@
 import { AiProviderId } from "@/lib/constants/enums/ai.enum";
-import {
-  OpenAICompatibleProvider,
-  type OpenAICompatibleOptions,
-} from "./openai-compatible";
+import { OpenAICompatibleProvider, type OpenAICompatibleOptions } from "./openai-compatible";
 
-export interface GroqProviderOptions
-  extends Omit<OpenAICompatibleOptions, "id" | "baseUrl"> {
+export interface GroqProviderOptions extends Omit<OpenAICompatibleOptions, "id" | "baseUrl"> {
   id?: string;
   baseUrl?: string;
 }

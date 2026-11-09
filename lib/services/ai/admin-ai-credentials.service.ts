@@ -9,11 +9,13 @@ import {
   type KillSwitchInput,
   type UpdateCredentialModelInput,
 } from "@/lib/validations/ai-credential.schema";
-import {
-  type CredentialViewDto,
-} from "@/lib/contracts/admin-ai-credentials.contract";
+import { type CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 import type { AiCredential } from "@/lib/database/schema/index.schema";
-import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
+import {
+  AiCredentialStatus,
+  type AiProvider,
+  type AiProviderId,
+} from "@/lib/constants/enums/ai.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
 import { LLMHealthService } from "../llm-health.service";
 
@@ -106,9 +108,7 @@ export class AdminAiCredentialsService {
       status: AiCredentialStatus.ACTIVE,
       priority: typeof input.priority === "number" ? input.priority : 100,
       dailyBudgetUsd:
-        typeof input.dailyBudgetUsd === "number"
-          ? input.dailyBudgetUsd.toFixed(2)
-          : null,
+        typeof input.dailyBudgetUsd === "number" ? input.dailyBudgetUsd.toFixed(2) : null,
       createdBy: actorId ? actorId : null,
     });
 
@@ -200,11 +200,7 @@ export class AdminAiCredentialsService {
   /**
    * Emergency kill-switch: immediately halts all traffic to the credential.
    */
-  async killSwitch(
-    input: KillSwitchInput,
-    actorId: string,
-    requestId?: string,
-  ): Promise<void> {
+  async killSwitch(input: KillSwitchInput, actorId: string, requestId?: string): Promise<void> {
     const cred = await this.repo.findCredentialById(input.credentialId);
     if (!cred) {
       throw new AppError(ErrorCode.NOT_FOUND, "Credential not found.");
@@ -264,13 +260,7 @@ export class AdminAiCredentialsService {
       }
     }
 
-    await this.repo.recordEvent(
-      cred.id,
-      "created",
-      actorId,
-      { action: "reactivated" },
-      requestId,
-    );
+    await this.repo.recordEvent(cred.id, "created", actorId, { action: "reactivated" }, requestId);
 
     return this.toDto(updated || cred);
   }

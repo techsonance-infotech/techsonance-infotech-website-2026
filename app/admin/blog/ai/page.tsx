@@ -99,9 +99,7 @@ export default function AdminAIPage() {
       await fetchJobs(false);
       setErrorModalJob(null);
     } catch (err: unknown) {
-      setErrorMsg(
-        err instanceof Error ? err.message : "Failed to restart generation job",
-      );
+      setErrorMsg(err instanceof Error ? err.message : "Failed to restart generation job");
     } finally {
       setRetryingJobId(null);
     }
@@ -382,7 +380,7 @@ export default function AdminAIPage() {
                             <button
                               type="button"
                               onClick={() => setErrorModalJob(job)}
-                              className="inline-flex items-center gap-1 rounded-xl border border-rose-200 bg-rose-50/70 px-2.5 py-1 text-[11px] font-semibold text-rose-700 shadow-2xs hover:bg-rose-100 hover:text-rose-800 transition-colors"
+                              className="inline-flex items-center gap-1 rounded-xl border border-rose-200 bg-rose-50/70 px-2.5 py-1 text-[11px] font-semibold text-rose-700 shadow-2xs transition-colors hover:bg-rose-100 hover:text-rose-800"
                             >
                               <AlertCircle className="h-3 w-3 text-rose-600" />
                               <span>Check Error</span>
@@ -392,7 +390,7 @@ export default function AdminAIPage() {
                               variant="outline"
                               disabled={retryingJobId === job.id}
                               onClick={() => handleRetryJob(job.id)}
-                              className="h-7.5 rounded-xl border border-blue-200 bg-blue-50/70 px-2.5 text-[11px] font-semibold text-[#1155CC] shadow-2xs hover:bg-blue-100 hover:text-blue-800 transition-colors inline-flex items-center gap-1"
+                              className="inline-flex h-7.5 items-center gap-1 rounded-xl border border-blue-200 bg-blue-50/70 px-2.5 text-[11px] font-semibold text-[#1155CC] shadow-2xs transition-colors hover:bg-blue-100 hover:text-blue-800"
                             >
                               <RotateCcw
                                 className={`h-3 w-3 ${
@@ -445,8 +443,8 @@ export default function AdminAIPage() {
           {errorModalJob && (
             <div className="space-y-4 pt-2">
               {/* Job Info */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 space-y-1.5">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <div className="space-y-1.5 rounded-2xl border border-slate-100 bg-slate-50 p-3.5">
+                <div className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   Target Topic & Checkpoint
                 </div>
                 <p className="text-xs font-bold text-slate-900">{errorModalJob.topicText}</p>
@@ -467,18 +465,21 @@ export default function AdminAIPage() {
                 <label className="block text-[11px] font-bold text-slate-700">
                   Root Cause Error Message
                 </label>
-                <div className="mt-1.5 max-h-48 overflow-y-auto rounded-2xl border border-rose-200 bg-rose-50/60 p-3 text-xs font-mono text-rose-900 leading-relaxed whitespace-pre-wrap">
+                <div className="mt-1.5 max-h-48 overflow-y-auto rounded-2xl border border-rose-200 bg-rose-50/60 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-rose-900">
                   {getErrorMessage(errorModalJob.errorDetails)}
                 </div>
               </div>
 
               {/* Helpful Advice */}
-              <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-3 text-xs text-blue-900 leading-relaxed">
-                <div className="flex items-center gap-1.5 font-bold text-blue-800 mb-1">
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-3 text-xs leading-relaxed text-blue-900">
+                <div className="mb-1 flex items-center gap-1.5 font-bold text-blue-800">
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>How to resolve & continue</span>
                 </div>
-                If the error occurred because no API credentials were configured, or keys hit their rate limit, now that your keys are active in the vault, clicking <strong>Restart Pipeline Now</strong> will resume generation without losing prior steps.
+                If the error occurred because no API credentials were configured, or keys hit their
+                rate limit, now that your keys are active in the vault, clicking{" "}
+                <strong>Restart Pipeline Now</strong> will resume generation without losing prior
+                steps.
               </div>
             </div>
           )}
@@ -502,7 +503,7 @@ export default function AdminAIPage() {
               <Button
                 disabled={retryingJobId === errorModalJob.id}
                 onClick={() => handleRetryJob(errorModalJob.id)}
-                className="rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-md shadow-[#1155CC]/25 hover:bg-[#0d44a4] inline-flex items-center gap-1.5"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-md shadow-[#1155CC]/25 hover:bg-[#0d44a4]"
               >
                 <RotateCcw
                   className={`h-3.5 w-3.5 ${
@@ -510,9 +511,7 @@ export default function AdminAIPage() {
                   }`}
                 />
                 <span>
-                  {retryingJobId === errorModalJob.id
-                    ? "Restarting..."
-                    : "Restart Pipeline Now"}
+                  {retryingJobId === errorModalJob.id ? "Restarting..." : "Restart Pipeline Now"}
                 </span>
               </Button>
             )}

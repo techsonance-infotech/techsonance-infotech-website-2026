@@ -12,10 +12,7 @@ import { isAllowedOrigin } from "@/lib/utils/text";
 
 export const runtime = "nodejs";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const requestId = await getRequestId();
   const headers = new Headers();
   headers.set("Content-Type", "application/json");

@@ -374,7 +374,11 @@ describe("AdminJobsService Lifecycle State Machine", () => {
     // 3. Submitting closed position for review (IN_REVIEW) is valid
     mockJobRecord.status = JobStatus.CLOSED;
     const recruiterActor = { userId: "recruiter-001", role: "recruiter" };
-    const inReview = await jobsService.transitionStatus("job-123", JobStatus.IN_REVIEW, recruiterActor);
+    const inReview = await jobsService.transitionStatus(
+      "job-123",
+      JobStatus.IN_REVIEW,
+      recruiterActor,
+    );
     expect(inReview.status).toBe(JobStatus.IN_REVIEW);
   });
 });

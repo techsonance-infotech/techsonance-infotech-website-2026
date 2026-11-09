@@ -145,6 +145,7 @@ describe("Autonomous Blog Pipeline & Approval Flow (FD-1 to FD-5)", () => {
         {} as any,
         {} as any,
         {} as any,
+        {} as any,
       );
 
       const job = await orchestrator.createJob({

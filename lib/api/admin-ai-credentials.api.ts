@@ -4,14 +4,10 @@ import {
   type KillSwitchInput,
   type UpdateCredentialModelInput,
 } from "@/lib/validations/ai-credential.schema";
-import {
-  type CredentialViewDto,
-} from "@/lib/contracts/admin-ai-credentials.contract";
+import { type CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
-export async function listAdminAiCredentials(
-  provider?: string,
-): Promise<CredentialViewDto[]> {
+export async function listAdminAiCredentials(provider?: string): Promise<CredentialViewDto[]> {
   const query = provider ? `?provider=${encodeURIComponent(provider)}` : "";
   const res = await fetch(`${API_ENDPOINTS.ADMIN.AI.CREDENTIALS}${query}`, {
     method: "GET",
@@ -61,9 +57,7 @@ export async function replaceAdminAiCredential(
   return json.data.credential;
 }
 
-export async function killSwitchAdminAiCredential(
-  input: KillSwitchInput,
-): Promise<void> {
+export async function killSwitchAdminAiCredential(input: KillSwitchInput): Promise<void> {
   const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_KILL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -33,23 +33,29 @@ describe("LLMRouterService - Multi-Account & Dynamic Key Failover", () => {
     });
 
     mockProviders = {
-      getProviders: vi.fn().mockReturnValue([
-        createMockProvider("groq", new QuotaError("daily", undefined, "Daily limit reached")),
-        createMockProvider("gemini", null, ["Answer", " from", " Gemini"]),
-      ]),
+      getProviders: vi
+        .fn()
+        .mockReturnValue([
+          createMockProvider("groq", new QuotaError("daily", undefined, "Daily limit reached")),
+          createMockProvider("gemini", null, ["Answer", " from", " Gemini"]),
+        ]),
     };
 
-    router = new LLMRouterService(
-      mockHealth,
-      mockProviders,
-      mockBroker,
-    );
+    router = new LLMRouterService(mockHealth, mockProviders, mockBroker);
   });
 
   it("should claim key from KeyBroker, failover on daily quota error, and complete on second provider", async () => {
     mockBroker.claimKey
-      .mockResolvedValueOnce({ key: "groq-key-1", credentialId: "cred-groq-1", isFallbackEnv: false })
-      .mockResolvedValueOnce({ key: "gemini-key-1", credentialId: "cred-gemini-1", isFallbackEnv: false });
+      .mockResolvedValueOnce({
+        key: "groq-key-1",
+        credentialId: "cred-groq-1",
+        isFallbackEnv: false,
+      })
+      .mockResolvedValueOnce({
+        key: "gemini-key-1",
+        credentialId: "cred-gemini-1",
+        isFallbackEnv: false,
+      });
 
     const chunks: string[] = [];
     for await (const chunk of router.routeChat({ messages: [{ role: "user", content: "Hi" }] })) {

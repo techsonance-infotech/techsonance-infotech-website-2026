@@ -145,7 +145,10 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           router.push("/admin/careers/jobs");
           router.refresh();
         } else {
-          setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
+          setTimeout(
+            () => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)),
+            4000,
+          );
         }
       }
     } catch (err: unknown) {
@@ -443,32 +446,35 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
             </>
           )}
 
-          {jobData.slug && (jobData.status === JobStatus.PUBLISHED || jobData.status === JobStatus.OPEN) && (
-            <Link
-              href={`/careers/${jobData.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#1155CC] dark:border-slate-800 dark:text-slate-300"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              <span>Public Page</span>
-            </Link>
-          )}
+          {jobData.slug &&
+            (jobData.status === JobStatus.PUBLISHED || jobData.status === JobStatus.OPEN) && (
+              <Link
+                href={`/careers/${jobData.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-[#1155CC] dark:border-slate-800 dark:text-slate-300"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                <span>Public Page</span>
+              </Link>
+            )}
         </div>
       </div>
 
       {/* Reviewer Feedback Warning if Returned */}
-      {(jobData.approvalStatus === "RETURNED" || jobData.approvalStatus === JobApprovalStatus.RETURNED) && jobData.approvalComment && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 animate-in fade-in dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
-          <div className="mb-1 flex items-center gap-2 font-bold">
-            <Undo2 className="h-4 w-4 text-amber-600" />
-            <span>Reviewer Feedback (Changes Requested):</span>
+      {(jobData.approvalStatus === "RETURNED" ||
+        jobData.approvalStatus === JobApprovalStatus.RETURNED) &&
+        jobData.approvalComment && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 animate-in fade-in dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+            <div className="mb-1 flex items-center gap-2 font-bold">
+              <Undo2 className="h-4 w-4 text-amber-600" />
+              <span>Reviewer Feedback (Changes Requested):</span>
+            </div>
+            <p className="pl-6 font-normal text-amber-800 dark:text-amber-300">
+              {jobData.approvalComment}
+            </p>
           </div>
-          <p className="pl-6 font-normal text-amber-800 dark:text-amber-300">
-            {jobData.approvalComment}
-          </p>
-        </div>
-      )}
+        )}
 
       {/* Alert Notifications */}
       {alertMessage && (

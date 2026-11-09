@@ -61,7 +61,7 @@ export function KillSwitchDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white p-6 shadow-xl rounded-3xl border border-red-200">
+      <DialogContent className="max-w-md rounded-3xl border border-red-200 bg-white p-6 shadow-xl">
         <DialogHeader>
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-red-100 text-red-600">
@@ -72,8 +72,10 @@ export function KillSwitchDialog({
             </DialogTitle>
           </div>
           <DialogDescription className="mt-1 text-xs text-slate-500">
-            Emergency shutdown for <span className="font-semibold text-slate-700">{credential.label}</span> (...{credential.last4}).
-            The router will immediately stop sending requests to this credential and fail over to other keys.
+            Emergency shutdown for{" "}
+            <span className="font-semibold text-slate-700">{credential.label}</span> (...
+            {credential.last4}). The router will immediately stop sending requests to this
+            credential and fail over to other keys.
           </DialogDescription>
         </DialogHeader>
 
@@ -110,7 +112,7 @@ export function KillSwitchDialog({
             </Button>
             <Button
               type="submit"
-              className="rounded-xl bg-red-600 text-xs font-bold hover:bg-red-700 text-white"
+              className="rounded-xl bg-red-600 text-xs font-bold text-white hover:bg-red-700"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Halting Key..." : "Activate Emergency Kill"}

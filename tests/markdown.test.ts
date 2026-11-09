@@ -20,7 +20,8 @@ describe("renderMarkdownToHtml", () => {
   });
 
   it("renders blockquotes with parsed inline formatting like bold and italics", () => {
-    const md = "> **Bottom line:** Zero-cold-start is not a magical claim; it is a *deterministic* budget with **connection pooling**.";
+    const md =
+      "> **Bottom line:** Zero-cold-start is not a magical claim; it is a *deterministic* budget with **connection pooling**.";
     const html = renderMarkdownToHtml(md);
     expect(html).toContain("<strong>Bottom line:</strong>");
     expect(html).toContain("<em>deterministic</em>");
@@ -90,13 +91,16 @@ describe("renderMarkdownToHtml", () => {
     expect(html1).toContain('data-mode="nomnoml"');
     expect(html1).toContain('data-mode="mermaid"');
 
-    const mdUntaggedFlowchart = "```\ngraph LR\nA[Client] -->|Write| B[Primary DB (region us-east-1)]\n```";
+    const mdUntaggedFlowchart =
+      "```\ngraph LR\nA[Client] -->|Write| B[Primary DB (region us-east-1)]\n```";
     const html2 = renderMarkdownToHtml(mdUntaggedFlowchart);
     expect(html2).toContain("mermaid-diagram-card");
     expect(html2).toContain("data-mermaid");
     // Verify quotes are added to handle parentheses in node labels
     const mermaidMatch2 = html2.match(/data-mermaid="([^"]+)"/);
-    expect(decodeURIComponent(mermaidMatch2?.[1] || "")).toContain('B["Primary DB (region us-east-1)"]');
+    expect(decodeURIComponent(mermaidMatch2?.[1] || "")).toContain(
+      'B["Primary DB (region us-east-1)"]',
+    );
 
     // Test complex AI generated flowchart with unicode arrows, escaped newlines, and chained arrows
     const mdComplexAI = `\`\`\`mermaid

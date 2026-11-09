@@ -28,7 +28,10 @@ import {
   reactivateAdminAiCredential,
 } from "@/lib/api/admin-ai-credentials.api";
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
-import { AddCredentialModal, type ProviderCategory } from "@/components/admin/ai/AddCredentialModal";
+import {
+  AddCredentialModal,
+  type ProviderCategory,
+} from "@/components/admin/ai/AddCredentialModal";
 import { ReplaceCredentialModal } from "@/components/admin/ai/ReplaceCredentialModal";
 import { ChangeModelModal } from "@/components/admin/ai/ChangeModelModal";
 import { KillSwitchDialog } from "@/components/admin/ai/KillSwitchDialog";
@@ -49,7 +52,9 @@ export default function AiCredentialsPage() {
   const [killTarget, setKillTarget] = useState<CredentialViewDto | null>(null);
   const [killDialogOpen, setKillDialogOpen] = useState(false);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
-  const [toastMsg, setToastMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [toastMsg, setToastMsg] = useState<{ type: "success" | "error"; text: string } | null>(
+    null,
+  );
 
   const isImageCredential = useCallback((cred: CredentialViewDto) => {
     const p = cred.provider.toLowerCase();
@@ -110,7 +115,9 @@ export default function AiCredentialsPage() {
 
   const activeCount = credentials.filter((c) => c.status === "active").length;
   const cooldownCount = credentials.filter((c) => c.status === "cooling_down").length;
-  const exhaustedCount = credentials.filter((c) => c.status === "exhausted" || c.status === "disabled").length;
+  const exhaustedCount = credentials.filter(
+    (c) => c.status === "exhausted" || c.status === "disabled",
+  ).length;
 
   const textCredentials = credentials.filter((c) => !isImageCredential(c));
   const imageCredentials = credentials.filter(isImageCredential);
@@ -167,7 +174,8 @@ export default function AiCredentialsPage() {
             </h1>
           </div>
           <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
-            Multi-account failover, AES-256-GCM sealed credentials, and automated failover pipelines.
+            Multi-account failover, AES-256-GCM sealed credentials, and automated failover
+            pipelines.
           </p>
         </div>
 
@@ -199,7 +207,7 @@ export default function AiCredentialsPage() {
               setInitialAddCategory("text");
               setAddModalOpen(true);
             }}
-            className="rounded-2xl bg-blue-600 text-xs font-bold text-white hover:bg-blue-700 shadow-sm"
+            className="rounded-2xl bg-blue-600 text-xs font-bold text-white shadow-sm hover:bg-blue-700"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Add LLM Key
@@ -253,9 +261,7 @@ export default function AiCredentialsPage() {
               <CheckCircle2 className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3 font-sora text-2xl font-black text-emerald-600">
-            {activeCount}
-          </div>
+          <div className="mt-3 font-sora text-2xl font-black text-emerald-600">{activeCount}</div>
           <span className="text-[11px] font-semibold text-slate-400">
             Ready for inference routing
           </span>
@@ -268,9 +274,7 @@ export default function AiCredentialsPage() {
               <Clock className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3 font-sora text-2xl font-black text-amber-600">
-            {cooldownCount}
-          </div>
+          <div className="mt-3 font-sora text-2xl font-black text-amber-600">{cooldownCount}</div>
           <span className="text-[11px] font-semibold text-slate-400">
             Rate-limited (auto-recovering)
           </span>
@@ -283,9 +287,7 @@ export default function AiCredentialsPage() {
               <OctagonAlert className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3 font-sora text-2xl font-black text-rose-600">
-            {exhaustedCount}
-          </div>
+          <div className="mt-3 font-sora text-2xl font-black text-rose-600">{exhaustedCount}</div>
           <span className="text-[11px] font-semibold text-slate-400">
             Budget limit or kill switch
           </span>
@@ -293,10 +295,10 @@ export default function AiCredentialsPage() {
       </div>
 
       {/* Main Table Card */}
-      <Card className="rounded-3xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
+      <Card className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
         {toastMsg && (
           <div
-            className={`border-b p-4 flex items-center justify-between gap-2 text-xs font-semibold ${
+            className={`flex items-center justify-between gap-2 border-b p-4 text-xs font-semibold ${
               toastMsg.type === "success"
                 ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                 : "border-rose-200 bg-rose-50 text-rose-800"
@@ -326,7 +328,8 @@ export default function AiCredentialsPage() {
               Registered Provider Keys & Multi-Account Pool
             </h2>
             <p className="mt-0.5 text-xs text-slate-500">
-              All credentials are stored as AES-256-GCM ciphertext. The router automatically falls back across keys when quota limits or rate limits are reached.
+              All credentials are stored as AES-256-GCM ciphertext. The router automatically falls
+              back across keys when quota limits or rate limits are reached.
             </p>
           </div>
 
@@ -431,7 +434,7 @@ export default function AiCredentialsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <thead className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
                   <tr>
                     <th className="px-5 py-3">Type</th>
                     <th className="px-5 py-3">Provider</th>
@@ -449,26 +452,26 @@ export default function AiCredentialsPage() {
                   {displayedCredentials.map((cred) => {
                     const isImg = isImageCredential(cred);
                     return (
-                      <tr key={cred.id} className="hover:bg-slate-50/60 transition-colors">
+                      <tr key={cred.id} className="transition-colors hover:bg-slate-50/60">
                         <td className="px-5 py-3.5">
                           {isImg ? (
                             <Badge
                               variant="outline"
-                              className="border-purple-300 bg-purple-50/80 text-purple-700 text-[10px] font-bold"
+                              className="border-purple-300 bg-purple-50/80 text-[10px] font-bold text-purple-700"
                             >
                               IMAGE (FLUX)
                             </Badge>
                           ) : (
                             <Badge
                               variant="outline"
-                              className="border-blue-300 bg-blue-50/80 text-blue-700 text-[10px] font-bold"
+                              className="border-blue-300 bg-blue-50/80 text-[10px] font-bold text-blue-700"
                             >
                               TEXT (LLM)
                             </Badge>
                           )}
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="font-bold uppercase tracking-wider text-slate-900">
+                          <span className="font-bold tracking-wider text-slate-900 uppercase">
                             {cred.provider}
                           </span>
                         </td>
@@ -480,26 +483,22 @@ export default function AiCredentialsPage() {
                               setModelModalOpen(true);
                             }}
                             title="Click to switch serving model"
-                            className={`group inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md border transition-all cursor-pointer hover:shadow-2xs ${
+                            className={`group inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-2 py-0.5 font-mono text-[11px] font-semibold transition-all hover:shadow-2xs ${
                               isImg
                                 ? "text-purple-700 bg-purple-50/80 border-purple-200/60 hover:bg-purple-100 hover:border-purple-300"
                                 : "text-blue-700 bg-blue-50/80 border-blue-200/60 hover:bg-blue-100 hover:border-blue-300"
                             }`}
                           >
                             <span>{cred.model || "default"}</span>
-                            <Sliders className="h-3 w-3 opacity-40 group-hover:opacity-100 transition-opacity" />
+                            <Sliders className="h-3 w-3 opacity-40 transition-opacity group-hover:opacity-100" />
                           </button>
                         </td>
-                        <td className="px-5 py-3.5 font-semibold text-slate-900">
-                          {cred.label}
-                        </td>
+                        <td className="px-5 py-3.5 font-semibold text-slate-900">{cred.label}</td>
                         <td className="px-5 py-3.5 font-mono text-slate-500">
                           ••••••••{cred.last4}
                         </td>
-                        <td className="px-5 py-3.5">
-                          {renderStatusBadge(cred.status)}
-                        </td>
-                        <td className="px-5 py-3.5 text-slate-600 font-semibold">
+                        <td className="px-5 py-3.5">{renderStatusBadge(cred.status)}</td>
+                        <td className="px-5 py-3.5 font-semibold text-slate-600">
                           #{cred.priority}
                         </td>
                         <td className="px-5 py-3.5 font-mono text-slate-600">
@@ -507,7 +506,9 @@ export default function AiCredentialsPage() {
                           {cred.dailyBudgetUsd ? ` / $${cred.dailyBudgetUsd}` : " (unlimited)"}
                         </td>
                         <td className="px-5 py-3.5 text-slate-400">
-                          {cred.lastUsedAt ? new Date(cred.lastUsedAt).toLocaleTimeString() : "Never"}
+                          {cred.lastUsedAt
+                            ? new Date(cred.lastUsedAt).toLocaleTimeString()
+                            : "Never"}
                         </td>
                         <td className="px-5 py-3.5 text-right whitespace-nowrap">
                           <div className="inline-flex items-center justify-end gap-2 whitespace-nowrap">
@@ -518,7 +519,7 @@ export default function AiCredentialsPage() {
                                 setModelTarget(cred);
                                 setModelModalOpen(true);
                               }}
-                              className="h-8 rounded-xl border border-blue-200 bg-blue-50/50 px-3 text-[11px] font-semibold text-blue-700 shadow-2xs hover:bg-blue-100 hover:text-blue-800 transition-colors inline-flex items-center gap-1.5"
+                              className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3 text-[11px] font-semibold text-blue-700 shadow-2xs transition-colors hover:bg-blue-100 hover:text-blue-800"
                             >
                               <Cpu className="h-3.5 w-3.5 text-blue-600" />
                               <span>Model</span>
@@ -531,7 +532,7 @@ export default function AiCredentialsPage() {
                                 setReplaceTarget(cred);
                                 setReplaceModalOpen(true);
                               }}
-                              className="h-8 rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-slate-900 transition-colors inline-flex items-center gap-1.5"
+                              className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-slate-900"
                             >
                               <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
                               <span>Replace</span>
@@ -543,7 +544,7 @@ export default function AiCredentialsPage() {
                                 size="sm"
                                 disabled={actionLoadingId === cred.id}
                                 onClick={() => handleReactivate(cred.id)}
-                                className="h-8 rounded-xl border border-amber-300 bg-amber-50/80 px-3 text-[11px] font-semibold text-amber-800 shadow-2xs hover:bg-amber-100 hover:text-amber-900 transition-colors inline-flex items-center gap-1.5"
+                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/80 px-3 text-[11px] font-semibold text-amber-800 shadow-2xs transition-colors hover:bg-amber-100 hover:text-amber-900"
                               >
                                 <Zap
                                   className={`h-3.5 w-3.5 text-amber-600 ${
@@ -560,7 +561,7 @@ export default function AiCredentialsPage() {
                                 size="sm"
                                 disabled={actionLoadingId === cred.id}
                                 onClick={() => handleReactivate(cred.id)}
-                                className="h-8 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3 text-[11px] font-semibold text-emerald-700 shadow-2xs hover:bg-emerald-100 hover:text-emerald-800 transition-colors inline-flex items-center gap-1.5"
+                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3 text-[11px] font-semibold text-emerald-700 shadow-2xs transition-colors hover:bg-emerald-100 hover:text-emerald-800"
                               >
                                 <Zap
                                   className={`h-3.5 w-3.5 text-emerald-600 ${
@@ -583,7 +584,7 @@ export default function AiCredentialsPage() {
                                   setKillTarget(cred);
                                   setKillDialogOpen(true);
                                 }}
-                                className="h-8 rounded-xl border border-rose-200 bg-rose-50/60 px-3 text-[11px] font-semibold text-rose-700 shadow-2xs hover:bg-rose-100 hover:text-rose-800 transition-colors inline-flex items-center gap-1.5"
+                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/60 px-3 text-[11px] font-semibold text-rose-700 shadow-2xs transition-colors hover:bg-rose-100 hover:text-rose-800"
                               >
                                 <PowerOff className="h-3.5 w-3.5 text-rose-600" />
                                 <span>Kill Switch</span>

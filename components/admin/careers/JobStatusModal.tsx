@@ -197,10 +197,10 @@ export function JobStatusModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="job-status-modal-title"
-        className="relative flex w-full max-w-lg max-h-[calc(100dvh-2rem)] flex-col rounded-3xl border border-slate-200 bg-white shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900 overflow-hidden"
+        className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header - Pinned at top */}
-        <div className="shrink-0 flex items-start justify-between gap-3 border-b border-slate-100 px-6 py-4 dark:border-slate-800">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-100 px-6 py-4 dark:border-slate-800">
           <div>
             <h3
               id="job-status-modal-title"
@@ -225,10 +225,12 @@ export function JobStatusModal({
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {/* Scrollable Form Body */}
-          <div className="flex-1 space-y-3.5 overflow-y-auto px-6 py-4 scrollbar-thin">
+          <div className="flex-1 scrollbar-thin space-y-3.5 overflow-y-auto px-6 py-4">
             {/* Current Status Pill */}
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-2.5 text-xs dark:bg-slate-800/50">
-              <span className="font-semibold text-slate-600 dark:text-slate-400">Current Stage:</span>
+              <span className="font-semibold text-slate-600 dark:text-slate-400">
+                Current Stage:
+              </span>
               <Badge
                 variant={
                   currentStatus === JobStatus.PUBLISHED || currentStatus === JobStatus.OPEN
@@ -316,7 +318,8 @@ export function JobStatusModal({
                     <span>Schedule Application Deadline (Close Time)</span>
                   </div>
                   <p className="text-[11px] text-blue-800/90 dark:text-blue-300">
-                    This role was previously closed. Pick a new closing date/time or leave empty to keep open indefinitely, then make it live.
+                    This role was previously closed. Pick a new closing date/time or leave empty to
+                    keep open indefinitely, then make it live.
                   </p>
                   <Input
                     id="status-modal-closes-at"
@@ -375,7 +378,8 @@ export function JobStatusModal({
                 htmlFor="status-comment"
                 className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
               >
-                Reason / Notes <span className="font-normal text-slate-400 lowercase">(optional)</span>
+                Reason / Notes{" "}
+                <span className="font-normal text-slate-400 lowercase">(optional)</span>
               </label>
               <Textarea
                 id="status-comment"
@@ -396,14 +400,14 @@ export function JobStatusModal({
           </div>
 
           {/* Sticky Footer Controls - Pinned at bottom */}
-          <div className="shrink-0 flex items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/80 px-6 py-3.5 dark:border-slate-800 dark:bg-slate-900/80">
+          <div className="flex shrink-0 items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/80 px-6 py-3.5 dark:border-slate-800 dark:bg-slate-900/80">
             <Button
               type="button"
               variant="outline"
               size="sm"
               disabled={isSubmitting}
               onClick={onClose}
-              className="rounded-xl text-xs font-bold cursor-pointer"
+              className="cursor-pointer rounded-xl text-xs font-bold"
             >
               Cancel
             </Button>
@@ -411,7 +415,7 @@ export function JobStatusModal({
               type="submit"
               size="sm"
               disabled={isSubmitting || !selectedStatus}
-              className="rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-xs hover:bg-[#0d44a4] cursor-pointer"
+              className="cursor-pointer rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-xs hover:bg-[#0d44a4]"
             >
               {isSubmitting ? (
                 <>

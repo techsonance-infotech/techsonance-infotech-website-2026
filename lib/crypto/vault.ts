@@ -66,10 +66,7 @@ export function seal(plain: string, aad: string): SealedSecret {
   const cipher = createCipheriv("aes-256-gcm", key, iv);
   cipher.setAAD(Buffer.from(aad, "utf-8"));
 
-  const ciphertext = Buffer.concat([
-    cipher.update(plain, "utf-8"),
-    cipher.final(),
-  ]);
+  const ciphertext = Buffer.concat([cipher.update(plain, "utf-8"), cipher.final()]);
 
   return {
     ciphertext,
@@ -91,16 +88,16 @@ export function open(sealed: SealedSecret, aad: string): string {
     decipher.setAAD(Buffer.from(aad, "utf-8"));
     decipher.setAuthTag(sealed.authTag);
 
-    const decrypted = Buffer.concat([
-      decipher.update(sealed.ciphertext),
-      decipher.final(),
-    ]);
+    const decrypted = Buffer.concat([decipher.update(sealed.ciphertext), decipher.final()]);
 
     return decrypted.toString("utf-8");
   } catch (err) {
-    throw new DecryptionError("Failed to decrypt secret: ciphertext or AAD is invalid or tampered", {
-      cause: err,
-    });
+    throw new DecryptionError(
+      "Failed to decrypt secret: ciphertext or AAD is invalid or tampered",
+      {
+        cause: err,
+      },
+    );
   }
 }
 

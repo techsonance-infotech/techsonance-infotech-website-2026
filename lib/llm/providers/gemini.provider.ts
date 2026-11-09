@@ -1,11 +1,7 @@
 import { AiProviderId } from "@/lib/constants/enums/ai.enum";
-import {
-  OpenAICompatibleProvider,
-  type OpenAICompatibleOptions,
-} from "./openai-compatible";
+import { OpenAICompatibleProvider, type OpenAICompatibleOptions } from "./openai-compatible";
 
-export interface GeminiProviderOptions
-  extends Omit<OpenAICompatibleOptions, "id" | "baseUrl"> {
+export interface GeminiProviderOptions extends Omit<OpenAICompatibleOptions, "id" | "baseUrl"> {
   id?: string;
   baseUrl?: string;
 }
@@ -20,9 +16,7 @@ export class GeminiProvider extends OpenAICompatibleProvider {
     super({
       id: options.id || AiProviderId.GEMINI,
       name: options.name || "Google Gemini",
-      baseUrl:
-        options.baseUrl ||
-        "https://generativelanguage.googleapis.com/v1beta/openai",
+      baseUrl: options.baseUrl || "https://generativelanguage.googleapis.com/v1beta/openai",
       apiKey: options.apiKey,
       model: options.model || "gemini-3.5-flash-lite",
       extraHeaders: options.extraHeaders,

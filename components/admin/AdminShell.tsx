@@ -61,9 +61,7 @@ export function AdminShell({
         const target = e.target as HTMLElement | null;
         const isEditing =
           target &&
-          (target.tagName === "INPUT" ||
-            target.tagName === "TEXTAREA" ||
-            target.isContentEditable);
+          (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
         if (!isEditing) {
           e.preventDefault();
           setIsCollapsed((prev) => {
@@ -241,7 +239,7 @@ export function AdminShell({
             <button
               type="button"
               onClick={handleToggleCollapse}
-              className="hidden md:flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC]"
+              className="hidden h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:outline-hidden md:flex"
               title="Collapse sidebar (Ctrl+B)"
               aria-label="Collapse sidebar"
             >
@@ -340,20 +338,23 @@ export function AdminShell({
       <CacheRevalidateDialog isOpen={revalidateOpen} onClose={() => setRevalidateOpen(false)} />
 
       {/* Main Content Area */}
-      <div data-lenis-prevent className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+      <div
+        data-lenis-prevent
+        className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto"
+      >
         {/* Floating Expand Sidebar Button (Desktop only when collapsed) */}
         {isCollapsed && (
-          <div className="sticky top-4 z-30 ml-4 self-start animate-in fade-in slide-in-from-left-3 duration-200 hidden md:block">
+          <div className="slide-in-from-left-3 sticky top-4 z-30 ml-4 hidden self-start duration-200 animate-in fade-in md:block">
             <button
               type="button"
               onClick={handleToggleCollapse}
-              className="group inline-flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-md backdrop-blur-md transition-all hover:border-blue-200 hover:bg-white hover:text-[#1155CC] hover:shadow-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC]"
+              className="group inline-flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-md backdrop-blur-md transition-all hover:border-blue-200 hover:bg-white hover:text-[#1155CC] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:outline-hidden"
               title="Expand sidebar (Ctrl+B)"
               aria-label="Expand sidebar"
             >
               <PanelLeftOpen className="h-4 w-4 text-[#1155CC] transition-transform group-hover:scale-110" />
               <span>Expand Sidebar</span>
-              <kbd className="ml-1 hidden items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500 lg:inline-flex">
+              <kbd className="ml-1 hidden items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 lg:inline-flex">
                 Ctrl+B
               </kbd>
             </button>

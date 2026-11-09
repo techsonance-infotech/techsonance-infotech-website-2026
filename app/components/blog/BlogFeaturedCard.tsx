@@ -24,11 +24,11 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps): React.JSX.Ele
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="group mb-16 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_15px_45px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(17,85,204,0.05)] cursor-pointer"
+      className="group mb-16 cursor-pointer overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_15px_45px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(17,85,204,0.05)]"
     >
       <Link
         href={postUrl}
-        className="grid grid-cols-1 lg:grid-cols-12 h-full"
+        className="grid h-full grid-cols-1 lg:grid-cols-12"
         aria-label={`Read featured article: ${post.title || "article"}`}
       >
         {/* Image box */}

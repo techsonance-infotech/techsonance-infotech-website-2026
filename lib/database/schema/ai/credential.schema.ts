@@ -25,9 +25,7 @@ export const bytea = customType<{ data: Buffer; driverData: Buffer }>({
   fromDriver(val: unknown): Buffer {
     if (Buffer.isBuffer(val)) return val;
     if (typeof val === "string") {
-      return val.startsWith("\\x")
-        ? Buffer.from(val.slice(2), "hex")
-        : Buffer.from(val, "hex");
+      return val.startsWith("\\x") ? Buffer.from(val.slice(2), "hex") : Buffer.from(val, "hex");
     }
     return Buffer.from((val as ArrayBuffer) || "");
   },
@@ -47,16 +45,12 @@ export const credentialsTable = pgTable("ts_ai_credentials", {
   keyVersion: integer("key_version").notNull().default(1),
   fingerprint: text("fingerprint").notNull().unique(),
   last4: text("last4").notNull(),
-  status: AiCredentialStatusEnum("status")
-    .notNull()
-    .default(AiCredentialStatus.ACTIVE),
+  status: AiCredentialStatusEnum("status").notNull().default(AiCredentialStatus.ACTIVE),
   priority: integer("priority").notNull().default(100),
   cooldownUntil: timestamp("cooldown_until", { withTimezone: true }),
   quotaResetsAt: timestamp("quota_resets_at", { withTimezone: true }),
   dailyBudgetUsd: numeric("daily_budget_usd", { precision: 10, scale: 2 }),
-  spentTodayUsd: numeric("spent_today_usd", { precision: 10, scale: 2 })
-    .notNull()
-    .default("0"),
+  spentTodayUsd: numeric("spent_today_usd", { precision: 10, scale: 2 }).notNull().default("0"),
   consecutiveFailures: integer("consecutive_failures").notNull().default(0),
   lastErrorKind: text("last_error_kind"),
   lastUsedAt: timestamp("last_used_at", { withTimezone: true }),

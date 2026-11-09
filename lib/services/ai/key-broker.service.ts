@@ -6,7 +6,11 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "@/lib/di/tokens";
 import type { BOT_CONFIG } from "@/lib/config";
 import type { Env } from "@/lib/env";
 import { open, DecryptionError } from "@/lib/crypto/vault";
-import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
+import {
+  AiCredentialStatus,
+  type AiProvider,
+  type AiProviderId,
+} from "@/lib/constants/enums/ai.enum";
 import { QuotaError } from "@/lib/llm/types";
 import { logger } from "@/lib/logger";
 
@@ -38,9 +42,7 @@ export class KeyBrokerService {
    * Prioritizes active encrypted keys in Postgres; falls back to environment variables
    * during migration if no database credentials exist.
    */
-  async claimKey(
-    providerId: AiProviderId | AiProvider | string,
-  ): Promise<ClaimedKey | null> {
+  async claimKey(providerId: AiProviderId | AiProvider | string): Promise<ClaimedKey | null> {
     try {
       const cred = await this.repo.claimNextActiveCredential(providerId);
 
@@ -64,32 +66,23 @@ export class KeyBrokerService {
             model: cred.model ?? undefined,
           };
         } catch (decryptErr) {
-          logger.error(
-            "KeyBrokerService: Decryption failed for credential, quarantining",
-            {
-              credentialId: cred.id,
-              provider: cred.provider,
-              error: decryptErr instanceof Error ? decryptErr.message : "Unknown",
-            },
-          );
+          logger.error("KeyBrokerService: Decryption failed for credential, quarantining", {
+            credentialId: cred.id,
+            provider: cred.provider,
+            error: decryptErr instanceof Error ? decryptErr.message : "Unknown",
+          });
 
           await this.repo.wipeCompromisedCredential(cred.id);
-          await this.repo.recordEvent(
-            cred.id,
-            "compromised",
-            "system",
-            { reason: "DECRYPTION_AUTH_TAG_FAILED" },
-          );
+          await this.repo.recordEvent(cred.id, "compromised", "system", {
+            reason: "DECRYPTION_AUTH_TAG_FAILED",
+          });
         }
       }
     } catch (err) {
-      logger.warn(
-        "KeyBrokerService: Error claiming DB credential, falling back to env",
-        {
-          providerId,
-          error: err instanceof Error ? err.message : "Unknown",
-        },
-      );
+      logger.warn("KeyBrokerService: Error claiming DB credential, falling back to env", {
+        providerId,
+        error: err instanceof Error ? err.message : "Unknown",
+      });
     }
 
     // Hybrid Fallback: Load static key from environment variables
@@ -139,15 +132,10 @@ export class KeyBrokerService {
           case "AUTH_FAILED": {
             // Immediate auto-quarantine
             await this.repo.wipeCompromisedCredential(credentialId);
-            await this.repo.recordEvent(
-              credentialId,
-              "compromised",
-              "system",
-              {
-                reason: "AUTH_FAILED",
-                error: details?.errorMessage,
-              },
-            );
+            await this.repo.recordEvent(credentialId, "compromised", "system", {
+              reason: "AUTH_FAILED",
+              error: details?.errorMessage,
+            });
             break;
           }
           case "QUOTA_EXHAUSTED": {
@@ -163,9 +151,8 @@ export class KeyBrokerService {
             break;
           }
           case "RATE_LIMITED": {
-            const retrySec = details?.retryAfterSec && details.retryAfterSec > 0
-              ? details.retryAfterSec
-              : 60;
+            const retrySec =
+              details?.retryAfterSec && details.retryAfterSec > 0 ? details.retryAfterSec : 60;
             const cooldownUntil = new Date(Date.now() + retrySec * 1000);
             await this.repo.updateStatus(
               credentialId,

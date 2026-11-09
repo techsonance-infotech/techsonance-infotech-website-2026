@@ -25,6 +25,11 @@ export class AdminTopicsService {
   }
 
   async listTopics(options: ListTopicsOptions = {}): Promise<{ topics: Topic[]; total: number }> {
+    try {
+      await this.topicsRepo.reconcileCompletedTopics();
+    } catch (err) {
+      logger.warn("Non-blocking topic status reconciliation error", { error: String(err) });
+    }
     return this.topicsRepo.listTopics(options);
   }
 
@@ -181,6 +186,8 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
     const job = await this.jobOrchestrator.createJob({
       topicText: topic.title,
       category: topic.category ?? "Engineering",
+      siteId: topic.siteId,
+      topicId: topic.id,
     });
 
     // Run execution in the background asynchronously

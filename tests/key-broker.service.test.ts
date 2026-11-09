@@ -33,12 +33,7 @@ describe("KeyBrokerService", () => {
       },
     };
 
-    broker = new KeyBrokerService(
-      mockRepo,
-      mockHealth,
-      mockEnv,
-      mockConfig as any,
-    );
+    broker = new KeyBrokerService(mockRepo, mockHealth, mockEnv, mockConfig as any);
   });
 
   it("should claim an active DB credential and unseal it in memory", async () => {

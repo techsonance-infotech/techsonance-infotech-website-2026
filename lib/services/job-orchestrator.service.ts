@@ -2,11 +2,13 @@ import "server-only";
 import { inject } from "@needle-di/core";
 import { GenerationJobsRepository } from "../repositories/generation-jobs.repository";
 import { AdminPostsRepository } from "../repositories/admin-posts.repository";
+import { AdminTopicsRepository } from "../repositories/admin-topics.repository";
 import {
   AiJobStatus,
   AiJobStep,
   type GenerationJob,
 } from "../database/schema/ai/generation-job.schema";
+import { AiTopicStatus } from "../constants/enums/ai.enum";
 import { AIWriterService, type OutlineResult, type MetadataResult } from "./ai-writer.service";
 import { ImageStepService, type ThumbnailGenerationResult } from "./image/image-step.service";
 import { ApprovalService } from "./approval.service";
@@ -20,6 +22,7 @@ export class JobOrchestratorService {
     private aiWriter: AIWriterService = inject(AIWriterService),
     private imageStep: ImageStepService = inject(ImageStepService),
     private approvalService: ApprovalService = inject(ApprovalService),
+    private topicsRepo: AdminTopicsRepository = inject(AdminTopicsRepository),
   ) {}
 
   /**
@@ -36,11 +39,13 @@ export class JobOrchestratorService {
     topicText: string;
     category?: string;
     siteId?: string;
+    topicId?: string;
   }): Promise<GenerationJob> {
     const siteId = await this.jobsRepo.getOrCreateSiteId(options.siteId);
 
     return await this.jobsRepo.create({
       siteId,
+      topicId: options.topicId || null,
       topicText: options.topicText,
       category: options.category || "Engineering",
       status: AiJobStatus.QUEUED,
@@ -204,6 +209,27 @@ export class JobOrchestratorService {
         currentStep: AiJobStep.COMPLETED,
         resultPostId: post.id,
       });
+
+      // Update Topic Status to GENERATED
+      try {
+        if (job.topicId) {
+          await this.topicsRepo.update(job.topicId, {
+            status: AiTopicStatus.GENERATED,
+          });
+        } else {
+          const matchingTopic = await this.topicsRepo.findByTitle(job.topicText);
+          if (matchingTopic) {
+            await this.topicsRepo.update(matchingTopic.id, {
+              status: AiTopicStatus.GENERATED,
+            });
+          }
+        }
+      } catch (topicErr) {
+        logger.warn("Non-blocking error transitioning topic to GENERATED", {
+          jobId,
+          error: String(topicErr),
+        });
+      }
 
       return { success: true, postId: post.id };
     } catch (err) {

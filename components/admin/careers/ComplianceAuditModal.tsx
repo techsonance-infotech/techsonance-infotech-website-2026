@@ -103,7 +103,7 @@ export function ComplianceAuditModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="compliance-modal-title"
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">

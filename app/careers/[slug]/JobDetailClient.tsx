@@ -1152,7 +1152,7 @@ export default function JobDetailClient({
                             setResumeFile(null);
                             if (fileInputRef.current) fileInputRef.current.value = "";
                           }}
-                          className="font-mono text-[10px] font-bold text-rose-500 hover:text-rose-600 cursor-pointer"
+                          className="cursor-pointer font-mono text-[10px] font-bold text-rose-500 hover:text-rose-600"
                         >
                           Remove file
                         </button>
@@ -1170,7 +1170,7 @@ export default function JobDetailClient({
 
                     {resumeFile ? (
                       <div className="flex items-center justify-between rounded-2xl border border-blue-200 bg-blue-50/60 p-3.5 transition-all">
-                        <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex min-w-0 items-center gap-3">
                           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xs">
                             <FileText className="h-5 w-5" />
                           </div>
@@ -1178,11 +1178,11 @@ export default function JobDetailClient({
                             <p className="truncate text-xs font-semibold text-slate-900">
                               {resumeFile.name}
                             </p>
-                            <div className="flex items-center gap-2 text-[10px] text-slate-500 font-medium">
+                            <div className="flex items-center gap-2 text-[10px] font-medium text-slate-500">
                               <span>{formatFileSize(resumeFile.size)}</span>
                               <span>•</span>
-                              <span className="text-emerald-600 font-semibold flex items-center gap-0.5">
-                                <CheckCircle2 className="h-3 w-3 inline" /> Ready to upload
+                              <span className="flex items-center gap-0.5 font-semibold text-emerald-600">
+                                <CheckCircle2 className="inline h-3 w-3" /> Ready to upload
                               </span>
                             </div>
                           </div>
@@ -1193,7 +1193,7 @@ export default function JobDetailClient({
                             setResumeFile(null);
                             if (fileInputRef.current) fileInputRef.current.value = "";
                           }}
-                          className="ml-2 rounded-lg p-1.5 text-slate-400 hover:bg-slate-200/60 hover:text-slate-700 transition-colors cursor-pointer"
+                          className="ml-2 cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-200/60 hover:text-slate-700"
                           aria-label="Remove resume file"
                         >
                           <X className="h-4 w-4" />
@@ -1205,7 +1205,7 @@ export default function JobDetailClient({
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                         onClick={() => fileInputRef.current?.click()}
-                        className={`mt-1 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-5 text-center transition-all cursor-pointer ${
+                        className={`mt-1 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-5 text-center transition-all ${
                           isDragging
                             ? "border-blue-500 bg-blue-50/70 scale-[0.99]"
                             : "border-slate-200 bg-slate-50/50 hover:border-blue-400 hover:bg-slate-50"

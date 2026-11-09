@@ -71,11 +71,7 @@ export async function POST(req: Request) {
     }
 
     const credentialsService = container.get(AdminAiCredentialsService);
-    await credentialsService.killSwitch(
-      parseResult.data,
-      session.userId || "admin",
-      requestId,
-    );
+    await credentialsService.killSwitch(parseResult.data, session.userId || "admin", requestId);
 
     return NextResponse.json(
       {

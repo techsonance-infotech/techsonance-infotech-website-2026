@@ -1,15 +1,17 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { and, count, desc, eq, ilike } from "drizzle-orm";
+import { and, count, desc, eq, exists, ilike, or, sql } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { Database } from "@/lib/database/index";
 import {
   topicsTable,
+  generationJobsTable,
+  postsTable,
   sitesTable,
   type Topic,
   type InsertTopic,
 } from "@/lib/database/schema/index.schema";
-import type { AiTopicStatus } from "@/lib/database/enum/ai.enum";
+import { AiTopicStatus, AiJobStatus } from "@/lib/database/enum/ai.enum";
 import { mapDbError } from "@/lib/dbErrors";
 
 export interface ListAdminTopicsOptions {
@@ -95,6 +97,70 @@ export class AdminTopicsRepository {
       throw mapDbError(err, {
         context: "AdminTopicsRepository.findById",
         id,
+      });
+    }
+  }
+
+  async findByTitle(title: string): Promise<Topic | null> {
+    if (!title || !title.trim()) return null;
+
+    try {
+      const [topic] = await this.db
+        .select()
+        .from(topicsTable)
+        .where(eq(topicsTable.title, title.trim()))
+        .limit(1);
+
+      return topic ?? null;
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AdminTopicsRepository.findByTitle",
+      });
+    }
+  }
+
+  async reconcileCompletedTopics(): Promise<number> {
+    try {
+      const completedJobExists = exists(
+        this.db
+          .select({ id: generationJobsTable.id })
+          .from(generationJobsTable)
+          .where(
+            and(
+              eq(generationJobsTable.status, AiJobStatus.COMPLETED),
+              or(
+                eq(generationJobsTable.topicId, topicsTable.id),
+                sql`LOWER(TRIM(${generationJobsTable.topicText})) = LOWER(TRIM(${topicsTable.title}))`,
+              ),
+            ),
+          ),
+      );
+
+      const matchingPostExists = exists(
+        this.db
+          .select({ id: postsTable.id })
+          .from(postsTable)
+          .where(sql`LOWER(TRIM(${postsTable.title})) = LOWER(TRIM(${topicsTable.title}))`),
+      );
+
+      const updated = await this.db
+        .update(topicsTable)
+        .set({
+          status: AiTopicStatus.GENERATED,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(topicsTable.status, AiTopicStatus.QUEUED),
+            or(completedJobExists, matchingPostExists),
+          ),
+        )
+        .returning({ id: topicsTable.id });
+
+      return updated.length;
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AdminTopicsRepository.reconcileCompletedTopics",
       });
     }
   }

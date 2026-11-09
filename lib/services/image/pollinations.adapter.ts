@@ -60,4 +60,3 @@ export class PollinationsImageAdapter {
     return Buffer.from(arrayBuf);
   }
 }
-

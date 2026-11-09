@@ -22,10 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { listAdminAiPrompts, updateAdminAiPrompt } from "@/lib/api/admin-ai.api";
 import type { PromptTemplateDto } from "@/lib/contracts/admin-ai-prompts.contract";
-import {
-  DEFAULT_PROMPT_TEMPLATES,
-  type DefaultPromptTemplate,
-} from "@/lib/constants/ai.constants";
+import { DEFAULT_PROMPT_TEMPLATES, type DefaultPromptTemplate } from "@/lib/constants/ai.constants";
 
 const STEPS = [
   {
@@ -62,25 +59,25 @@ const PRESET_MODELS = [
 
 const QUICK_INSERT_SYSTEM_BLOCKS = [
   {
-    title: "+ Architecture Guidelines",
+    title: "Architecture Guidelines",
     text: `\n\n### Enterprise Architecture Guidelines:
 - Highlight production tradeoffs, failover scenarios, and operational overhead.
 - Present clean, modular service boundaries over monolithic functions.`,
   },
   {
-    title: "+ Strict TypeScript Rules",
+    title: "Strict TypeScript Rules",
     text: `\n\n### Code Snippet Standards:
 - Write idiomatic TypeScript with strict types, explicit return types, and zero loose \`any\`.
 - Include realistic error handling, recovery paths, and boundary safety.`,
   },
   {
-    title: "+ Executive Editorial Voice",
+    title: "Executive Editorial Voice",
     text: `\n\n### Audience & Tone:
 - Target audience: Principal Architects, Staff Engineers, and Technical Directors.
 - Tone: Pragmatic, direct, and authoritative with zero superficial marketing fluff.`,
   },
   {
-    title: "+ Strict Output Guard",
+    title: "Strict Output Guard",
     text: `\n\n### Strict Output Constraints:
 - Do NOT wrap output with conversational preamble or trailing commentary.
 - Return ONLY valid output adhering strictly to the required schema.`,
@@ -89,11 +86,11 @@ const QUICK_INSERT_SYSTEM_BLOCKS = [
 
 const QUICK_INSERT_USER_BLOCKS = [
   {
-    title: "+ Add Focus Directive",
+    title: "Add Focus Directive",
     text: `\nKey Focus Areas: Prioritize enterprise reliability, horizontal scalability, and developer ergonomics.`,
   },
   {
-    title: "+ Add Tech Stack Context",
+    title: "Add Tech Stack Context",
     text: `\nTarget Architecture: Next.js 16 App Router, React 19, TypeScript strict mode, and PostgreSQL.`,
   },
 ];
@@ -200,7 +197,14 @@ export default function PromptsManagementPage() {
       userPromptTemplate !== (active.userPromptTemplate || "") ||
       temperature !== (active.temperature ?? 70)
     );
-  }, [templates, selectedStep, systemPrompt, userPromptTemplate, temperature, isModifiedFromDefault]);
+  }, [
+    templates,
+    selectedStep,
+    systemPrompt,
+    userPromptTemplate,
+    temperature,
+    isModifiedFromDefault,
+  ]);
 
   const handleRestoreDefault = () => {
     startTransition(() => {
@@ -249,7 +253,8 @@ export default function PromptsManagementPage() {
       const updated = await updateAdminAiPrompt(active.id, {
         systemPrompt,
         userPromptTemplate,
-        modelPreference: selectedStep === "image" ? "flux-schnell" : (active.modelPreference || "vault-dynamic"),
+        modelPreference:
+          selectedStep === "image" ? "flux-schnell" : active.modelPreference || "vault-dynamic",
         temperature,
       });
 
@@ -303,7 +308,8 @@ export default function PromptsManagementPage() {
             )}
           </div>
           <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
-            Tune AI pipeline prompts at runtime without code deploys. Partial edits preserve core JSON and model contracts.
+            Tune AI pipeline prompts at runtime without code deploys. Partial edits preserve core
+            JSON and model contracts.
           </p>
         </div>
 
@@ -345,7 +351,9 @@ export default function PromptsManagementPage() {
             className="rounded-2xl bg-blue-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 disabled:opacity-50"
           >
             <Save className="mr-2 h-4 w-4" />
-            {saving ? "Saving Changes..." : `Save Version ${activeTemplate ? `v${activeTemplate.version + 1}` : ""}`}
+            {saving
+              ? "Saving Changes..."
+              : `Save Version ${activeTemplate ? `v${activeTemplate.version + 1}` : ""}`}
           </Button>
         </div>
       </div>
@@ -360,7 +368,11 @@ export default function PromptsManagementPage() {
             const isSelected = selectedStep === s.key;
             const t = templates.find((item) => item.stepName === s.key);
             const stepDef = DEFAULT_PROMPT_TEMPLATES.find((d) => d.stepName === s.key);
-            const isCustom = t && stepDef && (t.systemPrompt !== stepDef.systemPrompt || t.userPromptTemplate !== stepDef.userPromptTemplate);
+            const isCustom =
+              t &&
+              stepDef &&
+              (t.systemPrompt !== stepDef.systemPrompt ||
+                t.userPromptTemplate !== stepDef.userPromptTemplate);
 
             return (
               <button
@@ -422,16 +434,20 @@ export default function PromptsManagementPage() {
                   Copy Default
                 </Button>
               </div>
-              <div className="grid grid-cols-1 gap-4 text-xs font-mono md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 font-mono text-xs md:grid-cols-2">
                 <div className="rounded-xl border border-blue-100 bg-white p-3">
-                  <span className="mb-1 block font-bold text-slate-700">Baseline System Prompt:</span>
-                  <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap text-[11px] text-slate-600">
+                  <span className="mb-1 block font-bold text-slate-700">
+                    Baseline System Prompt:
+                  </span>
+                  <pre className="max-h-48 overflow-y-auto text-[11px] whitespace-pre-wrap text-slate-600">
                     {currentDefault.systemPrompt}
                   </pre>
                 </div>
                 <div className="rounded-xl border border-blue-100 bg-white p-3">
-                  <span className="mb-1 block font-bold text-slate-700">Baseline User Prompt Template:</span>
-                  <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap text-[11px] text-slate-600">
+                  <span className="mb-1 block font-bold text-slate-700">
+                    Baseline User Prompt Template:
+                  </span>
+                  <pre className="max-h-48 overflow-y-auto text-[11px] whitespace-pre-wrap text-slate-600">
                     {currentDefault.userPromptTemplate}
                   </pre>
                 </div>
@@ -450,13 +466,19 @@ export default function PromptsManagementPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900">Image Generation Engine</span>
-                        <Badge variant="outline" className="border-purple-300 bg-purple-100/70 text-purple-700 text-[10px] font-semibold">
+                        <span className="text-xs font-bold text-slate-900">
+                          Image Generation Engine
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="border-purple-300 bg-purple-100/70 text-[10px] font-semibold text-purple-700"
+                        >
                           FLUX.1-schnell
                         </Badge>
                       </div>
                       <p className="mt-0.5 text-[11px] text-slate-500">
-                        Prompt directs Cloudflare Workers AI FLUX & Pollinations FLUX managed via AI Vault.
+                        Prompt directs Cloudflare Workers AI FLUX & Pollinations FLUX managed via AI
+                        Vault.
                       </p>
                     </div>
                   </div>
@@ -467,11 +489,16 @@ export default function PromptsManagementPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900">Dynamic Vault Routing</span>
-                        <Badge variant="success" dot={true} className="text-[10px]">Active Vault Key</Badge>
+                        <span className="text-xs font-bold text-slate-900">
+                          Dynamic Vault Routing
+                        </span>
+                        <Badge variant="success" dot={true} className="text-[10px]">
+                          Active Vault Key
+                        </Badge>
                       </div>
                       <p className="mt-0.5 text-[11px] text-slate-500">
-                        Inference automatically executes using your active saved Vault provider and model. No manual override needed.
+                        Inference automatically executes using your active saved Vault provider and
+                        model. No manual override needed.
                       </p>
                     </div>
                   </div>
@@ -524,7 +551,9 @@ export default function PromptsManagementPage() {
 
               {/* Partial edit quick-insert helper chips */}
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] font-bold text-slate-400">Quick partial additions:</span>
+                <span className="text-[10px] font-bold text-slate-400">
+                  Quick partial additions:
+                </span>
                 {QUICK_INSERT_SYSTEM_BLOCKS.map((block) => (
                   <button
                     key={block.title}
@@ -565,7 +594,9 @@ export default function PromptsManagementPage() {
 
               {/* Quick user prompt additions */}
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] font-bold text-slate-400">Add partial parameters:</span>
+                <span className="text-[10px] font-bold text-slate-400">
+                  Add partial parameters:
+                </span>
                 {QUICK_INSERT_USER_BLOCKS.map((block) => (
                   <button
                     key={block.title}

@@ -71,7 +71,7 @@ export function normalizeMermaidCode(raw: string): string {
 
   // 1. Merge node labels or quotes that got accidentally split across line breaks
   code = code.replace(/\["([^"]*)\r?\n([^"]*)"\]/g, '["$1 $2"]');
-  code = code.replace(/(\[[^\]\r\n]*)\r?\n([^\]\r\n]*\])/g, '$1 $2');
+  code = code.replace(/(\[[^\]\r\n]*)\r?\n([^\]\r\n]*\])/g, "$1 $2");
 
   // 2. Decode HTML entities
   code = code
@@ -104,10 +104,13 @@ export function normalizeMermaidCode(raw: string): string {
   });
 
   // 8. Wrap unquoted node labels containing parentheses, colons, or slashes in double quotes
-  code = code.replace(/([A-Za-z0-9_-]+)\[([^"\]\r\n]*[\(\):\/][^"\]\r\n]*)\]/g, (match, id, label) => {
-    if (label.startsWith('"') && label.endsWith('"')) return match;
-    return `${id}["${label}"]`;
-  });
+  code = code.replace(
+    /([A-Za-z0-9_-]+)\[([^"\]\r\n]*[(\):/][^"\]\r\n]*)\]/g,
+    (match, id, label) => {
+      if (label.startsWith('"') && label.endsWith('"')) return match;
+      return `${id}["${label}"]`;
+    },
+  );
 
   // 9. Split chained edges on single lines with labels (e.g. A -->|L1| B -->|L2| C)
   const lines = code.split("\n");
@@ -156,10 +159,10 @@ export function formatMathAndMetrics(text: string): string {
   if (!text) return "";
 
   // 1. Parenthesized LaTeX percentiles: ($P_{99}$) or ($p_{99}$) or ($P_{50}$)
-  let res = text.replace(/\(\s*\$([A-Za-z]+)_\{?([0-9a-zA-Z\.]+)\}?\$?\s*\)/g, "($1<sub>$2</sub>)");
+  let res = text.replace(/\(\s*\$([A-Za-z]+)_\{?([0-9a-zA-Z.]+)\}?\$?\s*\)/g, "($1<sub>$2</sub>)");
 
   // 2. Unparenthesized LaTeX subscripts with dollar signs: $P_{99}$, $p_{99}$, $T_{max}$, $N_1$
-  res = res.replace(/\$([A-Za-z]+)_\{?([0-9a-zA-Z\.]+)\}?\$?/g, "$1<sub>$2</sub>");
+  res = res.replace(/\$([A-Za-z]+)_\{?([0-9a-zA-Z.]+)\}?\$?/g, "$1<sub>$2</sub>");
 
   // 3. Parenthesized acronyms prefixed with dollar: ($TPMS) -> (TPMS)
   res = res.replace(/\(\s*\$([A-Za-z]{2,})\s*\)/g, "($1)");
@@ -171,7 +174,7 @@ export function formatMathAndMetrics(text: string): string {
   res = res.replace(/\$O\(([^$]+)\)\$/g, "O($1)");
 
   // 6. Exponents: $N^2$ or $2^{10}$ -> N<sup>2</sup>
-  res = res.replace(/\$([A-Za-z0-9]+)\^\{?([0-9a-zA-Z\.]+)\}?\$?/g, "$1<sup>$2</sup>");
+  res = res.replace(/\$([A-Za-z0-9]+)\^\{?([0-9a-zA-Z.]+)\}?\$?/g, "$1<sup>$2</sup>");
 
   return res;
 }
@@ -240,9 +243,7 @@ export function mermaidToNomnoml(mermaidCode: string): string {
     }
 
     // Match edge: from -->|label| to or from --> to
-    const edgeMatch = trimmed.match(
-      /^(.+?)\s*(?:-->|-.->|==>)\s*(?:\|([^|]+)\|\s*)?(.+)$/
-    );
+    const edgeMatch = trimmed.match(/^(.+?)\s*(?:-->|-.->|==>)\s*(?:\|([^|]+)\|\s*)?(.+)$/);
     if (edgeMatch) {
       const parseNode = (raw: string): string => {
         const s = raw.trim();
@@ -260,7 +261,7 @@ export function mermaidToNomnoml(mermaidCode: string): string {
         if (nodeMap.has(s)) {
           return nodeMap.get(s)!;
         }
-        return s.replace(/[\[\]"']/g, "").trim();
+        return s.replace(/[[\]"']/g, "").trim();
       };
 
       const fromLabel = parseNode(edgeMatch[1]);
@@ -297,28 +298,45 @@ export function mermaidToNomnoml(mermaidCode: string): string {
 
 /**
  * Extracts h2 and h3 headings from Markdown to generate a Table of Contents.
+ * Deduplicates heading IDs to avoid duplicate HTML anchors and duplicate React keys.
  */
 export function extractTableOfContents(markdown: string): TocItem[] {
   if (!markdown || typeof markdown !== "string") return [];
   const headingRegex = /^(#{2,3})\s+(.+)$/gm;
   const items: TocItem[] = [];
+  const idCounts = new Map<string, number>();
   let match: RegExpExecArray | null;
 
   while ((match = headingRegex.exec(markdown)) !== null) {
     const depth = match[1].length;
     const rawHeading = match[2].trim();
     const formatted = formatMathAndMetrics(rawHeading);
-    const text = formatted.replace(/[*_`#]/g, "").replace(/<[^>]*>/g, "").trim();
-    const id = text
+    const text = formatted
+      .replace(/[*_`#]/g, "")
+      .replace(/<[^>]*>/g, "")
+      .trim();
+    const baseId = text
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
 
-    if (id && text) {
-      items.push({ id, text, depth });
+    if (baseId && text) {
+      const count = idCounts.get(baseId) ?? 0;
+      idCounts.set(baseId, count + 1);
+      const uniqueId = count === 0 ? baseId : `${baseId}-${count}`;
+      items.push({ id: uniqueId, text, depth });
     }
   }
   return items;
+}
+
+const headingIdCounts = new Map<string, number>();
+
+/**
+ * Resets heading ID counter for unique markdown anchor generation.
+ */
+export function resetHeadingIdCounts(): void {
+  headingIdCounts.clear();
 }
 
 /**
@@ -331,11 +349,15 @@ export function extractTableOfContents(markdown: string): TocItem[] {
  */
 const customRenderer = {
   heading({ text, depth }: { text: string; depth: number }): string {
-    const cleanId = text
+    const baseId = text
       .replace(/<[^>]*>/g, "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
+
+    const count = headingIdCounts.get(baseId) ?? 0;
+    headingIdCounts.set(baseId, count + 1);
+    const cleanId = count === 0 ? baseId : `${baseId}-${count}`;
 
     if (depth === 2) {
       return `
@@ -377,7 +399,7 @@ const customRenderer = {
         renderedNomnomlSvg = nomnoml.renderSvg(nomnomlCode);
         renderedNomnomlSvg = renderedNomnomlSvg.replace(
           /<svg\b/,
-          '<svg class="nomnoml-svg mx-auto max-w-full h-auto" style="max-width: 100%; height: auto;"'
+          '<svg class="nomnoml-svg mx-auto max-w-full h-auto" style="max-width: 100%; height: auto;"',
         );
       } catch {
         renderedNomnomlSvg = "";
@@ -581,6 +603,7 @@ export function renderMarkdownToHtml(markdown: string): string {
   }
 
   try {
+    resetHeadingIdCounts();
     const cleaned = cleanTrailingCutoffs(markdown);
     const preprocessed = preprocessMarkdownMath(cleaned);
     const html = marked.parse(preprocessed);

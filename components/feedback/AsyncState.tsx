@@ -13,6 +13,7 @@ interface AsyncStateProps<T> {
   skeleton: React.ReactNode;
   emptyUI: React.ReactNode;
   children: (data: T) => React.ReactNode;
+  showSkeletonOnLoading?: boolean;
 }
 
 export function AsyncState<T>({
@@ -24,6 +25,7 @@ export function AsyncState<T>({
   skeleton,
   emptyUI,
   children,
+  showSkeletonOnLoading = false,
 }: AsyncStateProps<T>) {
   const isOnline = useSyncExternalStore(
     (notify) => {
@@ -63,7 +65,7 @@ export function AsyncState<T>({
     );
   }
 
-  if (loading && (!data || isEmpty(data))) {
+  if (loading && (showSkeletonOnLoading || !data || isEmpty(data))) {
     return <>{skeleton}</>;
   }
 

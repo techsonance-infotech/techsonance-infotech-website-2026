@@ -13,7 +13,11 @@ import {
   type AiCredential,
   type InsertAiCredential,
 } from "@/lib/database/schema/index.schema";
-import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
+import {
+  AiCredentialStatus,
+  type AiProvider,
+  type AiProviderId,
+} from "@/lib/constants/enums/ai.enum";
 import { mapDbError } from "@/lib/dbErrors";
 
 export class AiCredentialsRepository {
@@ -24,10 +28,7 @@ export class AiCredentialsRepository {
    */
   async createAccount(data: InsertAiAccount): Promise<AiAccount> {
     try {
-      const [account] = await this.db
-        .insert(accountsTable)
-        .values(data)
-        .returning();
+      const [account] = await this.db.insert(accountsTable).values(data).returning();
       return account;
     } catch (err) {
       throw mapDbError(err, {
@@ -62,10 +63,7 @@ export class AiCredentialsRepository {
    */
   async createCredential(data: InsertAiCredential): Promise<AiCredential> {
     try {
-      const [credential] = await this.db
-        .insert(credentialsTable)
-        .values(data)
-        .returning();
+      const [credential] = await this.db.insert(credentialsTable).values(data).returning();
       return credential;
     } catch (err) {
       throw mapDbError(err, {
@@ -122,9 +120,7 @@ export class AiCredentialsRepository {
   /**
    * Lists credentials, optionally filtered by provider.
    */
-  async listCredentials(
-    provider?: AiProviderId | AiProvider | string,
-  ): Promise<AiCredential[]> {
+  async listCredentials(provider?: AiProviderId | AiProvider | string): Promise<AiCredential[]> {
     try {
       if (provider) {
         return await this.db
@@ -133,10 +129,7 @@ export class AiCredentialsRepository {
           .where(eq(credentialsTable.provider, String(provider)))
           .orderBy(asc(credentialsTable.priority));
       }
-      return await this.db
-        .select()
-        .from(credentialsTable)
-        .orderBy(asc(credentialsTable.priority));
+      return await this.db.select().from(credentialsTable).orderBy(asc(credentialsTable.priority));
     } catch (err) {
       throw mapDbError(err, {
         context: "AiCredentialsRepository.listCredentials",

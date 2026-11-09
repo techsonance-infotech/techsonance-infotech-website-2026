@@ -40,7 +40,7 @@ export const SafeAdminPostItemSchema = z
     publishedAt: z
       .union([z.string(), z.date()])
       .nullish()
-      .transform((v) => (v instanceof Date ? v.toISOString() : v ?? null))
+      .transform((v) => (v instanceof Date ? v.toISOString() : (v ?? null)))
       .catch(null),
     createdAt: z
       .union([z.string(), z.date()])

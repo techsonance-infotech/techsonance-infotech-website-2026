@@ -20,24 +20,14 @@ describe("JobStatusModal Component", () => {
 
   it("does not render when isOpen is false", () => {
     const html = renderToString(
-      <JobStatusModal
-        isOpen={false}
-        job={sampleJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={false} job={sampleJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
     expect(html).toBe("");
   });
 
   it("renders modal header with position title and current status badge", () => {
     const html = renderToString(
-      <JobStatusModal
-        isOpen={true}
-        job={sampleJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={true} job={sampleJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
 
     expect(html).toContain("Update Position Status");
@@ -48,12 +38,7 @@ describe("JobStatusModal Component", () => {
 
   it("lists valid lifecycle transitions for a PUBLISHED role (PAUSED, CLOSED, DRAFT, IN_REVIEW)", () => {
     const html = renderToString(
-      <JobStatusModal
-        isOpen={true}
-        job={sampleJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={true} job={sampleJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
 
     expect(html).toContain("PAUSED");
@@ -70,12 +55,7 @@ describe("JobStatusModal Component", () => {
     };
 
     const html = renderToString(
-      <JobStatusModal
-        isOpen={true}
-        job={draftJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={true} job={draftJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
 
     expect(html).toContain("PUBLISHED");
@@ -91,12 +71,7 @@ describe("JobStatusModal Component", () => {
     };
 
     const html = renderToString(
-      <JobStatusModal
-        isOpen={true}
-        job={pausedJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={true} job={pausedJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
 
     expect(html).toContain("PUBLISHED");
@@ -111,12 +86,7 @@ describe("JobStatusModal Component", () => {
     };
 
     const html = renderToString(
-      <JobStatusModal
-        isOpen={true}
-        job={closedJob}
-        onClose={vi.fn()}
-        onSuccess={vi.fn()}
-      />,
+      <JobStatusModal isOpen={true} job={closedJob} onClose={vi.fn()} onSuccess={vi.fn()} />,
     );
 
     expect(html).toContain("PUBLISHED");

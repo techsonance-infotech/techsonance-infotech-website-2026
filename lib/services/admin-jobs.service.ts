@@ -175,10 +175,14 @@ export class AdminJobsService {
       if (scheduleOptions?.closesAt !== undefined || scheduleOptions?.publishAt !== undefined) {
         const scheduleUpdates: Partial<InsertJob> = {};
         if (scheduleOptions.closesAt !== undefined) {
-          scheduleUpdates.closesAt = scheduleOptions.closesAt ? new Date(scheduleOptions.closesAt) : null;
+          scheduleUpdates.closesAt = scheduleOptions.closesAt
+            ? new Date(scheduleOptions.closesAt)
+            : null;
         }
         if (scheduleOptions.publishAt !== undefined) {
-          scheduleUpdates.publishAt = scheduleOptions.publishAt ? new Date(scheduleOptions.publishAt) : null;
+          scheduleUpdates.publishAt = scheduleOptions.publishAt
+            ? new Date(scheduleOptions.publishAt)
+            : null;
         }
         return this.updateJob(jobId, scheduleUpdates, actor.userId, ipAddress);
       }

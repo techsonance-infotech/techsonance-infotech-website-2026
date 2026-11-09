@@ -3,82 +3,50 @@
   "version": "9",
   "dialect": "postgres",
   "id": "6cabdeca-8636-423c-b1c3-36e85e92a468",
-  "prevIds": [
-    "07dd1334-738f-4620-8a70-a2ca728a0676"
-  ],
+  "prevIds": ["07dd1334-738f-4620-8a70-a2ca728a0676"],
   "footprints": [
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_account_billing_mode"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_account_billing_mode"],
       "writes": [
         "s|enum|public.ts_ai_account_billing_mode",
         "n|enum|public.ts_ai_account_billing_mode",
         "e|enum|public.ts_ai_account_billing_mode",
         "n|type|public.ts_ai_account_billing_mode"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_alert_severity"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_alert_severity"],
       "writes": [
         "s|enum|public.ts_ai_alert_severity",
         "n|enum|public.ts_ai_alert_severity",
         "e|enum|public.ts_ai_alert_severity",
         "n|type|public.ts_ai_alert_severity"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_ai_credential_status"
-      ],
+      "statementTarget": ["enum", "public", "ts_ai_credential_status"],
       "writes": [
         "s|enum|public.ts_ai_credential_status",
         "n|enum|public.ts_ai_credential_status",
         "e|enum|public.ts_ai_credential_status",
         "n|type|public.ts_ai_credential_status"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "alter_enum",
-      "statementTarget": [
-        "enum",
-        "public",
-        "ts_content_application_status"
-      ],
-      "writes": [
-        "s|enum|public.ts_content_application_status"
-      ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "statementTarget": ["enum", "public", "ts_content_application_status"],
+      "writes": ["s|enum|public.ts_content_application_status"],
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_web_consultation_bookings"
-      ],
+      "statementTarget": ["table", "public", "ts_web_consultation_bookings"],
       "writes": [
         "s|tbl|public.ts_web_consultation_bookings",
         "n|tbl|public.ts_web_consultation_bookings",
@@ -89,17 +57,11 @@
         "n|rel|public.ts_web_consultation_bookings_slot_uq",
         "n|rel|public.ts_web_consultation_bookings_reference_uq"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_accounts"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_accounts"],
       "writes": [
         "s|tbl|public.ts_ai_accounts",
         "n|tbl|public.ts_ai_accounts",
@@ -108,18 +70,11 @@
         "n|type|public.ts_ai_accounts",
         "n|rel|public.ts_ai_accounts_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_account_billing_mode"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_account_billing_mode"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_credentials"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_credentials"],
       "writes": [
         "s|tbl|public.ts_ai_credentials",
         "n|tbl|public.ts_ai_credentials",
@@ -129,18 +84,11 @@
         "n|rel|public.ts_ai_credentials_pkey",
         "n|rel|public.ts_ai_credentials_fingerprint_key"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_credential_status"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_credential_status"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_credential_events"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_credential_events"],
       "writes": [
         "s|tbl|public.ts_ai_credential_events",
         "n|tbl|public.ts_ai_credential_events",
@@ -149,17 +97,11 @@
         "n|type|public.ts_ai_credential_events",
         "n|rel|public.ts_ai_credential_events_pkey"
       ],
-      "reads": [
-        "n|sch|public"
-      ]
+      "reads": ["n|sch|public"]
     },
     {
       "statementType": "create_table",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_alerts"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_alerts"],
       "writes": [
         "s|tbl|public.ts_ai_alerts",
         "n|tbl|public.ts_ai_alerts",
@@ -168,10 +110,7 @@
         "n|type|public.ts_ai_alerts",
         "n|rel|public.ts_ai_alerts_pkey"
       ],
-      "reads": [
-        "n|sch|public",
-        "n|enum|public.ts_ai_alert_severity"
-      ]
+      "reads": ["n|sch|public", "n|enum|public.ts_ai_alert_severity"]
     },
     {
       "statementType": "drop_index",
@@ -197,21 +136,13 @@
     },
     {
       "statementType": "add_column",
-      "statementTarget": [
-        "column",
-        "public",
-        "ts_content_applications",
-        "privacy_consent"
-      ],
+      "statementTarget": ["column", "public", "ts_content_applications", "privacy_consent"],
       "writes": [
         "s|col|public.ts_content_applications.privacy_consent",
         "n|col|public.ts_content_applications.privacy_consent",
         "e|col|public.ts_content_applications.privacy_consent"
       ],
-      "reads": [
-        "n|tbl|public.ts_content_applications",
-        "n|sch|public"
-      ]
+      "reads": ["n|tbl|public.ts_content_applications", "n|sch|public"]
     },
     {
       "statementType": "create_index",
@@ -276,11 +207,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_credentials"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_credentials"],
       "writes": [
         "s|fk|public.ts_ai_credentials.ts_ai_credentials_account_id_ts_ai_accounts_id_fkey",
         "n|fk|public.ts_ai_credentials.ts_ai_credentials_account_id_ts_ai_accounts_id_fkey",
@@ -299,11 +226,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_credential_events"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_credential_events"],
       "writes": [
         "s|fk|public.ts_ai_credential_events.ts_ai_credential_events_credential_id_ts_ai_credentials_id_fkey",
         "n|fk|public.ts_ai_credential_events.ts_ai_credential_events_credential_id_ts_ai_credentials_id_fkey",
@@ -322,11 +245,7 @@
     },
     {
       "statementType": "create_fk",
-      "statementTarget": [
-        "table",
-        "public",
-        "ts_ai_alerts"
-      ],
+      "statementTarget": ["table", "public", "ts_ai_alerts"],
       "writes": [
         "s|fk|public.ts_ai_alerts.ts_ai_alerts_credential_id_ts_ai_credentials_id_fkey",
         "n|fk|public.ts_ai_alerts.ts_ai_alerts_credential_id_ts_ai_credentials_id_fkey",
@@ -395,11 +314,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_account_billing_mode",
-        "values": [
-          "prepaid",
-          "postpaid",
-          "free_tier"
-        ],
+        "values": ["prepaid", "postpaid", "free_tier"],
         "entityType": "enums"
       }
     },
@@ -408,12 +323,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_alert_severity",
-        "values": [
-          "info",
-          "warning",
-          "high",
-          "critical"
-        ],
+        "values": ["info", "warning", "high", "critical"],
         "entityType": "enums"
       }
     },
@@ -422,13 +332,7 @@
       "row": {
         "schema": "public",
         "name": "ts_ai_credential_status",
-        "values": [
-          "active",
-          "cooling_down",
-          "exhausted",
-          "disabled",
-          "compromised"
-        ],
+        "values": ["active", "cooling_down", "exhausted", "disabled", "compromised"],
         "entityType": "enums"
       }
     },
@@ -1590,14 +1494,10 @@
         "table": "ts_ai_credentials",
         "name": "ts_ai_credentials_account_id_ts_ai_accounts_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "account_id"
-        ],
+        "columns": ["account_id"],
         "schemaTo": "public",
         "tableTo": "ts_ai_accounts",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "SET NULL",
         "entityType": "fks"
@@ -1610,14 +1510,10 @@
         "table": "ts_ai_credential_events",
         "name": "ts_ai_credential_events_credential_id_ts_ai_credentials_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "credential_id"
-        ],
+        "columns": ["credential_id"],
         "schemaTo": "public",
         "tableTo": "ts_ai_credentials",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "SET NULL",
         "entityType": "fks"
@@ -1630,14 +1526,10 @@
         "table": "ts_ai_alerts",
         "name": "ts_ai_alerts_credential_id_ts_ai_credentials_id_fkey",
         "nameExplicit": false,
-        "columns": [
-          "credential_id"
-        ],
+        "columns": ["credential_id"],
         "schemaTo": "public",
         "tableTo": "ts_ai_credentials",
-        "columnsTo": [
-          "id"
-        ],
+        "columnsTo": ["id"],
         "onUpdate": "NO ACTION",
         "onDelete": "SET NULL",
         "entityType": "fks"
@@ -1649,9 +1541,7 @@
         "schema": "public",
         "table": "ts_web_consultation_bookings",
         "name": "ts_web_consultation_bookings_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -1662,9 +1552,7 @@
         "schema": "public",
         "table": "ts_ai_accounts",
         "name": "ts_ai_accounts_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -1675,9 +1563,7 @@
         "schema": "public",
         "table": "ts_ai_credentials",
         "name": "ts_ai_credentials_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -1688,9 +1574,7 @@
         "schema": "public",
         "table": "ts_ai_credential_events",
         "name": "ts_ai_credential_events_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -1701,9 +1585,7 @@
         "schema": "public",
         "table": "ts_ai_alerts",
         "name": "ts_ai_alerts_pkey",
-        "columns": [
-          "id"
-        ],
+        "columns": ["id"],
         "nameExplicit": false,
         "entityType": "pks"
       }
@@ -1715,9 +1597,7 @@
         "table": "ts_web_consultation_bookings",
         "name": "ts_web_consultation_bookings_slot_uq",
         "nameExplicit": true,
-        "columns": [
-          "slot_iso"
-        ],
+        "columns": ["slot_iso"],
         "nullsNotDistinct": false,
         "entityType": "uniques"
       }
@@ -1729,9 +1609,7 @@
         "table": "ts_web_consultation_bookings",
         "name": "ts_web_consultation_bookings_reference_uq",
         "nameExplicit": true,
-        "columns": [
-          "reference"
-        ],
+        "columns": ["reference"],
         "nullsNotDistinct": false,
         "entityType": "uniques"
       }
@@ -1743,9 +1621,7 @@
         "table": "ts_ai_credentials",
         "name": "ts_ai_credentials_fingerprint_key",
         "nameExplicit": false,
-        "columns": [
-          "fingerprint"
-        ],
+        "columns": ["fingerprint"],
         "nullsNotDistinct": false,
         "entityType": "uniques"
       }

@@ -183,7 +183,11 @@ export const transitionJobStatusBodySchema = z
     targetStatus: (data.targetStatus || data.status) as JobStatus,
     comment: data.comment,
     closesAt: data.closesAt ? new Date(data.closesAt) : data.closesAt === null ? null : undefined,
-    publishAt: data.publishAt ? new Date(data.publishAt) : data.publishAt === null ? null : undefined,
+    publishAt: data.publishAt
+      ? new Date(data.publishAt)
+      : data.publishAt === null
+        ? null
+        : undefined,
   }));
 
 export type TransitionJobStatusBodyInput = z.input<typeof transitionJobStatusBodySchema>;

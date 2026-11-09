@@ -21,11 +21,7 @@ interface BlogPostClientProps {
   tocItems?: TocItem[];
 }
 
-export default function BlogPostClient({
-  post,
-  relatedPosts,
-  tocItems = [],
-}: BlogPostClientProps) {
+export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: BlogPostClientProps) {
   useEffect(() => {
     if (post?.slug) {
       trackBlogPostView(post.slug, post.title || "Post", post.category || "General");
@@ -120,108 +116,111 @@ export default function BlogPostClient({
     let isMounted = true;
 
     async function renderMermaidDiagrams() {
-      const mermaidContainers = document.querySelectorAll<HTMLElement>(".mermaid-diagram[data-mermaid]");
+      const mermaidContainers = document.querySelectorAll<HTMLElement>(
+        ".mermaid-diagram[data-mermaid]",
+      );
       if (mermaidContainers.length === 0) return;
 
       try {
         const mermaidModule = await import("mermaid");
         const mermaid = mermaidModule.default || mermaidModule;
 
-          if (typeof document !== "undefined" && "fonts" in document) {
-            try {
-              await document.fonts.ready;
-            } catch {}
-          }
+        if (typeof document !== "undefined" && "fonts" in document) {
+          try {
+            await document.fonts.ready;
+          } catch {}
+        }
 
-          mermaid.initialize({
-            startOnLoad: false,
-            theme: "base",
-            flowchart: {
-              htmlLabels: true,
-              curve: "basis",
-              nodeSpacing: 45,
-              rankSpacing: 55,
-              padding: 15,
-              useMaxWidth: true,
-            },
-            themeVariables: {
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-              fontSize: "13px",
-              primaryColor: "#EEF5FF",
-              primaryBorderColor: "#1155CC",
-              primaryTextColor: "#0F172A",
-              lineColor: "#1155CC",
-              secondaryColor: "#F8FAFC",
-              tertiaryColor: "#FFFFFF",
-              mainBkg: "#F8FAFC",
-              nodeBorder: "#1155CC",
-              clusterBkg: "#F1F5F9",
-              clusterBorder: "#CBD5E1",
-              defaultLinkColor: "#1155CC",
-              edgeLabelBackground: "#FFFFFF",
-            },
-            securityLevel: "loose",
-            suppressErrorRendering: true,
-          });
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          flowchart: {
+            htmlLabels: true,
+            curve: "basis",
+            nodeSpacing: 45,
+            rankSpacing: 55,
+            padding: 15,
+            useMaxWidth: true,
+          },
+          themeVariables: {
+            fontFamily:
+              '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            fontSize: "13px",
+            primaryColor: "#EEF5FF",
+            primaryBorderColor: "#1155CC",
+            primaryTextColor: "#0F172A",
+            lineColor: "#1155CC",
+            secondaryColor: "#F8FAFC",
+            tertiaryColor: "#FFFFFF",
+            mainBkg: "#F8FAFC",
+            nodeBorder: "#1155CC",
+            clusterBkg: "#F1F5F9",
+            clusterBorder: "#CBD5E1",
+            defaultLinkColor: "#1155CC",
+            edgeLabelBackground: "#FFFFFF",
+          },
+          securityLevel: "loose",
+          suppressErrorRendering: true,
+        });
 
-          for (let i = 0; i < mermaidContainers.length; i++) {
-            if (!isMounted) break;
-            const container = mermaidContainers[i];
-            if (container.getAttribute("data-rendered") === "true") continue;
+        for (let i = 0; i < mermaidContainers.length; i++) {
+          if (!isMounted) break;
+          const container = mermaidContainers[i];
+          if (container.getAttribute("data-rendered") === "true") continue;
 
-            const rawCode = container.getAttribute("data-mermaid");
-            if (!rawCode) continue;
+          const rawCode = container.getAttribute("data-mermaid");
+          if (!rawCode) continue;
 
-            const code = decodeURIComponent(rawCode).trim();
-            const id = `mermaid-chart-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
+          const code = decodeURIComponent(rawCode).trim();
+          const id = `mermaid-chart-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
 
-            try {
-              const { svg } = await mermaid.render(id, code);
-              if (isMounted) {
-                container.innerHTML = svg;
-                container.setAttribute("data-rendered", "true");
-                const svgEl = container.querySelector("svg");
-                if (svgEl) {
-                  svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
-                  svgEl.style.maxWidth = "100%";
-                  svgEl.style.height = "auto";
+          try {
+            const { svg } = await mermaid.render(id, code);
+            if (isMounted) {
+              container.innerHTML = svg;
+              container.setAttribute("data-rendered", "true");
+              const svgEl = container.querySelector("svg");
+              if (svgEl) {
+                svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
+                svgEl.style.maxWidth = "100%";
+                svgEl.style.height = "auto";
+              }
+            }
+          } catch {
+            if (isMounted) {
+              // Parse node transitions into a sleek visual architecture flow
+              const lines = code.split("\n");
+              const steps: { from: string; to: string; label?: string }[] = [];
+
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (
+                  !trimmed ||
+                  trimmed.startsWith("flowchart") ||
+                  trimmed.startsWith("graph") ||
+                  trimmed.startsWith("style ")
+                )
+                  continue;
+
+                const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
+                if (match) {
+                  const cleanNode = (n: string) =>
+                    n
+                      .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
+                      .replace(/[[\]"']/g, "")
+                      .trim();
+                  steps.push({
+                    from: cleanNode(match[1]),
+                    to: cleanNode(match[3]),
+                    label: match[2]?.trim(),
+                  });
                 }
               }
-            } catch {
-              if (isMounted) {
-                // Parse node transitions into a sleek visual architecture flow
-                const lines = code.split("\n");
-                const steps: { from: string; to: string; label?: string }[] = [];
 
-                for (const line of lines) {
-                  const trimmed = line.trim();
-                  if (
-                    !trimmed ||
-                    trimmed.startsWith("flowchart") ||
-                    trimmed.startsWith("graph") ||
-                    trimmed.startsWith("style ")
-                  )
-                    continue;
-
-                  const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
-                  if (match) {
-                    const cleanNode = (n: string) =>
-                      n
-                        .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
-                        .replace(/[\[\]"']/g, "")
-                        .trim();
-                    steps.push({
-                      from: cleanNode(match[1]),
-                      to: cleanNode(match[3]),
-                      label: match[2]?.trim(),
-                    });
-                  }
-                }
-
-                if (steps.length > 0) {
-                  const stepsHtml = steps
-                    .map(
-                      (step, idx) => `
+              if (steps.length > 0) {
+                const stepsHtml = steps
+                  .map(
+                    (step, idx) => `
                       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-colors shadow-2xs">
                         <div class="flex items-center gap-3">
                           <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-[#1155CC]">${idx + 1}</span>
@@ -236,29 +235,29 @@ export default function BlogPostClient({
                         <div class="text-xs font-bold text-[#1155CC] bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${step.to}</div>
                       </div>
                     `,
-                    )
-                    .join("");
+                  )
+                  .join("");
 
-                  container.innerHTML = `
+                container.innerHTML = `
                     <div class="w-full space-y-2 py-2">
                       ${stepsHtml}
                     </div>
                   `;
-                } else {
-                  container.innerHTML = `
+              } else {
+                container.innerHTML = `
                     <div class="w-full text-left font-mono text-xs text-slate-700 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
                       <pre class="overflow-x-auto whitespace-pre p-3 bg-white rounded-lg border border-slate-200/80 text-slate-700 text-[12px] leading-relaxed">${code}</pre>
                     </div>
                   `;
-                }
-                container.setAttribute("data-rendered", "true");
               }
+              container.setAttribute("data-rendered", "true");
             }
           }
-        } catch {
-          // Fallback if mermaid module cannot be loaded
         }
+      } catch {
+        // Fallback if mermaid module cannot be loaded
       }
+    }
 
     void renderMermaidDiagrams();
 
@@ -385,9 +384,9 @@ export default function BlogPostClient({
                     ON THIS PAGE
                   </span>
                   <nav className="max-h-[320px] space-y-2.5 overflow-y-auto pr-1 text-xs">
-                    {tocItems.map((item) => (
+                    {tocItems.map((item, idx) => (
                       <a
-                        key={item.id}
+                        key={`${item.id}-${idx}`}
                         href={`#${item.id}`}
                         className={`block transition-colors hover:text-[#1155CC] ${
                           item.depth === 2
@@ -438,14 +437,14 @@ export default function BlogPostClient({
               <div
                 className="article-content max-w-none text-base leading-relaxed text-slate-700
                   [&_a]:font-semibold [&_a]:text-[#1155CC] [&_a]:underline [&_a:hover]:text-[#0d419d]
-                  [&_p]:mb-5 [&_p]:text-base sm:[&_p]:text-[17px] [&_p]:leading-[1.85] [&_p]:text-slate-600
-                  [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-6 [&_ul]:text-slate-600
-                  [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:pl-6 [&_ol]:text-slate-600
-                  [&_li]:leading-relaxed
+                  [&_img]:my-8 [&_img]:rounded-2xl [&_img]:border [&_img]:border-slate-100 [&_img]:shadow-md
+                  [&_li]:leading-relaxed [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:pl-6
+                  [&_ol]:text-slate-600 [&_p]:mb-5 [&_p]:text-base [&_p]:leading-[1.85] [&_p]:text-slate-600
+                  sm:[&_p]:text-[17px]
                   [&_strong]:font-bold [&_strong]:text-slate-900
-                  [&_sub]:text-[0.72em] [&_sub]:font-semibold [&_sub]:text-slate-800 [&_sub]:align-sub
-                  [&_sup]:text-[0.72em] [&_sup]:font-semibold [&_sup]:text-slate-800 [&_sup]:align-super
-                  [&_img]:my-8 [&_img]:rounded-2xl [&_img]:border [&_img]:border-slate-100 [&_img]:shadow-md"
+                  [&_sub]:align-sub [&_sub]:text-[0.72em] [&_sub]:font-semibold [&_sub]:text-slate-800
+                  [&_sup]:align-super [&_sup]:text-[0.72em] [&_sup]:font-semibold [&_sup]:text-slate-800
+                  [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-6 [&_ul]:text-slate-600"
                 dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 
@@ -506,7 +505,7 @@ export default function BlogPostClient({
                   key={rPost.slug || String(idx)}
                   href={`/blog/${rPost.slug || "post"}`}
                   aria-label={`Read article: ${rPost.title || "article"}`}
-                  className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)] cursor-pointer"
+                  className="group flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)]"
                 >
                   <div className="p-6">
                     <span className="mb-2 block text-[9px] font-black tracking-wider text-[#1155CC] uppercase">

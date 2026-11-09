@@ -26,7 +26,7 @@ export function BlogCard({ post }: BlogCardProps): React.JSX.Element {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4 }}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_12px_30px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)] cursor-pointer"
+      className="group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_12px_30px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(17,85,204,0.04)]"
     >
       <Link
         href={postUrl}

@@ -265,6 +265,7 @@ export default function AdminBlogListPage() {
             data={posts}
             isEmpty={(items) => items.length === 0}
             onRetry={() => fetchPosts(true)}
+            showSkeletonOnLoading={true}
             skeleton={
               <div className="space-y-3 py-6">
                 {[1, 2, 3, 4, 5].map((i) => (
