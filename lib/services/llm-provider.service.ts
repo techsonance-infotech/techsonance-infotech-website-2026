@@ -5,6 +5,8 @@ import type { BOT_CONFIG } from "../config";
 import type { Env } from "../env";
 import type { LLMProvider } from "../llm/types";
 import { OpenAICompatibleProvider } from "../llm/providers/openai-compatible";
+import { GroqProvider } from "../llm/providers/groq.provider";
+import { GeminiProvider } from "../llm/providers/gemini.provider";
 
 export class LLMProviderService {
   constructor(
@@ -18,7 +20,7 @@ export class LLMProviderService {
     const providerMap: Record<string, LLMProvider> = {};
 
     // 1. Groq
-    providerMap.groq = new OpenAICompatibleProvider({
+    providerMap.groq = new GroqProvider({
       id: p.groq.id,
       name: p.groq.name,
       baseUrl: p.groq.baseUrl,
@@ -27,7 +29,7 @@ export class LLMProviderService {
     });
 
     // 2. Google Gemini (OpenAI compatible endpoint)
-    providerMap.gemini = new OpenAICompatibleProvider({
+    providerMap.gemini = new GeminiProvider({
       id: p.gemini.id,
       name: p.gemini.name,
       baseUrl: p.gemini.baseUrl,

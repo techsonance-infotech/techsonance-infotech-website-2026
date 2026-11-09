@@ -14,10 +14,10 @@ export interface OpenAICompatibleOptions {
 export class OpenAICompatibleProvider implements LLMProvider {
   public id: AiProviderId | AiProvider | string;
   public name: string;
-  private baseUrl: string;
-  private apiKey: string;
-  private model: string;
-  private extraHeaders?: Record<string, string>;
+  protected baseUrl: string;
+  protected apiKey: string;
+  protected model: string;
+  protected extraHeaders?: Record<string, string>;
 
   constructor(options: OpenAICompatibleOptions) {
     this.id = options.id;
