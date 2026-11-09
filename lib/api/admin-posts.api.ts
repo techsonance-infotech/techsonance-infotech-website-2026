@@ -318,8 +318,18 @@ export interface GeneratePostThumbnailResponse {
   };
 }
 
+export interface GeneratePostThumbnailInput {
+  postId?: string;
+  title: string;
+  prompt?: string;
+  summary?: string;
+  contentExcerpt?: string;
+  category?: string;
+  keywords?: string[];
+}
+
 export async function generatePostThumbnail(
-  input: { postId?: string; title: string; prompt?: string },
+  input: GeneratePostThumbnailInput,
   signal?: AbortSignal,
 ): Promise<GeneratePostThumbnailResponse> {
   const schema = z.strictObject({

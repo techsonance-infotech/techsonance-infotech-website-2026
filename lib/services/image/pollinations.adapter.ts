@@ -17,6 +17,8 @@ export class PollinationsImageAdapter {
     const height = options.height ?? 720;
     const model = options.model || this.defaultModel;
 
+    const seed = Math.floor(Math.random() * 9999999);
+
     // 1. Try gen.pollinations.ai (supports API key or free token if accepted)
     try {
       const headers: Record<string, string> = {};
@@ -26,7 +28,7 @@ export class PollinationsImageAdapter {
 
       const url = `https://gen.pollinations.ai/image/${encodeURIComponent(
         prompt,
-      )}?model=${encodeURIComponent(model)}&width=${width}&height=${height}&nologo=true`;
+      )}?model=${encodeURIComponent(model)}&width=${width}&height=${height}&nologo=true&enhance=false&private=true&seed=${seed}`;
 
       const res = await fetch(url, {
         method: "GET",
@@ -45,7 +47,7 @@ export class PollinationsImageAdapter {
     // 2. Open Pollinations fallback endpoint (free tier, no token required)
     const openUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
       prompt,
-    )}?model=flux&width=${width}&height=${height}&nologo=true`;
+    )}?model=flux&width=${width}&height=${height}&nologo=true&enhance=false&private=true&seed=${seed}`;
 
     const openRes = await fetch(openUrl, {
       method: "GET",

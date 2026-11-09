@@ -94,14 +94,55 @@ export async function POST(req: Request) {
       );
     }
 
-    const { postId, title, prompt } = parseResult.data;
+    const {
+      postId,
+      title,
+      prompt,
+      summary,
+      contentExcerpt,
+      category,
+      keywords,
+    } = parseResult.data;
 
-    // 4. Generate thumbnail via ImageStepService
+    let postSummary = summary;
+    let postContent = contentExcerpt;
+    let postCategory = category;
+    let postKeywords = keywords;
+
+    // 4. Enrich context from repository if postId exists and fields are missing
+    if (postId) {
+      try {
+        const postsRepo = container.get(AdminPostsRepository);
+        const existing = await postsRepo.findPostById(postId);
+        if (existing) {
+          postSummary = postSummary || existing.excerpt || undefined;
+          postContent = postContent || existing.content?.slice(0, 1500) || undefined;
+          postCategory =
+            postCategory ||
+            (existing as { category?: { name?: string } | null }).category?.name ||
+            undefined;
+          postKeywords =
+            postKeywords && postKeywords.length > 0
+              ? postKeywords
+              : existing.tags || undefined;
+        }
+      } catch (repoErr) {
+        logger.warn("Could not load existing post context for thumbnail generation", {
+          error: String(repoErr),
+        });
+      }
+    }
+
+    // 5. Generate thumbnail via ImageStepService with full article semantic context
     const imageStepService = container.get(ImageStepService);
     const targetPrompt = prompt && prompt.trim().length > 0 ? prompt.trim() : title;
 
     const result = await imageStepService.generateThumbnail(targetPrompt, {
       title,
+      summary: postSummary,
+      contentExcerpt: postContent,
+      category: postCategory,
+      keywords: postKeywords,
       jobId: postId,
     });
 

@@ -18,12 +18,30 @@ import {
   Trash2,
   Sparkles,
   RefreshCw,
+  ZoomIn,
+  Maximize2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 import {
   submitPostForReview,
@@ -58,6 +76,8 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [generatingThumbnail, setGeneratingThumbnail] = useState(false);
   const [thumbnailFeedback, setThumbnailFeedback] = useState<string | null>(null);
+  const [showImagePreview, setShowImagePreview] = useState(false);
+  const [showDeleteImageConfirm, setShowDeleteImageConfirm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -140,10 +160,20 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
     setGeneratingThumbnail(true);
     setThumbnailFeedback(null);
     try {
+      const currentExcerpt = getValues("excerpt")?.trim();
+      const currentContent = getValues("content")?.trim();
+      const currentTags = getValues("tagsInput")
+        ?.split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+
       const res = await generatePostThumbnail({
         postId: initialPost?.id,
         title: currentTitle,
         prompt: initialPost?.thumbnailPrompt || currentTitle,
+        summary: currentExcerpt,
+        contentExcerpt: currentContent?.slice(0, 1500),
+        keywords: currentTags,
       });
 
       if (res.data?.url) {
@@ -604,7 +634,11 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               {heroImage ? (
-                <div className="group relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+                <div
+                  onClick={() => setShowImagePreview(true)}
+                  className="group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 shadow-xs transition-all hover:border-[#1155CC]/50"
+                  title="Click to zoom and inspect image"
+                >
                   <Image
                     src={heroImage}
                     alt="Hero Thumbnail Preview"
@@ -612,14 +646,28 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                     unoptimized
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center gap-2 bg-slate-950/40 opacity-0 transition-opacity group-hover:opacity-100">
+
+                  {/* Top-Right Delete Action Button (Isolated from center click) */}
+                  <div className="absolute top-2.5 right-2.5 z-20">
                     <button
                       type="button"
-                      onClick={() => setValue("heroImage", "", { shouldDirty: true })}
-                      className="rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-md hover:bg-rose-700"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDeleteImageConfirm(true);
+                      }}
+                      className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950/80 text-rose-300 shadow-md backdrop-blur-md transition-all hover:scale-105 hover:bg-rose-600 hover:text-white"
+                      title="Remove hero image"
                     >
-                      Remove
+                      <Trash2 className="h-4 w-4" />
                     </button>
+                  </div>
+
+                  {/* Center Click-To-Zoom Hover Cue */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-950/30 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="flex items-center gap-1.5 rounded-full bg-slate-950/70 px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md">
+                      <ZoomIn className="h-3.5 w-3.5 text-[#38bdf8]" />
+                      <span>Click to zoom & inspect</span>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -808,6 +856,72 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
           </dialog>
         </div>
       )}
+      {/* Full-Screen Zoom Lightbox Modal */}
+      <Dialog open={showImagePreview} onOpenChange={setShowImagePreview}>
+        <DialogContent className="max-w-4xl overflow-hidden border-slate-800 bg-slate-950 p-0 text-white sm:rounded-2xl">
+          <DialogHeader className="border-b border-slate-800 p-4">
+            <DialogTitle className="text-sm font-bold text-slate-200">
+              Hero Graphic Preview — {title || "Article Image"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="relative flex aspect-video w-full items-center justify-center bg-slate-950 p-2">
+            {heroImage && (
+              <Image
+                src={heroImage}
+                alt="Full resolution hero graphic"
+                fill
+                unoptimized
+                className="object-contain"
+              />
+            )}
+          </div>
+          <div className="flex items-center justify-between border-t border-slate-800 bg-slate-900/90 px-4 py-3 text-xs text-slate-400">
+            <span>16:9 Editorial Graphic</span>
+            {heroImage && (
+              <a
+                href={heroImage}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-[#38bdf8] hover:underline"
+              >
+                Open Full Resolution &rarr;
+              </a>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Image Confirmation Dialog */}
+      <AlertDialog open={showDeleteImageConfirm} onOpenChange={setShowDeleteImageConfirm}>
+        <AlertDialogContent className="rounded-2xl sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-sora text-base font-bold text-slate-900">
+              Remove Hero Image?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-xs text-slate-500">
+              Are you sure you want to remove the current hero image from this article? You can
+              upload a replacement or generate a new AI graphic at any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => setShowDeleteImageConfirm(false)}
+              className="rounded-xl text-xs"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setValue("heroImage", "", { shouldDirty: true });
+                setShowDeleteImageConfirm(false);
+              }}
+              className="rounded-xl bg-rose-600 text-xs font-bold text-white hover:bg-rose-700"
+            >
+              Remove Image
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

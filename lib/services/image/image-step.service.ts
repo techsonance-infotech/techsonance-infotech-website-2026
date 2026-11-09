@@ -77,7 +77,7 @@ export class ImageStepService {
       must_avoid: ["readable text", "letters", "watermarks", "faces"],
     };
 
-    if (this.aiWriter && (context.summary || context.contentExcerpt)) {
+    if (this.aiWriter) {
       try {
         visualBrief = await this.aiWriter.generateVisualBrief({
           title,

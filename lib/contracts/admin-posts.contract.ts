@@ -180,6 +180,10 @@ export const generateThumbnailInputSchema = z.strictObject({
   postId: z.uuid().optional(),
   title: z.string().trim().min(3).max(300),
   prompt: z.string().trim().max(1000).optional(),
+  summary: z.string().trim().max(1000).optional(),
+  contentExcerpt: z.string().trim().max(4000).optional(),
+  category: z.string().trim().max(100).optional(),
+  keywords: z.array(z.string().trim()).max(20).optional(),
 });
 export type GenerateThumbnailInput = z.infer<typeof generateThumbnailInputSchema>;
 

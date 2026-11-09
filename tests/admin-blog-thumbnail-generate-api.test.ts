@@ -51,6 +51,7 @@ describe("POST /api/admin/blog/thumbnail/generate", () => {
     };
 
     const mockPostsRepo = {
+      findPostById: vi.fn().mockResolvedValue(null),
       updatePostWithAudit: vi
         .fn()
         .mockResolvedValue({ id: "e6b440c9-f3f6-4cc4-b9ae-42a391d8098d" }),
