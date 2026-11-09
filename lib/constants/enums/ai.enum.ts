@@ -86,3 +86,23 @@ export enum AiAlertSeverity {
   CRITICAL = "critical",
 }
 
+export enum AiProviderId {
+  GROQ = "groq",
+  GEMINI = "gemini",
+  OPENAI = "openai",
+  ANTHROPIC = "anthropic",
+  CEREBRAS = "cerebras",
+  OPENROUTER = "openrouter",
+  MISTRAL = "mistral",
+  XAI = "xai",
+  DEEPSEEK = "deepseek",
+  COHERE = "cohere",
+  TOGETHER = "together",
+  PERPLEXITY = "perplexity",
+  CLOUDFLARE = "cloudflare",
+  GITHUB = "github",
+}
+
+export type AiProvider = `${AiProviderId}`;
+export const AI_PROVIDER_VALUES = Object.values(AiProviderId) as [AiProviderId, ...AiProviderId[]];
+

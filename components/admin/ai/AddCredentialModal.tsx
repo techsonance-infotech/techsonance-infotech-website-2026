@@ -68,7 +68,10 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     defaultModel: "llama-3.3-70b-versatile",
     models: [
       { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B Versatile" },
+      { id: "openai/gpt-oss-120b", label: "OpenAI GPT-OSS 120B (Groq Hosted)" },
+      { id: "openai/gpt-oss-20b", label: "OpenAI GPT-OSS 20B (Groq Hosted)" },
       { id: "deepseek-r1-distill-llama-70b", label: "DeepSeek R1 Distill Llama 70B" },
+      { id: "qwen/qwen3.8-27b", label: "Alibaba Qwen 3.8 27B (Groq Hosted)" },
       { id: "qwen-2.5-32b", label: "Qwen 2.5 32B" },
       { id: "llama-3.1-8b-instant", label: "Llama 3.1 8B Instant" },
       { id: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },

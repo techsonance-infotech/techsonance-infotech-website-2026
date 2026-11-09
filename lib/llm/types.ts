@@ -1,3 +1,5 @@
+import { type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
+
 // ─── LLM Types & Error Definitions ──────────────────────────────────────────
 
 export interface LLMMessage {
@@ -41,8 +43,9 @@ export class AllExhaustedError extends Error {
 }
 
 export interface LLMProvider {
-  id: string;
+  id: AiProviderId | AiProvider | string;
   name: string;
   enabled: () => boolean;
   chat(req: LLMChatRequest): AsyncIterable<string>;
+  withApiKey?(apiKey: string, modelOverride?: string): LLMProvider;
 }

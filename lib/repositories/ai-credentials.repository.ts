@@ -13,7 +13,7 @@ import {
   type AiCredential,
   type InsertAiCredential,
 } from "@/lib/database/schema/index.schema";
-import { AiCredentialStatus } from "@/lib/constants/enums/ai.enum";
+import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { mapDbError } from "@/lib/dbErrors";
 
 export class AiCredentialsRepository {
@@ -122,13 +122,15 @@ export class AiCredentialsRepository {
   /**
    * Lists credentials, optionally filtered by provider.
    */
-  async listCredentials(provider?: string): Promise<AiCredential[]> {
+  async listCredentials(
+    provider?: AiProviderId | AiProvider | string,
+  ): Promise<AiCredential[]> {
     try {
       if (provider) {
         return await this.db
           .select()
           .from(credentialsTable)
-          .where(eq(credentialsTable.provider, provider))
+          .where(eq(credentialsTable.provider, String(provider)))
           .orderBy(asc(credentialsTable.priority));
       }
       return await this.db
@@ -152,7 +154,7 @@ export class AiCredentialsRepository {
    *  - canary rows
    */
   async claimNextActiveCredential(
-    provider: string,
+    provider: AiProviderId | AiProvider | string,
     now: Date = new Date(),
   ): Promise<AiCredential | null> {
     try {
@@ -161,7 +163,7 @@ export class AiCredentialsRepository {
         .from(credentialsTable)
         .where(
           and(
-            eq(credentialsTable.provider, provider),
+            eq(credentialsTable.provider, String(provider)),
             eq(credentialsTable.status, AiCredentialStatus.ACTIVE),
             eq(credentialsTable.isCanary, false),
             or(

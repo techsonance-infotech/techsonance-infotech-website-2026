@@ -12,7 +12,7 @@ import {
   type CredentialViewDto,
 } from "@/lib/contracts/admin-ai-credentials.contract";
 import type { AiCredential } from "@/lib/database/schema/index.schema";
-import { AiCredentialStatus } from "@/lib/constants/enums/ai.enum";
+import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
 
 export class AdminAiCredentialsService {
@@ -47,7 +47,9 @@ export class AdminAiCredentialsService {
   /**
    * Lists registered credentials with administrative metadata.
    */
-  async listCredentials(provider?: string): Promise<CredentialViewDto[]> {
+  async listCredentials(
+    provider?: AiProviderId | AiProvider | string,
+  ): Promise<CredentialViewDto[]> {
     const rows = await this.repo.listCredentials(provider);
     return rows.map((r) => this.toDto(r));
   }

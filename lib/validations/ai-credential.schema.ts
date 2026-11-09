@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { AI_PROVIDER_VALUES } from "@/lib/constants/enums/ai.enum";
 
 export const addCredentialSchema = z.strictObject({
-  provider: z.string().trim().min(1, { error: "Provider is required" }).max(50),
+  provider: z.enum(AI_PROVIDER_VALUES).or(z.string().trim().min(1, { error: "Provider is required" }).max(50)),
   model: z.string().trim().min(1).max(100).optional(),
   label: z.string().trim().min(1, { error: "Label is required" }).max(100),
   apiKey: z.string().trim().min(5, { error: "API key must be at least 5 characters" }).max(500),

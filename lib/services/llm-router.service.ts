@@ -4,6 +4,7 @@ import { LLMHealthService } from "./llm-health.service";
 import { LLMProviderService } from "./llm-provider.service";
 import { KeyBrokerService, type FailureKind } from "./ai/key-broker.service";
 import { AllExhaustedError, QuotaError, type LLMChatRequest, type LLMProvider } from "../llm/types";
+import { type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 
 export class LLMRouterService {
   constructor(
@@ -40,8 +41,8 @@ export class LLMRouterService {
           const claimed = await this.keyBroker.claimKey(provider.id);
           if (claimed) {
             credentialId = claimed.credentialId;
-            if ("withApiKey" in provider && typeof (provider as any).withApiKey === "function") {
-              activeProvider = (provider as any).withApiKey(claimed.key);
+            if (typeof provider.withApiKey === "function") {
+              activeProvider = provider.withApiKey(claimed.key, claimed.model);
             }
           }
         }

@@ -1,8 +1,9 @@
 import { BOT_CONFIG } from "@/lib/config";
+import { type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { QuotaError, type LLMChatRequest, type LLMProvider } from "../types";
 
 export interface OpenAICompatibleOptions {
-  id: string;
+  id: AiProviderId | AiProvider | string;
   name: string;
   baseUrl: string;
   apiKey: string;
@@ -11,7 +12,7 @@ export interface OpenAICompatibleOptions {
 }
 
 export class OpenAICompatibleProvider implements LLMProvider {
-  public id: string;
+  public id: AiProviderId | AiProvider | string;
   public name: string;
   private baseUrl: string;
   private apiKey: string;
@@ -27,13 +28,13 @@ export class OpenAICompatibleProvider implements LLMProvider {
     this.extraHeaders = options.extraHeaders;
   }
 
-  withApiKey(apiKey: string): OpenAICompatibleProvider {
+  withApiKey(apiKey: string, modelOverride?: string): OpenAICompatibleProvider {
     return new OpenAICompatibleProvider({
       id: this.id,
       name: this.name,
       baseUrl: this.baseUrl,
       apiKey,
-      model: this.model,
+      model: modelOverride && modelOverride.trim() ? modelOverride.trim() : this.model,
       extraHeaders: this.extraHeaders,
     });
   }

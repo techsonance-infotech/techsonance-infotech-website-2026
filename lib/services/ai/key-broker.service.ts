@@ -6,7 +6,7 @@ import { BOT_CONFIG_TOKEN, ENV_CONFIG_TOKEN } from "@/lib/di/tokens";
 import type { BOT_CONFIG } from "@/lib/config";
 import type { Env } from "@/lib/env";
 import { open, DecryptionError } from "@/lib/crypto/vault";
-import { AiCredentialStatus } from "@/lib/constants/enums/ai.enum";
+import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { QuotaError } from "@/lib/llm/types";
 import { logger } from "@/lib/logger";
 
@@ -22,6 +22,7 @@ export interface ClaimedKey {
   credentialId?: string;
   isFallbackEnv: boolean;
   label?: string;
+  model?: string;
 }
 
 export class KeyBrokerService {
@@ -37,7 +38,9 @@ export class KeyBrokerService {
    * Prioritizes active encrypted keys in Postgres; falls back to environment variables
    * during migration if no database credentials exist.
    */
-  async claimKey(providerId: string): Promise<ClaimedKey | null> {
+  async claimKey(
+    providerId: AiProviderId | AiProvider | string,
+  ): Promise<ClaimedKey | null> {
     try {
       const cred = await this.repo.claimNextActiveCredential(providerId);
 
@@ -58,6 +61,7 @@ export class KeyBrokerService {
             credentialId: cred.id,
             isFallbackEnv: false,
             label: cred.label,
+            model: cred.model ?? undefined,
           };
         } catch (decryptErr) {
           logger.error(
@@ -123,7 +127,7 @@ export class KeyBrokerService {
    * Normalizes provider errors and marks credential & health states.
    */
   async reportFailure(
-    providerId: string,
+    providerId: AiProviderId | AiProvider | string,
     credentialId: string | undefined,
     errorKind: FailureKind,
     details?: { retryAfterSec?: number; errorMessage?: string },
