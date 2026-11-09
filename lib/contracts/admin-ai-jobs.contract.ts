@@ -47,6 +47,20 @@ export const createAiJobResponseSchema = z.object({
 
 export type CreateAiJobResponseDto = z.infer<typeof createAiJobResponseSchema>;
 
+export const aiJobParamsSchema = z.strictObject({
+  id: z.string().uuid({ error: "Invalid job ID format" }),
+});
+
+export type AiJobParamsInput = z.input<typeof aiJobParamsSchema>;
+export type AiJobParamsOutput = z.output<typeof aiJobParamsSchema>;
+
+export const retryAiJobResponseSchema = z.object({
+  job: z.any(),
+  message: z.string(),
+});
+
+export type RetryAiJobResponseDto = z.infer<typeof retryAiJobResponseSchema>;
+
 export const listAiJobsContract = defineContract({
   method: "GET",
   path: API_ENDPOINTS.ADMIN.AI.JOBS,

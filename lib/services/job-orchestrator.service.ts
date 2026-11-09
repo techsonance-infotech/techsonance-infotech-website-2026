@@ -10,6 +10,7 @@ import {
 import { AIWriterService, type OutlineResult, type MetadataResult } from "./ai-writer.service";
 import { ImageStepService, type ThumbnailGenerationResult } from "./image/image-step.service";
 import { ApprovalService } from "./approval.service";
+import { AppError, ErrorCode } from "../errors";
 import { logger } from "../logger";
 
 export class JobOrchestratorService {
@@ -45,6 +46,35 @@ export class JobOrchestratorService {
       status: AiJobStatus.QUEUED,
       currentStep: AiJobStep.OUTLINE,
     });
+  }
+
+  /**
+   * Retries or restarts a failed or stuck generation job.
+   */
+  async retryJob(jobId: string): Promise<GenerationJob> {
+    const job = await this.jobsRepo.findById(jobId);
+
+    if (!job?.id) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Generation job not found");
+    }
+
+    // Reset errorDetails, bump lease, reset status to QUEUED, and allow retry attempts
+    await this.jobsRepo.update(jobId, {
+      status: AiJobStatus.QUEUED,
+      errorDetails: null,
+      attempt: Math.max(0, (job.attempt || 1) - 1),
+      leaseExpiresAt: new Date(Date.now() + 180_000),
+    });
+
+    // Enqueue execution in background
+    this.executeJob(jobId).catch((e) => {
+      logger.error(`Background AI generation job retry ${jobId} failed:`, {
+        error: String(e),
+      });
+    });
+
+    const updated = await this.jobsRepo.findById(jobId);
+    return updated || job;
   }
 
   /**

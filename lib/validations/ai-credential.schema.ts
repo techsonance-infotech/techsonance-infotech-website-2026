@@ -31,6 +31,13 @@ export const killSwitchSchema = z.strictObject({
 export type KillSwitchInput = z.input<typeof killSwitchSchema>;
 export type KillSwitchOutput = z.output<typeof killSwitchSchema>;
 
+export const reactivateCredentialSchema = z.strictObject({
+  credentialId: z.string().uuid({ error: "Valid credential ID is required" }),
+});
+
+export type ReactivateCredentialInput = z.input<typeof reactivateCredentialSchema>;
+export type ReactivateCredentialOutput = z.output<typeof reactivateCredentialSchema>;
+
 export const testConnectionSchema = z.strictObject({
   provider: z.string().trim().min(1, { error: "Provider is required" }),
   apiKey: z.string().trim().min(5, { error: "API key must be at least 5 characters" }),

@@ -15,12 +15,16 @@ import {
   Sliders,
   Sparkles,
   BarChart3,
+  PowerOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AI_ADMIN_ROUTES } from "@/lib/constants/ai.constants";
-import { listAdminAiCredentials } from "@/lib/api/admin-ai-credentials.api";
+import {
+  listAdminAiCredentials,
+  reactivateAdminAiCredential,
+} from "@/lib/api/admin-ai-credentials.api";
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 import { AddCredentialModal } from "@/components/admin/ai/AddCredentialModal";
 import { ReplaceCredentialModal } from "@/components/admin/ai/ReplaceCredentialModal";
@@ -37,6 +41,28 @@ export default function AiCredentialsPage() {
   const [replaceModalOpen, setReplaceModalOpen] = useState(false);
   const [killTarget, setKillTarget] = useState<CredentialViewDto | null>(null);
   const [killDialogOpen, setKillDialogOpen] = useState(false);
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const handleReactivate = async (credentialId: string) => {
+    setActionLoadingId(credentialId);
+    setToastMsg(null);
+    try {
+      await reactivateAdminAiCredential(credentialId);
+      setToastMsg({
+        type: "success",
+        text: "Credential re-activated successfully! It is now active for inference routing.",
+      });
+      await fetchCredentials(false);
+    } catch (err) {
+      setToastMsg({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to reactivate credential",
+      });
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
 
   const fetchCredentials = useCallback(async (showLoader = false) => {
     if (showLoader) setLoading(true);
@@ -223,6 +249,30 @@ export default function AiCredentialsPage() {
 
       {/* Main Table Card */}
       <Card className="rounded-3xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
+        {toastMsg && (
+          <div
+            className={`border-b p-4 flex items-center justify-between gap-2 text-xs font-semibold ${
+              toastMsg.type === "success"
+                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                : "border-rose-200 bg-rose-50 text-rose-800"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {toastMsg.type === "success" ? (
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+              ) : (
+                <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600" />
+              )}
+              <span>{toastMsg.text}</span>
+            </div>
+            <button
+              onClick={() => setToastMsg(null)}
+              className="text-xs text-slate-400 hover:text-slate-700"
+            >
+              ✕
+            </button>
+          </div>
+        )}
         <div className="border-b border-slate-100 bg-slate-50/50 p-5 sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="font-sora text-base font-bold text-slate-900">
@@ -321,30 +371,57 @@ export default function AiCredentialsPage() {
                       <td className="px-5 py-3.5 text-slate-400">
                         {cred.lastUsedAt ? new Date(cred.lastUsedAt).toLocaleTimeString() : "Never"}
                       </td>
-                      <td className="px-5 py-3.5 text-right space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setReplaceTarget(cred);
-                            setReplaceModalOpen(true);
-                          }}
-                          className="h-7 rounded-xl px-2.5 text-[11px] font-semibold text-amber-700 hover:bg-amber-50"
-                        >
-                          Replace
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={cred.status === "disabled" || cred.status === "compromised"}
-                          onClick={() => {
-                            setKillTarget(cred);
-                            setKillDialogOpen(true);
-                          }}
-                          className="h-7 rounded-xl px-2.5 text-[11px] font-semibold text-rose-700 hover:bg-rose-50"
-                        >
-                          Kill Switch
-                        </Button>
+                      <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                        <div className="inline-flex items-center justify-end gap-2 whitespace-nowrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setReplaceTarget(cred);
+                              setReplaceModalOpen(true);
+                            }}
+                            className="h-8 rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-slate-900 transition-colors inline-flex items-center gap-1.5"
+                          >
+                            <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
+                            <span>Replace</span>
+                          </Button>
+
+                          {cred.status === "disabled" ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={actionLoadingId === cred.id}
+                              onClick={() => handleReactivate(cred.id)}
+                              className="h-8 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3 text-[11px] font-semibold text-emerald-700 shadow-2xs hover:bg-emerald-100 hover:text-emerald-800 transition-colors inline-flex items-center gap-1.5"
+                            >
+                              <Zap
+                                className={`h-3.5 w-3.5 text-emerald-600 ${
+                                  actionLoadingId === cred.id ? "animate-spin" : ""
+                                }`}
+                              />
+                              <span>
+                                {actionLoadingId === cred.id ? "Activating..." : "Re-activate"}
+                              </span>
+                            </Button>
+                          ) : cred.status === "compromised" ? (
+                            <span className="inline-flex items-center rounded-xl border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-400">
+                              Wiped
+                            </span>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setKillTarget(cred);
+                                setKillDialogOpen(true);
+                              }}
+                              className="h-8 rounded-xl border border-rose-200 bg-rose-50/60 px-3 text-[11px] font-semibold text-rose-700 shadow-2xs hover:bg-rose-100 hover:text-rose-800 transition-colors inline-flex items-center gap-1.5"
+                            >
+                              <PowerOff className="h-3.5 w-3.5 text-rose-600" />
+                              <span>Kill Switch</span>
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

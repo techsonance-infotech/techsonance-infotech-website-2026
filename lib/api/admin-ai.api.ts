@@ -107,6 +107,26 @@ export async function createAdminAiJob(
 }
 
 /**
+ * Retries a failed or stuck autonomous content generation job.
+ * Endpoint: POST /api/admin/ai/jobs/:id/retry
+ */
+export async function retryAdminAiJob(
+  jobId: string,
+  signal?: AbortSignal,
+): Promise<AdminGenerationJob> {
+  const url = `${API_ENDPOINTS.ADMIN.AI.JOBS}/${encodeURIComponent(jobId)}/retry`;
+
+  const data = await safeFetch(url, SingleJobSchema, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    signal,
+  });
+
+  return (data && "job" in data ? data.job : data) as unknown as AdminGenerationJob;
+}
+
+/**
  * Lists editorial topic proposals in the AI backlog.
  * Endpoint: GET /api/admin/ai/topics
  */

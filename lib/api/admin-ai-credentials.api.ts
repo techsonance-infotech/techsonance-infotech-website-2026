@@ -74,3 +74,20 @@ export async function killSwitchAdminAiCredential(
     throw new Error(json.error?.message || "Failed to activate kill switch");
   }
 }
+
+export async function reactivateAdminAiCredential(
+  credentialId: string,
+): Promise<CredentialViewDto> {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_REACTIVATE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credentialId }),
+  });
+
+  const json = await res.json();
+  if (!res.ok || !json.ok) {
+    throw new Error(json.error?.message || "Failed to reactivate credential");
+  }
+
+  return json.data.credential;
+}

@@ -13,13 +13,24 @@ import {
   ArrowUpRight,
   ShieldCheck,
   ImageIcon,
+  RotateCcw,
+  KeyRound,
+  OctagonAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import type { AdminGenerationJob } from "@/lib/types/admin.types";
-import { listAdminAiJobs, createAdminAiJob } from "@/lib/api/admin-ai.api";
+import { listAdminAiJobs, createAdminAiJob, retryAdminAiJob } from "@/lib/api/admin-ai.api";
 import { AiJobStatus } from "@/lib/constants/enums/ai.enum";
 
 const getStatusBadge = (status: AiJobStatus | string) => {
@@ -61,6 +72,40 @@ export default function AdminAIPage() {
   const [triggering, setTriggering] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [retryingJobId, setRetryingJobId] = useState<string | null>(null);
+  const [errorModalJob, setErrorModalJob] = useState<AdminGenerationJob | null>(null);
+
+  const getErrorMessage = (details: unknown): string => {
+    if (!details) return "Unknown error during pipeline execution.";
+    if (typeof details === "string") return details;
+    if (typeof details === "object" && details !== null) {
+      const rec = details as Record<string, unknown>;
+      if (typeof rec.error === "string") return rec.error;
+      if (typeof rec.message === "string") return rec.message;
+      return JSON.stringify(details, null, 2);
+    }
+    return String(details);
+  };
+
+  const handleRetryJob = async (jobId: string) => {
+    setRetryingJobId(jobId);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      await retryAdminAiJob(jobId);
+      setSuccessMsg(
+        "Generation job restarted! Autonomous pipeline is now running in the background with your active credentials.",
+      );
+      await fetchJobs(false);
+      setErrorModalJob(null);
+    } catch (err: unknown) {
+      setErrorMsg(
+        err instanceof Error ? err.message : "Failed to restart generation job",
+      );
+    } finally {
+      setRetryingJobId(null);
+    }
+  };
 
   const fetchJobs = useCallback(async (showLoader = false) => {
     if (showLoader) setLoading(true);
@@ -323,7 +368,7 @@ export default function AdminAIPage() {
                           minute: "2-digit",
                         })}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
                         {job.resultPostId ? (
                           <Link
                             href={`/admin/blog/${job.resultPostId}`}
@@ -333,12 +378,32 @@ export default function AdminAIPage() {
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
                         ) : job.status === AiJobStatus.FAILED ? (
-                          <span
-                            className="text-[11px] font-semibold text-rose-600"
-                            title={JSON.stringify(job.errorDetails)}
-                          >
-                            Check Error
-                          </span>
+                          <div className="inline-flex items-center justify-end gap-1.5 whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => setErrorModalJob(job)}
+                              className="inline-flex items-center gap-1 rounded-xl border border-rose-200 bg-rose-50/70 px-2.5 py-1 text-[11px] font-semibold text-rose-700 shadow-2xs hover:bg-rose-100 hover:text-rose-800 transition-colors"
+                            >
+                              <AlertCircle className="h-3 w-3 text-rose-600" />
+                              <span>Check Error</span>
+                            </button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={retryingJobId === job.id}
+                              onClick={() => handleRetryJob(job.id)}
+                              className="h-7.5 rounded-xl border border-blue-200 bg-blue-50/70 px-2.5 text-[11px] font-semibold text-[#1155CC] shadow-2xs hover:bg-blue-100 hover:text-blue-800 transition-colors inline-flex items-center gap-1"
+                            >
+                              <RotateCcw
+                                className={`h-3 w-3 ${
+                                  retryingJobId === job.id ? "animate-spin text-[#1155CC]" : ""
+                                }`}
+                              />
+                              <span>
+                                {retryingJobId === job.id ? "Restarting..." : "Retry Job"}
+                              </span>
+                            </Button>
+                          </div>
                         ) : (
                           <span className="flex items-center justify-end gap-1 text-[11px] font-medium text-slate-400">
                             <Clock className="h-3 w-3 animate-spin" />
@@ -354,6 +419,106 @@ export default function AdminAIPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Error Diagnostics & Fast-Retry Modal */}
+      <Dialog
+        open={!!errorModalJob}
+        onOpenChange={(open) => {
+          if (!open) setErrorModalJob(null);
+        }}
+      >
+        <DialogContent className="max-w-lg rounded-3xl border border-rose-100 bg-white p-6 shadow-xl">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-rose-100 text-rose-600">
+                <OctagonAlert className="h-5 w-5" />
+              </div>
+              <DialogTitle className="font-sora text-base font-bold text-slate-900">
+                Generation Pipeline Failure Details
+              </DialogTitle>
+            </div>
+            <DialogDescription className="mt-1 text-xs text-slate-500">
+              Diagnostic trace of why the autonomous blog generation stalled.
+            </DialogDescription>
+          </DialogHeader>
+
+          {errorModalJob && (
+            <div className="space-y-4 pt-2">
+              {/* Job Info */}
+              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 space-y-1.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Target Topic & Checkpoint
+                </div>
+                <p className="text-xs font-bold text-slate-900">{errorModalJob.topicText}</p>
+                <div className="flex items-center gap-2 text-[11px] font-medium text-slate-500">
+                  <span>Failed at Step:</span>
+                  <span className="rounded bg-rose-100 px-2 py-0.5 font-mono text-[10px] font-bold text-rose-700">
+                    {errorModalJob.currentStep || "outline"}
+                  </span>
+                  <span>&bull;</span>
+                  <span>
+                    Attempt {errorModalJob.attempt} of {errorModalJob.maxAttempts}
+                  </span>
+                </div>
+              </div>
+
+              {/* Error Reason */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700">
+                  Root Cause Error Message
+                </label>
+                <div className="mt-1.5 max-h-48 overflow-y-auto rounded-2xl border border-rose-200 bg-rose-50/60 p-3 text-xs font-mono text-rose-900 leading-relaxed whitespace-pre-wrap">
+                  {getErrorMessage(errorModalJob.errorDetails)}
+                </div>
+              </div>
+
+              {/* Helpful Advice */}
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-3 text-xs text-blue-900 leading-relaxed">
+                <div className="flex items-center gap-1.5 font-bold text-blue-800 mb-1">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>How to resolve & continue</span>
+                </div>
+                If the error occurred because no API credentials were configured, or keys hit their rate limit, now that your keys are active in the vault, clicking <strong>Restart Pipeline Now</strong> will resume generation without losing prior steps.
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setErrorModalJob(null)}
+              className="rounded-xl border-slate-200 text-xs font-bold"
+            >
+              Close
+            </Button>
+            <Link
+              href="/admin/ai/credentials"
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+            >
+              <KeyRound className="h-3.5 w-3.5" />
+              <span>Open Vault Keys</span>
+            </Link>
+            {errorModalJob && (
+              <Button
+                disabled={retryingJobId === errorModalJob.id}
+                onClick={() => handleRetryJob(errorModalJob.id)}
+                className="rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-md shadow-[#1155CC]/25 hover:bg-[#0d44a4] inline-flex items-center gap-1.5"
+              >
+                <RotateCcw
+                  className={`h-3.5 w-3.5 ${
+                    retryingJobId === errorModalJob.id ? "animate-spin" : ""
+                  }`}
+                />
+                <span>
+                  {retryingJobId === errorModalJob.id
+                    ? "Restarting..."
+                    : "Restart Pipeline Now"}
+                </span>
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

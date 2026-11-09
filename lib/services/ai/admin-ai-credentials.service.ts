@@ -217,4 +217,42 @@ export class AdminAiCredentialsService {
       requestId,
     );
   }
+
+  /**
+   * Re-activates a disabled credential if its ciphertext is intact.
+   */
+  async reactivateCredential(
+    credentialId: string,
+    actorId: string,
+    requestId?: string,
+  ): Promise<CredentialViewDto> {
+    const cred = await this.repo.findCredentialById(credentialId);
+    if (!cred) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Credential not found.");
+    }
+
+    if (cred.status === AiCredentialStatus.COMPROMISED || !cred.ciphertext) {
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        "Cannot re-activate a compromised or wiped credential. Please add or replace with a new key.",
+      );
+    }
+
+    const updated = await this.repo.updateStatus(
+      cred.id,
+      AiCredentialStatus.ACTIVE,
+      null,
+      "Manual reactivation",
+    );
+
+    await this.repo.recordEvent(
+      cred.id,
+      "created",
+      actorId,
+      { action: "reactivated" },
+      requestId,
+    );
+
+    return this.toDto(updated || cred);
+  }
 }

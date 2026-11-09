@@ -1,0 +1,122 @@
+import "server-only";
+import { NextResponse } from "next/server";
+import { getContainer } from "@/lib/di/container";
+import { AdminAuthService } from "@/lib/services/admin-auth.service";
+import { AdminAiCredentialsService } from "@/lib/services/ai/admin-ai-credentials.service";
+import { reactivateCredentialSchema } from "@/lib/validations/ai-credential.schema";
+import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
+import { getRequestId } from "@/lib/server/requestContext";
+import { isAllowedOrigin } from "@/lib/utils/text";
+import { logger } from "@/lib/logger";
+
+export const runtime = "nodejs";
+
+export async function POST(req: Request) {
+  const requestId = await getRequestId();
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+  headers.set("x-request-id", requestId);
+  headers.set("Cache-Control", "private, no-store");
+
+  try {
+    const origin = req.headers.get("origin");
+    if (origin && !isAllowedOrigin(origin)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.FORBIDDEN,
+            message: "Cross-origin request not allowed",
+            requestId,
+          },
+        },
+        { status: 403, headers },
+      );
+    }
+
+    const container = getContainer();
+    const authService = container.get(AdminAuthService);
+    const session = await authService.getCurrentSession();
+
+    if (!session) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.UNAUTHENTICATED,
+            message: "Authentication required",
+            requestId,
+          },
+        },
+        { status: 401, headers },
+      );
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const parseResult = reactivateCredentialSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.VALIDATION,
+            message: "Validation failed",
+            fieldErrors: toFieldErrors(parseResult.error),
+            requestId,
+          },
+        },
+        { status: 422, headers },
+      );
+    }
+
+    const credentialsService = container.get(AdminAiCredentialsService);
+    const updated = await credentialsService.reactivateCredential(
+      parseResult.data.credentialId,
+      session.userId || "admin",
+      requestId,
+    );
+
+    return NextResponse.json(
+      {
+        ok: true,
+        data: {
+          credential: updated,
+          message: "Credential re-activated successfully. Ready for inference routing.",
+        },
+      },
+      { status: 200, headers },
+    );
+  } catch (err) {
+    logger.error("Admin AI credentials reactivate POST failed", {
+      requestId,
+      error: err,
+    });
+
+    if (err instanceof AppError) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: err.code,
+            message: err.message,
+            requestId,
+          },
+        },
+        { status: STATUS_BY_CODE[err.code] || 500, headers },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: ErrorCode.INTERNAL,
+          message: "Failed to reactivate AI credential",
+          requestId,
+        },
+      },
+      { status: 500, headers },
+    );
+  }
+}
