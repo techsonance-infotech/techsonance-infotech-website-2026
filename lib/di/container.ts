@@ -38,6 +38,7 @@ import { ApprovalRequestsRepository } from "../repositories/approval-requests.re
 import { PublicContentRepository } from "../repositories/public-content.repository";
 import { AiCredentialsRepository } from "../repositories/ai-credentials.repository";
 import { KeyBrokerService } from "../services/ai/key-broker.service";
+import { AdminAiCredentialsService } from "../services/ai/admin-ai-credentials.service";
 import { CareerApplyService } from "../services/career-apply.service";
 import { ApplicationsService } from "../services/applications.service";
 import { AdminAuthService } from "../services/admin-auth.service";
@@ -84,6 +85,7 @@ export function configureContainer(container: Container): Container {
   container.bind(PublicContentRepository);
   container.bind(AiCredentialsRepository);
   container.bind(KeyBrokerService);
+  container.bind(AdminAiCredentialsService);
   container.bind(CareerApplyService);
   container.bind(ApplicationsService);
   container.bind(AdminAuthService);

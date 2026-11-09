@@ -69,6 +69,8 @@ export const API_ENDPOINTS = {
       TOPIC_LAUNCH: (id: string) => `/api/admin/ai/topics/${id}/launch` as const,
       TOPIC_SUGGEST: "/api/admin/ai/topics/suggest",
       USAGE: "/api/admin/ai/usage",
+      CREDENTIALS: "/api/admin/ai/credentials",
+      ACCOUNTS: "/api/admin/ai/accounts",
     },
 
     // Cache Revalidation
