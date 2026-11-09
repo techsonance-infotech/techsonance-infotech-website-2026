@@ -1,3 +1,9 @@
+export const AI_ADMIN_ROUTES = {
+  CREDENTIALS: "/admin/ai/credentials",
+  PIPELINE: "/admin/blog/ai",
+  USAGE: "/admin/blog/ai/usage",
+} as const;
+
 export const AI_JOBS_LIMITS = {
   TOPIC_MIN: 5,
   TOPIC_MAX: 300,

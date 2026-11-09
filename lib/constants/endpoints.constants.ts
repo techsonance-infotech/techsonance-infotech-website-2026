@@ -70,6 +70,8 @@ export const API_ENDPOINTS = {
       TOPIC_SUGGEST: "/api/admin/ai/topics/suggest",
       USAGE: "/api/admin/ai/usage",
       CREDENTIALS: "/api/admin/ai/credentials",
+      CREDENTIALS_REPLACE: "/api/admin/ai/credentials/replace",
+      CREDENTIALS_KILL: "/api/admin/ai/credentials/kill",
       ACCOUNTS: "/api/admin/ai/accounts",
     },
 

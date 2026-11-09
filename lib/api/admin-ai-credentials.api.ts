@@ -6,12 +6,13 @@ import {
 import {
   type CredentialViewDto,
 } from "@/lib/contracts/admin-ai-credentials.contract";
+import { API_ENDPOINTS } from "@/lib/constants/endpoints.constants";
 
 export async function listAdminAiCredentials(
   provider?: string,
 ): Promise<CredentialViewDto[]> {
   const query = provider ? `?provider=${encodeURIComponent(provider)}` : "";
-  const res = await fetch(`/api/admin/ai/credentials${query}`, {
+  const res = await fetch(`${API_ENDPOINTS.ADMIN.AI.CREDENTIALS}${query}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -28,7 +29,7 @@ export async function listAdminAiCredentials(
 export async function createAdminAiCredential(
   input: AddCredentialInput,
 ): Promise<CredentialViewDto> {
-  const res = await fetch("/api/admin/ai/credentials", {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
@@ -45,7 +46,7 @@ export async function createAdminAiCredential(
 export async function replaceAdminAiCredential(
   input: ReplaceCredentialInput,
 ): Promise<CredentialViewDto> {
-  const res = await fetch("/api/admin/ai/credentials/replace", {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_REPLACE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
@@ -62,7 +63,7 @@ export async function replaceAdminAiCredential(
 export async function killSwitchAdminAiCredential(
   input: KillSwitchInput,
 ): Promise<void> {
-  const res = await fetch("/api/admin/ai/credentials/kill", {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_KILL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),

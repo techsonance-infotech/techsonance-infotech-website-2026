@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { AI_ADMIN_ROUTES } from "@/lib/constants/ai.constants";
 import { listAdminAiCredentials } from "@/lib/api/admin-ai-credentials.api";
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 import { AddCredentialModal } from "@/components/admin/ai/AddCredentialModal";
@@ -138,19 +139,19 @@ export default function AiCredentialsPage() {
       {/* Navigation Sub-Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-200">
         <Link
-          href="/admin/ai/credentials"
+          href={AI_ADMIN_ROUTES.CREDENTIALS}
           className="border-b-2 border-blue-600 px-4 py-2.5 text-xs font-bold text-blue-600"
         >
           Accounts & Keys Vault
         </Link>
         <Link
-          href="/admin/blog/ai"
+          href={AI_ADMIN_ROUTES.PIPELINE}
           className="border-b-2 border-transparent px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900"
         >
           Autonomous Blog Pipeline
         </Link>
         <Link
-          href="/admin/blog/ai/usage"
+          href={AI_ADMIN_ROUTES.USAGE}
           className="border-b-2 border-transparent px-4 py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900"
         >
           Telemetry & Resource Caps
