@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { renderMarkdownToHtml, extractTableOfContents } from "@/lib/utils/markdown";
+import {
+  renderMarkdownToHtml,
+  extractTableOfContents,
+  mermaidToNomnoml,
+} from "@/lib/utils/markdown";
 
 describe("renderMarkdownToHtml", () => {
   it("returns empty string for empty input", () => {
@@ -57,12 +61,17 @@ describe("renderMarkdownToHtml", () => {
     expect(html).toContain("Val 1");
   });
 
-  it("renders mermaid diagrams as interactive architecture cards", () => {
+  it("renders mermaid diagrams as interactive architecture cards with parallel Nomnoml support", () => {
     const mdWithMermaidTag = "```mermaid\nflowchart TD\nA[Start] --> B[End]\n```";
     const html1 = renderMarkdownToHtml(mdWithMermaidTag);
     expect(html1).toContain("mermaid-diagram-card");
     expect(html1).toContain("data-mermaid");
+    expect(html1).toContain("data-nomnoml");
     expect(html1).toContain("Architecture Diagram");
+    expect(html1).toContain("Nomnoml (Full Labels)");
+    expect(html1).toContain("Mermaid");
+    expect(html1).toContain('data-mode="nomnoml"');
+    expect(html1).toContain('data-mode="mermaid"');
 
     const mdUntaggedFlowchart = "```\ngraph LR\nA[Client] -->|Write| B[Primary DB (region us-east-1)]\n```";
     const html2 = renderMarkdownToHtml(mdUntaggedFlowchart);
@@ -140,5 +149,36 @@ More text.
       text: "Deployment Strategy",
       depth: 2,
     });
+  });
+});
+
+describe("mermaidToNomnoml", () => {
+  it("translates flowchart LR with edge labels to Nomnoml format", () => {
+    const mermaid = `
+flowchart LR
+Client["Browser / Mobile"] -->|Write| PrimaryDB["Primary DB"]
+Client -->|Read| ReadReplica["Read-Replica"]
+PrimaryDB -->|Edge Function| Supabase["Supabase"]
+PrimaryDB -->|Logical Replication| ReadReplica
+    `;
+    const nomnoml = mermaidToNomnoml(mermaid);
+    expect(nomnoml).toContain("#direction: right");
+    expect(nomnoml).toContain("#stroke: #1155cc");
+    expect(nomnoml).toContain("[Browser / Mobile] - Write > [Primary DB]");
+    expect(nomnoml).toContain("[Browser / Mobile] - Read > [Read-Replica]");
+    expect(nomnoml).toContain("[Primary DB] - Edge Function > [Supabase]");
+    expect(nomnoml).toContain("[Primary DB] - Logical Replication > [Read-Replica]");
+  });
+
+  it("translates flowchart TD to down direction", () => {
+    const mermaid = `
+flowchart TD
+A[Start] --> B[Processing]
+B --> C[Done]
+    `;
+    const nomnoml = mermaidToNomnoml(mermaid);
+    expect(nomnoml).toContain("#direction: down");
+    expect(nomnoml).toContain("[Start] -> [Processing]");
+    expect(nomnoml).toContain("[Processing] -> [Done]");
   });
 });

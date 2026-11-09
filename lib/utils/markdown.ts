@@ -203,6 +203,98 @@ export function preprocessMarkdownMath(md: string): string {
 }
 
 /**
+ * Translates Mermaid flowchart / graph syntax to Nomnoml syntax for robust,
+ * unclipped SVG diagram rendering.
+ */
+export function mermaidToNomnoml(mermaidCode: string): string {
+  const lines = mermaidCode.split("\n");
+  let direction = "right";
+
+  const nodeMap = new Map<string, string>();
+  const edgeList: { from: string; to: string; label: string }[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (
+      !trimmed ||
+      trimmed.startsWith("style ") ||
+      trimmed.startsWith("classDef ") ||
+      trimmed.startsWith("class ")
+    )
+      continue;
+
+    const lower = trimmed.toLowerCase();
+    if (
+      lower.includes("flowchart td") ||
+      lower.includes("graph td") ||
+      lower.includes("flowchart tb") ||
+      lower.includes("graph tb")
+    ) {
+      direction = "down";
+      continue;
+    }
+    if (lower.includes("flowchart lr") || lower.includes("graph lr")) {
+      direction = "right";
+      continue;
+    }
+
+    // Match edge: from -->|label| to or from --> to
+    const edgeMatch = trimmed.match(
+      /^(.+?)\s*(?:-->|-.->|==>)\s*(?:\|([^|]+)\|\s*)?(.+)$/
+    );
+    if (edgeMatch) {
+      const parseNode = (raw: string): string => {
+        const s = raw.trim();
+        const namedMatch = s.match(/^([A-Za-z0-9_]+)\s*\["?(.*?)"?\]$/);
+        if (namedMatch) {
+          const id = namedMatch[1];
+          const label = namedMatch[2] || id;
+          nodeMap.set(id, label);
+          return label;
+        }
+        const bracketMatch = s.match(/^\["?(.*?)"?\]$/);
+        if (bracketMatch) {
+          return bracketMatch[1];
+        }
+        if (nodeMap.has(s)) {
+          return nodeMap.get(s)!;
+        }
+        return s.replace(/[\[\]"']/g, "").trim();
+      };
+
+      const fromLabel = parseNode(edgeMatch[1]);
+      const toLabel = parseNode(edgeMatch[3]);
+      const edgeLabel = edgeMatch[2]?.trim() || "";
+
+      if (fromLabel && toLabel) {
+        edgeList.push({ from: fromLabel, to: toLabel, label: edgeLabel });
+      }
+    }
+  }
+
+  const nomnomlLines = [
+    `#direction: ${direction}`,
+    "#font: Inter, system-ui, sans-serif",
+    "#fontSize: 13",
+    "#stroke: #1155cc",
+    "#fill: #f8fafd",
+    "#lineWidth: 1.5",
+    "#edgeMargin: 16",
+    "#padding: 16",
+  ];
+
+  for (const edge of edgeList) {
+    if (edge.label) {
+      nomnomlLines.push(`[${edge.from}] - ${edge.label} > [${edge.to}]`);
+    } else {
+      nomnomlLines.push(`[${edge.from}] -> [${edge.to}]`);
+    }
+  }
+
+  return nomnomlLines.join("\n");
+}
+
+/**
  * Extracts h2 and h3 headings from Markdown to generate a Table of Contents.
  */
 export function extractTableOfContents(markdown: string): TocItem[] {
@@ -274,33 +366,60 @@ const customRenderer = {
   code({ text, lang }: { text: string; lang?: string }): string {
     if (isMermaidCode(lang, text)) {
       const normalizedMermaid = normalizeMermaidCode(text);
+      const nomnomlCode = mermaidToNomnoml(normalizedMermaid);
+      const encodedNomnoml = encodeURIComponent(nomnomlCode);
       const encodedMermaid = encodeURIComponent(normalizedMermaid);
       const encodedRaw = encodeURIComponent(text);
 
       return `
-        <div class="mermaid-diagram-card my-10 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs">
-          <div class="mermaid-diagram-header flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-2.5">
+        <div class="mermaid-diagram-card my-10 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs" data-card="diagram">
+          <div class="mermaid-diagram-header flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 bg-slate-50/80 px-4 py-2.5">
             <div class="flex items-center gap-2">
               <span class="inline-block h-2 w-2 rounded-full bg-[#1155CC]"></span>
               <span class="font-mono text-[11px] font-bold tracking-wider text-slate-700 uppercase">Architecture Diagram</span>
             </div>
+            
             <div class="flex items-center gap-2">
+              <!-- Parallel Renderer Switcher Tabs -->
+              <div class="diagram-engine-tabs flex items-center rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs">
+                <button type="button" class="tab-nomnoml-btn rounded-md bg-[#1155CC] px-2.5 py-1 font-mono text-[10px] font-bold text-white transition-all shadow-xs" data-mode="nomnoml">
+                  Nomnoml (Full Labels)
+                </button>
+                <button type="button" class="tab-mermaid-btn rounded-md px-2.5 py-1 font-mono text-[10px] font-bold text-slate-500 transition-all hover:text-slate-900" data-mode="mermaid">
+                  Mermaid
+                </button>
+              </div>
+
               <button type="button" class="copy-code-btn flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 shadow-2xs" data-code="${encodedRaw}">
                 <svg class="h-3 w-3 copy-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                 </svg>
-                <span class="copy-text">Copy Diagram</span>
+                <span class="copy-text">Copy</span>
               </button>
-              <span class="rounded-md bg-blue-50 px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1155CC]">MERMAID</span>
             </div>
           </div>
-          <div class="mermaid-diagram flex justify-center p-6 sm:p-8 overflow-x-auto text-center" data-mermaid="${encodedMermaid}">
+
+          <!-- Nomnoml Container (Active by default: pristine unclipped labels) -->
+          <div class="nomnoml-diagram-view flex justify-center p-6 sm:p-8 overflow-x-auto text-center" data-nomnoml="${encodedNomnoml}">
             <div class="flex items-center gap-2 text-xs text-slate-400 py-4">
               <svg class="h-4 w-4 animate-spin text-[#1155CC]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
               </svg>
-              <span>Rendering architecture diagram...</span>
+              <span>Rendering Nomnoml architecture...</span>
+            </div>
+          </div>
+
+          <!-- Mermaid Container (Parallel rendering, accessible via tab) -->
+          <div class="mermaid-diagram-view hidden flex justify-center p-6 sm:p-8 overflow-x-auto text-center" data-mermaid="${encodedMermaid}">
+            <div class="mermaid-diagram flex justify-center w-full" data-mermaid="${encodedMermaid}">
+              <div class="flex items-center gap-2 text-xs text-slate-400 py-4">
+                <svg class="h-4 w-4 animate-spin text-[#1155CC]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Rendering Mermaid architecture...</span>
+              </div>
             </div>
           </div>
         </div>

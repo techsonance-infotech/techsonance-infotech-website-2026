@@ -79,152 +79,223 @@ export default function BlogPostClient({
     return () => document.removeEventListener("click", handleCopyClick);
   }, []);
 
-  // Dynamic Mermaid Diagram Renderer
+  // Diagram Engine Tab Switcher (Nomnoml vs Mermaid parallel view)
+  useEffect(() => {
+    const handleTabClick = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement)?.closest(".diagram-engine-tabs button");
+      if (!btn) return;
+
+      const card = btn.closest(".mermaid-diagram-card");
+      if (!card) return;
+
+      const mode = btn.getAttribute("data-mode");
+      const nomnomlView = card.querySelector(".nomnoml-diagram-view");
+      const mermaidView = card.querySelector(".mermaid-diagram-view");
+      const nomnomlBtn = card.querySelector(".tab-nomnoml-btn");
+      const mermaidBtn = card.querySelector(".tab-mermaid-btn");
+
+      if (mode === "nomnoml") {
+        nomnomlView?.classList.remove("hidden");
+        mermaidView?.classList.add("hidden");
+        nomnomlBtn?.classList.add("bg-[#1155CC]", "text-white", "shadow-xs");
+        nomnomlBtn?.classList.remove("text-slate-500");
+        mermaidBtn?.classList.remove("bg-[#1155CC]", "text-white", "shadow-xs");
+        mermaidBtn?.classList.add("text-slate-500");
+      } else if (mode === "mermaid") {
+        nomnomlView?.classList.add("hidden");
+        mermaidView?.classList.remove("hidden");
+        mermaidBtn?.classList.add("bg-[#1155CC]", "text-white", "shadow-xs");
+        mermaidBtn?.classList.remove("text-slate-500");
+        nomnomlBtn?.classList.remove("bg-[#1155CC]", "text-white", "shadow-xs");
+        nomnomlBtn?.classList.add("text-slate-500");
+      }
+    };
+
+    document.addEventListener("click", handleTabClick);
+    return () => document.removeEventListener("click", handleTabClick);
+  }, []);
+
+  // Dynamic Architecture Diagrams Renderer (Nomnoml + Mermaid parallel)
   useEffect(() => {
     let isMounted = true;
 
-    async function renderMermaidDiagrams() {
-      const containers = document.querySelectorAll<HTMLElement>(".mermaid-diagram[data-mermaid]");
-      if (containers.length === 0) return;
+    async function renderDiagrams() {
+      // 1. Render Nomnoml diagrams (crisp unclipped SVG with full labels)
+      const nomnomlContainers = document.querySelectorAll<HTMLElement>(".nomnoml-diagram-view[data-nomnoml]");
+      if (nomnomlContainers.length > 0) {
+        try {
+          const nomnomlModule = await import("nomnoml");
+          const nomnoml = nomnomlModule.default || nomnomlModule;
 
-      try {
-        const mermaidModule = await import("mermaid");
-        const mermaid = mermaidModule.default || mermaidModule;
+          nomnomlContainers.forEach((container) => {
+            if (!isMounted || container.getAttribute("data-rendered") === "true") return;
+            const rawNom = container.getAttribute("data-nomnoml");
+            if (!rawNom) return;
 
-        if (typeof document !== "undefined" && "fonts" in document) {
-          try {
-            await document.fonts.ready;
-          } catch {}
-        }
-
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: "base",
-          flowchart: {
-            htmlLabels: true,
-            curve: "basis",
-            nodeSpacing: 45,
-            rankSpacing: 55,
-            padding: 15,
-            useMaxWidth: true,
-          },
-          themeVariables: {
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-            fontSize: "13px",
-            primaryColor: "#EEF5FF",
-            primaryBorderColor: "#1155CC",
-            primaryTextColor: "#0F172A",
-            lineColor: "#1155CC",
-            secondaryColor: "#F8FAFC",
-            tertiaryColor: "#FFFFFF",
-            mainBkg: "#F8FAFC",
-            nodeBorder: "#1155CC",
-            clusterBkg: "#F1F5F9",
-            clusterBorder: "#CBD5E1",
-            defaultLinkColor: "#1155CC",
-            edgeLabelBackground: "#FFFFFF",
-          },
-          securityLevel: "loose",
-          suppressErrorRendering: true,
-        });
-
-        for (let i = 0; i < containers.length; i++) {
-          if (!isMounted) break;
-          const container = containers[i];
-          if (container.getAttribute("data-rendered") === "true") continue;
-
-          const rawCode = container.getAttribute("data-mermaid");
-          if (!rawCode) continue;
-
-          const code = decodeURIComponent(rawCode).trim();
-          const id = `mermaid-chart-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
-
-          try {
-            const { svg } = await mermaid.render(id, code);
-            if (isMounted) {
-              container.innerHTML = svg;
-              container.setAttribute("data-rendered", "true");
-              const svgEl = container.querySelector("svg");
-              if (svgEl) {
-                svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
-                svgEl.style.maxWidth = "100%";
-                svgEl.style.height = "auto";
-              }
-            }
-          } catch {
-            if (isMounted) {
-              // Parse node transitions into a sleek visual architecture flow
-              const lines = code.split("\n");
-              const steps: { from: string; to: string; label?: string }[] = [];
-
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (
-                  !trimmed ||
-                  trimmed.startsWith("flowchart") ||
-                  trimmed.startsWith("graph") ||
-                  trimmed.startsWith("style ")
-                )
-                  continue;
-
-                const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
-                if (match) {
-                  const cleanNode = (n: string) =>
-                    n
-                      .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
-                      .replace(/[\[\]"']/g, "")
-                      .trim();
-                  steps.push({
-                    from: cleanNode(match[1]),
-                    to: cleanNode(match[3]),
-                    label: match[2]?.trim(),
-                  });
+            const nomCode = decodeURIComponent(rawNom);
+            try {
+              const svg = nomnoml.renderSvg(nomCode);
+              if (isMounted) {
+                container.innerHTML = svg;
+                container.setAttribute("data-rendered", "true");
+                const svgEl = container.querySelector("svg");
+                if (svgEl) {
+                  svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
+                  svgEl.style.maxWidth = "100%";
+                  svgEl.style.height = "auto";
                 }
               }
+            } catch (err) {
+              console.warn("Nomnoml render error:", err);
+            }
+          });
+        } catch (e) {
+          console.warn("Failed to load nomnoml:", e);
+        }
+      }
 
-              if (steps.length > 0) {
-                const stepsHtml = steps
-                  .map(
-                    (step, idx) => `
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-colors shadow-2xs">
-                      <div class="flex items-center gap-3">
-                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-[#1155CC]">${idx + 1}</span>
-                        <span class="text-xs font-bold text-slate-800">${step.from}</span>
-                      </div>
-                      <div class="flex items-center gap-2 px-2">
-                        ${step.label ? `<span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 border border-slate-200 shadow-2xs">${step.label}</span>` : ""}
-                        <svg class="h-4 w-4 text-[#1155CC] shrink-0 rotate-90 sm:rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </div>
-                      <div class="text-xs font-bold text-[#1155CC] bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${step.to}</div>
-                    </div>
-                  `,
-                  )
-                  .join("");
+      // 2. Render Mermaid diagrams (parallel view)
+      const mermaidContainers = document.querySelectorAll<HTMLElement>(".mermaid-diagram[data-mermaid]");
+      if (mermaidContainers.length > 0) {
+        try {
+          const mermaidModule = await import("mermaid");
+          const mermaid = mermaidModule.default || mermaidModule;
 
-                container.innerHTML = `
-                  <div class="w-full space-y-2 py-2">
-                    ${stepsHtml}
-                  </div>
-                `;
-              } else {
-                container.innerHTML = `
-                  <div class="w-full text-left font-mono text-xs text-slate-700 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
-                    <pre class="overflow-x-auto whitespace-pre p-3 bg-white rounded-lg border border-slate-200/80 text-slate-700 text-[12px] leading-relaxed">${code}</pre>
-                  </div>
-                `;
+          if (typeof document !== "undefined" && "fonts" in document) {
+            try {
+              await document.fonts.ready;
+            } catch {}
+          }
+
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: "base",
+            flowchart: {
+              htmlLabels: true,
+              curve: "basis",
+              nodeSpacing: 45,
+              rankSpacing: 55,
+              padding: 15,
+              useMaxWidth: true,
+            },
+            themeVariables: {
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontSize: "13px",
+              primaryColor: "#EEF5FF",
+              primaryBorderColor: "#1155CC",
+              primaryTextColor: "#0F172A",
+              lineColor: "#1155CC",
+              secondaryColor: "#F8FAFC",
+              tertiaryColor: "#FFFFFF",
+              mainBkg: "#F8FAFC",
+              nodeBorder: "#1155CC",
+              clusterBkg: "#F1F5F9",
+              clusterBorder: "#CBD5E1",
+              defaultLinkColor: "#1155CC",
+              edgeLabelBackground: "#FFFFFF",
+            },
+            securityLevel: "loose",
+            suppressErrorRendering: true,
+          });
+
+          for (let i = 0; i < mermaidContainers.length; i++) {
+            if (!isMounted) break;
+            const container = mermaidContainers[i];
+            if (container.getAttribute("data-rendered") === "true") continue;
+
+            const rawCode = container.getAttribute("data-mermaid");
+            if (!rawCode) continue;
+
+            const code = decodeURIComponent(rawCode).trim();
+            const id = `mermaid-chart-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
+
+            try {
+              const { svg } = await mermaid.render(id, code);
+              if (isMounted) {
+                container.innerHTML = svg;
+                container.setAttribute("data-rendered", "true");
+                const svgEl = container.querySelector("svg");
+                if (svgEl) {
+                  svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
+                  svgEl.style.maxWidth = "100%";
+                  svgEl.style.height = "auto";
+                }
               }
-              container.setAttribute("data-rendered", "true");
+            } catch {
+              if (isMounted) {
+                // Parse node transitions into a sleek visual architecture flow
+                const lines = code.split("\n");
+                const steps: { from: string; to: string; label?: string }[] = [];
+
+                for (const line of lines) {
+                  const trimmed = line.trim();
+                  if (
+                    !trimmed ||
+                    trimmed.startsWith("flowchart") ||
+                    trimmed.startsWith("graph") ||
+                    trimmed.startsWith("style ")
+                  )
+                    continue;
+
+                  const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
+                  if (match) {
+                    const cleanNode = (n: string) =>
+                      n
+                        .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
+                        .replace(/[\[\]"']/g, "")
+                        .trim();
+                    steps.push({
+                      from: cleanNode(match[1]),
+                      to: cleanNode(match[3]),
+                      label: match[2]?.trim(),
+                    });
+                  }
+                }
+
+                if (steps.length > 0) {
+                  const stepsHtml = steps
+                    .map(
+                      (step, idx) => `
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-colors shadow-2xs">
+                        <div class="flex items-center gap-3">
+                          <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-[#1155CC]">${idx + 1}</span>
+                          <span class="text-xs font-bold text-slate-800">${step.from}</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-2">
+                          ${step.label ? `<span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 border border-slate-200 shadow-2xs">${step.label}</span>` : ""}
+                          <svg class="h-4 w-4 text-[#1155CC] shrink-0 rotate-90 sm:rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </div>
+                        <div class="text-xs font-bold text-[#1155CC] bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${step.to}</div>
+                      </div>
+                    `,
+                    )
+                    .join("");
+
+                  container.innerHTML = `
+                    <div class="w-full space-y-2 py-2">
+                      ${stepsHtml}
+                    </div>
+                  `;
+                } else {
+                  container.innerHTML = `
+                    <div class="w-full text-left font-mono text-xs text-slate-700 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
+                      <pre class="overflow-x-auto whitespace-pre p-3 bg-white rounded-lg border border-slate-200/80 text-slate-700 text-[12px] leading-relaxed">${code}</pre>
+                    </div>
+                  `;
+                }
+                container.setAttribute("data-rendered", "true");
+              }
             }
           }
+        } catch {
+          // Fallback if mermaid module cannot be loaded
         }
-      } catch {
-        // Fallback if mermaid module cannot be loaded
       }
     }
 
-    void renderMermaidDiagrams();
+    void renderDiagrams();
 
     return () => {
       isMounted = false;

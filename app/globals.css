@@ -160,6 +160,27 @@
   rx: 12px !important;
 }
 
+/* ─── Nomnoml Architecture Diagram Styling ─────────────────────────────────────── */
+.nomnoml-diagram-view svg {
+  max-width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.nomnoml-diagram-view text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  fill: #0f172a !important;
+}
+
+.nomnoml-diagram-view path {
+  stroke: #1155cc !important;
+}
+
+.nomnoml-diagram-view rect {
+  stroke: #1155cc !important;
+  fill: #f8fafd !important;
+}
+
 :root {
   --background: #fafbfd;
   --foreground: #0f172a;
