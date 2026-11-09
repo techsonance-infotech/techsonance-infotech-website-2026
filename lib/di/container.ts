@@ -36,6 +36,7 @@ import { AdminPromptsRepository } from "../repositories/admin-prompts.repository
 import { AdminTelemetryRepository } from "../repositories/admin-telemetry.repository";
 import { ApprovalRequestsRepository } from "../repositories/approval-requests.repository";
 import { PublicContentRepository } from "../repositories/public-content.repository";
+import { AiCredentialsRepository } from "../repositories/ai-credentials.repository";
 import { CareerApplyService } from "../services/career-apply.service";
 import { ApplicationsService } from "../services/applications.service";
 import { AdminAuthService } from "../services/admin-auth.service";
@@ -80,6 +81,7 @@ export function configureContainer(container: Container): Container {
   container.bind(AdminTelemetryRepository);
   container.bind(ApprovalRequestsRepository);
   container.bind(PublicContentRepository);
+  container.bind(AiCredentialsRepository);
   container.bind(CareerApplyService);
   container.bind(ApplicationsService);
   container.bind(AdminAuthService);
