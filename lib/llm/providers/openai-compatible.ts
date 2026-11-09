@@ -27,6 +27,17 @@ export class OpenAICompatibleProvider implements LLMProvider {
     this.extraHeaders = options.extraHeaders;
   }
 
+  withApiKey(apiKey: string): OpenAICompatibleProvider {
+    return new OpenAICompatibleProvider({
+      id: this.id,
+      name: this.name,
+      baseUrl: this.baseUrl,
+      apiKey,
+      model: this.model,
+      extraHeaders: this.extraHeaders,
+    });
+  }
+
   enabled(): boolean {
     return !!this.apiKey && this.apiKey.trim().length > 0;
   }
