@@ -7,6 +7,7 @@ import { replaceCredentialSchema } from "@/lib/validations/ai-credential.schema"
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { getRequestId } from "@/lib/server/requestContext";
 import { isAllowedOrigin } from "@/lib/utils/text";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -88,6 +89,11 @@ export async function POST(req: Request) {
       { status: 200, headers },
     );
   } catch (err) {
+    logger.error("Admin AI credentials replace POST failed", {
+      requestId,
+      error: err,
+    });
+
     if (err instanceof AppError) {
       return NextResponse.json(
         {
