@@ -52,3 +52,37 @@ export enum AiProviderStatus {
   DISABLED = "DISABLED",
   COOLDOWN = "COOLDOWN",
 }
+
+export enum AiCredentialStatus {
+  ACTIVE = "active",
+  COOLING_DOWN = "cooling_down",
+  EXHAUSTED = "exhausted",
+  DISABLED = "disabled",
+  COMPROMISED = "compromised",
+}
+
+export enum AiAccountBillingMode {
+  PREPAID = "prepaid",
+  POSTPAID = "postpaid",
+  FREE_TIER = "free_tier",
+}
+
+export enum AiCredentialEventKind {
+  CREATED = "created",
+  USED = "used",
+  FAILED = "failed",
+  COOLED = "cooled",
+  EXHAUSTED = "exhausted",
+  DISABLED = "disabled",
+  COMPROMISED = "compromised",
+  ROTATED = "rotated",
+  WIPED = "wiped",
+}
+
+export enum AiAlertSeverity {
+  INFO = "info",
+  WARNING = "warning",
+  HIGH = "high",
+  CRITICAL = "critical",
+}
+

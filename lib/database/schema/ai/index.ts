@@ -5,3 +5,7 @@ export * from "./topic.schema";
 export * from "./prompt-template.schema";
 export * from "./usage-event.schema";
 export * from "./provider-account.schema";
+export * from "./account.schema";
+export * from "./credential.schema";
+export * from "./credential-event.schema";
+export * from "./alert.schema";

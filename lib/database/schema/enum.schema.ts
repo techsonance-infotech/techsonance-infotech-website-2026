@@ -7,6 +7,9 @@ import {
   AiApprovalDecision,
   AiTopicStatus,
   AiProviderStatus,
+  AiCredentialStatus,
+  AiAccountBillingMode,
+  AiAlertSeverity,
 } from "../enum/ai.enum";
 import {
   AdminRole,
@@ -58,6 +61,21 @@ export const AiTopicStatusEnum = pgEnum(
 export const AiProviderStatusEnum = pgEnum(
   "ts_ai_provider_status",
   Object.values(AiProviderStatus) as [string, ...string[]],
+);
+
+export const AiCredentialStatusEnum = pgEnum(
+  "ts_ai_credential_status",
+  Object.values(AiCredentialStatus) as [string, ...string[]],
+);
+
+export const AiAccountBillingModeEnum = pgEnum(
+  "ts_ai_account_billing_mode",
+  Object.values(AiAccountBillingMode) as [string, ...string[]],
+);
+
+export const AiAlertSeverityEnum = pgEnum(
+  "ts_ai_alert_severity",
+  Object.values(AiAlertSeverity) as [string, ...string[]],
 );
 
 // Content & Admin Enums
