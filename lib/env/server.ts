@@ -88,6 +88,7 @@ export const serverEnvSchema = z.object({
     .string()
     .optional()
     .default("k4q8V4/9h5vL4P8rW3Z8N9tK2eR6vU4X7yT1wQ3mB6E="),
+  AI_KEK_V2: z.string().optional(),
   AI_FP_PEPPER: z
     .string()
     .optional()

@@ -31,6 +31,7 @@ function getMasterKey(version: number): Buffer {
   // Versioned master keys mapping
   const keys: Record<number, string | undefined> = {
     1: env.AI_KEK_V1,
+    2: env.AI_KEK_V2,
   };
 
   const keyB64 = keys[version];
