@@ -100,6 +100,9 @@ export enum AiProviderId {
   TOGETHER = "together",
   PERPLEXITY = "perplexity",
   CLOUDFLARE = "cloudflare",
+  POLLINATIONS = "pollinations",
+  REPLICATE = "replicate",
+  STABILITY = "stability",
   GITHUB = "github",
 }
 

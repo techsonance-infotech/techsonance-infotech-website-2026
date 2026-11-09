@@ -15,6 +15,7 @@ import {
   PlusCircle,
   Copy,
   Info,
+  Cpu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -186,10 +187,9 @@ export default function PromptsManagementPage() {
     return (
       systemPrompt.trim() !== currentDefault.systemPrompt.trim() ||
       userPromptTemplate.trim() !== currentDefault.userPromptTemplate.trim() ||
-      modelPreference !== currentDefault.modelPreference ||
       temperature !== currentDefault.temperature
     );
-  }, [systemPrompt, userPromptTemplate, modelPreference, temperature, currentDefault]);
+  }, [systemPrompt, userPromptTemplate, temperature, currentDefault]);
 
   // Check if current text differs from database saved version
   const isDirty = useMemo(() => {
@@ -198,10 +198,9 @@ export default function PromptsManagementPage() {
     return (
       systemPrompt !== (active.systemPrompt || "") ||
       userPromptTemplate !== (active.userPromptTemplate || "") ||
-      modelPreference !== (active.modelPreference || "") ||
       temperature !== (active.temperature ?? 70)
     );
-  }, [templates, selectedStep, systemPrompt, userPromptTemplate, modelPreference, temperature, isModifiedFromDefault]);
+  }, [templates, selectedStep, systemPrompt, userPromptTemplate, temperature, isModifiedFromDefault]);
 
   const handleRestoreDefault = () => {
     startTransition(() => {
@@ -250,7 +249,7 @@ export default function PromptsManagementPage() {
       const updated = await updateAdminAiPrompt(active.id, {
         systemPrompt,
         userPromptTemplate,
-        modelPreference,
+        modelPreference: selectedStep === "image" ? "flux-schnell" : (active.modelPreference || "vault-dynamic"),
         temperature,
       });
 
@@ -444,54 +443,42 @@ export default function PromptsManagementPage() {
             {/* Model & Temperature Controls */}
             <div className="grid grid-cols-1 gap-4 border-b border-slate-100 pb-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="model-preference-select"
-                  className="mb-1 flex items-center justify-between text-xs font-bold text-slate-700"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Terminal className="h-3.5 w-3.5 text-blue-600" />
-                    Target Model Preference
-                  </span>
-                  {isCustomModel && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCustomModel(false);
-                        setModelPreference("gemini-3.0-flash");
-                      }}
-                      className="text-[10px] text-blue-600 hover:underline"
-                    >
-                      Use Preset List
-                    </button>
-                  )}
-                </label>
-                {isCustomModel ? (
-                  <input
-                    id="model-preference-custom"
-                    type="text"
-                    value={modelPreference}
-                    onChange={(e) => setModelPreference(e.target.value)}
-                    placeholder="Enter model name (e.g., gemini-3.0-flash, gpt-4o)..."
-                    className="h-9 w-full rounded-xl border border-blue-300 bg-white px-3 font-mono text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  />
+                {selectedStep === "image" ? (
+                  <div className="flex items-start gap-3 rounded-2xl border border-purple-200/80 bg-purple-50/50 p-3.5">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white shadow-xs">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-900">Image Generation Engine</span>
+                        <Badge variant="outline" className="border-purple-300 bg-purple-100/70 text-purple-700 text-[10px] font-semibold">
+                          FLUX.1-schnell
+                        </Badge>
+                      </div>
+                      <p className="mt-0.5 text-[11px] text-slate-500">
+                        Prompt directs Cloudflare Workers AI FLUX & Pollinations FLUX managed via AI Vault.
+                      </p>
+                    </div>
+                  </div>
                 ) : (
-                  <select
-                    id="model-preference-select"
-                    value={modelPreference}
-                    onChange={(e) => handleModelSelectChange(e.target.value)}
-                    className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
-                  >
-                    {PRESET_MODELS.map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.label}
-                      </option>
-                    ))}
-                    <option value="__custom__">⚙️ Enter custom model identifier...</option>
-                  </select>
+                  <div className="flex items-start gap-3 rounded-2xl border border-blue-200/80 bg-blue-50/50 p-3.5">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xs">
+                      <Cpu className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-900">Dynamic Vault Routing</span>
+                        <Badge variant="success" dot={true} className="text-[10px]">Active Vault Key</Badge>
+                      </div>
+                      <p className="mt-0.5 text-[11px] text-slate-500">
+                        Inference automatically executes using your active saved Vault provider and model. No manual override needed.
+                      </p>
+                    </div>
+                  </div>
                 )}
               </div>
 
-              <div>
+              <div className="flex flex-col justify-center rounded-2xl border border-slate-100 bg-slate-50/50 p-3.5">
                 <label
                   htmlFor="temperature-range"
                   className="mb-1 flex items-center justify-between text-xs font-bold text-slate-700"
@@ -515,7 +502,7 @@ export default function PromptsManagementPage() {
                   max="100"
                   value={temperature}
                   onChange={(e) => setTemperature(Number(e.target.value))}
-                  className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-100 accent-blue-600"
+                  className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-blue-600"
                 />
               </div>
             </div>

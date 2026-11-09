@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { KeyRound, ShieldCheck, AlertCircle, Edit3, Cpu } from "lucide-react";
+import { KeyRound, ShieldCheck, AlertCircle, Edit3, Cpu, Sparkles, Layers } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -15,34 +15,57 @@ import { Input } from "@/components/ui/input";
 import { createAdminAiCredential } from "@/lib/api/admin-ai-credentials.api";
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 
+export type ProviderCategory = "text" | "image";
+
 interface AddCredentialModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: (newCred: CredentialViewDto) => void;
+  initialCategory?: ProviderCategory;
 }
 
-interface ProviderCatalogEntry {
+export interface ProviderCatalogEntry {
   id: string;
   name: string;
+  category: ProviderCategory;
   defaultModel: string;
   models: { id: string; label: string }[];
 }
 
-const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
+export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
+  // Text LLM Providers
+  {
+    id: "groq",
+    name: "Groq (LPU Inference)",
+    category: "text",
+    defaultModel: "openai/gpt-oss-120b",
+    models: [
+      { id: "openai/gpt-oss-120b", label: "OpenAI GPT-OSS 120B (Active - Ultra Fast)" },
+      { id: "openai/gpt-oss-20b", label: "OpenAI GPT-OSS 20B (Groq Hosted)" },
+      { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B Versatile" },
+      { id: "qwen/qwen3.8-27b", label: "Alibaba Qwen 3.8 27B (Groq Hosted)" },
+      { id: "deepseek-r1-distill-llama-70b", label: "DeepSeek R1 Distill Llama 70B" },
+      { id: "canopylabs/orpheus-v1-english", label: "Canopy Labs Orpheus v1 (Groq Hosted)" },
+      { id: "llama-3.1-8b-instant", label: "Llama 3.1 8B Instant" },
+      { id: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },
+    ],
+  },
   {
     id: "gemini",
     name: "Google Gemini",
-    defaultModel: "gemini-3.0-flash",
+    category: "text",
+    defaultModel: "gemini-3.5-flash-lite",
     models: [
-      { id: "gemini-3.0-flash", label: "Gemini 3.0 Flash (Fast & Capable, Recommended)" },
-      { id: "gemini-3.0-pro", label: "Gemini 3.0 Pro (Advanced Reasoning)" },
-      { id: "gemini-3.0-flash-lite", label: "Gemini 3.0 Flash Lite (Cost-Efficient)" },
-      { id: "gemini-3.0-ultra", label: "Gemini 3.0 Ultra (Deep Enterprise)" },
+      { id: "gemini-3.5-flash-lite", label: "Gemini 3.5 Flash Lite (Fast & Active)" },
+      { id: "gemini-3.5-flash", label: "Gemini 3.5 Flash (Production General)" },
+      { id: "gemini-3.8-flash", label: "Gemini 3.8 Flash (Latest Preview)" },
+      { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro (Deep Code & Reasoning)" },
     ],
   },
   {
     id: "openai",
     name: "OpenAI",
+    category: "text",
     defaultModel: "gpt-4o",
     models: [
       { id: "gpt-4o", label: "GPT-4o (Omni Flagship)" },
@@ -55,6 +78,7 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
   {
     id: "anthropic",
     name: "Anthropic Claude",
+    category: "text",
     defaultModel: "claude-3-7-sonnet-20250219",
     models: [
       { id: "claude-3-7-sonnet-20250219", label: "Claude 3.7 Sonnet (Hybrid Reasoning)" },
@@ -63,33 +87,9 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     ],
   },
   {
-    id: "groq",
-    name: "Groq (LPU Inference)",
-    defaultModel: "llama-3.3-70b-versatile",
-    models: [
-      { id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B Versatile" },
-      { id: "openai/gpt-oss-120b", label: "OpenAI GPT-OSS 120B (Groq Hosted)" },
-      { id: "openai/gpt-oss-20b", label: "OpenAI GPT-OSS 20B (Groq Hosted)" },
-      { id: "deepseek-r1-distill-llama-70b", label: "DeepSeek R1 Distill Llama 70B" },
-      { id: "qwen/qwen3.8-27b", label: "Alibaba Qwen 3.8 27B (Groq Hosted)" },
-      { id: "qwen-2.5-32b", label: "Qwen 2.5 32B" },
-      { id: "llama-3.1-8b-instant", label: "Llama 3.1 8B Instant" },
-      { id: "mixtral-8x7b-32768", label: "Mixtral 8x7B" },
-    ],
-  },
-  {
-    id: "xai",
-    name: "xAI (Grok)",
-    defaultModel: "grok-2-latest",
-    models: [
-      { id: "grok-2-latest", label: "Grok 2" },
-      { id: "grok-2-vision-latest", label: "Grok 2 Vision" },
-      { id: "grok-beta", label: "Grok Beta" },
-    ],
-  },
-  {
     id: "deepseek",
     name: "DeepSeek",
+    category: "text",
     defaultModel: "deepseek-chat",
     models: [
       { id: "deepseek-chat", label: "DeepSeek-V3 (deepseek-chat)" },
@@ -99,6 +99,7 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
   {
     id: "cerebras",
     name: "Cerebras (Ultra-Fast)",
+    category: "text",
     defaultModel: "llama-3.3-70b",
     models: [
       { id: "llama-3.3-70b", label: "Llama 3.3 70B" },
@@ -106,8 +107,20 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     ],
   },
   {
+    id: "xai",
+    name: "xAI (Grok)",
+    category: "text",
+    defaultModel: "grok-2-latest",
+    models: [
+      { id: "grok-2-latest", label: "Grok 2" },
+      { id: "grok-2-vision-latest", label: "Grok 2 Vision" },
+      { id: "grok-beta", label: "Grok Beta" },
+    ],
+  },
+  {
     id: "mistral",
     name: "Mistral AI",
+    category: "text",
     defaultModel: "mistral-small-latest",
     models: [
       { id: "mistral-small-latest", label: "Mistral Small" },
@@ -119,6 +132,7 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
   {
     id: "openrouter",
     name: "OpenRouter",
+    category: "text",
     defaultModel: "meta-llama/llama-3.3-70b-instruct:free",
     models: [
       { id: "meta-llama/llama-3.3-70b-instruct:free", label: "Llama 3.3 70B Free" },
@@ -128,18 +142,9 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     ],
   },
   {
-    id: "cloudflare",
-    name: "Cloudflare Workers AI",
-    defaultModel: "@cf/meta/llama-3.3-70b-instruct",
-    models: [
-      { id: "@cf/meta/llama-3.3-70b-instruct", label: "Llama 3.3 70B Instruct" },
-      { id: "@cf/meta/llama-3.1-8b-instruct", label: "Llama 3.1 8B Instruct" },
-      { id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", label: "DeepSeek R1 Distill Qwen 32B" },
-    ],
-  },
-  {
     id: "github",
     name: "GitHub Models (Azure AI)",
+    category: "text",
     defaultModel: "gpt-4o",
     models: [
       { id: "gpt-4o", label: "GPT-4o" },
@@ -147,9 +152,55 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
       { id: "Phi-4", label: "Microsoft Phi-4" },
     ],
   },
+
+  // Image Generation Providers
+  {
+    id: "cloudflare",
+    name: "Cloudflare Workers AI",
+    category: "image",
+    defaultModel: "@cf/black-forest-labs/flux-1-schnell",
+    models: [
+      { id: "@cf/black-forest-labs/flux-1-schnell", label: "FLUX.1-schnell (Recommended - Fast 1200x630)" },
+      { id: "@cf/stabilityai/stable-diffusion-xl-base-1.0", label: "Stable Diffusion XL Base 1.0" },
+      { id: "@cf/bytedance/stable-diffusion-xl-lightning", label: "SDXL Lightning (Ultra Fast)" },
+    ],
+  },
+  {
+    id: "pollinations",
+    name: "Pollinations.ai (FLUX / Turbo)",
+    category: "image",
+    defaultModel: "flux",
+    models: [
+      { id: "flux", label: "FLUX Model (Image Generation)" },
+      { id: "turbo", label: "Turbo (Fast Generation)" },
+    ],
+  },
+  {
+    id: "replicate",
+    name: "Replicate (FLUX & Diffusion)",
+    category: "image",
+    defaultModel: "black-forest-labs/flux-schnell",
+    models: [
+      { id: "black-forest-labs/flux-schnell", label: "FLUX Schnell (Replicate)" },
+      { id: "black-forest-labs/flux-dev", label: "FLUX Dev (High Detail)" },
+      { id: "stability-ai/sdxl", label: "Stability AI SDXL" },
+    ],
+  },
+  {
+    id: "stability",
+    name: "Stability AI (Stable Diffusion)",
+    category: "image",
+    defaultModel: "stable-diffusion-3.5-large",
+    models: [
+      { id: "stable-diffusion-3.5-large", label: "Stable Diffusion 3.5 Large" },
+      { id: "sd3-medium", label: "SD3 Medium" },
+      { id: "core", label: "Stable Image Core" },
+    ],
+  },
   {
     id: "custom",
     name: "Custom / Self-Hosted Provider",
+    category: "text",
     defaultModel: "custom-model",
     models: [],
   },
@@ -159,9 +210,11 @@ export function AddCredentialModal({
   open,
   onOpenChange,
   onSuccess,
+  initialCategory = "text",
 }: AddCredentialModalProps) {
-  const [provider, setProvider] = useState("gemini");
-  const [modelOption, setModelOption] = useState("gemini-3.0-flash");
+  const [selectedCategory, setSelectedCategory] = useState<ProviderCategory>(initialCategory);
+  const [provider, setProvider] = useState("groq");
+  const [modelOption, setModelOption] = useState("openai/gpt-oss-120b");
   const [customModelText, setCustomModelText] = useState("");
   const [label, setLabel] = useState("");
   const [apiKey, setApiKey] = useState("");
@@ -170,10 +223,36 @@ export function AddCredentialModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const currentProviderEntry =
-    PROVIDER_CATALOG.find((p) => p.id === provider) || PROVIDER_CATALOG[0];
+  useEffect(() => {
+    if (open) {
+      setSelectedCategory(initialCategory);
+      const catProviders = PROVIDER_CATALOG.filter((p) => p.category === initialCategory);
+      const defaultP = catProviders[0] || PROVIDER_CATALOG[0];
+      setProvider(defaultP.id);
+      setModelOption(defaultP.defaultModel);
+      setCustomModelText(defaultP.defaultModel);
+      setLabel("");
+      setApiKey("");
+      setErrorMsg(null);
+    }
+  }, [open, initialCategory]);
 
-  // When provider changes, sync default model
+  const categoryProviders = PROVIDER_CATALOG.filter(
+    (p) => p.category === selectedCategory || p.id === "custom",
+  );
+
+  const currentProviderEntry =
+    PROVIDER_CATALOG.find((p) => p.id === provider) || categoryProviders[0] || PROVIDER_CATALOG[0];
+
+  const handleCategoryChange = (newCat: ProviderCategory) => {
+    setSelectedCategory(newCat);
+    const catProviders = PROVIDER_CATALOG.filter((p) => p.category === newCat);
+    const firstP = catProviders[0] || PROVIDER_CATALOG[0];
+    setProvider(firstP.id);
+    setModelOption(firstP.defaultModel);
+    setCustomModelText(firstP.defaultModel);
+  };
+
   const handleProviderChange = (newProvider: string) => {
     setProvider(newProvider);
     const entry = PROVIDER_CATALOG.find((p) => p.id === newProvider) || PROVIDER_CATALOG[0];
@@ -256,7 +335,40 @@ export function AddCredentialModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+          {/* Category Switcher: Text vs Image */}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Engine Category
+            </label>
+            <div className="grid grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-1 border border-slate-200/60">
+              <button
+                type="button"
+                onClick={() => handleCategoryChange("text")}
+                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${
+                  selectedCategory === "text"
+                    ? "bg-white text-blue-700 shadow-xs border border-slate-200/60"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Cpu className="h-3.5 w-3.5 text-blue-600" />
+                Text Generation (LLMs)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCategoryChange("image")}
+                className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-all ${
+                  selectedCategory === "image"
+                    ? "bg-white text-purple-700 shadow-xs border border-purple-200/60"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5 text-purple-600" />
+                Image Generation (FLUX)
+              </button>
+            </div>
+          </div>
+
           {/* Provider Selection */}
           <div>
             <label className="block text-xs font-bold text-slate-700">
@@ -267,7 +379,7 @@ export function AddCredentialModal({
               onChange={(e) => handleProviderChange(e.target.value)}
               className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             >
-              {PROVIDER_CATALOG.map((p) => (
+              {categoryProviders.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
                 </option>
@@ -324,7 +436,7 @@ export function AddCredentialModal({
                 <Input
                   value={customModelText}
                   onChange={(e) => setCustomModelText(e.target.value)}
-                  placeholder="e.g. gemini-2.5-flash or llama-3.3-70b-specdec"
+                  placeholder="e.g. @cf/black-forest-labs/flux-1-schnell or openai/gpt-oss-120b"
                   className="rounded-xl font-mono text-xs pl-8"
                   required
                 />
@@ -344,7 +456,11 @@ export function AddCredentialModal({
             <Input
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder={`e.g. ${currentProviderEntry.name} Production Primary`}
+              placeholder={
+                selectedCategory === "image"
+                  ? `e.g. Cloudflare FLUX Production Token`
+                  : `e.g. ${currentProviderEntry.name} Production Primary`
+              }
               className="mt-1 rounded-xl text-xs"
               required
             />
@@ -354,7 +470,7 @@ export function AddCredentialModal({
           <div>
             <div className="flex items-center justify-between">
               <label className="block text-xs font-bold text-slate-700">
-                API Key (Write-Only)
+                API Key / Auth Token (Write-Only)
               </label>
               <span className="text-[10px] font-semibold text-blue-600">
                 AES-256-GCM Sealed
@@ -364,7 +480,7 @@ export function AddCredentialModal({
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Paste raw key here (sk-... / gsk_... / AIza...)"
+              placeholder="Paste raw key/token here (sk-... / gsk_... / Bearer...)"
               className="mt-1 rounded-xl font-mono text-xs"
               required
             />
