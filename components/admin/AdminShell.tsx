@@ -12,6 +12,7 @@ import {
   Lightbulb,
   Sliders,
   BarChart3,
+  KeyRound,
   ExternalLink,
   LogOut,
   Menu,
@@ -136,6 +137,13 @@ export function AdminShell({
       icon: Sparkles,
       active: pathname === "/admin/blog/ai",
       badge: "Autonomous",
+    },
+    {
+      title: "AI Vault & Keys",
+      href: "/admin/ai/credentials",
+      icon: KeyRound,
+      active: pathname.startsWith("/admin/ai"),
+      badge: "Encrypted",
     },
     {
       title: "AI Telemetry",
