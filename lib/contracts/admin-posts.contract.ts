@@ -175,3 +175,30 @@ export const submitAdminPostContract = defineContract({
   response: singleAdminPostResponseSchema,
   status: 200,
 });
+
+export const generateThumbnailInputSchema = z.strictObject({
+  postId: z.uuid().optional(),
+  title: z.string().trim().min(3).max(300),
+  prompt: z.string().trim().max(1000).optional(),
+});
+export type GenerateThumbnailInput = z.infer<typeof generateThumbnailInputSchema>;
+
+export const generateThumbnailResponseSchema = z.strictObject({
+  url: z.string(),
+  provider: z.string(),
+  prompt: z.string(),
+  alt: z.string(),
+  thumbnailMissing: z.boolean(),
+});
+export type GenerateThumbnailResponse = z.infer<typeof generateThumbnailResponseSchema>;
+
+export const generateThumbnailContract = defineContract({
+  method: "POST",
+  path: API_ENDPOINTS.ADMIN.POST_THUMBNAIL_GENERATE,
+  auth: "required",
+  params: noParams,
+  query: noQuery,
+  body: generateThumbnailInputSchema,
+  response: generateThumbnailResponseSchema,
+  status: 200,
+});

@@ -117,6 +117,10 @@ export class JobOrchestratorService {
         let sectionMarkdown: string;
 
         if (!cached || !cached.content) {
+          if (i > 0) {
+            // Pacing delay (1.2s) between sections to avoid hitting provider rate limits (TPM/RPM)
+            await new Promise((resolve) => setTimeout(resolve, 1200));
+          }
           sectionMarkdown = await this.aiWriter.generateSection(heading, {
             topic: job.topicText,
             outline: headings,
@@ -140,6 +144,8 @@ export class JobOrchestratorService {
       const metaKey = `${jobId}:meta:${job.version}`;
       let meta = await this.getCachedStepData<MetadataResult>(metaKey);
       if (!meta) {
+        // Pacing delay (1.2s) before metadata generation to refresh provider token bucket
+        await new Promise((resolve) => setTimeout(resolve, 1200));
         meta = await this.aiWriter.generateMetadata(fullDraft, job.topicText);
         await this.jobsRepo.upsertStep(jobId, "meta", metaKey, meta);
       }

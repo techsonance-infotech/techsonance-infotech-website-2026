@@ -98,6 +98,25 @@ describe("AiCredentialsRepository", () => {
     expect(mockDb.update).toHaveBeenCalled();
   });
 
+  it("should update the model identifier of an existing credential", async () => {
+    const updatedRow = {
+      id: "cred-uuid-1",
+      model: "llama-3.3-70b-versatile",
+    };
+
+    mockDb.update.mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockResolvedValue([updatedRow]),
+        }),
+      }),
+    });
+
+    const res = await repo.updateModel("cred-uuid-1", "llama-3.3-70b-versatile");
+    expect(res).toEqual(updatedRow);
+    expect(mockDb.update).toHaveBeenCalled();
+  });
+
   it("should record an append-only audit event", async () => {
     mockDb.insert.mockReturnValue({
       values: vi.fn().mockResolvedValue([]),

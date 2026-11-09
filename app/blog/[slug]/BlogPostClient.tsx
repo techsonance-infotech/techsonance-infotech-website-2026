@@ -9,12 +9,23 @@ import { Icon } from "@/app/components/icons/Icon";
 import type { BlogPost } from "@/lib/content/types";
 import { trackBlogPostView } from "@/lib/analytics";
 
+interface TocItem {
+  id: string;
+  text: string;
+  depth: number;
+}
+
 interface BlogPostClientProps {
   post: BlogPost;
   relatedPosts: BlogPost[];
+  tocItems?: TocItem[];
 }
 
-export default function BlogPostClient({ post, relatedPosts }: BlogPostClientProps) {
+export default function BlogPostClient({
+  post,
+  relatedPosts,
+  tocItems = [],
+}: BlogPostClientProps) {
   useEffect(() => {
     if (post?.slug) {
       trackBlogPostView(post.slug, post.title || "Post", post.category || "General");
@@ -36,6 +47,189 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
 
   const tags = Array.isArray(post.tags) ? post.tags : [];
   const safeRelatedPosts = Array.isArray(relatedPosts) ? relatedPosts.filter(Boolean) : [];
+
+  // Clipboard copy handler for code blocks and diagrams
+  useEffect(() => {
+    const handleCopyClick = (e: MouseEvent) => {
+      const btn = (e.target as HTMLElement)?.closest(".copy-code-btn");
+      if (!btn) return;
+
+      const codeAttr = btn.getAttribute("data-code");
+      if (!codeAttr) return;
+
+      const code = decodeURIComponent(codeAttr);
+      navigator.clipboard
+        .writeText(code)
+        .then(() => {
+          const copyText = btn.querySelector(".copy-text");
+          if (copyText) {
+            const original = copyText.textContent;
+            copyText.textContent = "Copied!";
+            btn.classList.add("bg-emerald-600", "text-white", "border-emerald-500");
+            setTimeout(() => {
+              copyText.textContent = original;
+              btn.classList.remove("bg-emerald-600", "text-white", "border-emerald-500");
+            }, 2000);
+          }
+        })
+        .catch(() => {});
+    };
+
+    document.addEventListener("click", handleCopyClick);
+    return () => document.removeEventListener("click", handleCopyClick);
+  }, []);
+
+  // Dynamic Mermaid Diagram Renderer
+  useEffect(() => {
+    let isMounted = true;
+
+    async function renderMermaidDiagrams() {
+      const containers = document.querySelectorAll<HTMLElement>(".mermaid-diagram[data-mermaid]");
+      if (containers.length === 0) return;
+
+      try {
+        const mermaidModule = await import("mermaid");
+        const mermaid = mermaidModule.default || mermaidModule;
+
+        if (typeof document !== "undefined" && "fonts" in document) {
+          try {
+            await document.fonts.ready;
+          } catch {}
+        }
+
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          flowchart: {
+            htmlLabels: true,
+            curve: "basis",
+            nodeSpacing: 45,
+            rankSpacing: 55,
+            padding: 15,
+            useMaxWidth: true,
+          },
+          themeVariables: {
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            fontSize: "13px",
+            primaryColor: "#EEF5FF",
+            primaryBorderColor: "#1155CC",
+            primaryTextColor: "#0F172A",
+            lineColor: "#1155CC",
+            secondaryColor: "#F8FAFC",
+            tertiaryColor: "#FFFFFF",
+            mainBkg: "#F8FAFC",
+            nodeBorder: "#1155CC",
+            clusterBkg: "#F1F5F9",
+            clusterBorder: "#CBD5E1",
+            defaultLinkColor: "#1155CC",
+            edgeLabelBackground: "#FFFFFF",
+          },
+          securityLevel: "loose",
+          suppressErrorRendering: true,
+        });
+
+        for (let i = 0; i < containers.length; i++) {
+          if (!isMounted) break;
+          const container = containers[i];
+          if (container.getAttribute("data-rendered") === "true") continue;
+
+          const rawCode = container.getAttribute("data-mermaid");
+          if (!rawCode) continue;
+
+          const code = decodeURIComponent(rawCode).trim();
+          const id = `mermaid-chart-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`;
+
+          try {
+            const { svg } = await mermaid.render(id, code);
+            if (isMounted) {
+              container.innerHTML = svg;
+              container.setAttribute("data-rendered", "true");
+              const svgEl = container.querySelector("svg");
+              if (svgEl) {
+                svgEl.classList.add("mx-auto", "max-w-full", "h-auto");
+                svgEl.style.maxWidth = "100%";
+                svgEl.style.height = "auto";
+              }
+            }
+          } catch {
+            if (isMounted) {
+              // Parse node transitions into a sleek visual architecture flow
+              const lines = code.split("\n");
+              const steps: { from: string; to: string; label?: string }[] = [];
+
+              for (const line of lines) {
+                const trimmed = line.trim();
+                if (
+                  !trimmed ||
+                  trimmed.startsWith("flowchart") ||
+                  trimmed.startsWith("graph") ||
+                  trimmed.startsWith("style ")
+                )
+                  continue;
+
+                const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
+                if (match) {
+                  const cleanNode = (n: string) =>
+                    n
+                      .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
+                      .replace(/[\[\]"']/g, "")
+                      .trim();
+                  steps.push({
+                    from: cleanNode(match[1]),
+                    to: cleanNode(match[3]),
+                    label: match[2]?.trim(),
+                  });
+                }
+              }
+
+              if (steps.length > 0) {
+                const stepsHtml = steps
+                  .map(
+                    (step, idx) => `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-colors shadow-2xs">
+                      <div class="flex items-center gap-3">
+                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-[#1155CC]">${idx + 1}</span>
+                        <span class="text-xs font-bold text-slate-800">${step.from}</span>
+                      </div>
+                      <div class="flex items-center gap-2 px-2">
+                        ${step.label ? `<span class="rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 border border-slate-200 shadow-2xs">${step.label}</span>` : ""}
+                        <svg class="h-4 w-4 text-[#1155CC] shrink-0 rotate-90 sm:rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </div>
+                      <div class="text-xs font-bold text-[#1155CC] bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">${step.to}</div>
+                    </div>
+                  `,
+                  )
+                  .join("");
+
+                container.innerHTML = `
+                  <div class="w-full space-y-2 py-2">
+                    ${stepsHtml}
+                  </div>
+                `;
+              } else {
+                container.innerHTML = `
+                  <div class="w-full text-left font-mono text-xs text-slate-700 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
+                    <pre class="overflow-x-auto whitespace-pre p-3 bg-white rounded-lg border border-slate-200/80 text-slate-700 text-[12px] leading-relaxed">${code}</pre>
+                  </div>
+                `;
+              }
+              container.setAttribute("data-rendered", "true");
+            }
+          }
+        }
+      } catch {
+        // Fallback if mermaid module cannot be loaded
+      }
+    }
+
+    void renderMermaidDiagrams();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [post.content]);
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -147,6 +341,31 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
                 </div>
               </div>
 
+              {/* Table of Contents (Sticky Navigation) */}
+              {tocItems.length > 0 && (
+                <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
+                  <span className="mb-4 flex items-center gap-2 border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1155CC]"></span>
+                    ON THIS PAGE
+                  </span>
+                  <nav className="max-h-[320px] space-y-2.5 overflow-y-auto pr-1 text-xs">
+                    {tocItems.map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        className={`block transition-colors hover:text-[#1155CC] ${
+                          item.depth === 2
+                            ? "font-bold text-slate-700"
+                            : "pl-3 text-[11px] font-medium text-slate-500 hover:text-[#1155CC]"
+                        }`}
+                      >
+                        {item.text}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              )}
+
               {tags.length > 0 && (
                 <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_30px_rgba(17,85,204,0.02)]">
                   <span className="mb-4 block border-b border-slate-50 pb-2 text-[10px] font-black tracking-widest text-slate-400 uppercase">
@@ -168,9 +387,29 @@ export default function BlogPostClient({ post, relatedPosts }: BlogPostClientPro
 
             {/* Post Content */}
             <div className="col-span-1 rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_15px_35px_rgba(17,85,204,0.02)] sm:p-10 lg:col-span-9">
+              {/* Hero Featured Image */}
+              {post.heroImage && (
+                <div className="relative mb-10 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-sm">
+                  <img
+                    src={post.heroImage}
+                    alt={post.title || "Article Banner"}
+                    className="aspect-video w-full object-cover"
+                  />
+                </div>
+              )}
+
               {/* Main Content Render */}
               <div
-                className="max-w-none leading-relaxed text-slate-700 [&>a]:text-[#1155CC] [&>a]:hover:underline [&>h1]:font-sora [&>h1]:font-medium [&>h2]:font-sora [&>h2]:font-medium [&>h3]:font-sora [&>h3]:font-medium [&>p]:leading-relaxed [&>p]:text-slate-600"
+                className="article-content max-w-none text-base leading-relaxed text-slate-700
+                  [&_a]:font-semibold [&_a]:text-[#1155CC] [&_a]:underline [&_a:hover]:text-[#0d419d]
+                  [&_p]:mb-5 [&_p]:text-base sm:[&_p]:text-[17px] [&_p]:leading-[1.85] [&_p]:text-slate-600
+                  [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:pl-6 [&_ul]:text-slate-600
+                  [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:pl-6 [&_ol]:text-slate-600
+                  [&_li]:leading-relaxed
+                  [&_strong]:font-bold [&_strong]:text-slate-900
+                  [&_sub]:text-[0.72em] [&_sub]:font-semibold [&_sub]:text-slate-800 [&_sub]:align-sub
+                  [&_sup]:text-[0.72em] [&_sup]:font-semibold [&_sup]:text-slate-800 [&_sup]:align-super
+                  [&_img]:my-8 [&_img]:rounded-2xl [&_img]:border [&_img]:border-slate-100 [&_img]:shadow-md"
                 dangerouslySetInnerHTML={{ __html: post.content || "" }}
               />
 

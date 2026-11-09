@@ -16,6 +16,8 @@ import {
   Tag,
   Clock,
   Trash2,
+  Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +31,7 @@ import {
   deletePost,
   createPost,
   updatePost,
+  generatePostThumbnail,
 } from "@/lib/api/admin-posts.api";
 import { uploadMediaAsset } from "@/lib/api/media.api";
 import type { AdminPost } from "@/lib/types/admin.types";
@@ -53,6 +56,8 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
   const router = useRouter();
 
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [generatingThumbnail, setGeneratingThumbnail] = useState(false);
+  const [thumbnailFeedback, setThumbnailFeedback] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -122,6 +127,34 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
       setError(err instanceof Error ? err.message : "Image upload failed");
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const handleGenerateThumbnail = async () => {
+    const currentTitle = getValues("title")?.trim();
+    if (!currentTitle) {
+      setThumbnailFeedback("Please enter an article title first.");
+      return;
+    }
+
+    setGeneratingThumbnail(true);
+    setThumbnailFeedback(null);
+    try {
+      const res = await generatePostThumbnail({
+        postId: initialPost?.id,
+        title: currentTitle,
+        prompt: initialPost?.thumbnailPrompt || currentTitle,
+      });
+
+      if (res.data?.url) {
+        setValue("heroImage", res.data.url, { shouldDirty: true, shouldValidate: true });
+        setThumbnailFeedback("Thumbnail generated successfully!");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to generate thumbnail.";
+      setThumbnailFeedback(`Generation failed: ${msg}`);
+    } finally {
+      setGeneratingThumbnail(false);
     }
   };
 
@@ -611,6 +644,39 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                   />
                 </label>
               )}
+
+              {/* AI Thumbnail Generation Trigger */}
+              <div className="space-y-2 border-t border-slate-100 pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={generatingThumbnail}
+                  onClick={handleGenerateThumbnail}
+                  className="w-full gap-2 rounded-xl border-[#1155CC]/30 bg-blue-50/50 text-xs font-bold text-[#1155CC] hover:bg-blue-100/60 hover:text-[#0c409c]"
+                >
+                  {generatingThumbnail ? (
+                    <>
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                      Generating Thumbnail with AI...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-3.5 w-3.5 text-[#1155CC]" />
+                      {heroImage ? "Regenerate AI Thumbnail" : "Generate AI Thumbnail"}
+                    </>
+                  )}
+                </Button>
+                {thumbnailFeedback && (
+                  <p
+                    className={`text-[11px] font-medium ${
+                      thumbnailFeedback.includes("failed") ? "text-rose-600" : "text-emerald-600"
+                    }`}
+                  >
+                    {thumbnailFeedback}
+                  </p>
+                )}
+              </div>
 
               <div>
                 <label

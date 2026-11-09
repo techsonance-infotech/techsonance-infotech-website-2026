@@ -5,6 +5,7 @@ import BlogPostClient from "./BlogPostClient";
 import JsonLd, { getArticleSchema } from "@/app/components/JsonLd";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 import type { BlogPost } from "@/lib/content/types";
+import { renderMarkdownToHtml, extractTableOfContents } from "@/lib/utils/markdown";
 import {
   publicBlogPostBoundarySchema,
   publicBlogListBoundarySchema,
@@ -96,6 +97,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
   let post: BlogPost;
   let relatedPosts: BlogPost[] = [];
+  let tocItems: { id: string; text: string; depth: number }[] = [];
 
   try {
     const source = getPostSource();
@@ -106,6 +108,16 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     }
 
     post = publicBlogPostBoundarySchema.parse(rawPost);
+
+    // Extract Table of Contents from raw markdown before HTML conversion
+    const rawContent = post.content || "";
+    tocItems = extractTableOfContents(rawContent);
+
+    // Transform Markdown to clean, semantic HTML on the server for SSR and SEO
+    post = {
+      ...post,
+      content: renderMarkdownToHtml(rawContent),
+    };
 
     const allPostsRaw = await source.list();
     const allPosts = publicBlogListBoundarySchema.parse(allPostsRaw);
@@ -201,7 +213,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   return (
     <>
       <JsonLd schema={unifiedSchema} />
-      <BlogPostClient post={post} relatedPosts={relatedPosts} />
+      <BlogPostClient post={post} relatedPosts={relatedPosts} tocItems={tocItems} />
     </>
   );
 }

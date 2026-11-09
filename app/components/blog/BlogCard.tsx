@@ -27,12 +27,22 @@ export function BlogCard({ post }: BlogCardProps): React.JSX.Element {
     >
       <div>
         {/* Card Image area */}
-        <div className="relative flex h-48 items-center justify-center overflow-hidden border-b border-slate-50 bg-linear-to-br from-[#1155CC]/5 to-[#22B6F6]/5">
-          <div className="absolute inset-0 bg-linear-to-tr from-[#1155CC]/10 via-transparent to-[#22B6F6]/10 opacity-30 transition-all duration-500 group-hover:scale-105" />
-          <Icon
-            name="monitor"
-            className="h-12 w-12 text-[#1155CC]/25 transition-all duration-500 group-hover:scale-110"
-          />
+        <div className="relative flex h-48 items-center justify-center overflow-hidden border-b border-slate-50 bg-slate-50">
+          {post.heroImage && post.heroImage !== "/images/blog/default-hero.jpg" ? (
+            <img
+              src={post.heroImage}
+              alt={post.title || "Article Thumbnail"}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-linear-to-tr from-[#1155CC]/10 via-transparent to-[#22B6F6]/10 opacity-30 transition-all duration-500 group-hover:scale-105" />
+              <Icon
+                name="monitor"
+                className="h-12 w-12 text-[#1155CC]/25 transition-all duration-500 group-hover:scale-110"
+              />
+            </>
+          )}
           <span className="absolute top-4 left-4 rounded-lg border border-slate-100 bg-white/90 px-2.5 py-1 text-[9px] font-black tracking-wider text-[#1155CC] uppercase backdrop-blur-sm">
             {post.category || "Software Engineering"}
           </span>

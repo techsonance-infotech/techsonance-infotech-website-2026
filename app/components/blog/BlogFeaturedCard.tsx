@@ -24,12 +24,22 @@ export function BlogFeaturedCard({ post }: BlogFeaturedCardProps): React.JSX.Ele
       className="group mb-16 grid grid-cols-1 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_15px_45px_rgba(17,85,204,0.02)] transition-all duration-300 hover:shadow-[0_25px_60px_rgba(17,85,204,0.05)] lg:grid-cols-12"
     >
       {/* Image box */}
-      <div className="relative flex h-64 min-h-[280px] items-center justify-center overflow-hidden border-b border-slate-100 bg-linear-to-br from-[#1155CC]/10 to-[#22B6F6]/10 sm:h-80 lg:col-span-6 lg:h-full lg:border-r lg:border-b-0">
-        <div className="absolute inset-0 bg-linear-to-tr from-[#1155CC]/20 via-transparent to-[#22B6F6]/20 opacity-50 transition-all duration-500 group-hover:scale-105" />
-        <Icon
-          name="code"
-          className="h-16 w-16 text-[#1155CC]/30 transition-all duration-500 group-hover:scale-110"
-        />
+      <div className="relative flex h-64 min-h-[280px] items-center justify-center overflow-hidden border-b border-slate-100 bg-slate-50 sm:h-80 lg:col-span-6 lg:h-full lg:border-r lg:border-b-0">
+        {post.heroImage && post.heroImage !== "/images/blog/default-hero.jpg" ? (
+          <img
+            src={post.heroImage}
+            alt={post.title || "Featured Article"}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-linear-to-tr from-[#1155CC]/20 via-transparent to-[#22B6F6]/20 opacity-50 transition-all duration-500 group-hover:scale-105" />
+            <Icon
+              name="code"
+              className="h-16 w-16 text-[#1155CC]/30 transition-all duration-500 group-hover:scale-110"
+            />
+          </>
+        )}
         <span className="absolute top-4 left-4 rounded-lg bg-[#1155CC] px-3 py-1.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm">
           Featured
         </span>

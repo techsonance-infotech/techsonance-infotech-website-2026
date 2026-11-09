@@ -2,6 +2,7 @@ import {
   type AddCredentialInput,
   type ReplaceCredentialInput,
   type KillSwitchInput,
+  type UpdateCredentialModelInput,
 } from "@/lib/validations/ai-credential.schema";
 import {
   type CredentialViewDto,
@@ -87,6 +88,23 @@ export async function reactivateAdminAiCredential(
   const json = await res.json();
   if (!res.ok || !json.ok) {
     throw new Error(json.error?.message || "Failed to reactivate credential");
+  }
+
+  return json.data.credential;
+}
+
+export async function updateAdminAiCredentialModel(
+  input: UpdateCredentialModelInput,
+): Promise<CredentialViewDto> {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_MODEL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const json = await res.json();
+  if (!res.ok || !json.ok) {
+    throw new Error(json.error?.message || "Failed to update credential model");
   }
 
   return json.data.credential;

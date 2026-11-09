@@ -26,6 +26,18 @@ export interface ValidationResult {
   errors: string[];
 }
 
+function cleanIncompleteTrailingMarkdown(text: string): string {
+  let cleaned = text.trim();
+  // Strip trailing dangling bullet points cut off mid-sentence (e.g. `* **Why` or `- **`)
+  cleaned = cleaned.replace(/[\n\r]\s*[-*•]\s*\*\*[^*]*$/g, "");
+  // Close unclosed fenced code blocks
+  const backtickCount = (cleaned.match(/```/g) || []).length;
+  if (backtickCount % 2 !== 0) {
+    cleaned += "\n```";
+  }
+  return cleaned.trim();
+}
+
 export class AIWriterService {
   constructor(private llmRouter: LLMRouterService = inject(LLMRouterService)) {}
 
@@ -36,7 +48,7 @@ export class AIWriterService {
         { role: "user", content: userPrompt },
       ],
       temperature: 0.7,
-      maxTokens: 2500,
+      maxTokens: 4000,
     };
 
     let result = "";
@@ -139,7 +151,8 @@ Context of Previous Sections: ${context.previousSectionsSummary || "Beginning of
 
 Write the full markdown for this section now.`;
 
-    return await this.completePrompt(systemPrompt, userPrompt);
+    const raw = await this.completePrompt(systemPrompt, userPrompt);
+    return cleanIncompleteTrailingMarkdown(raw);
   }
 
   /**

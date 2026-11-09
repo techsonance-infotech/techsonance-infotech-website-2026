@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Sora } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import "highlight.js/styles/atom-one-dark.css";
 import LenisProvider from "@/app/components/LenisProvider";
 import CookieConsent from "@/app/components/home/CookieConsent";
 import JsonLd, { getUnifiedRootEntityGraph } from "@/app/components/JsonLd";

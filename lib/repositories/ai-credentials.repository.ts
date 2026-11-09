@@ -164,12 +164,20 @@ export class AiCredentialsRepository {
         .where(
           and(
             eq(credentialsTable.provider, String(provider)),
-            eq(credentialsTable.status, AiCredentialStatus.ACTIVE),
-            eq(credentialsTable.isCanary, false),
             or(
-              isNull(credentialsTable.cooldownUntil),
-              lte(credentialsTable.cooldownUntil, now),
+              and(
+                eq(credentialsTable.status, AiCredentialStatus.ACTIVE),
+                or(
+                  isNull(credentialsTable.cooldownUntil),
+                  lte(credentialsTable.cooldownUntil, now),
+                ),
+              ),
+              and(
+                eq(credentialsTable.status, AiCredentialStatus.COOLING_DOWN),
+                lte(credentialsTable.cooldownUntil, now),
+              ),
             ),
+            eq(credentialsTable.isCanary, false),
             or(
               isNull(credentialsTable.dailyBudgetUsd),
               sql`${credentialsTable.spentTodayUsd} < ${credentialsTable.dailyBudgetUsd}`,
@@ -181,6 +189,12 @@ export class AiCredentialsRepository {
           asc(sql`COALESCE(${credentialsTable.lastUsedAt}, '1970-01-01')`),
         )
         .limit(1);
+
+      if (credential && credential.status === AiCredentialStatus.COOLING_DOWN) {
+        await this.updateStatus(credential.id, AiCredentialStatus.ACTIVE, null);
+        credential.status = AiCredentialStatus.ACTIVE;
+        credential.cooldownUntil = null;
+      }
 
       return credential ?? null;
     } catch (err) {
@@ -263,6 +277,30 @@ export class AiCredentialsRepository {
     } catch (err) {
       throw mapDbError(err, {
         context: "AiCredentialsRepository.wipeCompromisedCredential",
+        id,
+      });
+    }
+  }
+
+  /**
+   * Updates the model identifier for an existing credential.
+   * Enforces mandatory where clause (rule 03 §3 / rule 12 §3.5).
+   */
+  async updateModel(id: string, model: string): Promise<AiCredential | null> {
+    try {
+      const [updated] = await this.db
+        .update(credentialsTable)
+        .set({
+          model,
+          updatedAt: new Date(),
+        })
+        .where(eq(credentialsTable.id, id))
+        .returning();
+
+      return updated ?? null;
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AiCredentialsRepository.updateModel",
         id,
       });
     }

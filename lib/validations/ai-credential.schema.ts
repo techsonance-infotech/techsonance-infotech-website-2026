@@ -45,3 +45,11 @@ export const testConnectionSchema = z.strictObject({
 
 export type TestConnectionInput = z.input<typeof testConnectionSchema>;
 export type TestConnectionOutput = z.output<typeof testConnectionSchema>;
+
+export const updateCredentialModelSchema = z.strictObject({
+  credentialId: z.string().uuid({ error: "Valid credential ID is required" }),
+  model: z.string().trim().min(1, { error: "Model identifier is required" }).max(100),
+});
+
+export type UpdateCredentialModelInput = z.input<typeof updateCredentialModelSchema>;
+export type UpdateCredentialModelOutput = z.output<typeof updateCredentialModelSchema>;

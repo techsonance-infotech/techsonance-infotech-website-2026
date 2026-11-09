@@ -101,27 +101,36 @@ export const legacyPostSource: PostSource = {
 async function fetchCmsPostsRaw(category?: string): Promise<BlogPost[]> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchPublishedPosts(category);
+    const dbPosts = await db.fetchPublishedPosts(category);
+    const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+    const legacy = (await legacyPostSource.list({ category })).filter(
+      (p) => !dbSlugs.has(p.slug),
+    );
+    return [...dbPosts, ...legacy];
   } catch {
-    return [];
+    return legacyPostSource.list({ category });
   }
 }
 
 async function fetchCmsPostBySlugRaw(slug: string): Promise<BlogPost | null> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchPostBySlug(slug);
+    const post = await db.fetchPostBySlug(slug);
+    if (post) return post;
   } catch {
-    return null;
+    // Fall back to legacy source
   }
+  return legacyPostSource.get(slug);
 }
 
 async function fetchCmsSlugsRaw(): Promise<string[]> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchPostSlugs();
+    const dbSlugs = await db.fetchPostSlugs();
+    const legacySlugs = await legacyPostSource.slugs();
+    return Array.from(new Set([...dbSlugs, ...legacySlugs]));
   } catch {
-    return [];
+    return legacyPostSource.slugs();
   }
 }
 
@@ -160,11 +169,11 @@ export const cmsPostSource: PostSource = {
 export function getPostSource(): PostSource {
   try {
     const env = getEnv();
-    if (env.CONTENT_SOURCE_BLOG === "cms") {
-      return cmsPostSource;
+    if (env.CONTENT_SOURCE_BLOG === "legacy") {
+      return legacyPostSource;
     }
   } catch {
-    // fallback to legacy source
+    // fallback
   }
-  return legacyPostSource;
+  return cmsPostSource;
 }

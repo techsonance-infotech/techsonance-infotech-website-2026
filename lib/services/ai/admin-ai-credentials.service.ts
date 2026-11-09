@@ -7,6 +7,7 @@ import {
   type AddCredentialInput,
   type ReplaceCredentialInput,
   type KillSwitchInput,
+  type UpdateCredentialModelInput,
 } from "@/lib/validations/ai-credential.schema";
 import {
   type CredentialViewDto,
@@ -14,11 +15,21 @@ import {
 import type { AiCredential } from "@/lib/database/schema/index.schema";
 import { AiCredentialStatus, type AiProvider, type AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { AppError, ErrorCode } from "@/lib/errors";
+import { LLMHealthService } from "../llm-health.service";
 
 export class AdminAiCredentialsService {
   constructor(
     private repo: AiCredentialsRepository = inject(AiCredentialsRepository),
-  ) {}
+    private healthService?: LLMHealthService,
+  ) {
+    if (!this.healthService) {
+      try {
+        this.healthService = inject(LLMHealthService);
+      } catch {
+        // Fallback for isolated test environments
+      }
+    }
+  }
 
   /**
    * Transforms database row into safe admin view DTO (zero keys or ciphertext exposed).
@@ -245,6 +256,14 @@ export class AdminAiCredentialsService {
       "Manual reactivation",
     );
 
+    if (this.healthService) {
+      try {
+        await this.healthService.markOk(cred.provider);
+      } catch {
+        // Non-fatal if health service is offline
+      }
+    }
+
     await this.repo.recordEvent(
       cred.id,
       "created",
@@ -254,5 +273,42 @@ export class AdminAiCredentialsService {
     );
 
     return this.toDto(updated || cred);
+  }
+
+  /**
+   * Updates the serving model for an existing credential without modifying the API key or ciphertext.
+   */
+  async updateModel(
+    input: UpdateCredentialModelInput,
+    actorId: string,
+    requestId?: string,
+  ): Promise<CredentialViewDto> {
+    const cred = await this.repo.findCredentialById(input.credentialId);
+    if (!cred) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Credential not found.");
+    }
+
+    if (cred.status === AiCredentialStatus.COMPROMISED || !cred.ciphertext) {
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        "Cannot change the model on a compromised or wiped credential.",
+      );
+    }
+
+    const updated = await this.repo.updateModel(cred.id, input.model.trim());
+
+    await this.repo.recordEvent(
+      cred.id,
+      "rotated",
+      actorId,
+      {
+        action: "model_updated",
+        previousModel: cred.model,
+        newModel: input.model.trim(),
+      },
+      requestId,
+    );
+
+    return this.toDto(updated || { ...cred, model: input.model.trim() });
   }
 }

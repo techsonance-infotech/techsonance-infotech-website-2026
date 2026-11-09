@@ -306,3 +306,41 @@ export async function listPosts(
     total,
   };
 }
+
+export interface GeneratePostThumbnailResponse {
+  ok: boolean;
+  data: {
+    url: string;
+    provider: string;
+    prompt: string;
+    alt: string;
+    thumbnailMissing: boolean;
+  };
+}
+
+export async function generatePostThumbnail(
+  input: { postId?: string; title: string; prompt?: string },
+  signal?: AbortSignal,
+): Promise<GeneratePostThumbnailResponse> {
+  const schema = z.strictObject({
+    ok: z.boolean(),
+    data: z.strictObject({
+      url: z.string(),
+      provider: z.string(),
+      prompt: z.string(),
+      alt: z.string(),
+      thumbnailMissing: z.boolean(),
+    }),
+  });
+
+  return safeFetch(API_ENDPOINTS.ADMIN.BLOG.POST_THUMBNAIL_GENERATE, schema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(input),
+    signal,
+    timeoutMs: 60_000,
+  });
+}

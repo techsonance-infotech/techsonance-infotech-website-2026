@@ -49,6 +49,7 @@ export const API_ENDPOINTS = {
       POST: (id: string) => `/api/admin/blog/posts/${id}` as const,
       POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
       POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
+      POST_THUMBNAIL_GENERATE: "/api/admin/blog/thumbnail/generate",
     },
 
     // Legacy Blog / CMS Posts aliases (for seamless backward compatibility)
@@ -56,6 +57,7 @@ export const API_ENDPOINTS = {
     POST: (id: string) => `/api/admin/blog/posts/${id}` as const,
     POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
     POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
+    POST_THUMBNAIL_GENERATE: "/api/admin/blog/thumbnail/generate",
 
     // Media Upload
     MEDIA_UPLOAD: "/api/admin/media/upload",
@@ -73,6 +75,7 @@ export const API_ENDPOINTS = {
       CREDENTIALS_REPLACE: "/api/admin/ai/credentials/replace",
       CREDENTIALS_KILL: "/api/admin/ai/credentials/kill",
       CREDENTIALS_REACTIVATE: "/api/admin/ai/credentials/reactivate",
+      CREDENTIALS_MODEL: "/api/admin/ai/credentials/model",
       ACCOUNTS: "/api/admin/ai/accounts",
     },
 

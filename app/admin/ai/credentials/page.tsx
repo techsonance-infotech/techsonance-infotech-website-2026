@@ -30,6 +30,7 @@ import {
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
 import { AddCredentialModal, type ProviderCategory } from "@/components/admin/ai/AddCredentialModal";
 import { ReplaceCredentialModal } from "@/components/admin/ai/ReplaceCredentialModal";
+import { ChangeModelModal } from "@/components/admin/ai/ChangeModelModal";
 import { KillSwitchDialog } from "@/components/admin/ai/KillSwitchDialog";
 
 export default function AiCredentialsPage() {
@@ -41,6 +42,8 @@ export default function AiCredentialsPage() {
   // Modal controls
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [initialAddCategory, setInitialAddCategory] = useState<ProviderCategory>("text");
+  const [modelTarget, setModelTarget] = useState<CredentialViewDto | null>(null);
+  const [modelModalOpen, setModelModalOpen] = useState(false);
   const [replaceTarget, setReplaceTarget] = useState<CredentialViewDto | null>(null);
   const [replaceModalOpen, setReplaceModalOpen] = useState(false);
   const [killTarget, setKillTarget] = useState<CredentialViewDto | null>(null);
@@ -470,15 +473,22 @@ export default function AiCredentialsPage() {
                           </span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span
-                            className={`font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setModelTarget(cred);
+                              setModelModalOpen(true);
+                            }}
+                            title="Click to switch serving model"
+                            className={`group inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold px-2 py-0.5 rounded-md border transition-all cursor-pointer hover:shadow-2xs ${
                               isImg
-                                ? "text-purple-700 bg-purple-50/80 border-purple-200/60"
-                                : "text-blue-700 bg-blue-50/80 border-blue-200/60"
+                                ? "text-purple-700 bg-purple-50/80 border-purple-200/60 hover:bg-purple-100 hover:border-purple-300"
+                                : "text-blue-700 bg-blue-50/80 border-blue-200/60 hover:bg-blue-100 hover:border-blue-300"
                             }`}
                           >
-                            {cred.model || "default"}
-                          </span>
+                            <span>{cred.model || "default"}</span>
+                            <Sliders className="h-3 w-3 opacity-40 group-hover:opacity-100 transition-opacity" />
+                          </button>
                         </td>
                         <td className="px-5 py-3.5 font-semibold text-slate-900">
                           {cred.label}
@@ -505,6 +515,19 @@ export default function AiCredentialsPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => {
+                                setModelTarget(cred);
+                                setModelModalOpen(true);
+                              }}
+                              className="h-8 rounded-xl border border-blue-200 bg-blue-50/50 px-3 text-[11px] font-semibold text-blue-700 shadow-2xs hover:bg-blue-100 hover:text-blue-800 transition-colors inline-flex items-center gap-1.5"
+                            >
+                              <Cpu className="h-3.5 w-3.5 text-blue-600" />
+                              <span>Model</span>
+                            </Button>
+
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
                                 setReplaceTarget(cred);
                                 setReplaceModalOpen(true);
                               }}
@@ -514,7 +537,24 @@ export default function AiCredentialsPage() {
                               <span>Replace</span>
                             </Button>
 
-                            {cred.status === "disabled" ? (
+                            {cred.status === "cooling_down" ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={actionLoadingId === cred.id}
+                                onClick={() => handleReactivate(cred.id)}
+                                className="h-8 rounded-xl border border-amber-300 bg-amber-50/80 px-3 text-[11px] font-semibold text-amber-800 shadow-2xs hover:bg-amber-100 hover:text-amber-900 transition-colors inline-flex items-center gap-1.5"
+                              >
+                                <Zap
+                                  className={`h-3.5 w-3.5 text-amber-600 ${
+                                    actionLoadingId === cred.id ? "animate-spin" : ""
+                                  }`}
+                                />
+                                <span>
+                                  {actionLoadingId === cred.id ? "Clearing..." : "Clear Cooldown"}
+                                </span>
+                              </Button>
+                            ) : cred.status === "disabled" ? (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -566,6 +606,13 @@ export default function AiCredentialsPage() {
         open={addModalOpen}
         onOpenChange={setAddModalOpen}
         initialCategory={initialAddCategory}
+        onSuccess={() => fetchCredentials(false)}
+      />
+
+      <ChangeModelModal
+        credential={modelTarget}
+        open={modelModalOpen}
+        onOpenChange={setModelModalOpen}
         onSuccess={() => fetchCredentials(false)}
       />
 

@@ -14,6 +14,7 @@ describe("AdminAiCredentialsService", () => {
       findCredentialById: vi.fn(),
       createCredential: vi.fn(),
       updateStatus: vi.fn(),
+      updateModel: vi.fn(),
       wipeCompromisedCredential: vi.fn(),
       recordEvent: vi.fn(),
     };
@@ -137,6 +138,53 @@ describe("AdminAiCredentialsService", () => {
         reason: "Suspected rate limiting flood during high traffic",
       }),
       undefined,
+    );
+  });
+
+  it("should update serving model without touching API key or ciphertext", async () => {
+    mockRepo.findCredentialById.mockResolvedValue({
+      id: "cred-to-update",
+      provider: "groq",
+      model: "openai/gpt-oss-120b",
+      status: AiCredentialStatus.ACTIVE,
+      ciphertext: Buffer.from("sealed"),
+      label: "Groq Main",
+      last4: "wwY3",
+      keyVersion: 1,
+      priority: 10,
+    });
+    mockRepo.updateModel.mockResolvedValue({
+      id: "cred-to-update",
+      provider: "groq",
+      model: "llama-3.3-70b-versatile",
+      status: AiCredentialStatus.ACTIVE,
+      label: "Groq Main",
+      last4: "wwY3",
+      keyVersion: 1,
+      priority: 10,
+    });
+
+    const res = await service.updateModel(
+      {
+        credentialId: "cred-to-update",
+        model: "llama-3.3-70b-versatile",
+      },
+      "admin-user-1",
+      "req-123",
+    );
+
+    expect(res.model).toBe("llama-3.3-70b-versatile");
+    expect(mockRepo.updateModel).toHaveBeenCalledWith("cred-to-update", "llama-3.3-70b-versatile");
+    expect(mockRepo.recordEvent).toHaveBeenCalledWith(
+      "cred-to-update",
+      "rotated",
+      "admin-user-1",
+      expect.objectContaining({
+        action: "model_updated",
+        previousModel: "openai/gpt-oss-120b",
+        newModel: "llama-3.3-70b-versatile",
+      }),
+      "req-123",
     );
   });
 });

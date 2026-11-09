@@ -37,15 +37,19 @@ export const SafeAdminPostItemSchema = z
       .nullish()
       .transform((v) => v || "5 min read"),
     status: z.enum(PostStatus).catch(PostStatus.DRAFT),
-    publishedAt: z.string().nullish().catch(null),
+    publishedAt: z
+      .union([z.string(), z.date()])
+      .nullish()
+      .transform((v) => (v instanceof Date ? v.toISOString() : v ?? null))
+      .catch(null),
     createdAt: z
-      .string()
+      .union([z.string(), z.date()])
       .nullish()
-      .transform((v) => v || new Date().toISOString()),
+      .transform((v) => (v instanceof Date ? v.toISOString() : v || new Date().toISOString())),
     updatedAt: z
-      .string()
+      .union([z.string(), z.date()])
       .nullish()
-      .transform((v) => v || new Date().toISOString()),
+      .transform((v) => (v instanceof Date ? v.toISOString() : v || new Date().toISOString())),
     version: z.coerce.number().int().catch(1),
     category: z
       .object({
