@@ -38,7 +38,7 @@ export class PollinationsImageAdapter {
 
       if (res.ok) {
         const arrayBuf = await res.arrayBuffer();
-        return Buffer.from(arrayBuf);
+        return this.cleanWatermark(Buffer.from(arrayBuf), width, height);
       }
     } catch {
       // Fall through to open endpoint fallback
@@ -55,10 +55,38 @@ export class PollinationsImageAdapter {
     });
 
     if (!openRes.ok) {
-      throw new Error(`Pollinations.ai error (${openRes.status}): ${openRes.statusText}`);
+      throw new Error(
+        `Pollinations.ai error (${openRes.status}): ${openRes.statusText}`,
+      );
     }
 
     const arrayBuf = await openRes.arrayBuffer();
-    return Buffer.from(arrayBuf);
+    return this.cleanWatermark(Buffer.from(arrayBuf), width, height);
+  }
+
+  /**
+   * Automatically strips free-tier watermark stamps from the bottom edge
+   * and resizes cleanly to the target 16:9 aspect ratio.
+   */
+  private async cleanWatermark(
+    rawBuffer: Buffer,
+    targetWidth: number,
+    targetHeight: number,
+  ): Promise<Buffer> {
+    try {
+      const sharp = (await import("sharp")).default;
+      const meta = await sharp(rawBuffer).metadata();
+      const currentWidth = meta.width || targetWidth;
+      const currentHeight = meta.height || targetHeight;
+      const cropHeight = Math.floor(currentHeight * 0.94);
+
+      return await sharp(rawBuffer)
+        .extract({ left: 0, top: 0, width: currentWidth, height: cropHeight })
+        .resize(targetWidth, targetHeight, { fit: "cover" })
+        .jpeg({ quality: 92 })
+        .toBuffer();
+    } catch {
+      return rawBuffer;
+    }
   }
 }

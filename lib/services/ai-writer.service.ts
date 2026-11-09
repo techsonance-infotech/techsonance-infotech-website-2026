@@ -417,7 +417,7 @@ Article title (for context only): ${title}
 Visual brief:
 ${JSON.stringify(brief, null, 2)}
 
-Brand style to apply: clean isometric 3D illustration, deep navy background, neon blue and emerald accent lighting, soft volumetric glow, smooth glass and matte metal materials, generous empty space on the left third for a headline overlay, no text.`;
+Brand style to apply: sleek enterprise engineering digital artwork, depicting dynamic distributed systems and software components (collaborative autonomous agent nodes, glowing server racks, fiber-optic data buses, and network topology maps). Rich multi-element composition with depth, midnight blue background with vibrant electric cyan and emerald accents, cinematic volumetric lighting. Never render an isolated single cube, empty box, or floating geometric shape. No text.`;
 
     try {
       const responseText = await this.completePrompt(systemPrompt, userPrompt);
@@ -435,7 +435,7 @@ Brand style to apply: clean isometric 3D illustration, deep navy background, neo
 
       return finalPrompt;
     } catch {
-      return `Minimalist modern isometric 3D editorial illustration representing ${title}, glowing servers and interconnecting cyan optical fibers, floating geometric data nodes against deep navy void, soft volumetric lighting and sleek glass reflections, wide composition, no text, no letters`;
+      return `Detailed architectural enterprise illustration representing ${title}, network of autonomous multi-agent software nodes collaborating in real-time, illuminated server blades and high-speed cyan optical conduits, complex distributed data topology, deep midnight blue background with vibrant teal and emerald illumination, cinematic depth of field, wide composition, no text, no letters`;
     }
   }
 
@@ -486,7 +486,7 @@ ${context.issues.join("; ") || "Needs improved relevance and compositional focus
 Critic AI fix instructions:
 ${context.reviewerFeedback || "Simplify background, remove cluttered shapes, strengthen central metaphor"}
 
-Brand style to apply: clean isometric 3D illustration, deep navy background, neon blue and emerald accent lighting, soft volumetric glow, smooth glass and matte metal materials, generous empty space on left third, no text.
+Brand style to apply: detailed enterprise architecture artwork, multi-agent systems with collaborative software nodes, high-speed data conduits, server rack arrays, deep navy background with emerald and cyan edge lighting, rich spatial depth, no single floating cubes or boxes, no text.
 
 Write the improved prompt now.`;
 
@@ -506,7 +506,7 @@ Write the improved prompt now.`;
 
       return finalPrompt;
     } catch {
-      return `Refined minimalist isometric 3D hero graphic for ${title}, single illuminated focal point, glowing data flow, clean empty negative space on left third, deep navy void with emerald and cyan edge lighting, no text, no letters`;
+      return `Refined enterprise technology illustration for ${title}, collaborative network of autonomous software agent nodes, glowing server blades and interconnected high-speed data streams, deep navy background with emerald and cyan edge illumination, cinematic composition, no text, no letters`;
     }
   }
 
@@ -577,7 +577,7 @@ Review the attached image and return the JSON verdict.`;
     const apiKey = env.GEMINI_API_KEY;
     if (apiKey) {
       try {
-        const model = "gemini-2.5-flash";
+        const model = "gemini-3-flash-preview";
         const res = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
           {
