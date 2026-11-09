@@ -24,7 +24,7 @@ export class GeminiProvider extends OpenAICompatibleProvider {
         options.baseUrl ||
         "https://generativelanguage.googleapis.com/v1beta/openai",
       apiKey: options.apiKey,
-      model: options.model || "gemini-3.0-flash",
+      model: options.model || "gemini-3.5-flash-lite",
       extraHeaders: options.extraHeaders,
     });
   }

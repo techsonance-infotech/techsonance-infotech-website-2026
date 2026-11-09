@@ -22,7 +22,7 @@ export class GroqProvider extends OpenAICompatibleProvider {
       name: options.name || "Groq",
       baseUrl: options.baseUrl || "https://api.groq.com/openai/v1",
       apiKey: options.apiKey,
-      model: options.model || "llama-3.3-70b-versatile",
+      model: options.model || "openai/gpt-oss-120b",
       extraHeaders: options.extraHeaders,
     });
   }
