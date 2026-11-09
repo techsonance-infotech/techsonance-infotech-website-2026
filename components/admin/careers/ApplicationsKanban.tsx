@@ -60,6 +60,11 @@ const KANBAN_STAGES: {
     dotColor: "bg-green-600",
   },
   {
+    status: ApplicationStatus.ON_HOLD,
+    title: "On Hold",
+    dotColor: "bg-amber-500",
+  },
+  {
     status: ApplicationStatus.REJECTED,
     title: "Rejected",
     dotColor: "bg-rose-500",

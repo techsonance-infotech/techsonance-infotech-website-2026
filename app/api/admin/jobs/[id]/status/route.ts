@@ -144,17 +144,19 @@ export async function POST(req: Request, { params }: RouteParams) {
         { status: 400, headers },
       );
     }
-    const { targetStatus, comment } = bodyResult.data;
+    const { targetStatus, comment, closesAt, publishAt } = bodyResult.data;
 
     // 5. Execution
     const ipAddress = req.headers.get("x-forwarded-for") || undefined;
     const jobsService = container.get(AdminJobsService);
+    const hasSchedule = closesAt !== undefined || publishAt !== undefined;
     const updated = await jobsService.transitionStatus(
       id,
       targetStatus,
       { userId: session.userId, role: session.role },
       comment,
       ipAddress,
+      ...(hasSchedule ? [{ closesAt, publishAt }] : []),
     );
 
     return NextResponse.json(

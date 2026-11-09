@@ -80,12 +80,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const jobUrls = (activeJobs || [])
-    .filter(
-      (job) =>
-        job.visibility !== "UNLISTED" &&
-        job.visibility !== "INTERNAL" &&
-        (job.status === "PUBLISHED" || job.status === "OPEN"),
-    )
+    .filter((job) => {
+      const vis = (job.visibility || "").toLowerCase();
+      if (vis === "unlisted" || vis === "internal") return false;
+      if (job.status !== "PUBLISHED" && job.status !== "OPEN") return false;
+      if (job.closesAt && new Date(job.closesAt).getTime() <= Date.now()) return false;
+      return true;
+    })
     .map((job) => {
       let lastMod = STATIC_LAST_MOD;
       if (job.updatedAt || job.publishedAt) {

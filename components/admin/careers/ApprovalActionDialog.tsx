@@ -79,12 +79,20 @@ export function ApprovalActionDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200 animate-in fade-in">
-      <dialog
-        open
+    <div
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isSubmitting) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200 animate-in fade-in"
+    >
+      <div
+        role="dialog"
         aria-modal="true"
         aria-labelledby="approval-dialog-title"
-        className="m-0 block w-full max-w-md space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -214,7 +222,7 @@ export function ApprovalActionDialog({
             </Button>
           </div>
         </form>
-      </dialog>
+      </div>
     </div>
   );
 }

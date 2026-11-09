@@ -24,6 +24,7 @@ import {
   Layers,
   Save,
   Copy,
+  Calendar,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,7 +37,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { evaluateCompleteness, type JobCompletenessState } from "./CompletenessChecklist";
+import {
+  evaluateCompleteness,
+  computeCompleteness,
+  type JobCompletenessState,
+} from "./CompletenessChecklist";
 import { StructuredListInput } from "./StructuredListInput";
 import { JobReviewSummary } from "./JobReviewSummary";
 import { FormSelect } from "./FormSelect";
@@ -145,6 +150,15 @@ export const DEFAULT_JOB_FORM: JobFormData = {
   featured: false,
 };
 
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 interface JobEditorFormProps {
   initialJob?: Partial<JobFormData>;
   onSave?: (jobData: JobFormData) => Promise<void> | void;
@@ -203,11 +217,32 @@ export function JobEditorForm({
 
   const job = watch();
 
+  const [isSlugCustomized, setIsSlugCustomized] = useState<boolean>(() => {
+    if (!initialJob?.slug || !initialJob?.title) return false;
+    if (initialJob.slug === "lead-distributed-systems-engineer") return false;
+    return initialJob.slug !== slugify(initialJob.title);
+  });
+
   useEffect(() => {
     if (initialJob) {
+      const isTemplateOrUncustomized =
+        !initialJob.slug ||
+        initialJob.slug === "lead-distributed-systems-engineer" ||
+        (!isSlugCustomized && initialJob.title && initialJob.slug !== slugify(initialJob.title));
+
+      const resolvedSlug =
+        isTemplateOrUncustomized && initialJob.title
+          ? slugify(initialJob.title)
+          : initialJob.slug;
+
+      if (isTemplateOrUncustomized && initialJob.title) {
+        setIsSlugCustomized(false);
+      }
+
       reset({
         ...DEFAULT_JOB_FORM,
         ...initialJob,
+        ...(resolvedSlug ? { slug: resolvedSlug } : {}),
         responsibilities: initialJob?.responsibilities || DEFAULT_JOB_FORM.responsibilities,
         requirements: initialJob?.requirements || DEFAULT_JOB_FORM.requirements,
         preferredQualifications: initialJob?.preferredQualifications || [],
@@ -217,7 +252,7 @@ export function JobEditorForm({
         hiringProcess: initialJob?.hiringProcess || DEFAULT_JOB_FORM.hiringProcess,
       });
     }
-  }, [initialJob, reset]);
+  }, [initialJob, reset, isSlugCustomized]);
 
   // Unsaved changes browser navigation guard (Finding 24)
   useEffect(() => {
@@ -235,9 +270,44 @@ export function JobEditorForm({
   // Changes are persisted explicitly via "Save Draft" or upon publishing.
   const [publishConfirmOpen, setPublishConfirmOpen] = useState(false);
   const [requirementsModalOpen, setRequirementsModalOpen] = useState(false);
+  const [scheduleClosesAt, setScheduleClosesAt] = useState<Date | null>(() => {
+    if (initialJob?.closesAt && new Date(initialJob.closesAt).getTime() > Date.now()) {
+      return new Date(initialJob.closesAt);
+    }
+    return null;
+  });
+
+  // Sync scheduleClosesAt when confirmation modal opens
+  useEffect(() => {
+    if (publishConfirmOpen) {
+      const currentClosesAt = watch("closesAt");
+      if (currentClosesAt && new Date(currentClosesAt).getTime() > Date.now()) {
+        setScheduleClosesAt(new Date(currentClosesAt));
+      } else {
+        setScheduleClosesAt(null);
+      }
+    }
+  }, [publishConfirmOpen, watch]);
+
   const [activeTab, setActiveTab] = useState<
     "basics" | "location" | "content" | "compensation" | "application" | "review"
   >("basics");
+
+  // Read ?tab= from URL params on mount to preserve tab upon save or edit
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get("tab");
+      if (
+        tabParam &&
+        ["basics", "location", "content", "compensation", "application", "review"].includes(
+          tabParam,
+        )
+      ) {
+        setActiveTab(tabParam as any);
+      }
+    }
+  }, []);
 
   const handleApplyQualityFix = (issue: DetectedIssue) => {
     const regex = new RegExp(`\\b${issue.word}\\b`, "gi");
@@ -272,22 +342,44 @@ export function JobEditorForm({
     if (hasBlockingError) {
       onClearError?.();
     }
+    const previousTitle = getValues("title");
     setValue(key as any, value as any, { shouldDirty: true });
     if (key === "title" && typeof value === "string") {
       const currentSlug = getValues("slug");
-      if (!currentSlug || currentSlug === slugify(getValues("title") || "")) {
+      // As long as slug is not explicitly customized, automatically sync slug to title in real-time
+      if (!isSlugCustomized || !currentSlug || currentSlug === "lead-distributed-systems-engineer") {
         setValue("slug", slugify(value), { shouldDirty: true });
       }
+      const currentSeoTitle = getValues("seoTitle");
+      if (
+        !currentSeoTitle ||
+        currentSeoTitle.includes("Lead Distributed Systems Engineer") ||
+        (previousTitle && currentSeoTitle.includes(previousTitle))
+      ) {
+        const genTitle = `${value.trim()} | Careers at TechSonance Infotech`;
+        setValue("seoTitle", genTitle.length > 60 ? genTitle.slice(0, 57) + "..." : genTitle, {
+          shouldDirty: true,
+        });
+      }
     }
-  };
-
-  const slugify = (text: string) => {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+    if (key === "slug" && typeof value === "string") {
+      const currentTitle = getValues("title");
+      if (!value || value === slugify(currentTitle || "")) {
+        setIsSlugCustomized(false);
+      } else {
+        setIsSlugCustomized(true);
+      }
+    }
+    if (key === "summary" && typeof value === "string") {
+      const currentSeoDesc = getValues("seoDescription");
+      if (!currentSeoDesc && value.trim()) {
+        setValue(
+          "seoDescription",
+          value.trim().length > 155 ? value.trim().slice(0, 152) + "..." : value.trim(),
+          { shouldDirty: true },
+        );
+      }
+    }
   };
 
   // Add items to arrays
@@ -439,9 +531,15 @@ export function JobEditorForm({
   };
 
   const completeness = evaluateCompleteness(job);
+  const completenessStats = computeCompleteness(job);
   const isAlreadyPublished = job.status === "PUBLISHED" || job.status === "OPEN";
+  const isClosed = job.status === "CLOSED";
   const canPublishDirectly =
-    job.status === "DRAFT" || job.status === "IN_REVIEW" || !job.status || isAlreadyPublished;
+    job.status === "DRAFT" ||
+    job.status === "IN_REVIEW" ||
+    !job.status ||
+    isAlreadyPublished ||
+    isClosed;
   const isPublishDisabled = isSaving || saveStatus === "saving" || hasBlockingError;
 
   const getFieldTab = (
@@ -626,6 +724,28 @@ export function JobEditorForm({
         </div>
 
         <div className="flex w-full items-center justify-end gap-2.5 sm:w-auto">
+          {/* Completeness Progress Badge */}
+          <div
+            className="hidden items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/70 px-2.5 py-1 sm:flex dark:border-slate-800 dark:bg-slate-800/40"
+            title={`${completenessStats.passedCount} of ${completenessStats.totalRequired} required sections complete`}
+          >
+            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${
+                  completenessStats.percentage === 100
+                    ? "bg-emerald-500"
+                    : completenessStats.percentage >= 60
+                    ? "bg-[#1155CC]"
+                    : "bg-amber-500"
+                }`}
+                style={{ width: `${completenessStats.percentage}%` }}
+              />
+            </div>
+            <span className="font-mono text-[10px] font-bold text-slate-600 dark:text-slate-400">
+              {completenessStats.percentage}%
+            </span>
+          </div>
+
           {/* Unified Save Status Indicator (Finding 3, Spec 4.1) */}
           <div
             className="mr-1 flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400"
@@ -704,7 +824,13 @@ export function JobEditorForm({
             className="h-8 cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
           >
             <Save className="h-3.5 w-3.5" />
-            <span>Save Draft</span>
+            <span>
+              {job.status === "PUBLISHED"
+                ? "Save Changes"
+                : isClosed
+                  ? "Save (Closed)"
+                  : "Save Draft"}
+            </span>
           </Button>
 
           {canPublishDirectly ? (
@@ -716,7 +842,13 @@ export function JobEditorForm({
               className="h-8 cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Publish Role Now</span>
+              <span>
+                {isClosed
+                  ? "Re-open & Relive Role"
+                  : isAlreadyPublished
+                    ? "Save Changes"
+                    : "Publish Role Now"}
+              </span>
             </Button>
           ) : (
             <Button
@@ -809,17 +941,38 @@ export function JobEditorForm({
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="job-slug-input"
-                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
-                >
-                  URL Slug
-                </label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label
+                    htmlFor="job-slug-input"
+                    className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                  >
+                    URL Slug
+                  </label>
+                  {!isSlugCustomized ? (
+                    <span className="flex items-center gap-1 font-mono text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                      <Sparkles className="h-3 w-3" /> Auto-sync with Title
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSlugCustomized(false);
+                        updateField("slug", slugify(job.title || ""));
+                      }}
+                      className="cursor-pointer font-mono text-[10px] font-bold text-[#1155CC] hover:underline dark:text-blue-400"
+                    >
+                      ✨ Reset to Auto-sync
+                    </button>
+                  )}
+                </div>
                 <Input
                   id="job-slug-input"
-                  placeholder="e.g. lead-distributed-systems-engineer"
+                  placeholder="e.g. backend-engineer"
                   value={job.slug || ""}
-                  onChange={(e) => updateField("slug", slugify(e.target.value))}
+                  onChange={(e) => {
+                    setIsSlugCustomized(true);
+                    updateField("slug", slugify(e.target.value));
+                  }}
                   className="rounded-xl font-mono text-xs"
                 />
                 <p className="mt-1 font-mono text-[10px] text-slate-500 dark:text-slate-400">
@@ -827,13 +980,32 @@ export function JobEditorForm({
                 </p>
               </div>
               <div>
-                <label
-                  htmlFor="job-refcode-input"
-                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
-                >
-                  Reference Code{" "}
-                  <span className="font-normal text-slate-400 lowercase">(optional)</span>
-                </label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label
+                    htmlFor="job-refcode-input"
+                    className="block text-xs font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                  >
+                    Reference Code{" "}
+                    <span className="font-normal text-slate-400 lowercase">(optional)</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const deptPrefix =
+                        (job.department || "ENG")
+                          .replace(/[^A-Za-z]/g, "")
+                          .slice(0, 3)
+                          .toUpperCase() || "GEN";
+                      const randomSuffix = Math.floor(100 + Math.random() * 900);
+                      updateField("referenceCode", `${deptPrefix}-2026-${randomSuffix}`);
+                    }}
+                    className="flex cursor-pointer items-center gap-1 font-mono text-[10px] font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                    title="Auto-generate a reference code from department and year"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    <span>Generate Code</span>
+                  </button>
+                </div>
                 <Input
                   id="job-refcode-input"
                   placeholder="e.g. ENG-2026-04"
@@ -884,15 +1056,41 @@ export function JobEditorForm({
                 >
                   Role Summary (Job Card Snippet)
                 </label>
-                <span
-                  className={`font-mono text-[10px] ${
-                    (job.summary?.length || 0) > 300
-                      ? "text-amber-500 font-bold"
-                      : "text-slate-500 dark:text-slate-400"
-                  }`}
-                >
-                  {job.summary?.length || 0} / 300 characters
-                </span>
+                <div className="flex items-center gap-3">
+                  {job.description && job.description.trim().length > 15 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cleanText =
+                          job.description
+                            ?.replace(/<[^>]*>/g, "")
+                            .replace(/[#*`_~]/g, "")
+                            .replace(/\s+/g, " ")
+                            .trim() || "";
+                        const sentences = cleanText.split(/(?<=[.!?])\s+/);
+                        let drafted = sentences[0] || "";
+                        if (sentences[1] && drafted.length + sentences[1].length < 240) {
+                          drafted += ` ${sentences[1]}`;
+                        }
+                        updateField("summary", drafted.slice(0, 280));
+                      }}
+                      className="flex cursor-pointer items-center gap-1 font-mono text-[10px] font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                      title="Draft summary from description"
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      <span>Auto-draft</span>
+                    </button>
+                  )}
+                  <span
+                    className={`font-mono text-[10px] ${
+                      (job.summary?.length || 0) > 300
+                        ? "text-amber-500 font-bold"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    {job.summary?.length || 0} / 300 characters
+                  </span>
+                </div>
               </div>
               <Textarea
                 id="job-summary-textarea"
@@ -1270,7 +1468,7 @@ export function JobEditorForm({
             </div>
 
             {/* Live Compensation Preview Banner (Finding 14, Spec 4.5) */}
-            <div className="flex items-center justify-between rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 p-4 dark:border-slate-800 dark:from-slate-800/40 dark:to-slate-800/20">
+            <div className="flex items-center justify-between rounded-2xl border border-blue-100 bg-linear-to-r from-blue-50/70 via-indigo-50/50 to-slate-50 p-4 dark:border-slate-800 dark:from-slate-800/40 dark:to-slate-800/20">
               <div>
                 <span className="block font-mono text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   Public Candidate Display Preview
@@ -1676,7 +1874,7 @@ export function JobEditorForm({
               className="cursor-pointer gap-1.5 rounded-xl text-xs font-bold"
             >
               <Save className="h-3.5 w-3.5" />
-              <span>Save Draft</span>
+              <span>{job.status === "PUBLISHED" ? "Save Changes" : "Save Draft"}</span>
             </Button>
 
             {!isLastTab ? (
@@ -1698,7 +1896,13 @@ export function JobEditorForm({
                 className="cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>{isAlreadyPublished ? "Update Published Role" : "Publish Role Now"}</span>
+                <span>
+                  {isClosed
+                    ? "Re-open & Relive Role"
+                    : isAlreadyPublished
+                      ? "Update Published Role"
+                      : "Publish Role Now"}
+                </span>
               </Button>
             ) : (
               <Button
@@ -1716,22 +1920,143 @@ export function JobEditorForm({
         </div>
       </div>
 
-      {/* Pre-Publish Confirmation Dialog (Finding 2, 25) */}
+      {/* Pre-Publish & Schedule Confirmation Dialog */}
       <Dialog open={publishConfirmOpen} onOpenChange={setPublishConfirmOpen}>
-        <DialogContent className="max-w-md rounded-2xl p-5">
+        <DialogContent className="max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 font-bold text-emerald-600">
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-xl font-bold ${
+                isClosed
+                  ? "bg-blue-500/10 text-[#1155CC]"
+                  : "bg-emerald-500/10 text-emerald-600"
+              }`}
+            >
               <Sparkles className="h-4 w-4" />
             </div>
             <DialogTitle className="font-sora text-base font-black text-slate-900 dark:text-white">
-              Publish Role to Careers Portal?
+              {isClosed ? "Re-open & Relive Position" : "Publish Role to Careers Portal?"}
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
-              You are about to publish{" "}
-              <strong className="text-slate-900 dark:text-white">{job.title || "this role"}</strong>{" "}
-              directly to the public careers portal. It will become live immediately for applicants.
+              {isClosed
+                ? "This role was previously closed. Schedule a new application deadline or keep it open indefinitely, then make it LIVE."
+                : `You are about to publish ${job.title || "this role"} directly to the public careers portal. It will become live immediately for applicants.`}
             </DialogDescription>
           </DialogHeader>
+
+          {/* Schedule Close Time (Application Deadline) Model for Closed or Live Posts */}
+          <div className="my-2.5 space-y-2.5 rounded-2xl border border-blue-200/80 bg-blue-50/70 p-3.5 text-xs text-blue-900 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-200">
+            <div className="flex items-center gap-1.5 font-bold">
+              <Clock className="h-4 w-4 text-[#1155CC]" />
+              <span>Schedule Application Deadline (Close Time)</span>
+            </div>
+            <p className="text-[11px] text-blue-800/90 dark:text-blue-300">
+              {isClosed
+                ? "Set a future closing time for applications, or choose open-ended to keep it accepting candidates until manually closed."
+                : "Optionally set an automatic expiration deadline for this opening."}
+            </p>
+
+            <div className="space-y-1">
+              <Input
+                id="modal-closes-at"
+                type="datetime-local"
+                min={new Date().toISOString().slice(0, 16)}
+                value={scheduleClosesAt ? new Date(scheduleClosesAt).toISOString().slice(0, 16) : ""}
+                onChange={(e) => {
+                  const val = e.target.value ? new Date(e.target.value) : null;
+                  setScheduleClosesAt(val);
+                  setValue("closesAt", val, { shouldDirty: true });
+                }}
+                className="rounded-xl bg-white font-mono text-xs dark:bg-slate-900"
+              />
+            </div>
+
+            {/* Quick Presets */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <span className="text-[10px] font-semibold text-slate-500">Quick schedule:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+                  setScheduleClosesAt(d);
+                  setValue("closesAt", d, { shouldDirty: true });
+                }}
+                className="cursor-pointer rounded-lg bg-blue-100/90 px-2 py-0.5 text-[11px] font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300"
+              >
+                +7 Days
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const d = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+                  setScheduleClosesAt(d);
+                  setValue("closesAt", d, { shouldDirty: true });
+                }}
+                className="cursor-pointer rounded-lg bg-blue-100/90 px-2 py-0.5 text-[11px] font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300"
+              >
+                +14 Days
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const d = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+                  setScheduleClosesAt(d);
+                  setValue("closesAt", d, { shouldDirty: true });
+                }}
+                className="cursor-pointer rounded-lg bg-blue-100/90 px-2 py-0.5 text-[11px] font-bold text-blue-700 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300"
+              >
+                +30 Days
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setScheduleClosesAt(null);
+                  setValue("closesAt", null, { shouldDirty: true });
+                }}
+                className="cursor-pointer rounded-lg border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-bold text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              >
+                No Deadline (Open Ended)
+              </button>
+            </div>
+
+            {scheduleClosesAt && new Date(scheduleClosesAt).getTime() <= Date.now() ? (
+              <p className="text-[11px] font-bold text-rose-600 dark:text-rose-400">
+                ⚠️ Selected deadline is in the past! Pick a future date or clear deadline.
+              </p>
+            ) : scheduleClosesAt ? (
+              <p className="text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
+                ✓ Position will go LIVE and auto-close on {new Date(scheduleClosesAt).toLocaleDateString()} at {new Date(scheduleClosesAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.
+              </p>
+            ) : (
+              <p className="text-[11px] font-medium text-slate-500">
+                ✓ Position will go LIVE immediately and stay open until manually closed.
+              </p>
+            )}
+          </div>
+
+          {/* Slug Mismatch Warning & Fix in Confirmation Modal */}
+          {Boolean(job.title && job.slug && job.slug !== slugify(job.title || "")) && (
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">
+              <div className="flex items-center gap-2 min-w-0">
+                <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                <div className="truncate">
+                  <p className="font-semibold">Slug doesn&apos;t match Title</p>
+                  <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                    Suggested: <strong className="font-mono">/careers/{slugify(job.title || "")}</strong>
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const newSlug = slugify(job.title || "");
+                  setValue("slug", newSlug, { shouldDirty: true });
+                }}
+                className="shrink-0 cursor-pointer rounded-lg bg-amber-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-amber-700"
+              >
+                Sync Now
+              </button>
+            </div>
+          )}
 
           <div className="my-2 space-y-1.5 rounded-xl border border-slate-200 bg-slate-50 p-3 font-mono text-xs dark:border-slate-800 dark:bg-slate-800/60">
             <div className="flex justify-between text-slate-600 dark:text-slate-300">
@@ -1765,15 +2090,31 @@ export function JobEditorForm({
               size="sm"
               onClick={async () => {
                 setPublishConfirmOpen(false);
-                if (isDirty) {
-                  await onSave?.(getValues());
+                const values = getValues();
+                // If slug was never customized from template or empty, ensure it matches title
+                if (
+                  values.title &&
+                  (!values.slug ||
+                    values.slug === "lead-distributed-systems-engineer" ||
+                    (initialJob?.title === "Lead Distributed Systems Engineer" &&
+                      values.slug === "lead-distributed-systems-engineer")) &&
+                  slugify(values.title) !== "lead-distributed-systems-engineer"
+                ) {
+                  values.slug = slugify(values.title);
+                  setValue("slug", values.slug);
                 }
-                await onPublish?.(getValues());
+                // Ensure valid closesAt
+                if (scheduleClosesAt && new Date(scheduleClosesAt).getTime() > Date.now()) {
+                  values.closesAt = scheduleClosesAt;
+                } else if (!scheduleClosesAt || new Date(scheduleClosesAt).getTime() <= Date.now()) {
+                  values.closesAt = null;
+                }
+                await onPublish?.(values);
               }}
               disabled={isSaving}
               className="cursor-pointer rounded-xl bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-700"
             >
-              Confirm &amp; Publish Now
+              {isClosed ? "Confirm & Make Live Now" : "Confirm & Publish Now"}
             </Button>
           </div>
         </DialogContent>
@@ -1781,7 +2122,7 @@ export function JobEditorForm({
 
       {/* Missing Requirements Modal Dialog (User Request & Spec 4.6) */}
       <Dialog open={requirementsModalOpen} onOpenChange={setRequirementsModalOpen}>
-        <DialogContent className="max-w-md rounded-2xl p-5">
+        <DialogContent className="max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl p-5">
           <DialogHeader className="space-y-1.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 font-bold text-amber-600">
               <AlertCircle className="h-4 w-4" />

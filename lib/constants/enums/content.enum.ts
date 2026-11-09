@@ -93,6 +93,7 @@ export enum ApplicationStatus {
   INTERVIEW = "INTERVIEW",
   OFFER = "OFFER",
   HIRED = "HIRED",
+  ON_HOLD = "ON_HOLD",
   REJECTED = "REJECTED",
   WITHDRAWN = "WITHDRAWN",
 }

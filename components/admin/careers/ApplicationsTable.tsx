@@ -51,6 +51,10 @@ const STAGE_STYLES: Record<ApplicationStatus, { label: string; class: string }> 
     label: "Hired",
     class: "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-300",
   },
+  [ApplicationStatus.ON_HOLD]: {
+    label: "On Hold",
+    class: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300",
+  },
   [ApplicationStatus.REJECTED]: {
     label: "Rejected",
     class: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300",

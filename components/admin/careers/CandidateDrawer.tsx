@@ -18,6 +18,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ApplicationStatus } from "@/lib/constants/enums";
 import {
   getAdminApplication,
@@ -74,6 +75,12 @@ export const STAGE_CONFIG: Record<
     bg: "bg-green-50 dark:bg-green-950/40",
     text: "text-green-700 dark:text-green-400",
     border: "border-green-200 dark:border-green-900",
+  },
+  [ApplicationStatus.ON_HOLD]: {
+    label: "On Hold",
+    bg: "bg-amber-50 dark:bg-amber-950/40",
+    text: "text-amber-700 dark:text-amber-400",
+    border: "border-amber-200 dark:border-amber-900",
   },
   [ApplicationStatus.REJECTED]: {
     label: "Rejected",
@@ -168,7 +175,7 @@ export function CandidateDrawer({
   }, [isOpen, showRejectModal, onClose]);
 
   const handleFetchResumeUrl = async () => {
-    if (!applicationId) return;
+    if (!applicationId || !app?.resumeFileName) return;
     setLoadingResume(true);
     try {
       const data = await getAdminApplicationResume(applicationId);
@@ -414,6 +421,7 @@ export function CandidateDrawer({
                       ApplicationStatus.INTERVIEW,
                       ApplicationStatus.OFFER,
                       ApplicationStatus.HIRED,
+                      ApplicationStatus.ON_HOLD,
                     ].map((stg) => {
                       const isCurrent = app.status === stg;
                       return (
@@ -460,36 +468,55 @@ export function CandidateDrawer({
                       Resume Document
                     </h4>
                     <span className="font-mono text-[11px] text-slate-400">
-                      {app.resumeFileName || "resume.pdf"}
+                      {app.resumeFileName ? app.resumeFileName : "None attached"}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-slate-50 p-4 dark:border-slate-700/80 dark:bg-slate-800/50">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-[#1155CC] dark:bg-blue-900/40">
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                          app.resumeFileName
+                            ? "bg-blue-100 text-[#1155CC] dark:bg-blue-900/40"
+                            : "bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                        }`}
+                      >
                         <FileText className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                          {app.resumeFileName || "Candidate Resume"}
+                          {app.resumeFileName ? app.resumeFileName : "No Resume Attached"}
                         </p>
-                        <p className="text-[10px] text-slate-500">Secure short-lived signed link</p>
+                        <p className="text-[10px] text-slate-500">
+                          {app.resumeFileName
+                            ? "Secure short-lived signed link"
+                            : "Resume was optional for this application"}
+                        </p>
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleFetchResumeUrl}
-                      disabled={loadingResume}
-                      className="flex items-center gap-1.5 rounded-xl text-xs"
-                    >
-                      {loadingResume ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      )}
-                      Open Resume
-                    </Button>
+                    {app.resumeFileName ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleFetchResumeUrl}
+                        disabled={loadingResume}
+                        className="flex items-center gap-1.5 rounded-xl text-xs"
+                      >
+                        {loadingResume ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        )}
+                        Open Resume
+                      </Button>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="border-slate-200 text-[11px] text-slate-500 dark:border-slate-700 dark:text-slate-400"
+                      >
+                        Not Provided (Optional)
+                      </Badge>
+                    )}
                   </div>
                 </div>
 

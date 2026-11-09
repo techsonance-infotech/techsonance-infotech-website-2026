@@ -172,6 +172,8 @@ export const transitionJobStatusBodySchema = z
     targetStatus: normalizedJobStatus.optional(),
     status: normalizedJobStatus.optional(),
     comment: z.string().trim().max(1000).optional(),
+    closesAt: z.union([z.string(), z.date(), z.null()]).optional(),
+    publishAt: z.union([z.string(), z.date(), z.null()]).optional(),
   })
   .refine((data) => Boolean(data.targetStatus || data.status), {
     message: "Target status is required",
@@ -180,6 +182,8 @@ export const transitionJobStatusBodySchema = z
   .transform((data) => ({
     targetStatus: (data.targetStatus || data.status) as JobStatus,
     comment: data.comment,
+    closesAt: data.closesAt ? new Date(data.closesAt) : data.closesAt === null ? null : undefined,
+    publishAt: data.publishAt ? new Date(data.publishAt) : data.publishAt === null ? null : undefined,
   }));
 
 export type TransitionJobStatusBodyInput = z.input<typeof transitionJobStatusBodySchema>;

@@ -90,11 +90,20 @@ export function VersionHistoryDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200 animate-in fade-in">
-      <dialog
-        open
+    <div
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !restoringVersionId) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200 animate-in fade-in"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
         aria-labelledby="version-history-dialog-title"
-        className="m-0 flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
+        className="relative flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 animate-in zoom-in-95 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
@@ -263,7 +272,7 @@ export function VersionHistoryDialog({
             Close
           </Button>
         </div>
-      </dialog>
+      </div>
     </div>
   );
 }

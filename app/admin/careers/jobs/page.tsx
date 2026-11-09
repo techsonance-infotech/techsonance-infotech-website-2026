@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef, startTransition } from "react";
 import Link from "next/link";
-import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, Briefcase, X } from "lucide-react";
+import { Plus, Search, MapPin, Trash2, RefreshCw, Edit3, Briefcase, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import type { Job } from "@/lib/types/careers";
 import { JobStatus } from "@/lib/constants/enums";
 import { listAdminJobs, deleteAdminJob } from "@/lib/api/admin-jobs.api";
 import { AsyncState } from "@/components/feedback/AsyncState";
+import { JobStatusModal } from "@/components/admin/careers/JobStatusModal";
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -25,6 +26,9 @@ export default function AdminJobsPage() {
   const [jobToDelete, setJobToDelete] = useState<{ id: string; title: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // Status transition modal state
+  const [jobForStatusModal, setJobForStatusModal] = useState<Job | null>(null);
 
   // Debounce search query
   useEffect(() => {
@@ -272,20 +276,33 @@ export default function AdminJobsPage() {
                           {job.type || "Full Time"}
                         </td>
                         <td className="px-4 py-3.5">
-                          <Badge
-                            variant={
-                              job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
-                                ? "success"
-                                : job.status === JobStatus.IN_REVIEW
-                                  ? "warning"
-                                  : "secondary"
-                            }
-                            dot={
-                              job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
-                            }
+                          <button
+                            type="button"
+                            onClick={() => setJobForStatusModal(job)}
+                            className="group/status inline-flex cursor-pointer items-center gap-1.5 rounded-full p-0.5 pr-2 transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
+                            title="Click to change position status"
                           >
-                            {job.status}
-                          </Badge>
+                            <Badge
+                              variant={
+                                job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
+                                  ? "success"
+                                  : job.status === JobStatus.IN_REVIEW
+                                    ? "info"
+                                    : job.status === JobStatus.PAUSED
+                                      ? "warning"
+                                      : job.status === JobStatus.CLOSED
+                                        ? "destructive"
+                                        : "secondary"
+                              }
+                              dot={
+                                job.status === JobStatus.OPEN || job.status === JobStatus.PUBLISHED
+                              }
+                              className="cursor-pointer transition-all group-hover/status:ring-2 group-hover/status:ring-[#1155CC]/30"
+                            >
+                              {job.status}
+                            </Badge>
+                            <ChevronDown className="h-3 w-3 text-slate-400 opacity-60 transition-opacity group-hover/status:opacity-100 group-hover/status:text-[#1155CC]" />
+                          </button>
                         </td>
                         <td aria-label="Actions" className="px-4 py-3.5 text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -320,11 +337,12 @@ export default function AdminJobsPage() {
 
       {/* Non-blocking Deletion Confirmation Modal */}
       {jobToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
-          <dialog
-            open
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
+          <div
+            role="dialog"
+            aria-modal="true"
             aria-labelledby="delete-job-dialog-title"
-            className="m-0 block w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+            className="relative w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-900"
           >
             <h3
               id="delete-job-dialog-title"
@@ -370,9 +388,22 @@ export default function AdminJobsPage() {
                 )}
               </Button>
             </div>
-          </dialog>
+          </div>
         </div>
       )}
+
+      {/* Interactive Status Transition Modal */}
+      <JobStatusModal
+        isOpen={Boolean(jobForStatusModal)}
+        job={jobForStatusModal}
+        onClose={() => setJobForStatusModal(null)}
+        onSuccess={(updatedJob) => {
+          setJobs((prev) =>
+            prev.map((j) => (j.id === updatedJob.id ? { ...j, status: updatedJob.status } : j)),
+          );
+          void fetchJobs();
+        }}
+      />
     </div>
   );
 }

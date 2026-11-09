@@ -34,7 +34,31 @@ import {
   Send,
   Upload,
   ExternalLink,
+  FileText,
+  X,
+  Globe,
+  CheckCircle2,
 } from "lucide-react";
+
+function LinkedinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.6 1.6 0 0 0 1.6-1.6 1.6 1.6 0 0 0-1.6-1.6 1.6 1.6 0 0 0 1.6 1.6m1.4 9.74v-8.37H5.06v8.37h2.8z" />
+    </svg>
+  );
+}
+
+function GithubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
+  );
+}
 
 interface JobDetailClientProps {
   job: JobPosting;
@@ -124,6 +148,64 @@ export default function JobDetailClient({
   const [screeningAnswers, setScreeningAnswers] = useState<Record<string, string | boolean>>({});
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+  };
+
+  const validateAndSetFile = (file: File | null | undefined) => {
+    setFileError("");
+    if (!file) {
+      setResumeFile(null);
+      return;
+    }
+
+    const name = file.name.toLowerCase();
+    const isAllowedExt = name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".doc");
+
+    if (!isAllowedExt) {
+      setFileError("Invalid format. Please upload a PDF or Word (.doc/.docx) document.");
+      setResumeFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setFileError("File too large. Maximum allowed resume size is 5MB.");
+      setResumeFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    setResumeFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      validateAndSetFile(file);
+    }
+  };
 
   const isClosed = job.status === "CLOSED";
   const isPaused = job.status === "PAUSED";
@@ -184,31 +266,7 @@ export default function JobDetailClient({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileError("");
-    const file = e.target.files?.[0];
-    if (!file) {
-      setResumeFile(null);
-      return;
-    }
-
-    const name = file.name.toLowerCase();
-    const isAllowedExt = name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".doc");
-
-    if (!isAllowedExt) {
-      setFileError("Invalid format. Please upload a PDF or Word (.doc/.docx) document.");
-      setResumeFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setFileError("File too large. Maximum allowed resume size is 5MB.");
-      setResumeFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      return;
-    }
-
-    setResumeFile(file);
+    validateAndSetFile(e.target.files?.[0]);
   };
 
   const onFormSubmit = async (values: ApplicationFormValues) => {
@@ -1029,9 +1087,10 @@ export default function JobDetailClient({
                     <div>
                       <label
                         htmlFor="apply-linkedin"
-                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                        className="mb-1 flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-slate-700 uppercase"
                       >
-                        LinkedIn
+                        <LinkedinIcon className="h-3.5 w-3.5 text-[#0A66C2]" />
+                        <span>LinkedIn</span>
                       </label>
                       <input
                         id="apply-linkedin"
@@ -1044,9 +1103,10 @@ export default function JobDetailClient({
                     <div>
                       <label
                         htmlFor="apply-github"
-                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                        className="mb-1 flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-slate-700 uppercase"
                       >
-                        GitHub
+                        <GithubIcon className="h-3.5 w-3.5 text-slate-800" />
+                        <span>GitHub</span>
                       </label>
                       <input
                         id="apply-github"
@@ -1059,9 +1119,10 @@ export default function JobDetailClient({
                     <div>
                       <label
                         htmlFor="apply-portfolio"
-                        className="mb-1 block text-[11px] font-bold tracking-wider text-slate-700 uppercase"
+                        className="mb-1 flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-slate-700 uppercase"
                       >
-                        Portfolio
+                        <Globe className="h-3.5 w-3.5 text-emerald-600" />
+                        <span>Portfolio</span>
                       </label>
                       <input
                         id="apply-portfolio"
@@ -1075,55 +1136,125 @@ export default function JobDetailClient({
 
                   {/* Resume Upload */}
                   <div>
-                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
-                      Resume / CV (PDF or DOCX, max 5MB){" "}
-                      {job.resumeRequired !== false && <span className="text-rose-500">*</span>}
-                    </label>
-                    <div className="mt-1 flex items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 px-4 py-4 transition-colors hover:border-blue-400">
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
-                        onChange={handleFileChange}
-                        className="hidden"
-                        id="resume-upload-modal"
-                      />
-                      <label
-                        htmlFor="resume-upload-modal"
-                        className="flex w-full cursor-pointer flex-col items-center gap-1.5 text-center"
-                      >
-                        <Upload className="h-5 w-5 text-slate-400" />
-                        <span className="text-xs font-semibold text-slate-700">
-                          {resumeFile ? resumeFile.name : "Click to select a resume file"}
-                        </span>
-                        <span className="text-[10px] text-slate-400">
-                          PDF or Word (.docx) up to 5MB • Validated before upload
-                        </span>
+                    <div className="mb-1 flex items-center justify-between">
+                      <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                        Resume / CV (PDF or DOCX, max 5MB){" "}
+                        {job.resumeRequired !== false ? (
+                          <span className="text-rose-500">*</span>
+                        ) : (
+                          <span className="font-normal text-slate-400 lowercase">(optional)</span>
+                        )}
                       </label>
+                      {resumeFile && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setResumeFile(null);
+                            if (fileInputRef.current) fileInputRef.current.value = "";
+                          }}
+                          className="font-mono text-[10px] font-bold text-rose-500 hover:text-rose-600 cursor-pointer"
+                        >
+                          Remove file
+                        </button>
+                      )}
                     </div>
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="resume-upload-modal"
+                    />
+
+                    {resumeFile ? (
+                      <div className="flex items-center justify-between rounded-2xl border border-blue-200 bg-blue-50/60 p-3.5 transition-all">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-xs">
+                            <FileText className="h-5 w-5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-xs font-semibold text-slate-900">
+                              {resumeFile.name}
+                            </p>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-500 font-medium">
+                              <span>{formatFileSize(resumeFile.size)}</span>
+                              <span>•</span>
+                              <span className="text-emerald-600 font-semibold flex items-center gap-0.5">
+                                <CheckCircle2 className="h-3 w-3 inline" /> Ready to upload
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setResumeFile(null);
+                            if (fileInputRef.current) fileInputRef.current.value = "";
+                          }}
+                          className="ml-2 rounded-lg p-1.5 text-slate-400 hover:bg-slate-200/60 hover:text-slate-700 transition-colors cursor-pointer"
+                          aria-label="Remove resume file"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`mt-1 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-5 text-center transition-all cursor-pointer ${
+                          isDragging
+                            ? "border-blue-500 bg-blue-50/70 scale-[0.99]"
+                            : "border-slate-200 bg-slate-50/50 hover:border-blue-400 hover:bg-slate-50"
+                        }`}
+                      >
+                        <div
+                          className={`mb-2 flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
+                            isDragging ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500"
+                          }`}
+                        >
+                          <Upload className="h-5 w-5" />
+                        </div>
+                        <span className="text-xs font-semibold text-slate-800">
+                          {isDragging
+                            ? "Drop your resume here"
+                            : "Click to select or drag and drop your resume"}
+                        </span>
+                        <span className="mt-0.5 text-[10px] text-slate-400">
+                          PDF or Word (.doc, .docx) up to 5MB • Validated before upload
+                        </span>
+                      </div>
+                    )}
+
                     {fileError && (
                       <p className="mt-1.5 text-xs font-semibold text-rose-600">{fileError}</p>
                     )}
                   </div>
 
                   {/* Cover Letter */}
-                  <div>
-                    <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
-                      Cover Letter / Notes{" "}
-                      {job.coverLetterRequirement === "REQUIRED" && (
-                        <span className="text-rose-500">*</span>
-                      )}
-                      {job.coverLetterRequirement === "OPTIONAL" && (
-                        <span className="font-normal text-slate-400 lowercase">(optional)</span>
-                      )}
-                    </label>
-                    <textarea
-                      rows={3}
-                      placeholder="Tell us what excites you about this role and why you're a great fit..."
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-                      {...register("coverLetter")}
-                    />
-                  </div>
+                  {job.coverLetterRequirement?.toUpperCase() !== "OFF" && (
+                    <div>
+                      <label className="mb-1 block text-xs font-bold tracking-wider text-slate-700 uppercase">
+                        Cover Letter / Notes{" "}
+                        {job.coverLetterRequirement === "REQUIRED" && (
+                          <span className="text-rose-500">*</span>
+                        )}
+                        {(job.coverLetterRequirement === "OPTIONAL" ||
+                          !job.coverLetterRequirement) && (
+                          <span className="font-normal text-slate-400 lowercase">(optional)</span>
+                        )}
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder="Tell us what excites you about this role and why you're a great fit..."
+                        className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                        {...register("coverLetter")}
+                      />
+                    </div>
+                  )}
 
                   {/* Screening Questions (if role specifies any) */}
                   {job.screeningQuestions &&

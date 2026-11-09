@@ -53,7 +53,7 @@ export interface ApplicationSubmitPayload {
   portfolioUrl?: string;
   githubUrl?: string;
   linkedinUrl?: string;
-  resumeFile:
+  resumeFile?:
     | File
     | {
         name: string;
@@ -61,7 +61,8 @@ export interface ApplicationSubmitPayload {
         type: string;
         arrayBuffer?: () => Promise<ArrayBuffer>;
         buffer?: Buffer | ArrayBuffer;
-      };
+      }
+    | null;
   coverLetter?: string;
   noticePeriodWeeks?: number;
   screeningAnswers?: ScreeningAnswerInput[];
@@ -310,11 +311,7 @@ export class CareerApplyService {
       throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.PRIVACY_CONSENT_REQUIRED);
     }
 
-    // 2. Resume file validation (including magic bytes)
-    const fileBytes = await this.validateResume(payload.resumeFile);
-    const file = payload.resumeFile;
-
-    // 3. Verify Job exists and is accepting applications
+    // 2. Verify Job exists and is accepting applications
     const job = await this.repository.findJobById(payload.jobId);
     if (!job) {
       throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
@@ -328,10 +325,60 @@ export class CareerApplyService {
       throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.JOB_DEADLINE_PASSED);
     }
 
+    // 3. Resume validation: required if job.resumeRequired !== false, otherwise optional
+    const file = payload.resumeFile;
+    const hasResume = Boolean(
+      file && (typeof file !== "object" || !("size" in file) || file.size > 0),
+    );
+
+    if (job.resumeRequired !== false && !hasResume) {
+      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED);
+    }
+
+    let storagePath = "";
+    let resumeFileName = "";
+    let resumeMimeType = "application/pdf";
+    let resumeUrl: string | undefined;
+
+    if (hasResume && file) {
+      const fileBytes = await this.validateResume(file);
+      storagePath = await this.uploadResumeToPrivateStorage(
+        fileBytes,
+        file.name,
+        file.type || "application/pdf",
+        job.siteId,
+        job.id,
+      );
+      resumeFileName = file.name;
+      resumeMimeType = file.type || "application/pdf";
+
+      if (this.supabaseAdmin?.storage && storagePath) {
+        try {
+          const { data: signedData } = await this.supabaseAdmin.storage
+            .from(RESUME_BUCKET)
+            .createSignedUrl(storagePath, RESUME_CREATION_SIGNED_URL_TTL_SEC);
+
+          if (signedData?.signedUrl) {
+            resumeUrl = signedData.signedUrl;
+          }
+        } catch {
+          // signed URL creation optional
+        }
+      }
+    }
+
     // 4. Check for duplicate application
     const normalizedEmail = payload.email.trim().toLowerCase();
     const existing = await this.repository.findExistingApplication(payload.jobId, normalizedEmail);
     if (existing) {
+      // Clean up uploaded file if duplicate
+      if (storagePath && this.supabaseAdmin?.storage) {
+        try {
+          await this.supabaseAdmin.storage.from(RESUME_BUCKET).remove([storagePath]);
+        } catch {
+          // ignore
+        }
+      }
       throw new AppError("CONFLICT", CAREER_ERRORS.DUPLICATE_APPLICATION);
     }
 
@@ -353,56 +400,47 @@ export class CareerApplyService {
       }
     }
 
-    // 6. Upload resume to private Supabase Storage bucket
-    const storagePath = await this.uploadResumeToPrivateStorage(
-      fileBytes,
-      file.name,
-      file.type || "application/pdf",
-      job.siteId,
-      job.id,
-    );
-
-    let resumeUrl: string | undefined;
-    if (this.supabaseAdmin?.storage) {
-      try {
-        const { data: signedData } = await this.supabaseAdmin.storage
-          .from(RESUME_BUCKET)
-          .createSignedUrl(storagePath, RESUME_CREATION_SIGNED_URL_TTL_SEC);
-
-        if (signedData?.signedUrl) {
-          resumeUrl = signedData.signedUrl;
+    // 6. Insert application record into database (with rollback on storage if insert fails)
+    let application;
+    try {
+      application = await this.repository.insertApplication({
+        siteId: job.siteId,
+        jobId: job.id,
+        jobVersionId: job.versionId || 1,
+        candidateName: payload.candidateName.trim(),
+        email: normalizedEmail,
+        phone: payload.phone?.trim() || null,
+        currentLocation: payload.currentLocation?.trim() || null,
+        portfolioUrl: payload.portfolioUrl?.trim() || null,
+        githubUrl: payload.githubUrl?.trim() || null,
+        linkedinUrl: payload.linkedinUrl?.trim() || null,
+        resumeStoragePath: storagePath,
+        resumeFileName: resumeFileName,
+        resumeMimeType: resumeMimeType,
+        resumeUrl: resumeUrl || null,
+        coverLetter: payload.coverLetter?.trim() || null,
+        noticePeriodWeeks: payload.noticePeriodWeeks ?? null,
+        screeningAnswers: payload.screeningAnswers || [],
+        knockoutTriggered,
+        source: payload.source || DEFAULT_APPLICATION_SOURCE,
+        status: ApplicationStatus.NEW,
+        privacyConsent: true,
+        privacyConsentDate: new Date(),
+        privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
+        talentPoolConsent: payload.talentPoolConsent ?? false,
+      });
+    } catch (insertErr) {
+      // Clean up orphaned uploaded file from storage
+      if (storagePath && this.supabaseAdmin?.storage) {
+        try {
+          await this.supabaseAdmin.storage.from(RESUME_BUCKET).remove([storagePath]);
+          logger.info(`Cleaned up orphaned resume after DB insert failure: ${storagePath}`);
+        } catch (cleanupErr) {
+          logger.warn(`Failed to clean up orphaned resume: ${String(cleanupErr)}`);
         }
-      } catch {
-        // signed URL creation optional
       }
+      throw insertErr;
     }
-
-    // 7. Insert application record into database
-    const application = await this.repository.insertApplication({
-      siteId: job.siteId,
-      jobId: job.id,
-      jobVersionId: job.versionId || 1,
-      candidateName: payload.candidateName.trim(),
-      email: normalizedEmail,
-      phone: payload.phone?.trim() || null,
-      currentLocation: payload.currentLocation?.trim() || null,
-      portfolioUrl: payload.portfolioUrl?.trim() || null,
-      githubUrl: payload.githubUrl?.trim() || null,
-      linkedinUrl: payload.linkedinUrl?.trim() || null,
-      resumeStoragePath: storagePath,
-      resumeFileName: file.name,
-      resumeMimeType: file.type || "application/pdf",
-      resumeUrl: resumeUrl || null,
-      coverLetter: payload.coverLetter?.trim() || null,
-      noticePeriodWeeks: payload.noticePeriodWeeks ?? null,
-      screeningAnswers: payload.screeningAnswers || [],
-      knockoutTriggered,
-      source: payload.source || DEFAULT_APPLICATION_SOURCE,
-      status: ApplicationStatus.NEW,
-      privacyConsentDate: new Date(),
-      privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
-      talentPoolConsent: payload.talentPoolConsent ?? false,
-    });
 
     // 7b. Store voluntary anonymous EEOC survey response if candidate chose to provide it
     if (

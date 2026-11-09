@@ -1,6 +1,6 @@
 import "server-only";
 import { inject } from "@needle-di/core";
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, or } from "drizzle-orm";
 import { DRIZZLE_DB_TOKEN } from "@/lib/di/tokens";
 import type { ContentVersion, Database, InsertContentAuditLog } from "@/lib/database/index";
 import { withTransaction } from "@/lib/database/transaction";
@@ -14,7 +14,7 @@ import {
   type InsertJob,
   type InsertContentVersion,
 } from "@/lib/database/schema/index.schema";
-import type { JobStatus } from "@/lib/database/enum";
+import { JobStatus } from "@/lib/database/enum";
 import { mapDbError } from "@/lib/dbErrors";
 
 export interface ListAdminJobsOptions {
@@ -311,6 +311,42 @@ export class AdminJobsRepository {
       );
     } catch (error) {
       throw mapDbError(error, { context: "AdminJobsRepository.deleteJobWithAudit", id });
+    }
+  }
+
+  /**
+   * Finds jobs scheduled to be published whose publishAt timestamp has arrived.
+   */
+  async findScheduledJobsToPublish(): Promise<Job[]> {
+    try {
+      const now = new Date();
+      if (!this.db.query?.jobsTable?.findMany) return [];
+      const scheduled = await this.db.query.jobsTable.findMany({
+        where: { status: JobStatus.SCHEDULED },
+      });
+      return ((scheduled as Job[]) || []).filter(
+        (j) => j.publishAt && new Date(j.publishAt).getTime() <= now.getTime(),
+      );
+    } catch (error) {
+      throw mapDbError(error, { context: "AdminJobsRepository.findScheduledJobsToPublish" });
+    }
+  }
+
+  /**
+   * Finds published or open jobs whose closesAt deadline has passed.
+   */
+  async findOpenJobsToClose(): Promise<Job[]> {
+    try {
+      const now = new Date();
+      const openJobs = await this.db
+        .select()
+        .from(jobsTable)
+        .where(or(eq(jobsTable.status, JobStatus.PUBLISHED), eq(jobsTable.status, JobStatus.OPEN)));
+      return ((openJobs as Job[]) || []).filter(
+        (j) => j.closesAt && new Date(j.closesAt).getTime() <= now.getTime(),
+      );
+    } catch (error) {
+      throw mapDbError(error, { context: "AdminJobsRepository.findOpenJobsToClose" });
     }
   }
 }

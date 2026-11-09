@@ -344,4 +344,37 @@ describe("AdminJobsService Lifecycle State Machine", () => {
       jobsService.transitionStatus("job-123", JobStatus.CLOSED, adminActor),
     ).rejects.toThrow();
   });
+
+  it("allows reliving a CLOSED role to PUBLISHED or IN_REVIEW and handles schedule close time", async () => {
+    mockJobRecord.status = JobStatus.CLOSED;
+    mockJobRecord.closesAt = new Date(Date.now() - 3600000); // Expired 1 hour ago
+    mockJobRecord.closedAt = new Date(Date.now() - 3600000);
+    const adminActor = { userId: "admin-001", role: "admin" };
+
+    // 1. Relive closed position to PUBLISHED without new deadline -> clears expired deadline
+    const relived = await jobsService.transitionStatus("job-123", JobStatus.PUBLISHED, adminActor);
+    expect(relived.status).toBe(JobStatus.PUBLISHED);
+    expect(relived.closedAt).toBeNull();
+    expect(relived.closesAt).toBeNull();
+
+    // 2. Relive closed position with newly scheduled future close time
+    mockJobRecord.status = JobStatus.CLOSED;
+    const futureCloseTime = new Date(Date.now() + 7 * 86400000);
+    const scheduledRelived = await jobsService.transitionStatus(
+      "job-123",
+      JobStatus.PUBLISHED,
+      adminActor,
+      undefined,
+      undefined,
+      { closesAt: futureCloseTime },
+    );
+    expect(scheduledRelived.status).toBe(JobStatus.PUBLISHED);
+    expect(scheduledRelived.closesAt).toEqual(futureCloseTime);
+
+    // 3. Submitting closed position for review (IN_REVIEW) is valid
+    mockJobRecord.status = JobStatus.CLOSED;
+    const recruiterActor = { userId: "recruiter-001", role: "recruiter" };
+    const inReview = await jobsService.transitionStatus("job-123", JobStatus.IN_REVIEW, recruiterActor);
+    expect(inReview.status).toBe(JobStatus.IN_REVIEW);
+  });
 });

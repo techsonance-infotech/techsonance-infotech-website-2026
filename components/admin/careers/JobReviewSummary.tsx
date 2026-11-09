@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Briefcase,
   MapPin,
@@ -12,13 +12,14 @@ import {
   Calendar,
   Layers,
   Edit3,
+  Sparkles,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FormSelect } from "./FormSelect";
 import { JobLivePreview } from "./JobLivePreview";
-import type { JobFormData } from "./JobEditorForm";
+import { slugify, type JobFormData } from "./JobEditorForm";
 
 interface JobReviewSummaryProps {
   job: JobFormData;
@@ -133,6 +134,68 @@ export function JobReviewSummary({
 
     return parts.join(" ");
   };
+
+  const generateSeoTitle = useCallback((title?: string) => {
+    const raw = `${title || "Open Role"} | Careers at TechSonance Infotech`;
+    return raw.length > 60 ? raw.slice(0, 57) + "..." : raw;
+  }, []);
+
+  const generateSeoDesc = useCallback(
+    (summary?: string, description?: string, title?: string, loc?: string) => {
+      if (summary && summary.trim().length > 10) {
+        const s = summary.trim();
+        return s.length > 155 ? s.slice(0, 152) + "..." : s;
+      }
+      const fallback = `Join TechSonance Infotech as a ${title || "specialist"}${loc ? ` in ${loc}` : ""}. Explore responsibilities, competitive pay, and benefits. Apply today.`;
+      return fallback.length > 155 ? fallback.slice(0, 152) + "..." : fallback;
+    },
+    [],
+  );
+
+  const handleAutoFillSeo = () => {
+    const newTitle = generateSeoTitle(job.title);
+    const newDesc = generateSeoDesc(job.summary, job.description, job.title, job.location);
+    updateField("seoTitle", newTitle);
+    updateField("seoDescription", newDesc);
+    if (
+      job.title &&
+      (!job.slug ||
+        job.slug === "lead-distributed-systems-engineer" ||
+        job.slug !== slugify(job.title))
+    ) {
+      updateField("slug", slugify(job.title));
+    }
+  };
+
+  // Auto-fill SEO metadata on mount / tab switch if empty
+  useEffect(() => {
+    if (!job.seoTitle && job.title) {
+      updateField("seoTitle", generateSeoTitle(job.title));
+    }
+    if (!job.seoDescription && (job.summary || job.title)) {
+      updateField(
+        "seoDescription",
+        generateSeoDesc(job.summary, job.description, job.title, job.location),
+      );
+    }
+    if (
+      job.title &&
+      job.slug === "lead-distributed-systems-engineer" &&
+      job.title !== "Lead Distributed Systems Engineer"
+    ) {
+      updateField("slug", slugify(job.title));
+    }
+  }, [
+    job.title,
+    job.summary,
+    job.location,
+    job.slug,
+    job.seoTitle,
+    job.seoDescription,
+    generateSeoTitle,
+    generateSeoDesc,
+    updateField,
+  ]);
 
   const serpTitle = job.seoTitle || `${job.title || "Job Title"} | Careers at TechSonance Infotech`;
   const serpSnippet =
@@ -371,9 +434,22 @@ export function JobReviewSummary({
                 <Search className="h-3.5 w-3.5 text-[#1155CC]" />
                 <span>Google Search Snippet Preview</span>
               </div>
-              <Badge variant="outline" className="font-mono text-[10px]">
-                Rich Result JobPosting
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAutoFillSeo}
+                  className="h-7 cursor-pointer gap-1.5 rounded-lg border-blue-200 bg-blue-50/60 px-2.5 text-[11px] font-bold text-[#1155CC] hover:bg-blue-100 hover:text-blue-800 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300"
+                  title="Auto-fill Meta Title and Description based on role details"
+                >
+                  <Sparkles className="h-3 w-3" />
+                  <span>Auto-Fill SEO</span>
+                </Button>
+                <Badge variant="outline" className="font-mono text-[10px]">
+                  Rich Result JobPosting
+                </Badge>
+              </div>
             </div>
 
             {/* Google Search Card Simulation */}
@@ -398,12 +474,21 @@ export function JobReviewSummary({
             <div className="grid grid-cols-1 gap-3 pt-2">
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label
-                    htmlFor="review-seo-title"
-                    className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
-                  >
-                    SEO Meta Title
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label
+                      htmlFor="review-seo-title"
+                      className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                    >
+                      SEO Meta Title
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => updateField("seoTitle", generateSeoTitle(job.title))}
+                      className="cursor-pointer text-[10px] font-semibold text-[#1155CC] hover:underline dark:text-blue-400"
+                    >
+                      Auto-fill
+                    </button>
+                  </div>
                   <span
                     className={`font-mono text-[10px] ${
                       (job.seoTitle?.length || 0) > 60
@@ -422,19 +507,32 @@ export function JobReviewSummary({
                   className="rounded-xl text-xs"
                 />
                 <p className="mt-1 text-[10px] text-slate-400">
-                  Optimal Google title length is 50–60 characters. Defaults to role title + agency
-                  suffix if empty.
+                  Optimal Google title length is 50–60 characters. Auto-filled from role title.
                 </p>
               </div>
 
               <div>
                 <div className="mb-1 flex items-center justify-between">
-                  <label
-                    htmlFor="review-seo-desc"
-                    className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
-                  >
-                    SEO Meta Description (Decoupled from Card Summary)
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <label
+                      htmlFor="review-seo-desc"
+                      className="text-[11px] font-bold tracking-wider text-slate-700 uppercase dark:text-slate-300"
+                    >
+                      SEO Meta Description (Decoupled from Card Summary)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateField(
+                          "seoDescription",
+                          generateSeoDesc(job.summary, job.description, job.title, job.location),
+                        )
+                      }
+                      className="cursor-pointer text-[10px] font-semibold text-[#1155CC] hover:underline dark:text-blue-400"
+                    >
+                      Auto-fill
+                    </button>
+                  </div>
                   <span
                     className={`font-mono text-[10px] ${
                       (job.seoDescription?.length || 0) > 155

@@ -13,11 +13,13 @@ import {
   Undo2,
   Copy,
   RefreshCw,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   JobEditorForm,
+  slugify,
   type JobFormData,
   DEFAULT_JOB_FORM,
 } from "@/components/admin/careers/JobEditorForm";
@@ -31,6 +33,7 @@ import {
   updateAdminJobStatus,
   toJobFormData,
 } from "@/lib/api/admin-jobs.api";
+import { JobStatus, JobApprovalStatus } from "@/lib/constants/enums";
 
 interface JobEditorPageProps {
   params: Promise<{ id: string }>;
@@ -93,21 +96,57 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
     setAlertMessage(null);
 
     try {
+      const targetStatus = (updatedData.status || JobStatus.DRAFT) as JobStatus;
+
       if (isNew) {
-        const job = await createAdminJob(updatedData);
+        const job = await createAdminJob({ ...updatedData, status: targetStatus });
+        if (targetStatus === JobStatus.PUBLISHED) {
+          await updateAdminJobStatus(job.id, {
+            targetStatus: JobStatus.PUBLISHED,
+            comment: "Created and published directly.",
+          });
+        }
         setSaveStatus("saved");
         setLastSavedAt(new Date());
         setJobData(toJobFormData(job));
-        setAlertMessage({ type: "success", text: "Role draft created successfully!" });
-        // Redirect to the newly created job ID
-        router.replace(`/admin/careers/jobs/${job.id}`);
+        setAlertMessage({
+          type: "success",
+          text:
+            targetStatus === JobStatus.PUBLISHED
+              ? "Role published successfully!"
+              : "Role draft created successfully!",
+        });
+
+        if (targetStatus === JobStatus.PUBLISHED) {
+          router.push("/admin/careers/jobs");
+          router.refresh();
+        } else {
+          router.replace(`/admin/careers/jobs/${job.id}?tab=review`);
+        }
       } else {
         const job = await updateAdminJob(id, updatedData);
+        if (targetStatus === JobStatus.PUBLISHED && jobData.status !== JobStatus.PUBLISHED) {
+          await updateAdminJobStatus(id, {
+            targetStatus: JobStatus.PUBLISHED,
+            comment: "Updated to published status.",
+          });
+        }
         setSaveStatus("saved");
         setLastSavedAt(new Date());
         setJobData(toJobFormData(job));
-        setAlertMessage({ type: "success", text: "Draft changes saved." });
-        setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
+        setAlertMessage({
+          type: "success",
+          text:
+            targetStatus === JobStatus.PUBLISHED
+              ? "Position is LIVE on careers portal!"
+              : "Draft changes saved.",
+        });
+        if (targetStatus === JobStatus.PUBLISHED) {
+          router.push("/admin/careers/jobs");
+          router.refresh();
+        } else {
+          setTimeout(() => setAlertMessage((prev) => (prev?.type === "success" ? null : prev)), 4000);
+        }
       }
     } catch (err: unknown) {
       setSaveStatus("error");
@@ -128,7 +167,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
         ...dataToClone,
         title: `${dataToClone.title || "Position"} (Copy)`,
         slug: `${(dataToClone.slug || "job").replace(/-copy-[a-z0-9]+$/, "")}-copy-${randomSuffix}`,
-        status: "DRAFT",
+        status: JobStatus.DRAFT,
       };
       delete duplicateData.id;
 
@@ -159,13 +198,13 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       // If still new, save first
       let currentJobId = id;
       if (isNew) {
-        const job = await createAdminJob({ ...updatedData, status: "DRAFT" });
+        const job = await createAdminJob({ ...updatedData, status: JobStatus.DRAFT });
         currentJobId = job.id;
       }
 
       // Transition to IN_REVIEW
       const transitionJob = await updateAdminJobStatus(currentJobId, {
-        targetStatus: "IN_REVIEW",
+        targetStatus: JobStatus.IN_REVIEW,
         comment: "Submitted by recruiter for executive approval.",
       });
 
@@ -199,33 +238,60 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
     setSaving(true);
     try {
       let currentJobId = id;
-      if (isNew) {
-        const job = await createAdminJob({ ...updatedData, status: "DRAFT" });
-        currentJobId = job.id;
-      } else {
-        await updateAdminJob(id, updatedData);
+      const isRelivingClosed = jobData.status === JobStatus.CLOSED;
+
+      // When reliving or publishing, clean expired past closesAt so it doesn't immediately close
+      let cleanedClosesAt = updatedData.closesAt;
+      if (cleanedClosesAt && new Date(cleanedClosesAt).getTime() <= Date.now()) {
+        cleanedClosesAt = null;
       }
 
-      if (jobData.status !== "PUBLISHED" && jobData.status !== "OPEN") {
-        const statusJob = await updateAdminJobStatus(currentJobId, {
-          targetStatus: "PUBLISHED",
-          comment: "Published directly to public careers portal.",
+      // Auto-correct leftover template slug if title has changed
+      let cleanedSlug = updatedData.slug;
+      if (
+        updatedData.title &&
+        (!cleanedSlug || cleanedSlug === "lead-distributed-systems-engineer") &&
+        slugify(updatedData.title) !== "lead-distributed-systems-engineer"
+      ) {
+        cleanedSlug = slugify(updatedData.title);
+      }
+
+      const dataToSave = {
+        ...updatedData,
+        ...(cleanedSlug ? { slug: cleanedSlug } : {}),
+        closesAt: cleanedClosesAt,
+        status: JobStatus.PUBLISHED,
+      };
+
+      if (isNew) {
+        const job = await createAdminJob(dataToSave);
+        currentJobId = job.id;
+        await updateAdminJobStatus(currentJobId, {
+          targetStatus: JobStatus.PUBLISHED,
+          comment: "Created and published directly.",
+          closesAt: cleanedClosesAt,
         });
-        setJobData(toJobFormData(statusJob));
       } else {
-        const refreshed = await getAdminJob(currentJobId);
-        setJobData(toJobFormData(refreshed));
+        await updateAdminJob(id, dataToSave);
+        await updateAdminJobStatus(currentJobId, {
+          targetStatus: JobStatus.PUBLISHED,
+          comment: isRelivingClosed
+            ? "Re-opened and relived position to active status."
+            : "Published directly to public careers portal.",
+          closesAt: cleanedClosesAt,
+        });
       }
 
       setAlertMessage({
         type: "success",
-        text: isNew
-          ? "Role is now LIVE on the public careers portal!"
-          : "Role details updated and live changes saved!",
+        text: isRelivingClosed
+          ? "Position has been relived and is LIVE on the careers portal!"
+          : "Position published successfully! Live on public careers board.",
       });
-      if (isNew) {
-        router.replace(`/admin/careers/jobs/${currentJobId}`);
-      }
+
+      // Redirect directly to jobs list so the user immediately sees it live
+      router.push("/admin/careers/jobs");
+      router.refresh();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to publish role.";
       setAlertMessage({ type: "error", text: msg });
@@ -292,13 +358,13 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
               </h1>
               <Badge
                 variant={
-                  jobData.status === "PUBLISHED" || jobData.status === "OPEN"
+                  jobData.status === JobStatus.PUBLISHED || jobData.status === JobStatus.OPEN
                     ? "default"
                     : "secondary"
                 }
                 className="rounded-full font-mono text-[10px] font-bold tracking-wider uppercase"
               >
-                {jobData.status || "DRAFT"}
+                {jobData.status || JobStatus.DRAFT}
               </Badge>
             </div>
             <p className="mt-0.5 text-xs font-medium text-slate-500">
@@ -335,7 +401,20 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
             </>
           )}
 
-          {!isNew && jobData.status === "IN_REVIEW" && (
+          {!isNew && jobData.status === JobStatus.CLOSED && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => handlePublish(jobData)}
+              disabled={saving}
+              className="cursor-pointer gap-1.5 rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-xs hover:bg-emerald-700"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>Re-open &amp; Relive Position</span>
+            </Button>
+          )}
+
+          {!isNew && jobData.status === JobStatus.IN_REVIEW && (
             <>
               <Button
                 type="button"
@@ -364,7 +443,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
             </>
           )}
 
-          {jobData.slug && (jobData.status === "PUBLISHED" || jobData.status === "OPEN") && (
+          {jobData.slug && (jobData.status === JobStatus.PUBLISHED || jobData.status === JobStatus.OPEN) && (
             <Link
               href={`/careers/${jobData.slug}`}
               target="_blank"
@@ -379,7 +458,7 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
       </div>
 
       {/* Reviewer Feedback Warning if Returned */}
-      {jobData.approvalStatus === "RETURNED" && jobData.approvalComment && (
+      {(jobData.approvalStatus === "RETURNED" || jobData.approvalStatus === JobApprovalStatus.RETURNED) && jobData.approvalComment && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 duration-200 animate-in fade-in dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
           <div className="mb-1 flex items-center gap-2 font-bold">
             <Undo2 className="h-4 w-4 text-amber-600" />
@@ -458,19 +537,21 @@ export default function JobEditorPage({ params }: JobEditorPageProps) {
           job={{
             id,
             title: jobData.title || "Untitled Position",
-            status: jobData.status || "DRAFT",
+            status: jobData.status || JobStatus.DRAFT,
             publishAt: jobData.publishAt,
           }}
           mode={approvalMode}
           onSuccess={(updatedJob) => {
-            setJobData(toJobFormData(updatedJob));
-            setAlertMessage({
-              type: "success",
-              text:
-                approvalMode === "approve"
-                  ? "Position successfully approved!"
-                  : "Position returned to draft with reviewer feedback.",
-            });
+            if (approvalMode === "approve") {
+              router.push("/admin/careers/jobs");
+              router.refresh();
+            } else {
+              setJobData(toJobFormData(updatedJob));
+              setAlertMessage({
+                type: "success",
+                text: "Position returned to draft with reviewer feedback.",
+              });
+            }
           }}
         />
       )}

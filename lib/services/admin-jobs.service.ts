@@ -110,6 +110,17 @@ export class AdminJobsService {
           : undefined,
     };
 
+    // Lock slug once published/live to protect search engine indexing & applicant links
+    if (
+      existing.status !== JobStatus.DRAFT &&
+      existing.status !== JobStatus.IN_REVIEW &&
+      existing.status !== JobStatus.CLOSED &&
+      updates.slug &&
+      updates.slug.trim() !== existing.slug
+    ) {
+      finalUpdates.slug = existing.slug;
+    }
+
     const validActorId =
       actorId && actorId.trim() && actorId !== "00000000-0000-0000-0000-000000000000"
         ? actorId
@@ -150,6 +161,10 @@ export class AdminJobsService {
     actor: { userId: string; role: string },
     comment?: string,
     ipAddress?: string,
+    scheduleOptions?: {
+      closesAt?: Date | string | null;
+      publishAt?: Date | string | null;
+    },
   ): Promise<Job> {
     const existing = await this.getJobById(jobId);
     if (!existing) {
@@ -157,6 +172,16 @@ export class AdminJobsService {
     }
 
     if (existing.status === targetStatus) {
+      if (scheduleOptions?.closesAt !== undefined || scheduleOptions?.publishAt !== undefined) {
+        const scheduleUpdates: Partial<InsertJob> = {};
+        if (scheduleOptions.closesAt !== undefined) {
+          scheduleUpdates.closesAt = scheduleOptions.closesAt ? new Date(scheduleOptions.closesAt) : null;
+        }
+        if (scheduleOptions.publishAt !== undefined) {
+          scheduleUpdates.publishAt = scheduleOptions.publishAt ? new Date(scheduleOptions.publishAt) : null;
+        }
+        return this.updateJob(jobId, scheduleUpdates, actor.userId, ipAddress);
+      }
       return existing;
     }
 
@@ -250,12 +275,19 @@ export class AdminJobsService {
         );
 
       case JobStatus.CLOSED:
-        if (!isAdminOrOwner) {
+        // Transitioning to DRAFT or IN_REVIEW can be performed by recruiters/editors as well as admins
+        if (
+          !isAdminOrOwner &&
+          targetStatus !== JobStatus.DRAFT &&
+          targetStatus !== JobStatus.IN_REVIEW
+        ) {
           throw new AppError(ErrorCode.FORBIDDEN, CAREER_ERRORS.FORBIDDEN_ROLE_REOPEN);
         }
         if (
           targetStatus === JobStatus.ARCHIVED ||
           targetStatus === JobStatus.DRAFT ||
+          targetStatus === JobStatus.IN_REVIEW ||
+          targetStatus === JobStatus.SCHEDULED ||
           targetStatus === JobStatus.PUBLISHED ||
           targetStatus === JobStatus.OPEN
         ) {
@@ -279,12 +311,37 @@ export class AdminJobsService {
       status: targetStatus,
     };
 
+    if (scheduleOptions?.closesAt !== undefined) {
+      updates.closesAt = scheduleOptions.closesAt ? new Date(scheduleOptions.closesAt) : null;
+    }
+    if (scheduleOptions?.publishAt !== undefined) {
+      updates.publishAt = scheduleOptions.publishAt ? new Date(scheduleOptions.publishAt) : null;
+    }
+
     if (targetStatus === JobStatus.PUBLISHED || targetStatus === JobStatus.OPEN) {
       updates.publishedAt = existing.publishedAt || new Date();
       updates.approvalStatus = JobApprovalStatus.APPROVED;
       updates.closedAt = null;
+
+      // When reliving / reopening a closed position:
+      // If caller did not pass an explicit new closesAt, check if existing.closesAt was already in the past
+      if (
+        scheduleOptions?.closesAt === undefined &&
+        existing.closesAt &&
+        new Date(existing.closesAt).getTime() <= Date.now()
+      ) {
+        updates.closesAt = null; // Auto-clear expired deadline so it doesn't instantly close again!
+      }
     } else if (targetStatus === JobStatus.SCHEDULED) {
       updates.approvalStatus = JobApprovalStatus.APPROVED;
+      updates.closedAt = null;
+      if (
+        scheduleOptions?.closesAt === undefined &&
+        existing.closesAt &&
+        new Date(existing.closesAt).getTime() <= Date.now()
+      ) {
+        updates.closesAt = null;
+      }
     } else if (targetStatus === JobStatus.CLOSED) {
       updates.closedAt = new Date();
     } else if (targetStatus === JobStatus.DRAFT && currentStatus === JobStatus.IN_REVIEW) {
@@ -295,8 +352,25 @@ export class AdminJobsService {
     } else if (targetStatus === JobStatus.DRAFT && currentStatus === JobStatus.CLOSED) {
       updates.approvalStatus = JobApprovalStatus.PENDING;
       updates.closedAt = null;
+      if (
+        scheduleOptions?.closesAt === undefined &&
+        existing.closesAt &&
+        new Date(existing.closesAt).getTime() <= Date.now()
+      ) {
+        updates.closesAt = null;
+      }
     } else if (targetStatus === JobStatus.IN_REVIEW) {
       updates.approvalStatus = JobApprovalStatus.PENDING;
+      if (currentStatus === JobStatus.CLOSED) {
+        updates.closedAt = null;
+        if (
+          scheduleOptions?.closesAt === undefined &&
+          existing.closesAt &&
+          new Date(existing.closesAt).getTime() <= Date.now()
+        ) {
+          updates.closesAt = null;
+        }
+      }
     }
 
     return this.updateJob(jobId, updates, actor.userId, ipAddress);
@@ -499,6 +573,83 @@ export class AdminJobsService {
 
     this.revalidateJobCache(updated.slug);
     return updated;
+  }
+
+  /**
+   * Sweeps scheduled jobs that reached publishAt and closes open jobs that passed closesAt.
+   * Purges cache tags for every updated job.
+   */
+  async sweepExpiredAndScheduledJobs(): Promise<{ publishedCount: number; closedCount: number }> {
+    let publishedCount = 0;
+    let closedCount = 0;
+
+    // 1. Publish scheduled jobs
+    try {
+      const scheduledJobs = await this.jobsRepo.findScheduledJobsToPublish();
+      for (const job of scheduledJobs) {
+        try {
+          const updated = await this.jobsRepo.updateJobWithAudit(
+            job.id,
+            {
+              status: JobStatus.PUBLISHED,
+              publishedAt: new Date(),
+              updatedAt: new Date(),
+            },
+            {
+              action: "AUTO_PUBLISH_SCHEDULED",
+              entityType: "job",
+              entityId: job.id,
+            },
+          );
+          if (updated) {
+            this.revalidateJobCache(updated.slug);
+            publishedCount++;
+            logger.info(`[Job Lifecycle Sweep] Auto-published scheduled job: ${job.slug}`);
+          }
+        } catch (jobErr) {
+          logger.warn(`Failed to auto-publish scheduled job ${job.id}: ${String(jobErr)}`);
+        }
+      }
+    } catch (err) {
+      logger.warn(`Scheduled jobs sweep error: ${String(err)}`);
+    }
+
+    // 2. Close expired jobs
+    try {
+      const expiredJobs = await this.jobsRepo.findOpenJobsToClose();
+      for (const job of expiredJobs) {
+        try {
+          const updated = await this.jobsRepo.updateJobWithAudit(
+            job.id,
+            {
+              status: JobStatus.CLOSED,
+              closedAt: new Date(),
+              updatedAt: new Date(),
+            },
+            {
+              action: "AUTO_CLOSE_EXPIRED",
+              entityType: "job",
+              entityId: job.id,
+            },
+          );
+          if (updated) {
+            this.revalidateJobCache(updated.slug);
+            closedCount++;
+            logger.info(`[Job Lifecycle Sweep] Auto-closed expired job: ${job.slug}`);
+          }
+        } catch (jobErr) {
+          logger.warn(`Failed to auto-close expired job ${job.id}: ${String(jobErr)}`);
+        }
+      }
+    } catch (err) {
+      logger.warn(`Expired jobs sweep error: ${String(err)}`);
+    }
+
+    if (publishedCount > 0 || closedCount > 0) {
+      this.revalidateJobCache();
+    }
+
+    return { publishedCount, closedCount };
   }
 
   private revalidateJobCache(slug?: string): void {

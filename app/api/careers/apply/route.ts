@@ -129,25 +129,13 @@ export async function POST(req: Request) {
 
     const validated = validationResult.data;
 
-    // 6. Resume document check
-    const resumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
-    if (
-      !resumeFile ||
-      (typeof resumeFile === "object" && "size" in resumeFile && resumeFile.size === 0)
-    ) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED,
-          errorPayload: {
-            code: "BAD_REQUEST",
-            message: CAREER_ERRORS.RESUME_DOCUMENT_REQUIRED,
-            requestId,
-          },
-        },
-        { status: 400, headers },
-      );
-    }
+    // 6. Resume document extraction
+    const rawResumeFile = (formData.get("resumeFile") || formData.get("resume")) as File | null;
+    const hasResume = Boolean(
+      rawResumeFile &&
+        (typeof rawResumeFile !== "object" || !("size" in rawResumeFile) || rawResumeFile.size > 0),
+    );
+    const resumeFile = hasResume ? rawResumeFile : null;
 
     // 7. Parse optional voluntary EEOC answers
     let eeoc:

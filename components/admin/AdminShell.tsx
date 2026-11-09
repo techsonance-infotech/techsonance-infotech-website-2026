@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -17,6 +17,8 @@ import {
   Menu,
   X,
   RefreshCw,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { logoutAdmin } from "@/lib/api/admin-governance.api";
@@ -37,11 +39,71 @@ export function AdminShell({
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [revalidateOpen, setRevalidateOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Rehydrate collapsed state from localStorage on client mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("admin_sidebar_collapsed");
+      if (stored === "true") {
+        setIsCollapsed(true);
+      }
+    } catch {
+      // LocalStorage not available or restricted
+    }
+  }, []);
+
+  // Keyboard shortcut Ctrl+B / Cmd+B to toggle sidebar collapse
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) {
+        const target = e.target as HTMLElement | null;
+        const isEditing =
+          target &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable);
+        if (!isEditing) {
+          e.preventDefault();
+          setIsCollapsed((prev) => {
+            const next = !prev;
+            try {
+              localStorage.setItem("admin_sidebar_collapsed", String(next));
+            } catch {
+              // Ignore
+            }
+            return next;
+          });
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleToggleCollapse = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("admin_sidebar_collapsed", String(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
 
   // Do not render admin shell if on login page
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
+
+  const isPostDetail =
+    pathname.startsWith("/admin/blog/") &&
+    !pathname.startsWith("/admin/blog/topics") &&
+    !pathname.startsWith("/admin/blog/prompts") &&
+    !pathname.startsWith("/admin/blog/ai");
 
   const navItems = [
     {
@@ -54,10 +116,7 @@ export function AdminShell({
       title: "Blog Articles",
       href: "/admin/blog",
       icon: FileText,
-      active:
-        pathname === "/admin/blog" ||
-        pathname.startsWith("/admin/blog/new") ||
-        pathname.match(/\/admin\/blog\/[^/]+$/) !== null,
+      active: pathname === "/admin/blog" || isPostDetail,
     },
     {
       title: "Topic Backlog",
@@ -133,17 +192,31 @@ export function AdminShell({
         </button>
       </div>
 
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-xs transition-opacity duration-200 md:hidden"
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col justify-between border-r border-slate-200/80 bg-white transition-transform duration-300 ease-in-out md:static md:h-full md:shrink-0 md:translate-x-0 ${
-          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        aria-label="Admin Navigation Sidebar"
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col justify-between border-r border-slate-200/80 bg-white transition-all duration-300 ease-in-out md:static md:h-full md:shrink-0 ${
+          mobileMenuOpen ? "translate-x-0 w-64 shadow-2xl" : "-translate-x-full md:translate-x-0"
+        } ${
+          isCollapsed
+            ? "md:w-0 md:opacity-0 md:-translate-x-full md:pointer-events-none md:border-r-0 overflow-hidden"
+            : "md:w-64 md:opacity-100 md:translate-x-0"
         }`}
       >
-        <div className="flex h-full flex-col overflow-y-auto">
+        <div className="flex h-full w-64 flex-col overflow-y-auto">
           {/* Logo & Workspace header */}
-          <div className="flex items-center justify-between border-b border-slate-100 p-6">
+          <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-base font-black text-white shadow-lg shadow-[#1155CC]/25">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-tr from-[#1155CC] via-[#1E6BEE] to-[#22B6F6] text-base font-black text-white shadow-lg shadow-[#1155CC]/25">
                 TS
               </div>
               <div>
@@ -155,6 +228,17 @@ export function AdminShell({
                 </span>
               </div>
             </div>
+
+            {/* Desktop Collapse Trigger */}
+            <button
+              type="button"
+              onClick={handleToggleCollapse}
+              className="hidden md:flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC]"
+              title="Collapse sidebar (Ctrl+B)"
+              aria-label="Collapse sidebar"
+            >
+              <PanelLeftClose className="h-4 w-4" />
+            </button>
           </div>
 
           {/* Main Navigation Links */}
@@ -248,7 +332,26 @@ export function AdminShell({
       <CacheRevalidateDialog isOpen={revalidateOpen} onClose={() => setRevalidateOpen(false)} />
 
       {/* Main Content Area */}
-      <div data-lenis-prevent className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+      <div data-lenis-prevent className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+        {/* Floating Expand Sidebar Button (Desktop only when collapsed) */}
+        {isCollapsed && (
+          <div className="sticky top-4 z-30 ml-4 self-start animate-in fade-in slide-in-from-left-3 duration-200 hidden md:block">
+            <button
+              type="button"
+              onClick={handleToggleCollapse}
+              className="group inline-flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-md backdrop-blur-md transition-all hover:border-blue-200 hover:bg-white hover:text-[#1155CC] hover:shadow-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1155CC]"
+              title="Expand sidebar (Ctrl+B)"
+              aria-label="Expand sidebar"
+            >
+              <PanelLeftOpen className="h-4 w-4 text-[#1155CC] transition-transform group-hover:scale-110" />
+              <span>Expand Sidebar</span>
+              <kbd className="ml-1 hidden items-center rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500 lg:inline-flex">
+                Ctrl+B
+              </kbd>
+            </button>
+          </div>
+        )}
+
         <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>

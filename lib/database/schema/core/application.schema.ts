@@ -7,6 +7,7 @@ import {
   boolean,
   jsonb,
   index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { baseEntityFields } from "../base.schema";
 import { sitesTable } from "./site.schema";
@@ -54,6 +55,7 @@ export const applicationsTable = pgTable(
     rating: integer("rating"), // 1 to 5 stars
 
     // Compliance & Consent
+    privacyConsent: boolean("privacy_consent").notNull().default(true),
     privacyConsentDate: timestamp("privacy_consent_date", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -61,7 +63,7 @@ export const applicationsTable = pgTable(
     talentPoolConsent: boolean("talent_pool_consent").notNull().default(false),
   },
   (table) => [
-    index("ts_content_app_job_email_idx").on(table.jobId, table.email),
+    uniqueIndex("ts_content_app_job_email_uq").on(table.jobId, table.email),
     index("ts_content_app_status_idx").on(table.status),
   ],
 );

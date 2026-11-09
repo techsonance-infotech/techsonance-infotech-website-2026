@@ -32,6 +32,8 @@ export interface JobApplicationFormProps {
   jobId: string;
   jobTitle: string;
   screeningQuestions?: ScreeningQuestionItem[];
+  resumeRequired?: boolean;
+  coverLetterRequirement?: "REQUIRED" | "OPTIONAL" | "OFF" | string;
   onSuccess?: (applicationId: string) => void;
 }
 
@@ -44,6 +46,8 @@ export function JobApplicationForm({
   jobId,
   jobTitle,
   screeningQuestions = DEFAULT_SCREENING_QUESTIONS,
+  resumeRequired = true,
+  coverLetterRequirement = "OPTIONAL",
   onSuccess,
 }: JobApplicationFormProps) {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -109,8 +113,16 @@ export function JobApplicationForm({
     setApiError(null);
     setFileError(null);
 
-    if (!resumeFile) {
+    if (resumeRequired !== false && !resumeFile) {
       setFileError("Please attach your resume document (PDF or DOCX).");
+      return;
+    }
+
+    if (
+      coverLetterRequirement === "REQUIRED" &&
+      (!values.coverLetter || !values.coverLetter.trim())
+    ) {
+      setApiError("A cover letter is required for this role.");
       return;
     }
 
@@ -369,7 +381,12 @@ export function JobApplicationForm({
           htmlFor="apply-resume"
           className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
         >
-          Resume Document (PDF or DOCX, max 5MB) <span className="text-red-500">*</span>
+          Resume Document (PDF or DOCX, max 5MB){" "}
+          {resumeRequired !== false ? (
+            <span className="text-red-500">*</span>
+          ) : (
+            <span className="font-normal text-zinc-400 lowercase">(optional)</span>
+          )}
         </label>
         <div className="flex items-center gap-4">
           <input
@@ -391,21 +408,28 @@ export function JobApplicationForm({
       </div>
 
       {/* Cover Letter */}
-      <div>
-        <label
-          htmlFor="apply-coverletter"
-          className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
-        >
-          Cover Letter or Note to Hiring Team (Optional)
-        </label>
-        <textarea
-          id="apply-coverletter"
-          rows={3}
-          {...register("coverLetter")}
-          placeholder="Briefly introduce your engineering philosophy, passion projects, or what excites you about this role..."
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
-        />
-      </div>
+      {coverLetterRequirement?.toUpperCase() !== "OFF" && (
+        <div>
+          <label
+            htmlFor="apply-coverletter"
+            className="mb-1 block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+          >
+            Cover Letter or Note to Hiring Team{" "}
+            {coverLetterRequirement === "REQUIRED" ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="font-normal text-zinc-400 lowercase">(Optional)</span>
+            )}
+          </label>
+          <textarea
+            id="apply-coverletter"
+            rows={3}
+            {...register("coverLetter")}
+            placeholder="Briefly introduce your engineering philosophy, passion projects, or what excites you about this role..."
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-hidden dark:border-zinc-700 dark:bg-zinc-900"
+          />
+        </div>
+      )}
 
       {/* Screening Questions (if any) */}
       {screeningQuestions.length > 0 && (

@@ -12,6 +12,8 @@ import {
 export interface UpdateJobStatusPayload {
   targetStatus: JobStatus | string;
   comment?: string;
+  closesAt?: string | Date | null;
+  publishAt?: string | Date | null;
 }
 
 export interface ListAdminJobsParams {

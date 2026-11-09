@@ -151,6 +151,7 @@ export const ApplicationStatusEnum = pgEnum("ts_content_application_status", [
   ApplicationStatus.INTERVIEW,
   ApplicationStatus.OFFER,
   ApplicationStatus.HIRED,
+  ApplicationStatus.ON_HOLD,
   ApplicationStatus.REJECTED,
   ApplicationStatus.WITHDRAWN,
 ]);

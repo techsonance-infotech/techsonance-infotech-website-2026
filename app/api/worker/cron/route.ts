@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminTelemetryService } from "@/lib/services/admin-telemetry.service";
 import { AdminTopicsService } from "@/lib/services/admin-topics.service";
+import { AdminJobsService } from "@/lib/services/admin-jobs.service";
 import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logger";
@@ -22,6 +23,15 @@ export async function POST(req: NextRequest) {
   const container = getContainer();
   const telemetry = container.get(AdminTelemetryService);
   const topicsService = container.get(AdminTopicsService);
+  const jobsService = container.get(AdminJobsService);
+
+  // 1. Run Careers Lifecycle Sweep (publish scheduled roles & close expired roles)
+  let careersSweep = { publishedCount: 0, closedCount: 0 };
+  try {
+    careersSweep = await jobsService.sweepExpiredAndScheduledJobs();
+  } catch (sweepErr) {
+    logger.warn(`Careers lifecycle sweep encountered non-blocking error: ${String(sweepErr)}`);
+  }
 
   try {
     const summary = await telemetry.getTelemetrySummary();

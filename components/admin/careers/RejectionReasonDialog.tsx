@@ -49,12 +49,20 @@ export function RejectionReasonDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200">
-      <dialog
-        open
+    <div
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && !isSubmitting) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs duration-200"
+    >
+      <div
+        role="dialog"
         aria-modal="true"
         aria-labelledby="reject-dialog-title"
-        className="w-full max-w-md space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl duration-150 dark:border-slate-800 dark:bg-slate-900"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -194,7 +202,7 @@ export function RejectionReasonDialog({
             )}
           </Button>
         </div>
-      </dialog>
+      </div>
     </div>
   );
 }

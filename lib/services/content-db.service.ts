@@ -157,50 +157,62 @@ export class ContentDbService {
     try {
       const jobs = await this.contentRepo.findPublishedJobs(status || JobStatus.OPEN);
 
-      return jobs.map((row) => ({
-        id: row.id,
-        slug: row.slug,
-        title: row.title,
-        referenceCode: row.referenceCode || undefined,
-        department: row.department,
-        location: row.location,
-        workMode: row.workMode,
-        remoteEligibility: row.remoteEligibility || undefined,
-        visaSupport: row.visaSupport || undefined,
-        type: row.type,
-        experienceLevel: row.experienceLevel || "mid",
-        summary: row.summary,
-        description: row.description,
-        responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
-        requirements: Array.isArray(row.requirements) ? row.requirements : [],
-        preferredQualifications: Array.isArray(row.preferredQualifications)
-          ? row.preferredQualifications
-          : [],
-        skills: Array.isArray(row.skills) ? row.skills : [],
-        benefits: Array.isArray(row.benefits) ? row.benefits : [],
-        aboutTeam: row.aboutTeam || undefined,
-        hiringProcess: Array.isArray(row.hiringProcess)
-          ? (row.hiringProcess as Array<{ step: string; title: string; desc?: string }>)
-          : [],
-        equalOpportunityStatement: row.equalOpportunityStatement || undefined,
-        salaryMin: row.salaryMin ?? undefined,
-        salaryMax: row.salaryMax ?? undefined,
-        salaryCurrency: row.salaryCurrency || "INR",
-        salaryPeriod: row.salaryPeriod || "year",
-        showSalaryPublicly: row.showSalaryPublicly,
-        compensationNotes: row.compensationNotes || undefined,
-        applicationMethod: row.applicationMethod,
-        externalApplyUrl: row.externalApplyUrl || undefined,
-        resumeRequired: row.resumeRequired,
-        coverLetterRequirement: row.coverLetterRequirement,
-        screeningQuestions: Array.isArray(row.screeningQuestions) ? row.screeningQuestions : [],
-        closesAt: row.closesAt ? row.closesAt.toISOString() : undefined,
-        status: row.status as JobStatus,
-        publishedAt: row.publishedAt ? row.publishedAt.toISOString() : undefined,
-        seoTitle: row.seoTitle || undefined,
-        seoDescription: row.seoDescription || undefined,
-        ogImage: row.ogImage || undefined,
-      }));
+      return jobs
+        .map((row) => {
+          const isExpired = Boolean(row.closesAt && new Date(row.closesAt).getTime() < Date.now());
+          const effectiveStatus = isExpired ? JobStatus.CLOSED : (row.status as JobStatus);
+
+          return {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            referenceCode: row.referenceCode || undefined,
+            department: row.department,
+            location: row.location,
+            workMode: row.workMode,
+            remoteEligibility: row.remoteEligibility || undefined,
+            visaSupport: row.visaSupport || undefined,
+            type: row.type,
+            experienceLevel: row.experienceLevel || "mid",
+            summary: row.summary,
+            description: row.description,
+            responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
+            requirements: Array.isArray(row.requirements) ? row.requirements : [],
+            preferredQualifications: Array.isArray(row.preferredQualifications)
+              ? row.preferredQualifications
+              : [],
+            skills: Array.isArray(row.skills) ? row.skills : [],
+            benefits: Array.isArray(row.benefits) ? row.benefits : [],
+            aboutTeam: row.aboutTeam || undefined,
+            hiringProcess: Array.isArray(row.hiringProcess)
+              ? (row.hiringProcess as Array<{ step: string; title: string; desc?: string }>)
+              : [],
+            equalOpportunityStatement: row.equalOpportunityStatement || undefined,
+            salaryMin: row.salaryMin ?? undefined,
+            salaryMax: row.salaryMax ?? undefined,
+            salaryCurrency: row.salaryCurrency || "INR",
+            salaryPeriod: row.salaryPeriod || "year",
+            showSalaryPublicly: row.showSalaryPublicly,
+            compensationNotes: row.compensationNotes || undefined,
+            applicationMethod: row.applicationMethod,
+            externalApplyUrl: row.externalApplyUrl || undefined,
+            resumeRequired: row.resumeRequired,
+            coverLetterRequirement: row.coverLetterRequirement,
+            screeningQuestions: Array.isArray(row.screeningQuestions) ? row.screeningQuestions : [],
+            closesAt: row.closesAt ? row.closesAt.toISOString() : undefined,
+            status: effectiveStatus,
+            publishedAt: row.publishedAt ? row.publishedAt.toISOString() : undefined,
+            seoTitle: row.seoTitle || undefined,
+            seoDescription: row.seoDescription || undefined,
+            ogImage: row.ogImage || undefined,
+          };
+        })
+        .filter((job) => {
+          if (status && (status === JobStatus.PUBLISHED || status === JobStatus.OPEN)) {
+            return job.status === status;
+          }
+          return true;
+        });
     } catch {
       return [];
     }
@@ -210,6 +222,9 @@ export class ContentDbService {
     try {
       const row = await this.contentRepo.findJobBySlug(slug);
       if (!row) return null;
+
+      const isExpired = Boolean(row.closesAt && new Date(row.closesAt).getTime() < Date.now());
+      const effectiveStatus = isExpired ? JobStatus.CLOSED : (row.status as JobStatus);
 
       return {
         id: row.id,
@@ -249,7 +264,7 @@ export class ContentDbService {
         coverLetterRequirement: row.coverLetterRequirement,
         screeningQuestions: Array.isArray(row.screeningQuestions) ? row.screeningQuestions : [],
         closesAt: row.closesAt ? row.closesAt.toISOString() : undefined,
-        status: row.status as JobStatus,
+        status: effectiveStatus,
         publishedAt: row.publishedAt ? row.publishedAt.toISOString() : undefined,
         seoTitle: row.seoTitle || undefined,
         seoDescription: row.seoDescription || undefined,

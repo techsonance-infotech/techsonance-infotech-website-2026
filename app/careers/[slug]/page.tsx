@@ -36,9 +36,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       `Join TechSonance Infotech as a ${job.title} in ${job.location}. Explore role overview, key responsibilities, qualifications, and apply online today.`;
     const canonical = `${BASE_URL}/careers/${job.slug}`;
 
+    const isNoIndex =
+      (job.visibility && job.visibility.toLowerCase() === "unlisted") ||
+      job.status === JobStatus.CLOSED ||
+      job.status === JobStatus.ARCHIVED ||
+      job.status === JobStatus.PAUSED;
+
     return {
       title,
       description,
+      ...(isNoIndex ? { robots: { index: false, follow: false } } : {}),
       alternates: {
         canonical,
       },
