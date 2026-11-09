@@ -528,11 +528,12 @@ const customRenderer = {
     return `<td class="px-5 py-3.5 leading-relaxed text-slate-600"${alignAttr}>${content}</td>`;
   },
 
-  blockquote({ text }: { text: string }): string {
+  blockquote(this: any, token: { text: string; tokens?: any[] }): string {
+    const body = this.parser && token.tokens ? this.parser.parse(token.tokens) : token.text;
     return `
       <blockquote class="my-8 rounded-2xl border-l-4 border-[#1155CC] bg-blue-50/50 p-5 shadow-xs">
-        <div class="italic leading-relaxed text-slate-700 text-sm sm:text-base">
-          ${text}
+        <div class="italic leading-relaxed text-slate-700 text-sm sm:text-base [&>p]:m-0">
+          ${body}
         </div>
       </blockquote>
     `;
@@ -546,6 +547,23 @@ const customRenderer = {
     return `<hr class="my-12 border-slate-200/80" />`;
   },
 };
+
+/**
+ * Cleans dangling bullet points or unclosed blocks from articles that may have been
+ * cut off during generation.
+ */
+export function cleanTrailingCutoffs(md: string): string {
+  if (!md || typeof md !== "string") return "";
+  let cleaned = md.trim();
+  // Strip trailing dangling bullet points cut off mid-sentence (e.g. `* **Why` or `- **` or `• **`)
+  cleaned = cleaned.replace(/[\n\r]\s*[-*•]\s*\*\*[^*]*$/g, "");
+  // Close unclosed fenced code blocks
+  const codeBlockCount = (cleaned.match(/```/g) || []).length;
+  if (codeBlockCount % 2 !== 0) {
+    cleaned += "\n```";
+  }
+  return cleaned;
+}
 
 // Apply custom renderer & options
 marked.use({
@@ -563,7 +581,8 @@ export function renderMarkdownToHtml(markdown: string): string {
   }
 
   try {
-    const preprocessed = preprocessMarkdownMath(markdown);
+    const cleaned = cleanTrailingCutoffs(markdown);
+    const preprocessed = preprocessMarkdownMath(cleaned);
     const html = marked.parse(preprocessed);
     if (typeof html === "string") {
       return html;

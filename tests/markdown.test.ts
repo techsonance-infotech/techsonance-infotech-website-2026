@@ -19,6 +19,21 @@ describe("renderMarkdownToHtml", () => {
     expect(html).toContain("Subheading");
   });
 
+  it("renders blockquotes with parsed inline formatting like bold and italics", () => {
+    const md = "> **Bottom line:** Zero-cold-start is not a magical claim; it is a *deterministic* budget with **connection pooling**.";
+    const html = renderMarkdownToHtml(md);
+    expect(html).toContain("<strong>Bottom line:</strong>");
+    expect(html).toContain("<em>deterministic</em>");
+    expect(html).toContain("<strong>connection pooling</strong>");
+  });
+
+  it("strips dangling unfinished bullet points cut off at article end", () => {
+    const mdWithCutoff = "Paragraph text.\n\n• **Why";
+    const html = renderMarkdownToHtml(mdWithCutoff);
+    expect(html).not.toContain("• **Why");
+    expect(html).toContain("Paragraph text.");
+  });
+
   it("converts bold and inline code with styled badge", () => {
     const md = "This is **bold** text and `code snippet`.";
     const html = renderMarkdownToHtml(md);
