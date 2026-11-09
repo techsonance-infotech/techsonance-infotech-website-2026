@@ -61,6 +61,34 @@ describe("AdminAiCredentialsService", () => {
     );
   });
 
+  it("should add a credential with a specific model name", async () => {
+    mockRepo.findByFingerprint.mockResolvedValue(null);
+    mockRepo.createCredential.mockImplementation(async (data: any) => ({
+      ...data,
+      id: "cred-uuid-2",
+      createdAt: new Date(),
+      spentTodayUsd: "0",
+    }));
+
+    const result = await service.addCredential(
+      {
+        provider: "gemini",
+        model: "gemini-2.5-pro",
+        label: "Gemini Pro Reasoning",
+        apiKey: "AIzaSy_custom_model_key_12345",
+      },
+      "admin-user-1",
+    );
+
+    expect(result.model).toBe("gemini-2.5-pro");
+    expect(mockRepo.createCredential).toHaveBeenCalledWith(
+      expect.objectContaining({
+        provider: "gemini",
+        model: "gemini-2.5-pro",
+      }),
+    );
+  });
+
   it("should reject duplicate API keys with CONFLICT error code", async () => {
     mockRepo.findByFingerprint.mockResolvedValue({ id: "existing-cred" });
 

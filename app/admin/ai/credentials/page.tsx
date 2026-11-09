@@ -279,6 +279,7 @@ export default function AiCredentialsPage() {
                 <thead className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                   <tr>
                     <th className="px-5 py-3">Provider</th>
+                    <th className="px-5 py-3">Model</th>
                     <th className="px-5 py-3">Label</th>
                     <th className="px-5 py-3">Key (Last 4)</th>
                     <th className="px-5 py-3">Status</th>
@@ -294,6 +295,11 @@ export default function AiCredentialsPage() {
                       <td className="px-5 py-3.5">
                         <span className="font-bold uppercase tracking-wider text-slate-900">
                           {cred.provider}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className="font-mono text-[11px] font-semibold text-blue-700 bg-blue-50/80 px-2 py-0.5 rounded-md border border-blue-200/60">
+                          {cred.model || "default"}
                         </span>
                       </td>
                       <td className="px-5 py-3.5 font-semibold text-slate-900">

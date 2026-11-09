@@ -11,6 +11,7 @@ export const credentialViewDto = z.object({
   id: z.string().uuid(),
   accountId: z.string().uuid().nullable().optional(),
   provider: z.string(),
+  model: z.string().nullable().optional(),
   label: z.string(),
   last4: z.string(),
   keyVersion: z.number().int(),

@@ -39,6 +39,7 @@ export const credentialsTable = pgTable("ts_ai_credentials", {
     onDelete: "set null",
   }),
   provider: text("provider").notNull(),
+  model: text("model"),
   label: text("label").notNull(),
   ciphertext: bytea("ciphertext"),
   iv: bytea("iv"),
