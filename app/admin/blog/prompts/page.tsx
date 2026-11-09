@@ -1,12 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, startTransition } from "react";
-import { FileCode, Save, Sliders, Check, Layers, Terminal } from "lucide-react";
+import React, { useState, useEffect, useCallback, startTransition, useMemo } from "react";
+import {
+  FileCode,
+  Save,
+  Sliders,
+  Check,
+  Layers,
+  Terminal,
+  RotateCcw,
+  Sparkles,
+  Eye,
+  EyeOff,
+  PlusCircle,
+  Copy,
+  Info,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { listAdminAiPrompts, updateAdminAiPrompt } from "@/lib/api/admin-ai.api";
 import type { PromptTemplateDto } from "@/lib/contracts/admin-ai-prompts.contract";
+import {
+  DEFAULT_PROMPT_TEMPLATES,
+  type DefaultPromptTemplate,
+} from "@/lib/constants/ai.constants";
 
 const STEPS = [
   {
@@ -32,6 +50,53 @@ const STEPS = [
   { key: "critic", name: "5. Quality Critic", desc: "Evaluates depth, voice, and quality score" },
 ];
 
+const PRESET_MODELS = [
+  { id: "gemini-3.0-flash", label: "Gemini 3.0 Flash (Recommended - Fast & Multimodal)" },
+  { id: "gemini-3.0-pro", label: "Gemini 3.0 Pro (Advanced Reasoning & Deep Code)" },
+  { id: "gemini-3.0-flash-lite", label: "Gemini 3.0 Flash Lite (Cost-Efficient)" },
+  { id: "gemini-3.0-ultra", label: "Gemini 3.0 Ultra (Deep Enterprise)" },
+  { id: "flux-schnell", label: "Cloudflare FLUX.1-schnell (Image Generation)" },
+  { id: "groq-llama3", label: "Groq Llama 3 70B (Ultra Low Latency)" },
+];
+
+const QUICK_INSERT_SYSTEM_BLOCKS = [
+  {
+    title: "+ Architecture Guidelines",
+    text: `\n\n### Enterprise Architecture Guidelines:
+- Highlight production tradeoffs, failover scenarios, and operational overhead.
+- Present clean, modular service boundaries over monolithic functions.`,
+  },
+  {
+    title: "+ Strict TypeScript Rules",
+    text: `\n\n### Code Snippet Standards:
+- Write idiomatic TypeScript with strict types, explicit return types, and zero loose \`any\`.
+- Include realistic error handling, recovery paths, and boundary safety.`,
+  },
+  {
+    title: "+ Executive Editorial Voice",
+    text: `\n\n### Audience & Tone:
+- Target audience: Principal Architects, Staff Engineers, and Technical Directors.
+- Tone: Pragmatic, direct, and authoritative with zero superficial marketing fluff.`,
+  },
+  {
+    title: "+ Strict Output Guard",
+    text: `\n\n### Strict Output Constraints:
+- Do NOT wrap output with conversational preamble or trailing commentary.
+- Return ONLY valid output adhering strictly to the required schema.`,
+  },
+];
+
+const QUICK_INSERT_USER_BLOCKS = [
+  {
+    title: "+ Add Focus Directive",
+    text: `\nKey Focus Areas: Prioritize enterprise reliability, horizontal scalability, and developer ergonomics.`,
+  },
+  {
+    title: "+ Add Tech Stack Context",
+    text: `\nTarget Architecture: Next.js 16 App Router, React 19, TypeScript strict mode, and PostgreSQL.`,
+  },
+];
+
 function getVariablesForStep(step: string) {
   switch (step) {
     case "outline":
@@ -54,12 +119,28 @@ export default function PromptsManagementPage() {
   const [selectedStep, setSelectedStep] = useState<string>("outline");
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showDefaultDiff, setShowDefaultDiff] = useState(false);
+  const [isCustomModel, setIsCustomModel] = useState(false);
 
   // Form state
   const [systemPrompt, setSystemPrompt] = useState("");
   const [userPromptTemplate, setUserPromptTemplate] = useState("");
-  const [modelPreference, setModelPreference] = useState("gemini-2.5-flash");
+  const [modelPreference, setModelPreference] = useState("gemini-3.0-flash");
   const [temperature, setTemperature] = useState(70);
+
+  // Pristine default for currently selected step
+  const currentDefault: DefaultPromptTemplate = useMemo(() => {
+    const found = DEFAULT_PROMPT_TEMPLATES.find((d) => d.stepName === selectedStep);
+    return (
+      found || {
+        stepName: selectedStep,
+        modelPreference: "gemini-3.0-flash",
+        temperature: 70,
+        systemPrompt: "",
+        userPromptTemplate: "",
+      }
+    );
+  }, [selectedStep]);
 
   const loadTemplates = useCallback(async () => {
     try {
@@ -78,22 +159,89 @@ export default function PromptsManagementPage() {
     });
   }, [loadTemplates]);
 
+  // When step changes or templates load, sync editor state
   useEffect(() => {
     const active = templates.find((t) => t.stepName === selectedStep);
-    if (active) {
-      startTransition(() => {
-        setSystemPrompt(active.systemPrompt);
-        setUserPromptTemplate(active.userPromptTemplate);
-        setModelPreference(active.modelPreference || "gemini-2.5-flash");
-        setTemperature(active.temperature ?? 70);
-      });
+    startTransition(() => {
+      if (active) {
+        setSystemPrompt(active.systemPrompt || currentDefault.systemPrompt);
+        setUserPromptTemplate(active.userPromptTemplate || currentDefault.userPromptTemplate);
+        const model = active.modelPreference || currentDefault.modelPreference;
+        setModelPreference(model);
+        setIsCustomModel(!PRESET_MODELS.some((m) => m.id === model));
+        setTemperature(active.temperature ?? currentDefault.temperature);
+      } else {
+        // Fallback to complete default template immediately
+        setSystemPrompt(currentDefault.systemPrompt);
+        setUserPromptTemplate(currentDefault.userPromptTemplate);
+        setModelPreference(currentDefault.modelPreference);
+        setIsCustomModel(!PRESET_MODELS.some((m) => m.id === currentDefault.modelPreference));
+        setTemperature(currentDefault.temperature);
+      }
+    });
+  }, [selectedStep, templates, currentDefault]);
+
+  // Check if current text differs from default baseline
+  const isModifiedFromDefault = useMemo(() => {
+    return (
+      systemPrompt.trim() !== currentDefault.systemPrompt.trim() ||
+      userPromptTemplate.trim() !== currentDefault.userPromptTemplate.trim() ||
+      modelPreference !== currentDefault.modelPreference ||
+      temperature !== currentDefault.temperature
+    );
+  }, [systemPrompt, userPromptTemplate, modelPreference, temperature, currentDefault]);
+
+  // Check if current text differs from database saved version
+  const isDirty = useMemo(() => {
+    const active = templates.find((t) => t.stepName === selectedStep);
+    if (!active) return isModifiedFromDefault;
+    return (
+      systemPrompt !== (active.systemPrompt || "") ||
+      userPromptTemplate !== (active.userPromptTemplate || "") ||
+      modelPreference !== (active.modelPreference || "") ||
+      temperature !== (active.temperature ?? 70)
+    );
+  }, [templates, selectedStep, systemPrompt, userPromptTemplate, modelPreference, temperature, isModifiedFromDefault]);
+
+  const handleRestoreDefault = () => {
+    startTransition(() => {
+      setSystemPrompt(currentDefault.systemPrompt);
+      setUserPromptTemplate(currentDefault.userPromptTemplate);
+      setModelPreference(currentDefault.modelPreference);
+      setIsCustomModel(!PRESET_MODELS.some((m) => m.id === currentDefault.modelPreference));
+      setTemperature(currentDefault.temperature);
+    });
+    showToast(`Restored default baseline for ${selectedStep}`);
+  };
+
+  const handleInsertSystemBlock = (blockText: string) => {
+    setSystemPrompt((prev) => (prev ? prev + blockText : blockText.trim()));
+    showToast("Added custom instructions to template");
+  };
+
+  const handleInsertUserBlock = (blockText: string) => {
+    setUserPromptTemplate((prev) => (prev ? prev + blockText : blockText.trim()));
+    showToast("Added parameters to user template");
+  };
+
+  const handleInsertToken = (token: string) => {
+    setUserPromptTemplate((prev) => (prev ? `${prev} ${token}` : token));
+  };
+
+  const handleModelSelectChange = (value: string) => {
+    if (value === "__custom__") {
+      setIsCustomModel(true);
+    } else {
+      setIsCustomModel(false);
+      setModelPreference(value);
     }
-  }, [selectedStep, templates]);
+  };
 
   const handleSave = async () => {
     const active = templates.find((t) => t.stepName === selectedStep);
     if (!active) {
-      showToast("Selected prompt step template not found");
+      showToast("Selected prompt step template not found in database. Reloading...");
+      void loadTemplates();
       return;
     }
 
@@ -107,7 +255,7 @@ export default function PromptsManagementPage() {
       });
 
       setTemplates((prev) => prev.map((t) => (t.id === active.id ? updated : t)));
-      showToast("Prompt template updated successfully!");
+      showToast("Prompt template version updated successfully!");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to save template";
       showToast(msg);
@@ -121,9 +269,11 @@ export default function PromptsManagementPage() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  const activeTemplate = templates.find((t) => t.stepName === selectedStep);
+
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      {/* Toast */}
+      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed right-6 bottom-6 z-50 flex slide-in-from-bottom items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl animate-in">
           <Check className="h-4 w-4 text-emerald-400" />
@@ -134,22 +284,71 @@ export default function PromptsManagementPage() {
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
-            Prompt Template Studio
-          </h1>
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-sora text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+              Prompt Template Studio
+            </h1>
+            {isModifiedFromDefault ? (
+              <Badge variant="warning" className="text-[10px]">
+                Customized
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-[10px] text-slate-500">
+                Default Baseline
+              </Badge>
+            )}
+            {isDirty && (
+              <Badge variant="destructive" dot={true} className="text-[10px]">
+                Unsaved Draft
+              </Badge>
+            )}
+          </div>
           <p className="mt-1 text-xs font-semibold text-slate-500 sm:text-sm">
-            Tune AI pipeline prompts at runtime without code deploys (FD-1 & FD-6).
+            Tune AI pipeline prompts at runtime without code deploys. Partial edits preserve core JSON and model contracts.
           </p>
         </div>
 
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="rounded-2xl bg-blue-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700"
-        >
-          <Save className="mr-2 h-4 w-4" />
-          {saving ? "Saving Changes..." : "Save Prompt Version"}
-        </Button>
+        <div className="flex items-center gap-2.5">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleRestoreDefault}
+            className="rounded-2xl border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+            title="Reset this step's editor to the original system default template"
+          >
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5 text-slate-500" />
+            Restore Default
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowDefaultDiff((prev) => !prev)}
+            className="rounded-2xl border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+          >
+            {showDefaultDiff ? (
+              <>
+                <EyeOff className="mr-1.5 h-3.5 w-3.5 text-slate-500" />
+                Hide Baseline
+              </>
+            ) : (
+              <>
+                <Eye className="mr-1.5 h-3.5 w-3.5 text-slate-500" />
+                View Baseline
+              </>
+            )}
+          </Button>
+
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={saving || !activeTemplate}
+            className="rounded-2xl bg-blue-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 disabled:opacity-50"
+          >
+            <Save className="mr-2 h-4 w-4" />
+            {saving ? "Saving Changes..." : `Save Version ${activeTemplate ? `v${activeTemplate.version + 1}` : ""}`}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -161,6 +360,9 @@ export default function PromptsManagementPage() {
           {STEPS.map((s) => {
             const isSelected = selectedStep === s.key;
             const t = templates.find((item) => item.stepName === s.key);
+            const stepDef = DEFAULT_PROMPT_TEMPLATES.find((d) => d.stepName === s.key);
+            const isCustom = t && stepDef && (t.systemPrompt !== stepDef.systemPrompt || t.userPromptTemplate !== stepDef.userPromptTemplate);
+
             return (
               <button
                 key={s.key}
@@ -178,11 +380,16 @@ export default function PromptsManagementPage() {
                   >
                     {s.name}
                   </span>
-                  {t && (
-                    <Badge variant="outline" className="h-4 px-1.5 py-0 text-[10px]">
-                      v{t.version}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-1">
+                    {isCustom && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" title="Customized" />
+                    )}
+                    {t && (
+                      <Badge variant="outline" className="h-4 px-1.5 py-0 text-[10px]">
+                        v{t.version}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <p className="line-clamp-1 text-[11px] text-slate-500">{s.desc}</p>
               </button>
@@ -192,30 +399,96 @@ export default function PromptsManagementPage() {
 
         {/* Editor Area */}
         <div className="space-y-6 lg:col-span-3">
+          {/* Baseline Reference Drawer (when toggled) */}
+          {showDefaultDiff && (
+            <Card className="rounded-3xl border border-blue-200 bg-blue-50/40 p-5 shadow-xs">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  <span className="text-xs font-bold text-blue-900">
+                    System Default Baseline for Step &ldquo;{selectedStep}&rdquo;
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(currentDefault.systemPrompt);
+                    showToast("Copied default system prompt to clipboard");
+                  }}
+                  className="h-7 text-xs text-blue-600 hover:bg-blue-100"
+                >
+                  <Copy className="mr-1 h-3.5 w-3.5" />
+                  Copy Default
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 gap-4 text-xs font-mono md:grid-cols-2">
+                <div className="rounded-xl border border-blue-100 bg-white p-3">
+                  <span className="mb-1 block font-bold text-slate-700">Baseline System Prompt:</span>
+                  <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap text-[11px] text-slate-600">
+                    {currentDefault.systemPrompt}
+                  </pre>
+                </div>
+                <div className="rounded-xl border border-blue-100 bg-white p-3">
+                  <span className="mb-1 block font-bold text-slate-700">Baseline User Prompt Template:</span>
+                  <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap text-[11px] text-slate-600">
+                    {currentDefault.userPromptTemplate}
+                  </pre>
+                </div>
+              </div>
+            </Card>
+          )}
+
           <Card className="space-y-6 rounded-3xl border-slate-200/80 bg-white p-6 shadow-sm">
             {/* Model & Temperature Controls */}
             <div className="grid grid-cols-1 gap-4 border-b border-slate-100 pb-4 sm:grid-cols-2">
               <div>
                 <label
                   htmlFor="model-preference-select"
-                  className="mb-1 flex items-center gap-1.5 text-xs font-bold text-slate-700"
+                  className="mb-1 flex items-center justify-between text-xs font-bold text-slate-700"
                 >
-                  <Terminal className="h-3.5 w-3.5 text-blue-600" />
-                  Target Model Preference
+                  <span className="flex items-center gap-1.5">
+                    <Terminal className="h-3.5 w-3.5 text-blue-600" />
+                    Target Model Preference
+                  </span>
+                  {isCustomModel && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCustomModel(false);
+                        setModelPreference("gemini-3.0-flash");
+                      }}
+                      className="text-[10px] text-blue-600 hover:underline"
+                    >
+                      Use Preset List
+                    </button>
+                  )}
                 </label>
-                <select
-                  id="model-preference-select"
-                  value={modelPreference}
-                  onChange={(e) => setModelPreference(e.target.value)}
-                  className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
-                >
-                  <option value="gemini-2.5-flash">
-                    Gemini 2.5 Flash (Recommended - Fast & Free)
-                  </option>
-                  <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep Reasoning)</option>
-                  <option value="flux-schnell">Cloudflare FLUX.1-schnell (Image)</option>
-                  <option value="groq-llama3">Groq Llama 3 70B (Ultra Low Latency)</option>
-                </select>
+                {isCustomModel ? (
+                  <input
+                    id="model-preference-custom"
+                    type="text"
+                    value={modelPreference}
+                    onChange={(e) => setModelPreference(e.target.value)}
+                    placeholder="Enter model name (e.g., gemini-3.0-flash, gpt-4o)..."
+                    className="h-9 w-full rounded-xl border border-blue-300 bg-white px-3 font-mono text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                ) : (
+                  <select
+                    id="model-preference-select"
+                    value={modelPreference}
+                    onChange={(e) => handleModelSelectChange(e.target.value)}
+                    className="h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium"
+                  >
+                    {PRESET_MODELS.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.label}
+                      </option>
+                    ))}
+                    <option value="__custom__">⚙️ Enter custom model identifier...</option>
+                  </select>
+                )}
               </div>
 
               <div>
@@ -247,7 +520,7 @@ export default function PromptsManagementPage() {
               </div>
             </div>
 
-            {/* System Prompt Editor */}
+            {/* System Prompt Editor with Quick Append Buttons */}
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <label
@@ -255,19 +528,36 @@ export default function PromptsManagementPage() {
                   className="flex items-center gap-1.5 text-xs font-bold text-slate-800"
                 >
                   <FileCode className="h-4 w-4 text-purple-600" />
-                  System Instructions (Persona & Guardrails)
+                  System Instructions (Persona, Guardrails & Output Schemas)
                 </label>
                 <span className="text-[10px] text-slate-400">
-                  Enforces voice, style, and output format
+                  Enforces persona, voice, and JSON output contracts
                 </span>
               </div>
+
+              {/* Partial edit quick-insert helper chips */}
+              <div className="mb-2 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400">Quick partial additions:</span>
+                {QUICK_INSERT_SYSTEM_BLOCKS.map((block) => (
+                  <button
+                    key={block.title}
+                    type="button"
+                    onClick={() => handleInsertSystemBlock(block.text)}
+                    className="inline-flex items-center rounded-lg border border-purple-200 bg-purple-50/60 px-2 py-0.5 text-[10px] font-semibold text-purple-700 transition-colors hover:bg-purple-100"
+                  >
+                    <PlusCircle className="mr-1 h-3 w-3 text-purple-600" />
+                    {block.title}
+                  </button>
+                ))}
+              </div>
+
               <textarea
                 id="system-prompt-textarea"
-                rows={6}
+                rows={9}
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
                 placeholder="Enter system prompt instructions..."
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs leading-relaxed focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
               />
             </div>
 
@@ -282,31 +572,48 @@ export default function PromptsManagementPage() {
                   User Prompt Template
                 </label>
                 <span className="text-[10px] text-slate-400">
-                  Interpolates step parameters at runtime
+                  Runtime parameters interpolated via tokens
                 </span>
               </div>
+
+              {/* Quick user prompt additions */}
+              <div className="mb-2 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400">Add partial parameters:</span>
+                {QUICK_INSERT_USER_BLOCKS.map((block) => (
+                  <button
+                    key={block.title}
+                    type="button"
+                    onClick={() => handleInsertUserBlock(block.text)}
+                    className="inline-flex items-center rounded-lg border border-indigo-200 bg-indigo-50/60 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 transition-colors hover:bg-indigo-100"
+                  >
+                    <PlusCircle className="mr-1 h-3 w-3 text-indigo-600" />
+                    {block.title}
+                  </button>
+                ))}
+              </div>
+
               <textarea
                 id="user-prompt-textarea"
-                rows={5}
+                rows={6}
                 value={userPromptTemplate}
                 onChange={(e) => setUserPromptTemplate(e.target.value)}
                 placeholder="Enter user prompt with {{tokens}}..."
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-4 font-mono text-xs leading-relaxed focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
               />
             </div>
 
             {/* Variable Tokens Helper */}
             <div className="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
               <span className="mb-2 block text-[11px] font-bold text-slate-600">
-                Available Variable Placeholders for this step:
+                Available Variable Placeholders for this step (click to insert into template):
               </span>
               <div className="flex flex-wrap items-center gap-2">
                 {getVariablesForStep(selectedStep).map((tok) => (
                   <button
                     key={tok}
                     type="button"
-                    onClick={() => setUserPromptTemplate((prev) => prev + ` ${tok}`)}
-                    className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-blue-600 hover:border-blue-400"
+                    onClick={() => handleInsertToken(tok)}
+                    className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 font-mono text-[11px] font-semibold text-blue-600 transition-colors hover:border-blue-400 hover:bg-blue-50"
                   >
                     {tok}
                   </button>
