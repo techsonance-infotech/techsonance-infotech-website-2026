@@ -30,6 +30,7 @@ import {
   deleteAdminAiTopic,
   suggestAdminAiTopics,
   launchAdminAiTopic,
+  autoGenerateAdminAiTopic,
   type AdminAiTopicItem,
 } from "@/lib/api/admin-ai.api";
 
@@ -41,6 +42,7 @@ export default function TopicsBacklogPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [isAutoPilotRunning, setIsAutoPilotRunning] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
@@ -197,6 +199,25 @@ export default function TopicsBacklogPage() {
     }
   };
 
+  const handleAutoPilot = async () => {
+    try {
+      setIsAutoPilotRunning(true);
+      showMessage(
+        "Auto-Pilot active: Selecting/synthesizing topic and launching autonomous pipeline...",
+      );
+      const res = await autoGenerateAdminAiTopic("Full-Stack & Agentic AI");
+      showMessage(
+        `Auto-Pilot engaged! Job created for: "${res.topicTitle}". You will receive an approval email upon completion.`,
+      );
+      void loadTopics(true);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error initiating Auto-Pilot";
+      showMessage(msg);
+    } finally {
+      setIsAutoPilotRunning(false);
+    }
+  };
+
   const handleCreateTopic = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
@@ -266,11 +287,21 @@ export default function TopicsBacklogPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Button
+            onClick={handleAutoPilot}
+            disabled={isAutoPilotRunning}
+            className="rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 hover:opacity-95"
+          >
+            <Play className={`mr-2 h-4 w-4 ${isAutoPilotRunning ? "animate-spin" : ""}`} />
+            {isAutoPilotRunning ? "Auto-Pilot Running..." : "Auto-Pilot: Generate Next"}
+          </Button>
+
           <Button
             onClick={handleAISuggest}
             disabled={isSuggesting}
-            className="rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 hover:opacity-95"
+            variant="outline"
+            className="rounded-2xl border-slate-200 text-xs font-semibold hover:bg-slate-50 dark:border-slate-800"
           >
             <Sparkles className={`mr-2 h-4 w-4 ${isSuggesting ? "animate-spin" : ""}`} />
             {isSuggesting ? "Proposing Topics..." : "AI Suggest Topics"}
@@ -278,7 +309,7 @@ export default function TopicsBacklogPage() {
 
           <Button
             onClick={() => setIsCreating(true)}
-            className="rounded-2xl bg-slate-900 text-xs font-semibold text-white hover:bg-slate-800"
+            className="rounded-2xl bg-slate-900 text-xs font-semibold text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900"
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Add Topic

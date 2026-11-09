@@ -155,14 +155,19 @@ export class JobOrchestratorService {
         await this.jobsRepo.upsertStep(jobId, "meta", metaKey, meta);
       }
 
-      // Step 4: AI Thumbnail Generation
+      // Step 4: AI Hero Image Generation (Visual Brief + FLUX Compose -> 16:9 1280x720)
       await this.jobsRepo.update(jobId, { currentStep: AiJobStep.IMAGE });
       const imageKey = `${jobId}:image:${job.version}`;
       let imageRes = await this.getCachedStepData<ThumbnailGenerationResult>(imageKey);
       if (!imageRes) {
         imageRes = await this.imageStep.generateThumbnail(meta.imagePrompt, {
           title: meta.title,
+          summary: meta.excerpt,
+          category: job.category || undefined,
+          keywords: meta.tags,
+          contentExcerpt: fullDraft.slice(0, 1200),
           jobId,
+          topic: job.topicText,
         });
         await this.jobsRepo.upsertStep(jobId, "image", imageKey, imageRes);
       }
@@ -199,9 +204,9 @@ export class JobOrchestratorService {
         },
       });
 
-      // Create Tokenized Approval & Send Review Email
+      // Create Tokenized Approval & Send Review Email with Full Context
       const approval = await this.approvalService.createApprovalRequest(post.id, job.version);
-      await this.approvalService.sendApprovalEmail(approval.token, post);
+      await this.approvalService.sendApprovalEmail(approval.token, post, job.topicText);
 
       // Mark Job Completed
       await this.jobsRepo.update(jobId, {

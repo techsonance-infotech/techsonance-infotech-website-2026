@@ -13,8 +13,8 @@ export class PollinationsImageAdapter {
       model?: string;
     } = {},
   ): Promise<Buffer> {
-    const width = options.width ?? 1200;
-    const height = options.height ?? 630;
+    const width = options.width ?? 1280;
+    const height = options.height ?? 720;
     const model = options.model || this.defaultModel;
 
     // 1. Try gen.pollinations.ai (supports API key or free token if accepted)

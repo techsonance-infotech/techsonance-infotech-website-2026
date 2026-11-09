@@ -19,8 +19,8 @@ export class CloudflareImageAdapter {
       );
     }
 
-    const width = options.width ?? 1200;
-    const height = options.height ?? 630;
+    const width = options.width ?? 1280;
+    const height = options.height ?? 720;
 
     const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${this.model}`;
 

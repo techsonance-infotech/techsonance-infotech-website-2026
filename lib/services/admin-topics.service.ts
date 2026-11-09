@@ -200,4 +200,58 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
 
     return { jobId: job.id };
   }
+
+  /**
+   * Auto-Pilot: Finds the next ready topic (or synthesizes a high-ranking topic with AI if backlog is empty),
+   * accepts it, and launches the autonomous blog generation pipeline in one shot.
+   */
+  async autoGenerateNextTopic(preferredCategory = "Full-Stack & Agentic AI"): Promise<{
+    jobId: string;
+    topicId: string;
+    topicTitle: string;
+  }> {
+    // 1. Look for existing accepted topic
+    let { topics } = await this.listTopics({
+      status: AiTopicStatus.ACCEPTED,
+      limit: 1,
+    });
+
+    // 2. If no accepted topic, look for any suggested topic
+    if (topics.length === 0) {
+      const suggestedResult = await this.listTopics({
+        status: AiTopicStatus.SUGGESTED,
+        limit: 1,
+      });
+      topics = suggestedResult.topics;
+    }
+
+    // 3. If backlog is completely empty, auto-suggest fresh topics using AI
+    if (topics.length === 0) {
+      logger.info("Auto-Pilot: Backlog empty. Synthesizing new topic ideas with AI...");
+      const newlySuggested = await this.suggestTopicsWithAI(preferredCategory);
+      if (newlySuggested.length > 0) {
+        topics = [newlySuggested[0]];
+      }
+    }
+
+    if (topics.length === 0) {
+      throw new AppError(ErrorCode.INTERNAL, "Could not discover or generate any topic to launch.");
+    }
+
+    const targetTopic = topics[0];
+
+    // Mark as accepted if needed
+    if (targetTopic.status !== AiTopicStatus.ACCEPTED) {
+      await this.updateTopicStatus(targetTopic.id, AiTopicStatus.ACCEPTED);
+    }
+
+    // Launch autonomous pipeline
+    const { jobId } = await this.launchTopicGeneration(targetTopic.id);
+
+    return {
+      jobId,
+      topicId: targetTopic.id,
+      topicTitle: targetTopic.title,
+    };
+  }
 }

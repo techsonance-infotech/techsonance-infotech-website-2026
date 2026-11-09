@@ -104,13 +104,10 @@ export function normalizeMermaidCode(raw: string): string {
   });
 
   // 8. Wrap unquoted node labels containing parentheses, colons, or slashes in double quotes
-  code = code.replace(
-    /([A-Za-z0-9_-]+)\[([^"\]\r\n]*[(\):/][^"\]\r\n]*)\]/g,
-    (match, id, label) => {
-      if (label.startsWith('"') && label.endsWith('"')) return match;
-      return `${id}["${label}"]`;
-    },
-  );
+  code = code.replace(/([A-Za-z0-9_-]+)\[([^"\]\r\n]*[():/][^"\]\r\n]*)\]/g, (match, id, label) => {
+    if (label.startsWith('"') && label.endsWith('"')) return match;
+    return `${id}["${label}"]`;
+  });
 
   // 9. Split chained edges on single lines with labels (e.g. A -->|L1| B -->|L2| C)
   const lines = code.split("\n");

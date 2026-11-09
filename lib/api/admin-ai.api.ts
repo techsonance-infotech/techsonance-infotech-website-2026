@@ -261,6 +261,32 @@ export async function launchAdminAiTopic(
 }
 
 /**
+ * Triggers autonomous discovery & generation in Auto-Pilot mode.
+ * Endpoint: POST /api/admin/ai/topics/auto-generate
+ */
+export async function autoGenerateAdminAiTopic(
+  category = "Full-Stack & Agentic AI",
+  signal?: AbortSignal,
+): Promise<{ jobId: string; topicId: string; topicTitle: string; message: string }> {
+  const url = "/api/admin/ai/topics/auto-generate";
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ category }),
+    signal,
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data?.error?.message || "Failed to trigger auto-generation");
+  }
+
+  return data.data;
+}
+
+/**
  * Retrieves AI token usage, quota limits, and telemetry.
  * Endpoint: GET /api/admin/ai/usage
  */

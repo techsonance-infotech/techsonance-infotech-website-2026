@@ -69,29 +69,33 @@ export async function POST(req: NextRequest) {
       limit: 1,
     });
 
+    let targetJobId = "";
+    let targetTopicTitle = "";
+
     if (topics.length === 0) {
-      logger.info("Autonomous cron: No accepted topics waiting in backlog");
-      return NextResponse.json({
-        success: true,
-        skipped: true,
-        reason: "No accepted topics in queue",
-      });
+      logger.info(
+        "Autonomous cron: No accepted topics in backlog. Engaging Auto-Pilot synthesis...",
+      );
+      const autoResult = await topicsService.autoGenerateNextTopic();
+      targetJobId = autoResult.jobId;
+      targetTopicTitle = autoResult.topicTitle;
+    } else {
+      const topic = topics[0];
+      const { jobId } = await topicsService.launchTopicGeneration(topic.id);
+      targetJobId = jobId;
+      targetTopicTitle = topic.title;
     }
 
-    const topic = topics[0];
-    const { jobId } = await topicsService.launchTopicGeneration(topic.id);
-
     logger.info("Autonomous cron triggered job successfully", {
-      jobId,
-      topicId: topic.id,
-      topicTitle: topic.title,
+      jobId: targetJobId,
+      topicTitle: targetTopicTitle,
     });
 
     return NextResponse.json({
       success: true,
       action: "job_started",
-      jobId,
-      topic: topic.title,
+      jobId: targetJobId,
+      topic: targetTopicTitle,
     });
   } catch (error) {
     logger.error("Autonomous cron failed", { error });

@@ -9,10 +9,16 @@ import { Textarea } from "@/components/ui/textarea";
 interface ApprovalActionFormProps {
   token: string;
   postId: string;
+  slug?: string | null;
   initialDecision: "approve" | "reject" | "improve";
 }
 
-export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalActionFormProps) {
+export function ApprovalActionForm({
+  token,
+  postId,
+  slug,
+  initialDecision,
+}: ApprovalActionFormProps) {
   const [decision, setDecision] = useState<"approve" | "reject" | "improve">(initialDecision);
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -20,6 +26,7 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
   const [completed, setCompleted] = useState<{
     success: boolean;
     decision: string;
+    slug?: string | null;
   } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,7 +46,11 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
         throw new Error(data.error || "Failed to submit decision");
       }
 
-      setCompleted({ success: true, decision });
+      setCompleted({
+        success: true,
+        decision,
+        slug: data?.result?.slug || slug,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submission failed");
     } finally {
@@ -70,13 +81,13 @@ export function ApprovalActionForm({ token, postId, initialDecision }: ApprovalA
 
         <div className="flex items-center justify-center gap-3 pt-4">
           {completed.decision === "approve" && (
-            <Link href="/blog" target="_blank">
+            <Link href={completed.slug ? `/blog/${completed.slug}` : "/blog"} target="_blank">
               <Button
                 variant="default"
                 size="sm"
-                className="rounded-xl bg-[#1155CC] text-xs font-bold text-white"
+                className="rounded-xl bg-[#1155CC] text-xs font-bold text-white shadow-md shadow-[#1155CC]/20"
               >
-                <span>View Live Blog</span>
+                <span>View Live Article</span>
                 <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </Link>
