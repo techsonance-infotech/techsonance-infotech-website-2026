@@ -502,37 +502,34 @@ export default function BlogPostClient({
             </h3>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {safeRelatedPosts.map((rPost, idx) => (
-                <div
+                <Link
                   key={rPost.slug || String(idx)}
-                  className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)]"
+                  href={`/blog/${rPost.slug || "post"}`}
+                  aria-label={`Read article: ${rPost.title || "article"}`}
+                  className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_10px_25px_rgba(17,85,204,0.01)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_45px_rgba(17,85,204,0.03)] cursor-pointer"
                 >
                   <div className="p-6">
                     <span className="mb-2 block text-[9px] font-black tracking-wider text-[#1155CC] uppercase">
                       {rPost.category || "Software Engineering"}
                     </span>
-                    <Link href={`/blog/${rPost.slug || "post"}`}>
-                      <h4 className="mb-2.5 line-clamp-2 font-sora text-base font-medium text-slate-900 transition-colors hover:text-[#1155CC] sm:text-lg">
-                        {rPost.title || "Untitled Article"}
-                      </h4>
-                    </Link>
+                    <h4 className="mb-2.5 line-clamp-2 font-sora text-base font-medium text-slate-900 transition-colors group-hover:text-[#1155CC] sm:text-lg">
+                      {rPost.title || "Untitled Article"}
+                    </h4>
                     <p className="line-clamp-2 text-xs leading-relaxed font-semibold text-slate-500">
                       {rPost.excerpt || ""}
                     </p>
                   </div>
                   <div className="flex items-center justify-between p-6 pt-0">
                     <span className="text-[10px] font-bold text-slate-400">{rPost.date || ""}</span>
-                    <Link
-                      href={`/blog/${rPost.slug || "post"}`}
-                      className="group/link flex items-center gap-1 text-xs font-bold text-[#1155CC] hover:underline"
-                    >
+                    <span className="flex items-center gap-1 text-xs font-bold text-[#1155CC] group-hover:underline">
                       Read Article
                       <Icon
                         name="arrow"
-                        className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5"
+                        className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"
                       />
-                    </Link>
+                    </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
