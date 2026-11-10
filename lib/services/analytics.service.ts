@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logger";
+
 declare global {
   interface Window {
     gtag?: (
@@ -50,7 +52,7 @@ export class AnalyticsService {
 
     // 3. Local Development Logging
     if (process.env.NODE_ENV === "development") {
-      console.debug(`[Analytics Event: ${eventName}]`, eventPayload);
+      logger.debug(`[Analytics Event: ${eventName}]`, eventPayload);
     }
   }
 

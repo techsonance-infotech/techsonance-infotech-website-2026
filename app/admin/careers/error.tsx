@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { AlertOctagon, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logger";
 
 export default function AdminCareersError({
   error,
@@ -13,7 +14,10 @@ export default function AdminCareersError({
 }) {
   useEffect(() => {
     // Log unexpected errors cleanly
-    console.error("[Careers Boundary Crash]:", error);
+    logger.error("[Careers Boundary Crash]", {
+      error: error.message,
+      digest: error.digest,
+    });
   }, [error]);
 
   return (

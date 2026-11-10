@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, type ReactNode } from "react";
+import { logger } from "@/lib/logger";
 
 type Props = { label: string; children: ReactNode; fallback?: ReactNode };
 type State = { failed: boolean };
@@ -13,7 +14,10 @@ export class WidgetBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: Error): void {
-    console.error(`[WidgetBoundary:${this.props.label}] caught error:`, error);
+    logger.error(`[WidgetBoundary:${this.props.label}] caught error`, {
+      label: this.props.label,
+      error: error.message,
+    });
   }
 
   override render(): ReactNode {

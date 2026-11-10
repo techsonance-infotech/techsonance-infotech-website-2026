@@ -1,6 +1,57 @@
+import fs from "node:fs";
+import path from "node:path";
 import readline from "node:readline";
 import crypto from "node:crypto";
-import { loadEnvironment, getScriptSupabaseClient } from "./seed-cms-content";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+// ─── Environment Loader ───────────────────────────────────────────────────────
+function loadEnvironment(): void {
+  for (const envFile of [".env.local", ".env"]) {
+    const envPath = path.resolve(process.cwd(), envFile);
+    if (fs.existsSync(envPath)) {
+      try {
+        if (typeof process.loadEnvFile === "function") {
+          process.loadEnvFile(envPath);
+        } else {
+          const content = fs.readFileSync(envPath, "utf-8");
+          for (const line of content.split("\n")) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith("#")) continue;
+            const eqIdx = trimmed.indexOf("=");
+            if (eqIdx !== -1) {
+              const key = trimmed.slice(0, eqIdx).trim();
+              const val = trimmed
+                .slice(eqIdx + 1)
+                .trim()
+                .replace(/^["']|["']$/g, "");
+              if (!process.env[key]) {
+                process.env[key] = val;
+              }
+            }
+          }
+        }
+      } catch {
+        // Fallback gracefully
+      }
+    }
+  }
+}
+
+function getSupabaseAdminClient(): SupabaseClient | null {
+  loadEnvironment();
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!url || !key) {
+    return null;
+  }
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 const KEY_LENGTH = 64;
 
@@ -29,11 +80,14 @@ function promptInput(query: string, hide = false): Promise<string> {
     } else {
       process.stdout.write(query);
       let input = "";
+      const stdin = process.stdin as NodeJS.ReadStream;
       const onData = (char: Buffer) => {
         const s = char.toString();
         if (s === "\n" || s === "\r" || s === "\u0004") {
-          process.stdin.removeListener("data", onData);
-          if (process.stdin.isTTY) (process.stdin as any).setRawMode(false);
+          stdin.removeListener("data", onData);
+          if (stdin.isTTY && typeof stdin.setRawMode === "function") {
+            stdin.setRawMode(false);
+          }
           process.stdout.write("\n");
           rl.close();
           resolve(input.trim());
@@ -50,18 +104,63 @@ function promptInput(query: string, hide = false): Promise<string> {
         }
       };
 
-      if (process.stdin.isTTY) {
-        (process.stdin as any).setRawMode(true);
+      if (stdin.isTTY && typeof stdin.setRawMode === "function") {
+        stdin.setRawMode(true);
       }
-      process.stdin.resume();
-      process.stdin.on("data", onData);
+      stdin.resume();
+      stdin.on("data", onData);
     }
   });
 }
 
+function parseCliArgs(): Record<string, string> {
+  const args = process.argv.slice(2);
+  const parsed: Record<string, string> = {};
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--help" || arg === "-h") {
+      parsed.help = "true";
+    } else if (arg.startsWith("--") && i + 1 < args.length && !args[i + 1].startsWith("--")) {
+      const key = arg.slice(2);
+      parsed[key] = args[i + 1];
+      i++;
+    }
+  }
+  return parsed;
+}
+
+function printHelp(): void {
+  console.log(`
+TechSonance Infotech - Admin User Injection CLI
+================================================
+Usage:
+  npx tsx scripts/create-admin.ts [options]
+
+Options:
+  --email <email>        Admin user email address
+  --name <name>          Admin user full name
+  --role <role>          Admin role: owner | admin | editor | author | viewer (default: admin)
+  --password <password>  Admin password (at least 8 characters)
+  --help, -h             Show this help message
+
+Environment Variables (alternative to flags):
+  ADMIN_SEED_EMAIL
+  ADMIN_SEED_NAME
+  ADMIN_SEED_ROLE
+  ADMIN_SEED_PASSWORD
+
+If neither flags nor environment variables are supplied, the script will prompt interactively.
+`);
+}
+
 async function main() {
-  loadEnvironment();
-  const supabase = getScriptSupabaseClient();
+  const cliArgs = parseCliArgs();
+  if (cliArgs.help) {
+    printHelp();
+    process.exit(0);
+  }
+
+  const supabase = getSupabaseAdminClient();
 
   if (!supabase) {
     console.error("❌ Could not connect to Supabase. Check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.");
@@ -72,32 +171,39 @@ async function main() {
   console.log("   TechSonance Admin User Injection Utility");
   console.log("=======================================================\n");
 
-  // Read arguments from command-line flags or environment variables or interactive prompt
-  const envEmail = process.env.ADMIN_SEED_EMAIL;
-  const envName = process.env.ADMIN_SEED_NAME;
-  const envRole = process.env.ADMIN_SEED_ROLE;
-  const envPassword = process.env.ADMIN_SEED_PASSWORD;
-
-  const email = envEmail || (await promptInput("Enter Admin Email: "));
+  const email =
+    cliArgs.email ||
+    process.env.ADMIN_SEED_EMAIL ||
+    (await promptInput("Enter Admin Email: "));
   if (!email || !email.includes("@")) {
     console.error("❌ Invalid email provided.");
     process.exit(1);
   }
 
-  const name = envName || (await promptInput("Enter Admin Full Name: "));
+  const name =
+    cliArgs.name ||
+    process.env.ADMIN_SEED_NAME ||
+    (await promptInput("Enter Admin Full Name: "));
   if (!name) {
     console.error("❌ Name is required.");
     process.exit(1);
   }
 
-  const role = envRole || (await promptInput("Enter Admin Role (owner/admin/editor) [default: admin]: ")) || "admin";
+  const role =
+    cliArgs.role ||
+    process.env.ADMIN_SEED_ROLE ||
+    (await promptInput("Enter Admin Role (owner/admin/editor) [default: admin]: ")) ||
+    "admin";
   const validRoles = ["owner", "admin", "editor", "author", "viewer"];
   if (!validRoles.includes(role)) {
     console.error(`❌ Invalid role. Allowed: ${validRoles.join(", ")}`);
     process.exit(1);
   }
 
-  const password = envPassword || (await promptInput("Enter Secure Password: ", true));
+  const password =
+    cliArgs.password ||
+    process.env.ADMIN_SEED_PASSWORD ||
+    (await promptInput("Enter Secure Password: ", true));
   if (!password || password.length < 8) {
     console.error("❌ Password must be at least 8 characters long.");
     process.exit(1);

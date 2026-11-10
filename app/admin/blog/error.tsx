@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { AlertOctagon, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logger";
 
 export default function AdminBlogError({
   error,
@@ -12,7 +13,10 @@ export default function AdminBlogError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[Blog Boundary Crash Caught]:", error);
+    logger.error("[Blog Boundary Crash Caught]", {
+      error: error.message,
+      digest: error.digest,
+    });
   }, [error]);
 
   return (

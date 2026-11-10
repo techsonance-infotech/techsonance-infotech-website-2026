@@ -6,6 +6,7 @@ import { ENV_CONFIG_TOKEN } from "../di/tokens";
 import type { Env } from "../env";
 import { escapeHtml } from "../text";
 import { BOT_CONFIG } from "../config";
+import { logger } from "../logger";
 
 export interface BookingPayload {
   name: string;
@@ -107,7 +108,7 @@ export class EmailService {
 
     if (!transporter) {
       if (process.env.NODE_ENV !== "production") {
-        console.log(`[Dev Mail Simulation] Subject: "${options.subject}" to:`, options.to);
+        logger.info(`[Dev Mail Simulation] Subject: "${options.subject}"`, { to: options.to });
         return { ok: true, messageId: "dev-simulated-id" };
       }
       return { ok: false, error: "SMTP configuration is missing on the server." };
@@ -126,7 +127,7 @@ export class EmailService {
       return { ok: true, messageId: info.messageId };
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Failed to send email";
-      console.error("Nodemailer transmission error:", errorMessage);
+      logger.error("Nodemailer transmission error", { error: errorMessage });
       return { ok: false, error: errorMessage };
     }
   }

@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { relations } from "./relation";
 import { getEnv } from "@/lib/env";
+import { logger } from "@/lib/logger";
 
 const LOCAL_DEFAULT_URL = "postgresql://postgres:postgres@localhost:54322/postgres";
 
@@ -12,7 +13,7 @@ export function resolveDatabaseUrl(): string {
     env = getEnv();
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn("env_validation_skipped:", err instanceof Error ? err.message : "unknown");
+      logger.warn("env_validation_skipped: " + (err instanceof Error ? err.message : "unknown"));
     }
   }
 
@@ -130,7 +131,7 @@ export async function checkDatabaseConnection(timeoutMs = 3000): Promise<boolean
     ]);
     return true;
   } catch (error) {
-    console.error("db_connection_error:", error instanceof Error ? error.message : "unknown");
+    logger.error("db_connection_error: " + (error instanceof Error ? error.message : "unknown"));
     return false;
   } finally {
     clearTimeout(timer);
@@ -143,7 +144,7 @@ export async function closeDatabaseConnections(): Promise<void> {
   state.db = null;
   if (client) {
     await client.end({ timeout: 2 }).catch((err: unknown) => {
-      console.error("db_pool_close_error:", err instanceof Error ? err.message : "unknown");
+      logger.error("db_pool_close_error: " + (err instanceof Error ? err.message : "unknown"));
     });
   }
 }

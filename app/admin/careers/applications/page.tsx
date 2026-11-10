@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ApplicationStatus } from "@/lib/constants/enums";
+import { reportClientError } from "@/lib/api/reportClientError";
 import {
   ApplicationsTable,
   type ApplicationItem,
@@ -85,7 +86,7 @@ export default function ApplicationsInboxPage() {
       setTalentPool(res.candidates);
       setTalentPoolTotal(res.total);
     } catch (err) {
-      console.error("Failed to load talent pool", err);
+      reportClientError(err instanceof Error ? err : new Error(String(err)), { action: "fetchTalentPool" });
     } finally {
       setLoadingTalentPool(false);
     }

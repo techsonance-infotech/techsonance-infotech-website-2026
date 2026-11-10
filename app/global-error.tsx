@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { AlertOctagon, RotateCcw, Home } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export default function GlobalError({
   error,
@@ -12,7 +13,10 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log unexpected root crash
-    console.error("Critical root global error caught:", error);
+    logger.error("Critical root global error caught", {
+      error: error.message,
+      digest: error.digest,
+    });
   }, [error]);
 
   return (

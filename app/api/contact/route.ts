@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { RateLimiterService } from "@/lib/services/ratelimit.service";
 import { ContactInquiryService } from "@/lib/services/contact-inquiry.service";
+import { logger } from "@/lib/logger";
 import {
   ContactInquiryType,
   CONTACT_ERRORS,
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
 
     // 1. Honeypot check (anti-spam)
     if (body.website || body.honeypot) {
-      console.warn(`Honeypot triggered from IP ${clientIp}. Ignoring spam submission.`);
+      logger.warn(`Honeypot triggered from IP ${clientIp}. Ignoring spam submission.`);
       return NextResponse.json({ success: true, message: "Request received." });
     }
 
@@ -124,7 +125,9 @@ export async function POST(request: Request) {
       delivered: result.emailDelivered,
     });
   } catch (error: unknown) {
-    console.error("Error processing contact submission:", error);
+    logger.error("Error processing contact submission", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return NextResponse.json(
       {
         error:

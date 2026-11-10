@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logger } from "@/lib/logger";
 
 export default function AdminError({
   error,
@@ -13,7 +14,10 @@ export default function AdminError({
 }) {
   useEffect(() => {
     // Log unexpected errors cleanly
-    console.error("[Admin Boundary Caught Error]:", error);
+    logger.error("[Admin Boundary Caught Error]", {
+      error: error.message,
+      digest: error.digest,
+    });
   }, [error]);
 
   return (
