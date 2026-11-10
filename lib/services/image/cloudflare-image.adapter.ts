@@ -16,6 +16,7 @@ export class CloudflareImageAdapter {
     let accountId: string | undefined;
     let apiToken: string | undefined;
     let credentialId: string | undefined;
+    let claimedModel: string | undefined;
 
     // 1. Prioritize database credential vault via KeyBrokerService
     if (this.keyBroker) {
@@ -23,10 +24,16 @@ export class CloudflareImageAdapter {
         const claimed = await this.keyBroker.claimKey("cloudflare");
         if (claimed) {
           credentialId = claimed.credentialId;
+          claimedModel = claimed.model;
           const rawKey = claimed.key.trim();
           if (rawKey.startsWith("{")) {
             try {
-              const parsed = JSON.parse(rawKey) as { accountId?: string; apiToken?: string; CF_ACCOUNT_ID?: string; CF_API_TOKEN?: string };
+              const parsed = JSON.parse(rawKey) as {
+                accountId?: string;
+                apiToken?: string;
+                CF_ACCOUNT_ID?: string;
+                CF_API_TOKEN?: string;
+              };
               accountId = parsed.accountId || parsed.CF_ACCOUNT_ID;
               apiToken = parsed.apiToken || parsed.CF_API_TOKEN;
             } catch {
@@ -62,7 +69,7 @@ export class CloudflareImageAdapter {
 
     const width = options.width ?? 1280;
     const height = options.height ?? 720;
-    const targetModel = options.model || this.model;
+    const targetModel = options.model || claimedModel || this.model;
 
     const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${targetModel}`;
 
@@ -74,11 +81,13 @@ export class CloudflareImageAdapter {
       },
       body: JSON.stringify({
         prompt,
-        num_steps: 4,
         width,
         height,
+        ...(targetModel.includes("schnell") || targetModel.includes("klein")
+          ? { num_steps: 4 }
+          : {}),
       }),
-      signal: AbortSignal.timeout(30000), // 30s timeout
+      signal: AbortSignal.timeout(35000), // 35s timeout
     });
 
     if (!res.ok) {

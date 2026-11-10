@@ -162,10 +162,28 @@ export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     models: [
       {
         id: "@cf/black-forest-labs/flux-1-schnell",
-        label: "FLUX.1-schnell (Recommended - Fast 1200x630)",
+        label: "FLUX.1-schnell (12B - Fast & Recommended 16:9)",
       },
-      { id: "@cf/stabilityai/stable-diffusion-xl-base-1.0", label: "Stable Diffusion XL Base 1.0" },
-      { id: "@cf/bytedance/stable-diffusion-xl-lightning", label: "SDXL Lightning (Ultra Fast)" },
+      {
+        id: "@cf/black-forest-labs/flux-2-klein-9b",
+        label: "FLUX.2 klein 9B (Ultra-Fast 4-Step SOTA)",
+      },
+      {
+        id: "@cf/black-forest-labs/flux-2-klein-4b",
+        label: "FLUX.2 klein 4B (Distilled Ultra-Low Latency)",
+      },
+      {
+        id: "@cf/black-forest-labs/flux-2-dev",
+        label: "FLUX.2 dev (Maximum Photorealism & Detail)",
+      },
+      {
+        id: "@cf/leonardo/lucid-origin",
+        label: "Leonardo.ai Lucid Origin (High-HD Graphic Design)",
+      },
+      {
+        id: "@cf/leonardo/phoenix-1.0",
+        label: "Leonardo.ai Phoenix 1.0 (Prompt Coherence & Text)",
+      },
     ],
   },
   {
