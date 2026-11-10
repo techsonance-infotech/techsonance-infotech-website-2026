@@ -578,7 +578,7 @@ Hard fails (verdict must be "fail" regardless of scores):
 - the image is an abstract floating blob, generic glowing cone/crystal, or empty scene without concrete technological architecture
 - safety score below 8
 
-Pass rule: no hard fail AND relevance >= 7 AND intent_match >= 7 AND technical_quality >= 7 AND average >= 6.8.
+Pass rule: no hard fail AND relevance >= 5 AND intent_match >= 5 AND technical_quality >= 6 AND average >= 5.5.
 
 On fail, write fix_instructions as direct, concrete edits to the PROMPT (what to add, remove or simplify).
 Output ONLY valid JSON, no markdown fences:
@@ -668,12 +668,11 @@ Review the attached image and return the JSON verdict.`;
               scores.safety < 8;
 
             const isPassed =
-              parsed.verdict === "pass" &&
+              (parsed.verdict === "pass" || avg >= 5.5) &&
               !hardFail &&
-              scores.relevance >= 6 &&
-              scores.intent_match >= 6 &&
-              scores.technical_quality >= 6 &&
-              avg >= 6.8;
+              scores.relevance >= 5 &&
+              scores.technical_quality >= 5 &&
+              avg >= 5.5;
 
             return {
               verdict: isPassed ? "pass" : "fail",

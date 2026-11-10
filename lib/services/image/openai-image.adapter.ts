@@ -61,12 +61,8 @@ export class OpenAIImageAdapter {
       size,
     };
 
-    // dall-e-3 and dall-e-2 support response_format; newer models omit it
-    if (model.startsWith("dall-e")) {
-      payload.response_format = "b64_json";
-      if (model === "dall-e-3") {
-        payload.quality = "standard";
-      }
+    if (model === "dall-e-3") {
+      payload.quality = "standard";
     }
 
     const res = await fetch("https://api.openai.com/v1/images/generations", {
