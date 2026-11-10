@@ -43,7 +43,7 @@ const STEPS = [
   {
     key: "image",
     name: "4. Thumbnail Prompt",
-    desc: "FLUX.1 / Pollinations image generation prompt",
+    desc: "FLUX / Cloudflare / Imagen 3 image generation prompt",
   },
   { key: "critic", name: "5. Quality Critic", desc: "Evaluates depth, voice, and quality score" },
 ];

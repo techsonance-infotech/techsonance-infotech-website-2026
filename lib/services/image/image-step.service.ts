@@ -7,6 +7,7 @@ import { OpenAIImageAdapter } from "./openai-image.adapter";
 import { GeminiImageAdapter } from "./gemini-image.adapter";
 import { PollinationsImageAdapter } from "./pollinations.adapter";
 import { KeyBrokerService } from "../ai/key-broker.service";
+import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
 export interface ThumbnailGenerationResult {
@@ -162,17 +163,43 @@ export class ImageStepService {
       let buffer: Buffer | null = null;
       let providerName = "cloudflare";
 
-      // Multi-tier provider fallback chain (1280x720, 16:9)
-      // Tier 1: Cloudflare Workers AI (FLUX.1-schnell via DB rotation)
-      try {
-        buffer = await this.cfAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
-        providerName = "cloudflare";
-      } catch (cfError) {
-        logger.warn(`Attempt ${attempt}: Cloudflare generation bypassed/failed`, {
-          error: String(cfError),
-        });
+      // Dynamically select only configured, active providers (never run unconfigured or exhausted providers)
+      const isCfReady =
+        typeof this.cfAdapter.isConfigured === "function"
+          ? await this.cfAdapter.isConfigured()
+          : true;
+      const isGeminiReady =
+        typeof this.geminiAdapter.isConfigured === "function"
+          ? await this.geminiAdapter.isConfigured()
+          : true;
+      const isOpenAiReady =
+        typeof this.openAiAdapter.isConfigured === "function"
+          ? await this.openAiAdapter.isConfigured()
+          : true;
 
-        // Tier 2: Google Gemini / Imagen (via DB key broker or env)
+      // Check if Pollinations is explicitly enabled via DB or env; default false to avoid unwanted watermark stamps
+      let isPollinationsEnabled = false;
+      if (this.keyBroker) {
+        isPollinationsEnabled = await this.keyBroker.hasActiveCredential("pollinations");
+      }
+      if (!isPollinationsEnabled) {
+        isPollinationsEnabled = getEnv().ENABLE_POLLINATIONS_FALLBACK === "true";
+      }
+
+      // Tier 1: Cloudflare Workers AI (FLUX via DB rotation or env)
+      if (isCfReady && !buffer) {
+        try {
+          buffer = await this.cfAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
+          providerName = "cloudflare";
+        } catch (cfError) {
+          logger.warn(`Attempt ${attempt}: Cloudflare generation bypassed/failed`, {
+            error: String(cfError),
+          });
+        }
+      }
+
+      // Tier 2: Google Gemini / Imagen (via DB key broker or env)
+      if (isGeminiReady && !buffer) {
         try {
           buffer = await this.geminiAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
           providerName = "gemini";
@@ -180,32 +207,33 @@ export class ImageStepService {
           logger.warn(`Attempt ${attempt}: Gemini image generation bypassed/failed`, {
             error: String(geminiError),
           });
+        }
+      }
 
-          // Tier 3: OpenAI DALL-E 3 (via DB key broker or env)
-          try {
-            buffer = await this.openAiAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
-            providerName = "openai";
-          } catch (openAiError) {
-            logger.warn(
-              `Attempt ${attempt}: OpenAI DALL-E bypassed/failed, falling back to Pollinations`,
-              {
-                error: String(openAiError),
-              },
-            );
+      // Tier 3: OpenAI DALL-E 3 (via DB key broker or env)
+      if (isOpenAiReady && !buffer) {
+        try {
+          buffer = await this.openAiAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
+          providerName = "openai";
+        } catch (openAiError) {
+          logger.warn(`Attempt ${attempt}: OpenAI DALL-E bypassed/failed`, {
+            error: String(openAiError),
+          });
+        }
+      }
 
-            // Tier 4: Pollinations.ai (Free open fallback with automatic watermark crop)
-            try {
-              providerName = "pollinations";
-              buffer = await this.pollinationsAdapter.generateImage(currentPrompt, {
-                width: 1280,
-                height: 720,
-              });
-            } catch (pollinationsError) {
-              logger.error(`Attempt ${attempt}: Pollinations.ai generation also failed`, {
-                error: String(pollinationsError),
-              });
-            }
-          }
+      // Tier 4: Pollinations.ai (ONLY when explicitly enabled or active in database)
+      if (isPollinationsEnabled && !buffer) {
+        try {
+          providerName = "pollinations";
+          buffer = await this.pollinationsAdapter.generateImage(currentPrompt, {
+            width: 1280,
+            height: 720,
+          });
+        } catch (pollinationsError) {
+          logger.error(`Attempt ${attempt}: Pollinations.ai generation failed`, {
+            error: String(pollinationsError),
+          });
         }
       }
 

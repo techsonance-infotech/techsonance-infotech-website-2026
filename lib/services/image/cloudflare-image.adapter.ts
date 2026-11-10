@@ -9,6 +9,15 @@ export class CloudflareImageAdapter {
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
+  async isConfigured(): Promise<boolean> {
+    if (this.keyBroker) {
+      const hasDb = await this.keyBroker.hasActiveCredential("cloudflare");
+      if (hasDb) return true;
+    }
+    const env = getEnv();
+    return !!(env.CF_ACCOUNT_ID && env.CF_API_TOKEN);
+  }
+
   async generateImage(
     prompt: string,
     options: { width?: number; height?: number; model?: string } = {},
@@ -67,11 +76,37 @@ export class CloudflareImageAdapter {
       );
     }
 
-    const width = options.width ?? 1280;
-    const height = options.height ?? 720;
     const targetModel = options.model || claimedModel || this.model;
 
     const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${targetModel}`;
+
+    // Cloudflare Workers AI schema payload adaptation:
+    // - FLUX.1 [schnell] strictly accepts: { prompt: string, steps?: number } (400 on width/height/num_steps)
+    // - FLUX.2 klein / dev models accept: { prompt: string, width?: number, height?: number } or FormData
+    // - Other diffusion models (Leonardo / SDXL) accept: { prompt: string, width?: number, height?: number, num_steps?: number }
+    let requestBody: Record<string, unknown>;
+
+    if (targetModel.includes("flux-1-schnell")) {
+      requestBody = {
+        prompt,
+        steps: 4,
+      };
+    } else if (targetModel.includes("klein")) {
+      requestBody = {
+        prompt,
+        width: Math.min(options.width ?? 1024, 1920),
+        height: Math.min(options.height ?? 768, 1920),
+      };
+    } else {
+      const width = options.width ?? 1280;
+      const height = options.height ?? 720;
+      requestBody = {
+        prompt,
+        width,
+        height,
+        ...(targetModel.includes("schnell") ? { steps: 4 } : { num_steps: 20 }),
+      };
+    }
 
     const res = await fetch(url, {
       method: "POST",
@@ -79,14 +114,7 @@ export class CloudflareImageAdapter {
         Authorization: `Bearer ${apiToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt,
-        width,
-        height,
-        ...(targetModel.includes("schnell") || targetModel.includes("klein")
-          ? { num_steps: 4 }
-          : {}),
-      }),
+      body: JSON.stringify(requestBody),
       signal: AbortSignal.timeout(35000), // 35s timeout
     });
 

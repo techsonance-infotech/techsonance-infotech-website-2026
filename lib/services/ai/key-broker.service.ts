@@ -114,6 +114,24 @@ export class KeyBrokerService {
   }
 
   /**
+   * Checks if an active database credential exists and is usable for a given provider.
+   */
+  async hasActiveCredential(providerId: AiProviderId | AiProvider | string): Promise<boolean> {
+    try {
+      const creds = await this.repo.listCredentials(providerId);
+      const now = new Date();
+      return creds.some(
+        (c) =>
+          c.status === AiCredentialStatus.ACTIVE &&
+          (!c.cooldownUntil || c.cooldownUntil <= now) &&
+          !c.isCanary,
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Records successful usage and token spend.
    */
   async reportSuccess(credentialId?: string, costUsd: number = 0): Promise<void> {

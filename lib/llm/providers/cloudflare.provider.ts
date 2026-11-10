@@ -2,10 +2,13 @@ import { AiProviderId } from "@/lib/constants/enums/ai.enum";
 import { OpenAICompatibleProvider, type OpenAICompatibleOptions } from "./openai-compatible";
 
 export interface CloudflareProviderOptions
-  extends Omit<OpenAICompatibleOptions, "id" | "baseUrl"> {
+  extends Omit<Partial<OpenAICompatibleOptions>, "id" | "baseUrl" | "apiKey"> {
   id?: string;
+  name?: string;
   baseUrl?: string;
+  apiKey: string;
   accountId?: string;
+  model?: string;
 }
 
 /**

@@ -9,6 +9,14 @@ export class OpenAIImageAdapter {
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
+  async isConfigured(): Promise<boolean> {
+    if (this.keyBroker) {
+      const hasDb = await this.keyBroker.hasActiveCredential("openai");
+      if (hasDb) return true;
+    }
+    return !!getEnv().OPENAI_API_KEY;
+  }
+
   async generateImage(
     prompt: string,
     options: { width?: number; height?: number; model?: string } = {},
@@ -46,20 +54,28 @@ export class OpenAIImageAdapter {
     // DALL-E 3 supports 1792x1024 (16:9 widescreen), 1024x1024, or 1024x1792
     const size = model === "dall-e-3" ? "1792x1024" : "1024x1024";
 
+    const payload: Record<string, unknown> = {
+      model,
+      prompt,
+      n: 1,
+      size,
+    };
+
+    // dall-e-3 and dall-e-2 support response_format; newer models omit it
+    if (model.startsWith("dall-e")) {
+      payload.response_format = "b64_json";
+      if (model === "dall-e-3") {
+        payload.quality = "standard";
+      }
+    }
+
     const res = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model,
-        prompt,
-        n: 1,
-        size,
-        response_format: "b64_json",
-        quality: "standard",
-      }),
+      body: JSON.stringify(payload),
       signal: AbortSignal.timeout(45000),
     });
 

@@ -100,15 +100,18 @@ describe("Image Generation & Failover Services", () => {
 
       const service = new ImageStepService(mockMediaService);
 
-      // Cloudflare fails
+      // Cloudflare is configured but fails
+      (service as any).cfAdapter.isConfigured = vi.fn().mockResolvedValue(true);
       (service as any).cfAdapter.generateImage = vi
         .fn()
         .mockRejectedValue(new Error("Cloudflare rate limit exceeded"));
 
-      // Pollinations succeeds
+      // Pollinations is configured and succeeds
       (service as any).pollinationsAdapter.generateImage = vi
         .fn()
         .mockResolvedValue(Buffer.from("pollinations-img"));
+
+      vi.stubEnv("ENABLE_POLLINATIONS_FALLBACK", "true");
 
       const res = await service.generateThumbnail("cloud scalability");
 

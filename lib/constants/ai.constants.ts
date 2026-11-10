@@ -153,7 +153,7 @@ Respond ONLY with a valid JSON object:
   "readTime": "6 min read",
   "seoTitle": "SEO title with agency branding | TechSonance",
   "seoDescription": "Meta description optimized for click-through and search engines",
-  "imagePrompt": "Editorial high-tech 3D banner description for FLUX.1 / Pollinations image generation"
+  "imagePrompt": "Editorial high-tech 3D banner description for Cloudflare FLUX / Imagen 3 image generation"
 }`,
     userPromptTemplate: `Topic: "{{topic}}"
 Category: {{category}}

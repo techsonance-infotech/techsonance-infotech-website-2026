@@ -9,6 +9,14 @@ export class GeminiImageAdapter {
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
+  async isConfigured(): Promise<boolean> {
+    if (this.keyBroker) {
+      const hasDb = await this.keyBroker.hasActiveCredential("gemini");
+      if (hasDb) return true;
+    }
+    return !!getEnv().GEMINI_API_KEY;
+  }
+
   async generateImage(
     prompt: string,
     options: { width?: number; height?: number; model?: string } = {},
