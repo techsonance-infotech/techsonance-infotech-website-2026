@@ -144,6 +144,7 @@ export async function POST(req: Request) {
       category: postCategory,
       keywords: postKeywords,
       jobId: postId,
+      isManualAdmin: true,
     });
 
     // 5. Persist to DB if postId was provided

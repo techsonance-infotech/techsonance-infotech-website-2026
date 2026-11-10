@@ -22,6 +22,7 @@ export interface HeroImagePipelineContext {
   contentExcerpt?: string;
   jobId?: string;
   topic?: string;
+  isManualAdmin?: boolean;
 }
 
 export class ImageStepService {
@@ -118,6 +119,9 @@ export class ImageStepService {
     const alt = `Hero illustration for ${title}`;
     let lastIssues: string[] = [];
     let lastFixInstructions = "";
+    let lastGeneratedBuffer: Buffer | null = null;
+    let lastGeneratedProvider = "pollinations";
+    let lastGeneratedPrompt = currentPrompt;
 
     // 3. Stage C & D: Generation & Critic AI Verification Loop (max 3 attempts)
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -168,6 +172,10 @@ export class ImageStepService {
         continue;
       }
 
+      lastGeneratedBuffer = buffer;
+      lastGeneratedProvider = providerName;
+      lastGeneratedPrompt = currentPrompt;
+
       // Critic AI Vision Quality Gate
       if (this.aiWriter) {
         try {
@@ -212,7 +220,7 @@ export class ImageStepService {
 
             lastIssues = verification.issues;
             lastFixInstructions = verification.fix_instructions;
-            // Intermediate rejected buffer is discarded in RAM — zero storage orphaned assets
+            // Intermediate rejected buffer is kept in memory for manual admin fallback
           }
         } catch (verifyErr) {
           logger.warn(`Critic AI verification step threw on attempt ${attempt}`, {
@@ -239,7 +247,33 @@ export class ImageStepService {
       }
     }
 
-    // 4. Graceful fallback placeholder after max attempts exhausted
+    // 4. For manual admin sessions: deliver the best generated buffer rather than blocking with fallback card
+    if (context.isManualAdmin && lastGeneratedBuffer) {
+      try {
+        const uploadRes = await this.mediaService.uploadImage(lastGeneratedBuffer, {
+          folder: "techsonance-blog-ai",
+        });
+
+        logger.info("Admin manual generation delivered image despite strict critic warnings", {
+          provider: lastGeneratedProvider,
+          issues: lastIssues,
+        });
+
+        return {
+          url: uploadRes.secureUrl,
+          provider: lastGeneratedProvider,
+          prompt: lastGeneratedPrompt,
+          alt,
+          thumbnailMissing: false,
+        };
+      } catch (uploadError) {
+        logger.error("Cloudinary upload of manual admin thumbnail failed", {
+          error: String(uploadError),
+        });
+      }
+    }
+
+    // 5. Graceful fallback placeholder for automated background queue workers
     logger.warn(
       `Hero image pipeline exhausted ${maxAttempts} attempts without pass. Falling back to default hero.`,
     );

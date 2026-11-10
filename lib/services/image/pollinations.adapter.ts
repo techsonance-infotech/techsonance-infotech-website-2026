@@ -44,24 +44,31 @@ export class PollinationsImageAdapter {
       // Fall through to open endpoint fallback
     }
 
-    // 2. Open Pollinations fallback endpoint (free tier, no token required)
-    const openUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-      prompt,
-    )}?model=flux&width=${width}&height=${height}&nologo=true&enhance=false&private=true&seed=${seed}`;
+    // 2. Open Pollinations fallback endpoint chain (gracefully handles 402 paywall on specific models)
+    const modelsToTry: (string | undefined)[] = ["flux", "turbo", undefined];
 
-    const openRes = await fetch(openUrl, {
-      method: "GET",
-      signal: AbortSignal.timeout(25000),
-    });
+    for (const fbModel of modelsToTry) {
+      try {
+        const modelQuery = fbModel ? `&model=${encodeURIComponent(fbModel)}` : "";
+        const openUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(
+          prompt,
+        )}?width=${width}&height=${height}&nologo=true&enhance=false&private=true&seed=${seed}${modelQuery}`;
 
-    if (!openRes.ok) {
-      throw new Error(
-        `Pollinations.ai error (${openRes.status}): ${openRes.statusText}`,
-      );
+        const openRes = await fetch(openUrl, {
+          method: "GET",
+          signal: AbortSignal.timeout(25000),
+        });
+
+        if (openRes.ok) {
+          const arrayBuf = await openRes.arrayBuffer();
+          return this.cleanWatermark(Buffer.from(arrayBuf), width, height);
+        }
+      } catch {
+        // Try next fallback model
+      }
     }
 
-    const arrayBuf = await openRes.arrayBuffer();
-    return this.cleanWatermark(Buffer.from(arrayBuf), width, height);
+    throw new Error("Pollinations.ai generation exhausted all model fallbacks");
   }
 
   /**
