@@ -5,7 +5,7 @@ import { logger } from "@/lib/logger";
 
 export class CloudflareImageAdapter {
   readonly name = "cloudflare";
-  readonly model = "@cf/black-forest-labs/flux-1-schnell";
+  readonly model = "@cf/leonardo/lucid-origin";
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
@@ -100,11 +100,16 @@ export class CloudflareImageAdapter {
     } else {
       const width = options.width ?? 1280;
       const height = options.height ?? 720;
+      const isLeonardo = targetModel.includes("leonardo") || targetModel.includes("lucid") || targetModel.includes("phoenix");
       requestBody = {
         prompt,
         width,
         height,
-        ...(targetModel.includes("schnell") ? { steps: 4 } : { num_steps: 20 }),
+        ...(isLeonardo
+          ? { num_steps: 25, guidance: 4.5 }
+          : targetModel.includes("schnell")
+            ? { steps: 4 }
+            : { num_steps: 20 }),
       };
     }
 
