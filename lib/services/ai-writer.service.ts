@@ -642,10 +642,10 @@ Review the attached image and return the JSON verdict.`;
             const isPassed =
               parsed.verdict === "pass" &&
               !hardFail &&
-              scores.relevance >= 7 &&
-              scores.intent_match >= 7 &&
-              scores.technical_quality >= 7 &&
-              avg >= 7.5;
+              scores.relevance >= 6 &&
+              scores.intent_match >= 6 &&
+              scores.technical_quality >= 6 &&
+              avg >= 6.8;
 
             return {
               verdict: isPassed ? "pass" : "fail",

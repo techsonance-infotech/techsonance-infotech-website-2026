@@ -348,7 +348,7 @@ export async function generatePostThumbnail(
     credentials: "include",
     body: JSON.stringify(input),
     signal,
-    timeoutMs: 60_000,
+    timeoutMs: 180_000, // 3 minutes timeout to allow full 3-attempt AI image generation and verification loop
   });
 
   return {

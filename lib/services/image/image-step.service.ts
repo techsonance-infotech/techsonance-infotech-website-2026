@@ -74,7 +74,8 @@ export class ImageStepService {
     context: HeroImagePipelineContext = {},
   ): Promise<ThumbnailGenerationResult> {
     const title = context.title || "TechSonance Engineering";
-    const maxAttempts = 3;
+    // For interactive manual admin sessions, 2 attempts provide fast delivery (< 25s) without UI timeout
+    const maxAttempts = context.isManualAdmin ? 2 : 3;
 
     // 1. Stage A: Visual brief extraction
     let visualBrief: {
