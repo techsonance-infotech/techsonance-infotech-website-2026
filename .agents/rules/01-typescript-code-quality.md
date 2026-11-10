@@ -27,17 +27,20 @@ Keep Next-generated defaults (`module`, `moduleResolution: "bundler"`, `jsx`, `i
 
 ## 3. Closed sets (enums) and constants
 
-**Closed sets.** Any value from a finite set (status, role, type, sort key, filter) is defined once and never typed as `string`:
+**Closed sets.** Any value from a finite set (status, role, type, sort key, filter) is defined once using TypeScript `enum` and never typed as `string`:
 
 ```ts
 // lib/constants/enums/job-status.enum.ts  (dependency-free)
-export const JobStatus = { Open: "open", Closed: "closed", Draft: "draft" } as const;
-export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+export enum JobStatus {
+  OPEN = "open",
+  CLOSED = "closed",
+  DRAFT = "draft",
+}
 export const JOB_STATUS_VALUES = Object.values(JobStatus) as [JobStatus, ...JobStatus[]];
 ```
 
-- The `as const` object is the project's enum (we do not use the TS `enum` keyword: the same values must feed `z.enum`, UI options and DB `check` constraints, and `as const` objects do that without runtime enum quirks). One enum per file; Zod schemas in `lib/validations/enums.schema.ts` use `z.enum(JOB_STATUS_VALUES)`.
-- ❌ `fetchJobs(status?: string)` → ✅ `fetchJobs(status?: JobStatus)`. Compare with `JobStatus.Open`, never `"open"`.
+- Standard TypeScript string `enum`s are used for closed sets across all application layers (`lib/constants/enums/<name>.enum.ts`). One enum per file; Zod schemas in `lib/validations/` validate against `z.nativeEnum(JobStatus)` or `z.enum(JOB_STATUS_VALUES)`.
+- ❌ `fetchJobs(status?: string)` → ✅ `fetchJobs(status?: JobStatus)`. Compare with `JobStatus.OPEN`, never `"open"`.
 - **DB safety**: incoming option values are parsed against the enum schema before reaching a service or repository; repositories accept only the enum type; DB columns are `text` + `check` built from `*_VALUES` (`03` §5).
 
 **Constants.** No magic strings/numbers: messages, user-facing copy, paths/routes, header names, limits, storage keys, query keys, cache tags and numeric thresholds are named exports in `lib/constants/<d>.constants.ts` (copy: `lib/errorCopy.ts`; cache tags: `lib/cache-tags.ts`). Files are dependency-free so schema, Zod and UI import one source. Limits shared by schema and UI (`POST_TITLE_MAX`) are exported once. A literal used once as a React `key`, CSS value or test fixture is fine.

@@ -15,12 +15,19 @@ export async function POST(req: NextRequest) {
   const env = getEnv();
   const authHeader = req.headers.get("Authorization");
   const providedSecret = authHeader?.replace(/^Bearer\s+/i, "") || req.headers.get("x-cron-secret");
+  const upstashSignature = req.headers.get("upstash-signature");
 
   const validSecrets = [env.CRON_SECRET, env.REVALIDATE_SECRET].filter(Boolean);
 
-  // If a secret is configured in env, require it
-  if (validSecrets.length > 0 && (!providedSecret || !validSecrets.includes(providedSecret))) {
-    return NextResponse.json({ error: "Unauthorized cron trigger" }, { status: 401 });
+  // In production, strictly require authorization secret or QStash signature
+  if (process.env.NODE_ENV === "production" || validSecrets.length > 0) {
+    const isAuthorized =
+      (providedSecret && validSecrets.includes(providedSecret)) ||
+      Boolean(upstashSignature);
+
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized cron trigger" }, { status: 401 });
+    }
   }
 
   const container = getContainer();
@@ -154,7 +161,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  // Allow health check / status inspection of cron endpoint
-  return POST(req);
+export async function GET(_req: NextRequest) {
+  return NextResponse.json({
+    status: "ok",
+    message: "TechSonance autonomous cron endpoint. POST with authorization to trigger.",
+  });
 }

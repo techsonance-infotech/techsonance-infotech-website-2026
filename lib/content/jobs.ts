@@ -201,31 +201,41 @@ export const legacyJobSource: JobSource = {
   },
 };
 
-// ─── CMS Database Fetchers (Delegates to ContentDbService via DI) ────────────
+// ─── CMS Database Fetchers (Delegates to ContentDbService via DI with legacy fallback) ────────────
 async function fetchCmsJobsRaw(status?: string): Promise<JobPosting[]> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchJobs(status as any);
+    const dbJobs = await db.fetchJobs(status as any);
+    if (dbJobs.length > 0) {
+      const dbSlugs = new Set(dbJobs.map((j) => j.slug));
+      const legacy = (await legacyJobSource.list({ status })).filter((j) => !dbSlugs.has(j.slug));
+      return [...dbJobs, ...legacy];
+    }
   } catch {
-    return [];
+    // Fall back to legacy jobs when DB is unavailable
   }
+  return legacyJobSource.list({ status });
 }
 
 async function fetchCmsJobBySlugRaw(slug: string): Promise<JobPosting | null> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchJobBySlug(slug);
+    const job = await db.fetchJobBySlug(slug);
+    if (job) return job;
   } catch {
-    return null;
+    // Fall back to legacy source
   }
+  return legacyJobSource.get(slug);
 }
 
 async function fetchCmsJobSlugsRaw(): Promise<string[]> {
   try {
     const db = getContainer().get(ContentDbService);
-    return await db.fetchJobSlugs();
+    const dbSlugs = await db.fetchJobSlugs();
+    const legacySlugs = await legacyJobSource.slugs();
+    return Array.from(new Set([...dbSlugs, ...legacySlugs]));
   } catch {
-    return [];
+    return legacyJobSource.slugs();
   }
 }
 
@@ -262,13 +272,5 @@ export const cmsJobSource: JobSource = {
 
 // ─── Factory: Source Selector ────────────────────────────────────────────────
 export function getJobSource(): JobSource {
-  try {
-    const env = getEnv();
-    if (env.CONTENT_SOURCE_CAREERS === "cms") {
-      return cmsJobSource;
-    }
-  } catch {
-    // fallback to legacy source
-  }
-  return legacyJobSource;
+  return cmsJobSource;
 }

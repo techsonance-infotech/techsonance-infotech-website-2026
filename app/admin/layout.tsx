@@ -19,8 +19,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <AdminShell
-      userEmail={session?.email ?? "admin@techsonance.co.in"}
-      userRole={session?.role ?? "owner"}
+      userEmail={session?.email}
+      userRole={session?.role}
     >
       {children}
     </AdminShell>

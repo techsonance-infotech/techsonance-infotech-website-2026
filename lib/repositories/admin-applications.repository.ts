@@ -221,6 +221,52 @@ export class AdminApplicationsRepository {
   }
 
   /**
+   * Lists talent pool candidates with optional search and pagination.
+   */
+  async listTalentPool(options: { search?: string; limit?: number; offset?: number } = {}) {
+    const { search, limit = 50, offset = 0 } = options;
+    const conditions = [];
+
+    if (search && search.trim()) {
+      const term = `%${search.trim()}%`;
+      conditions.push(
+        or(
+          ilike(talentPoolTable.name, term),
+          ilike(talentPoolTable.email, term),
+          ilike(talentPoolTable.preferredRole, term),
+        ),
+      );
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    try {
+      const [candidates, totalRows] = await Promise.all([
+        this.db
+          .select()
+          .from(talentPoolTable)
+          .where(whereClause)
+          .orderBy(desc(talentPoolTable.createdAt))
+          .limit(limit)
+          .offset(offset),
+        this.db
+          .select({ count: count() })
+          .from(talentPoolTable)
+          .where(whereClause),
+      ]);
+
+      return {
+        candidates,
+        total: Number(totalRows[0]?.count ?? 0),
+      };
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AdminApplicationsRepository.listTalentPool",
+      });
+    }
+  }
+
+  /**
    * Retrieves all applications and talent pool records for an email (GDPR data export).
    */
   async findCandidateRecords(email: string) {

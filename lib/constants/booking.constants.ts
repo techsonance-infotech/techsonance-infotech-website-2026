@@ -39,7 +39,16 @@ export const BOOKING_MESSAGES = {
 } as const;
 
 export { BookingStatus, BOOKING_STATUS_VALUES } from "./enums/booking.enum";
+export { CalWebhookTrigger, CAL_WEBHOOK_TRIGGER_VALUES } from "./enums/cal-webhook.enum";
 export { API_ENDPOINTS } from "./endpoints.constants";
+
+export const CAL_BOOKING_DEFAULTS = {
+  SOURCE: "cal.id",
+  PROJECT_TYPE: "Discovery Consultation (Cal.id)",
+  BUDGET_RANGE: "Discovery",
+  TIMELINE: "Immediate",
+  FALLBACK_VISITOR_NAME: "Cal.id Visitor",
+} as const;
 
 export const BOOKING_ENDPOINTS = {
   SLOTS: "/api/slots",

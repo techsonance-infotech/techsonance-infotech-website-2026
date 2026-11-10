@@ -16,11 +16,37 @@ interface UploadedMedia {
   createdAt: string;
 }
 
+const MEDIA_STORAGE_KEY = "ts_admin_media_library";
+
 export default function MediaLibraryPage() {
   const [uploads, setUploads] = useState<UploadedMedia[]>([]);
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Rehydrate persisted media on mount
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem(MEDIA_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setUploads(parsed);
+        }
+      }
+    } catch {
+      // LocalStorage unavailable or corrupt
+    }
+  }, []);
+
+  const saveUploads = (newItems: UploadedMedia[]) => {
+    setUploads(newItems);
+    try {
+      localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(newItems.slice(0, 100)));
+    } catch {
+      // Storage quota reached
+    }
+  };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,10 +64,10 @@ export default function MediaLibraryPage() {
         format: data.format,
         width: data.width,
         height: data.height,
-        createdAt: new Date().toLocaleTimeString(),
+        createdAt: new Date().toLocaleDateString(),
       };
 
-      setUploads((prev) => [item, ...prev]);
+      saveUploads([item, ...uploads]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {

@@ -165,13 +165,5 @@ export const cmsPostSource: PostSource = {
 
 // ─── Factory: Source Selector ────────────────────────────────────────────────
 export function getPostSource(): PostSource {
-  try {
-    const env = getEnv();
-    if (env.CONTENT_SOURCE_BLOG === "legacy") {
-      return legacyPostSource;
-    }
-  } catch {
-    // fallback
-  }
   return cmsPostSource;
 }

@@ -13,4 +13,5 @@ export * from "./core/eeoc.schema";
 export * from "./core/version.schema";
 export * from "./core/audit.schema";
 export * from "./core/consultation-booking.schema";
+export * from "./core/contact-inquiry.schema";
 export * from "./ai/index";

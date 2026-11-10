@@ -14,6 +14,7 @@ import { ImageStepService, type ThumbnailGenerationResult } from "./image/image-
 import { ApprovalService } from "./approval.service";
 import { AppError, ErrorCode } from "../errors";
 import { logger } from "../logger";
+import { dispatchJobStep } from "./qstash.service";
 
 export class JobOrchestratorService {
   constructor(
@@ -71,12 +72,11 @@ export class JobOrchestratorService {
       leaseExpiresAt: new Date(Date.now() + 180_000),
     });
 
-    // Enqueue execution in background
-    this.executeJob(jobId).catch((e) => {
-      logger.error(`Background AI generation job retry ${jobId} failed:`, {
-        error: String(e),
-      });
-    });
+    // Enqueue execution via Upstash QStash queue with fallback
+    await dispatchJobStep(
+      { jobId, step: "outline" },
+      () => this.executeJob(jobId),
+    );
 
     const updated = await this.jobsRepo.findById(jobId);
     return updated || job;

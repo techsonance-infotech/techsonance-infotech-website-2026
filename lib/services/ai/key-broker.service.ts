@@ -72,8 +72,14 @@ export class KeyBrokerService {
             error: decryptErr instanceof Error ? decryptErr.message : "Unknown",
           });
 
-          await this.repo.wipeCompromisedCredential(cred.id);
-          await this.repo.recordEvent(cred.id, "compromised", "system", {
+          // Quarantine: Mark credential disabled without destroying ciphertext so key can be recovered upon KEK rotation
+          await this.repo.updateStatus(
+            cred.id,
+            AiCredentialStatus.DISABLED,
+            null,
+            "DECRYPTION_AUTH_TAG_FAILED",
+          );
+          await this.repo.recordEvent(cred.id, "failed", "system", {
             reason: "DECRYPTION_AUTH_TAG_FAILED",
           });
         }

@@ -17,6 +17,9 @@ import {
   ShieldCheck,
   AlertCircle,
   X,
+  ExternalLink,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +37,8 @@ import {
   listAdminApplications,
   updateAdminApplication,
   getAdminApplicationsExportUrl,
+  listAdminTalentPool,
+  type TalentPoolCandidateItem,
 } from "@/lib/api/admin-applications.api";
 import { listAdminJobs } from "@/lib/api/admin-jobs.api";
 import { AsyncState } from "@/components/feedback/AsyncState";
@@ -66,6 +71,31 @@ export default function ApplicationsInboxPage() {
   // Selected candidate drawer
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [complianceModalOpen, setComplianceModalOpen] = useState(false);
+
+  // Tab: Applications vs Talent Pool
+  const [activeTab, setActiveTab] = useState<"applications" | "talent-pool">("applications");
+  const [talentPool, setTalentPool] = useState<TalentPoolCandidateItem[]>([]);
+  const [talentPoolTotal, setTalentPoolTotal] = useState(0);
+  const [loadingTalentPool, setLoadingTalentPool] = useState(false);
+
+  const fetchTalentPool = useCallback(async () => {
+    try {
+      setLoadingTalentPool(true);
+      const res = await listAdminTalentPool({ search: debouncedSearch });
+      setTalentPool(res.candidates);
+      setTalentPoolTotal(res.total);
+    } catch (err) {
+      console.error("Failed to load talent pool", err);
+    } finally {
+      setLoadingTalentPool(false);
+    }
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (activeTab === "talent-pool") {
+      fetchTalentPool();
+    }
+  }, [activeTab, fetchTalentPool]);
 
   // Debounce search
   useEffect(() => {
@@ -244,6 +274,169 @@ export default function ApplicationsInboxPage() {
           </Button>
         </div>
       </div>
+
+      {/* Tab Switcher: Job Applications vs Talent Pool */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3 dark:border-slate-800">
+        <button
+          type="button"
+          onClick={() => setActiveTab("applications")}
+          className={`flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+            activeTab === "applications"
+              ? "bg-[#1155CC] text-white shadow-xs"
+              : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+          }`}
+        >
+          <Briefcase className="h-4 w-4" />
+          Job Applications ({totalCount})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("talent-pool")}
+          className={`flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+            activeTab === "talent-pool"
+              ? "bg-[#1155CC] text-white shadow-xs"
+              : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+          }`}
+        >
+          <Users className="h-4 w-4" />
+          General Talent Pool ({talentPoolTotal})
+        </button>
+      </div>
+
+      {activeTab === "talent-pool" ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search talent pool by name, email, role..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-4 text-xs font-medium text-slate-900 shadow-2xs focus:border-[#1155CC] focus:outline-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+              />
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchTalentPool}
+              className="h-9 rounded-2xl border-slate-200 text-xs dark:border-slate-800"
+            >
+              <RefreshCw
+                className={`mr-1.5 h-3.5 w-3.5 ${loadingTalentPool ? "animate-spin" : ""}`}
+              />
+              Refresh
+            </Button>
+          </div>
+
+          {loadingTalentPool ? (
+            <div className="space-y-3 py-8">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-20 w-full rounded-2xl" />
+              ))}
+            </div>
+          ) : talentPool.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-16 text-center dark:border-slate-800 dark:bg-slate-900">
+              <Users className="h-10 w-10 text-slate-300 dark:text-slate-600" />
+              <h4 className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-300">
+                {debouncedSearch
+                  ? "No talent pool candidates match search"
+                  : "No talent pool submissions yet"}
+              </h4>
+              <p className="mt-1 max-w-sm text-xs text-slate-400">
+                Candidates who submit general applications or consent to talent pool storage will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {talentPool.map((candidate) => (
+                <div
+                  key={candidate.id}
+                  className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="font-sora text-sm font-bold text-slate-900 dark:text-white">
+                        {candidate.name}
+                      </h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span className="flex items-center gap-1">
+                          <Mail className="h-3.5 w-3.5 text-slate-400" />
+                          <a
+                            href={`mailto:${candidate.email}`}
+                            className="text-[#1155CC] hover:underline"
+                          >
+                            {candidate.email}
+                          </a>
+                        </span>
+                        {candidate.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="h-3.5 w-3.5 text-slate-400" />
+                            {candidate.phone}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {candidate.experienceLevel && (
+                      <Badge
+                        variant="outline"
+                        className="rounded-lg text-[10px] font-bold uppercase"
+                      >
+                        {candidate.experienceLevel}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                      Preferred Role:
+                    </span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">
+                      {candidate.preferredRole || "General Interest"}
+                    </span>
+                  </div>
+
+                  {candidate.skills && candidate.skills.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {candidate.skills.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {candidate.notes && (
+                    <p className="mt-3 rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600 dark:bg-slate-800/50 dark:text-slate-300">
+                      {candidate.notes}
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-[11px] text-slate-400 dark:border-slate-800">
+                    <span>
+                      Joined: {new Date(candidate.createdAt).toLocaleDateString()}
+                    </span>
+                    {candidate.portfolioUrl && (
+                      <a
+                        href={candidate.portfolioUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-1 font-semibold text-[#1155CC] hover:underline"
+                      >
+                        Portfolio <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <>
 
       {/* Non-blocking action error notification */}
       {actionError && (
@@ -473,6 +666,8 @@ export default function ApplicationsInboxPage() {
           )
         }
       </AsyncState>
+      </>
+      )}
 
       {/* Candidate Profile Evaluation Drawer */}
       <CandidateDrawer

@@ -8,6 +8,7 @@ import type { Topic } from "@/lib/database/schema/index.schema";
 import { AiTopicStatus } from "@/lib/database/enum/ai.enum";
 import { AIWriterService } from "./ai-writer.service";
 import { JobOrchestratorService } from "./job-orchestrator.service";
+import { dispatchJobStep } from "./qstash.service";
 import { logger } from "../logger";
 import { AppError, ErrorCode } from "@/lib/errors";
 
@@ -190,13 +191,11 @@ Respond strictly with a valid JSON array of objects with keys: title, keywords (
       topicId: topic.id,
     });
 
-    // Run execution in the background asynchronously
-    this.jobOrchestrator.executeJob(job.id).catch((err) => {
-      logger.error("Autonomous execution error for topic job", {
-        jobId: job.id,
-        error: String(err),
-      });
-    });
+    // Run execution via Upstash QStash queue with fallback
+    await dispatchJobStep(
+      { jobId: job.id, step: "outline" },
+      () => this.jobOrchestrator.executeJob(job.id),
+    );
 
     return { jobId: job.id };
   }

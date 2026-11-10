@@ -24,6 +24,8 @@ import { ContentDbService } from "../services/content-db.service";
 import { MediaService } from "../services/media.service";
 import { AdminPostsService } from "../services/admin-posts.service";
 import { AdminJobsService } from "../services/admin-jobs.service";
+import { ContactInquiryService } from "../services/contact-inquiry.service";
+import { ContactInquiryRepository } from "../repositories/contact-inquiry.repository";
 import { BookingRepository } from "../repositories/booking.repository";
 import { CareerApplicationsRepository } from "../repositories/career-applications.repository";
 import { AdminApplicationsRepository } from "../repositories/admin-applications.repository";
@@ -72,6 +74,8 @@ export function configureContainer(container: Container): Container {
   container.bind(MediaService);
   container.bind(AdminPostsService);
   container.bind(AdminJobsService);
+  container.bind(ContactInquiryService);
+  container.bind(ContactInquiryRepository);
   container.bind(BookingRepository);
   container.bind(CareerApplicationsRepository);
   container.bind(AdminApplicationsRepository);

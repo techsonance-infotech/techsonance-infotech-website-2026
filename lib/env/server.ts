@@ -81,10 +81,6 @@ export const serverEnvSchema = z.object({
   AI_BLOG_DAILY_CAP: z.coerce.number().optional().default(1),
   AI_BLOG_WEEKLY_CAP: z.coerce.number().optional().default(3),
 
-  // Content Abstraction Layer Sources
-  CONTENT_SOURCE_BLOG: z.enum(["legacy", "cms"]).optional().default("legacy"),
-  CONTENT_SOURCE_CAREERS: z.enum(["legacy", "cms"]).optional().default("legacy"),
-
   // AI Vault & Credential Pipeline
   AI_KEK_V1: z.string().optional().default("k4q8V4/9h5vL4P8rW3Z8N9tK2eR6vU4X7yT1wQ3mB6E="),
   AI_KEK_V2: z.string().optional(),
@@ -97,11 +93,33 @@ export const serverEnvSchema = z.object({
     .default("http://localhost:3000,https://www.techsonance.co.in,https://techsonance.co.in"),
   COMPANY_DOMAIN: z.string().optional().default("techsonance.co.in"),
   HEALTH_SECRET: z.string().optional(),
+  CAL_WEBHOOK_SECRET: z.string().optional(),
   ALLOW_PLACEHOLDERS: z
     .string()
     .optional()
     .default("true")
     .transform((val) => val === "true" || val === "1"),
+}).superRefine((data, ctx) => {
+  if (process.env.NODE_ENV === "production") {
+    const DEV_KEK = "k4q8V4/9h5vL4P8rW3Z8N9tK2eR6vU4X7yT1wQ3mB6E=";
+    const DEV_PEPPER = "dGVjaHNvbmFuY2UtYWktZnAtcGVwcGVyLTIwMjYtZGV2";
+
+    if (!data.AI_KEK_V1 || data.AI_KEK_V1 === DEV_KEK) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "AI_KEK_V1 must be set to a unique 32-byte base64 encryption key in production.",
+        path: ["AI_KEK_V1"],
+      });
+    }
+
+    if (!data.AI_FP_PEPPER || data.AI_FP_PEPPER === DEV_PEPPER) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "AI_FP_PEPPER must be set to a unique pepper string in production.",
+        path: ["AI_FP_PEPPER"],
+      });
+    }
+  }
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

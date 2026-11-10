@@ -54,6 +54,10 @@ export class ApplicationsService {
     };
   }
 
+  async listTalentPool(options: { search?: string; limit?: number; offset?: number } = {}) {
+    return await this.repository.listTalentPool(options);
+  }
+
   async getApplicationById(id: string): Promise<Application & { jobTitle: string }> {
     if (!id || !id.trim()) {
       throw new AppError("NOT_FOUND", CAREER_ERRORS.APPLICATION_NOT_FOUND);

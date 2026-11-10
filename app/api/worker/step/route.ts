@@ -3,29 +3,59 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getContainer } from "@/lib/di/container";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
+import { getQStashReceiver } from "@/lib/services/qstash.service";
 import { getEnv } from "@/lib/env";
 import { logger } from "@/lib/logger";
 
 const stepSchema = z.object({
   jobId: z.uuid(),
+  step: z.string().optional(),
 });
 
 export async function POST(req: Request) {
   try {
     const env = getEnv();
+    const rawBody = await req.text();
     const authHeader = req.headers.get("x-worker-secret") || req.headers.get("x-revalidate-secret");
-    const isSecretValid = env.REVALIDATE_SECRET && authHeader === env.REVALIDATE_SECRET;
+    const upstashSignature = req.headers.get("upstash-signature");
 
-    // Optional verification if QStash signing keys are present
-    if (!isSecretValid && !req.headers.get("upstash-signature")) {
-      // In development, allow internal triggers if no secret is enforced
-      if (process.env.NODE_ENV === "production" && env.REVALIDATE_SECRET) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    let isAuthorized = Boolean(
+      (env.REVALIDATE_SECRET && authHeader === env.REVALIDATE_SECRET) ||
+      (env.CRON_SECRET && authHeader === env.CRON_SECRET)
+    );
+
+    // Verify QStash receiver signature if present
+    if (!isAuthorized && upstashSignature) {
+      const receiver = getQStashReceiver();
+      if (receiver) {
+        try {
+          const isValid = await receiver.verify({
+            signature: upstashSignature,
+            body: rawBody,
+            url: req.url,
+          });
+          if (isValid) isAuthorized = true;
+        } catch (verifyErr) {
+          logger.warn("QStash signature verification failed", { error: String(verifyErr) });
+        }
+      } else {
+        // Fallback for QStash token presence
+        isAuthorized = true;
       }
     }
 
-    const rawBody = await req.json().catch(() => ({}));
-    const parseResult = stepSchema.safeParse(rawBody);
+    if (process.env.NODE_ENV === "production" && !isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let parsedBody: unknown;
+    try {
+      parsedBody = JSON.parse(rawBody);
+    } catch {
+      parsedBody = {};
+    }
+
+    const parseResult = stepSchema.safeParse(parsedBody);
 
     if (!parseResult.success) {
       return NextResponse.json(

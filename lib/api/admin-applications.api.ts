@@ -189,3 +189,59 @@ export async function purgeCandidateCompliance(
 
   return data as CandidateCompliancePurgeResponse;
 }
+
+export interface TalentPoolCandidateItem {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  skills: string[];
+  preferredRole?: string | null;
+  experienceLevel?: string | null;
+  portfolioUrl?: string | null;
+  resumeStoragePath?: string | null;
+  notes?: string | null;
+  consentDate: string;
+  createdAt: string;
+}
+
+export interface ListTalentPoolResult {
+  candidates: TalentPoolCandidateItem[];
+  total: number;
+}
+
+/**
+ * Lists candidates from the talent pool.
+ * Endpoint: GET /api/admin/careers/talent-pool
+ */
+export async function listAdminTalentPool(
+  query?: { search?: string; limit?: number; offset?: number },
+  options?: { signal?: AbortSignal },
+): Promise<ListTalentPoolResult> {
+  const params = new URLSearchParams();
+  if (query?.search?.trim()) params.set("search", query.search.trim());
+  if (query?.limit) params.set("limit", String(query.limit));
+  if (query?.offset) params.set("offset", String(query.offset));
+
+  const queryStr = params.toString();
+  const url = queryStr
+    ? `/api/admin/careers/talent-pool?${queryStr}`
+    : "/api/admin/careers/talent-pool";
+
+  const response = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    signal: options?.signal,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load talent pool");
+  }
+
+  const json = await response.json();
+  const rawData = json.data || json;
+  return {
+    candidates: rawData.candidates ?? [],
+    total: rawData.total ?? 0,
+  };
+}

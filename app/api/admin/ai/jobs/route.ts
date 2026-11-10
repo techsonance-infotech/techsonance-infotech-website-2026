@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { JobOrchestratorService } from "@/lib/services/job-orchestrator.service";
+import { dispatchJobStep } from "@/lib/services/qstash.service";
 import { createAiJobSchema, listAiJobsQuerySchema } from "@/lib/contracts/admin-ai-jobs.contract";
 import { AppError, ErrorCode, toFieldErrors } from "@/lib/errors";
 import { logger } from "@/lib/logger";
@@ -191,13 +192,11 @@ export async function POST(req: Request) {
       siteId,
     });
 
-    // Enqueue 6-step generation in background
-    orchestrator.executeJob(job.id).catch((e) => {
-      logger.error(`Background AI generation job ${job.id} execution failed`, {
-        error: String(e),
-        requestId,
-      });
-    });
+    // Enqueue 6-step generation via Upstash QStash (with direct fallback)
+    await dispatchJobStep(
+      { jobId: job.id, step: "outline" },
+      () => orchestrator.executeJob(job.id),
+    );
 
     return NextResponse.json(
       {

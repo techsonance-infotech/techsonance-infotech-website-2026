@@ -21,15 +21,7 @@ describe("Content Abstraction Layer", () => {
   });
 
   describe("Posts Source", () => {
-    it("defaults to legacyPostSource when CONTENT_SOURCE_BLOG is not set", () => {
-      delete process.env.CONTENT_SOURCE_BLOG;
-      resetEnv();
-      const source = getPostSource();
-      expect(source).toBe(legacyPostSource);
-    });
-
-    it("switches to cmsPostSource when CONTENT_SOURCE_BLOG is set to 'cms'", () => {
-      process.env.CONTENT_SOURCE_BLOG = "cms";
+    it("always returns cmsPostSource as the single source of truth", () => {
       resetEnv();
       const source = getPostSource();
       expect(source).toBe(cmsPostSource);
@@ -86,15 +78,7 @@ describe("Content Abstraction Layer", () => {
   });
 
   describe("Jobs Source", () => {
-    it("defaults to legacyJobSource when CONTENT_SOURCE_CAREERS is not set", () => {
-      delete process.env.CONTENT_SOURCE_CAREERS;
-      resetEnv();
-      const source = getJobSource();
-      expect(source).toBe(legacyJobSource);
-    });
-
-    it("switches to cmsJobSource when CONTENT_SOURCE_CAREERS is set to 'cms'", () => {
-      process.env.CONTENT_SOURCE_CAREERS = "cms";
+    it("always returns cmsJobSource as the single source of truth", () => {
       resetEnv();
       const source = getJobSource();
       expect(source).toBe(cmsJobSource);

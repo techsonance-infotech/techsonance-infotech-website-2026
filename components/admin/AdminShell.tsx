@@ -98,6 +98,14 @@ export function AdminShell({
     return <>{children}</>;
   }
 
+  // If no user email is provided and not on login page, redirect unauthenticated visitors
+  if (!userEmail) {
+    if (typeof window !== "undefined") {
+      router.push("/admin/login");
+    }
+    return null;
+  }
+
   const isPostDetail =
     pathname.startsWith("/admin/blog/") &&
     !pathname.startsWith("/admin/blog/topics") &&
