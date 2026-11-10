@@ -142,6 +142,19 @@ export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     ],
   },
   {
+    id: "cloudflare",
+    name: "Cloudflare Workers AI (LLMs & Text)",
+    category: "text",
+    defaultModel: "@cf/meta/llama-3.3-70b-instruct",
+    models: [
+      { id: "@cf/meta/llama-3.3-70b-instruct", label: "Llama 3.3 70B Instruct (Top Intelligence)" },
+      { id: "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", label: "DeepSeek R1 Distill Qwen 32B (Reasoning)" },
+      { id: "@cf/meta/llama-3.1-8b-instruct", label: "Llama 3.1 8B Instruct (High Speed)" },
+      { id: "@cf/qwen/qwen2.5-72b-instruct", label: "Qwen 2.5 72B Instruct (Deep Analysis)" },
+      { id: "@cf/mistral/mistral-7b-instruct-v0.2", label: "Mistral 7B Instruct v0.2" },
+    ],
+  },
+  {
     id: "github",
     name: "GitHub Models (Azure AI)",
     category: "text",
@@ -156,7 +169,7 @@ export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
   // Image Generation Providers
   {
     id: "cloudflare",
-    name: "Cloudflare Workers AI",
+    name: "Cloudflare Workers AI (FLUX & Diffusion)",
     category: "image",
     defaultModel: "@cf/black-forest-labs/flux-1-schnell",
     models: [
@@ -288,7 +301,9 @@ export function AddCredentialModal({
   );
 
   const currentProviderEntry =
-    PROVIDER_CATALOG.find((p) => p.id === provider) || categoryProviders[0] || PROVIDER_CATALOG[0];
+    categoryProviders.find((p) => p.id === provider) ||
+    categoryProviders[0] ||
+    PROVIDER_CATALOG[0];
 
   const handleCategoryChange = (newCat: ProviderCategory) => {
     setSelectedCategory(newCat);
@@ -301,7 +316,10 @@ export function AddCredentialModal({
 
   const handleProviderChange = (newProvider: string) => {
     setProvider(newProvider);
-    const entry = PROVIDER_CATALOG.find((p) => p.id === newProvider) || PROVIDER_CATALOG[0];
+    const entry =
+      categoryProviders.find((p) => p.id === newProvider) ||
+      PROVIDER_CATALOG.find((p) => p.id === newProvider) ||
+      PROVIDER_CATALOG[0];
     if (entry.models.length > 0) {
       setModelOption(entry.defaultModel);
       setCustomModelText(entry.defaultModel);

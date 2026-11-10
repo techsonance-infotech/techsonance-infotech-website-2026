@@ -36,10 +36,21 @@ export function ChangeModelModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Match provider catalog to suggest supported models
-  const providerEntry = credential
-    ? PROVIDER_CATALOG.find((p) => p.id.toLowerCase() === credential.provider.toLowerCase())
-    : null;
+  // Match provider catalog to suggest supported models (matches both text and image categories)
+  const matchedEntries = credential
+    ? PROVIDER_CATALOG.filter((p) => p.id.toLowerCase() === credential.provider.toLowerCase())
+    : [];
+
+  const providerEntry =
+    matchedEntries.find((p) => p.models.some((m) => m.id === credential?.model)) ||
+    matchedEntries[0] ||
+    null;
+
+  const combinedModels = Array.from(
+    new Map(
+      matchedEntries.flatMap((p) => p.models).map((m) => [m.id, m])
+    ).values()
+  );
 
   useEffect(() => {
     if (credential) {
@@ -49,10 +60,10 @@ export function ChangeModelModal({
       setErrorMsg(null);
 
       // Check if current model exists in catalog
-      const existsInCatalog = providerEntry?.models.some((m) => m.id === current);
+      const existsInCatalog = combinedModels.some((m) => m.id === current);
       setIsCustom(!existsInCatalog && !!current);
     }
-  }, [credential, providerEntry]);
+  }, [credential, combinedModels]);
 
   if (!credential) return null;
 
@@ -137,7 +148,7 @@ export function ChangeModelModal({
           )}
 
           {/* Catalog Preset Models */}
-          {providerEntry && providerEntry.models.length > 0 && (
+          {combinedModels.length > 0 && (
             <div className="space-y-2">
               <label className="flex items-center justify-between text-xs font-bold tracking-wider text-slate-600 uppercase">
                 <span>Available Catalog Models</span>
@@ -145,7 +156,7 @@ export function ChangeModelModal({
               </label>
 
               <div className="grid max-h-48 grid-cols-1 gap-1.5 overflow-y-auto pr-1">
-                {providerEntry.models.map((m) => {
+                {combinedModels.map((m) => {
                   const isSelected = !isCustom && selectedModel === m.id;
                   const isCurrent = credential.model === m.id;
 

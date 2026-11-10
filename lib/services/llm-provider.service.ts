@@ -7,6 +7,7 @@ import type { LLMProvider } from "../llm/types";
 import { OpenAICompatibleProvider } from "../llm/providers/openai-compatible";
 import { GroqProvider } from "../llm/providers/groq.provider";
 import { GeminiProvider } from "../llm/providers/gemini.provider";
+import { CloudflareProvider } from "../llm/providers/cloudflare.provider";
 
 export class LLMProviderService {
   constructor(
@@ -87,13 +88,10 @@ export class LLMProviderService {
     });
 
     // 8. Cloudflare Workers AI
-    const cfBaseUrl = env.CF_ACCOUNT_ID
-      ? p.cloudflare.baseUrlPattern.replace("{ACCOUNT_ID}", env.CF_ACCOUNT_ID)
-      : "";
-    providerMap.cloudflare = new OpenAICompatibleProvider({
+    providerMap.cloudflare = new CloudflareProvider({
       id: p.cloudflare.id,
       name: p.cloudflare.name,
-      baseUrl: cfBaseUrl,
+      accountId: env.CF_ACCOUNT_ID || "",
       apiKey: env.CF_API_TOKEN || "",
       model: p.cloudflare.model,
     });
