@@ -8,8 +8,8 @@ import type { Env } from "@/lib/env";
 import { open, DecryptionError } from "@/lib/crypto/vault";
 import {
   AiCredentialStatus,
+  AiProviderId,
   type AiProvider,
-  type AiProviderId,
 } from "@/lib/constants/enums/ai.enum";
 import { QuotaError } from "@/lib/llm/types";
 import { logger } from "@/lib/logger";
@@ -86,6 +86,18 @@ export class KeyBrokerService {
     }
 
     // Hybrid Fallback: Load static key from environment variables
+    if (providerId === "cloudflare" || providerId === AiProviderId.CLOUDFLARE) {
+      const cfAcc = (this.env as Record<string, any>).CF_ACCOUNT_ID;
+      const cfTok = (this.env as Record<string, any>).CF_API_TOKEN;
+      if (typeof cfAcc === "string" && cfAcc.trim() && typeof cfTok === "string" && cfTok.trim()) {
+        return {
+          key: `${cfAcc.trim()}:${cfTok.trim()}`,
+          isFallbackEnv: true,
+          label: "Environment Static Key (Cloudflare)",
+        };
+      }
+    }
+
     const providerConfig = (this.config.providers as Record<string, any>)[providerId];
     if (providerConfig?.apiKeyEnv) {
       const envKey = (this.env as Record<string, any>)[providerConfig.apiKeyEnv];

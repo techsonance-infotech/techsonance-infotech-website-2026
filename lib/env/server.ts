@@ -24,6 +24,7 @@ export const serverEnvSchema = z.object({
   CF_ACCOUNT_ID: z.string().optional(),
   CF_API_TOKEN: z.string().optional(),
   GITHUB_MODELS_TOKEN: z.string().optional(),
+  OPENAI_API_KEY: z.string().optional(),
 
   LLM_PRIORITY: z.string().default("groq,gemini,cerebras,openrouter,mistral,cloudflare,github"),
   EXHAUSTED_RETRY_HOURS: z.coerce.number().default(6),

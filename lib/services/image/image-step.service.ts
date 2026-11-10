@@ -3,7 +3,10 @@ import { inject } from "@needle-di/core";
 import { MediaService } from "../media.service";
 import { AIWriterService } from "../ai-writer.service";
 import { CloudflareImageAdapter } from "./cloudflare-image.adapter";
+import { OpenAIImageAdapter } from "./openai-image.adapter";
+import { GeminiImageAdapter } from "./gemini-image.adapter";
 import { PollinationsImageAdapter } from "./pollinations.adapter";
+import { KeyBrokerService } from "../ai/key-broker.service";
 import { logger } from "@/lib/logger";
 
 export interface ThumbnailGenerationResult {
@@ -26,12 +29,15 @@ export interface HeroImagePipelineContext {
 }
 
 export class ImageStepService {
-  private cfAdapter = new CloudflareImageAdapter();
-  private pollinationsAdapter = new PollinationsImageAdapter();
+  private cfAdapter: CloudflareImageAdapter;
+  private openAiAdapter: OpenAIImageAdapter;
+  private geminiAdapter: GeminiImageAdapter;
+  private pollinationsAdapter: PollinationsImageAdapter;
 
   constructor(
     private mediaService: MediaService = inject(MediaService),
     private aiWriter?: AIWriterService,
+    private keyBroker?: KeyBrokerService,
   ) {
     if (!this.aiWriter) {
       try {
@@ -40,6 +46,18 @@ export class ImageStepService {
         // Safe when constructed directly in unit tests without DI container
       }
     }
+    if (!this.keyBroker) {
+      try {
+        this.keyBroker = inject(KeyBrokerService);
+      } catch {
+        // Safe when constructed directly in unit tests without DI container
+      }
+    }
+
+    this.cfAdapter = new CloudflareImageAdapter(this.keyBroker);
+    this.openAiAdapter = new OpenAIImageAdapter(this.keyBroker);
+    this.geminiAdapter = new GeminiImageAdapter(this.keyBroker);
+    this.pollinationsAdapter = new PollinationsImageAdapter();
   }
 
   /**
@@ -144,27 +162,50 @@ export class ImageStepService {
       let buffer: Buffer | null = null;
       let providerName = "cloudflare";
 
-      // Provider fallback chain (1280x720, 16:9)
+      // Multi-tier provider fallback chain (1280x720, 16:9)
+      // Tier 1: Cloudflare Workers AI (FLUX.1-schnell via DB rotation)
       try {
         buffer = await this.cfAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
+        providerName = "cloudflare";
       } catch (cfError) {
-        logger.warn(
-          `Attempt ${attempt}: Cloudflare generation failed, falling back to Pollinations.ai`,
-          {
-            error: String(cfError),
-          },
-        );
+        logger.warn(`Attempt ${attempt}: Cloudflare generation bypassed/failed`, {
+          error: String(cfError),
+        });
 
+        // Tier 2: Google Gemini / Imagen (via DB key broker or env)
         try {
-          providerName = "pollinations";
-          buffer = await this.pollinationsAdapter.generateImage(currentPrompt, {
-            width: 1280,
-            height: 720,
+          buffer = await this.geminiAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
+          providerName = "gemini";
+        } catch (geminiError) {
+          logger.warn(`Attempt ${attempt}: Gemini image generation bypassed/failed`, {
+            error: String(geminiError),
           });
-        } catch (pollinationsError) {
-          logger.error(`Attempt ${attempt}: Pollinations.ai generation also failed`, {
-            error: String(pollinationsError),
-          });
+
+          // Tier 3: OpenAI DALL-E 3 (via DB key broker or env)
+          try {
+            buffer = await this.openAiAdapter.generateImage(currentPrompt, { width: 1280, height: 720 });
+            providerName = "openai";
+          } catch (openAiError) {
+            logger.warn(
+              `Attempt ${attempt}: OpenAI DALL-E bypassed/failed, falling back to Pollinations`,
+              {
+                error: String(openAiError),
+              },
+            );
+
+            // Tier 4: Pollinations.ai (Free open fallback with automatic watermark crop)
+            try {
+              providerName = "pollinations";
+              buffer = await this.pollinationsAdapter.generateImage(currentPrompt, {
+                width: 1280,
+                height: 720,
+              });
+            } catch (pollinationsError) {
+              logger.error(`Attempt ${attempt}: Pollinations.ai generation also failed`, {
+                error: String(pollinationsError),
+              });
+            }
+          }
         }
       }
 

@@ -169,6 +169,27 @@ export const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
     ],
   },
   {
+    id: "gemini",
+    name: "Google Gemini & Imagen (Image Generation)",
+    category: "image",
+    defaultModel: "models/imagen-3.0-generate-002",
+    models: [
+      { id: "models/imagen-3.0-generate-002", label: "Google Imagen 3 (High-Detail 16:9)" },
+      { id: "models/gemini-2.5-flash-image", label: "Gemini 2.5 Flash Image" },
+      { id: "models/gemini-3.1-flash-image", label: "Gemini 3.1 Flash Image" },
+    ],
+  },
+  {
+    id: "openai",
+    name: "OpenAI (DALL-E 3 & ChatGPT)",
+    category: "image",
+    defaultModel: "dall-e-3",
+    models: [
+      { id: "dall-e-3", label: "DALL-E 3 (High-Fidelity 1792x1024 16:9)" },
+      { id: "dall-e-2", label: "DALL-E 2 (Fast 1024x1024)" },
+    ],
+  },
+  {
     id: "pollinations",
     name: "Pollinations.ai (FLUX / Turbo)",
     category: "image",
@@ -221,6 +242,8 @@ export function AddCredentialModal({
   const [customModelText, setCustomModelText] = useState("");
   const [label, setLabel] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [cfAccountId, setCfAccountId] = useState("");
+  const [cfApiToken, setCfApiToken] = useState("");
   const [dailyBudgetUsd, setDailyBudgetUsd] = useState("10.00");
   const [priority, setPriority] = useState("10");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -236,6 +259,8 @@ export function AddCredentialModal({
       setCustomModelText(defaultP.defaultModel);
       setLabel("");
       setApiKey("");
+      setCfAccountId("");
+      setCfApiToken("");
       setErrorMsg(null);
     }
   }, [open, initialCategory]);
@@ -275,9 +300,27 @@ export function AddCredentialModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!label.trim() || !apiKey.trim()) {
-      setErrorMsg("Please provide both a label and a valid API key.");
+
+    const isCloudflare = provider === "cloudflare";
+    const effectiveApiKey = isCloudflare
+      ? `${cfAccountId.trim()}:${cfApiToken.trim()}`
+      : apiKey.trim();
+
+    if (!label.trim()) {
+      setErrorMsg("Please provide a descriptive credential label.");
       return;
+    }
+
+    if (isCloudflare) {
+      if (!cfAccountId.trim() || !cfApiToken.trim()) {
+        setErrorMsg("Please provide both Cloudflare Account ID and API Token.");
+        return;
+      }
+    } else {
+      if (!apiKey.trim()) {
+        setErrorMsg("Please provide a valid API key / auth token.");
+        return;
+      }
     }
 
     if (isCustomModelActive && !customModelText.trim()) {
@@ -293,7 +336,7 @@ export function AddCredentialModal({
         provider,
         model: resolvedModel || undefined,
         label: label.trim(),
-        apiKey: apiKey.trim(),
+        apiKey: effectiveApiKey,
         dailyBudgetUsd: parseFloat(dailyBudgetUsd) || 0,
         priority: parseInt(priority, 10) || 100,
       });
@@ -460,23 +503,59 @@ export function AddCredentialModal({
             />
           </div>
 
-          {/* API Key */}
-          <div>
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-700">
-                API Key / Auth Token (Write-Only)
-              </label>
-              <span className="text-[10px] font-semibold text-blue-600">AES-256-GCM Sealed</span>
+          {/* API Key / Cloudflare Dual Inputs */}
+          {provider === "cloudflare" ? (
+            <div className="space-y-3 rounded-2xl border border-blue-200/60 bg-blue-50/50 p-3.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-blue-900">Cloudflare Workers AI Credentials</span>
+                <span className="text-[10px] font-semibold text-blue-600">AES-256-GCM Vault</span>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700">
+                  Cloudflare Account ID (32-character Hex)
+                </label>
+                <Input
+                  value={cfAccountId}
+                  onChange={(e) => setCfAccountId(e.target.value)}
+                  placeholder="e.g. 3a4f89b21c4e70d1891a238f4560b21a"
+                  className="mt-1 rounded-xl bg-white font-mono text-xs"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700">
+                  Cloudflare API Token (Workers AI Read Permission)
+                </label>
+                <Input
+                  type="password"
+                  value={cfApiToken}
+                  onChange={(e) => setCfApiToken(e.target.value)}
+                  placeholder="Bearer token with Workers AI Read access"
+                  className="mt-1 rounded-xl bg-white font-mono text-xs"
+                  required
+                />
+              </div>
             </div>
-            <Input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Paste raw key/token here (sk-... / gsk_... / Bearer...)"
-              className="mt-1 rounded-xl font-mono text-xs"
-              required
-            />
-          </div>
+          ) : (
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-slate-700">
+                  API Key / Auth Token (Write-Only)
+                </label>
+                <span className="text-[10px] font-semibold text-blue-600">AES-256-GCM Sealed</span>
+              </div>
+              <Input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="Paste raw key/token here (sk-... / gsk_... / Bearer...)"
+                className="mt-1 rounded-xl font-mono text-xs"
+                required
+              />
+            </div>
+          )}
 
           {/* Budget & Priority */}
           <div className="grid grid-cols-2 gap-3">
