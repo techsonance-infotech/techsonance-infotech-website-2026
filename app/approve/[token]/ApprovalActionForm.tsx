@@ -27,6 +27,24 @@ interface ApprovalActionFormProps {
   postId: string;
   slug?: string | null;
   initialDecision: UiApprovalDecision;
+  autoExecute?: boolean;
+}
+
+function decisionLabel(d: UiApprovalDecision): string {
+  switch (d) {
+    case "approve":
+      return "Approve & Publish Live";
+    case "approve_content_retry_image":
+      return "Keep Content, Regenerate Hero Graphic";
+    case "approve_image_revise_content":
+      return "Keep Image, Revise Article Text";
+    case "reject":
+      return "Reject & Archive Draft";
+    case "improve":
+      return "Request Revisions";
+    default:
+      return "Confirm Action";
+  }
 }
 
 export function ApprovalActionForm({
@@ -34,27 +52,30 @@ export function ApprovalActionForm({
   postId,
   slug,
   initialDecision,
+  autoExecute = false,
 }: ApprovalActionFormProps) {
   const [decision, setDecision] = useState<UiApprovalDecision>(initialDecision);
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [autoCountdown, setAutoCountdown] = useState<number | null>(autoExecute ? 3 : null);
+  const [autoCancelled, setAutoCancelled] = useState(false);
   const [completed, setCompleted] = useState<{
     success: boolean;
     decision: string;
     slug?: string | null;
   } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeSubmit = async (selectedDecision: UiApprovalDecision, feedbackText: string) => {
     setError(null);
     setSubmitting(true);
+    setAutoCountdown(null);
 
     try {
       const res = await fetch(`/approve/${token}/confirm`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision, feedback }),
+        body: JSON.stringify({ decision: selectedDecision, feedback: feedbackText }),
       });
 
       const data = await res.json();
@@ -64,7 +85,7 @@ export function ApprovalActionForm({
 
       setCompleted({
         success: true,
-        decision,
+        decision: selectedDecision,
         slug: data?.result?.slug || slug,
       });
     } catch (err) {
@@ -72,6 +93,28 @@ export function ApprovalActionForm({
     } finally {
       setSubmitting(false);
     }
+  };
+
+  React.useEffect(() => {
+    if (!autoExecute || autoCancelled || autoCountdown === null || completed || submitting) {
+      return;
+    }
+
+    if (autoCountdown <= 0) {
+      void executeSubmit(decision, feedback);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setAutoCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [autoCountdown, autoCancelled, autoExecute, completed, submitting, decision, feedback]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await executeSubmit(decision, feedback);
   };
 
   if (completed) {
@@ -148,6 +191,45 @@ export function ApprovalActionForm({
 
   return (
     <div className="space-y-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+      {autoCountdown !== null && autoCountdown > 0 && !autoCancelled && (
+        <div className="rounded-2xl border border-blue-200 bg-blue-50/90 p-4 shadow-sm animate-in fade-in duration-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-black text-white animate-pulse">
+                {autoCountdown}
+              </span>
+              <div>
+                <p className="text-xs font-bold text-slate-900">
+                  Auto-confirming &quot;{decisionLabel(decision)}&quot; in {autoCountdown}s...
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Action will execute automatically. Click cancel to review or change decision.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setAutoCancelled(true)}
+                className="h-8 rounded-lg border-slate-300 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50"
+              >
+                Cancel Auto-Run
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => void executeSubmit(decision, feedback)}
+                className="h-8 rounded-lg bg-blue-600 text-xs font-bold text-white hover:bg-blue-700"
+              >
+                Confirm Now
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-sora text-base font-bold text-slate-900">

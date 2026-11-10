@@ -106,11 +106,11 @@ export class ApprovalService {
     const toRecipients = recipients.length === 1 ? recipients[0] : recipients;
     const fromEmail = env.FROM_EMAIL || `"TechSonance Studio" <connect.techsonance@gmail.com>`;
 
-    const approveBothUrl = `${siteUrl}/approve/${token}?action=approve`;
-    const approveContentRetryImageUrl = `${siteUrl}/approve/${token}?action=approve_content_retry_image`;
-    const approveImageReviseContentUrl = `${siteUrl}/approve/${token}?action=approve_image_revise_content`;
-    const rejectUrl = `${siteUrl}/approve/${token}?action=reject`;
-    const improveUrl = `${siteUrl}/approve/${token}?action=improve`;
+    const approveBothUrl = `${siteUrl}/approve/${token}?action=approve&auto=true`;
+    const approveContentRetryImageUrl = `${siteUrl}/approve/${token}?action=approve_content_retry_image&auto=true`;
+    const approveImageReviseContentUrl = `${siteUrl}/approve/${token}?action=approve_image_revise_content&auto=true`;
+    const rejectUrl = `${siteUrl}/approve/${token}?action=reject&auto=true`;
+    const improveUrl = `${siteUrl}/approve/${token}?action=improve&auto=true`;
     const adminPreviewUrl = `${siteUrl}/admin/blog/${post.id}`;
 
     const sourceTopic = topicText || post.title;

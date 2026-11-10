@@ -34,10 +34,10 @@ export default async function ApprovePage({
   searchParams,
 }: {
   params: Promise<{ token: string }>;
-  searchParams: Promise<{ action?: string }>;
+  searchParams: Promise<{ action?: string; auto?: string }>;
 }) {
   const { token } = await params;
-  const { action = "approve" } = await searchParams;
+  const { action = "approve", auto } = await searchParams;
 
   const container = getContainer();
   const approvalService = container.get(ApprovalService);
@@ -260,6 +260,7 @@ export default async function ApprovePage({
           postId={post.id}
           slug={post.slug}
           initialDecision={initialDecision}
+          autoExecute={auto === "true" || auto === "1"}
         />
       </main>
 
