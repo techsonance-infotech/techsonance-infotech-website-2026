@@ -5,6 +5,7 @@ import { blogPosts } from "@/data/blog";
 import { landingPages } from "@/data/landing-pages";
 import { BASE_URL } from "@/lib/seo-aeo-geo-config";
 import { getJobSource } from "@/lib/content/jobs";
+import { getPostSource } from "@/lib/content/posts";
 
 const STATIC_LAST_MOD = new Date("2026-10-14T00:00:00.000Z");
 
@@ -53,11 +54,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Map blog post routes with real post dates
-  const blogUrls = blogPosts.map((post) => {
+  // Map blog post routes dynamically from CMS (with fallback to curated articles)
+  let publishedPosts: Array<{ slug: string; date?: string; publishedAt?: string; updatedAt?: string }> = [];
+  try {
+    publishedPosts = await getPostSource().list({ status: "PUBLISHED" });
+  } catch {
+    publishedPosts = [];
+  }
+
+  // Fallback to static blog list if database is offline or unseeded
+  if (!publishedPosts || publishedPosts.length === 0) {
+    publishedPosts = blogPosts;
+  }
+
+  const blogUrls = publishedPosts.map((post) => {
     let postDate: Date;
     try {
-      postDate = new Date(post.date);
+      const dateStr = post.date || post.publishedAt || post.updatedAt;
+      postDate = dateStr ? new Date(dateStr) : STATIC_LAST_MOD;
       if (isNaN(postDate.getTime())) {
         postDate = STATIC_LAST_MOD;
       }

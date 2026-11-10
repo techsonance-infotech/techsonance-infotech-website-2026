@@ -97,7 +97,7 @@ export const serverEnvSchema = z.object({
   ALLOW_PLACEHOLDERS: z
     .string()
     .optional()
-    .default("true")
+    .default(process.env.NODE_ENV === "production" ? "false" : "true")
     .transform((val) => val === "true" || val === "1"),
 }).superRefine((data, ctx) => {
   if (process.env.NODE_ENV === "production") {

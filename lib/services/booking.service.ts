@@ -1,4 +1,5 @@
 import "server-only";
+import crypto from "node:crypto";
 import { inject } from "@needle-di/core";
 import { EmailService, type BookingPayload } from "./email.service";
 import { BookingRepository } from "../repositories/booking.repository";
@@ -35,7 +36,7 @@ export class BookingService {
   }
 
   generateBookingRef(): string {
-    const randomHex = Math.random().toString(36).substring(2, 10).toUpperCase();
+    const randomHex = crypto.randomBytes(4).toString("hex").toUpperCase();
     return `TS-${randomHex}`;
   }
 

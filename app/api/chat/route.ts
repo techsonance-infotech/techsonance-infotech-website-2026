@@ -142,9 +142,32 @@ export async function POST(req: Request) {
 
       let rawOutput = "";
       try {
+        let streamBuffer = "";
         for await (const chunk of routerService.routeChat({ messages: llmMessages })) {
           rawOutput += chunk;
-          await sendSSE("token", chunk);
+          streamBuffer += chunk;
+
+          // Suppress [[BOOKING]] token fragment while streaming
+          if (streamBuffer.includes("[[") && !streamBuffer.includes("]]")) {
+            continue; // Wait for complete tag before flushing
+          }
+
+          if (streamBuffer.includes("[[BOOKING]]")) {
+            streamBuffer = streamBuffer.replace(/\[\[BOOKING\]\]/g, "");
+          }
+
+          if (streamBuffer.length > 0) {
+            await sendSSE("token", streamBuffer);
+            streamBuffer = "";
+          }
+        }
+
+        // Flush any remaining buffered characters
+        if (streamBuffer.length > 0) {
+          const cleanTail = streamBuffer.replace(/\[\[BOOKING\]\]/g, "");
+          if (cleanTail.length > 0) {
+            await sendSSE("token", cleanTail);
+          }
         }
 
         const filtered = filterOutput(rawOutput);

@@ -66,8 +66,8 @@ export class AdminAuthService {
       };
     }
 
-    // 2. Dev mode fallback when ALLOW_PLACEHOLDERS is true
-    if (env.ALLOW_PLACEHOLDERS) {
+    // 2. Dev mode fallback when ALLOW_PLACEHOLDERS is true (Strictly disabled in production)
+    if (env.ALLOW_PLACEHOLDERS && process.env.NODE_ENV !== "production") {
       return {
         id: "00000000-0000-0000-0000-000000000000",
         email: normalizedEmail,
