@@ -49,12 +49,18 @@ const STEPS = [
 ];
 
 const PRESET_MODELS = [
-  { id: "gemini-3.0-flash", label: "Gemini 3.0 Flash (Recommended - Fast & Multimodal)" },
+  { id: "gemini-3.5-flash-lite", label: "Gemini 3.5 Flash Lite (Sub-second & Efficient)" },
+  { id: "gemini-3.0-flash", label: "Gemini 3.0 Flash (Fast & Multimodal)" },
   { id: "gemini-3.0-pro", label: "Gemini 3.0 Pro (Advanced Reasoning & Deep Code)" },
-  { id: "gemini-3.0-flash-lite", label: "Gemini 3.0 Flash Lite (Cost-Efficient)" },
-  { id: "gemini-3.0-ultra", label: "Gemini 3.0 Ultra (Deep Enterprise)" },
-  { id: "flux-schnell", label: "Cloudflare FLUX.1-schnell (Image Generation)" },
-  { id: "groq-llama3", label: "Groq Llama 3 70B (Ultra Low Latency)" },
+  { id: "gpt-4o", label: "OpenAI GPT-4o (Omni Flagship)" },
+  { id: "gpt-4o-mini", label: "OpenAI GPT-4o Mini (Ultra Fast)" },
+  { id: "o3-mini", label: "OpenAI o3-mini (High-Speed Reasoning)" },
+  { id: "claude-3-7-sonnet-20250219", label: "Claude 3.7 Sonnet (Hybrid Reasoning)" },
+  { id: "deepseek-chat", label: "DeepSeek V3 (Cost-Effective)" },
+  { id: "llama-3.3-70b-versatile", label: "Groq Llama 3.3 70B (High Throughput)" },
+  { id: "flux-schnell", label: "Cloudflare FLUX.1-schnell (16:9 Image Generation)" },
+  { id: "dall-e-3", label: "OpenAI DALL-E 3 (High-Fidelity 1792x1024)" },
+  { id: "models/imagen-3.0-generate-002", label: "Google Imagen 3 (Photorealistic 16:9)" },
 ];
 
 const QUICK_INSERT_SYSTEM_BLOCKS = [

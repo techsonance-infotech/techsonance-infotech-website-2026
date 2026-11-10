@@ -116,6 +116,22 @@ export const BOT_CONFIG = {
       fallbackModel: "open-mistral-7b",
       apiKeyEnv: "MISTRAL_API_KEY",
     },
+    openai: {
+      id: "openai",
+      name: "OpenAI",
+      baseUrl: "https://api.openai.com/v1",
+      model: "gpt-4o",
+      fallbackModel: "gpt-4o-mini",
+      apiKeyEnv: "OPENAI_API_KEY",
+    },
+    deepseek: {
+      id: "deepseek",
+      name: "DeepSeek",
+      baseUrl: "https://api.deepseek.com/v1",
+      model: "deepseek-chat",
+      fallbackModel: "deepseek-reasoner",
+      apiKeyEnv: "DEEPSEEK_API_KEY",
+    },
     cloudflare: {
       id: "cloudflare",
       name: "Cloudflare Workers AI",

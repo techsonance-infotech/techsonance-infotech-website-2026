@@ -68,7 +68,25 @@ export class LLMProviderService {
       model: p.mistral.model,
     });
 
-    // 6. Cloudflare Workers AI
+    // 6. OpenAI
+    providerMap.openai = new OpenAICompatibleProvider({
+      id: p.openai.id,
+      name: p.openai.name,
+      baseUrl: p.openai.baseUrl,
+      apiKey: env.OPENAI_API_KEY || "",
+      model: p.openai.model,
+    });
+
+    // 7. DeepSeek
+    providerMap.deepseek = new OpenAICompatibleProvider({
+      id: p.deepseek.id,
+      name: p.deepseek.name,
+      baseUrl: p.deepseek.baseUrl,
+      apiKey: (env as Record<string, any>).DEEPSEEK_API_KEY || "",
+      model: p.deepseek.model,
+    });
+
+    // 8. Cloudflare Workers AI
     const cfBaseUrl = env.CF_ACCOUNT_ID
       ? p.cloudflare.baseUrlPattern.replace("{ACCOUNT_ID}", env.CF_ACCOUNT_ID)
       : "";
@@ -80,7 +98,7 @@ export class LLMProviderService {
       model: p.cloudflare.model,
     });
 
-    // 7. GitHub Models
+    // 9. GitHub Models
     providerMap.github = new OpenAICompatibleProvider({
       id: p.github.id,
       name: p.github.name,
@@ -91,7 +109,7 @@ export class LLMProviderService {
 
     // Order according to LLM_PRIORITY
     const priorityList = (
-      env.LLM_PRIORITY || "groq,gemini,cerebras,openrouter,mistral,cloudflare,github"
+      env.LLM_PRIORITY || "groq,gemini,openai,cerebras,openrouter,mistral,deepseek,cloudflare,github"
     )
       .split(",")
       .map((s) => s.trim().toLowerCase())
