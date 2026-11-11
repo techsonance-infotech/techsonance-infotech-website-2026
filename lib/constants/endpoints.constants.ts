@@ -50,6 +50,7 @@ export const API_ENDPOINTS = {
       POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
       POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
       POST_THUMBNAIL_GENERATE: "/api/admin/blog/thumbnail/generate",
+      POST_AI_REVISE: (id: string) => `/api/admin/blog/posts/${id}/ai-revise` as const,
     },
 
     // Legacy Blog / CMS Posts aliases (for seamless backward compatibility)
@@ -58,6 +59,7 @@ export const API_ENDPOINTS = {
     POST_PUBLISH: (id: string) => `/api/admin/blog/posts/${id}/publish` as const,
     POST_SUBMIT: (id: string) => `/api/admin/blog/posts/${id}/submit` as const,
     POST_THUMBNAIL_GENERATE: "/api/admin/blog/thumbnail/generate",
+    POST_AI_REVISE: (id: string) => `/api/admin/blog/posts/${id}/ai-revise` as const,
 
     // Media Upload
     MEDIA_UPLOAD: "/api/admin/media/upload",

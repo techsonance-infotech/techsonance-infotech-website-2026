@@ -5,6 +5,7 @@ import { AdminPromptsService } from "./admin-prompts.service";
 import type { LLMChatRequest } from "../llm/types";
 import { logger } from "../logger";
 import { getEnv } from "../env";
+import { AppError, ErrorCode } from "../errors";
 
 export interface OutlineResult {
   headings: string[];
@@ -44,6 +45,124 @@ export interface CriticVerificationResult {
   seen: string;
   issues: string[];
   fix_instructions: string;
+}
+
+export interface ReviseContentInput {
+  currentContent: string;
+  articleTitle: string;
+  topic?: string;
+  instruction: string;
+  targetSectionHeading?: string;
+}
+
+export interface ReviseContentResult {
+  revisedContent: string;
+  summaryOfChanges: string;
+  validation: ValidationResult;
+}
+
+export interface SectionSlice {
+  found: boolean;
+  headingLine?: string;
+  startIndex: number;
+  endIndex: number;
+  sectionContent: string;
+}
+
+export function unwrapOuterMarkdownFence(text: string): string {
+  let cleaned = text.trim();
+  if (cleaned.startsWith("```markdown") && cleaned.endsWith("```")) {
+    cleaned = cleaned.slice(11, -3).trim();
+  } else if (cleaned.startsWith("```md") && cleaned.endsWith("```")) {
+    cleaned = cleaned.slice(5, -3).trim();
+  } else if (cleaned.startsWith("```") && cleaned.endsWith("```")) {
+    const firstLineEnd = cleaned.indexOf("\n");
+    if (firstLineEnd !== -1) {
+      const firstLine = cleaned.slice(3, firstLineEnd).trim();
+      if (firstLine === "markdown" || firstLine === "md" || firstLine === "") {
+        cleaned = cleaned.slice(firstLineEnd + 1, -3).trim();
+      }
+    }
+  }
+  return cleaned;
+}
+
+export function findMarkdownSection(markdown: string, targetHeading: string): SectionSlice {
+  const normalize = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\-]/g, "-")
+      .replace(/[^a-z0-9\- ]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const normalizedTarget = normalize(targetHeading);
+  if (!normalizedTarget) {
+    return { found: false, startIndex: -1, endIndex: -1, sectionContent: "" };
+  }
+
+  // Match all markdown headings: e.g. "### 4. Full request-response flow diagram"
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+  const headings: { level: number; heading: string; fullMatch: string; index: number }[] = [];
+
+  let match: RegExpExecArray | null;
+  while ((match = headingRegex.exec(markdown)) !== null) {
+    headings.push({
+      level: match[1].length,
+      heading: match[2].trim(),
+      fullMatch: match[0],
+      index: match.index,
+    });
+  }
+
+  // 1. Exact or substring match on headings
+  let targetIndex = -1;
+  for (let i = 0; i < headings.length; i++) {
+    const h = headings[i];
+    const normH = normalize(h.heading);
+    if (normH.includes(normalizedTarget) || normalizedTarget.includes(normH)) {
+      targetIndex = i;
+      break;
+    }
+  }
+
+  // 2. Keyword fallback (e.g. if target was "section 4" or "flow diagram")
+  if (targetIndex === -1) {
+    const targetWords = normalizedTarget.split(" ").filter((w) => w.length > 2);
+    let bestScore = 0;
+    for (let i = 0; i < headings.length; i++) {
+      const normH = normalize(headings[i].heading);
+      const score = targetWords.filter((w) => normH.includes(w)).length;
+      if (score > bestScore && score >= Math.min(2, targetWords.length)) {
+        bestScore = score;
+        targetIndex = i;
+      }
+    }
+  }
+
+  if (targetIndex === -1) {
+    return { found: false, startIndex: -1, endIndex: -1, sectionContent: "" };
+  }
+
+  const target = headings[targetIndex];
+  const startIndex = target.index;
+
+  // End index is the start of the next heading of same or higher level (level <= target.level)
+  let endIndex = markdown.length;
+  for (let i = targetIndex + 1; i < headings.length; i++) {
+    if (headings[i].level <= target.level) {
+      endIndex = headings[i].index;
+      break;
+    }
+  }
+
+  return {
+    found: true,
+    headingLine: target.fullMatch,
+    startIndex,
+    endIndex,
+    sectionContent: markdown.slice(startIndex, endIndex).trim(),
+  };
 }
 
 function cleanIncompleteTrailingMarkdown(text: string): string {
@@ -289,6 +408,134 @@ Generate the publication metadata JSON.`;
       valid: errors.length === 0,
       wordCount,
       errors,
+    };
+  }
+
+  /**
+   * Surgical Content Revision: Applies targeted editorial fixes and rewrites flawed sections
+   * without destroying or regenerating the rest of the post.
+   */
+  async reviseContent(input: ReviseContentInput): Promise<ReviseContentResult> {
+    // 1. Identify if a target section was passed or can be detected from instructions
+    let targetHeading = input.targetSectionHeading?.trim();
+    if (!targetHeading) {
+      const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+      let m: RegExpExecArray | null;
+      const headings: string[] = [];
+      while ((m = headingRegex.exec(input.currentContent)) !== null) {
+        headings.push(m[2].trim());
+      }
+      for (const h of headings) {
+        const cleanH = h
+          .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\-]/g, "-")
+          .toLowerCase();
+        const cleanInst = input.instruction
+          .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\-]/g, "-")
+          .toLowerCase();
+        if (cleanInst.includes(cleanH)) {
+          targetHeading = h;
+          break;
+        }
+      }
+    }
+
+    const sectionSlice = targetHeading
+      ? findMarkdownSection(input.currentContent, targetHeading)
+      : { found: false, startIndex: -1, endIndex: -1, sectionContent: "" };
+
+    let revisedContent = "";
+    let summaryOfChanges = "";
+
+    if (sectionSlice.found && sectionSlice.sectionContent) {
+      // SURGICAL SECTION REVISION: Send ONLY the target section to LLM
+      const systemPrompt = `You are an elite Staff Software Engineer and Technical Editor at TechSonance Infotech.
+Your task is to surgically revise and improve ONLY ONE SPECIFIC SECTION of an engineering blog post according to editorial instructions.
+
+STRICT EDITORIAL DIRECTIVES:
+1. SURGICAL REVISION: Rewrite ONLY this specific section. Keep its heading and improve technical depth, code, and diagrams.
+2. PRESERVE SCOPE: Do NOT output any other sections of the article. Do NOT include greetings, preamble, or commentary.
+3. ARCHITECTURE DIAGRAMS (CRITICAL):
+   - All Mermaid diagrams MUST have 100% valid syntax.
+   - For request-response flows, distributed RPC calls, or multi-step agent interactions, ALWAYS use a Mermaid sequenceDiagram (\`sequenceDiagram\`, \`autonumber\`, \`actor\`, \`participant\`, \`->>\`, \`-->>\`) or clean hierarchical \`flowchart TD\` with subgraphs so labels NEVER collide, overlap, or cross back-and-forth.
+   - Always quote flowchart node labels e.g. id["Clear Label"].
+   - NEVER place unescaped arrows (\`-->\` or \`→\`) inside pipe labels (\`|...|\`).
+4. OUTPUT: Return ONLY the revised markdown for this section (starting with the section heading). Do NOT wrap the entire response in outer \`\`\`markdown fences.`;
+
+      const userPrompt = `ARTICLE TITLE: "${input.articleTitle}"
+${input.topic ? `SOURCE TOPIC: "${input.topic}"` : ""}
+
+SECTION TO REVISE:
+${sectionSlice.sectionContent}
+
+EDITORIAL INSTRUCTIONS:
+${input.instruction}
+
+Provide the surgically revised section markdown now:`;
+
+      const raw = await this.completePrompt(systemPrompt, userPrompt);
+      const unwrapped = unwrapOuterMarkdownFence(raw);
+      const cleanedSection = cleanIncompleteTrailingMarkdown(unwrapped);
+
+      // Splice the revised section directly back into the original document
+      const before = input.currentContent.slice(0, sectionSlice.startIndex);
+      const after = input.currentContent.slice(sectionSlice.endIndex);
+      revisedContent = `${before}${cleanedSection}\n\n${after}`.trim();
+      summaryOfChanges = `Surgically revised section "${sectionSlice.headingLine || targetHeading}": ${input.instruction.slice(0, 100)}`;
+    } else {
+      // FULL ARTICLE REVISION FALLBACK
+      const systemPrompt = `You are an elite Staff Software Engineer and Technical Editor at TechSonance Infotech.
+Your task is to surgically revise and fix specific parts of an existing engineering blog post according to editorial instructions.
+
+STRICT EDITORIAL DIRECTIVES:
+1. SURGICAL FOCUS: Fix ONLY the flawed, awful, or requested parts described in the instructions (e.g. broken diagrams, weak sections, inaccuracies, or formatting bugs).
+2. PRESERVE SURROUNDING CONTENT: Do NOT discard, summarize, or alter other well-written sections, headings, or code snippets. Keep the full article intact with your improvements integrated seamlessly.
+3. ARCHITECTURE DIAGRAMS (CRITICAL):
+   - All Mermaid diagrams MUST have 100% valid syntax.
+   - For bidirectional, request-response, or multi-step feedback loops (e.g. User -> Dispatcher -> Retriever -> Planner -> User), ALWAYS use a Mermaid sequenceDiagram (\`sequenceDiagram\`, \`autonumber\`, \`participant\`, \`->>\`, \`-->>\`) or a clean hierarchical \`flowchart TD\` with subgraphs so labels NEVER collide or overlap.
+   - Always quote flowchart node labels e.g. id["Clear Label"].
+   - NEVER place unescaped arrows (\`-->\` or \`→\`) inside pipe labels (\`|...|\`).
+4. QUALITY & TONE: Maintain deep technical authority, pragmatic explanation of trade-offs, and zero marketing fluff. Never invent fake APIs or bogus benchmarks.
+5. OUTPUT: Output the full revised article in clean GitHub Flavored Markdown.`;
+
+      const userPrompt = `ARTICLE TITLE: "${input.articleTitle}"
+${input.topic ? `SOURCE TOPIC: "${input.topic}"` : ""}
+
+EDITORIAL FIX INSTRUCTIONS:
+${input.instruction}
+
+CURRENT ARTICLE DRAFT:
+${input.currentContent}
+
+Now provide the full revised article markdown with the fixes applied.`;
+
+      const raw = await this.completePrompt(systemPrompt, userPrompt);
+      const unwrapped = unwrapOuterMarkdownFence(raw);
+      revisedContent = cleanIncompleteTrailingMarkdown(unwrapped);
+      summaryOfChanges = `Applied surgical revision based on instruction: "${input.instruction.slice(0, 100)}"`;
+    }
+
+    // Safety Assertions: Protect against accidental LLM whole-post truncation
+    const originalWordCount = input.currentContent.trim().split(/\s+/).length;
+    const revisedWordCount = revisedContent.trim().split(/\s+/).length;
+    const isExplicitCondense = /shorten|condense|summarize|trim|reduce length/i.test(input.instruction);
+
+    if (!isExplicitCondense && originalWordCount > 500 && revisedWordCount < originalWordCount * 0.7) {
+      throw new AppError(
+        ErrorCode.VALIDATION,
+        `Revision dropped content unexpectedly (${revisedWordCount} words vs original ${originalWordCount} words). Use targeted section revision to preserve the full post.`,
+      );
+    }
+
+    const validation = this.validateArticle({
+      title: input.articleTitle,
+      content: revisedContent,
+      slug: "revision-check",
+    });
+
+    return {
+      revisedContent,
+      summaryOfChanges,
+      validation,
     };
   }
 

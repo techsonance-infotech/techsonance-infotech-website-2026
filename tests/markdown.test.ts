@@ -3,6 +3,7 @@ import {
   renderMarkdownToHtml,
   extractTableOfContents,
   mermaidToNomnoml,
+  normalizeMermaidCode,
 } from "@/lib/utils/markdown";
 
 describe("renderMarkdownToHtml", () => {
@@ -203,5 +204,17 @@ B --> C[Done]
     expect(nomnoml).toContain("#direction: down");
     expect(nomnoml).toContain("[Start] -> [Processing]");
     expect(nomnoml).toContain("[Processing] -> [Done]");
+  });
+
+  it("normalizes unicode arrows outside labels while preserving arrows inside pipe labels", () => {
+    const raw = `
+flowchart TD
+    A[Browser] → B[Edge POP]
+    B -->|Fetch prompt → LLM API| C[LLM Provider]
+    `;
+    const normalized = normalizeMermaidCode(raw);
+    expect(normalized).toContain("A[Browser] --> B[Edge POP]");
+    expect(normalized).toContain("|Fetch prompt -> LLM API|");
+    expect(normalized).not.toContain("|Fetch prompt --> LLM API|");
   });
 });

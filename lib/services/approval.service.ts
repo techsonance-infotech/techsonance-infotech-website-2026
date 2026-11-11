@@ -459,6 +459,38 @@ export class ApprovalService {
   }
 
   /**
+   * Asynchronously triggers the AI Content Revision pipeline when an editor requests text improvements.
+   */
+  private async triggerContentRevision(
+    postId: string,
+    feedback: string,
+  ): Promise<void> {
+    try {
+      const { getContainer } = await import("@/lib/di/container");
+      const { JobOrchestratorService } = await import("./job-orchestrator.service");
+
+      const container = getContainer();
+      const orchestrator = container.get(JobOrchestratorService);
+
+      logger.info("Triggering autonomous content revision from editorial feedback", {
+        postId,
+        feedback,
+      });
+
+      await orchestrator.revisePostContent({
+        postId,
+        instruction: feedback,
+        autoPublish: false,
+      });
+    } catch (revErr) {
+      logger.error("Failed to execute autonomous content revision", {
+        postId,
+        error: String(revErr),
+      });
+    }
+  }
+
+  /**
    * Atomically verifies the token and applies the decision.
    */
   async decide(
@@ -596,6 +628,20 @@ export class ApprovalService {
           error: String(genErr),
         });
       });
+    }
+
+    if (decision === "approve_image_revise_content" || decision === "improve") {
+      if (feedback && feedback.trim()) {
+        this.triggerContentRevision(
+          post.id,
+          feedback,
+        ).catch((revErr) => {
+          logger.error("Async content revision error", {
+            postId: post.id,
+            error: String(revErr),
+          });
+        });
+      }
     }
 
     if (decision === "approve") {

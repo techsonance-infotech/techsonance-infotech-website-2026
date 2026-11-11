@@ -73,12 +73,22 @@ export function normalizeMermaidCode(raw: string): string {
   code = code.replace(/\["([^"]*)\r?\n([^"]*)"\]/g, '["$1 $2"]');
   code = code.replace(/(\[[^\]\r\n]*)\r?\n([^\]\r\n]*\])/g, "$1 $2");
 
-  // 2. Decode HTML entities
+  // 2. Decode HTML entities and normalize non-breaking hyphens (U+2011)
   code = code
     .replace(/&gt;/g, ">")
     .replace(/&lt;/g, "<")
     .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"');
+    .replace(/&quot;/g, '"')
+    .replace(/\u2011/g, "-");
+
+  // Protect edge labels inside pipes so internal text like `|Fetch prompt → LLM API|`
+  // does not have its arrows converted into structural `-->` syntax.
+  const pipeLabels: string[] = [];
+  code = code.replace(/\|([^|\r\n]+)\|/g, (_, labelContent: string) => {
+    const safeLabel = labelContent.replace(/[\u2192\u2794\u279c→]/g, "->");
+    pipeLabels.push(safeLabel);
+    return `__PIPE_LABEL_${pipeLabels.length - 1}__`;
+  });
 
   // 3. Normalize all unicode arrows & box drawing characters:
   // \u2500 is ─ (box drawing), \u2014 is —, \u2013 is –, \u2192 is →, \u2794 is ➔, \u279c is ➜
@@ -87,6 +97,12 @@ export function normalizeMermaidCode(raw: string): string {
   code = code.replace(/[\u2192\u2794\u279c→]/g, "-->");
   code = code.replace(/-\s*-->/g, "-->");
   code = code.replace(/-->\s*-->/g, "-->");
+
+  // Restore protected pipe labels
+  code = code.replace(/__PIPE_LABEL_(\d+)__/g, (_, idx: string) => {
+    const orig = pipeLabels[Number(idx)];
+    return orig !== undefined ? `|${orig}|` : "||";
+  });
 
   // 4. Clean trailing dashes on node names e.g. "APIGW -" -> "APIGW"
   code = code.replace(/\b([A-Za-z0-9_]+)\s+-\s*$/gm, "$1");
@@ -236,6 +252,25 @@ export function mermaidToNomnoml(mermaidCode: string): string {
     }
     if (lower.includes("flowchart lr") || lower.includes("graph lr")) {
       direction = "right";
+      continue;
+    }
+
+    // Match participant definitions in sequence diagrams e.g. participant E as Edge Function
+    const participantMatch = trimmed.match(/^participant\s+([A-Za-z0-9_]+)(?:\s+as\s+(.+))?$/i);
+    if (participantMatch) {
+      nodeMap.set(participantMatch[1], participantMatch[2]?.trim() || participantMatch[1]);
+      continue;
+    }
+
+    // Match sequence diagram message e.g. A->>B: message
+    const seqMatch = trimmed.match(/^([A-Za-z0-9_]+)\s*(?:->>|-->>)\s*([A-Za-z0-9_]+)\s*:\s*(.+)$/);
+    if (seqMatch) {
+      const fromLabel = nodeMap.get(seqMatch[1]) || seqMatch[1];
+      const toLabel = nodeMap.get(seqMatch[2]) || seqMatch[2];
+      const label = seqMatch[3].trim();
+      if (fromLabel && toLabel) {
+        edgeList.push({ from: fromLabel, to: toLabel, label });
+      }
       continue;
     }
 

@@ -15,6 +15,23 @@ import { ApprovalService } from "./approval.service";
 import { AppError, ErrorCode } from "../errors";
 import { logger } from "../logger";
 import { dispatchJobStep } from "./qstash.service";
+import { revalidateTag } from "next/cache";
+import type { Post } from "../database/schema/index.schema";
+
+export interface RevisePostOptions {
+  postId: string;
+  instruction: string;
+  targetSectionHeading?: string;
+  autoPublish?: boolean;
+}
+
+export interface RevisePostResult {
+  success: boolean;
+  postId: string;
+  status: string;
+  summary: string;
+  validationErrors?: string[];
+}
 
 export class JobOrchestratorService {
   constructor(
@@ -257,5 +274,103 @@ export class JobOrchestratorService {
   private async getCachedStepData<T = unknown>(idempotencyKey: string): Promise<T | null> {
     const step = await this.jobsRepo.findStepByIdempotencyKey(idempotencyKey);
     return step?.status === "DONE" ? (step.outputData as unknown as T) : null;
+  }
+
+  /**
+   * Assigns an existing post to the agentic pipeline for surgical content revision.
+   * Fixes flawed sections or diagrams, updates post in database, and either re-submits
+   * for approval or auto-publishes with cache revalidation.
+   */
+  async revisePostContent(options: RevisePostOptions): Promise<RevisePostResult> {
+    const post = await this.postsRepo.findPostById(options.postId);
+    if (!post) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Target post not found for revision");
+    }
+
+    logger.info("Executing autonomous content revision", {
+      postId: post.id,
+      instruction: options.instruction,
+      targetSection: options.targetSectionHeading,
+      autoPublish: options.autoPublish,
+    });
+
+    const revisionResult = await this.aiWriter.reviseContent({
+      currentContent: post.content,
+      articleTitle: post.title,
+      instruction: options.instruction,
+      targetSectionHeading: options.targetSectionHeading,
+    });
+
+    const newVersion = (post.versionId || 1) + 1;
+    const isAutoPublish = Boolean(options.autoPublish);
+    const newStatus = isAutoPublish ? "PUBLISHED" : "IN_REVIEW";
+
+    const updatePayload: Partial<Post> = {
+      content: revisionResult.revisedContent,
+      status: newStatus,
+      versionId: newVersion,
+    };
+
+    if (isAutoPublish) {
+      updatePayload.publishedAt = new Date();
+    }
+
+    const updatedPost = await this.postsRepo.updatePostWithAudit(
+      post.id,
+      updatePayload,
+      {
+        action: isAutoPublish ? "AI_CONTENT_REVISED_AND_PUBLISHED" : "AI_CONTENT_REVISED",
+        entityType: "post",
+        afterState: {
+          instruction: options.instruction,
+          summary: revisionResult.summaryOfChanges,
+        },
+      },
+    );
+
+    if (isAutoPublish) {
+      try {
+        revalidateTag("posts", "default");
+        if (post.slug) {
+          revalidateTag(`post:${post.slug}`, "default");
+        }
+      } catch (cacheErr) {
+        logger.warn("Non-blocking cache tag revalidation error during auto-publish", {
+          error: String(cacheErr),
+        });
+      }
+    } else {
+      // Dispatches fresh approval request for editorial sign-off
+      try {
+        const approval = await this.approvalService.createApprovalRequest(post.id, newVersion);
+        await this.approvalService.sendApprovalEmail(
+          approval.token,
+          {
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt,
+            content: revisionResult.revisedContent,
+            heroImage: post.heroImage,
+          },
+          `Revision: ${options.instruction.slice(0, 80)}`,
+        );
+      } catch (approvalErr) {
+        logger.warn("Non-blocking error dispatching revision approval email", {
+          error: String(approvalErr),
+        });
+      }
+    }
+
+    return {
+      success: true,
+      postId: post.id,
+      status: updatedPost?.status || newStatus,
+      summary: revisionResult.summaryOfChanges,
+      validationErrors:
+        revisionResult.validation.errors.length > 0
+          ? revisionResult.validation.errors
+          : undefined,
+    };
   }
 }

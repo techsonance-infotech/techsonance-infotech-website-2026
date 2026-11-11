@@ -191,6 +191,32 @@ export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: Bl
               // Parse node transitions into a sleek visual architecture flow
               const lines = code.split("\n");
               const steps: { from: string; to: string; label?: string }[] = [];
+              const nodeNames = new Map<string, string>();
+
+              // First pass: extract participant/node definitions e.g. participant D as Edge Dispatcher or E[Edge Function]
+              for (const line of lines) {
+                const trimmed = line.trim();
+                const nodeDefMatch = trimmed.match(/^([A-Za-z0-9_]+)\s*\["?(.*?)"?\]/);
+                if (nodeDefMatch) {
+                  nodeNames.set(nodeDefMatch[1], nodeDefMatch[2] || nodeDefMatch[1]);
+                }
+                const participantMatch = trimmed.match(/^participant\s+([A-Za-z0-9_]+)(?:\s+as\s+(.+))?$/i);
+                if (participantMatch) {
+                  nodeNames.set(participantMatch[1], participantMatch[2]?.trim() || participantMatch[1]);
+                }
+              }
+
+              const resolveNode = (raw: string): string => {
+                const match = raw.trim().match(/^([A-Za-z0-9_]+)\s*\["?(.*?)"?\]$/);
+                if (match) {
+                  const id = match[1];
+                  const label = match[2] || id;
+                  nodeNames.set(id, label);
+                  return label;
+                }
+                const clean = raw.replace(/[[\]"']/g, "").trim();
+                return nodeNames.get(clean) || clean;
+              };
 
               for (const line of lines) {
                 const trimmed = line.trim();
@@ -198,21 +224,32 @@ export default function BlogPostClient({ post, relatedPosts, tocItems = [] }: Bl
                   !trimmed ||
                   trimmed.startsWith("flowchart") ||
                   trimmed.startsWith("graph") ||
+                  trimmed.startsWith("sequenceDiagram") ||
+                  trimmed.startsWith("autonumber") ||
+                  trimmed.startsWith("participant") ||
+                  trimmed.startsWith("actor") ||
                   trimmed.startsWith("style ")
                 )
                   continue;
 
-                const match = trimmed.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
+                // Match flowchart edge: A -->|label| B or A --> B
+                const match = trimmed.match(/^(.+?)\s*(?:-->|->)\s*(?:\|([^|]+)\|\s*)?(.+)$/);
                 if (match) {
-                  const cleanNode = (n: string) =>
-                    n
-                      .replace(/^[A-Za-z0-9_]+\s*\["?(.*?)"?\]$/, "$1")
-                      .replace(/[[\]"']/g, "")
-                      .trim();
                   steps.push({
-                    from: cleanNode(match[1]),
-                    to: cleanNode(match[3]),
+                    from: resolveNode(match[1]),
+                    to: resolveNode(match[3]),
                     label: match[2]?.trim(),
+                  });
+                  continue;
+                }
+
+                // Match sequence edge: A->>B: message or A-->>B: message
+                const seqMatch = trimmed.match(/^([A-Za-z0-9_]+)\s*(?:->>|-->>|->|-->)\s*([A-Za-z0-9_]+)\s*:\s*(.+)$/);
+                if (seqMatch) {
+                  steps.push({
+                    from: resolveNode(seqMatch[1]),
+                    to: resolveNode(seqMatch[2]),
+                    label: seqMatch[3]?.trim(),
                   });
                 }
               }

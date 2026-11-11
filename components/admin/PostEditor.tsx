@@ -50,6 +50,7 @@ import {
   createPost,
   updatePost,
   generatePostThumbnail,
+  aiRevisePost,
 } from "@/lib/api/admin-posts.api";
 import { uploadMediaAsset } from "@/lib/api/media.api";
 import type { AdminPost } from "@/lib/types/admin.types";
@@ -85,6 +86,13 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // AI Revision states
+  const [showAiReviseDialog, setShowAiReviseDialog] = useState(false);
+  const [reviseInstruction, setReviseInstruction] = useState("");
+  const [reviseTargetSection, setReviseTargetSection] = useState("");
+  const [reviseAutoPublish, setReviseAutoPublish] = useState(false);
+  const [revising, setRevising] = useState(false);
 
   // Initialize React Hook Form for full state and validation management
   const {
@@ -408,6 +416,42 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
     }
   };
 
+  /**
+   * Endpoint Integration: POST /api/admin/blog/posts/[id]/ai-revise
+   * Assigns flawed/awful content or broken diagrams to the AI agent pipeline
+   * to surgically fix, re-validate, and either submit for review or republish.
+   */
+  const handleAiRevise = async () => {
+    if (!initialPost?.id || !reviseInstruction.trim()) return;
+    setRevising(true);
+    setError(null);
+    setSuccessMsg(null);
+    try {
+      const res = await aiRevisePost(initialPost.id, {
+        instruction: reviseInstruction.trim(),
+        targetSectionHeading: reviseTargetSection.trim() || undefined,
+        autoPublish: reviseAutoPublish,
+      });
+
+      if (res.ok) {
+        setSuccessMsg(
+          `AI Agent successfully revised content: ${res.data.summary}. ${
+            reviseAutoPublish ? "Changes are published live!" : "Submitted for editorial review."
+          }`,
+        );
+        setShowAiReviseDialog(false);
+        setReviseInstruction("");
+        router.refresh();
+      } else {
+        setError(res.message || "AI content revision failed");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to run AI content revision");
+    } finally {
+      setRevising(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-6xl space-y-6 pb-16">
       {/* Top action bar */}
@@ -458,6 +502,20 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5" />
               <span>{deleting ? "Deleting..." : "Delete"}</span>
+            </Button>
+          )}
+
+          {!isNew && initialPost?.id && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={saving || submitting || publishing || deleting || revising}
+              onClick={() => setShowAiReviseDialog(true)}
+              className="rounded-xl border-purple-200 bg-purple-50/50 text-xs font-bold text-purple-700 hover:bg-purple-100/70 shadow-2xs"
+            >
+              <Sparkles className="mr-1.5 h-3.5 w-3.5 text-purple-600" />
+              <span>AI Revise / Fix</span>
             </Button>
           )}
 
@@ -922,6 +980,100 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {/* AI Revise / Fix Dialog */}
+      <Dialog open={showAiReviseDialog} onOpenChange={setShowAiReviseDialog}>
+        <DialogContent className="sm:max-w-[540px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 font-sora text-base font-bold text-slate-900">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+              <span>Assign to Agentic Revision Pipeline</span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-xs text-slate-600">
+              Assign a flawed, broken, or awful section (such as overlapping Mermaid diagrams, technical inaccuracies, or outdated APIs) to the agentic pipeline. The AI will surgically fix and validate the content without altering the rest of the post.
+            </p>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="revise-instruction"
+                className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
+              >
+                Fix Instructions <span className="text-rose-500">*</span>
+              </label>
+              <Textarea
+                id="revise-instruction"
+                rows={4}
+                value={reviseInstruction}
+                onChange={(e) => setReviseInstruction(e.target.value)}
+                placeholder="e.g. Fix the Mermaid architecture diagrams in Section 4 and Section 5 so that labels never collide or overlap, and use clean sequenceDiagram syntax for the RPC steps."
+                className="text-xs"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="revise-target-section"
+                className="block text-xs font-bold tracking-wider text-slate-700 uppercase"
+              >
+                Target Section Heading (Optional)
+              </label>
+              <Input
+                id="revise-target-section"
+                value={reviseTargetSection}
+                onChange={(e) => setReviseTargetSection(e.target.value)}
+                placeholder="e.g. 4. Full request-response flow diagram"
+                className="h-9 text-xs"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 pt-1">
+              <input
+                type="checkbox"
+                id="revise-auto-publish"
+                checked={reviseAutoPublish}
+                onChange={(e) => setReviseAutoPublish(e.target.checked)}
+                className="h-4 w-4 rounded border-slate-300 text-[#1155CC] focus:ring-[#1155CC]"
+              />
+              <label htmlFor="revise-auto-publish" className="text-xs font-semibold text-slate-700">
+                Auto-publish to live site after validation (purges CDN cache tags)
+              </label>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={revising}
+              onClick={() => setShowAiReviseDialog(false)}
+              className="rounded-xl text-xs"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              disabled={revising || !reviseInstruction.trim()}
+              onClick={handleAiRevise}
+              className="rounded-xl bg-purple-600 text-xs font-bold text-white shadow-sm hover:bg-purple-700"
+            >
+              {revising ? (
+                <>
+                  <RefreshCw className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                  <span>Agent Revising Content...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                  <span>Run Agent Revision</span>
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

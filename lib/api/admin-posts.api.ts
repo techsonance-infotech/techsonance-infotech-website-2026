@@ -356,3 +356,52 @@ export async function generatePostThumbnail(
     data,
   };
 }
+
+export interface AiRevisePostInput {
+  instruction: string;
+  targetSectionHeading?: string;
+  autoPublish?: boolean;
+}
+
+export interface AiRevisePostResponse {
+  ok: boolean;
+  data: {
+    success: boolean;
+    postId: string;
+    status: string;
+    summary: string;
+    validationErrors?: string[];
+  };
+  message?: string;
+}
+
+export async function aiRevisePost(
+  postId: string,
+  input: AiRevisePostInput,
+  signal?: AbortSignal,
+): Promise<AiRevisePostResponse> {
+  const schema = z.strictObject({
+    success: z.boolean(),
+    postId: z.string(),
+    status: z.string(),
+    summary: z.string(),
+    validationErrors: z.array(z.string()).optional(),
+  });
+
+  const endpoint = API_ENDPOINTS.ADMIN.BLOG.POST_AI_REVISE(postId);
+  const data = await safeFetch(endpoint, schema, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(input),
+    signal,
+    timeoutMs: 180_000,
+  });
+
+  return {
+    ok: true,
+    data,
+  };
+}

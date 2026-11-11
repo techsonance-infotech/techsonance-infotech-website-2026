@@ -206,3 +206,19 @@ export const generateThumbnailContract = defineContract({
   response: generateThumbnailResponseSchema,
   status: 200,
 });
+
+export const aiReviseAdminPostSchema = z.strictObject({
+  instruction: z.string().trim().min(5, "Instruction must be at least 5 characters").max(2000),
+  targetSectionHeading: z.string().trim().max(200).optional(),
+  autoPublish: z.boolean().optional().default(false),
+});
+export type AiReviseAdminPostInput = z.input<typeof aiReviseAdminPostSchema>;
+
+export const aiReviseAdminPostResponseSchema = z.strictObject({
+  success: z.boolean(),
+  postId: z.string(),
+  status: z.string(),
+  summary: z.string(),
+  validationErrors: z.array(z.string()).optional(),
+});
+export type AiReviseAdminPostResponse = z.infer<typeof aiReviseAdminPostResponseSchema>;
