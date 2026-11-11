@@ -20,9 +20,29 @@ export class BookingService {
     private bookingRepo: BookingRepository = inject(BookingRepository),
   ) {}
 
-  getAvailableSlots(fromTimestamp = Date.now(), daysAhead?: number): SlotDto[] {
+  async getAvailableSlots(fromTimestamp = Date.now(), daysAhead?: number): Promise<SlotDto[]> {
     try {
-      return generateAvailableSlots(fromTimestamp, daysAhead);
+      const allSlots = generateAvailableSlots(fromTimestamp, daysAhead);
+
+      // Filter out slots already confirmed in the database
+      try {
+        const fromDate = new Date(fromTimestamp);
+        const toDate = new Date(
+          fromTimestamp + (daysAhead ? Math.min(daysAhead, 30) : 14) * 24 * 60 * 60 * 1000,
+        );
+        const booked = await this.bookingRepo.getBookedSlots(fromDate, toDate);
+        if (booked && booked.length > 0) {
+          const bookedSet = new Set(booked);
+          return allSlots.filter((slot) => !bookedSet.has(slot.iso));
+        }
+      } catch (dbErr) {
+        // Non-blocking: if DB is temporarily unreachable during slot generation, fall back to calculated grid
+        logger.warn("Could not fetch booked slots from DB, returning calculated grid", {
+          error: dbErr instanceof Error ? dbErr.message : String(dbErr),
+        });
+      }
+
+      return allSlots;
     } catch (error) {
       logger.error("Failed to generate available slots", { error });
       throw new AppError(ErrorCode.INTERNAL, BOOKING_ERRORS.FAILED_TO_FETCH_SLOTS, {

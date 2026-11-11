@@ -8,6 +8,7 @@ import { buildSystemPrompt } from "@/lib/prompt";
 import { filterOutput } from "@/lib/rag/filter";
 import { AllExhaustedError } from "@/lib/llm/types";
 import { sanitizeInput, isAllowedOrigin } from "@/lib/text";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -180,6 +181,9 @@ export async function POST(req: Request) {
       } catch (err: unknown) {
         if (err instanceof AllExhaustedError) {
           // Fallback to FAQ-only mode
+          logger.warn("Chat LLM providers exhausted, entering FAQ-only mode", {
+            earliestRetryAt: err.earliestRetryAt,
+          });
           const fallbackText = `I am currently in direct-answer mode. ${BOT_CONFIG.exhaustedMessage}`;
           await sendSSE("token", fallbackText);
           await sendSSE("meta", {
@@ -190,6 +194,9 @@ export async function POST(req: Request) {
           });
           await sendSSE("done", {});
         } else {
+          logger.error("Chat LLM router invocation unexpected error", {
+            error: err instanceof Error ? err.message : String(err),
+          });
           const errText = `I encountered an unexpected issue. Feel free to ask again or select an option below.`;
           await sendSSE("token", errText);
           await sendSSE("meta", {
@@ -200,8 +207,11 @@ export async function POST(req: Request) {
           await sendSSE("done", {});
         }
       }
-    } catch {
+    } catch (streamErr) {
       // Catch any unexpected stream write errors
+      logger.error("Chat SSE stream write error", {
+        error: streamErr instanceof Error ? streamErr.message : String(streamErr),
+      });
     } finally {
       try {
         await writer.close();

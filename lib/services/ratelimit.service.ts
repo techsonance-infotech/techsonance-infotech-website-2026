@@ -70,6 +70,17 @@ export class RateLimiterService {
 
     // Token Bucket In-Memory Fallback
     const now = Date.now();
+
+    // Memory hygiene: prune stale buckets when map exceeds threshold
+    if (this.memoryBuckets.size > 2000) {
+      const maxAgeMs = 30 * 60 * 1000;
+      for (const [k, b] of this.memoryBuckets.entries()) {
+        if (now - b.lastRefill > maxAgeMs) {
+          this.memoryBuckets.delete(k);
+        }
+      }
+    }
+
     let bucket = this.memoryBuckets.get(key);
 
     if (!bucket) {

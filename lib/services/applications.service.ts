@@ -3,7 +3,7 @@ import { inject } from "@needle-di/core";
 import { AdminApplicationsRepository } from "@/lib/repositories/admin-applications.repository";
 import type { Application } from "@/lib/database/schema/index.schema";
 import { ApplicationStatus } from "@/lib/database/enum/content.enum";
-import { AppError } from "@/lib/errors";
+import { AppError, ErrorCode } from "@/lib/errors";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -60,12 +60,12 @@ export class ApplicationsService {
 
   async getApplicationById(id: string): Promise<Application & { jobTitle: string }> {
     if (!id || !id.trim()) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.APPLICATION_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.APPLICATION_NOT_FOUND);
     }
 
     const row = await this.repository.findApplicationById(id);
     if (!row || !row.application) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.APPLICATION_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.APPLICATION_NOT_FOUND);
     }
 
     return {
@@ -102,7 +102,7 @@ export class ApplicationsService {
 
     const updated = await this.repository.updateStageWithAudit(id, updateData, auditData);
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.APPLICATION_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.APPLICATION_NOT_FOUND);
     }
 
     return updated;
@@ -115,7 +115,7 @@ export class ApplicationsService {
     actorId?: string,
   ): Promise<Application> {
     if (rating !== undefined && (rating < 1 || rating > 5)) {
-      throw new AppError("BAD_REQUEST", CAREER_ERRORS.RATING_OUT_OF_RANGE);
+      throw new AppError(ErrorCode.BAD_REQUEST, CAREER_ERRORS.RATING_OUT_OF_RANGE);
     }
 
     const current = await this.getApplicationById(id);
@@ -144,7 +144,7 @@ export class ApplicationsService {
 
     const updated = await this.repository.updateReviewWithAudit(id, updateData, auditData);
     if (!updated) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.APPLICATION_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.APPLICATION_NOT_FOUND);
     }
 
     return updated;
@@ -154,7 +154,7 @@ export class ApplicationsService {
     const application = await this.getApplicationById(id);
 
     if (!(application as Record<string, unknown>).resumeStoragePath) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.RESUME_NOT_ATTACHED);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.RESUME_NOT_ATTACHED);
     }
 
     if (this.supabaseAdmin?.storage) {
@@ -167,7 +167,7 @@ export class ApplicationsService {
           );
 
         if (error) {
-          throw new AppError("INTERNAL", `${CAREER_ERRORS.SIGNED_URL_FAILED}: ${error.message}`);
+          throw new AppError(ErrorCode.INTERNAL, `${CAREER_ERRORS.SIGNED_URL_FAILED}: ${error.message}`);
         }
 
         if (data?.signedUrl) {
@@ -175,7 +175,7 @@ export class ApplicationsService {
         }
       } catch (err) {
         if (err instanceof AppError) throw err;
-        throw new AppError("INTERNAL", `${CAREER_ERRORS.SIGNED_URL_FAILED}: ${String(err)}`);
+        throw new AppError(ErrorCode.INTERNAL, `${CAREER_ERRORS.SIGNED_URL_FAILED}: ${String(err)}`);
       }
     }
 
@@ -283,7 +283,7 @@ export class ApplicationsService {
 
   async exportCandidateData(email: string) {
     if (!email || !email.trim()) {
-      throw new AppError("VALIDATION", CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED);
+      throw new AppError(ErrorCode.VALIDATION, CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED);
     }
     const cleanEmail = email.trim().toLowerCase();
 
@@ -299,7 +299,7 @@ export class ApplicationsService {
 
   async purgeCandidateData(email: string, actorId?: string, ipAddress?: string) {
     if (!email || !email.trim()) {
-      throw new AppError("VALIDATION", CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED_GDPR);
+      throw new AppError(ErrorCode.VALIDATION, CAREER_ERRORS.CANDIDATE_EMAIL_REQUIRED_GDPR);
     }
     const cleanEmail = email.trim().toLowerCase();
 

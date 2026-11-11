@@ -184,7 +184,7 @@ export class CareerApplyService {
     }
 
     if (file.size > MAX_RESUME_SIZE) {
-      throw new AppError("PAYLOAD_TOO_LARGE", CAREER_ERRORS.RESUME_TOO_LARGE);
+      throw new AppError(ErrorCode.PAYLOAD_TOO_LARGE, CAREER_ERRORS.RESUME_TOO_LARGE);
     }
 
     const fileName = (file.name || "").toLowerCase();
@@ -192,7 +192,7 @@ export class CareerApplyService {
       fileName.endsWith(".pdf") || fileName.endsWith(".docx") || fileName.endsWith(".doc");
 
     if (!ALLOWED_MIME_TYPES.has(file.type) && !isAllowedExt) {
-      throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_BAD_FORMAT);
+      throw new AppError(ErrorCode.UNSUPPORTED_MEDIA, CAREER_ERRORS.RESUME_BAD_FORMAT);
     }
 
     // Read bytes for magic byte verification
@@ -222,7 +222,7 @@ export class CareerApplyService {
           bytes[4] === PDF_MAGIC[4];
 
         if (!matchesPdf) {
-          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_PDF_MAGIC);
+          throw new AppError(ErrorCode.UNSUPPORTED_MEDIA, CAREER_ERRORS.RESUME_PDF_MAGIC);
         }
       } else if (isDocxExt) {
         const matchesDocx =
@@ -232,7 +232,7 @@ export class CareerApplyService {
           bytes[3] === DOCX_MAGIC[3];
 
         if (!matchesDocx) {
-          throw new AppError("UNSUPPORTED_MEDIA", CAREER_ERRORS.RESUME_DOCX_MAGIC);
+          throw new AppError(ErrorCode.UNSUPPORTED_MEDIA, CAREER_ERRORS.RESUME_DOCX_MAGIC);
         }
       }
     }
@@ -314,7 +314,7 @@ export class CareerApplyService {
     // 2. Verify Job exists and is accepting applications
     const job = await this.repository.findJobById(payload.jobId);
     if (!job) {
-      throw new AppError("NOT_FOUND", CAREER_ERRORS.JOB_NOT_FOUND);
+      throw new AppError(ErrorCode.NOT_FOUND, CAREER_ERRORS.JOB_NOT_FOUND);
     }
 
     if (job.status !== "PUBLISHED" && job.status !== "OPEN") {
@@ -379,7 +379,7 @@ export class CareerApplyService {
           // ignore
         }
       }
-      throw new AppError("CONFLICT", CAREER_ERRORS.DUPLICATE_APPLICATION);
+      throw new AppError(ErrorCode.CONFLICT, CAREER_ERRORS.DUPLICATE_APPLICATION);
     }
 
     // 5. Evaluate screening questions for knockout triggers
@@ -576,7 +576,7 @@ export class CareerApplyService {
     });
 
     if (!talent) {
-      throw new AppError("INTERNAL", CAREER_ERRORS.TALENT_INSERT_FAILED);
+      throw new AppError(ErrorCode.INTERNAL, CAREER_ERRORS.TALENT_INSERT_FAILED);
     }
 
     // Confirmation email

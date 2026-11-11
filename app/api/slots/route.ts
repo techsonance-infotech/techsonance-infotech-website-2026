@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 export const GET = handleRoute(getSlotsContract, async ({ query }) => {
   const bookingService = getContainer().get(BookingService);
-  const slots = bookingService.getAvailableSlots(query.fromTimestamp, query.daysAhead);
+  const slots = await bookingService.getAvailableSlots(query.fromTimestamp, query.daysAhead);
 
   return {
     slots,

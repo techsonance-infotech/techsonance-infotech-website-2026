@@ -114,7 +114,7 @@ describe("Needle DI Container Infrastructure", () => {
     ]);
 
     const bookingService = testContainer.get(BookingService);
-    const slots = bookingService.getAvailableSlots();
+    const slots = await bookingService.getAvailableSlots();
     expect(slots.length).toBeGreaterThan(0);
 
     const result = await bookingService.processBooking({

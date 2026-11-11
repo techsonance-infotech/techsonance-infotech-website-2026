@@ -98,10 +98,10 @@ export class BookingRepository {
       const conditions = [eq(consultationBookingsTable.status, BookingStatus.CONFIRMED)];
 
       if (fromTimestamp) {
-        conditions.push(gte(consultationBookingsTable.createdAt, fromTimestamp));
+        conditions.push(gte(consultationBookingsTable.slotIso, fromTimestamp.toISOString()));
       }
       if (toTimestamp) {
-        conditions.push(lte(consultationBookingsTable.createdAt, toTimestamp));
+        conditions.push(lte(consultationBookingsTable.slotIso, toTimestamp.toISOString()));
       }
 
       const records = await this.db
