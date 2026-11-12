@@ -58,7 +58,7 @@ export class ImageStepService {
     this.cfAdapter = new CloudflareImageAdapter(this.keyBroker);
     this.openAiAdapter = new OpenAIImageAdapter(this.keyBroker);
     this.geminiAdapter = new GeminiImageAdapter(this.keyBroker);
-    this.pollinationsAdapter = new PollinationsImageAdapter();
+    this.pollinationsAdapter = new PollinationsImageAdapter(this.keyBroker);
   }
 
   /**

@@ -5,7 +5,7 @@ import { logger } from "@/lib/logger";
 
 export class OpenAIImageAdapter {
   readonly name = "openai";
-  readonly defaultModel = "dall-e-3";
+  readonly defaultModel = "gpt-image-1.5";
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
@@ -23,7 +23,7 @@ export class OpenAIImageAdapter {
   ): Promise<Buffer> {
     let apiKey: string | undefined;
     let credentialId: string | undefined;
-    const model = options.model || this.defaultModel;
+    let claimedModel: string | undefined;
 
     // 1. Prioritize database credential vault via KeyBrokerService
     if (this.keyBroker) {
@@ -32,6 +32,12 @@ export class OpenAIImageAdapter {
         if (claimed) {
           apiKey = claimed.key.trim();
           credentialId = claimed.credentialId;
+          if (
+            claimed.model &&
+            (claimed.model.includes("image") || claimed.model.includes("dall-e"))
+          ) {
+            claimedModel = claimed.model.trim();
+          }
         }
       } catch (err) {
         logger.warn("OpenAIImageAdapter: DB key claim failed, trying env", {
@@ -51,8 +57,10 @@ export class OpenAIImageAdapter {
       );
     }
 
-    // DALL-E 3 supports 1792x1024 (16:9 widescreen), 1024x1024, or 1024x1792
-    const size = model === "dall-e-3" ? "1792x1024" : "1024x1024";
+    const model = options.model || claimedModel || this.defaultModel;
+    const isDalle3 = model === "dall-e-3";
+    const isGptImage = model.includes("gpt-image") || model.includes("chatgpt-image");
+    const size = isDalle3 ? "1792x1024" : isGptImage ? "1536x1024" : "1024x1024";
 
     const payload: Record<string, unknown> = {
       model,
@@ -61,8 +69,10 @@ export class OpenAIImageAdapter {
       size,
     };
 
-    if (model === "dall-e-3") {
+    if (isDalle3) {
       payload.quality = "standard";
+    } else if (isGptImage) {
+      payload.quality = "medium";
     }
 
     const res = await fetch("https://api.openai.com/v1/images/generations", {
@@ -88,7 +98,7 @@ export class OpenAIImageAdapter {
           errorMessage: errText,
         });
       }
-      throw new Error(`OpenAI DALL-E error (${res.status}): ${errText}`);
+      throw new Error(`OpenAI Image error (${res.status}, model=${model}): ${errText}`);
     }
 
     if (this.keyBroker && credentialId) {

@@ -7,6 +7,7 @@ import {
   type AddCredentialInput,
   type ReplaceCredentialInput,
   type KillSwitchInput,
+  type DeactivateCredentialInput,
   type UpdateCredentialModelInput,
 } from "@/lib/validations/ai-credential.schema";
 import { type CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
@@ -300,5 +301,76 @@ export class AdminAiCredentialsService {
     );
 
     return this.toDto(updated || { ...cred, model: input.model.trim() });
+  }
+
+  /**
+   * Cleanly deactivates (pauses) an active or cooling-down credential without wiping ciphertext.
+   */
+  async deactivateCredential(
+    input: DeactivateCredentialInput,
+    actorId: string,
+    requestId?: string,
+  ): Promise<CredentialViewDto> {
+    const cred = await this.repo.findCredentialById(input.credentialId);
+    if (!cred) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Credential not found.");
+    }
+
+    if (cred.status === AiCredentialStatus.COMPROMISED || !cred.ciphertext) {
+      throw new AppError(
+        ErrorCode.BAD_REQUEST,
+        "Compromised or wiped credentials cannot be deactivated. Please delete or replace the credential.",
+      );
+    }
+
+    const updated = await this.repo.updateStatus(
+      cred.id,
+      AiCredentialStatus.DISABLED,
+      null,
+      input.reason?.trim() ? `DEACTIVATED: ${input.reason.trim()}` : "MANUAL_DEACTIVATED",
+    );
+
+    await this.repo.recordEvent(
+      cred.id,
+      "disabled",
+      actorId,
+      {
+        action: "deactivated",
+        reason: input.reason?.trim() || "Manual deactivation",
+      },
+      requestId,
+    );
+
+    return this.toDto(updated || { ...cred, status: AiCredentialStatus.DISABLED });
+  }
+
+  /**
+   * Permanently deletes a credential record from the vault (including compromised, disabled, or unused keys).
+   */
+  async deleteCredential(
+    credentialId: string,
+    actorId: string,
+    requestId?: string,
+  ): Promise<void> {
+    const cred = await this.repo.findCredentialById(credentialId);
+    if (!cred) {
+      throw new AppError(ErrorCode.NOT_FOUND, "Credential not found.");
+    }
+
+    await this.repo.deleteCredential(cred.id);
+
+    await this.repo.recordEvent(
+      null,
+      "deleted",
+      actorId,
+      {
+        deletedCredentialId: cred.id,
+        provider: cred.provider,
+        label: cred.label,
+        last4: cred.last4,
+        previousStatus: cred.status,
+      },
+      requestId,
+    );
   }
 }

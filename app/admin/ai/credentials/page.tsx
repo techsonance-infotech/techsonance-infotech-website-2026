@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, startTransition } from "react"
 import Link from "next/link";
 import {
   KeyRound,
-  ShieldCheck,
   Plus,
   RefreshCw,
   AlertTriangle,
@@ -14,29 +13,68 @@ import {
   OctagonAlert,
   Sliders,
   Sparkles,
-  BarChart3,
   PowerOff,
+  PauseCircle,
+  Trash2,
   Cpu,
-  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AI_ADMIN_ROUTES } from "@/lib/constants/ai.constants";
 import {
+  isImageCredentialModel,
+  type ProviderCategory,
+} from "@/lib/constants/ai-providers.constants";
+import {
   listAdminAiCredentials,
   reactivateAdminAiCredential,
+  deactivateAdminAiCredential,
 } from "@/lib/api/admin-ai-credentials.api";
 import type { CredentialViewDto } from "@/lib/contracts/admin-ai-credentials.contract";
-import {
-  AddCredentialModal,
-  type ProviderCategory,
-} from "@/components/admin/ai/AddCredentialModal";
+import { AddCredentialModal } from "@/components/admin/ai/AddCredentialModal";
 import { ReplaceCredentialModal } from "@/components/admin/ai/ReplaceCredentialModal";
 import { ChangeModelModal } from "@/components/admin/ai/ChangeModelModal";
 import { KillSwitchDialog } from "@/components/admin/ai/KillSwitchDialog";
+import { DeleteCredentialDialog } from "@/components/admin/ai/DeleteCredentialDialog";
 
-export default function AiCredentialsPage() {
+function renderStatusBadge(status: string): React.ReactElement {
+  switch (status) {
+    case "active":
+      return (
+        <Badge variant="success" dot={true} className="whitespace-nowrap">
+          ACTIVE
+        </Badge>
+      );
+    case "cooling_down":
+      return (
+        <Badge variant="warning" dot={true} className="whitespace-nowrap">
+          COOLDOWN
+        </Badge>
+      );
+    case "exhausted":
+      return (
+        <Badge variant="destructive" dot={true} className="whitespace-nowrap">
+          EXHAUSTED
+        </Badge>
+      );
+    case "compromised":
+      return (
+        <Badge variant="destructive" dot={true} className="whitespace-nowrap">
+          WIPED
+        </Badge>
+      );
+    case "disabled":
+    default:
+      return (
+        <Badge variant="outline" className="whitespace-nowrap">
+          DISABLED
+        </Badge>
+      );
+  }
+}
+
+export default function AiCredentialsPage(): React.ReactElement {
   const [credentials, setCredentials] = useState<CredentialViewDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -51,24 +89,36 @@ export default function AiCredentialsPage() {
   const [replaceModalOpen, setReplaceModalOpen] = useState(false);
   const [killTarget, setKillTarget] = useState<CredentialViewDto | null>(null);
   const [killDialogOpen, setKillDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<CredentialViewDto | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState<{ type: "success" | "error"; text: string } | null>(
     null,
   );
 
   const isImageCredential = useCallback((cred: CredentialViewDto) => {
-    const p = cred.provider.toLowerCase();
-    const m = (cred.model || "").toLowerCase();
-    return (
-      p === "cloudflare" ||
-      p === "pollinations" ||
-      p === "replicate" ||
-      p === "stability" ||
-      m.includes("flux") ||
-      m.includes("diffusion") ||
-      m.includes("image")
-    );
+    return isImageCredentialModel(cred.provider, cred.model);
   }, []);
+
+  const handleDeactivate = async (credentialId: string) => {
+    setActionLoadingId(credentialId);
+    setToastMsg(null);
+    try {
+      await deactivateAdminAiCredential(credentialId);
+      setToastMsg({
+        type: "success",
+        text: "Credential deactivated. Routing to this key is paused until re-activated.",
+      });
+      await fetchCredentials(false);
+    } catch (err) {
+      setToastMsg({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to deactivate credential",
+      });
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
 
   const handleReactivate = async (credentialId: string) => {
     setActionLoadingId(credentialId);
@@ -116,7 +166,7 @@ export default function AiCredentialsPage() {
   const activeCount = credentials.filter((c) => c.status === "active").length;
   const cooldownCount = credentials.filter((c) => c.status === "cooling_down").length;
   const exhaustedCount = credentials.filter(
-    (c) => c.status === "exhausted" || c.status === "disabled",
+    (c) => c.status === "exhausted" || c.status === "disabled" || c.status === "compromised",
   ).length;
 
   const textCredentials = credentials.filter((c) => !isImageCredential(c));
@@ -128,40 +178,8 @@ export default function AiCredentialsPage() {
         ? textCredentials
         : credentials;
 
-  const renderStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge variant="success" dot={true}>
-            ACTIVE
-          </Badge>
-        );
-      case "cooling_down":
-        return (
-          <Badge variant="warning" dot={true}>
-            COOLING DOWN
-          </Badge>
-        );
-      case "exhausted":
-        return (
-          <Badge variant="destructive" dot={true}>
-            EXHAUSTED
-          </Badge>
-        );
-      case "compromised":
-        return (
-          <Badge variant="destructive" dot={true}>
-            COMPROMISED (WIPED)
-          </Badge>
-        );
-      case "disabled":
-      default:
-        return <Badge variant="outline">DISABLED</Badge>;
-    }
-  };
-
   return (
-    <div className="mx-auto max-w-7xl space-y-8 p-4 sm:p-6 lg:p-8">
+    <div className="space-y-6">
       {/* Navigation Tabs Header */}
       <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-center">
         <div>
@@ -322,10 +340,10 @@ export default function AiCredentialsPage() {
         )}
 
         {/* Filter Bar & Header */}
-        <div className="border-b border-slate-100 bg-slate-50/50 p-5 sm:flex sm:items-center sm:justify-between">
-          <div>
+        <div className="flex flex-col gap-4 border-b border-slate-100 bg-slate-50/50 p-5 xl:flex-row xl:items-center xl:justify-between">
+          <div className="min-w-0">
             <h2 className="font-sora text-base font-bold text-slate-900">
-              Registered Provider Keys & Multi-Account Pool
+              Registered Provider Keys &amp; Multi-Account Pool
             </h2>
             <p className="mt-0.5 text-xs text-slate-500">
               All credentials are stored as AES-256-GCM ciphertext. The router automatically falls
@@ -334,14 +352,14 @@ export default function AiCredentialsPage() {
           </div>
 
           {/* Category Filter Chips */}
-          <div className="mt-4 flex items-center gap-1.5 sm:mt-0">
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setCategoryFilter("all")}
-              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`shrink-0 rounded-xl px-3.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all ${
                 categoryFilter === "all"
                   ? "bg-slate-900 text-white shadow-xs"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
               }`}
             >
               All Keys ({credentials.length})
@@ -349,26 +367,26 @@ export default function AiCredentialsPage() {
             <button
               type="button"
               onClick={() => setCategoryFilter("text")}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all ${
                 categoryFilter === "text"
                   ? "bg-blue-600 text-white shadow-xs"
-                  : "bg-white text-blue-700 border border-blue-200/80 hover:bg-blue-50/50"
+                  : "border border-blue-200/80 bg-white text-blue-700 hover:bg-blue-50/50"
               }`}
             >
-              <Cpu className="h-3 w-3" />
-              Text LLMs ({textCredentials.length})
+              <Cpu className="h-3.5 w-3.5 shrink-0" />
+              <span>Text LLMs ({textCredentials.length})</span>
             </button>
             <button
               type="button"
               onClick={() => setCategoryFilter("image")}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all ${
                 categoryFilter === "image"
                   ? "bg-purple-600 text-white shadow-xs"
-                  : "bg-white text-purple-700 border border-purple-200/80 hover:bg-purple-50/50"
+                  : "border border-purple-200/80 bg-white text-purple-700 hover:bg-purple-50/50"
               }`}
             >
-              <Sparkles className="h-3 w-3" />
-              Image Engines ({imageCredentials.length})
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
+              <span>Image Engines ({imageCredentials.length})</span>
             </button>
           </div>
         </div>
@@ -432,171 +450,222 @@ export default function AiCredentialsPage() {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-slate-100 bg-slate-50/50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                  <tr>
-                    <th className="px-5 py-3">Type</th>
-                    <th className="px-5 py-3">Provider</th>
-                    <th className="px-5 py-3">Model</th>
-                    <th className="px-5 py-3">Label</th>
-                    <th className="px-5 py-3">Key (Last 4)</th>
-                    <th className="px-5 py-3">Status</th>
-                    <th className="px-5 py-3">Priority</th>
-                    <th className="px-5 py-3">Spent Today / Cap</th>
-                    <th className="px-5 py-3">Last Used</th>
-                    <th className="px-5 py-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-                  {displayedCredentials.map((cred) => {
-                    const isImg = isImageCredential(cred);
-                    return (
-                      <tr key={cred.id} className="transition-colors hover:bg-slate-50/60">
-                        <td className="px-5 py-3.5">
-                          {isImg ? (
-                            <Badge
-                              variant="outline"
-                              className="border-purple-300 bg-purple-50/80 text-[10px] font-bold text-purple-700"
-                            >
-                              IMAGE (FLUX)
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="outline"
-                              className="border-blue-300 bg-blue-50/80 text-[10px] font-bold text-blue-700"
-                            >
-                              TEXT (LLM)
-                            </Badge>
-                          )}
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="font-bold tracking-wider text-slate-900 uppercase">
-                            {cred.provider}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setModelTarget(cred);
-                              setModelModalOpen(true);
-                            }}
-                            title="Click to switch serving model"
-                            className={`group inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-2 py-0.5 font-mono text-[11px] font-semibold transition-all hover:shadow-2xs ${
-                              isImg
-                                ? "text-purple-700 bg-purple-50/80 border-purple-200/60 hover:bg-purple-100 hover:border-purple-300"
-                                : "text-blue-700 bg-blue-50/80 border-blue-200/60 hover:bg-blue-100 hover:border-blue-300"
-                            }`}
+            <div className="divide-y divide-slate-100">
+              {/* Desktop Column Headers */}
+              <div className="hidden border-b border-slate-100 bg-slate-50/70 px-5 py-3 text-[11px] font-bold tracking-wider text-slate-500 uppercase lg:grid lg:grid-cols-12 lg:items-center lg:gap-4">
+                <div className="lg:col-span-3">Provider &amp; Label</div>
+                <div className="lg:col-span-3">Serving Model</div>
+                <div className="lg:col-span-2">Status &amp; Usage</div>
+                <div className="text-right lg:col-span-4">Actions</div>
+              </div>
+
+              {displayedCredentials.map((cred) => {
+                const isImg = isImageCredential(cred);
+                const isCompromised = cred.status === "compromised";
+                return (
+                  <div
+                    key={cred.id}
+                    className="grid grid-cols-1 gap-3 px-5 py-4 text-xs transition-colors hover:bg-slate-50/60 lg:grid-cols-12 lg:items-center lg:gap-4"
+                  >
+                    {/* Col 1: Provider, Category Badge, Label, Key */}
+                    <div className="min-w-0 space-y-1.5 lg:col-span-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold tracking-wider text-slate-900 uppercase">
+                          {cred.provider}
+                        </span>
+                        {isImg ? (
+                          <Badge
+                            variant="outline"
+                            className="border-purple-300 bg-purple-50/80 text-[9px] font-bold whitespace-nowrap text-purple-700"
                           >
-                            <span>{cred.model || "default"}</span>
-                            <Sliders className="h-3 w-3 opacity-40 transition-opacity group-hover:opacity-100" />
-                          </button>
-                        </td>
-                        <td className="px-5 py-3.5 font-semibold text-slate-900">{cred.label}</td>
-                        <td className="px-5 py-3.5 font-mono text-slate-500">
-                          ••••••••{cred.last4}
-                        </td>
-                        <td className="px-5 py-3.5">{renderStatusBadge(cred.status)}</td>
-                        <td className="px-5 py-3.5 font-semibold text-slate-600">
+                            IMAGE (FLUX)
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="border-blue-300 bg-blue-50/80 text-[9px] font-bold whitespace-nowrap text-blue-700"
+                          >
+                            TEXT (LLM)
+                          </Badge>
+                        )}
+                        <span className="font-mono text-[11px] text-slate-400">
+                          ••••{cred.last4}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[12px]">
+                        <span className="truncate font-semibold text-slate-800" title={cred.label}>
+                          {cred.label}
+                        </span>
+                        <span className="shrink-0 text-[10px] font-semibold text-slate-400">
                           #{cred.priority}
-                        </td>
-                        <td className="px-5 py-3.5 font-mono text-slate-600">
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Col 2: Active Model Switcher */}
+                    <div className="min-w-0 lg:col-span-3">
+                      <button
+                        type="button"
+                        disabled={isCompromised}
+                        onClick={() => {
+                          setModelTarget(cred);
+                          setModelModalOpen(true);
+                        }}
+                        title={
+                          isCompromised
+                            ? "Wiped credential — use Replace or Delete"
+                            : "Click to switch serving model"
+                        }
+                        className={`group inline-flex max-w-full items-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${
+                          isCompromised
+                            ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 opacity-75"
+                            : isImg
+                              ? "cursor-pointer border-purple-200/70 bg-purple-50/80 text-purple-700 hover:border-purple-300 hover:bg-purple-100 hover:shadow-2xs"
+                              : "cursor-pointer border-blue-200/70 bg-blue-50/80 text-blue-700 hover:border-blue-300 hover:bg-blue-100 hover:shadow-2xs"
+                        }`}
+                      >
+                        <span className="truncate">{cred.model || "default"}</span>
+                        {!isCompromised && (
+                          <Sliders className="h-3 w-3 shrink-0 opacity-50 transition-opacity group-hover:opacity-100" />
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Col 3: Status & Budget / Usage */}
+                    <div className="flex flex-row items-center justify-between gap-2 lg:col-span-2 lg:flex-col lg:items-start lg:justify-center lg:gap-1.5">
+                      {renderStatusBadge(cred.status)}
+                      <div className="flex items-center gap-1.5 font-mono text-[11px] whitespace-nowrap text-slate-600">
+                        <span>
                           ${parseFloat(cred.spentTodayUsd || "0").toFixed(2)}
-                          {cred.dailyBudgetUsd ? ` / $${cred.dailyBudgetUsd}` : " (unlimited)"}
-                        </td>
-                        <td className="px-5 py-3.5 text-slate-400">
+                          {cred.dailyBudgetUsd ? ` / $${cred.dailyBudgetUsd}` : " (unlim.)"}
+                        </span>
+                        <span className="text-slate-300">&bull;</span>
+                        <span className="font-sans text-[10px] text-slate-400">
                           {cred.lastUsedAt
                             ? new Date(cred.lastUsedAt).toLocaleTimeString()
                             : "Never"}
-                        </td>
-                        <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                          <div className="inline-flex items-center justify-end gap-2 whitespace-nowrap">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setModelTarget(cred);
-                                setModelModalOpen(true);
-                              }}
-                              className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3 text-[11px] font-semibold text-blue-700 shadow-2xs transition-colors hover:bg-blue-100 hover:text-blue-800"
-                            >
-                              <Cpu className="h-3.5 w-3.5 text-blue-600" />
-                              <span>Model</span>
-                            </Button>
+                        </span>
+                      </div>
+                    </div>
 
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setReplaceTarget(cred);
-                                setReplaceModalOpen(true);
-                              }}
-                              className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-slate-900"
-                            >
-                              <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
-                              <span>Replace</span>
-                            </Button>
+                    {/* Col 4: Non-clipping Responsive Actions */}
+                    <div className="flex flex-wrap items-center justify-start gap-1.5 lg:col-span-4 lg:justify-end">
+                      {!isCompromised && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setModelTarget(cred);
+                            setModelModalOpen(true);
+                          }}
+                          title="Switch serving model"
+                          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-blue-200 bg-blue-50/50 px-2.5 text-[11px] font-semibold text-blue-700 shadow-2xs transition-colors hover:bg-blue-100 hover:text-blue-800"
+                        >
+                          <Cpu className="h-3.5 w-3.5 text-blue-600" />
+                          <span>Model</span>
+                        </Button>
+                      )}
 
-                            {cred.status === "cooling_down" ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={actionLoadingId === cred.id}
-                                onClick={() => handleReactivate(cred.id)}
-                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/80 px-3 text-[11px] font-semibold text-amber-800 shadow-2xs transition-colors hover:bg-amber-100 hover:text-amber-900"
-                              >
-                                <Zap
-                                  className={`h-3.5 w-3.5 text-amber-600 ${
-                                    actionLoadingId === cred.id ? "animate-spin" : ""
-                                  }`}
-                                />
-                                <span>
-                                  {actionLoadingId === cred.id ? "Clearing..." : "Clear Cooldown"}
-                                </span>
-                              </Button>
-                            ) : cred.status === "disabled" ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={actionLoadingId === cred.id}
-                                onClick={() => handleReactivate(cred.id)}
-                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 px-3 text-[11px] font-semibold text-emerald-700 shadow-2xs transition-colors hover:bg-emerald-100 hover:text-emerald-800"
-                              >
-                                <Zap
-                                  className={`h-3.5 w-3.5 text-emerald-600 ${
-                                    actionLoadingId === cred.id ? "animate-spin" : ""
-                                  }`}
-                                />
-                                <span>
-                                  {actionLoadingId === cred.id ? "Activating..." : "Re-activate"}
-                                </span>
-                              </Button>
-                            ) : cred.status === "compromised" ? (
-                              <span className="inline-flex items-center rounded-xl border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-400">
-                                Wiped
-                              </span>
-                            ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setKillTarget(cred);
-                                  setKillDialogOpen(true);
-                                }}
-                                className="inline-flex h-8 items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/60 px-3 text-[11px] font-semibold text-rose-700 shadow-2xs transition-colors hover:bg-rose-100 hover:text-rose-800"
-                              >
-                                <PowerOff className="h-3.5 w-3.5 text-rose-600" />
-                                <span>Kill Switch</span>
-                              </Button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setReplaceTarget(cred);
+                          setReplaceModalOpen(true);
+                        }}
+                        title="Rotate / replace key"
+                        className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-slate-900"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
+                        <span>Replace</span>
+                      </Button>
+
+                      {cred.status === "cooling_down" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={actionLoadingId === cred.id}
+                          onClick={() => handleReactivate(cred.id)}
+                          title="Clear rate-limit cooldown"
+                          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-amber-300 bg-amber-50/80 px-2.5 text-[11px] font-semibold text-amber-800 shadow-2xs transition-colors hover:bg-amber-100 hover:text-amber-900"
+                        >
+                          <Zap
+                            className={`h-3.5 w-3.5 text-amber-600 ${
+                              actionLoadingId === cred.id ? "animate-spin" : ""
+                            }`}
+                          />
+                          <span>{actionLoadingId === cred.id ? "Clearing..." : "Clear"}</span>
+                        </Button>
+                      )}
+
+                      {cred.status === "disabled" ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={actionLoadingId === cred.id}
+                          onClick={() => handleReactivate(cred.id)}
+                          title="Re-activate credential"
+                          className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-emerald-200 bg-emerald-50/70 px-2.5 text-[11px] font-semibold text-emerald-700 shadow-2xs transition-colors hover:bg-emerald-100 hover:text-emerald-800"
+                        >
+                          <Zap
+                            className={`h-3.5 w-3.5 text-emerald-600 ${
+                              actionLoadingId === cred.id ? "animate-spin" : ""
+                            }`}
+                          />
+                          <span>
+                            {actionLoadingId === cred.id ? "Activating..." : "Re-activate"}
+                          </span>
+                        </Button>
+                      ) : !isCompromised ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={actionLoadingId === cred.id}
+                            onClick={() => handleDeactivate(cred.id)}
+                            title="Deactivate / pause credential without wiping key"
+                            className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-amber-200 bg-amber-50/60 px-2.5 text-[11px] font-semibold text-amber-800 shadow-2xs transition-colors hover:bg-amber-100 hover:text-amber-900"
+                          >
+                            <PauseCircle className="h-3.5 w-3.5 text-amber-600" />
+                            <span>
+                              {actionLoadingId === cred.id ? "Pausing..." : "Deactivate"}
+                            </span>
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setKillTarget(cred);
+                              setKillDialogOpen(true);
+                            }}
+                            title="Emergency Kill Switch (requires audit reason)"
+                            aria-label={`Kill Switch for ${cred.label}`}
+                            className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-rose-200 bg-rose-50/60 px-2 text-[11px] font-semibold text-rose-700 shadow-2xs transition-colors hover:bg-rose-100 hover:text-rose-800"
+                          >
+                            <PowerOff className="h-3.5 w-3.5 text-rose-600" />
+                          </Button>
+                        </>
+                      ) : null}
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setDeleteTarget(cred);
+                          setDeleteDialogOpen(true);
+                        }}
+                        title="Permanently delete credential"
+                        aria-label={`Delete ${cred.label}`}
+                        className="inline-flex h-8 shrink-0 items-center gap-1 rounded-xl border border-rose-200 bg-white px-2.5 text-[11px] font-semibold text-rose-600 shadow-2xs transition-colors hover:bg-rose-50 hover:text-rose-700"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span>Delete</span>
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </CardContent>
@@ -607,28 +676,62 @@ export default function AiCredentialsPage() {
         open={addModalOpen}
         onOpenChange={setAddModalOpen}
         initialCategory={initialAddCategory}
-        onSuccess={() => fetchCredentials(false)}
+        onSuccess={() => {
+          setToastMsg({ type: "success", text: "New credential encrypted and added to Vault." });
+          void fetchCredentials(false);
+        }}
       />
 
       <ChangeModelModal
         credential={modelTarget}
         open={modelModalOpen}
         onOpenChange={setModelModalOpen}
-        onSuccess={() => fetchCredentials(false)}
+        onSuccess={(updatedCred) => {
+          setToastMsg({
+            type: "success",
+            text: `Serving model switched to ${updatedCred.model}.`,
+          });
+          void fetchCredentials(false);
+        }}
       />
 
       <ReplaceCredentialModal
         credential={replaceTarget}
         open={replaceModalOpen}
         onOpenChange={setReplaceModalOpen}
-        onSuccess={() => fetchCredentials(false)}
+        onSuccess={() => {
+          setToastMsg({
+            type: "success",
+            text: "Credential rotated successfully. Old ciphertext wiped.",
+          });
+          void fetchCredentials(false);
+        }}
       />
 
       <KillSwitchDialog
         credential={killTarget}
         open={killDialogOpen}
         onOpenChange={setKillDialogOpen}
-        onSuccess={() => fetchCredentials(false)}
+        onSuccess={() => {
+          setToastMsg({
+            type: "success",
+            text: "Emergency kill switch activated. Credential halted.",
+          });
+          void fetchCredentials(false);
+        }}
+      />
+
+      <DeleteCredentialDialog
+        credential={deleteTarget}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onSuccess={() => {
+          setToastMsg({
+            type: "success",
+            text: "Credential permanently deleted from Vault.",
+          });
+          void fetchCredentials(false);
+        }}
       />
     </div>
   );

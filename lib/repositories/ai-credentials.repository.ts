@@ -7,7 +7,6 @@ import {
   accountsTable,
   credentialsTable,
   credentialEventsTable,
-  alertsTable,
   type AiAccount,
   type InsertAiAccount,
   type AiCredential,
@@ -294,6 +293,26 @@ export class AiCredentialsRepository {
     } catch (err) {
       throw mapDbError(err, {
         context: "AiCredentialsRepository.updateModel",
+        id,
+      });
+    }
+  }
+
+  /**
+   * Permanently deletes a credential record by UUID.
+   * Associated events and alerts retain historical records with credential_id set to null.
+   */
+  async deleteCredential(id: string): Promise<AiCredential | null> {
+    try {
+      const [deleted] = await this.db
+        .delete(credentialsTable)
+        .where(eq(credentialsTable.id, id))
+        .returning();
+
+      return deleted ?? null;
+    } catch (err) {
+      throw mapDbError(err, {
+        context: "AiCredentialsRepository.deleteCredential",
         id,
       });
     }

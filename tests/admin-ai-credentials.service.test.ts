@@ -15,6 +15,7 @@ describe("AdminAiCredentialsService", () => {
       createCredential: vi.fn(),
       updateStatus: vi.fn(),
       updateModel: vi.fn(),
+      deleteCredential: vi.fn(),
       wipeCompromisedCredential: vi.fn(),
       recordEvent: vi.fn(),
     };
@@ -186,5 +187,91 @@ describe("AdminAiCredentialsService", () => {
       }),
       "req-123",
     );
+  });
+
+  it("should cleanly deactivate an active credential without wiping ciphertext", async () => {
+    mockRepo.findCredentialById.mockResolvedValue({
+      id: "cred-cf-active",
+      provider: "cloudflare",
+      model: "@cf/black-forest-labs/flux-1-schnell",
+      status: AiCredentialStatus.ACTIVE,
+      ciphertext: Buffer.from("sealed"),
+      label: "CF account :Manish.vg",
+      last4: "3b23",
+      keyVersion: 1,
+      priority: 10,
+      spentTodayUsd: "0",
+      isCanary: false,
+      createdAt: new Date(),
+    });
+    mockRepo.updateStatus.mockResolvedValue({
+      id: "cred-cf-active",
+      provider: "cloudflare",
+      model: "@cf/black-forest-labs/flux-1-schnell",
+      status: AiCredentialStatus.DISABLED,
+      label: "CF account :Manish.vg",
+      last4: "3b23",
+      keyVersion: 1,
+      priority: 10,
+      spentTodayUsd: "0",
+      isCanary: false,
+      createdAt: new Date(),
+    });
+
+    const res = await service.deactivateCredential(
+      { credentialId: "cred-cf-active", reason: "Rotating CF key" },
+      "admin-user-1",
+      "req-deact",
+    );
+
+    expect(res.status).toBe(AiCredentialStatus.DISABLED);
+    expect(mockRepo.wipeCompromisedCredential).not.toHaveBeenCalled();
+    expect(mockRepo.updateStatus).toHaveBeenCalledWith(
+      "cred-cf-active",
+      AiCredentialStatus.DISABLED,
+      null,
+      "DEACTIVATED: Rotating CF key",
+    );
+    expect(mockRepo.recordEvent).toHaveBeenCalledWith(
+      "cred-cf-active",
+      "disabled",
+      "admin-user-1",
+      expect.objectContaining({ action: "deactivated" }),
+      "req-deact",
+    );
+  });
+
+  it("should permanently delete compromised or old credentials and log null-linked audit event", async () => {
+    mockRepo.findCredentialById.mockResolvedValue({
+      id: "cred-old-wiped",
+      provider: "cloudflare",
+      label: "Old CF Key",
+      last4: "1c6b",
+      status: AiCredentialStatus.COMPROMISED,
+    });
+    mockRepo.deleteCredential.mockResolvedValue({ id: "cred-old-wiped" });
+
+    await service.deleteCredential("cred-old-wiped", "admin-user-1", "req-del");
+
+    expect(mockRepo.deleteCredential).toHaveBeenCalledWith("cred-old-wiped");
+    expect(mockRepo.recordEvent).toHaveBeenCalledWith(
+      null,
+      "deleted",
+      "admin-user-1",
+      expect.objectContaining({
+        deletedCredentialId: "cred-old-wiped",
+        provider: "cloudflare",
+        last4: "1c6b",
+      }),
+      "req-del",
+    );
+  });
+
+  it("should throw NOT_FOUND when deleting a missing credential", async () => {
+    mockRepo.findCredentialById.mockResolvedValue(null);
+
+    await expect(service.deleteCredential("missing-id", "admin-user-1")).rejects.toMatchObject({
+      code: ErrorCode.NOT_FOUND,
+    });
   });
 });

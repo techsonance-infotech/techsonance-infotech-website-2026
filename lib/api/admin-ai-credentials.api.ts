@@ -103,3 +103,36 @@ export async function updateAdminAiCredentialModel(
 
   return json.data.credential;
 }
+
+export async function deactivateAdminAiCredential(
+  credentialId: string,
+  reason?: string,
+): Promise<CredentialViewDto> {
+  const res = await fetch(API_ENDPOINTS.ADMIN.AI.CREDENTIALS_DEACTIVATE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credentialId, ...(reason ? { reason } : {}) }),
+  });
+
+  const json = await res.json();
+  if (!res.ok || !json.ok) {
+    throw new Error(json.error?.message || "Failed to deactivate credential");
+  }
+
+  return json.data.credential;
+}
+
+export async function deleteAdminAiCredential(credentialId: string): Promise<void> {
+  const res = await fetch(
+    `${API_ENDPOINTS.ADMIN.AI.CREDENTIALS}?credentialId=${encodeURIComponent(credentialId)}`,
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  const json = await res.json();
+  if (!res.ok || !json.ok) {
+    throw new Error(json.error?.message || "Failed to delete AI credential");
+  }
+}

@@ -131,4 +131,17 @@ describe("AiCredentialsRepository", () => {
     );
     expect(mockDb.insert).toHaveBeenCalled();
   });
+
+  it("should delete a credential by ID using an explicit where clause", async () => {
+    const deletedRow = { id: "cred-uuid-del" };
+    mockDb.delete.mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([deletedRow]),
+      }),
+    });
+
+    const res = await repo.deleteCredential("cred-uuid-del");
+    expect(res).toEqual(deletedRow);
+    expect(mockDb.delete).toHaveBeenCalled();
+  });
 });

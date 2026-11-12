@@ -48,6 +48,21 @@ export const reactivateCredentialSchema = z.strictObject({
 export type ReactivateCredentialInput = z.input<typeof reactivateCredentialSchema>;
 export type ReactivateCredentialOutput = z.output<typeof reactivateCredentialSchema>;
 
+export const deactivateCredentialSchema = z.strictObject({
+  credentialId: z.string().uuid({ error: "Valid credential ID is required" }),
+  reason: z.string().trim().min(3).max(250).optional(),
+});
+
+export type DeactivateCredentialInput = z.input<typeof deactivateCredentialSchema>;
+export type DeactivateCredentialOutput = z.output<typeof deactivateCredentialSchema>;
+
+export const deleteCredentialSchema = z.strictObject({
+  credentialId: z.string().uuid({ error: "Valid credential ID is required" }),
+});
+
+export type DeleteCredentialInput = z.input<typeof deleteCredentialSchema>;
+export type DeleteCredentialOutput = z.output<typeof deleteCredentialSchema>;
+
 export const testConnectionSchema = z.strictObject({
   provider: z.string().trim().min(1, { error: "Provider is required" }),
   apiKey: z.string().trim().min(5, { error: "API key must be at least 5 characters" }),

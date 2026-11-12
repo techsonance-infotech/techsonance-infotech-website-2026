@@ -81,46 +81,65 @@ export class CloudflareImageAdapter {
     const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${targetModel}`;
 
     // Cloudflare Workers AI schema payload adaptation:
-    // - FLUX.1 [schnell] strictly accepts: { prompt: string, steps?: number } (400 on width/height/num_steps)
-    // - FLUX.2 klein / dev models accept: { prompt: string, width?: number, height?: number } or FormData
-    // - Other diffusion models (Leonardo / SDXL) accept: { prompt: string, width?: number, height?: number, num_steps?: number }
-    let requestBody: Record<string, unknown>;
+    // - FLUX.2 models (flux-2-dev, flux-2-klein-9b, flux-2-klein-4b) require multipart/form-data (FormData)
+    // - FLUX.1 [schnell] strictly accepts JSON: { prompt: string, steps?: number }
+    // - Other diffusion models (Leonardo / SDXL) accept JSON: { prompt, width, height, num_steps, guidance }
+    const isFlux2Multipart =
+      targetModel.includes("flux-2") || targetModel.includes("klein");
 
-    if (targetModel.includes("flux-1-schnell")) {
-      requestBody = {
-        prompt,
-        steps: 4,
+    let fetchHeaders: Record<string, string>;
+    let fetchBody: FormData | string;
+
+    if (isFlux2Multipart) {
+      const form = new FormData();
+      form.append("prompt", prompt);
+      form.append("width", String(Math.min(options.width ?? 1280, 1920)));
+      form.append("height", String(Math.min(options.height ?? 720, 1920)));
+      if (targetModel.includes("flux-2-dev")) {
+        form.append("steps", "25");
+      }
+      // Omit Content-Type so fetch automatically sets the multipart boundary header
+      fetchHeaders = {
+        Authorization: `Bearer ${apiToken}`,
       };
-    } else if (targetModel.includes("klein")) {
-      requestBody = {
-        prompt,
-        width: Math.min(options.width ?? 1024, 1920),
-        height: Math.min(options.height ?? 768, 1920),
-      };
+      fetchBody = form;
     } else {
-      const width = options.width ?? 1280;
-      const height = options.height ?? 720;
-      const isLeonardo = targetModel.includes("leonardo") || targetModel.includes("lucid") || targetModel.includes("phoenix");
-      requestBody = {
-        prompt,
-        width,
-        height,
-        ...(isLeonardo
-          ? { num_steps: 25, guidance: 4.5 }
-          : targetModel.includes("schnell")
-            ? { steps: 4 }
-            : { num_steps: 20 }),
+      let requestBody: Record<string, unknown>;
+      if (targetModel.includes("flux-1-schnell")) {
+        requestBody = {
+          prompt,
+          steps: 4,
+        };
+      } else {
+        const width = options.width ?? 1280;
+        const height = options.height ?? 720;
+        const isLeonardo =
+          targetModel.includes("leonardo") ||
+          targetModel.includes("lucid") ||
+          targetModel.includes("phoenix");
+        requestBody = {
+          prompt,
+          width,
+          height,
+          ...(isLeonardo
+            ? { num_steps: 25, guidance: 4.5 }
+            : targetModel.includes("schnell")
+              ? { steps: 4 }
+              : { num_steps: 20 }),
+        };
+      }
+      fetchHeaders = {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
       };
+      fetchBody = JSON.stringify(requestBody);
     }
 
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(35000), // 35s timeout
+      headers: fetchHeaders,
+      body: fetchBody,
+      signal: AbortSignal.timeout(45000), // 45s timeout
     });
 
     if (!res.ok) {

@@ -350,13 +350,13 @@ export function AdminShell({
         data-lenis-prevent
         className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto"
       >
-        {/* Floating Expand Sidebar Button (Desktop only when collapsed) */}
+        {/* Sticky Expand Sidebar Bar (Desktop only when collapsed) */}
         {isCollapsed && (
-          <div className="slide-in-from-left-3 sticky top-4 z-30 ml-4 hidden self-start duration-200 animate-in fade-in md:block">
+          <div className="sticky top-0 z-30 hidden w-full items-center border-b border-slate-200/70 bg-slate-50/95 px-4 py-2 backdrop-blur-md md:flex lg:px-8">
             <button
               type="button"
               onClick={handleToggleCollapse}
-              className="group inline-flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-md backdrop-blur-md transition-all hover:border-blue-200 hover:bg-white hover:text-[#1155CC] hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:outline-hidden"
+              className="group inline-flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-xs transition-all hover:border-blue-200 hover:bg-white hover:text-[#1155CC] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[#1155CC] focus-visible:outline-hidden"
               title="Expand sidebar (Ctrl+B)"
               aria-label="Expand sidebar"
             >
@@ -369,7 +369,7 @@ export function AdminShell({
           </div>
         )}
 
-        <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1440px] flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

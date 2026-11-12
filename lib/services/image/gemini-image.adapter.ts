@@ -5,7 +5,7 @@ import { logger } from "@/lib/logger";
 
 export class GeminiImageAdapter {
   readonly name = "gemini";
-  readonly defaultModel = "models/imagen-3.0-generate-002";
+  readonly defaultModel = "models/gemini-3.1-flash-image";
 
   constructor(private keyBroker?: KeyBrokerService) {}
 
@@ -23,7 +23,7 @@ export class GeminiImageAdapter {
   ): Promise<Buffer> {
     let apiKey: string | undefined;
     let credentialId: string | undefined;
-    const model = options.model || this.defaultModel;
+    let claimedModel: string | undefined;
 
     // 1. Prioritize database credential vault via KeyBrokerService
     if (this.keyBroker) {
@@ -32,6 +32,14 @@ export class GeminiImageAdapter {
         if (claimed) {
           apiKey = claimed.key.trim();
           credentialId = claimed.credentialId;
+          if (
+            claimed.model &&
+            (claimed.model.includes("image") ||
+              claimed.model.includes("imagen") ||
+              claimed.model.includes("nano-banana"))
+          ) {
+            claimedModel = claimed.model.trim();
+          }
         }
       } catch (err) {
         logger.warn("GeminiImageAdapter: DB key claim failed, trying env", {
@@ -51,46 +59,50 @@ export class GeminiImageAdapter {
       );
     }
 
+    const model = options.model || claimedModel || this.defaultModel;
     const cleanModel = model.replace(/^models\//, "");
 
-    // 3. Try predict endpoint (Imagen 3 standard REST endpoint)
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:predict`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "x-goog-api-key": apiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          instances: [{ prompt }],
-          parameters: {
-            sampleCount: 1,
-            aspectRatio: "16:9",
-            outputOptions: { mimeType: "image/jpeg" },
+    // 3. Try predict endpoint ONLY when explicitly targeting an Imagen model
+    if (cleanModel.startsWith("imagen")) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:predict`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "x-goog-api-key": apiKey,
+            "Content-Type": "application/json",
           },
-        }),
-        signal: AbortSignal.timeout(35000),
-      });
+          body: JSON.stringify({
+            instances: [{ prompt }],
+            parameters: {
+              sampleCount: 1,
+              aspectRatio: "16:9",
+              outputOptions: { mimeType: "image/jpeg" },
+            },
+          }),
+          signal: AbortSignal.timeout(35000),
+        });
 
-      if (res.ok) {
-        const data = (await res.json()) as {
-          predictions?: Array<{ bytesBase64Encoded?: string; mimeType?: string }>;
-        };
-        const b64 = data.predictions?.[0]?.bytesBase64Encoded;
-        if (b64) {
-          if (this.keyBroker && credentialId) {
-            await this.keyBroker.reportSuccess(credentialId);
+        if (res.ok) {
+          const data = (await res.json()) as {
+            predictions?: Array<{ bytesBase64Encoded?: string; mimeType?: string }>;
+          };
+          const b64 = data.predictions?.[0]?.bytesBase64Encoded;
+          if (b64) {
+            if (this.keyBroker && credentialId) {
+              await this.keyBroker.reportSuccess(credentialId);
+            }
+            return Buffer.from(b64, "base64");
           }
-          return Buffer.from(b64, "base64");
         }
+      } catch {
+        // Fall through to multimodal generateContent endpoint
       }
-    } catch {
-      // Fall through to multimodal generateContent endpoint
     }
 
-    // 4. Fallback: Multimodal generateContent (Gemini Flash Image)
-    const genUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`;
+    // 4. Multimodal generateContent using the configured Gemini image model (fallback if predict wasn't used)
+    const targetGenModel = cleanModel.startsWith("imagen") ? "gemini-3.1-flash-image" : cleanModel;
+    const genUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetGenModel}:generateContent`;
     const genRes = await fetch(genUrl, {
       method: "POST",
       headers: {

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST } from "@/app/api/admin/ai/credentials/route";
+import { GET, POST, DELETE } from "@/app/api/admin/ai/credentials/route";
+import { POST as deactivatePOST } from "@/app/api/admin/ai/credentials/deactivate/route";
 import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminAiCredentialsService } from "@/lib/services/ai/admin-ai-credentials.service";
@@ -28,6 +29,8 @@ describe("GET & POST /api/admin/ai/credentials — Black Box API Tests", () => {
     mockCredentialsService = {
       listCredentials: vi.fn(),
       addCredential: vi.fn(),
+      deleteCredential: vi.fn(),
+      deactivateCredential: vi.fn(),
     };
 
     const container = getContainer();
@@ -169,6 +172,75 @@ describe("GET & POST /api/admin/ai/credentials — Black Box API Tests", () => {
       expect(json.data.credential.id).toBe("cred-uuid-new");
       expect(json.data.credential.last4).toBe("9999");
       expect(json.data.credential.apiKey).toBeUndefined(); // Zero secret exposed
+    });
+  });
+
+  describe("DELETE /api/admin/ai/credentials", () => {
+    it("rejects unauthenticated delete requests with 401", async () => {
+      mockAuthService.getCurrentSession.mockResolvedValueOnce(null);
+
+      const req = new Request(
+        "http://localhost:3000/api/admin/ai/credentials?credentialId=660e8400-e29b-41d4-a716-446655440001",
+        { method: "DELETE" },
+      );
+      const res = await DELETE(req);
+      expect(res.status).toBe(401);
+    });
+
+    it("rejects non-UUID credentialId with 422 VALIDATION", async () => {
+      mockAuthService.getCurrentSession.mockResolvedValueOnce(sampleAdminSession);
+
+      const req = new Request(
+        "http://localhost:3000/api/admin/ai/credentials?credentialId=not-a-uuid",
+        { method: "DELETE" },
+      );
+      const res = await DELETE(req);
+      expect(res.status).toBe(422);
+    });
+
+    it("deletes credential and returns 200 on success", async () => {
+      mockAuthService.getCurrentSession.mockResolvedValueOnce(sampleAdminSession);
+      mockCredentialsService.deleteCredential.mockResolvedValueOnce(undefined);
+
+      const validId = "660e8400-e29b-41d4-a716-446655440001";
+      const req = new Request(
+        `http://localhost:3000/api/admin/ai/credentials?credentialId=${validId}`,
+        { method: "DELETE" },
+      );
+      const res = await DELETE(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.ok).toBe(true);
+      expect(json.data.success).toBe(true);
+      expect(mockCredentialsService.deleteCredential).toHaveBeenCalledWith(
+        validId,
+        "admin-uuid-1",
+        expect.any(String),
+      );
+    });
+  });
+
+  describe("POST /api/admin/ai/credentials/deactivate", () => {
+    it("deactivates active credential and returns 200", async () => {
+      mockAuthService.getCurrentSession.mockResolvedValueOnce(sampleAdminSession);
+      const validId = "660e8400-e29b-41d4-a716-446655440001";
+      mockCredentialsService.deactivateCredential.mockResolvedValueOnce({
+        id: validId,
+        provider: "cloudflare",
+        status: "disabled",
+        last4: "3b23",
+      });
+
+      const req = new Request("http://localhost:3000/api/admin/ai/credentials/deactivate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credentialId: validId }),
+      });
+      const res = await deactivatePOST(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.ok).toBe(true);
+      expect(json.data.credential.status).toBe("disabled");
     });
   });
 });

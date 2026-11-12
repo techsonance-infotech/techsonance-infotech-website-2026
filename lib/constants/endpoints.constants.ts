@@ -76,6 +76,7 @@ export const API_ENDPOINTS = {
       CREDENTIALS: "/api/admin/ai/credentials",
       CREDENTIALS_REPLACE: "/api/admin/ai/credentials/replace",
       CREDENTIALS_KILL: "/api/admin/ai/credentials/kill",
+      CREDENTIALS_DEACTIVATE: "/api/admin/ai/credentials/deactivate",
       CREDENTIALS_REACTIVATE: "/api/admin/ai/credentials/reactivate",
       CREDENTIALS_MODEL: "/api/admin/ai/credentials/model",
       ACCOUNTS: "/api/admin/ai/accounts",
