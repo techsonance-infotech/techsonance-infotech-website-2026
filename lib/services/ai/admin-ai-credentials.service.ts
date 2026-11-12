@@ -76,7 +76,21 @@ export class AdminAiCredentialsService {
     actorId: string,
     requestId?: string,
   ): Promise<CredentialViewDto> {
-    const fp = fingerprint(input.apiKey);
+    let effectiveApiKey = input.apiKey.trim();
+    if (input.provider.toLowerCase() === "cloudflare" && effectiveApiKey.includes(":")) {
+      const parts = effectiveApiKey.split(":");
+      const acc = parts[0]?.trim().toLowerCase();
+      const tok = parts.slice(1).join(":").trim();
+      if (!acc || !/^[0-9a-f]{32}$/.test(acc)) {
+        throw new AppError(
+          ErrorCode.VALIDATION,
+          "Cloudflare Account ID must be a 32-character hexadecimal string (0-9, a-f). Found invalid identifier.",
+        );
+      }
+      effectiveApiKey = `${acc}:${tok}`;
+    }
+
+    const fp = fingerprint(effectiveApiKey);
 
     // 1. Prevent duplicate key registration
     const existing = await this.repo.findByFingerprint(fp);
@@ -90,8 +104,8 @@ export class AdminAiCredentialsService {
     // 2. Generate UUID and seal with AAD bound to row ID and provider slug
     const credId = randomUUID();
     const aad = `${credId}:${input.provider}`;
-    const sealed = seal(input.apiKey, aad);
-    const last4 = input.apiKey.slice(-4);
+    const sealed = seal(effectiveApiKey, aad);
+    const last4 = effectiveApiKey.slice(-4);
 
     // 3. Store encrypted record in database
     const created = await this.repo.createCredential({
@@ -138,7 +152,21 @@ export class AdminAiCredentialsService {
       throw new AppError(ErrorCode.NOT_FOUND, "Target credential not found.");
     }
 
-    const fp = fingerprint(input.newApiKey);
+    let effectiveKey = input.newApiKey.trim();
+    if (oldCred.provider.toLowerCase() === "cloudflare" && effectiveKey.includes(":")) {
+      const parts = effectiveKey.split(":");
+      const acc = parts[0]?.trim().toLowerCase();
+      const tok = parts.slice(1).join(":").trim();
+      if (!acc || !/^[0-9a-f]{32}$/.test(acc)) {
+        throw new AppError(
+          ErrorCode.VALIDATION,
+          "Cloudflare Account ID must be a 32-character hexadecimal string (0-9, a-f). Found invalid identifier.",
+        );
+      }
+      effectiveKey = `${acc}:${tok}`;
+    }
+
+    const fp = fingerprint(effectiveKey);
     const existing = await this.repo.findByFingerprint(fp);
     if (existing && existing.id !== oldCred.id) {
       throw new AppError(
@@ -149,8 +177,8 @@ export class AdminAiCredentialsService {
 
     const newCredId = randomUUID();
     const aad = `${newCredId}:${oldCred.provider}`;
-    const sealed = seal(input.newApiKey, aad);
-    const last4 = input.newApiKey.slice(-4);
+    const sealed = seal(effectiveKey, aad);
+    const last4 = effectiveKey.slice(-4);
 
     // 1. Insert new active credential inheriting old settings
     const created = await this.repo.createCredential({

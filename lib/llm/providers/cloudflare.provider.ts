@@ -45,6 +45,10 @@ export class CloudflareProvider extends OpenAICompatibleProvider {
       }
     }
 
+    if (parsedAccountId) {
+      parsedAccountId = parsedAccountId.toLowerCase().trim();
+    }
+
     const accountId = parsedAccountId || "placeholder-account";
     const baseUrl =
       options.baseUrl ||

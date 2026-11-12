@@ -76,6 +76,10 @@ export class CloudflareImageAdapter {
       );
     }
 
+    // Normalize accountId (lowercase and whitespace trim only; bad characters are caught by validation)
+    accountId = accountId.toLowerCase().trim();
+    apiToken = apiToken.trim();
+
     const targetModel = options.model || claimedModel || this.model;
 
     const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${targetModel}`;
@@ -155,7 +159,8 @@ export class CloudflareImageAdapter {
           errorMessage: errText,
         });
       }
-      throw new Error(`Cloudflare AI image error (${res.status}): ${errText}`);
+      const cleanMessage = parseCloudflareErrorMessage(res.status, errText);
+      throw new Error(cleanMessage);
     }
 
     // Report success to update usage and keep account healthy
@@ -175,4 +180,17 @@ export class CloudflareImageAdapter {
     const arrayBuf = await res.arrayBuffer();
     return Buffer.from(arrayBuf);
   }
+}
+
+function parseCloudflareErrorMessage(status: number, rawText: string): string {
+  try {
+    const data = JSON.parse(rawText) as { errors?: Array<{ message?: string; code?: number }> };
+    const firstErr = data.errors?.[0];
+    if (firstErr?.message) {
+      return `Cloudflare AI (${status}): ${firstErr.message}${firstErr.code ? ` (code ${firstErr.code})` : ""}`;
+    }
+  } catch {
+    // raw fallback
+  }
+  return `Cloudflare AI (${status}): ${rawText.replace(/\s+/g, " ").slice(0, 150)}`;
 }

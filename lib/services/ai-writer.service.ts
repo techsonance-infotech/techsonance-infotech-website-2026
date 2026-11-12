@@ -2,7 +2,7 @@ import "server-only";
 import { inject } from "@needle-di/core";
 import { LLMRouterService } from "./llm-router.service";
 import { AdminPromptsService } from "./admin-prompts.service";
-import type { LLMChatRequest } from "../llm/types";
+import { type LLMChatRequest, AllExhaustedError } from "../llm/types";
 import { logger } from "../logger";
 import { getEnv } from "../env";
 import { AppError, ErrorCode } from "../errors";
@@ -207,7 +207,17 @@ export class AIWriterService {
         result += chunk;
       }
     } catch (error) {
-      logger.error("AIWriterService completion error", { error });
+      if (error instanceof AllExhaustedError) {
+        logger.warn("AIWriterService: All LLM providers in cooldown or exhausted", {
+          earliestRetryAt: error.earliestRetryAt
+            ? new Date(error.earliestRetryAt).toISOString()
+            : undefined,
+        });
+      } else {
+        logger.error("AIWriterService completion error", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
       throw error;
     }
 

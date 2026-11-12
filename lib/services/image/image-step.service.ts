@@ -194,7 +194,7 @@ export class ImageStepService {
           providerName = "cloudflare";
         } catch (cfError) {
           logger.warn(`Attempt ${attempt}: Cloudflare generation bypassed/failed`, {
-            error: String(cfError),
+            error: cfError instanceof Error ? cfError.message : String(cfError),
           });
         }
       }
@@ -206,7 +206,7 @@ export class ImageStepService {
           providerName = "gemini";
         } catch (geminiError) {
           logger.warn(`Attempt ${attempt}: Gemini image generation bypassed/failed`, {
-            error: String(geminiError),
+            error: geminiError instanceof Error ? geminiError.message : String(geminiError),
           });
         }
       }
@@ -218,7 +218,7 @@ export class ImageStepService {
           providerName = "openai";
         } catch (openAiError) {
           logger.warn(`Attempt ${attempt}: OpenAI DALL-E bypassed/failed`, {
-            error: String(openAiError),
+            error: openAiError instanceof Error ? openAiError.message : String(openAiError),
           });
         }
       }

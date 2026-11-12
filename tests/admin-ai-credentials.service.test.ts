@@ -274,4 +274,64 @@ describe("AdminAiCredentialsService", () => {
       code: ErrorCode.NOT_FOUND,
     });
   });
+
+  describe("Cloudflare Account ID Validation", () => {
+    it("should reject Cloudflare credential with invalid non-hex character 'O' in account ID", async () => {
+      await expect(
+        service.addCredential(
+          {
+            provider: "cloudflare",
+            label: "Bad CF Account ID",
+            apiKey: "7858306bd979f4b9e6484aeOc55333aa:valid_token_here",
+          },
+          "admin-user-1",
+        ),
+      ).rejects.toMatchObject({
+        code: ErrorCode.VALIDATION,
+        message: expect.stringContaining("32-character hexadecimal string"),
+      });
+    });
+
+    it("should reject Cloudflare credential with account ID that is not 32 characters", async () => {
+      await expect(
+        service.addCredential(
+          {
+            provider: "cloudflare",
+            label: "Short CF Account ID",
+            apiKey: "7858306b:valid_token_here",
+          },
+          "admin-user-1",
+        ),
+      ).rejects.toMatchObject({
+        code: ErrorCode.VALIDATION,
+        message: expect.stringContaining("32-character hexadecimal string"),
+      });
+    });
+
+    it("should accept valid 32-char hex Cloudflare account ID and normalize to lowercase", async () => {
+      mockRepo.findByFingerprint.mockResolvedValue(null);
+      mockRepo.createCredential.mockImplementation(async (data: any) => ({
+        ...data,
+        id: "cf-cred-valid",
+        createdAt: new Date(),
+        spentTodayUsd: "0",
+      }));
+
+      const result = await service.addCredential(
+        {
+          provider: "cloudflare",
+          label: "Valid CF Account",
+          apiKey: "7858306BD979F4B9E6484AE0C55333AA:valid_token_here",
+        },
+        "admin-user-1",
+      );
+
+      expect(result.id).toBe("cf-cred-valid");
+      expect(mockRepo.createCredential).toHaveBeenCalledWith(
+        expect.objectContaining({
+          provider: "cloudflare",
+        }),
+      );
+    });
+  });
 });

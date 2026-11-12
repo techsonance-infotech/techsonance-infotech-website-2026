@@ -98,7 +98,8 @@ export class OpenAIImageAdapter {
           errorMessage: errText,
         });
       }
-      throw new Error(`OpenAI Image error (${res.status}, model=${model}): ${errText}`);
+      const cleanMessage = parseOpenAIErrorMessage(res.status, model, errText);
+      throw new Error(cleanMessage);
     }
 
     if (this.keyBroker && credentialId) {
@@ -121,4 +122,17 @@ export class OpenAIImageAdapter {
 
     throw new Error("OpenAI DALL-E did not return valid image content");
   }
+}
+
+function parseOpenAIErrorMessage(status: number, model: string, rawText: string): string {
+  try {
+    const data = JSON.parse(rawText) as { error?: { message?: string; code?: string } };
+    const msg = data.error?.message;
+    if (msg) {
+      return `OpenAI (${status}, model=${model}): ${msg.slice(0, 150)}`;
+    }
+  } catch {
+    // raw fallback
+  }
+  return `OpenAI (${status}, model=${model}): ${rawText.replace(/\s+/g, " ").slice(0, 150)}`;
 }

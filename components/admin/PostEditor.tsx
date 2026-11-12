@@ -186,7 +186,13 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
 
       if (res.data?.url) {
         setValue("heroImage", res.data.url, { shouldDirty: true, shouldValidate: true });
-        setThumbnailFeedback("Thumbnail generated successfully!");
+        if (res.data.thumbnailMissing) {
+          setThumbnailFeedback(
+            "AI generation failed across providers (quota/auth). Fallback hero image was applied.",
+          );
+        } else {
+          setThumbnailFeedback("AI thumbnail generated successfully!");
+        }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to generate thumbnail.";
@@ -776,7 +782,11 @@ export function PostEditor({ initialPost, isNew = false }: PostEditorProps) {
                 {thumbnailFeedback && (
                   <p
                     className={`text-[11px] font-medium ${
-                      thumbnailFeedback.includes("failed") ? "text-rose-600" : "text-emerald-600"
+                      thumbnailFeedback.includes("Fallback")
+                        ? "text-amber-600"
+                        : thumbnailFeedback.includes("failed")
+                          ? "text-rose-600"
+                          : "text-emerald-600"
                     }`}
                   >
                     {thumbnailFeedback}

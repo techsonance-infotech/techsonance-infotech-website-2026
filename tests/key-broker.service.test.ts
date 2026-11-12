@@ -69,16 +69,22 @@ describe("KeyBrokerService", () => {
     expect(claimed?.isFallbackEnv).toBe(true);
   });
 
-  it("should auto-quarantine and wipe ciphertext when AUTH_FAILED is reported", async () => {
+  it("should non-destructively quarantine credential (set disabled, preserve ciphertext) when AUTH_FAILED is reported", async () => {
     const credId = "cred-compromised-99";
     await broker.reportFailure("groq", credId, "AUTH_FAILED", {
       errorMessage: "401 Unauthorized API Key Revoked",
     });
 
-    expect(mockRepo.wipeCompromisedCredential).toHaveBeenCalledWith(credId);
+    expect(mockRepo.updateStatus).toHaveBeenCalledWith(
+      credId,
+      AiCredentialStatus.DISABLED,
+      null,
+      "AUTH_FAILED",
+    );
+    expect(mockRepo.wipeCompromisedCredential).not.toHaveBeenCalled();
     expect(mockRepo.recordEvent).toHaveBeenCalledWith(
       credId,
-      "compromised",
+      "disabled",
       "system",
       expect.objectContaining({ reason: "AUTH_FAILED" }),
     );

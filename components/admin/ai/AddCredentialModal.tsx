@@ -94,8 +94,10 @@ function AddCredentialForm({
     e.preventDefault();
 
     const isCloudflare = provider === "cloudflare";
+    const sanitizedCfAccountId = isCloudflare ? cfAccountId.trim().toLowerCase() : "";
+    const sanitizedCfApiToken = isCloudflare ? cfApiToken.trim() : "";
     const effectiveApiKey = isCloudflare
-      ? `${cfAccountId.trim()}:${cfApiToken.trim()}`
+      ? `${sanitizedCfAccountId}:${sanitizedCfApiToken}`
       : apiKey.trim();
 
     if (!label.trim()) {
@@ -104,8 +106,14 @@ function AddCredentialForm({
     }
 
     if (isCloudflare) {
-      if (!cfAccountId.trim() || !cfApiToken.trim()) {
+      if (!sanitizedCfAccountId || !sanitizedCfApiToken) {
         setErrorMsg("Please provide both Cloudflare Account ID and API Token.");
+        return;
+      }
+      if (!/^[0-9a-f]{32}$/.test(sanitizedCfAccountId)) {
+        setErrorMsg(
+          "Cloudflare Account ID must be a 32-character hexadecimal string (0-9, a-f). Found invalid character(s) or incorrect length.",
+        );
         return;
       }
     } else if (!apiKey.trim()) {

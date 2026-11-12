@@ -166,11 +166,17 @@ export class KeyBrokerService {
       try {
         switch (errorKind) {
           case "AUTH_FAILED": {
-            // Immediate auto-quarantine
-            await this.repo.wipeCompromisedCredential(credentialId);
-            await this.repo.recordEvent(credentialId, "compromised", "system", {
+            // Non-destructive quarantine: mark DISABLED, preserve ciphertext for admin inspection/recovery
+            await this.repo.updateStatus(
+              credentialId,
+              AiCredentialStatus.DISABLED,
+              null,
+              "AUTH_FAILED",
+            );
+            await this.repo.recordEvent(credentialId, "disabled", "system", {
               reason: "AUTH_FAILED",
               error: details?.errorMessage,
+              note: "Authentication rejected (401/403). Check token permissions or account configuration.",
             });
             break;
           }

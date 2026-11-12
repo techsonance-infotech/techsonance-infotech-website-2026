@@ -44,13 +44,21 @@ function ReplaceCredentialForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const sanitizedCfAccountId = isCloudflare ? cfAccountId.trim().toLowerCase() : "";
+    const sanitizedCfApiToken = isCloudflare ? cfApiToken.trim() : "";
     const effectiveKey = isCloudflare
-      ? `${cfAccountId.trim()}:${cfApiToken.trim()}`
+      ? `${sanitizedCfAccountId}:${sanitizedCfApiToken}`
       : newApiKey.trim();
 
     if (isCloudflare) {
-      if (!cfAccountId.trim() || !cfApiToken.trim()) {
+      if (!sanitizedCfAccountId || !sanitizedCfApiToken) {
         setErrorMsg("Please provide both Cloudflare Account ID and Workers AI API Token.");
+        return;
+      }
+      if (!/^[0-9a-f]{32}$/.test(sanitizedCfAccountId)) {
+        setErrorMsg(
+          "Cloudflare Account ID must be a 32-character hexadecimal string (0-9, a-f). Found invalid character(s) or incorrect length.",
+        );
         return;
       }
     } else if (!newApiKey.trim()) {

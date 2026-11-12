@@ -133,7 +133,8 @@ export class GeminiImageAdapter {
           errorMessage: errText,
         });
       }
-      throw new Error(`Google Gemini Image error (${genRes.status}): ${errText}`);
+      const cleanMessage = parseGeminiErrorMessage(genRes.status, errText);
+      throw new Error(cleanMessage);
     }
 
     if (this.keyBroker && credentialId) {
@@ -160,4 +161,27 @@ export class GeminiImageAdapter {
 
     throw new Error("Google Gemini Image did not return valid image parts");
   }
+}
+
+function parseGeminiErrorMessage(status: number, rawText: string): string {
+  try {
+    const data = JSON.parse(rawText) as {
+      error?: { message?: string; status?: string; code?: number };
+    };
+    const msg = data.error?.message;
+    if (msg) {
+      if (
+        status === 429 ||
+        data.error?.status === "RESOURCE_EXHAUSTED" ||
+        msg.includes("Quota exceeded")
+      ) {
+        return "Google Gemini (429): Quota limit reached on Free Tier (RESOURCE_EXHAUSTED)";
+      }
+      const firstLine = msg.split("\n")[0]?.trim() || msg;
+      return `Google Gemini (${status}): ${firstLine.slice(0, 150)}`;
+    }
+  } catch {
+    // raw fallback
+  }
+  return `Google Gemini (${status}): ${rawText.replace(/\s+/g, " ").slice(0, 150)}`;
 }
