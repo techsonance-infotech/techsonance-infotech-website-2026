@@ -5,6 +5,7 @@ export enum AdminRole {
   AUTHOR = "author",
   VIEWER = "viewer",
 }
+export const ADMIN_ROLE_VALUES = Object.values(AdminRole) as [AdminRole, ...AdminRole[]];
 
 export enum PostStatus {
   DRAFT = "DRAFT",

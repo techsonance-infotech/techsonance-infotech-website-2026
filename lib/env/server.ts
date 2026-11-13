@@ -119,6 +119,16 @@ export const serverEnvSchema = z.object({
         path: ["AI_FP_PEPPER"],
       });
     }
+
+    const sessionSecret = data.JWT_ACCESS_SECRET || data.BETTER_AUTH_SECRET;
+    const DEV_SECRET = "techsonance-studio-admin-secret-minimum-32-chars";
+    if (!sessionSecret || sessionSecret.length < 32 || sessionSecret === DEV_SECRET) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "JWT_ACCESS_SECRET or BETTER_AUTH_SECRET must be set to a secure key of at least 32 characters in production.",
+        path: ["JWT_ACCESS_SECRET"],
+      });
+    }
   }
 });
 

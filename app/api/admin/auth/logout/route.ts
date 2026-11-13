@@ -56,7 +56,15 @@ export async function POST(req: Request) {
       { status: 200, headers },
     );
 
-    // Delete session cookie from client
+    // Delete and expire session cookie from client
+    response.cookies.set(SESSION_COOKIE, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+      expires: new Date(0),
+    });
     response.cookies.delete(SESSION_COOKIE);
 
     return response;

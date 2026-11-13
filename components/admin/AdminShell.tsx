@@ -33,8 +33,8 @@ interface AdminShellProps {
 
 export function AdminShell({
   children,
-  userEmail = "admin@techsonance.co.in",
-  userRole = "owner",
+  userEmail,
+  userRole,
 }: AdminShellProps) {
   const pathname = usePathname();
   const router = useRouter();

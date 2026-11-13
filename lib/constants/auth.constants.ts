@@ -1,3 +1,5 @@
+import { AdminRole } from "@/lib/constants/enums/content.enum";
+
 export const AUTH_LIMITS = {
   EMAIL_MAX: 254,
   PASSWORD_MIN: 6,
@@ -26,9 +28,9 @@ export const AUTH_MESSAGES = {
 } as const;
 
 export const AUTH_DEFAULT_ROLES = {
-  OWNER: "owner",
-  ADMIN: "admin",
-  EDITOR: "editor",
-  AUTHOR: "author",
-  VIEWER: "viewer",
+  OWNER: AdminRole.OWNER,
+  ADMIN: AdminRole.ADMIN,
+  EDITOR: AdminRole.EDITOR,
+  AUTHOR: AdminRole.AUTHOR,
+  VIEWER: AdminRole.VIEWER,
 } as const;

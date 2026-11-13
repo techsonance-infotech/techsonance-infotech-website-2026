@@ -26,6 +26,15 @@ export function escapeHtml(text: string): string {
 export function isAllowedOrigin(originHeader: string | null): boolean {
   if (!originHeader) return true; // Server-side or direct invocation
 
+  let parsed: URL;
+  try {
+    parsed = new URL(originHeader.trim());
+  } catch {
+    return false;
+  }
+
+  const normalizedOrigin = parsed.origin.toLowerCase();
+
   let allowedList = [
     "http://localhost:3000",
     "https://www.techsonance.co.in",
@@ -40,11 +49,16 @@ export function isAllowedOrigin(originHeader: string | null): boolean {
     // fallback
   }
 
-  const cleanOrigin = originHeader.trim().toLowerCase();
-  return (
-    allowedList.includes(cleanOrigin) ||
-    cleanOrigin.includes("localhost") ||
-    cleanOrigin.includes("127.0.0.1") ||
-    cleanOrigin.includes("techsonance.co.in")
-  );
+  if (allowedList.includes(normalizedOrigin)) {
+    return true;
+  }
+
+  // In non-production, permit local development loopback addresses on any port
+  if (process.env.NODE_ENV !== "production") {
+    if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") {
+      return true;
+    }
+  }
+
+  return false;
 }

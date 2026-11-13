@@ -98,10 +98,42 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. Authenticate credentials
+    // 4. Authenticate credentials with account-level rate limiting
     const { email, password } = parseResult.data;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const accountRateLimitResult = await rateLimiter.check(`admin:login:acct:${normalizedEmail}`, {
+      maxRequests: AUTH_LIMITS.MAX_LOGIN_ATTEMPTS,
+      windowSeconds: AUTH_LIMITS.LOGIN_WINDOW_SECONDS,
+    });
+
+    if (!accountRateLimitResult.success) {
+      const retryAfter = accountRateLimitResult.retryAfter ?? AUTH_LIMITS.LOGIN_WINDOW_SECONDS;
+      headers.set("Retry-After", String(retryAfter));
+
+      logger.warn("Admin account login rate limit exceeded", {
+        email: normalizedEmail,
+        retryAfter,
+        requestId,
+      });
+
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.RATE_LIMITED,
+            message: AUTH_ERRORS.RATE_LIMITED,
+            retryAfterSec: retryAfter,
+            requestId,
+          },
+          code: ErrorCode.RATE_LIMITED,
+        },
+        { status: 429, headers },
+      );
+    }
+
     const authService = container.get(AdminAuthService);
-    const user = await authService.authenticate(email, password);
+    const user = await authService.authenticate(normalizedEmail, password);
 
     // 5. Generate secure session token and issue HTTP-only cookie
     const token = createSessionToken({

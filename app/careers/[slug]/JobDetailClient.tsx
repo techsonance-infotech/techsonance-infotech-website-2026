@@ -232,12 +232,34 @@ export default function JobDetailClient({
     }
   }, [isApplyOpen]);
 
-  // Read the URL on the client only (avoids SSR/hydration issues)
+  // Read URL and handle auto-apply / scroll-to-top on deep-link navigation
   useEffect(() => {
     startTransition(() => {
       setCurrentUrl(window.location.href);
     });
-  }, []);
+
+    if (typeof window === "undefined") return;
+
+    try {
+      const url = new URL(window.location.href);
+      const isApplyRequested =
+        url.searchParams.get("apply") === "true" ||
+        window.location.hash === "#apply-form" ||
+        window.location.hash === "#apply";
+
+      if (isApplyRequested) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { immediate: true });
+        }
+        if (canApply && !(job.applicationMethod === "external" && job.externalApplyUrl)) {
+          setIsApplyOpen(true);
+        }
+      }
+    } catch {
+      // Safe fallback if URL parsing fails
+    }
+  }, [canApply, job.applicationMethod, job.externalApplyUrl]);
 
   const handleCopyLink = async () => {
     try {
@@ -442,7 +464,7 @@ export default function JobDetailClient({
               </div>
 
               {canApply && (
-                <div className="flex shrink-0 gap-3 sm:flex-col">
+                <div id="apply-form" className="flex shrink-0 gap-3 sm:flex-col">
                   {job.applicationMethod === "external" && job.externalApplyUrl ? (
                     <Button
                       asChild

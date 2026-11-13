@@ -825,7 +825,7 @@ export default function CareersClient({ initialJobs }: { initialJobs?: JobPostin
                             <Link href={`/careers/${job.slug || "job"}`}>View Details</Link>
                           </Button>
                           <Button asChild variant="default" size="sm" className="rounded-xl">
-                            <Link href={`/careers/${job.slug || "job"}#apply-form`}>Apply Now</Link>
+                            <Link href={`/careers/${job.slug || "job"}?apply=true`}>Apply Now</Link>
                           </Button>
                         </div>
                       </div>

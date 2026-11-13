@@ -7,6 +7,16 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
+  // Scroll to top on client-side route transitions when no anchor hash is targeted
+  useEffect(() => {
+    if (isAdmin) return;
+    if (typeof window !== "undefined" && window.__lenis) {
+      if (!window.location.hash) {
+        window.__lenis.scrollTo(0, { immediate: true });
+      }
+    }
+  }, [pathname, isAdmin]);
+
   useEffect(() => {
     // Disable smooth-scrolling entirely inside Admin Studio and CMS authoring pages.
     // Admin dashboards require native, unhindered scrolling for dense forms, nested panels, and dropdowns.

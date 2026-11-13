@@ -121,5 +121,26 @@ describe("Career Application Client API & Component Integration", () => {
       expect(html).toContain("Do you have 3+ years experience with Next.js?");
       expect(html).toContain("Submit Application");
     });
+
+    it("renders job details hero with id='apply-form' to guarantee valid anchor target", async () => {
+      const { default: JobDetailClient } = await import("@/app/careers/[slug]/JobDetailClient");
+      const mockJob: import("@/lib/content/types").JobPosting = {
+        slug: "lead-engineer",
+        title: "Lead Engineer",
+        department: "Engineering",
+        location: "Remote",
+        workMode: "remote",
+        type: "Full Time",
+        description: "Leading frontend initiatives",
+        responsibilities: ["Lead engineering projects"],
+        requirements: ["Next.js proficiency"],
+        benefits: ["Comprehensive health coverage"],
+        status: "PUBLISHED",
+      };
+
+      const html = renderToString(<JobDetailClient job={mockJob} similarJobs={[]} />);
+      expect(html).toContain('id="apply-form"');
+      expect(html).toContain("Apply for this Role");
+    });
   });
 });

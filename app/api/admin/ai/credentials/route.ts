@@ -7,6 +7,7 @@ import {
   addCredentialSchema,
   deleteCredentialSchema,
 } from "@/lib/validations/ai-credential.schema";
+import { AdminRole } from "@/lib/constants/enums/content.enum";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { getRequestId } from "@/lib/server/requestContext";
 import { isAllowedOrigin } from "@/lib/utils/text";
@@ -26,7 +27,8 @@ async function requireAdminSession(
   req: Request,
   requestId: string,
   headers: Headers,
-): Promise<{ userId?: string } | NextResponse> {
+  minRole: string = "admin",
+): Promise<{ userId?: string; role?: string } | NextResponse> {
   const origin = req.headers.get("origin");
   if (origin && !isAllowedOrigin(origin)) {
     return NextResponse.json(
@@ -38,7 +40,8 @@ async function requireAdminSession(
     );
   }
 
-  const session = await getContainer().get(AdminAuthService).getCurrentSession();
+  const authService = getContainer().get(AdminAuthService);
+  const session = await authService.getCurrentSession();
   if (!session) {
     return NextResponse.json(
       {
@@ -48,6 +51,21 @@ async function requireAdminSession(
       { status: 401, headers },
     );
   }
+
+  const hasPerm = typeof authService.hasPermission === "function"
+    ? authService.hasPermission(session.role, minRole)
+    : (session.role === AdminRole.ADMIN || session.role === AdminRole.OWNER || (session.role as string) === "super_admin");
+
+  if (!hasPerm) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: { code: ErrorCode.FORBIDDEN, message: "Insufficient permissions for AI credentials management", requestId },
+      },
+      { status: 403, headers },
+    );
+  }
+
   return session;
 }
 

@@ -51,7 +51,7 @@ describe("AdminShell Component — Collapsible Sidebar & Navigation Active State
     currentPathname = "/admin/blog/topics";
 
     const html = renderToString(
-      <AdminShell>
+      <AdminShell userEmail="admin@techsonance.co.in">
         <div>Topics Page</div>
       </AdminShell>,
     );
@@ -71,7 +71,7 @@ describe("AdminShell Component — Collapsible Sidebar & Navigation Active State
     currentPathname = "/admin/blog/post-123";
 
     const html = renderToString(
-      <AdminShell>
+      <AdminShell userEmail="admin@techsonance.co.in">
         <div>Edit Article</div>
       </AdminShell>,
     );
@@ -87,7 +87,7 @@ describe("AdminShell Component — Collapsible Sidebar & Navigation Active State
     currentPathname = "/admin/blog/new";
 
     const html = renderToString(
-      <AdminShell>
+      <AdminShell userEmail="admin@techsonance.co.in">
         <div>New Article</div>
       </AdminShell>,
     );
@@ -100,7 +100,7 @@ describe("AdminShell Component — Collapsible Sidebar & Navigation Active State
     currentPathname = "/admin/blog/prompts";
 
     const html = renderToString(
-      <AdminShell>
+      <AdminShell userEmail="admin@techsonance.co.in">
         <div>Prompt Studio</div>
       </AdminShell>,
     );
@@ -116,12 +116,37 @@ describe("AdminShell Component — Collapsible Sidebar & Navigation Active State
     currentPathname = "/admin/careers/jobs";
 
     const html = renderToString(
-      <AdminShell>
+      <AdminShell userEmail="admin@techsonance.co.in">
         <div>Careers Page</div>
       </AdminShell>,
     );
 
     const careersLink = getAnchorByHref(html, "/admin/careers/jobs");
     expect(careersLink.classes).toContain("bg-[#1155CC]");
+  });
+
+  it("does not render admin shell when user is unauthenticated on protected routes", () => {
+    currentPathname = "/admin/dashboard";
+
+    const html = renderToString(
+      <AdminShell>
+        <div>Secret Content</div>
+      </AdminShell>,
+    );
+
+    expect(html).toBe("");
+  });
+
+  it("renders login page children without admin shell on /admin/login", () => {
+    currentPathname = "/admin/login";
+
+    const html = renderToString(
+      <AdminShell>
+        <div>Login Form</div>
+      </AdminShell>,
+    );
+
+    expect(html).toContain("Login Form");
+    expect(html).not.toContain("Overview");
   });
 });

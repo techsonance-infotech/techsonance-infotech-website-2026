@@ -4,6 +4,7 @@ import { getContainer } from "@/lib/di/container";
 import { AdminAuthService } from "@/lib/services/admin-auth.service";
 import { AdminAiCredentialsService } from "@/lib/services/ai/admin-ai-credentials.service";
 import { replaceCredentialSchema } from "@/lib/validations/ai-credential.schema";
+import { AdminRole } from "@/lib/constants/enums/content.enum";
 import { AppError, ErrorCode, STATUS_BY_CODE, toFieldErrors } from "@/lib/errors";
 import { getRequestId } from "@/lib/server/requestContext";
 import { isAllowedOrigin } from "@/lib/utils/text";
@@ -49,6 +50,24 @@ export async function POST(req: Request) {
           },
         },
         { status: 401, headers },
+      );
+    }
+
+    const hasPerm = typeof authService.hasPermission === "function"
+      ? authService.hasPermission(session.role, "admin")
+      : (session.role === AdminRole.ADMIN || session.role === AdminRole.OWNER || (session.role as string) === "super_admin");
+
+    if (!hasPerm) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: ErrorCode.FORBIDDEN,
+            message: "Insufficient permissions for replacing credentials",
+            requestId,
+          },
+        },
+        { status: 403, headers },
       );
     }
 

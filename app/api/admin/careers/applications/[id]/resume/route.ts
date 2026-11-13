@@ -64,7 +64,29 @@ export async function GET(req: Request, { params }: RouteParams) {
     );
   }
 
-  // 3. Strict UUID parameter validation
+  // 3. RBAC permission check (editor, admin, recruiter, or hiring_manager required to view candidate resume)
+  const allowedResumeRoles = ["owner", "admin", "editor", "recruiter", "hiring_manager"];
+  const hasResumePerm = allowedResumeRoles.includes(session.role as string);
+
+  if (!hasResumePerm) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: {
+          code: ErrorCode.FORBIDDEN,
+          message: "Forbidden: insufficient permissions to access candidate resume",
+          requestId,
+        },
+        code: ErrorCode.FORBIDDEN,
+      },
+      {
+        status: 403,
+        headers: { "x-request-id": requestId },
+      },
+    );
+  }
+
+  // 4. Strict UUID parameter validation
   const rawParams = await params;
   const paramValidation = applicationResumeParamsSchema.safeParse(rawParams);
 
