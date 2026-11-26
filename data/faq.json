@@ -80,7 +80,7 @@
       "examples of your work",
       "previous apps"
     ],
-    "a": "Our featured production case studies include:\n• Zion: Event discovery & ticketing platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
+    "a": "Our featured production case studies include:\n• CMS TechSonance: Enterprise operations & HRMS platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
     "cta": true,
     "tags": ["portfolio", "case-studies", "work"]
   },
@@ -351,7 +351,7 @@
       "appointment booking software",
       "reservation platform"
     ],
-    "a": "Yes! We have built ticketing platforms (like Zion) featuring seat/tier selection, QR-code validation, automated scheduling, and organizer revenue dashboards.",
+    "a": "Yes! We engineer modern booking and reservation platforms featuring custom seating maps, QR-code validation, automated scheduling, calendar integrations, and organizer revenue dashboards.",
     "cta": true,
     "tags": ["services", "booking", "events"]
   },

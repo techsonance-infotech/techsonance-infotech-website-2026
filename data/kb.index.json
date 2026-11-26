@@ -51,7 +51,7 @@
     "id": "experience-0",
     "topic": "experience",
     "title": "Portfolio Track Record",
-    "text": "Over our 5+ years of building digital products, our team has delivered over 10+ production platforms and applications across diverse industries:\n- **Zion**: AI-powered cross-platform mobile application for event discovery, social ticketing, real-time chat, and host analytics built with Flutter, Firebase, and Stripe.\n- **Utsav**: Unified mobile mandal and community festival management platform for Ganesh Chaturthi scheduling, donation ledger tracking, expense reporting, and committee workflows built with Flutter and Node.js.\n- **FreightFlow**: Enterprise logistics and supply chain orchestration platform featuring real-time fleet dispatch, automated invoicing, and route optimization.\n- **SyncServe POS**: High-throughput retail point-of-sale system supporting multi-terminal syncing, barcode scanning, offline caching, and instant GST invoices.\n- **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.\n- **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.\n- **AccuNest**: Comprehensive accounting and financial management suite for SMEs.",
+    "text": "Over our 5+ years of building digital products, our team has delivered over 10+ production platforms and applications across diverse industries:\n- **CMS TechSonance**: Enterprise multi-tenant operations, HRMS, and client management platform featuring dual dashboards, 23-role granular RBAC, NFC/GPS attendance, automated payroll, project sprint/Kanban tracking, client CRM pipeline, and finance invoicing built with Next.js 15, React 19, Supabase (PostgreSQL), and Docker.\n- **Utsav**: Unified mobile mandal and community festival management platform for Ganesh Chaturthi scheduling, donation ledger tracking, expense reporting, and committee workflows built with Flutter and Node.js.\n- **FreightFlow**: Enterprise logistics and supply chain orchestration platform featuring real-time fleet dispatch, automated invoicing, and route optimization.\n- **SyncServe POS**: High-throughput retail point-of-sale system supporting multi-terminal syncing, barcode scanning, offline caching, and instant GST invoices.\n- **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.\n- **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.\n- **AccuNest**: Comprehensive accounting and financial management suite for SMEs.",
     "tags": [
       "experience",
       "portfolio",
@@ -426,7 +426,7 @@
     "id": "faq-company-portfolio",
     "topic": "faq",
     "title": "Can I see your portfolio, case studies or testimonials?",
-    "text": "Question: Can I see your portfolio, case studies or testimonials?\nAlternative phrasings: show me your work | case studies | past projects | portfolio link | examples of your work | previous apps\nAnswer: Our featured production case studies include:\n• Zion: Event discovery & ticketing platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
+    "text": "Question: Can I see your portfolio, case studies or testimonials?\nAlternative phrasings: show me your work | case studies | past projects | portfolio link | examples of your work | previous apps\nAnswer: Our featured production case studies include:\n• CMS TechSonance: Enterprise operations & HRMS platform\n• FreightFlow: Logistics management system\n• SyncServe: Retail POS & inventory platform\n• Utsav & MasterWeg: Community & operations tools\n\nVisit our portfolio section to explore full details!",
     "tags": [
       "faq",
       "portfolio",
@@ -668,7 +668,7 @@
     "id": "faq-services-booking-ticketing",
     "topic": "faq",
     "title": "Can you build booking, ticketing or event platforms?",
-    "text": "Question: Can you build booking, ticketing or event platforms?\nAlternative phrasings: event booking app | ticket booking system | appointment booking software | reservation platform\nAnswer: Yes! We have built ticketing platforms (like Zion) featuring seat/tier selection, QR-code validation, automated scheduling, and organizer revenue dashboards.",
+    "text": "Question: Can you build booking, ticketing or event platforms?\nAlternative phrasings: event booking app | ticket booking system | appointment booking software | reservation platform\nAnswer: Yes! We engineer modern booking and reservation platforms featuring custom seating maps, QR-code validation, automated scheduling, calendar integrations, and organizer revenue dashboards.",
     "tags": [
       "faq",
       "services",

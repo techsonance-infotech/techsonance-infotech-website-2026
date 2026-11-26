@@ -143,12 +143,12 @@ export const landingPages: Record<string, LandingPageData> = {
         tags: ["React 19", "IndexedDB", "Node.js", "PWA", "POS"]
       },
       {
-        slug: "zion",
-        title: "Zion Event Discovery & Ticketing App",
-        client: "Zion Entertainment",
-        metric: "50,000+ Concurrent Event Attendees",
-        description: "Real-time cross-platform mobile application featuring interactive seat mapping, QR ticketing, and host revenue analytics.",
-        tags: ["Flutter", "Firebase", "Node.js", "Mobile"]
+        slug: "cms-techsonance",
+        title: "CMS TechSonance Operations Platform",
+        client: "TechSonance Infotech",
+        metric: "99.98% System Uptime",
+        description: "Multi-tenant enterprise operations suite unifying HRMS, dual-source attendance, and client delivery pipelines.",
+        tags: ["Next.js 16", "PostgreSQL", "Supabase RLS", "Enterprise SaaS"]
       }
     ],
 
@@ -318,12 +318,12 @@ export const landingPages: Record<string, LandingPageData> = {
         tags: ["Node.js", "NestJS", "IndexedDB", "PWA", "POS"]
       },
       {
-        slug: "zion",
-        title: "Zion Event Discovery & Ticketing App",
-        client: "Zion Entertainment",
-        metric: "50,000+ Concurrent Event Attendees",
-        description: "Real-time backend featuring interactive seat mapping, QR ticketing, and host revenue analytics.",
-        tags: ["Node.js", "NestJS", "Firebase", "Socket.IO"]
+        slug: "utsav",
+        title: "Utsav Community & Festival Platform",
+        client: "Community Mandals",
+        metric: "50,000+ Active Members",
+        description: "Scalable Node.js & PostgreSQL backend managing real-time festival scheduling, donation ledgers, and committee workflows.",
+        tags: ["Node.js", "PostgreSQL", "Prisma", "Socket.IO"]
       }
     ],
 

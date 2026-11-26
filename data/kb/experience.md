@@ -2,13 +2,12 @@
 
 ## Portfolio Track Record
 Over our 5+ years of building digital products, our team has delivered over 10+ production platforms and applications across diverse industries:
-- **Zion**: AI-powered cross-platform mobile application for event discovery, social ticketing, real-time chat, and host analytics built with Flutter, Firebase, and Stripe.
+- **CMS TechSonance**: Enterprise multi-tenant operations, HRMS, and client management platform featuring dual dashboards, 23-role granular RBAC, NFC/GPS attendance, automated payroll, project sprint/Kanban tracking, client CRM pipeline, and finance invoicing built with Next.js 15, React 19, Supabase (PostgreSQL), and Docker.
 - **Utsav**: Unified mobile mandal and community festival management platform for Ganesh Chaturthi scheduling, donation ledger tracking, expense reporting, and committee workflows built with Flutter and Node.js.
 - **FreightFlow**: Enterprise logistics and supply chain orchestration platform featuring real-time fleet dispatch, automated invoicing, and route optimization.
 - **SyncServe POS**: High-throughput retail point-of-sale system supporting multi-terminal syncing, barcode scanning, offline caching, and instant GST invoices.
 - **MasterWeg**: All-in-one German university admissions platform with AI-driven course matching and automated document preparation.
 - **TechSonance Marketplace**: Multi-vendor B2B e-commerce platform with automated merchant payouts, advanced catalog search, and dispute management.
-- **CMS TechSonance**: Enterprise multi-tenant operations, HRMS, and client management platform featuring dual dashboards, 23-role granular RBAC, NFC/GPS attendance, automated payroll, project sprint/Kanban tracking, client CRM pipeline, and finance invoicing built with Next.js 15, React 19, Supabase (PostgreSQL), and Docker.
 - **AccuNest**: Comprehensive accounting and financial management suite for SMEs.
 
 ## Client Industries Served

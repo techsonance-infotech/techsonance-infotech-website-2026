@@ -320,11 +320,11 @@ $$ LANGUAGE plpgsql;
     `,
   },
 
-  // ── 3. Zion (Mobile Event Discovery, Social Ticketing & Flutter) ──────────
+  // ── 3. Utsav (Community Festival Operations & Flutter) ───────────────────
   {
-    slug: "zion-event-discovery-social-ticketing-flutter-architecture",
-    title: "Building Zion: Architecting a 60 FPS Event Discovery & Social Ticketing Platform with Flutter, Isar DB & Riverpod",
-    excerpt: "Inside the cross-platform engineering of Zion: local-first Isar database caching for sub-100ms searches, 2-step frictionless ticket checkout, real-time social feeds, and organizer gate validation.",
+    slug: "utsav-mandal-management-flutter-architecture",
+    title: "Engineering Utsav: Centralized Mandal Operations, Real-Time Donation Tracking, and Festival Scheduling with Flutter & Node.js",
+    excerpt: "Inside the cross-platform engineering of Utsav: high-concurrency festival scheduling, transparent donation ledgers, committee duty delegation, and offline-first member communications built with Flutter, Riverpod, and PostgreSQL.",
     category: "Software Engineering",
     date: "October 16, 2026",
     readTime: "7 min read",
@@ -340,108 +340,113 @@ $$ LANGUAGE plpgsql;
         avatar: "SO",
       },
     ],
-    heroImage: "/images/zion/zion-event-discovery-mobile-app-showcase.png",
-    tags: ["Flutter", "Dart", "Isar DB", "Riverpod", "Mobile App", "Offline-First", "Stripe", "Event Ticketing"],
+    heroImage: "/images/utsav/utsav-festival-app-showcase.png",
+    tags: ["Flutter", "Dart", "Riverpod", "Node.js", "PostgreSQL", "Prisma", "Mobile App", "Community Operations"],
     faqs: [
       {
-        question: "Why was Flutter selected for Zion rather than native Swift and Kotlin?",
-        answer: "Flutter's Impeller rendering engine compiles directly to native ARM64 machine code, rendering 60 FPS animations across iOS and Android from a single shared codebase. This unified architecture saved over 4 months of dual-platform engineering while maintaining native-grade performance."
+        question: "Why was Flutter selected for Utsav rather than native Android and iOS?",
+        answer: "Flutter delivers unified 60 FPS performance from a single codebase across both Android and iOS. This enabled rapid deployment of identical committee workflows, donor receipt generation, and real-time announcements without duplicating business logic."
       },
       {
-        question: "How does Zion ensure attendees can show their tickets in venue basements without internet?",
-        answer: "Zion uses an embedded Isar NoSQL database for local-first caching. When a ticket is purchased, its signed cryptographic token and QR pass are stored locally on the device keychain. Attendees can pull up passes and get scanned at gates without an active cellular data signal."
+        question: "How does Utsav maintain data integrity for cash and digital donations during peak festival rushes?",
+        answer: "Utsav uses transactional PostgreSQL isolation levels combined with client-side optimistic UI updates. Every donation entry generates an immutable digital voucher with instant SMS confirmation and audit trail timestamps."
       },
       {
-        question: "How does the organizer dashboard prevent duplicate ticket scanning at different gates?",
-        answer: "Host scanner devices sync validated QR tokens over cloud websockets with local peer mesh fallbacks (Wi-Fi Direct and Bluetooth). When a ticket is scanned at Gate 1, all other scanners invalidate the ticket in under 50ms, preventing duplicate entry."
+        question: "How does the platform support volunteers in low-connectivity procession zones?",
+        answer: "The Flutter client features local SQLite caching. Duty schedules, volunteer contacts, and emergency notices remain accessible offline and synchronize automatically when connectivity is restored."
       }
     ],
     content: `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-6 mb-8 text-slate-800">
         <span class="text-xs font-black uppercase tracking-wider text-[#1155CC] block mb-2">Executive Summary &amp; Direct Answer (AEO / TL;DR)</span>
         <p class="text-sm sm:text-base leading-relaxed font-medium">
-          <strong>How do you achieve fluid 60 FPS mobile event discovery and sub-second offline ticket verification?</strong> By combining <strong>Flutter</strong> with <strong>Riverpod reactive state management</strong> and an embedded <strong>Isar NoSQL database</strong>. Isar caches event catalogs, venue maps, and encrypted tickets locally on the device, enabling <strong>sub-100ms search responses</strong> and guaranteed venue entry in zero-connectivity basements. A streamlined 2-step Apple Pay &amp; Google Pay checkout flow reduces cart abandonment by <strong>42%</strong>.
+          <strong>How do you build a reliable mobile operations platform for high-traffic festival mandals and community organizations?</strong> By pairing a <strong>Flutter cross-platform application</strong> with <strong>Riverpod reactive state management</strong> and a resilient <strong>Node.js and PostgreSQL backend</strong>. The platform unifies donation tracking with immutable audit ledgers, coordinates volunteer duties, and caches daily aarti schedules locally for guaranteed access during high-density processions.
         </p>
       </div>
 
       <p class="lead text-lg text-slate-700 leading-relaxed font-semibold mb-6">
-        Ticketing applications face a brutally demanding lifecycle: users experience massive drop-off rates during flash-sale ticket drops, venue attendees get stranded at turnstiles when cellular networks jam inside basements, and organizers lose revenue to fraudulent ticket passes.
+        Community festival organizations and Ganpati mandals manage massive logistical complexity during peak festival seasons: thousands of donor receipts, daily prayer schedules, VIP security rosters, and vendor payments, often tracked across loose paper slips and chaotic WhatsApp groups.
       </p>
 
       <p class="text-slate-600 leading-relaxed mb-6">
-        When engineering <a href="/portfolio/zion" class="text-[#1155CC] font-bold underline">Zion</a>, we set out to build an immersive mobile application for event seekers and creators that delivers zero-latency discovery, 2-step ticket booking, and offline gate reliability.
+        In this deep dive, we explore how TechSonance architected <a href="/portfolio/utsav" class="text-[#1155CC] font-bold underline">Utsav</a>, a production mobile application designed to bring corporate-grade operational rigor and financial transparency to community organizations.
       </p>
 
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">1. Fluid 60 FPS UI Architecture with Flutter &amp; Impeller</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">1. Cross-Platform Consistency with Flutter &amp; Riverpod</h3>
       <p class="text-slate-600 leading-relaxed mb-4">
-        Users exploring nightlife and music festivals demand modern visuals: glassmorphism cards, interactive venue maps, and video previews. Building this in hybrid web wrappers produces micro-stutters and frame drops.
+        Mandal committee members and volunteers use a diverse range of budget and flagship smartphones across Android and iOS. Flutter ensures pixel-perfect UI consistency and smooth 60 FPS interactions across every device tier.
       </p>
       <p class="text-slate-600 leading-relaxed mb-6">
-        With Flutter's Impeller engine, shader compilation happens ahead of time (AOT), eliminating jank during scroll. We structured the UI using <strong>Riverpod</strong> for predictable, declarative state management that cleanly decouples UI views from background network and location providers.
+        Using <strong>Riverpod</strong>, state updates for incoming donations and duty reassignments flow reactively without unpredictable side effects, keeping the UI responsive even under rapid tap rates.
       </p>
 
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">2. Local-First Caching with Embedded Isar Database</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">2. Real-Time Transparent Donation Tracking</h3>
       <p class="text-slate-600 leading-relaxed mb-4">
-        Waiting for network roundtrips during search frustrates users. We integrated <strong>Isar DB</strong>, an ultra-fast NoSQL database that runs directly inside the mobile app's process space.
-      </p>
-      <p class="text-slate-600 leading-relaxed mb-6">
-        When a user opens Zion, nearby events are fetched and persisted to Isar in memory. Full-text search and category filtering happen in <strong>under 10ms</strong> directly against the local storage:
+        Financial accountability is vital for trust in community organizations. Utsav's donation engine records both cash and UPI contributions into an immutable database ledger:
       </p>
 
       <pre class="bg-slate-950 text-slate-200 rounded-2xl p-5 overflow-x-auto text-xs font-mono mb-6">
-// Sub-10ms local in-memory event search
-Future&lt;List&lt;Event&gt;&gt; searchEventsLocally(String query, String category) async {
-  return await isar.events
-    .filter()
-    .categoryEqualTo(category)
-    .and()
-    .titleContains(query, caseSensitive: false)
-    .sortByDate()
-    .findAll();
+// Immutable Donation Entry with Transactional Integrity
+export async function recordDonation(mandalId: string, payload: DonationDTO) {
+  return await prisma.$transaction(async (tx) => {
+    const voucherNumber = await generateSequentialVoucher(tx, mandalId);
+    const donation = await tx.donation.create({
+      data: {
+        mandalId,
+        voucherNumber,
+        donorName: payload.donorName,
+        amount: payload.amount,
+        paymentMode: payload.mode,
+        receivedBy: payload.volunteerId,
+        createdAt: new Date(),
+      },
+    });
+    return donation;
+  });
 }
       </pre>
 
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">3. Frictionless 2-Step Ticket Checkout</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">3. Volunteer Roster &amp; Duty Delegation</h3>
       <p class="text-slate-600 leading-relaxed mb-6">
-        Traditional ticketing platforms force users through five to seven screens: account registration, ticket quantity, personal details, insurance add-ons, payment method selection, and OTP verification. By integrating native Apple Pay and Google Pay APIs through Stripe, Zion compresses this entire funnel into two taps with biometric confirmation.
+        Managing 100+ volunteers across 10 days of festivals requires structured shift management. Utsav lets mandal leaders create shift rosters, assign specific gates or aarti duties, and push automated schedule reminders via Firebase Cloud Messaging (FCM).
       </p>
 
-      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Zion Performance Metrics</h3>
+      <h3 class="text-xl font-medium text-slate-900 mt-8 mb-4 font-sora">Utsav Operational Impact</h3>
       <div class="overflow-x-auto my-6">
         <table class="w-full text-xs text-left border-collapse border border-slate-200 rounded-xl overflow-hidden">
           <thead class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider">
             <tr>
-              <th class="p-3 border border-slate-200">Metric</th>
-              <th class="p-3 border border-slate-200">Industry Standard</th>
-              <th class="p-3 border border-slate-200">Zion Platform Result</th>
-              <th class="p-3 border border-slate-200">User Impact</th>
+              <th class="p-3 border border-slate-200">Operational Dimension</th>
+              <th class="p-3 border border-slate-200">Manual Paper System</th>
+              <th class="p-3 border border-slate-200">Utsav Digital Platform</th>
+              <th class="p-3 border border-slate-200">Mandal Benefit</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 text-slate-600">
             <tr class="bg-white">
-              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Catalog Search Latency</td>
-              <td class="p-3 border border-slate-200">600 - 1200 ms</td>
-              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">&lt; 15 ms (Isar DB)</td>
-              <td class="p-3 border border-slate-200">Sub-second discovery feel</td>
+              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Donation Reconciliation</td>
+              <td class="p-3 border border-slate-200">2 - 3 weeks post festival</td>
+              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">Real-time daily balance</td>
+              <td class="p-3 border border-slate-200">Zero unaccounted cash</td>
             </tr>
             <tr class="bg-slate-50/50">
-              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Scroll Frame Rate</td>
-              <td class="p-3 border border-slate-200">42 - 50 FPS</td>
-              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">Consistent 60 FPS</td>
-              <td class="p-3 border border-slate-200">Zero jank on event feeds</td>
+              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Receipt Generation</td>
+              <td class="p-3 border border-slate-200">Carbon-copy paper books</td>
+              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">Instant SMS &amp; digital PDF</td>
+              <td class="p-3 border border-slate-200">100% paperless audit trail</td>
             </tr>
             <tr class="bg-white">
-              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Checkout Abandonment</td>
-              <td class="p-3 border border-slate-200">68% drop-off</td>
-              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">26% drop-off</td>
-              <td class="p-3 border border-slate-200">42% increase in sales conversion</td>
+              <td class="p-3 font-semibold text-slate-900 border border-slate-200">Volunteer Duty Coordination</td>
+              <td class="p-3 border border-slate-200">Chaotic WhatsApp broadcasts</td>
+              <td class="p-3 border border-slate-200 text-emerald-600 font-bold">In-app shifts &amp; push alerts</td>
+              <td class="p-3 border border-slate-200">Zero unattended security gates</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <p class="text-slate-600 leading-relaxed mb-6">
-        Discover more about our mobile engineering capabilities on our <a href="/services/mobile-development" class="text-[#1155CC] font-bold underline">Mobile App Development Services</a> page.
+        Learn more about our mobile engineering capabilities on our <a href="/services/mobile-development" class="text-[#1155CC] font-bold underline">Mobile App Development Services</a> page.
       </p>
     `,
   },
