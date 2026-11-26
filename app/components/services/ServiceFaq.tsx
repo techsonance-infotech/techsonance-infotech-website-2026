@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Icon } from "@/app/components/icons/Icon";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 export interface FAQ {
   question: string;

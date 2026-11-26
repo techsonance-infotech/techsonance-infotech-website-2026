@@ -87,7 +87,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
   },
   portfolio: {
     title: "Our Work & Case Studies | TechSonance Infotech LLP Portfolio",
-    description: "Explore our software portfolio. We build high-throughput Marketplace platforms, enterprise CMS & HRMS systems, scalable multi-tenant logistics SaaS, mobile ticketing apps, and custom accounting tools.",
+    description: "Explore our software portfolio. We build high-throughput Marketplace platforms, enterprise CMS & HRMS systems, scalable multi-tenant logistics SaaS, community mobile apps, and custom accounting tools.",
     keywords: [
       "Marketplace Development Company",
       "SaaS Development Company",
@@ -100,7 +100,7 @@ export const SEO_METADATA: Record<string, PageMetadata> = {
     ],
     canonical: `${BASE_URL}/portfolio`,
     ogTitle: "Our Work Portfolio | TechSonance Infotech LLP",
-    ogDescription: "Real-world engineering case studies, showing high-scale systems built for enterprise operations, logistics, retail POS, mobile ticketing, and accounting.",
+    ogDescription: "Real-world engineering case studies, showing high-scale systems built for enterprise operations, logistics, retail POS, mobile applications, and accounting.",
     ogImage: "/images/og/portfolio.png"
   },
   blog: {

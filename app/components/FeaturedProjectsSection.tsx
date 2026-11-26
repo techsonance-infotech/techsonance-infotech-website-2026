@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 import { getFeaturedProjects, type Project } from "@/data/projects";
 import { ProjectMockup } from "./projects/ProjectMockup";

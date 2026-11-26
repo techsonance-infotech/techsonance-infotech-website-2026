@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendMail } from '@/lib/email';
+import { getEnv } from '@/lib/env';
 
 // In-memory rate limiting map
 const ipCache = new Map<string, { count: number; resetTime: number }>();
@@ -112,32 +113,10 @@ export async function POST(request: Request) {
       }
     }
 
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = process.env.SMTP_PORT;
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS;
-    const adminEmail = process.env.ADMIN_EMAIL;
+        const env = getEnv();
+    const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
 
-    // Check if SMTP configuration is missing
-    if (!smtpHost || !smtpPort || !emailUser || !emailPass || !adminEmail) {
-      console.error("Missing SMTP environment variables");
-      return NextResponse.json(
-        { error: "Mail server configuration is missing on the server." },
-        { status: 500 }
-      );
-    }
-
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: parseInt(smtpPort),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    });
-
-    let subject = "New Contact Inquiry - TechSonance";
+let subject = "New Contact Inquiry - TechSonance";
     let textContent = "";
     let htmlContent = "";
 
@@ -332,22 +311,28 @@ ${message}
       `;
     }
 
-    const mailOptions = {
-      from: `"${body.firstName ? `${body.firstName} ${body.lastName}` : body.name}" <${emailUser}>`,
+        const senderName = body.firstName ? `${body.firstName} ${body.lastName}` : body.name;
+    const result = await sendMail({
+      from: `"${senderName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
       html: htmlContent,
       replyTo: body.email,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error || "Failed to send email" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending email via SMTP:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to send email" },
+      { error: (error instanceof Error ? error.message : "Failed to send email") || "Failed to send email" },
       { status: 500 }
     );
   }

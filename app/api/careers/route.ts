@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { sendMail } from "@/lib/email";
+import { getEnv } from "@/lib/env";
 
 export async function POST(request: Request) {
   try {
@@ -20,33 +21,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });
     }
 
-    // SMTP Credentials Check
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpPort = process.env.SMTP_PORT;
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS;
-    const adminEmail = process.env.ADMIN_EMAIL;
+        const env = getEnv();
+    const adminEmail = env.ADMIN_EMAIL || process.env.ADMIN_EMAIL || "info@techsonance.co.in";
 
-    if (!smtpHost || !smtpPort || !emailUser || !emailPass || !adminEmail) {
-      console.error("Missing SMTP environment variables in careers route");
-      return NextResponse.json(
-        { error: "Mail server configuration is missing on the server." },
-        { status: 500 }
-      );
-    }
-
-    // Setup Nodemailer Transporter
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: parseInt(smtpPort),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    });
-
-    // Handle File Attachment
+// Handle File Attachment
     const attachments = [];
     if (resume && resume.size > 0) {
       const bytes = await resume.arrayBuffer();
@@ -153,23 +131,28 @@ ${message}
       </div>
     `;
 
-    const mailOptions = {
-      from: `"${fullName}" <${emailUser}>`,
+        const result = await sendMail({
+      from: `"${fullName}" <${env.SMTP_USER || process.env.EMAIL_USER || "info@techsonance.co.in"}>`,
       to: adminEmail,
       subject: subject,
       text: textContent,
       html: htmlContent,
       replyTo: email,
       attachments: attachments,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: result.error || "Failed to send application email" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending career application email via SMTP:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to send application email" },
+      { error: (error instanceof Error ? error.message : "Failed to send application email") || "Failed to send application email" },
       { status: 500 }
     );
   }

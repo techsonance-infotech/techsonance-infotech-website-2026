@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MessageSquare, X, Calendar, Sparkles } from "lucide-react";
-import { nanoid } from "nanoid";
 import { BOT_CONFIG } from "@/lib/config";
 import {
   type Msg,
@@ -21,7 +20,7 @@ export default function ChatWidget() {
     if (typeof window !== "undefined") {
       let sid = localStorage.getItem("ts_chat_session_id");
       if (!sid) {
-        sid = nanoid(16);
+        sid = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
         localStorage.setItem("ts_chat_session_id", sid);
       }
       return sid;
@@ -39,7 +38,7 @@ export default function ChatWidget() {
 
   // Initialize or restore session on mount
   useEffect(() => {
-    const sid = sessionId || (typeof window !== "undefined" ? localStorage.getItem("ts_chat_session_id") || nanoid(16) : "");
+    const sid = sessionId || (typeof window !== "undefined" ? localStorage.getItem("ts_chat_session_id") || crypto.randomUUID().replace(/-/g, "").slice(0, 16) : "");
     if (!sid) return;
 
     // Clean up messages older than 30 days
@@ -223,7 +222,7 @@ export default function ChatWidget() {
   const handleClearChat = async () => {
     if (confirm("Are you sure you want to clear your local chat history?")) {
       await clearAllChat();
-      const sid = nanoid(16);
+      const sid = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
       localStorage.setItem("ts_chat_session_id", sid);
       setSessionId(sid);
 

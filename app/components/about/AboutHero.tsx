@@ -3,7 +3,7 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import SafeImage from "@/app/components/SafeImage";
 import BookConsultationModal from "@/app/components/home/BookConsultationModal";
 import { Button } from "@/components/ui/button";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { getAllProjects, type Project } from "@/data/projects";
 import { TechBadge } from "@/app/components/projects/TechBadge";
@@ -156,17 +156,17 @@ export default function PortfolioClient() {
       <ArcGalleryHero
         images={[
           "/images/utsav/utsav-festival-app-showcase.png",
-          "/images/zion/zion-event-discovery-mobile-app-showcase.png",
+          "/images/cms-techsonance/login-left-banner.jpg",
           "/images/portfolio-hero-images/ai-automation-mockup.png",
           "/images/portfolio-hero-images/ecommerce-website-design-examples-1024x768.jpg",
-          "/images/zion/zion-neon-dubai-onboarding-screens.png",
+          "/images/projects/freightflow/freightflow-logistics-fleet-management-dashboard.png",
           "/images/utsav/utsav-mandal-app-ui-showcase.png",
           "/images/portfolio-hero-images/saas-analytics-mockup.png",
           "/images/portfolio-hero-images/custom-software-mockup.png",
-          "/images/zion/zion-event-analytics-host-dashboard.png",
+          "/images/accunest/accunest-dashboard.png",
           "/images/portfolio-hero-images/mobile-website-design.webp",
           "/images/portfolio-hero-images/cloud-architecture-mockup.png",
-          "/images/zion/zion-event-ticket-booking-analytics.png",
+          "/images/cms-techsonance/cms-techsonance-hrms-dashboard-features.png",
         ]}
         className="bg-[#FAFBFD] text-[#0F172A] pt-24 pb-16 min-h-[90vh]"
       >

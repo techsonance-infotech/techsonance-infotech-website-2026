@@ -52,12 +52,12 @@
 
 ## 3. Client Review Generation Campaign (10+ Reviews in 90 Days)
 
-### A. Email Outreach Template for Past Clients (e.g. FreightFlow, Zion)
+### A. Email Outreach Template for Past Clients (e.g. FreightFlow, Utsav)
 **Subject:** Quick feedback on our software engineering collaboration — TechSonance
 
 > Hi [Client First Name],
 >
-> It has been an honor partnering with your team to engineer and scale [Project Name, e.g. FreightFlow / Zion]. Seeing the system deliver [mention key result, e.g. sub-second queries / 50k+ event attendees] has been a milestone for our entire engineering squad.
+> It has been an honor partnering with your team to engineer and scale [Project Name, e.g. FreightFlow / Utsav]. Seeing the system deliver [mention key result, e.g. sub-second queries / 50k+ active users] has been a milestone for our entire engineering squad.
 >
 > As we expand our global engineering practice from Surat, verified reviews on Google and Clutch are the most credible way new clients learn about our technical standards.
 >
